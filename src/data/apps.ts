@@ -88,7 +88,7 @@ export const apps: AppCard[] = [
     "id": "TACH-GOP-PDF",
     "title": "TÁCH GỘP PDF",
     "description": "TÁCH GỘP PDF",
-    "image": "/tachgoppdf.jpg",
+    "image": "/tachgoppdf.JPG",
     "url": "https://tach-gop-pdf.vercel.app/",
     "category": "BỘ TRỢ LÝ AI",
     "badge": "BỘ TRỢ LÝ AI",
