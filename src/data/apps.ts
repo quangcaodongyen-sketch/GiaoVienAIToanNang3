@@ -90,11 +90,11 @@ export const apps: AppCard[] = [
     "description": "TÁCH GỘP PDF",
     "image": "/tachgoppdf.jpg",
     "url": "https://tach-gop-pdf.vercel.app/",
-    "category": "TẠO SKKN",
+    "category": "BỘ TRỢ LÝ AI",
     "badge": "BỘ TRỢ LÝ AI",
     "active": true,
     "featured": false,
-    "order": 3
+    "order": 4
   },
   {
     "id": "video-giao-duc",
