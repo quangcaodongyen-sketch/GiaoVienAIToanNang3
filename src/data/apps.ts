@@ -85,16 +85,16 @@ export const apps: AppCard[] = [
     "order": 2
   },
   {
-    "id": "thi-gvg",
-    "title": "VIẾT BIỆN PHÁP GV GIỎI-GVCN GIỎI",
-    "description": "App viết biện pháp thi GVG-GVCN với 47 phương pháp và kĩ thuật dạy học mới nhất",
-    "image": "/vietbienphap.PNG",
-    "url": "https://trolyvietbienphap.vercel.app/",
+    "id": "TACH-GOP-PDF",
+    "title": "TÁCH GỘP PDF",
+    "description": "TÁCH GỘP PDF",
+    "image": "/tachgoppdf.jpg",
+    "url": "https://tach-gop-pdf.vercel.app/",
     "category": "TẠO SKKN",
-    "badge": "LIÊN HỆ SỬ DỤNG",
-    "active": false,
+    "badge": "BỘ TRỢ LÝ AI",
+    "active": true,
     "featured": false,
-    "order": 1
+    "order": 3
   },
   {
     "id": "video-giao-duc",
