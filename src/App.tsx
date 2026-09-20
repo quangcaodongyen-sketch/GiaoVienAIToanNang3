@@ -15,7 +15,15 @@ import {
   UserCheck, 
   FileText, 
   Layers,
-  ArrowRight
+  ArrowRight,
+  Headphones,
+  Crown,
+  Play,
+  Download,
+  CheckCircle2,
+  Volume2,
+  Bell,
+  Users
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
@@ -24,6 +32,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
   const [showSKKNModal, setShowSKKNModal] = useState(false);
+  const [showListeningModal, setShowListeningModal] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -40,9 +49,15 @@ export default function App() {
     : activeApps.filter((app) => app.category === selectedCategory);
 
   const handleAppClick = (app: AppCard, e: React.MouseEvent) => {
+    if (app.id === 'smart-listening-pro') {
+      e.preventDefault();
+      setShowListeningModal(true);
+      return;
+    }
     if (app.id === 'viet-skkn') {
       e.preventDefault();
       setShowSKKNModal(true);
+      return;
     }
   };
 
@@ -545,6 +560,128 @@ export default function App() {
               <button
                 onClick={() => setShowSKKNModal(false)}
                 className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SMART LISTENING PRO MODAL WITH VIDEO TUTORIAL */}
+      {showListeningModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-3xl w-full p-5 sm:p-7 shadow-2xl relative my-auto border border-slate-100 max-h-[95vh] overflow-y-auto">
+            {/* Close button */}
+            <button
+              onClick={() => setShowListeningModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-10"
+              aria-label="Đóng"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Header */}
+            <div className="flex items-start gap-4 pb-4 border-b border-slate-100 pr-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#123A63] via-[#1E40AF] to-[#2563EB] flex items-center justify-center text-amber-400 shadow-md shadow-blue-900/20 shrink-0">
+                <Crown className="w-8 h-8" />
+              </div>
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold mb-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  BẢN QUYỀN THƯƠNG MẠI PRO
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-[#123A63] tracking-tight">
+                  SMART LISTENING PRO
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+                  Chuyển lời thoại văn bản thành bài nghe Tiếng Anh chuẩn Quốc tế – Tác giả: {BRAND.author}
+                </p>
+              </div>
+            </div>
+
+            {/* Video Tutorial Player */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm font-bold text-[#123A63] flex items-center gap-1.5">
+                  <Play className="w-4 h-4 text-red-500 fill-red-500" />
+                  Video hướng dẫn thực chiến (Xem trực tiếp):
+                </span>
+                <span className="text-[11px] text-slate-400 font-medium">Độ nét cao HD</span>
+              </div>
+              <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner">
+                <video 
+                  controls 
+                  preload="metadata"
+                  className="w-full aspect-video max-h-[380px] object-contain bg-black"
+                >
+                  <source src="/tao-bai-nghe-listening.mp4" type="video/mp4" />
+                  Trình duyệt của bạn không hỗ trợ thẻ phát video.
+                </video>
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-500 italic text-center">
+                💡 Xem Thầy Thành thao tác chuyển kịch bản 2 nhân vật, chèn chuông hiệu lệnh và xuất file MP3 trong 1 phút.
+              </p>
+            </div>
+
+            {/* 4 Feature Highlights Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <Volume2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Giọng đọc AI chuẩn bản ngữ</h4>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Đa dạng giọng Anh - Mỹ, Anh - Anh (Nam & Nữ) tự nhiên, rõ ràng, truyền cảm.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Kịch bản hội thoại đa vai</h4>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Tự động phân vai Teacher, Boy, Girl... chuyển đổi giọng đọc mượt mà theo từng lời thoại.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <Bell className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Chuông hiệu lệnh & Ngắt quãng</h4>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Chèn tiếng chuông Ding, Bell, Jingle và thiết lập khoảng lặng chờ học sinh làm bài thi.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Xuất file MP3 – Chạy Offline</h4>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">File nhẹ 1 click mở ngay, không cần cài đặt, dạy học trên lớp không lo mất mạng Wifi.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
+              <a
+                href={BRAND.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-3 px-4 rounded-xl bg-[#0D9488] hover:bg-teal-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-teal-700/20 transition-all hover:scale-[1.01]"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Nhận Bản Quyền & Tư Vấn (Zalo: {BRAND.phone})
+              </a>
+
+              <button
+                onClick={() => setShowListeningModal(false)}
+                className="py-3 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
               >
                 Đóng
               </button>

@@ -13,6 +13,18 @@ export interface AppCard {
 
 export const apps: AppCard[] = [
   {
+    "id": "smart-listening-pro",
+    "title": "SMART LISTENING PRO",
+    "description": "Chuyển lời thoại văn bản thành bài nghe tiếng Anh chuẩn bản ngữ. Tự động chèn chuông hiệu lệnh, ngắt nghỉ theo câu và xuất file MP3 chất lượng cao.",
+    "image": "/smart_listening_icon.png",
+    "url": "#smart-listening",
+    "category": "TIẾNG ANH & BÀI NGHE",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "soangiaoannanglucso",
     "title": "SOẠN GIÁO ÁN NĂNG LỰC SỐ",
     "description": "Tích hợp NLS vào giáo án",
