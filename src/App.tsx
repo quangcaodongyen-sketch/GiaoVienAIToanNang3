@@ -27,12 +27,15 @@ import {
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
+import { AdminDashboard } from './components/AdminDashboard';
+import { OnlineTTSModal } from './components/OnlineTTSModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -87,11 +90,19 @@ export default function App() {
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8 font-medium text-slate-700 text-sm">
+            <div className="hidden md:flex items-center gap-6 font-medium text-slate-700 text-sm">
               <a href="#hero" className="hover:text-[#2563EB] transition-colors">Trang chủ</a>
               <a href="#apps" className="hover:text-[#2563EB] transition-colors">Ứng dụng</a>
               <a href="#about" className="hover:text-[#2563EB] transition-colors">Về tác giả</a>
               <a href="#contact" className="hover:text-[#2563EB] transition-colors">Liên hệ</a>
+              <button
+                onClick={() => setShowAdminDashboard(true)}
+                className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 border border-amber-300 transition-colors text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                title="Quản trị Bản quyền Cloud 24/7"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-600" />
+                Quản trị Cloud
+              </button>
               <a 
                 href="#contact" 
                 className="px-4 py-2 rounded-lg bg-[#123A63] text-white hover:bg-[#2563EB] transition-colors text-sm font-semibold shadow-sm"
@@ -141,6 +152,16 @@ export default function App() {
               >
                 Liên hệ
               </a>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setShowAdminDashboard(true);
+                }}
+                className="px-3 py-2 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 font-bold text-left flex items-center gap-2"
+              >
+                <Crown className="w-4 h-4 text-amber-600" />
+                Quản trị Bản quyền Cloud
+              </button>
               <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
                 <a
                   href={BRAND.zaloUrl}
@@ -158,44 +179,44 @@ export default function App() {
 
       <main className="flex-1">
         {/* HERO SECTION */}
-        <section id="hero" className="relative py-16 sm:py-24 bg-white border-b border-slate-200/80 overflow-hidden">
+        <section id="hero" className="relative py-7 sm:py-10 bg-white border-b border-slate-200/80 overflow-hidden">
           <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#2563EB_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-[#2563EB] text-xs sm:text-sm font-semibold tracking-wide shadow-xs">
-                <Sparkles className="w-4 h-4" />
+            <div className="max-w-3xl mx-auto text-center space-y-2.5 sm:space-y-3.5">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-[#2563EB] text-xs font-semibold tracking-wide shadow-xs">
+                <Sparkles className="w-3.5 h-3.5" />
                 <span>{BRAND.hero.subtitle}</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-[#123A63] tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-[#123A63] tracking-tight leading-tight">
                 {BRAND.hero.title}
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-2xl mx-auto">
                 {BRAND.hero.description}
               </p>
 
-              <div className="pt-4 flex flex-wrap justify-center gap-4">
+              <div className="pt-1.5 flex flex-wrap justify-center gap-2.5 sm:gap-3">
                 <a
                   href="#apps"
-                  className="px-6 py-3.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm sm:text-base shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
                 >
-                  <BookOpen className="w-5 h-5" />
+                  <BookOpen className="w-4 h-4" />
                   Khám phá ứng dụng
                 </a>
                 <a
                   href="#about"
-                  className="px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm sm:text-base transition-all flex items-center gap-2"
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5"
                 >
-                  <UserCheck className="w-5 h-5 text-slate-600" />
+                  <UserCheck className="w-4 h-4 text-slate-600" />
                   Về tác giả
                 </a>
                 <a
                   href="#contact"
-                  className="px-6 py-3.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-sm sm:text-base shadow-xs transition-all flex items-center gap-2"
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5"
                 >
-                  <Phone className="w-5 h-5 text-[#0D9488]" />
+                  <Phone className="w-4 h-4 text-[#0D9488]" />
                   Liên hệ hỗ trợ
                 </a>
               </div>
@@ -204,9 +225,9 @@ export default function App() {
         </section>
 
         {/* APPS SECTION */}
-        <section id="apps" className="py-16 sm:py-20 bg-[#F6F8FC]">
+        <section id="apps" className="py-7 sm:py-10 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-3">
               <div>
                 <span className="text-[#0D9488] font-bold text-xs sm:text-sm uppercase tracking-wider block mb-1">
                   Danh mục công cụ
@@ -522,6 +543,15 @@ export default function App() {
 
           <div className="pt-6 text-center text-xs text-blue-300 font-medium">
             <p>{BRAND.copyright}</p>
+            <div className="mt-2">
+              <button
+                onClick={() => setShowAdminDashboard(true)}
+                className="text-[11px] text-blue-300 hover:text-white underline inline-flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity"
+              >
+                <Crown className="w-3 h-3 text-amber-400" />
+                Cổng Quản trị Bản quyền Online (Admin Thầy Thành)
+              </button>
+            </div>
           </div>
         </div>
       </footer>
@@ -568,127 +598,17 @@ export default function App() {
         </div>
       )}
 
-      {/* SMART LISTENING PRO MODAL WITH VIDEO TUTORIAL */}
-      {showListeningModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-3xl w-full p-5 sm:p-7 shadow-2xl relative my-auto border border-slate-100 max-h-[95vh] overflow-y-auto">
-            {/* Close button */}
-            <button
-              onClick={() => setShowListeningModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-10"
-              aria-label="Đóng"
-            >
-              <X className="w-6 h-6" />
-            </button>
+      {/* ONLINE TTS & SMART LISTENING PRO MODAL (3 TABS) */}
+      <OnlineTTSModal
+        isOpen={showListeningModal}
+        onClose={() => setShowListeningModal(false)}
+      />
 
-            {/* Header */}
-            <div className="flex items-start gap-4 pb-4 border-b border-slate-100 pr-10">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#123A63] via-[#1E40AF] to-[#2563EB] flex items-center justify-center text-amber-400 shadow-md shadow-blue-900/20 shrink-0">
-                <Crown className="w-8 h-8" />
-              </div>
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  BẢN QUYỀN THƯƠNG MẠI PRO
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-[#123A63] tracking-tight">
-                  SMART LISTENING PRO
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-                  Chuyển lời thoại văn bản thành bài nghe Tiếng Anh chuẩn Quốc tế – Tác giả: {BRAND.author}
-                </p>
-              </div>
-            </div>
-
-            {/* Video Tutorial Player */}
-            <div className="space-y-2 pt-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-bold text-[#123A63] flex items-center gap-1.5">
-                  <Play className="w-4 h-4 text-red-500 fill-red-500" />
-                  Video hướng dẫn thực chiến (Xem trực tiếp):
-                </span>
-                <span className="text-[11px] text-slate-400 font-medium">Độ nét cao HD</span>
-              </div>
-              <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner">
-                <video 
-                  controls 
-                  preload="metadata"
-                  className="w-full aspect-video max-h-[380px] object-contain bg-black"
-                >
-                  <source src="/tao-bai-nghe-listening.mp4" type="video/mp4" />
-                  Trình duyệt của bạn không hỗ trợ thẻ phát video.
-                </video>
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-500 italic text-center">
-                💡 Xem Thầy Thành thao tác chuyển kịch bản 2 nhân vật, chèn chuông hiệu lệnh và xuất file MP3 trong 1 phút.
-              </p>
-            </div>
-
-            {/* 4 Feature Highlights Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
-                  <Volume2 className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Giọng đọc AI chuẩn bản ngữ</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Đa dạng giọng Anh - Mỹ, Anh - Anh (Nam & Nữ) tự nhiên, rõ ràng, truyền cảm.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 mt-0.5">
-                  <Users className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Kịch bản hội thoại đa vai</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Tự động phân vai Teacher, Boy, Girl... chuyển đổi giọng đọc mượt mà theo từng lời thoại.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
-                  <Bell className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Chuông hiệu lệnh & Ngắt quãng</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Chèn tiếng chuông Ding, Bell, Jingle và thiết lập khoảng lặng chờ học sinh làm bài thi.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800">Xuất file MP3 – Chạy Offline</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">File nhẹ 1 click mở ngay, không cần cài đặt, dạy học trên lớp không lo mất mạng Wifi.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
-              <a
-                href={BRAND.zaloUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 py-3 px-4 rounded-xl bg-[#0D9488] hover:bg-teal-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-teal-700/20 transition-all hover:scale-[1.01]"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Nhận Bản Quyền & Tư Vấn (Zalo: {BRAND.phone})
-              </a>
-
-              <button
-                onClick={() => setShowListeningModal(false)}
-                className="py-3 px-5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* CLOUD ADMIN DASHBOARD 24/7 */}
+      <AdminDashboard
+        isOpen={showAdminDashboard}
+        onClose={() => setShowAdminDashboard(false)}
+      />
     </div>
   );
 }
