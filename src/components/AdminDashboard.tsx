@@ -9,19 +9,16 @@ import {
   Plus, 
   Search, 
   RefreshCw, 
-  Settings, 
   Key, 
   Phone, 
   Building2, 
-  UserCheck, 
-  Calendar, 
   Check, 
   Lock, 
   Unlock,
   Cloud,
   AlertCircle
 } from 'lucide-react';
-import { licenseService, LicenseRecord, SupabaseConfig } from '../services/licenseService';
+import { licenseService, LicenseRecord } from '../services/licenseService';
 
 interface AdminDashboardProps {
   isOpen: boolean;

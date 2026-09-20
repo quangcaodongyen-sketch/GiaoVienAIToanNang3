@@ -13,7 +13,6 @@ import {
   FileText, 
   CheckCircle2, 
   Send,
-  RotateCcw,
   Zap,
   Bell,
   Clock,
@@ -156,7 +155,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
+  const [, setCurrentLineIndex] = useState<number>(-1);
   const [playbackSeconds, setPlaybackSeconds] = useState<number>(0);
   const [totalEstimatedSeconds, setTotalEstimatedSeconds] = useState<number>(30);
 

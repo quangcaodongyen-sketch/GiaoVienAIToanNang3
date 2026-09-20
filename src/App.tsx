@@ -16,14 +16,8 @@ import {
   FileText, 
   Layers,
   ArrowRight,
-  Headphones,
   Crown,
-  Play,
-  Download,
-  CheckCircle2,
-  Volume2,
-  Bell,
-  Users
+  Search
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
@@ -33,6 +27,7 @@ import { OnlineTTSModal } from './components/OnlineTTSModal';
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
+  const [searchQuery, setSearchQuery] = useState('');
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
@@ -47,9 +42,26 @@ export default function App() {
   // Categories based ONLY on activeApps
   const categories = ['Tất cả', ...Array.from(new Set(activeApps.map((app) => app.category)))];
 
-  const filteredApps = selectedCategory === 'Tất cả'
-    ? activeApps
-    : activeApps.filter((app) => app.category === selectedCategory);
+  // Category counts
+  const categoryCounts = categories.reduce<Record<string, number>>((acc, cat) => {
+    if (cat === 'Tất cả') {
+      acc[cat] = activeApps.length;
+    } else {
+      acc[cat] = activeApps.filter((a) => a.category === cat).length;
+    }
+    return acc;
+  }, {});
+
+  // Filtered by Category and Search Query
+  const filteredApps = activeApps.filter((app) => {
+    const matchesCategory = selectedCategory === 'Tất cả' || app.category === selectedCategory;
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch = query === '' ||
+      app.title.toLowerCase().includes(query) ||
+      app.description.toLowerCase().includes(query) ||
+      app.category.toLowerCase().includes(query);
+    return matchesCategory && matchesSearch;
+  });
 
   const handleAppClick = (app: AppCard, e: React.MouseEvent) => {
     if (app.id === 'smart-listening-pro') {
@@ -70,42 +82,131 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F6F8FC] text-[#172033] flex flex-col font-sans">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      {/* TOP ANNOUNCEMENT & CONTACT BAR */}
+      <div className="bg-gradient-to-r from-[#0d2a4a] via-[#123A63] to-[#1a4b80] text-white text-[11px] sm:text-xs py-2 px-4 border-b border-blue-900/50 shadow-inner">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 truncate">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-200 border border-blue-400/30 font-semibold text-[10px] tracking-wide uppercase">
+              <Sparkles className="w-3 h-3 text-amber-300" />
+              Công cụ AI Giáo Dục
+            </span>
+            <span className="hidden sm:inline text-blue-100 font-medium truncate">
+              Hệ sinh thái công cụ AI thiết thực cho giáo viên – Thầy giáo {BRAND.author}
+            </span>
+            <span className="sm:hidden text-blue-100 font-medium truncate">
+              GV AI Toàn Năng – {BRAND.author}
+            </span>
+          </div>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 font-medium">
+            <a
+              href={BRAND.zaloUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-blue-100 hover:text-white transition-colors"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Zalo hỗ trợ: <strong className="text-white">{BRAND.phone}</strong></span>
+            </a>
+            <span className="text-blue-400/40 hidden md:inline">|</span>
+            <a
+              href={BRAND.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center gap-1 text-blue-200 hover:text-white transition-colors"
+            >
+              <Share2 className="w-3 h-3" />
+              <span>Facebook</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN HEADER */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm transition-all">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Logo & Brand Name */}
-            <a href="#hero" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#123A63] to-[#2563EB] flex items-center justify-center text-white shadow-md shadow-blue-900/10 group-hover:scale-105 transition-transform">
-                <GraduationCap className="w-6 h-6" />
+            <a href="#apps" className="flex items-center gap-3 sm:gap-3.5 group">
+              <div className="relative">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#0f2b48] via-[#123A63] to-[#2563EB] flex items-center justify-center text-white shadow-md shadow-blue-900/20 group-hover:scale-105 group-hover:shadow-blue-600/30 transition-all duration-300 ring-2 ring-blue-500/20">
+                  <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-white transition-transform group-hover:-rotate-6" />
+                </div>
+                {/* Active Indicator Pulse */}
+                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-white"></span>
+                </span>
               </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-bold tracking-tight text-[#123A63]">
-                  {BRAND.websiteTitle}
-                </h1>
-                <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
-                  {BRAND.slogan}
-                </p>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-base sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
+                    {BRAND.websiteTitle}
+                  </h1>
+                  <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
+                    AI 4.0
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                    {BRAND.slogan}
+                  </p>
+                  <span className="text-slate-300 hidden sm:inline">•</span>
+                  <span className="text-[11px] text-[#0D9488] font-semibold hidden sm:inline">
+                    {BRAND.author}
+                  </span>
+                </div>
               </div>
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6 font-medium text-slate-700 text-sm">
-              <a href="#hero" className="hover:text-[#2563EB] transition-colors">Trang chủ</a>
-              <a href="#apps" className="hover:text-[#2563EB] transition-colors">Ứng dụng</a>
-              <a href="#about" className="hover:text-[#2563EB] transition-colors">Về tác giả</a>
-              <a href="#contact" className="hover:text-[#2563EB] transition-colors">Liên hệ</a>
+            <div className="hidden md:flex items-center gap-2 lg:gap-3 font-medium text-slate-700 text-sm">
+              <a
+                href="#apps"
+                className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
+              >
+                <BookOpen className="w-4 h-4 text-blue-600" />
+                <span>Kho ứng dụng</span>
+              </a>
+              <a
+                href="#about"
+                className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
+              >
+                <UserCheck className="w-4 h-4 text-slate-500" />
+                <span>Về tác giả</span>
+              </a>
+              <a
+                href="#contact"
+                className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
+              >
+                <Phone className="w-4 h-4 text-teal-600" />
+                <span>Liên hệ</span>
+              </a>
+
+              {/* Quản trị Cloud Button */}
               <button
                 onClick={() => setShowAdminDashboard(true)}
-                className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 border border-amber-300 transition-colors text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                className="ml-1 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-yellow-500/10 hover:from-amber-500/20 hover:to-yellow-500/20 text-amber-900 border border-amber-300/80 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:shadow-xs group"
                 title="Quản trị Bản quyền Cloud 24/7"
               >
-                <Crown className="w-3.5 h-3.5 text-amber-600" />
-                Quản trị Cloud
+                <Crown className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
+                <span>Quản trị Cloud</span>
               </button>
+
+              {/* Primary Hotline / Zalo Button */}
+              <a
+                href={BRAND.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/80 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-[#0D9488]" />
+                <span>Zalo Hỗ trợ</span>
+              </a>
+
+              {/* Primary Contact CTA */}
               <a 
                 href="#contact" 
-                className="px-4 py-2 rounded-lg bg-[#123A63] text-white hover:bg-[#2563EB] transition-colors text-sm font-semibold shadow-sm"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#123A63] to-[#2563EB] hover:from-[#0f2d4f] hover:to-blue-600 text-white transition-all text-sm font-semibold shadow-md shadow-blue-900/15 hover:shadow-blue-600/30 hover:scale-[1.02]"
               >
                 Hỗ trợ ngay
               </a>
@@ -115,49 +216,45 @@ export default function App() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
-              className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors border border-slate-200"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6 text-slate-800" /> : <Menu className="w-6 h-6 text-slate-800" />}
             </button>
           </div>
 
           {/* Mobile Navigation Drawer */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-slate-100 flex flex-col gap-3 font-medium text-slate-700 text-sm">
-              <a 
-                href="#hero" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                Trang chủ
-              </a>
+            <div className="md:hidden py-4 border-t border-slate-200/80 flex flex-col gap-2 font-medium text-slate-700 text-sm animate-fadeIn">
               <a 
                 href="#apps" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
               >
-                Ứng dụng
+                <BookOpen className="w-4 h-4 text-blue-600" />
+                Kho ứng dụng AI
               </a>
               <a 
                 href="#about" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
               >
+                <UserCheck className="w-4 h-4 text-slate-600" />
                 Về tác giả
               </a>
               <a 
                 href="#contact" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
               >
-                Liên hệ
+                <Phone className="w-4 h-4 text-teal-600" />
+                Liên hệ hỗ trợ
               </a>
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setShowAdminDashboard(true);
                 }}
-                className="px-3 py-2 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 font-bold text-left flex items-center gap-2"
+                className="px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-bold text-left flex items-center gap-2.5 shadow-2xs"
               >
                 <Crown className="w-4 h-4 text-amber-600" />
                 Quản trị Bản quyền Cloud
@@ -167,8 +264,9 @@ export default function App() {
                   href={BRAND.zaloUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full text-center px-4 py-2.5 rounded-lg bg-[#0D9488] text-white font-semibold"
+                  className="w-full text-center px-4 py-2.5 rounded-xl bg-[#0D9488] hover:bg-teal-700 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2"
                 >
+                  <MessageCircle className="w-4 h-4" />
                   Chat Zalo: {BRAND.phone}
                 </a>
               </div>
@@ -178,105 +276,120 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {/* HERO SECTION */}
-        <section id="hero" className="relative py-7 sm:py-10 bg-white border-b border-slate-200/80 overflow-hidden">
-          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#2563EB_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="max-w-3xl mx-auto text-center space-y-2.5 sm:space-y-3.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-[#2563EB] text-xs font-semibold tracking-wide shadow-xs">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{BRAND.hero.subtitle}</span>
-              </div>
-
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-[#123A63] tracking-tight leading-tight">
-                {BRAND.hero.title}
-              </h1>
-
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-2xl mx-auto">
-                {BRAND.hero.description}
-              </p>
-
-              <div className="pt-1.5 flex flex-wrap justify-center gap-2.5 sm:gap-3">
-                <a
-                  href="#apps"
-                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  Khám phá ứng dụng
-                </a>
-                <a
-                  href="#about"
-                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5"
-                >
-                  <UserCheck className="w-4 h-4 text-slate-600" />
-                  Về tác giả
-                </a>
-                <a
-                  href="#contact"
-                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5"
-                >
-                  <Phone className="w-4 h-4 text-[#0D9488]" />
-                  Liên hệ hỗ trợ
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* APPS SECTION */}
-        <section id="apps" className="py-7 sm:py-10 bg-[#F6F8FC]">
+        {/* APPS SECTION (PRIMARY SHOWCASE) */}
+        <section id="apps" className="pt-6 pb-16 sm:pt-8 sm:pb-20 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-3">
-              <div>
-                <span className="text-[#0D9488] font-bold text-xs sm:text-sm uppercase tracking-wider block mb-1">
-                  Danh mục công cụ
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#123A63]">
-                  Hệ thống Ứng dụng AI
-                </h2>
+            {/* SECTION HEADER & SEARCH / FILTER PANEL */}
+            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 mb-8 transition-all">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-slate-100">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 text-xs font-bold uppercase tracking-wider mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                    Hệ Thống Ứng Dụng AI Giáo Dục
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#123A63] tracking-tight">
+                    Kho Công Cụ AI Thực Chiến
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
+                    Tuyển tập các công cụ AI thiết thực hỗ trợ giáo viên soạn bài, tạo đề thi ma trận, chuẩn hóa văn bản, bài nghe tiếng Anh và đổi mới phương pháp giảng dạy.
+                  </p>
+                </div>
+
+                {/* SEARCH BAR */}
+                <div className="w-full lg:w-80 shrink-0">
+                  <div className="relative">
+                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Tìm kiếm công cụ (Đề thi, SKKN, Nghe...)..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-50 border border-slate-200/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm text-slate-800 placeholder-slate-400 transition-all shadow-inner"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/60"
+                        title="Xóa tìm kiếm"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* Category filter tabs if activeApps exist */}
-              {activeApps.length > 0 && categories.length > 1 && (
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
-                        selectedCategory === cat
-                          ? 'bg-[#123A63] text-white shadow-xs'
-                          : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
+              {/* CATEGORY FILTER TABS & APP COUNTER */}
+              <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {activeApps.length > 0 && categories.length > 1 && (
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    {categories.map((cat) => {
+                      const count = categoryCounts[cat] || 0;
+                      const isSelected = selectedCategory === cat;
+                      return (
+                        <button
+                          key={cat}
+                          onClick={() => setSelectedCategory(cat)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                            isSelected
+                              ? 'bg-[#123A63] text-white shadow-sm ring-2 ring-[#123A63]/20'
+                              : 'bg-slate-100 hover:bg-slate-200/70 text-slate-700 border border-slate-200/80 hover:text-[#123A63]'
+                          }`}
+                        >
+                          <span>{cat}</span>
+                          <span
+                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                              isSelected
+                                ? 'bg-white/20 text-white'
+                                : 'bg-white text-slate-500 border border-slate-200'
+                            }`}
+                          >
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="text-xs text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                  <span>Hiển thị <strong className="text-slate-800 font-bold">{filteredApps.length}</strong> / {activeApps.length} ứng dụng</span>
                 </div>
-              )}
+              </div>
             </div>
 
-            {/* Empty State when no active apps */}
-            {activeApps.length === 0 ? (
-              <div className="max-w-2xl mx-auto py-16 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-[#F59E0B]">
-                  <Sparkles className="w-8 h-8" />
+            {/* EMPTY STATE */}
+            {filteredApps.length === 0 ? (
+              <div className="max-w-md mx-auto py-16 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
+                <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+                  <Search className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-bold text-[#123A63] mb-2">
-                  Thông báo cập nhật
+                <h3 className="text-lg font-bold text-[#123A63] mb-1">
+                  Không tìm thấy ứng dụng phù hợp
                 </h3>
-                <p className="text-slate-600 text-base font-medium">
-                  Các công cụ đang được rà soát và cập nhật. Vui lòng quay lại sau.
+                <p className="text-slate-600 text-xs sm:text-sm">
+                  Không có công cụ nào khớp với từ khóa "{searchQuery}". Thầy/Cô vui lòng thử từ khóa khác.
                 </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('Tất cả');
+                  }}
+                  className="mt-4 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#2563EB] font-bold text-xs transition-all inline-flex items-center gap-1.5"
+                >
+                  Đặt lại bộ lọc
+                </button>
               </div>
             ) : (
-              /* Active Apps Grid */
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              /* ACTIVE APPS GRID */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
                 {filteredApps.map((app) => (
                   <div
                     key={app.id}
-                    className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col"
+                    className={`group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300/80 transition-all duration-300 flex flex-col hover:-translate-y-1 ${
+                      app.featured ? 'ring-2 ring-amber-400/80 shadow-amber-500/10' : ''
+                    }`}
                   >
                     <div className="relative h-48 bg-slate-100 overflow-hidden">
                       {!appImgErrors[app.id] ? (
@@ -284,7 +397,7 @@ export default function App() {
                           src={app.image}
                           alt={app.title}
                           onError={() => handleAppImgError(app.id)}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
@@ -292,8 +405,14 @@ export default function App() {
                           <span className="text-xs font-semibold">GV AI TOÀN NĂNG</span>
                         </div>
                       )}
-                      <div className="absolute top-3 right-3">
-                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#123A63]/90 text-white backdrop-blur-xs">
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                        {app.featured && (
+                          <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-xs flex items-center gap-1">
+                            <Crown className="w-3 h-3" />
+                            HOT
+                          </span>
+                        )}
+                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#123A63]/90 text-white backdrop-blur-xs shadow-xs">
                           {app.badge}
                         </span>
                       </div>
@@ -306,7 +425,7 @@ export default function App() {
 
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div>
-                        <h3 className="text-lg font-bold text-[#123A63] line-clamp-1">
+                        <h3 className="text-lg font-bold text-[#123A63] group-hover:text-[#2563EB] transition-colors line-clamp-1">
                           {app.title}
                         </h3>
                         <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-3">
@@ -319,10 +438,10 @@ export default function App() {
                         onClick={(e) => handleAppClick(app, e)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 px-4 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2 shadow-xs"
+                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md"
                       >
                         Truy cập ứng dụng
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                       </a>
                     </div>
                   </div>
