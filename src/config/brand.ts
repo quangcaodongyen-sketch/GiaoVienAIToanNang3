@@ -29,3 +29,18 @@ export const BRAND = {
     photoAlt: "Đinh Văn Thành – Giáo viên Tiếng Anh Trường THCS Đồng Yên"
   }
 };
+
+// Cấu hình link lưu trữ đám mây cho các file nặng (> 25MB) của Tích hợp NLS - AI
+export const NLS_RESOURCES = {
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) CDN tốc độ cao vĩnh viễn
+  fullZipUrl: "https://files.catbox.moe/lwzhrw.zip",
+  // Link tải file cài đặt .exe từ gói nén an toàn
+  exeUrl: "https://files.catbox.moe/lwzhrw.zip",
+  // Link Video HD Streaming trực tiếp cho web
+  videoDirectUrl: "https://files.catbox.moe/l661sh.mp4",
+  videoEmbedUrl: "",
+  // Link xem video trên tab mới
+  videoWatchUrl: "https://files.catbox.moe/l661sh.mp4",
+  // Link tải video trực tiếp
+  videoDownloadUrl: "https://files.catbox.moe/l661sh.mp4"
+};

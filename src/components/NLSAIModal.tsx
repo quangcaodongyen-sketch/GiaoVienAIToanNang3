@@ -22,7 +22,7 @@ import {
   Info,
   Award
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, NLS_RESOURCES } from '../config/brand';
 import { getOrCreateNLSHardwareCode, verifyKeyFormat } from '../services/nlsKeyService';
 
 interface NLSAIModalProps {
@@ -846,24 +846,35 @@ ${fullContent}
                 </div>
 
                 <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl">
-                  <video 
-                    controls 
-                    playsInline
-                    preload="auto"
-                    poster="/giaoanNLS.png"
-                    className="w-full aspect-video max-h-[320px] object-contain bg-black"
-                  >
-                    <source src="/HD_tich_hop_NLS_AI.mp4" type="video/mp4" />
-                    <source src="/HD%20t%C3%ADch%20h%E1%BB%A3p%20NLS-AI.mp4" type="video/mp4" />
-                    Trình duyệt không hỗ trợ thẻ video.
-                  </video>
+                  {NLS_RESOURCES.videoEmbedUrl ? (
+                    <iframe
+                      src={NLS_RESOURCES.videoEmbedUrl}
+                      title="Video hướng dẫn tích hợp NLS-AI"
+                      className="w-full aspect-video max-h-[360px] border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video 
+                      controls 
+                      playsInline
+                      preload="metadata"
+                      poster="/giaoanNLS.png"
+                      className="w-full aspect-video max-h-[320px] object-contain bg-black"
+                    >
+                      <source src={NLS_RESOURCES.videoDirectUrl || "/HD_tich_hop_NLS_AI.mp4"} type="video/mp4" />
+                      <source src="/HD_tich_hop_NLS_AI.mp4" type="video/mp4" />
+                      <source src="/HD%20t%C3%ADch%20h%E1%BB%A3p%20NLS-AI.mp4" type="video/mp4" />
+                      Trình duyệt không hỗ trợ thẻ video.
+                    </video>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
                   <span>💡 Video hướng dẫn thực chiến từng thao tác cài đặt và soạn giáo án chuẩn CV 5512.</span>
                   <div className="flex items-center gap-3 shrink-0">
                     <a
-                      href="/HD_tich_hop_NLS_AI.mp4"
+                      href={NLS_RESOURCES.videoWatchUrl || "/HD_tich_hop_NLS_AI.mp4"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
@@ -871,12 +882,14 @@ ${fullContent}
                       ▶ Mở tab mới
                     </a>
                     <a
-                      href="/HD_tich_hop_NLS_AI.mp4"
-                      download="HD_tich_hop_NLS_AI.mp4"
+                      href={NLS_RESOURCES.videoDownloadUrl || NLS_RESOURCES.videoWatchUrl || "/HD_tich_hop_NLS_AI.mp4"}
+                      target={NLS_RESOURCES.videoDownloadUrl?.startsWith('http') || NLS_RESOURCES.videoWatchUrl?.startsWith('http') ? "_blank" : undefined}
+                      download={!NLS_RESOURCES.videoDownloadUrl?.startsWith('http') ? "HD_tich_hop_NLS_AI.mp4" : undefined}
+                      rel="noopener noreferrer"
                       className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
                     >
                       <Download className="w-3 h-3" />
-                      Tải Video HD (52 MB)
+                      Tải Video HD (12 MB)
                     </a>
                   </div>
                 </div>
@@ -896,9 +909,11 @@ ${fullContent}
                   </div>
 
                   <a
-                    href="/Tich_Hop_NLS_AI_THCS_Pass_123.zip"
-                    download="Tich_Hop_NLS_AI_THCS_Pass_123.zip"
-                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0"
+                    href={NLS_RESOURCES.fullZipUrl || "/Tich_Hop_NLS_AI_THCS_Pass_123.zip"}
+                    target={NLS_RESOURCES.fullZipUrl?.startsWith('http') ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    download={!NLS_RESOURCES.fullZipUrl?.startsWith('http') ? "Tich_Hop_NLS_AI_THCS_Pass_123.zip" : undefined}
+                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                     Tải Trọn Bộ (Pass: 123)
@@ -922,9 +937,11 @@ ${fullContent}
                     </p>
                   </div>
                   <a
-                    href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
-                    download="Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+                    href={NLS_RESOURCES.exeUrl || "/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"}
+                    target={NLS_RESOURCES.exeUrl?.startsWith('http') ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    download={!NLS_RESOURCES.exeUrl?.startsWith('http') ? "Cai_Dat_Tich_Hop_NLS_AI_THCS.exe" : undefined}
+                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
                     Tải File Cài Đặt (.exe)
