@@ -50,15 +50,15 @@ export const apps: AppCard[] = [
   },
   {
     "id": "sinhdebienthe",
-    "title": "SINH ĐỀ BIẾN THỂ VIP",
-    "description": "Sinh đề biến thể từ đề gốc thành 3 đề tương đương",
+    "title": "SINH 3 ĐỀ BIẾN THỂ VIP (AI PRO)",
+    "description": "Tự động phân tích ma trận đề gốc và sinh 3 đề kiểm tra biến thể tương đương (nhẹ, vừa, sâu) kèm đáp án chi tiết, Audio Script và xuất file Word chuẩn 100%.",
     "image": "/sinhdebientheVIP.png",
-    "url": "https://sinh-de-bien-the-vip.vercel.app/",
-    "category": "ĐỀ KIỂM TRA",
-    "badge": "MIỄN PHÍ",
+    "url": "#sinh-de-bien-the",
+    "category": "TIẾNG ANH & ĐỀ THI",
+    "badge": "BẢN QUYỀN PRO",
     "active": true,
-    "featured": false,
-    "order": 1
+    "featured": true,
+    "order": 0
   },
   {
     "id": "TAODEKTCV7991",
