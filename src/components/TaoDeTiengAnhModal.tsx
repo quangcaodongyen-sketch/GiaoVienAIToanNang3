@@ -5,20 +5,18 @@ import {
   Download,
   Copy,
   Check,
-  ShieldCheck,
   Crown,
   FileText,
   Play,
   CheckCircle2,
   AlertTriangle,
-  Send,
-  BookOpen,
-  HelpCircle,
   FolderDown,
   Layers,
   FileCheck2,
   Headphones,
-  Award
+  Award,
+  Volume2,
+  Square
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import {
@@ -28,77 +26,17 @@ import {
   consumeSecureExamTrial,
   ExamVerifyResult
 } from '../services/taodeKeyService';
+import {
+  generateExamSuite,
+  exportToWordHtml,
+  ExamSuiteData
+} from '../services/examGeneratorEngine';
 
 interface TaoDeTiengAnhModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenAdmin?: () => void;
 }
-
-// Ngữ liệu bộ đề chuẩn CV 7991 cho Global Success 6, 7, 8, 9 (Trung tính, áp dụng chuẩn cho mọi trường THCS trên toàn quốc)
-const EXAM_DATABASE: Record<string, Record<string, {
-  topics: string;
-  hasSpeaking: boolean;
-  listeningScript: string;
-  examCode1: string;
-  examCode2: string;
-  answers: string;
-  matrixSpec: string;
-}>> = {
-  '6': {
-    'GK1': {
-      topics: 'Unit 1: My New School, Unit 2: My House, Unit 3: My Friends',
-      hasSpeaking: false,
-      listeningScript: `AUDIO SCRIPT - KIỂM TRA GIỮA HỌC KÌ I TIẾNG ANH 6\nPart 1: Listen to Phong talking about his first day at secondary school. Circle A, B or C.\nPhong: Hi everyone! Today is my first day at secondary school. My school is very big and modern. There are 25 classrooms and a big computer room. I wear my new uniform: a white shirt and blue trousers. My best friend is Duy. He is in the same class with me. We are very excited!\n\nPart 2: Listen to Mi talking about her house. Circle True (A) or False (B).\nMi: My family lives in a beautiful town house in Da Nang. There are six rooms: a living room, three bedrooms, a kitchen and two bathrooms. My favorite room is my bedroom because it has a big window overlooking the green garden.`,
-      examCode1: `PART I. LISTENING (2.0 pts)\nTask 1. Listen to Phong talking about his school. Circle A, B, or C (1.0 pt):\n1. How is Phong's new school?\nA. small and old          B. big and modern         C. small but modern\n2. How many classrooms are there in his school?\nA. 20                     B. 25                     C. 30\n3. What does Phong wear on his first day?\nA. white shirt and blue trousers    B. white shirt and black trousers    C. blue T-shirt\n4. Who is Phong's best friend?\nA. Duy                    B. Nam                    C. Minh\n\nTask 2. Listen to Mi talking about her house. Circle A (True) or B (False) (1.0 pt):\n5. Mi's family lives in a country house.                   A. True      B. False\n6. There are six rooms in her house.                       A. True      B. False\n7. Her house has three bathrooms.                          A. True      B. False\n8. Her bedroom has a window overlooking a garden.          A. True      B. False\n\nPART II. LANGUAGE & GRAMMAR (3.0 pts)\nQuestion 9. Choose the word whose underlined part is pronounced differently:\nA. fast<u>s</u>               B. book<u>s</u>              C. pen<u>s</u>               D. cat<u>s</u>\nQuestion 10. Find the word with different stress position:\nA. 'compass               B. 'clever               C. po'lite              D. 'active\nQuestion 11. Duy is very ________. He likes drawing creative pictures.\nA. hard-working           B. creative              C. confident            D. patient\nQuestion 12. There ________ a large poster and two lamps in my bedroom.\nA. is                     B. are                   C. be                   D. have\nQuestion 13. Look! The students ________ football in the school playground.\nA. play                   B. plays                 C. are playing          D. is playing\nQuestion 14. We ________ to the English club every Tuesday afternoon.\nA. go                     B. goes                  C. are going            D. went\n\nPART III. READING (2.5 pts)\nRead the text and choose the correct answer for each question:\n"My name is Nam. I live in a peaceful green town in Viet Nam. My house is surrounded by green trees and fresh air. There is a secondary school near my house, so I walk to school every morning with my friends. After school, we often play badminton in the park..."\nQuestion 15. Where does Nam live?\nA. In a busy city         B. In a peaceful green town  C. In a tall apartment\nQuestion 16. How does he go to school?\nA. By bicycle             B. By bus                C. On foot\n\nPART IV. WRITING (2.5 pts)\nRewrite the following sentences without changing their meaning:\nQuestion 17. My house has six rooms.\n-> There are __________________________________________________.\nQuestion 18. Lan's hair is long and black.\n-> Lan has ____________________________________________________.\nWrite a paragraph (50-60 words) about your best friend (1.5 pts).`,
-      examCode2: `PART I. LISTENING (2.0 pts) [MÃ ĐỀ HOÁN VỊ 602]\nTask 1. Listen to Phong talking about his school. Circle A, B, or C:\n1. Who is Phong's best friend?\nA. Minh                   B. Duy                   C. Nam\n2. How is Phong's new school?\nA. big and modern         B. small and old         C. small but modern\n3. How many classrooms are there in his school?\nA. 30                     B. 20                    C. 25\n4. What does Phong wear on his first day?\nA. blue T-shirt           B. white shirt and blue trousers   C. white shirt and black trousers\n\nTask 2. Listen to Mi talking about her house. Circle True or False:\n5. There are six rooms in her house.                       A. True      B. False\n6. Mi's family lives in a country house.                   A. True      B. False\n7. Her bedroom has a window overlooking a garden.          A. True      B. False\n8. Her house has three bathrooms.                          A. True      B. False\n\nPART II. LANGUAGE FOCUS (3.0 pts)\nQuestion 9. Find the word with different stress position:\nA. po'lite                B. 'compass              C. 'clever              D. 'active\nQuestion 10. Choose the word whose underlined part is pronounced differently:\nA. pen<u>s</u>               B. fast<u>s</u>              C. book<u>s</u>             D. cat<u>s</u>\nQuestion 11. Look! The students ________ football in the school playground.\nA. are playing            B. play                  C. plays                D. is playing\nQuestion 12. Duy is very ________. He likes drawing creative pictures.\nA. confident              B. hard-working          C. creative             D. patient\n\nPART III. READING & PART IV. WRITING\n(Nội dung các câu hỏi đọc hiểu và viết lại câu tương đương chuẩn mực)`,
-      answers: `HƯỚNG DẪN CHẤM & ĐÁP ÁN CHI TIẾT - ĐỀ GIỮA KÌ I TIẾNG ANH 6\nMÃ ĐỀ 601:\n1. B   2. B   3. A   4. A\n5. B (False)   6. A (True)   7. B (False)   8. A (True)\n9. C (/z/ vs /s/)\n10. C (Trọng âm 2, còn lại âm 1)\n11. B (creative)\n12. A (is)\n13. C (are playing)\n14. A (go)\n15. B   16. C\n17. There are six rooms in my house.\n18. Lan has long black hair.\nWriting (1.5 pts): Đúng cấu trúc ngữ pháp, từ vựng phong phú, chuẩn chính tả (1.5đ).\n\nMÃ ĐỀ HOÁN VỊ 602:\n1. B   2. A   3. C   4. B\n5. A   6. B   7. A   8. B\n9. A   10. A  11. A  12. C`,
-      matrixSpec: `MA TRẬN & BẢN ĐẶC TẢ ĐỀ KIỂM TRA GIỮA KÌ I TIẾNG ANH 6 (CV 7991)\n- Nghe hiểu (Listening): 20% (2.0 điểm - 8 câu TNKQ: 4 câu ABC, 4 câu True/False)\n- Kiến thức ngôn ngữ (Language): 30% (3.0 điểm - 12 câu TNKQ)\n- Đọc hiểu (Reading): 25% (2.5 điểm - 5 câu điền từ + 5 câu đọc hiểu)\n- Viết (Writing): 25% (2.5 điểm - 4 câu viết lại + 1 bài viết đoạn văn 1.5đ)\n- Thang điểm tổng: 10,0 điểm (100% Đề viết trên giấy - Giữa kỳ không thi Nói).`
-    },
-    'CK1': {
-      topics: 'Unit 1 đến Unit 6 (Tet, Natural Wonders, Neighbourhood, Schools, Houses, Friends)',
-      hasSpeaking: true,
-      listeningScript: `AUDIO SCRIPT - KIỂM TRA CUỐI HỌC KÌ I TIẾNG ANH 6\nPart 1: Listen to An talking about Tet holiday in Viet Nam. Circle A, B or C.\nAn: Tet is the most important festival in Viet Nam. Before Tet, people clean and decorate their homes with peach blossoms and kumquat trees. Children receive lucky money in red envelopes. Families gather to eat traditional food like Chung cake.\n\nPart 2: Listen to Nick talking about Ha Long Bay. Circle True (A) or False (B).\nNick: Ha Long Bay is in Quang Ninh province. It has thousands of limestone islands and beautiful caves. Tourists can go kayaking, swimming and explore breathtaking scenery. It is a world natural wonder.`,
-      examCode1: `PART I. LISTENING (2.0 pts)\nTask 1. Listen to An talking about Tet. Circle A, B or C (1.0 pt):\n1. What is Tet in Viet Nam?\nA. The longest holiday    B. The most important festival   C. A modern event\n2. What do people decorate their homes with?\nA. Roses and sunflowers   B. Peach blossoms and kumquat trees   C. Green balloons\n\nPART II. LANGUAGE FOCUS (2.4 pts)\nPART III. READING COMPREHENSION (2.0 pts)\nPART IV. WRITING (1.6 pts)\nPART V. SPEAKING (2.0 pts - Tổ chức phỏng vấn và thuyết trình chủ đề)`,
-      examCode2: `PART I. LISTENING (2.0 pts) [MÃ ĐỀ HOÁN VỊ 602]\nPART II. LANGUAGE FOCUS (2.4 pts)\nPART III. READING COMPREHENSION (2.0 pts)\nPART IV. WRITING (1.6 pts)\nPART V. SPEAKING (2.0 pts)`,
-      answers: `HƯỚNG DẪN CHẤM & ĐÁP ÁN ĐỀ CUỐI HỌC KÌ I TIẾNG ANH 6 (Thang điểm 10.0đ):\n- Điểm bài viết trên giấy: 8.0 điểm\n- Điểm bài nói (Speaking): 2.0 điểm (Gồm Interview 0.5đ, Topic Presentation 1.0đ, Q&A 0.5đ).`,
-      matrixSpec: `MA TRẬN & BẢN ĐẶC TẢ ĐỀ CUỐI HỌC KÌ I TIẾNG ANH 6 (CV 7991):\n- Phần thi Viết: 8.0 điểm (36 câu trắc nghiệm + Viết câu + Viết đoạn văn)\n- Phần thi Nói: 2.0 điểm (Thực hiện trực tiếp với giám khảo)`
-    }
-  },
-  '7': {
-    'GK1': {
-      topics: 'Unit 1: Hobbies, Unit 2: Healthy Living, Unit 3: Community Service',
-      hasSpeaking: false,
-      listeningScript: `AUDIO SCRIPT - KIỂM TRA GIỮA HỌC KÌ I TIẾNG ANH 7\nListen to Elena talking about her hobby of making pottery. Elena started this hobby two years ago. She learns from her grandfather who is an experienced artisan. Making pottery helps her become more patient and relaxed...`,
-      examCode1: `PART I. LISTENING (2.0 pts)\nTask 1. Listen to Elena talking about pottery making. Circle A, B or C (1.0 pt):\n1. When did Elena start her hobby?\nA. One year ago           B. Two years ago          C. Three years ago\n2. Who taught her how to make pottery?\nA. Her grandfather        B. Her father             C. Her art teacher\n\nPART II. LANGUAGE FOCUS (3.0 pts)\nQuestion 3. Choose the word with a different sound in the underlined part:\nA. act<u>i</u>vity           B. tr<u>i</u>p                 C. f<u>i</u>nd                D. c<u>i</u>nema\nQuestion 4. We should eat more vegetables ________ they are rich in vitamins.\nA. so                     B. because               C. although             D. but\n\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      examCode2: `PART I. LISTENING (2.0 pts) [MÃ ĐỀ HOÁN VỊ 702]\nPART II. LANGUAGE FOCUS (3.0 pts)\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      answers: `ĐÁP ÁN CHI TIẾT MÃ ĐỀ 701 & 702 (GIỮA KÌ I TIẾNG ANH 7 chuẩn CV 7991)`,
-      matrixSpec: `MA TRẬN BẢN ĐẶC TẢ ĐỀ GIỮA KÌ I TIẾNG ANH 7 THEO CV 7991 (10.0đ)`
-    }
-  },
-  '8': {
-    'GK1': {
-      topics: 'Unit 1: Leisure Time, Unit 2: Life in the Countryside, Unit 3: Teenagers',
-      hasSpeaking: false,
-      listeningScript: `AUDIO SCRIPT - KIỂM TRA GIỮA HỌC KÌ I TIẾNG ANH 8\nListen to Tom talking about life in the countryside and how teenagers spend their free time with outdoor sports, flying kites, and helping families during harvest seasons...`,
-      examCode1: `PART I. LISTENING (2.0 pts)\nTask 1. Listen to Tom talking about life in the countryside. Circle A, B or C:\n1. Where does Tom live?\nA. In a big city          B. In a peaceful village  C. Near the seaside\n2. What do teenagers enjoy doing during harvest time?\nA. Flying kites and riding bikes    B. Playing computer games    C. Watching movies\n\nPART II. LANGUAGE (3.0 pts)\nQuestion 3. Life in the countryside is usually ________ than in the bustling city.\nA. peaceful               B. more peaceful         C. most peaceful        D. as peaceful\n\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      examCode2: `PART I. LISTENING (2.0 pts) [MÃ ĐỀ HOÁN VỊ 802]\nPART II. LANGUAGE (3.0 pts)\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      answers: `ĐÁP ÁN CHI TIẾT MÃ ĐỀ 801 & 802 (GIỮA KÌ I TIẾNG ANH 8 chuẩn CV 7991)`,
-      matrixSpec: `MA TRẬN BẢN ĐẶC TẢ ĐỀ GIỮA KÌ I TIẾNG ANH 8 THEO CV 7991 (10.0đ)`
-    }
-  },
-  '9': {
-    'GK1': {
-      topics: 'Unit 1: Local Community, Unit 2: City Life, Unit 3: Healthy Living for Teens',
-      hasSpeaking: false,
-      listeningScript: `AUDIO SCRIPT - KIỂM TRA GIỮA HỌC KÌ I TIẾNG ANH 9\nListen to Sarah talking about community volunteer projects and how teenagers can maintain a healthy, balanced lifestyle with study and physical exercise in modern society...`,
-      examCode1: `PART I. LISTENING (2.0 pts)\nTask 1. Listen to Sarah talking about community activities. Circle A, B or C:\n1. What community project does Sarah participate in?\nA. Green park cleaning    B. Blood donation        C. Book charity for kids\n2. How do physical exercises help teenagers?\nA. Reduce stress and stay fit       B. Make more money       C. Pass examinations easily\n\nPART II. LANGUAGE FOCUS (3.0 pts)\nQuestion 3. The artisan explained how to ________ traditional conical hats.\nA. knit                   B. carve                 C. weave                D. embroider\n\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      examCode2: `PART I. LISTENING (2.0 pts) [MÃ ĐỀ HOÁN VỊ 902]\nPART II. LANGUAGE (3.0 pts)\nPART III. READING (2.5 pts)\nPART IV. WRITING (2.5 pts)`,
-      answers: `ĐÁP ÁN CHI TIẾT MÃ ĐỀ 901 & 902 (GIỮA KÌ I TIẾNG ANH 9 chuẩn CV 7991)`,
-      matrixSpec: `MA TRẬN BẢN ĐẶC TẢ ĐỀ GIỮA KÌ I TIẾNG ANH 9 THEO CV 7991 (10.0đ)`
-    }
-  }
-};
 
 export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Navigation tabs: 'experience' | 'download' | 'register'
@@ -124,11 +62,10 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   // Generation state - Khởi tạo rỗng, khách hàng KHÔNG THỂ xem đề mẫu trước khi bấm Tạo đề!
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [generatedExam1, setGeneratedExam1] = useState<string>('');
-  const [generatedExam2, setGeneratedExam2] = useState<string>('');
-  const [generatedAnswers, setGeneratedAnswers] = useState<string>('');
-  const [generatedMatrix, setGeneratedMatrix] = useState<string>('');
-  const [generatedAudio, setGeneratedAudio] = useState<string>('');
+  const [examSuite, setExamSuite] = useState<ExamSuiteData | null>(null);
+
+  // Audio Speech state
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
 
   // Pro registration form
   const [inputKey, setInputKey] = useState<string>('');
@@ -182,27 +119,18 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     setIsGenerating(true);
 
     setTimeout(() => {
-      const gradeData = EXAM_DATABASE[selectedGrade] || EXAM_DATABASE['6'];
-      const termData = gradeData[selectedTerm] || gradeData['GK1'];
+      const suite = generateExamSuite({
+        grade: selectedGrade,
+        term: selectedTerm,
+        parentAgency,
+        schoolName,
+        schoolYear,
+        timeMinutes: Number(examDuration) || 60
+      });
 
-      const termName = selectedTerm === 'GK1' ? 'GIỮA HỌC KÌ I' 
-        : selectedTerm === 'CK1' ? 'CUỐI HỌC KÌ I' 
-        : selectedTerm === 'GK2' ? 'GIỮA HỌC KÌ II' 
-        : selectedTerm === 'CK2' ? 'CUỐI HỌC KÌ II' 
-        : 'KHẢO SÁT CHẤT LƯỢNG ĐẦU NĂM';
-
-      const header1 = `${parentAgency}\n${schoolName}\n\nĐỀ KIỂM TRA ${termName} - MÔN TIẾNG ANH ${selectedGrade}\nNăm học: ${schoolYear} | Thời gian làm bài: ${examDuration} phút (Không kể thời gian phát đề)\nMÃ ĐỀ: ${selectedGrade}01 (Chuẩn Công văn 7991/BGDĐT)\n----------------------------------------------------------------------\nChủ đề kiểm tra: ${termData.topics}\n\n`;
-
-      const header2 = `${parentAgency}\n${schoolName}\n\nĐỀ KIỂM TRA ${termName} - MÔN TIẾNG ANH ${selectedGrade}\nNăm học: ${schoolYear} | Thời gian làm bài: ${examDuration} phút (Không kể thời gian phát đề)\nMÃ ĐỀ: ${selectedGrade}02 (Hoán vị phương án và vị trí câu hỏi chuẩn CV 7991)\n----------------------------------------------------------------------\nChủ đề kiểm tra: ${termData.topics}\n\n`;
-
-      setGeneratedExam1(header1 + termData.examCode1);
-      setGeneratedExam2(header2 + termData.examCode2);
-      setGeneratedAnswers(termData.answers);
-      setGeneratedMatrix(termData.matrixSpec);
-      setGeneratedAudio(termData.listeningScript);
-
+      setExamSuite(suite);
       setIsGenerating(false);
-    }, 1200);
+    }, 1000);
   };
 
   // Kích hoạt License Key Pro
@@ -225,47 +153,14 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     }
   };
 
-  // Copy text to clipboard
-  const handleCopy = (text: string, section: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedSection(section);
-    setTimeout(() => setCopiedSection(null), 2000);
-  };
-
-  // Tải file Word (.doc)
+  // Tải file Word (.doc) đúng 100% chuẩn văn bản desktop & add-in
   const handleDownloadDoc = () => {
-    const fullContent = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><meta charset='utf-8'><title>De_Kiem_Tra_Tieng_Anh_${selectedGrade}_${selectedTerm}</title>
-      <style>
-        body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.25; }
-        h1, h2, h3 { font-family: 'Times New Roman', serif; }
-      </style>
-      </head>
-      <body>
-        <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">
-          ${parentAgency}<br>${schoolName}<br>
-          BỘ ĐỀ KIỂM TRA TIẾNG ANH ${selectedGrade} (GLOBAL SUCCESS) - NĂM HỌC ${schoolYear}
-        </div>
-        <hr/>
-        <h2>I. ĐỀ KIỂM TRA MÃ ${selectedGrade}01</h2>
-        <pre style="font-family: 'Times New Roman'; font-size: 13pt; white-space: pre-wrap;">${generatedExam1}</pre>
-        <br style="page-break-before: always;"/>
-        <h2>II. ĐỀ KIỂM TRA MÃ ${selectedGrade}02 (HOÁN VỊ)</h2>
-        <pre style="font-family: 'Times New Roman'; font-size: 13pt; white-space: pre-wrap;">${generatedExam2}</pre>
-        <br style="page-break-before: always;"/>
-        <h2>III. HƯỚNG DẪN CHẤM & ĐÁP ÁN CHI TIẾT</h2>
-        <pre style="font-family: 'Times New Roman'; font-size: 13pt; white-space: pre-wrap;">${generatedAnswers}</pre>
-        <br style="page-break-before: always;"/>
-        <h2>IV. MA TRẬN & BẢN ĐẶC TẢ (CV 7991)</h2>
-        <pre style="font-family: 'Times New Roman'; font-size: 13pt; white-space: pre-wrap;">${generatedMatrix}</pre>
-        <br style="page-break-before: always;"/>
-        <h2>V. AUDIO SCRIPT FILE NGHE</h2>
-        <pre style="font-family: 'Times New Roman'; font-size: 13pt; white-space: pre-wrap;">${generatedAudio}</pre>
-      </body>
-      </html>
-    `;
-    const blob = new Blob(['\ufeff' + fullContent], { type: 'application/msword' });
+    if (!examSuite) {
+      alert('Vui lòng tạo đề trước khi tải về!');
+      return;
+    }
+    const htmlContent = exportToWordHtml(examSuite);
+    const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -274,11 +169,48 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     URL.revokeObjectURL(url);
   };
 
+  // Phát âm thanh tiếng Anh mô phỏng bài thi nghe
+  const handleToggleAudio = () => {
+    if (!examSuite) return;
+
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    if (!('speechSynthesis' in window)) {
+      alert('Trình duyệt của Thầy/Cô không hỗ trợ SpeechSynthesis.');
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const dialogueText = examSuite.audioDialogue.map(([spk, txt]) => `${spk} ${txt}`).join('. ');
+    const fullSpeech = `Part 1. Listen and circle the best answer A, B, or C. ${dialogueText}. Part 2. Listen and circle the best answer A or B. ${examSuite.audioMonologue}`;
+
+    const utterance = new SpeechSynthesisUtterance(fullSpeech);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    utterance.onend = () => setIsPlayingAudio(false);
+    utterance.onerror = () => setIsPlayingAudio(false);
+
+    setIsPlayingAudio(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Sao chép nội dung
+  const handleCopyText = (text: string, section: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedSection(section);
+    setTimeout(() => setCopiedSection(null), 2000);
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-5xl h-[92vh] max-h-[900px] flex flex-col rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-5xl h-[92vh] max-h-[920px] flex flex-col rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden">
         
         {/* HEADER MODAL */}
         <div className="px-4 sm:px-6 py-3.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between gap-3">
@@ -302,8 +234,11 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
           </div>
 
           <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            onClick={() => {
+              if (isPlayingAudio) window.speechSynthesis.cancel();
+              onClose();
+            }}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -313,47 +248,46 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         <div className="px-4 sm:px-6 py-2 bg-slate-950 border-b border-slate-800 flex items-center gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('experience')}
-            className={`py-2 px-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'experience'
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            1. Trải Nghiệm Online (CV 7991)
+            Tab 1: Trải Nghiệm Trực Tuyến
           </button>
 
           <button
             onClick={() => setActiveTab('download')}
-            className={`py-2 px-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'download'
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <FolderDown className="w-4 h-4" />
-            2. Tải Bản Cài Desktop & Word Add-in
+            <Download className="w-4 h-4" />
+            Tab 2: Tải Về & Hướng Dẫn
           </button>
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`py-2 px-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'register'
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            3. Bản Quyền Pro
-            {isProActive && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+            Tab 3: Bản Quyền & Kích Hoạt
           </button>
         </div>
 
-        {/* TAB BODY CONTENT */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs sm:text-sm text-slate-300">
-
+        {/* MODAL BODY */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (SINH ĐỀ & ĐÁP ÁN THEO CV 7991)             */}
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN                                             */}
           {/* ========================================================================= */}
           {activeTab === 'experience' && (
             <div className="space-y-4">
@@ -381,7 +315,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       setIsProActive(false);
                       setVerifyResult(null);
                     }}
-                    className="text-[10px] text-slate-500 hover:text-rose-400 underline"
+                    className="text-[10px] text-slate-500 hover:text-rose-400 underline cursor-pointer"
                   >
                     Đổi key
                   </button>
@@ -425,7 +359,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       ))}
                     </div>
                     <span className="text-[10px] text-slate-400 italic ml-auto hidden sm:inline">
-                      (Mỗi máy tính được tặng 5 lượt sinh đề kiểm tra miễn phí)
+                      (Mỗi máy tính được tạo 5 đề kiểm tra miễn phí)
                     </span>
                   </div>
                 </div>
@@ -435,13 +369,13 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
                 {/* 1. Chọn Lớp */}
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
                     1. Khối lớp
                   </label>
                   <select
                     value={selectedGrade}
                     onChange={(e) => setSelectedGrade(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-cyan-500"
                   >
                     <option value="6">Lớp 6 (Global Success)</option>
                     <option value="7">Lớp 7 (Global Success)</option>
@@ -452,13 +386,13 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
                 {/* 2. Chọn Kỳ kiểm tra */}
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
                     2. Kỳ kiểm tra
                   </label>
                   <select
                     value={selectedTerm}
                     onChange={(e) => setSelectedTerm(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-cyan-500"
                   >
                     <option value="GK1">Giữa Học Kì I (GK1)</option>
                     <option value="CK1">Cuối Học Kì I (CK1 - Kèm Nói)</option>
@@ -470,28 +404,28 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
                 {/* 3. Số mã đề hoán vị */}
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
                     3. Số mã đề
                   </label>
                   <select
                     value={numVariants}
                     onChange={(e) => setNumVariants(Number(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-cyan-500"
                   >
                     <option value={2}>2 Mã đề (Hoán vị A/B)</option>
-                    <option value={4}>4 Mã đề (601, 602, 603, 604)</option>
+                    <option value={4}>4 Mã đề (Hoán vị toàn diện)</option>
                   </select>
                 </div>
 
                 {/* 4. Thời gian làm bài */}
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
                     4. Thời gian
                   </label>
                   <select
                     value={examDuration}
                     onChange={(e) => setExamDuration(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-cyan-500"
                   >
                     <option value="45">45 Phút</option>
                     <option value="60">60 Phút (Chuẩn CV 7991)</option>
@@ -499,29 +433,29 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   </select>
                 </div>
 
-                {/* Thông tin đơn vị */}
+                {/* Thông tin đơn vị (Tự do tùy chỉnh theo trường của giáo viên) */}
                 <div className="sm:col-span-2">
-                  <label className="block text-slate-300 font-bold mb-1">
-                    Tên trường THCS
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
+                    Tên trường THCS (Giáo viên tự nhập trường của mình)
                   </label>
                   <input
                     type="text"
                     value={schoolName}
                     onChange={(e) => setSchoolName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500"
                     placeholder="Ví dụ: TRƯỜNG THCS NGUYỄN DU"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-slate-300 font-bold mb-1">
+                  <label className="block text-slate-300 font-bold mb-1 text-xs">
                     Đơn vị chủ quản
                   </label>
                   <input
                     type="text"
                     value={parentAgency}
                     onChange={(e) => setParentAgency(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500"
                     placeholder="Ví dụ: PHÒNG GIÁO DỤC VÀ ĐÀO TẠO"
                   />
                 </div>
@@ -540,7 +474,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 >
                   <Sparkles className="w-4 h-4" />
                   {isGenerating
-                    ? 'AI Đang Biên Soạn Đề Chuẩn CV 7991...'
+                    ? 'AI Đang Biên Soạn Đề Chuẩn 100% CV 7991...'
                     : !isProActive && trialRemaining <= 0
                     ? 'Đã Hết Lượt Tạo Thử (0/5) - Nâng Cấp Pro'
                     : isProActive
@@ -551,16 +485,16 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleDownloadDoc}
-                    disabled={!generatedExam1}
+                    disabled={!examSuite}
                     className={`py-2.5 px-4 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md transition-all ${
-                      !generatedExam1
+                      !examSuite
                         ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed opacity-60'
                         : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20 hover:scale-105 cursor-pointer'
                     }`}
-                    title={!generatedExam1 ? 'Vui lòng bấm Tạo Đề trước khi tải file Word' : 'Tải file Word (.doc)'}
+                    title={!examSuite ? 'Vui lòng bấm Tạo Đề trước khi tải file Word' : 'Tải file Word (.doc)'}
                   >
                     <Download className="w-4 h-4" />
-                    Tải File Word (.doc)
+                    Tải File Word (.doc) Chuẩn 100%
                   </button>
                 </div>
               </div>
@@ -571,37 +505,37 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 <div className="px-3 py-2 bg-slate-900 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto">
                   <button
                     onClick={() => setPreviewSubTab('de1')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'de1'
                         ? 'bg-cyan-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 1. Đề thi Mã {selectedGrade}01
+                    📄 1. Đề thi Mã {examSuite ? examSuite.code1 : `${selectedGrade}01`}
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('de2')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'de2'
                         ? 'bg-cyan-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 2. Đề thi Mã {selectedGrade}02 (Hoán vị)
+                    📄 2. Đề thi Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('dapan')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'dapan'
                         ? 'bg-cyan-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    ✅ 3. Đáp án & Thang điểm
+                    ✅ 3. Đáp án & Biểu điểm
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('matran')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'matran'
                         ? 'bg-cyan-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -611,58 +545,378 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('audio')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'audio'
                         ? 'bg-cyan-600 text-white shadow-sm'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    🎧 5. Audio Script File Nghe
+                    🎧 5. File Nghe Audio Scripts
                   </button>
                 </div>
 
                 {/* Sub-tab content */}
                 <div className="p-4 relative">
-                  {generatedExam1 ? (
+                  {examSuite ? (
                     <>
-                      <div className="absolute top-4 right-4 flex items-center gap-2">
-                        <button
-                          onClick={() => {
-                            const contentMap = {
-                              de1: generatedExam1,
-                              de2: generatedExam2,
-                              dapan: generatedAnswers,
-                              matran: generatedMatrix,
-                              audio: generatedAudio
-                            };
-                            handleCopy(contentMap[previewSubTab], previewSubTab);
-                          }}
-                          className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 border border-slate-700 shadow-sm"
-                        >
-                          {copiedSection === previewSubTab ? (
+                      {/* SUB-TAB 1 & 2: ĐỀ THI MÃ 1 HOẶC MÃ 2 (ĐÚNG NGUYÊN VĂN BẢN VÀ BẢNG ĐIỂM 100%) */}
+                      {(previewSubTab === 'de1' || previewSubTab === 'de2') && (() => {
+                        const currentExam = previewSubTab === 'de1' ? examSuite.examCode1 : examSuite.examCode2;
+                        return (
+                          <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
+                            {/* KHUNG TIÊU ĐỀ 2 CỘT */}
+                            <div className="grid grid-cols-2 gap-4 pb-2 text-center text-[11.5pt]">
+                              <div>
+                                <div className="font-bold uppercase">{examSuite.parentAgency}</div>
+                                <div className="font-bold uppercase underline">{examSuite.schoolName}</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-[12.5pt] uppercase">BÀI KIỂM TRA ĐÁNH GIÁ {examSuite.termTitle}</div>
+                                <div className="font-bold">NĂM HỌC: {examSuite.schoolYear}</div>
+                                <div className="font-bold">Môn: Tiếng Anh {examSuite.grade}</div>
+                                <div className="italic text-[11pt]">Thời gian: {examSuite.timeMinutes} phút</div>
+                              </div>
+                            </div>
+
+                            {/* DÒNG HỌ VÀ TÊN HỌC SINH */}
+                            <div className="py-2 text-[13pt] flex items-center justify-between border-t border-slate-300">
+                              <span>Full name: __________________________,</span>
+                              <span>Class: {examSuite.grade}A___</span>
+                              <span className="font-bold">Mã đề {currentExam.code}</span>
+                            </div>
+
+                            {/* BẢNG ĐIỂM (MARKS TABLE 3 HÀNG X 4 CỘT) ĐÚNG MẪU 100% */}
+                            <table className="w-full border-collapse border border-black text-center text-[11.5pt] my-3">
+                              <thead>
+                                <tr>
+                                  <th colSpan={2} className="border border-black p-1.5 w-1/4 font-bold">Marks</th>
+                                  <th rowSpan={2} className="border border-black p-1.5 w-1/6 font-bold">Total</th>
+                                  <th rowSpan={2} className="border border-black p-1.5 font-bold">Teacher’s remarks</th>
+                                </tr>
+                                <tr>
+                                  <th className="border border-black p-1 w-1/8 font-bold">Speak</th>
+                                  <th className="border border-black p-1 w-1/8 font-bold">Write</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr className="h-14">
+                                  <td className="border border-black p-1"></td>
+                                  <td className="border border-black p-1"></td>
+                                  <td className="border border-black p-1"></td>
+                                  <td className="border border-black p-2 text-left align-top text-[10pt] leading-loose">
+                                    <div>___________________________________________________________</div>
+                                    <div>___________________________________________________________</div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            {/* CÁC PHẦN THI PART 1 ĐẾN PART 8 */}
+                            {currentExam.parts.map((part, pIdx) => (
+                              <div key={pIdx} className="mt-4">
+                                <div className="font-bold text-[13pt] mb-1">{part.title} ({part.points})</div>
+                                {part.passage && (
+                                  <div className="text-justify indent-8 mb-2 leading-relaxed text-[13pt]">
+                                    {part.passage}
+                                  </div>
+                                )}
+                                <div className="space-y-1.5 pl-1">
+                                  {part.questions.map((q, qIdx) => (
+                                    <div key={qIdx} className="mb-2">
+                                      <div className="text-[13pt]">
+                                        <span className="font-bold mr-1">{q.num}</span> {q.stem}
+                                      </div>
+                                      {q.options && q.options.length > 0 && (
+                                        <div className="pl-5 flex flex-wrap gap-x-6 gap-y-1 text-[13pt] mt-0.5">
+                                          {q.options.map((opt, oIdx) => {
+                                            const letter = String.fromCharCode(65 + oIdx);
+                                            return (
+                                              <span key={oIdx}>
+                                                <strong className="mr-1">{opt.startsWith(letter + '.') ? '' : `${letter}.`}</strong>
+                                                {opt}
+                                              </span>
+                                            );
+                                          })}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+
+                            {/* PART 8: WRITING */}
+                            <div className="mt-4">
+                              <div className="font-bold text-[13pt] mb-1">
+                                Part 8. Writing ({examSuite.hasSpeaking ? '0.8 pt' : '1.5 pts'}) {currentExam.writingPrompt}
+                              </div>
+                              <div className="italic pl-2 whitespace-pre-line text-[13pt] text-slate-800">
+                                {currentExam.writingCues}
+                              </div>
+                            </div>
+
+                            {/* CHÂN TRANG */}
+                            <div className="text-center font-bold my-6 text-[12pt]">
+                              ------The end------
+                            </div>
+                            <div className="text-right italic font-bold text-[11pt]">
+                              Mã đề: {currentExam.code}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* SUB-TAB 3: ĐÁP ÁN & BIỂU ĐIỂM (BẢNG 4 CỘT 19 HÀNG) */}
+                      {previewSubTab === 'dapan' && (
+                        <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
+                          <div className="text-left font-bold text-[11.5pt] mb-2">
+                            <div>{examSuite.parentAgency}</div>
+                            <div>{examSuite.schoolName}</div>
+                          </div>
+                          <div className="text-center font-bold mb-4">
+                            <div className="text-[13.5pt]">HƯỚNG DẪN ĐÁP ÁN VÀ BIỂU ĐIỂM</div>
+                            <div className="text-[13.5pt]">KIỂM TRA ĐÁNH GIÁ {examSuite.termTitle}</div>
+                            <div className="text-[12.5pt]">NĂM HỌC: {examSuite.schoolYear} - MÔN: TIẾNG ANH {examSuite.grade} (MÃ ĐỀ {examSuite.code1} & {examSuite.code2})</div>
+                          </div>
+
+                          {/* NỘI DUNG BÀI NGHE */}
+                          <div className="font-bold text-[13pt] mt-3 mb-1">
+                            NỘI DUNG BÀI NGHE (AUDIO SCRIPTS - DÙNG CHO CẢ 2 MÃ ĐỀ)
+                          </div>
+                          <div className="font-bold text-[12pt] mt-2 mb-1">Part 1. Listen and circle the best answer A, B, or C. (1.0 pt)</div>
+                          <div className="pl-4 space-y-1 mb-3 text-[12pt]">
+                            {examSuite.audioDialogue.map(([spk, txt], idx) => (
+                              <div key={idx}>
+                                <strong>{spk}</strong> {txt}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="font-bold text-[12pt] mt-2 mb-1">Part 2. Listen and circle the best answer A or B. (1.0 pt)</div>
+                          <div className="text-justify indent-8 text-[12pt] mb-4">
+                            {examSuite.audioMonologue}
+                          </div>
+
+                          {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM 4 CỘT */}
+                          <div className="font-bold text-[13pt] mt-3 mb-2">
+                            I. PHẦN TRẮC NGHIỆM KHÁCH QUAN (36 CÂU = {examSuite.mcqTotalPts} ĐIỂM TRÊN ĐỀ VIẾT)
+                          </div>
+                          <table className="w-full border-collapse border border-black text-center text-[11pt] mb-4">
+                            <thead>
+                              <tr className="bg-slate-100">
+                                <th className="border border-black p-2 w-[12%] font-bold">Câu</th>
+                                <th className="border border-black p-2 w-[38%] font-bold">Đáp án MÃ ĐỀ {examSuite.code1}</th>
+                                <th className="border border-black p-2 w-[12%] font-bold">Câu</th>
+                                <th className="border border-black p-2 w-[38%] font-bold">Đáp án MÃ ĐỀ {examSuite.code2}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {examSuite.answerRows.map((row, idx) => (
+                                <tr key={idx} className={idx % 2 === 1 ? 'bg-slate-50' : ''}>
+                                  <td className="border border-black p-1">{row.col1Num}</td>
+                                  <td className="border border-black p-1">{row.col1Ans}</td>
+                                  <td className="border border-black p-1">{row.col2Num}</td>
+                                  <td className="border border-black p-1">{row.col2Ans}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+
+                          {/* TỰ LUẬN VIẾT */}
+                          <div className="font-bold text-[13pt] mt-4 mb-1">
+                            II. PHẦN TỰ LUẬN VIẾT (PART 8: {examSuite.hasSpeaking ? '0.8 pt' : '1.5 pts'})
+                          </div>
+                          <div className="text-[12pt] space-y-1 mb-2">
+                            {examSuite.writingRubric.map((r, idx) => (
+                              <div key={idx}>{r}</div>
+                            ))}
+                          </div>
+                          <div className="font-bold italic text-[12.5pt] mt-3 mb-1">
+                            * Đoạn văn mẫu tham khảo (Sample writing):
+                          </div>
+                          <div className="text-justify indent-8 text-[12.5pt] mb-4 text-slate-800">
+                            {examSuite.sampleWriting}
+                          </div>
+
+                          {/* PHẦN THI NÓI (SPEAKING) NẾU CÓ */}
+                          {examSuite.hasSpeaking && (
                             <>
-                              <Check className="w-3.5 h-3.5 text-emerald-400" />
-                              Đã Sao Chép!
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              Sao Chép Mục Này
+                              <div className="font-bold text-[13pt] mt-4 mb-2">
+                                III. PHẦN THI NÓI (SPEAKING TEST: 2.0 ĐIỂM)
+                              </div>
+                              <table className="w-full border-collapse border border-black text-left text-[10pt] mb-4">
+                                <thead>
+                                  <tr className="bg-slate-100 text-center">
+                                    <th className="border border-black p-2 w-[15%] font-bold">To do</th>
+                                    <th className="border border-black p-2 w-[32%] font-bold">To say (Examiner)</th>
+                                    <th className="border border-black p-2 w-[28%] font-bold">Response (Students)</th>
+                                    <th className="border border-black p-2 w-[25%] font-bold">Back-up</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {examSuite.speakingRows.map(([todo, say, res, backup], idx) => (
+                                    <tr key={idx}>
+                                      <td className="border border-black p-2 text-center font-bold whitespace-pre-line">{todo}</td>
+                                      <td className="border border-black p-2 whitespace-pre-line">{say}</td>
+                                      <td className="border border-black p-2 whitespace-pre-line">{res}</td>
+                                      <td className="border border-black p-2 whitespace-pre-line">{backup}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
                             </>
                           )}
-                        </button>
-                      </div>
 
-                      <div className="p-4 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[420px] overflow-y-auto whitespace-pre-wrap selection:bg-cyan-100">
-                        {previewSubTab === 'de1' && generatedExam1}
-                        {previewSubTab === 'de2' && generatedExam2}
-                        {previewSubTab === 'dapan' && generatedAnswers}
-                        {previewSubTab === 'matran' && generatedMatrix}
-                        {previewSubTab === 'audio' && generatedAudio}
-                      </div>
+                          {/* TỔNG ĐIỂM */}
+                          <div className="font-bold text-[12.5pt] mt-4 whitespace-pre-line border-t border-slate-300 pt-2">
+                            {examSuite.scoreSummary}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* SUB-TAB 4: MA TRẬN 15 CỘT & ĐẶC TẢ 7 CỘT CHUẨN CV 7991 */}
+                      {previewSubTab === 'matran' && (
+                        <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[11pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
+                          {/* TIÊU ĐỀ MA TRẬN */}
+                          <div className="text-center font-bold mb-3">
+                            <div className="text-[11.5pt]">{examSuite.parentAgency} - {examSuite.schoolName}</div>
+                            <div className="text-[12pt]">MA TRẬN ĐỀ KIỂM TRA ĐÁNH GIÁ {examSuite.termTitle} - NĂM HỌC {examSuite.schoolYear}</div>
+                            <div className="text-[11pt]">MÔN: TIẾNG ANH {examSuite.grade} (GLOBAL SUCCESS) - THỜI GIAN LÀM BÀI: {examSuite.timeMinutes} PHÚT</div>
+                            <div className="italic text-[9.5pt] font-normal">{examSuite.matrixSubtitle}</div>
+                          </div>
+
+                          {/* BẢNG MA TRẬN 15 CỘT */}
+                          <div className="overflow-x-auto mb-6">
+                            <table className="w-full border-collapse border border-black text-center text-[8pt]">
+                              <thead>
+                                <tr className="bg-[#E8EEF5]">
+                                  {examSuite.matrixHeaders.map((h, idx) => (
+                                    <th key={idx} className="border border-black p-1 font-bold">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.matrixRows.map((row, rIdx) => {
+                                  const isTotal = row[0].startsWith("TỔNG");
+                                  return (
+                                    <tr key={rIdx} className={isTotal ? 'bg-[#F4F6F9] font-bold' : ''}>
+                                      {row.map((val, cIdx) => (
+                                        <td
+                                          key={cIdx}
+                                          className={`border border-black p-1 ${cIdx === 1 || cIdx === 2 ? 'text-left' : 'text-center'}`}
+                                        >
+                                          {val}
+                                        </td>
+                                      ))}
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* TIÊU ĐỀ BẢN ĐẶC TẢ */}
+                          <div className="text-center font-bold mb-3 border-t border-slate-300 pt-4">
+                            <div className="text-[11.5pt]">BẢN ĐẶC TẢ KỸ THUẬT ĐỀ KIỂM TRA {examSuite.termTitle} - TIẾNG ANH {examSuite.grade}</div>
+                            <div className="italic text-[9.5pt] font-normal">{examSuite.specSubtitle}</div>
+                          </div>
+
+                          {/* BẢNG ĐẶC TẢ 7 CỘT */}
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-black text-left text-[8pt]">
+                              <thead>
+                                <tr className="bg-[#E8EEF5] text-center">
+                                  {examSuite.specHeaders.map((h, idx) => (
+                                    <th key={idx} className="border border-black p-1.5 font-bold">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.specRows.map((row, rIdx) => (
+                                  <tr key={rIdx}>
+                                    {row.map((val, cIdx) => (
+                                      <td
+                                        key={cIdx}
+                                        className={`border border-black p-1.5 whitespace-pre-line ${
+                                          [0, 4, 5, 6].includes(cIdx) ? 'text-center' : 'text-left'
+                                        }`}
+                                      >
+                                        {val}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* SUB-TAB 5: FILE NGHE AUDIO VỚI TRÌNH PHÁT MÔ PHỎNG GIỌNG BẢN XỨ */}
+                      {previewSubTab === 'audio' && (
+                        <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner space-y-4">
+                          <div className="p-4 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-cyan-600 text-white flex items-center justify-center">
+                                <Headphones className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h5 className="font-bold text-slate-900 text-sm">
+                                  Phát âm thanh mô phỏng tiếng Anh (AI Voice English)
+                                </h5>
+                                <p className="text-xs text-slate-600">
+                                  Giọng đọc chuẩn tiếng Anh Mỹ / Anh bám sát Audio Script đề thi.
+                                </p>
+                              </div>
+                            </div>
+
+                            <button
+                              onClick={handleToggleAudio}
+                              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                                isPlayingAudio
+                                  ? 'bg-rose-600 text-white animate-pulse'
+                                  : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/20'
+                              }`}
+                            >
+                              {isPlayingAudio ? (
+                                <>
+                                  <Square className="w-4 h-4 fill-white" />
+                                  Dừng Phát
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="w-4 h-4 fill-white" />
+                                  Phát File Nghe
+                                </>
+                              )}
+                            </button>
+                          </div>
+
+                          <div>
+                            <div className="font-bold text-[13pt] mb-2 text-cyan-900">
+                              Part 1. Dialogue Audio Script (Nghe hội thoại giữa Nam & Mai):
+                            </div>
+                            <div className="space-y-2 pl-4 text-[13pt]">
+                              {examSuite.audioDialogue.map(([spk, txt], idx) => (
+                                <div key={idx}>
+                                  <strong className="text-slate-900">{spk}</strong> {txt}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="border-t border-slate-200 pt-3">
+                            <div className="font-bold text-[13pt] mb-2 text-cyan-900">
+                              Part 2. Monologue Audio Script (Đoạn thông báo cộng đồng):
+                            </div>
+                            <div className="text-justify indent-8 text-[13pt] leading-relaxed">
+                              {examSuite.audioMonologue}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </>
                   ) : (
-                    /* TRẠNG THÁI KHÓA/CHƯA TẠO ĐỀ: KHÁCH HÀNG KHÔNG THỂ XEM TRƯỚC ĐỀ MẪU */
+                    /* TRẠNG THÁI CHƯA BẤM TẠO ĐỀ: KHÁCH HÀNG KHÔNG THỂ XEM TRƯỚC ĐỀ MẪU */
                     <div className="py-12 px-4 text-center flex flex-col items-center justify-center space-y-4">
                       <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
                         <FileText className="w-7 h-7" />
@@ -727,7 +981,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       href={EXAM_RESOURCES.videoWatchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
+                      className="text-cyan-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                     >
                       ▶ Mở tab mới
                     </a>
@@ -863,185 +1117,191 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: ĐĂNG KÝ BẢN QUYỀN PRO & KÍCH HOẠT                                  */}
+          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT                                             */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4">
               
-              {/* KHUNG NHẬP MÃ BẢN QUYỀN */}
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                  KÍCH HOẠT BẢN QUYỀN PRO BẰNG LICENSE KEY
-                </h4>
+              {/* HARDWARE CODE & LICENSE KEY INPUT */}
+              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-amber-400" />
+                    <h4 className="text-sm font-bold text-white">
+                      KÍCH HOẠT BẢN QUYỀN PRO CÔNG CỤ TẠO ĐỀ TIẾNG ANH
+                    </h4>
+                  </div>
+                  {isProActive && (
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      ✓ Đã kích hoạt
+                    </span>
+                  )}
+                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-slate-400 text-[11px] mb-1">
-                      Mã máy tính của Thầy/Cô (Hardware Code):
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Mã Máy Hardware Code */}
+                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                    <label className="block text-xs font-bold text-slate-300">
+                      MÃ MÁY TÍNH CỦA BẠN (HARDWARE CODE):
                     </label>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         readOnly
                         value={detectedMid}
-                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-cyan-300 font-mono font-bold text-xs"
+                        className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-cyan-300 font-mono text-sm font-bold select-all focus:outline-none"
                       />
                       <button
-                        onClick={() => handleCopy(detectedMid, 'mid')}
-                        className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold"
-                        title="Sao chép mã máy"
+                        onClick={() => handleCopyText(detectedMid, 'mid')}
+                        className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         {copiedSection === 'mid' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        Copy
                       </button>
                     </div>
+                    <p className="text-[11px] text-slate-400 italic">
+                      * Hãy gửi mã máy này qua Zalo <strong>{BRAND.phone}</strong> (Thầy Thành) để nhận License Key Pro kích hoạt ngay.
+                    </p>
                   </div>
 
-                  <div className="sm:col-span-2">
-                    <label className="block text-slate-400 text-[11px] mb-1">
-                      Nhập License Key Pro (Ví dụ: ENG-LT-2540BE3FF-...):
+                  {/* Ô Nhập License Key Pro */}
+                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                    <label className="block text-xs font-bold text-slate-300">
+                      NHẬP LICENSE KEY KÍCH HOẠT:
                     </label>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         value={inputKey}
-                        onChange={(e) => setInputKey(e.target.value)}
-                        placeholder="ENG-LT-..."
-                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-emerald-300 font-mono font-bold text-xs focus:outline-none focus:border-cyan-500"
+                        onChange={(e) => setInputKey(e.target.value.toUpperCase())}
+                        placeholder="VD: DVT-EXAM-PRO-..."
+                        className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-amber-300 font-mono text-sm font-bold uppercase focus:outline-none focus:border-amber-500"
                       />
                       <button
                         onClick={handleActivatePro}
-                        className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 shrink-0"
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold shadow-md shadow-amber-600/20 cursor-pointer"
                       >
-                        Kích Hoạt Ngay
+                        Kích Hoạt
                       </button>
                     </div>
+                    <p className="text-[11px] text-slate-400 italic">
+                      * Key Pro mở khóa tạo đề không giới hạn, đầy đủ đề thi và ma trận đặc tả chuẩn CV 7991.
+                    </p>
                   </div>
-                </div>
-
-                {verifyResult && (
-                  <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
-                    verifyResult.isValid 
-                      ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-200' 
-                      : 'bg-rose-950/60 border-rose-500/40 text-rose-200'
-                  }`}>
-                    {verifyResult.isValid ? <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> : <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />}
-                    <span>{verifyResult.message} {verifyResult.isValid && `(${verifyResult.packageName} - Hạn dùng: ${verifyResult.expiryDateStr})`}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* BẢNG GIÁ GÓI BẢN QUYỀN */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* 1 Năm */}
-                <div 
-                  onClick={() => setSelectedPackage('1year')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    selectedPackage === '1year'
-                      ? 'bg-blue-950/60 border-blue-500 shadow-md shadow-blue-500/20'
-                      : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-xs text-blue-300">GÓI 1 NĂM</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">365 ngày</span>
-                  </div>
-                  <div className="text-xl font-black text-white mb-2">100.000đ</div>
-                  <ul className="text-[11px] text-slate-400 space-y-1">
-                    <li>✓ Tạo đề không giới hạn</li>
-                    <li>✓ Trọn bộ 4 khối 6, 7, 8, 9</li>
-                    <li>✓ Hỗ trợ cập nhật 1 năm</li>
-                  </ul>
-                </div>
-
-                {/* 2 Năm */}
-                <div 
-                  onClick={() => setSelectedPackage('2year')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    selectedPackage === '2year'
-                      ? 'bg-purple-950/60 border-purple-500 shadow-md shadow-purple-500/20'
-                      : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-xs text-purple-300">GÓI 2 NĂM</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">Tiết kiệm</span>
-                  </div>
-                  <div className="text-xl font-black text-white mb-2">150.000đ</div>
-                  <ul className="text-[11px] text-slate-400 space-y-1">
-                    <li>✓ Tạo đề không giới hạn</li>
-                    <li>✓ Đầy đủ đề cương & đặc tả</li>
-                    <li>✓ Hỗ trợ kỹ thuật 2 năm</li>
-                  </ul>
-                </div>
-
-                {/* Vĩnh viễn */}
-                <div 
-                  onClick={() => setSelectedPackage('lifetime')}
-                  className={`p-4 rounded-2xl border relative transition-all cursor-pointer ${
-                    selectedPackage === 'lifetime'
-                      ? 'bg-amber-950/60 border-amber-500 shadow-lg shadow-amber-500/20'
-                      : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="absolute -top-2.5 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full">
-                    KHUYÊN DÙNG
-                  </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-xs text-amber-300">GÓI TRỌN ĐỜI</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">Vĩnh viễn</span>
-                  </div>
-                  <div className="text-xl font-black text-white mb-2">200.000đ</div>
-                  <ul className="text-[11px] text-slate-400 space-y-1">
-                    <li>✓ Bản quyền trọn đời theo máy</li>
-                    <li>✓ Cập nhật miễn phí trọn đời</li>
-                    <li>✓ Hỗ trợ 24/7 từ Thầy Thành</li>
-                  </ul>
                 </div>
               </div>
 
-              {/* NÚT LIÊN HỆ ZALO THẦY THÀNH */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-cyan-950/60 border border-blue-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+              {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {/* Gói 1 Năm */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      GÓI 1 NĂM HỌC
+                    </span>
+                    <h5 className="font-black text-white text-sm">Gói Cơ Bản</h5>
+                    <div className="text-xl font-black text-white">
+                      200.000đ <span className="text-xs text-slate-400 font-normal">/năm</span>
+                    </div>
+                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                      <li className="flex items-center gap-1.5">✓ Tạo đề kiểm tra Lớp 6, 7, 8, 9</li>
+                      <li className="flex items-center gap-1.5">✓ Tải file Word chuẩn CV 7991</li>
+                      <li className="flex items-center gap-1.5">✓ Hạn sử dụng: 12 tháng</li>
+                    </ul>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%201%20Nam%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition-colors cursor-pointer"
+                  >
+                    Đăng Ký Qua Zalo
+                  </a>
+                </div>
+
+                {/* Gói 2 Năm */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      TIẾT KIỆM 25%
+                    </span>
+                    <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
+                    <div className="text-xl font-black text-cyan-400">
+                      300.000đ <span className="text-xs text-slate-400 font-normal">/2 năm</span>
+                    </div>
+                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                      <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>
+                      <li className="flex items-center gap-1.5">✓ Tặng kèm Add-in Word chạy trực tiếp</li>
+                      <li className="flex items-center gap-1.5">✓ Cập nhật đề mới miễn phí</li>
+                    </ul>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%202%20Nam%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition-colors cursor-pointer"
+                  >
+                    Đăng Ký Qua Zalo
+                  </a>
+                </div>
+
+                {/* Gói Vĩnh Viễn */}
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-950/40 via-slate-950 to-slate-950 border-2 border-amber-500/50 space-y-3 flex flex-col justify-between shadow-xl shadow-amber-500/10">
+                  <div className="space-y-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/40">
+                      👑 PHỔ BIẾN NHẤT
+                    </span>
+                    <h5 className="font-black text-white text-sm">Gói Vĩnh Viễn (Lifetime)</h5>
+                    <div className="text-xl font-black text-amber-400">
+                      500.000đ <span className="text-xs text-slate-400 font-normal">/trọn đời</span>
+                    </div>
+                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
+                      <li className="flex items-center gap-1.5">✓ Không giới hạn thời gian</li>
+                      <li className="flex items-center gap-1.5">✓ Bản cài Word + Desktop + Web</li>
+                      <li className="flex items-center gap-1.5">✓ Hỗ trợ kỹ thuật trực tiếp từ Thầy Thành</li>
+                    </ul>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%20Vinh%20Vien%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold text-center block shadow-md shadow-amber-600/20 cursor-pointer"
+                  >
+                    Đăng Ký Trọn Đời Qua Zalo
+                  </a>
+                </div>
+              </div>
+
+              {/* THÔNG TIN TÁC GIẢ & HỖ TRỢ */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div>
-                  <h5 className="font-bold text-white text-xs sm:text-sm flex items-center gap-1.5">
-                    Liên hệ cấp mã bản quyền tức thì qua Zalo
-                  </h5>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    Thầy giáo Đinh Văn Thành – THCS Đồng Yên – Hotline / Zalo: <strong>{BRAND.phone}</strong>
-                  </p>
+                  <strong>Tác giả:</strong> Thầy giáo Đinh Văn Thành – Trường THCS Đồng Yên
+                  <br />
+                  <strong>Hotline / Zalo:</strong> <span className="text-cyan-400 font-mono font-bold">{BRAND.phone}</span>
                 </div>
-
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Chào Thầy Thành, tôi muốn đăng ký bản quyền Pro phần mềm Tạo đề kiểm tra Tiếng Anh Global Success THCS (${
-                      selectedPackage === '1year' ? 'Gói 1 Năm - 100k' : selectedPackage === '2year' ? 'Gói 2 Năm - 150k' : 'Gói Trọn Đời - 200k'
-                    }). Mã máy tính của tôi là: ${detectedMid}`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-600/30 transition-all hover:scale-105 shrink-0"
-                >
-                  <Send className="w-4 h-4" />
-                  Mở Zalo Nhận Key Ngay ({BRAND.phone})
-                </a>
+                <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href={`https://zalo.me/${BRAND.zalo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    💬 Nhắn Tin Zalo Thầy Thành
+                  </a>
+                  {onOpenAdmin && (
+                    <button
+                      onClick={onOpenAdmin}
+                      className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      Quản Trị Admin
+                    </button>
+                  )}
+                </div>
               </div>
 
             </div>
           )}
 
-        </div>
-
-        {/* MODAL FOOTER */}
-        <div className="px-4 sm:px-6 py-3 bg-slate-950/90 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-          <span className="flex items-center gap-1">
-            🟢 Tạo đề Tiếng Anh Global Success THCS – Bản quyền Thầy giáo Đinh Văn Thành
-          </span>
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition-colors"
-          >
-            Đóng
-          </button>
         </div>
 
       </div>
