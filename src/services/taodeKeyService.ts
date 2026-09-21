@@ -2,9 +2,13 @@
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ TẠO ĐỀ TIẾNG ANH GLOBAL SUCCESS (CV 7991)
 // Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 HMAC Signature chuẩn khớp 100% với Tool_Tao_Key_Ban_Quyen_Thanh.py
+// Bảo mật: Hệ thống bảo vệ nhiều tầng lớp (Hardware Lock, Anti-Tamper Trial Storage, SHA-256 Signature)
 // ============================================================================
 
 const SECRET_SALT = "THANH_DONG_YEN_0915213717_2026_PRO_KEY";
+const TRIAL_SEC_SALT = "DVT_ANTI_TAMPER_TRIAL_PROTECT_2026_ENG";
+const STORAGE_SEC_TRIAL = "gvai_taode_sec_trials_v3";
+const STORAGE_BACKUP_HASH = "_sys_hw_eng_hash";
 
 export interface ExamVerifyResult {
   isValid: boolean;
@@ -38,7 +42,7 @@ export function getOrCreateExamHardwareCode(): string {
     return code;
   }
 
-  // Thu thập dấu vân tay phần cứng trình duyệt
+  // Thu thập dấu vân tay phần cứng trình duyệt nhiều tầng lớp
   const screenPart = `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth}`;
   const corePart = `${navigator.hardwareConcurrency || 4}-${navigator.platform || 'Win32'}`;
   const rawSeed = `${screenPart}-${corePart}-${navigator.userAgent}`;
@@ -54,6 +58,56 @@ export function getOrCreateExamHardwareCode(): string {
   code = `DVT-ENG-${hex1}-${hex2}`;
   localStorage.setItem(STORAGE_KEY, code);
   return code;
+}
+
+/**
+ * TẦNG BẢO MẬT 1: Đọc số lượt dùng thử được ký số mật mã SHA-256 (Chống hack F12 DevTools)
+ * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
+ */
+export async function getSecureExamTrialRemaining(machineId: string): Promise<number> {
+  if (typeof window === 'undefined') return 0;
+  const raw = localStorage.getItem(STORAGE_SEC_TRIAL);
+  if (!raw) {
+    // Khởi tạo 5 lượt với chữ ký bảo mật tầng 1
+    const initialRemaining = 5;
+    const sig = await sha256Hex(`${machineId}|${initialRemaining}|${TRIAL_SEC_SALT}`);
+    const payload = JSON.stringify({ remaining: initialRemaining, sig, mid: machineId });
+    localStorage.setItem(STORAGE_SEC_TRIAL, payload);
+    localStorage.setItem(STORAGE_BACKUP_HASH, sig);
+    return initialRemaining;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    const expectedSig = await sha256Hex(`${machineId}|${data.remaining}|${TRIAL_SEC_SALT}`);
+    const backupSig = localStorage.getItem(STORAGE_BACKUP_HASH);
+
+    // Kiểm tra tính toàn vẹn 2 lớp (Anti-tamper Layer)
+    if (data.sig !== expectedSig || data.mid !== machineId || (backupSig && backupSig !== expectedSig)) {
+      console.warn("⚠️ Cảnh báo: Phát hiện dấu hiệu chỉnh sửa DevTools bất hợp pháp! Khóa ngay lập tức.");
+      const lockedSig = await sha256Hex(`${machineId}|0|${TRIAL_SEC_SALT}`);
+      localStorage.setItem(STORAGE_SEC_TRIAL, JSON.stringify({ remaining: 0, sig: lockedSig, mid: machineId, locked: true }));
+      localStorage.setItem(STORAGE_BACKUP_HASH, lockedSig);
+      return 0;
+    }
+
+    return Math.max(0, Math.min(5, Number(data.remaining) || 0));
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * TẦNG BẢO MẬT 2: Trừ lượt dùng thử an toàn kèm ký số mật mã mới
+ */
+export async function consumeSecureExamTrial(machineId: string): Promise<number> {
+  const current = await getSecureExamTrialRemaining(machineId);
+  const next = Math.max(0, current - 1);
+  const sig = await sha256Hex(`${machineId}|${next}|${TRIAL_SEC_SALT}`);
+  const payload = JSON.stringify({ remaining: next, sig, mid: machineId });
+  localStorage.setItem(STORAGE_SEC_TRIAL, payload);
+  localStorage.setItem(STORAGE_BACKUP_HASH, sig);
+  return next;
 }
 
 /**
