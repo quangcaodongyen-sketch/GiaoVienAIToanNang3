@@ -143,8 +143,8 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [detectedMid, setDetectedMid] = useState<string>('MB-E10D-BE85');
   const [copiedMid, setCopiedMid] = useState(false);
 
-  // Hệ thống 10 lượt dùng thử miễn phí
-  const [trialRemaining, setTrialRemaining] = useState<number>(10);
+  // Hệ thống 5 lượt dùng thử miễn phí
+  const [trialRemaining, setTrialRemaining] = useState<number>(5);
 
   // Online Studio States
   const [textInput, setTextInput] = useState(SAMPLE_SECONDARY);
@@ -186,14 +186,14 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     setRegMid(mid);
     setActiveMidInput(mid);
 
-    // Đọc số lượt dùng thử còn lại trên máy
+    // Đọc số lượt dùng thử còn lại trên máy (tối đa 5 lượt/máy tính)
     const savedTrials = localStorage.getItem('gvai_trial_remaining');
     if (savedTrials !== null) {
       const parsed = parseInt(savedTrials, 10);
-      setTrialRemaining(isNaN(parsed) ? 10 : parsed);
+      setTrialRemaining(isNaN(parsed) ? 5 : Math.max(0, Math.min(parsed, 5)));
     } else {
-      localStorage.setItem('gvai_trial_remaining', '10');
-      setTrialRemaining(10);
+      localStorage.setItem('gvai_trial_remaining', '5');
+      setTrialRemaining(5);
     }
 
     // Tự động kiểm tra xem mã máy này đã được kích hoạt Pro trên Cloud chưa
@@ -296,15 +296,15 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       return;
     }
 
-    // KIỂM TRA LƯỢT DÙNG THỬ 10 LẦN
+    // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActivated) {
       if (trialRemaining <= 0) {
-        alert('⚠️ Thầy/Cô đã sử dụng hết 10 lượt dùng thử miễn phí trên máy tính này!\n\nVui lòng đăng ký kích hoạt bản quyền Pro vĩnh viễn (hoặc liên hệ Thầy Thành) để mở khóa tạo bài không giới hạn.');
+        alert('⚠️ Thầy/Cô đã sử dụng hết 5 lượt dùng thử miễn phí trên máy tính này!\n\nVui lòng đăng ký kích hoạt bản quyền Pro vĩnh viễn (hoặc liên hệ Thầy Thành: 0915.213717) để mở khóa tạo bài không giới hạn.');
         setActiveTab('register');
         return;
       }
-      // Trừ 1 lượt dùng thử
-      const nextRemaining = trialRemaining - 1;
+      // Trừ 1 lượt dùng thử (tối thiểu 0)
+      const nextRemaining = Math.max(0, trialRemaining - 1);
       setTrialRemaining(nextRemaining);
       localStorage.setItem('gvai_trial_remaining', String(nextRemaining));
     }
@@ -573,11 +573,11 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                       DÙNG THỬ MIỄN PHÍ TRÊN MÁY TÍNH NÀY:
                     </span>
                     <span className="text-[11px] text-slate-300">
-                      Đã sử dụng {10 - trialRemaining}/10 lượt
+                      Đã sử dụng {5 - trialRemaining}/5 lượt
                     </span>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-bold self-start sm:self-auto ${
-                    trialRemaining > 3 
+                    trialRemaining > 2 
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
                       : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                   }`}>
@@ -585,25 +585,25 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   </span>
                 </div>
 
-                {/* 10 Dấu Chấm Tiến Trình [ ● ● ● ○ ○ ○ ○ ○ ○ ○ ] */}
+                {/* 5 Dấu Chấm Tiến Trình [ ● ● ● ○ ○ ] */}
                 <div className="flex items-center gap-2 pt-1">
                   <span className="text-slate-400 font-mono text-[11px]">Tiến trình:</span>
                   <div className="flex items-center gap-1.5 font-mono">
-                    {Array.from({ length: 10 }).map((_, i) => (
+                    {Array.from({ length: 5 }).map((_, i) => (
                       <span
                         key={i}
                         className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
-                          i < (10 - trialRemaining)
+                          i < (5 - trialRemaining)
                             ? 'bg-blue-500 text-white shadow-xs shadow-blue-500/50'
                             : 'bg-slate-800 text-slate-500 border border-slate-700'
                         }`}
                       >
-                        {i < (10 - trialRemaining) ? '●' : '○'}
+                        {i < (5 - trialRemaining) ? '●' : '○'}
                       </span>
                     ))}
                   </div>
                   <span className="text-[10px] text-slate-400 italic ml-auto hidden sm:inline">
-                    (Mỗi máy tính được tặng 10 lượt tạo bài nghe miễn phí)
+                    (Mỗi máy tính được tặng 5 lượt tạo bài nghe miễn phí)
                   </span>
                 </div>
               </div>
@@ -761,10 +761,18 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   {!isPlaying ? (
                     <button
                       onClick={handlePlayStudio}
-                      className="py-2 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/30 transition-all hover:scale-105"
+                      className={`py-2 px-4 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md transition-all hover:scale-105 ${
+                        !isProActivated && trialRemaining <= 0
+                          ? 'bg-rose-900/80 text-rose-200 border border-rose-600/40 hover:bg-rose-800'
+                          : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/30'
+                      }`}
                     >
                       <Play className="w-4 h-4 fill-white" />
-                      Phát Bài Nghe
+                      {!isProActivated && trialRemaining <= 0
+                        ? 'Đã Hết 5 Lượt Thử (Kích hoạt Pro)'
+                        : isProActivated
+                        ? 'Phát Toàn Bộ Bài Nghe'
+                        : `Phát Bài Nghe (Còn ${trialRemaining}/5 lượt)`}
                     </button>
                   ) : (
                     <>
@@ -925,7 +933,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                     Phần Mềm Smart Listening Pro (Bản 1-Click Chạy Ngay)
                   </h4>
                   <p className="text-[11px] text-slate-300 mt-1">
-                    Dung lượng: <b>22 MB</b> – Đã đóng gói sẵn file <code className="text-emerald-300 font-mono">Smart Listening Pro.exe</code>. Tải về giải nén nhấp đúp là chạy ngay, không lo virus, không cần cài đặt rườm rà!
+                    Dung lượng: <b>22 MB</b> – Đã nén mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> (giúp tải 100% không bị trình duyệt Chrome/Cốc Cốc chặn).
                   </p>
                 </div>
 
@@ -936,23 +944,23 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0"
                 >
                   <Download className="w-4 h-4" />
-                  Tải Bản Cài Đặt (22 MB)
+                  Tải Bản Cài Đặt (Pass: 123)
                 </a>
               </div>
 
               {/* Hướng Dẫn Nhanh 3 Bước */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-emerald-500/20 text-[11px]">
-                <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
                   <span className="font-bold text-emerald-400 block mb-0.5">Bước 1: Tải về</span>
-                  <span className="text-slate-400">Bấm nút xanh ở trên để tải file Smart_Listening_Pro.zip về máy.</span>
+                  <span className="text-slate-300">Bấm nút xanh ở trên để tải file về máy. (Nếu Chrome hiện cảnh báo, bấm dấu <strong>&gt;</strong> chọn <em>"Vẫn tải xuống"</em>).</span>
                 </div>
-                <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
                   <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Giải nén</span>
-                  <span className="text-slate-400">Nhấp chuột phải vào file vừa tải &rarr; chọn "Extract Here" (Giải nén).</span>
+                  <span className="text-slate-300">Nhấp chuột phải vào file &rarr; chọn "Extract Here" &rarr; Nhập mật khẩu: <strong className="text-amber-300">123</strong></span>
                 </div>
-                <div className="bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
                   <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Chạy ứng dụng</span>
-                  <span className="text-slate-400">Nhấp đúp vào Smart Listening Pro.exe để bắt đầu tạo bài nghe!</span>
+                  <span className="text-slate-300">Nhấp đúp vào <code>Smart Listening Pro.exe</code> (Chọn <em>More info &rarr; Run anyway</em> nếu có).</span>
                 </div>
               </div>
             </div>

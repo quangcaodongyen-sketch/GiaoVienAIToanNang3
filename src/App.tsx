@@ -23,6 +23,7 @@ import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
+import { NLSAIModal } from './components/NLSAIModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
+  const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -67,6 +69,11 @@ export default function App() {
     if (app.id === 'smart-listening-pro') {
       e.preventDefault();
       setShowListeningModal(true);
+      return;
+    }
+    if (app.id === 'tichhop-nls-ai-thcs' || app.id === 'soangiaoannanglucso') {
+      e.preventDefault();
+      setShowNLSAIModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -721,6 +728,13 @@ export default function App() {
       <OnlineTTSModal
         isOpen={showListeningModal}
         onClose={() => setShowListeningModal(false)}
+      />
+
+      {/* TÍCH HỢP NLS - AI THCS (ADD-INS V2) MODAL (3 TABS) */}
+      <NLSAIModal
+        isOpen={showNLSAIModal}
+        onClose={() => setShowNLSAIModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* CLOUD ADMIN DASHBOARD 24/7 */}

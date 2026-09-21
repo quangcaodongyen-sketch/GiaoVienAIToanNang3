@@ -25,16 +25,16 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
-    "id": "soangiaoannanglucso",
-    "title": "SOẠN GIÁO ÁN NĂNG LỰC SỐ",
-    "description": "Tích hợp NLS vào giáo án",
+    "id": "tichhop-nls-ai-thcs",
+    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V2)",
+    "description": "Tích hợp Năng lực số (NLS), AI, STEM, ANQP vào giáo án Word chuẩn Công văn 5512 cho 12 môn THCS. Tặng kèm bộ Word Add-in Ribbon và công cụ tự động 1-click.",
     "image": "/giaoanNLS.png",
-    "url": "https://giao-an-nls.vercel.app/app",
-    "category": "GIÁO ÁN",
-    "badge": "MIỄN PHÍ",
+    "url": "#nls-ai",
+    "category": "GIÁO ÁN & CÔNG CỤ SỐ",
+    "badge": "BẢN QUYỀN PRO",
     "active": true,
-    "featured": false,
-    "order": 1
+    "featured": true,
+    "order": 0
   },
   {
     "id": "sinhdebienthe",

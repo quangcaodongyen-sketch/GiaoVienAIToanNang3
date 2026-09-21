@@ -16,9 +16,14 @@ import {
   Lock, 
   Unlock,
   Cloud,
-  AlertCircle
+  AlertCircle,
+  Copy,
+  Send,
+  FileCode,
+  Sparkles
 } from 'lucide-react';
 import { licenseService, LicenseRecord } from '../services/licenseService';
+import { generateEd25519Key } from '../services/nlsKeyService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -30,12 +35,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
+  // Tab chuyển đổi giữa TTS và NLS-AI
+  const [adminTab, setAdminTab] = useState<'tts' | 'nls'>('tts');
+
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [loading, setLoading] = useState(false);
 
-  // Modal tạo key mới
+  // Modal tạo key mới (Smart Listening Pro)
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newMid, setNewMid] = useState('');
   const [newName, setNewName] = useState('');
@@ -48,6 +56,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [supabaseUrl, setSupabaseUrl] = useState('');
   const [supabaseKey, setSupabaseKey] = useState('');
   const [configSuccess, setConfigSuccess] = useState(false);
+
+  // State cho Tool Tạo Key Ed25519 (NLS-AI THCS V2)
+  const [nlsMid, setNlsMid] = useState('');
+  const [nlsYears, setNlsYears] = useState<number>(99);
+  const [nlsKeyResult, setNlsKeyResult] = useState('');
+  const [nlsZaloMsg, setNlsZaloMsg] = useState('');
+  const [nlsGenError, setNlsGenError] = useState('');
+  const [nlsCopiedKey, setNlsCopiedKey] = useState(false);
+  const [nlsCopiedMsg, setNlsCopiedMsg] = useState(false);
+  const [nlsHistory, setNlsHistory] = useState<Array<{
+    mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
 
   // Mật khẩu Admin chính thức: Thaythanh2026@
   const handleLogin = (e: React.FormEvent) => {
@@ -76,8 +100,53 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       const cfg = licenseService.getSavedConfig();
       setSupabaseUrl(cfg.url);
       setSupabaseKey(cfg.anonKey);
+      try {
+        const savedHist = localStorage.getItem('gvai_admin_nls_key_history');
+        if (savedHist) setNlsHistory(JSON.parse(savedHist));
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, [isOpen, isAuthenticated]);
+
+  const handleGenerateNLSKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNlsGenError('');
+    try {
+      const res = await generateEd25519Key(nlsMid, nlsYears);
+      setNlsKeyResult(res.key);
+      setNlsZaloMsg(res.zaloMessage);
+
+      const newRecord = {
+        mid: nlsMid.trim().toUpperCase(),
+        key: res.key,
+        expDate: res.expDate,
+        plan: res.planName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...nlsHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      setNlsHistory(updated);
+      localStorage.setItem('gvai_admin_nls_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setNlsGenError(err.message || 'Lỗi khi tạo key Ed25519');
+    }
+  };
+
+  const handleCopyNLSKey = () => {
+    if (nlsKeyResult) {
+      navigator.clipboard.writeText(nlsKeyResult);
+      setNlsCopiedKey(true);
+      setTimeout(() => setNlsCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyNLSZaloMsg = () => {
+    if (nlsZaloMsg) {
+      navigator.clipboard.writeText(nlsZaloMsg);
+      setNlsCopiedMsg(true);
+      setTimeout(() => setNlsCopiedMsg(false), 2000);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -259,213 +328,384 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           </div>
         </div>
 
-        {/* 4 STATS CARDS */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
-          <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
-            <span className="text-xs text-slate-400 font-medium block">Tổng thiết bị</span>
-            <span className="text-2xl font-black text-white mt-1 block">{totalCount}</span>
-          </div>
-          <div className={`p-3.5 rounded-2xl border transition-all ${pendingCount > 0 ? 'bg-amber-500/15 border-amber-500/50 shadow-lg shadow-amber-500/10 animate-pulse' : 'bg-slate-800/80 border-slate-700/60'}`}>
-            <span className="text-xs text-amber-400 font-bold block flex items-center gap-1">
-              🔔 Chờ duyệt mới
-            </span>
-            <span className="text-2xl font-black text-amber-400 mt-1 block">{pendingCount}</span>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
-            <span className="text-xs text-emerald-400 font-medium block">Đang hoạt động (Pro)</span>
-            <span className="text-2xl font-black text-emerald-400 mt-1 block">{activeCount}</span>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
-            <span className="text-xs text-rose-400 font-medium block">Bị khóa / Thu hồi</span>
-            <span className="text-2xl font-black text-rose-400 mt-1 block">{revokedCount}</span>
-          </div>
+        {/* TAB CHUYỂN ĐỔI: 1. SMART LISTENING PRO | 2. TÍCH HỢP NLS-AI V2 */}
+        <div className="flex gap-2 my-3 border-b border-slate-800 pb-2 text-xs font-bold shrink-0 overflow-x-auto">
+          <button
+            onClick={() => setAdminTab('tts')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all ${
+              adminTab === 'tts'
+                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            1. Bản Quyền Smart Listening Pro (Cloud)
+          </button>
+          <button
+            onClick={() => setAdminTab('nls')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all ${
+              adminTab === 'nls'
+                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <FileCode className="w-4 h-4" />
+            2. Tool Tạo Key Ed25519 - Tích Hợp NLS-AI V2
+          </button>
         </div>
 
-        {/* CONTROLS BAR */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3">
-          <div className="flex items-center gap-2 flex-1 max-w-md">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Tìm mã máy, tên giáo viên, số điện thoại..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400"
-              />
+        {/* TAB 1: SMART LISTENING PRO (CLOUD DATABASE) */}
+        {adminTab === 'tts' && (
+          <>
+            {/* 4 STATS CARDS */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-2">
+              <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <span className="text-xs text-slate-400 font-medium block">Tổng thiết bị</span>
+                <span className="text-2xl font-black text-white mt-1 block">{totalCount}</span>
+              </div>
+              <div className={`p-3.5 rounded-2xl border transition-all ${pendingCount > 0 ? 'bg-amber-500/15 border-amber-500/50 shadow-lg shadow-amber-500/10 animate-pulse' : 'bg-slate-800/80 border-slate-700/60'}`}>
+                <span className="text-xs text-amber-400 font-bold block flex items-center gap-1">
+                  🔔 Chờ duyệt mới
+                </span>
+                <span className="text-2xl font-black text-amber-400 mt-1 block">{pendingCount}</span>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <span className="text-xs text-emerald-400 font-medium block">Đang hoạt động (Pro)</span>
+                <span className="text-2xl font-black text-emerald-400 mt-1 block">{activeCount}</span>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                <span className="text-xs text-rose-400 font-medium block">Bị khóa / Thu hồi</span>
+                <span className="text-2xl font-black text-rose-400 mt-1 block">{revokedCount}</span>
+              </div>
             </div>
 
-            <div className="flex gap-1 bg-slate-800 p-1 rounded-xl border border-slate-700 text-xs">
-              <button
-                onClick={() => setFilterStatus('ALL')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'ALL' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
-              >
-                Tất cả
-              </button>
-              <button
-                onClick={() => setFilterStatus('PENDING')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'PENDING' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
-              >
-                Chờ duyệt {pendingCount > 0 && `(${pendingCount})`}
-              </button>
-              <button
-                onClick={() => setFilterStatus('ACTIVE')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'ACTIVE' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
-              >
-                Pro
-              </button>
-            </div>
-          </div>
+            {/* CONTROLS BAR */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3">
+              <div className="flex items-center gap-2 flex-1 max-w-md">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Tìm mã máy, tên giáo viên, số điện thoại..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400"
+                  />
+                </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20"
-            >
-              <Plus className="w-4 h-4" />
-              Tạo Key Trực Tiếp
-            </button>
-            <button
-              onClick={loadData}
-              disabled={loading}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-              title="Làm mới"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-        </div>
+                <div className="flex gap-1 bg-slate-800 p-1 rounded-xl border border-slate-700 text-xs">
+                  <button
+                    onClick={() => setFilterStatus('ALL')}
+                    className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'ALL' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
+                  >
+                    Tất cả
+                  </button>
+                  <button
+                    onClick={() => setFilterStatus('PENDING')}
+                    className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'PENDING' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
+                  >
+                    Chờ duyệt {pendingCount > 0 && `(${pendingCount})`}
+                  </button>
+                  <button
+                    onClick={() => setFilterStatus('ACTIVE')}
+                    className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${filterStatus === 'ACTIVE' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
+                  >
+                    Pro
+                  </button>
+                </div>
+              </div>
 
-        {/* CUSTOMER LICENSES TABLE */}
-        <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/50">
-          {filtered.length === 0 ? (
-            <div className="py-12 text-center text-slate-500 text-sm">
-              Không tìm thấy thiết bị nào phù hợp.
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20"
+                >
+                  <Plus className="w-4 h-4" />
+                  Tạo Key Trực Tiếp
+                </button>
+                <button
+                  onClick={loadData}
+                  disabled={loading}
+                  className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                  title="Làm mới"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
             </div>
-          ) : (
-            <table className="w-full text-left text-xs border-collapse">
-              <thead className="sticky top-0 bg-slate-800/90 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
-                <tr>
-                  <th className="py-3 px-3">Mã Thiết Bị</th>
-                  <th className="py-3 px-3">Giáo Viên / Đơn Vị</th>
-                  <th className="py-3 px-3">Số Zalo</th>
-                  <th className="py-3 px-3">Gói Mua</th>
-                  <th className="py-3 px-3">Trạng Thái</th>
-                  <th className="py-3 px-3 text-right">Thao Tác Admin</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800 text-slate-300">
-                {filtered.map((item) => (
-                  <tr key={item.machine_id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-3 px-3">
-                      <span className="font-mono font-bold text-amber-300 bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20">
-                        {item.machine_id}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="font-bold text-white text-sm">{item.teacher_name || 'Chưa cập nhật'}</div>
-                      <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                        <Building2 className="w-3 h-3 text-slate-500" />
-                        {item.school_unit || 'Cá nhân'}
-                      </div>
-                    </td>
-                    <td className="py-3 px-3">
-                      {item.phone_zalo ? (
-                        <a
-                          href={`https://zalo.me/${item.phone_zalo.replace(/\D/g, '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sky-400 hover:underline flex items-center gap-1"
-                        >
-                          <Phone className="w-3 h-3" />
-                          {item.phone_zalo}
-                        </a>
-                      ) : (
-                        <span className="text-slate-600">-</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="font-semibold text-slate-200">
-                        {item.package_type === 'LIFETIME' ? '👑 Trọn Đời' : item.package_type === '2YEAR' ? '2 Năm' : '1 Năm'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3">
-                      {item.status === 'PENDING' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 border border-amber-500/40 text-amber-300">
-                          <Clock className="w-3 h-3" /> Chờ Duyệt
-                        </span>
-                      )}
-                      {item.status === 'ACTIVE' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
-                          <CheckCircle2 className="w-3 h-3" /> Bản Quyền Pro
-                        </span>
-                      )}
-                      {item.status === 'REVOKED' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/20 border border-rose-500/40 text-rose-400">
-                          <ShieldAlert className="w-3 h-3" /> Đã Khóa
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        {item.status === 'PENDING' ? (
-                          <button
-                            onClick={() => handleApprove(item.machine_id)}
-                            className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center gap-1 shadow-xs"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                            Duyệt Ngay
-                          </button>
-                        ) : (
-                          <>
-                            <button
-                              onClick={() => handleExtend(item.machine_id, '1YEAR')}
-                              className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px]"
-                              title="Gia hạn +1 Năm"
-                            >
-                              +1 Năm
-                            </button>
-                            <button
-                              onClick={() => handleExtend(item.machine_id, 'LIFETIME')}
-                              className="px-2 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-amber-400 text-[11px]"
-                              title="Nâng cấp Vĩnh viễn"
-                            >
-                              Vĩnh Viễn
-                            </button>
-                            {item.status === 'ACTIVE' ? (
-                              <button
-                                onClick={() => handleRevoke(item.machine_id)}
-                                className="p-1.5 rounded-md hover:bg-rose-950/40 text-rose-400"
-                                title="Khóa máy này"
-                              >
-                                <Lock className="w-3.5 h-3.5" />
-                              </button>
-                            ) : (
+
+            {/* CUSTOMER LICENSES TABLE */}
+            <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/50">
+              {filtered.length === 0 ? (
+                <div className="py-12 text-center text-slate-500 text-sm">
+                  Không tìm thấy thiết bị nào phù hợp.
+                </div>
+              ) : (
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="sticky top-0 bg-slate-800/90 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
+                    <tr>
+                      <th className="py-3 px-3">Mã Thiết Bị</th>
+                      <th className="py-3 px-3">Giáo Viên / Đơn Vị</th>
+                      <th className="py-3 px-3">Gói Bản Quyền</th>
+                      <th className="py-3 px-3">Trạng Thái</th>
+                      <th className="py-3 px-3">Ngày Kích Hoạt</th>
+                      <th className="py-3 px-3 text-right">Thao Tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {filtered.map((item, idx) => (
+                      <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
+                        <td className="py-3 px-3 font-mono font-bold text-amber-300">
+                          {item.machine_id}
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="font-semibold text-white">{item.teacher_name || 'Chưa cập nhật'}</div>
+                          <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                            <Phone className="w-3 h-3 text-slate-500" />
+                            <span>{item.phone_zalo || 'Không có'}</span>
+                            {item.school_unit && (
+                              <>
+                                <span className="text-slate-600">•</span>
+                                <Building2 className="w-3 h-3 text-slate-500" />
+                                <span>{item.school_unit}</span>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${item.package_type === 'LIFETIME' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'}`}>
+                            {item.package_type === 'LIFETIME' ? 'Trọn Đời' : item.package_type}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          {item.status === 'ACTIVE' && (
+                            <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                              <CheckCircle2 className="w-3.5 h-3.5" /> Hoạt động
+                            </span>
+                          )}
+                          {item.status === 'PENDING' && (
+                            <span className="inline-flex items-center gap-1 text-amber-400 font-bold animate-pulse">
+                              <Clock className="w-3.5 h-3.5" /> Chờ duyệt
+                            </span>
+                          )}
+                          {item.status === 'REVOKED' && (
+                            <span className="inline-flex items-center gap-1 text-rose-400 font-bold">
+                              <ShieldAlert className="w-3.5 h-3.5" /> Bị khóa
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-3 text-slate-400 text-[11px]">
+                          {item.activated_at ? item.activated_at.substring(0, 10) : 'Chưa kích hoạt'}
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {item.status === 'PENDING' && (
                               <button
                                 onClick={() => handleApprove(item.machine_id)}
-                                className="p-1.5 rounded-md hover:bg-emerald-950/40 text-emerald-400"
-                                title="Mở khóa máy này"
+                                className="py-1 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm transition-colors"
                               >
-                                <Unlock className="w-3.5 h-3.5" />
+                                Duyệt Pro
                               </button>
                             )}
-                          </>
-                        )}
-                        <button
-                          onClick={() => handleDelete(item.machine_id)}
-                          className="p-1.5 rounded-md hover:bg-slate-800 text-slate-500 hover:text-rose-400"
-                          title="Xóa"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                            {item.status !== 'PENDING' && (
+                              <>
+                                {item.status === 'ACTIVE' ? (
+                                  <button
+                                    onClick={() => handleRevoke(item.machine_id)}
+                                    className="p-1.5 rounded-md hover:bg-rose-950/40 text-slate-500 hover:text-rose-400"
+                                    title="Khóa bản quyền"
+                                  >
+                                    <Lock className="w-3.5 h-3.5" />
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => handleApprove(item.machine_id)}
+                                    className="p-1.5 rounded-md hover:bg-emerald-950/40 text-emerald-400"
+                                    title="Mở khóa máy này"
+                                  >
+                                    <Unlock className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </>
+                            )}
+                            <button
+                              onClick={() => handleDelete(item.machine_id)}
+                              className="p-1.5 rounded-md hover:bg-slate-800 text-slate-500 hover:text-rose-400"
+                              title="Xóa"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* TAB 2: TOOL TẠO KEY ED25519 - TÍCH HỢP NLS-AI V2 */}
+        {adminTab === 'nls' && (
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+            {/* CARD TẠO KEY ED25519 */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-950 border border-emerald-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-emerald-300 flex items-center gap-2">
+                  <FileCode className="w-4 h-4 text-emerald-400" />
+                  KÝ SỐ ED25519 & TẠO KEY BẢN QUYỀN PRO THCS 2026
+                </h4>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Chuẩn thuật toán Admin_Tao_Key_Pro.exe
+                </span>
+              </div>
+
+              <form onSubmit={handleGenerateNLSKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-300 font-bold mb-1">
+                      1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: DVT-0B1D-A6A7-5A14"
+                      value={nlsMid}
+                      onChange={(e) => setNlsMid(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-cyan-300 focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      2. Chọn Gói Bản Quyền:
+                    </label>
+                    <select
+                      value={nlsYears}
+                      onChange={(e) => setNlsYears(Number(e.target.value))}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value={99}>VIP Trọn Đời (Khuyên dùng)</option>
+                      <option value={1}>1 Năm (150.000 VNĐ)</option>
+                      <option value={2}>2 Năm (250.000 VNĐ)</option>
+                      <option value={3}>3 Năm (300.000 VNĐ)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02]"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    KÝ SỐ & TẠO MÃ KÍCH HOẠT PRO (ED25519)
+                  </button>
+
+                  {nlsGenError && (
+                    <span className="text-rose-400 font-semibold">{nlsGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY & TIN NHẮN ZALO */}
+              {nlsKeyResult && (
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      Mã Key kích hoạt Ed25519:
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={nlsKeyResult}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-emerald-500/50 font-mono text-xs text-emerald-300 font-bold select-all focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyNLSKey}
+                        className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 border border-slate-700"
+                      >
+                        {nlsCopiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {nlsCopiedKey ? 'Đã copy Key!' : 'Copy Key'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-slate-300 font-bold">
+                        Tin nhắn Zalo gửi khách hàng (đã định dạng chuẩn):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleCopyNLSZaloMsg}
+                        className="py-1.5 px-3 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-[11px] flex items-center gap-1.5 shadow"
+                      >
+                        {nlsCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                        {nlsCopiedMsg ? 'Đã copy tin nhắn Zalo!' : 'Sao chép tin nhắn Zalo gửi Khách'}
+                      </button>
+                    </div>
+                    <textarea
+                      readOnly
+                      rows={7}
+                      value={nlsZaloMsg}
+                      className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed text-slate-200 select-all focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LỊCH SỬ CÁC KEY ĐÃ TẠO GẦN ĐÂY */}
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+              <span className="font-bold text-slate-200 block text-xs">
+                Lịch sử các Key Ed25519 đã tạo gần đây ({nlsHistory.length} bản ghi):
+              </span>
+              {nlsHistory.length === 0 ? (
+                <p className="text-slate-500 py-3 text-center">Chưa có key nào được tạo gần đây.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[11px]">
+                    <thead className="text-slate-400 border-b border-slate-800">
+                      <tr>
+                        <th className="py-2 px-2">Thời gian</th>
+                        <th className="py-2 px-2">Mã máy</th>
+                        <th className="py-2 px-2">Gói</th>
+                        <th className="py-2 px-2">Key Pro</th>
+                        <th className="py-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {nlsHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-cyan-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-amber-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px]"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* MODAL TẠO KEY TRỰC TIẾP */}
         {showCreateModal && (
