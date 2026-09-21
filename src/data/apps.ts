@@ -85,9 +85,33 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
+    "id": "chuanhoavanbanvip",
+    "title": "CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020)",
+    "description": "Tự động phân tích, sửa lỗi chính tả và chuẩn hóa thể thức 2 cột đầu trang (Cơ quan/Quốc hiệu), trích yếu, căn cứ, nơi nhận và chữ ký đúng quy cách Nghị định 30/2020/NĐ-CP. Định dạng Times New Roman 13pt chuẩn mực sư phạm.",
+    "image": "/chuanhoavanbanvip.jpg",
+    "url": "#chuan-hoa-vb",
+    "category": "VĂN BẢN & TIỆN ÍCH SỐ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
+    "id": "TACH-GOP-PDF",
+    "title": "PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI)",
+    "description": "Bộ công cụ xử lý tệp PDF chuyên sâu dành cho giáo viên: Tách dải trang tùy biến, gộp nhiều giáo án/đề thi thành 1 file duy nhất với tốc độ tức thì, tự động quét và loại bỏ toàn bộ trang trắng rác khi scan tài liệu.",
+    "image": "/tachgoppdf.jpg",
+    "url": "#tach-gop-pdf",
+    "category": "VĂN BẢN & TIỆN ÍCH SỐ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "TAODEKTCV7991",
     "title": "TẠO ĐỀ KIỂM TRA THEO CV 7991",
-    "description": "Tạo đề kiểm tra các môn học theo CV 7991",
+    "description": "Tự động sinh ma trận đặc tả, câu hỏi trắc nghiệm đúng sai, trả lời ngắn chuẩn cấu trúc Công văn 7991 cho tất cả các môn học.",
     "image": "/Taodektcv7991.jpg",
     "url": "https://kiem-tra-cv-7991.vercel.app/",
     "category": "ĐỀ KIỂM TRA",
@@ -99,7 +123,7 @@ export const apps: AppCard[] = [
   {
     "id": "congthutoan",
     "title": "CHUYỂN CÔNG THỨC AI SANG MATHTYPE WORD",
-    "description": "Chuyển công thức từ Gemini và ChatGPT sang Mathtype Word",
+    "description": "Chuyển đổi tức thì công thức LaTeX, AI từ Gemini và ChatGPT sang MathType Word chuẩn xác 100%, không bị vỡ định dạng toán học.",
     "image": "/congthucmathtype.jpg",
     "url": "https://web-to-mathtype-word.vercel.app/",
     "category": "BỘ TRỢ LÝ AI",
@@ -110,8 +134,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "trolyGVCN",
-    "title": "TRỢ LÝ GVCN",
-    "description": "Trợ lý giáo viên chủ nhiệm",
+    "title": "TRỢ LÝ GIÁO VIÊN CHỦ NHIỆM (GVCN)",
+    "description": "Trợ lý AI chuyên biệt cho Giáo viên chủ nhiệm: Tự động hóa nhận xét học sinh định kỳ, biên bản họp phụ huynh và quản lý nề nếp lớp học sư phạm.",
     "image": "/trolygvnn.jpg",
     "url": "https://tro-ly-gvcn.vercel.app/",
     "category": "BỘ TRỢ LÝ AI",
@@ -119,30 +143,6 @@ export const apps: AppCard[] = [
     "active": true,
     "featured": false,
     "order": 1
-  },
-  {
-    "id": "chuanhoavanbanvip",
-    "title": "CHUẨN HÓA VĂN BẢN VIP",
-    "description": "Chuẩn hóa tất cả các loại VB",
-    "image": "/chuanhoavanbanvip.jpg",
-    "url": "https://chuan-hoa-vb-vip.vercel.app/",
-    "category": "BỘ TRỢ LÝ AI",
-    "badge": "TRẢI NGHIỆM MIỄN PHÍ",
-    "active": true,
-    "featured": false,
-    "order": 2
-  },
-  {
-    "id": "TACH-GOP-PDF",
-    "title": "TÁCH GỘP PDF",
-    "description": "TÁCH GỘP PDF",
-    "image": "/tachgoppdf.JPG",
-    "url": "https://tach-gop-pdf.vercel.app/",
-    "category": "BỘ TRỢ LÝ AI",
-    "badge": "BỘ TRỢ LÝ AI",
-    "active": true,
-    "featured": false,
-    "order": 4
   },
   {
     "id": "video-giao-duc",

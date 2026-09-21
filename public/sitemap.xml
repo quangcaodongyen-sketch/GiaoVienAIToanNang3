@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  
+  <!-- Trang Chủ Chính -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Chuẩn Hóa Văn Bản Hành Chính AI (Nghị Định 30/2020) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#chuan-hoa-vb</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#tach-gop-pdf</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Smart Listening Pro (Tạo Bài Nghe Tiếng Anh) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#smart-listening</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Tích Hợp NLS - AI THCS (CV 5512) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#nls-ai</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Tạo Đề Kiểm Tra Tiếng Anh CV 7991 -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#tao-de-tieng-anh</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Sinh 3 Đề Biến Thể VIP (AI PRO) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#sinh-de-bien-the</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Screen Record Pro V2 -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#screen-record</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Đinh Thành Cleaner Pro v4.5 VIP -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#cleaner-pro</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

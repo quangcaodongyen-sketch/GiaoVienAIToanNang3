@@ -1,0 +1,6 @@
+# Robots.txt - Giáo Viên AI Toàn Năng (Thầy giáo Đinh Văn Thành)
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://giaovienai-toannang.vercel.app/sitemap.xml

@@ -28,6 +28,8 @@ import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
 import { ScreenRecordModal } from './components/ScreenRecordModal';
 import { CleanerModal } from './components/CleanerModal';
+import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
+import { TachGopPDFModal } from './components/TachGopPDFModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,6 +42,8 @@ export default function App() {
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
   const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
   const [showCleanerModal, setShowCleanerModal] = useState(false);
+  const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
+  const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -52,6 +56,8 @@ export default function App() {
       else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
       else if (hash === '#screen-record') setShowScreenRecordModal(true);
       else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);
+      else if (hash === '#chuan-hoa-vb' || hash === '#chuanhoavanban') setShowChuanHoaVBModal(true);
+      else if (hash === '#tach-gop-pdf' || hash === '#pdf-suite') setShowTachGopPDFModal(true);
       else if (hash === '#smart-listening') setShowListeningModal(true);
       else if (hash === '#nls-ai') setShowNLSAIModal(true);
       else if (hash === '#admin') setShowAdminDashboard(true);
@@ -119,6 +125,16 @@ export default function App() {
     if (app.id === 'dinhthanh-cleaner-pro' || app.url === '#cleaner-pro' || app.url === '#cleaner') {
       e.preventDefault();
       setShowCleanerModal(true);
+      return;
+    }
+    if (app.id === 'chuanhoavanbanvip' || app.url === '#chuan-hoa-vb') {
+      e.preventDefault();
+      setShowChuanHoaVBModal(true);
+      return;
+    }
+    if (app.id === 'TACH-GOP-PDF' || app.url === '#tach-gop-pdf') {
+      e.preventDefault();
+      setShowTachGopPDFModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -807,6 +823,20 @@ export default function App() {
       <CleanerModal
         isOpen={showCleanerModal}
         onClose={() => setShowCleanerModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020) (3 TABS) */}
+      <ChuanHoaVBModal
+        isOpen={showChuanHoaVBModal}
+        onClose={() => setShowChuanHoaVBModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI) (3 TABS) */}
+      <TachGopPDFModal
+        isOpen={showTachGopPDFModal}
+        onClose={() => setShowTachGopPDFModal(false)}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
