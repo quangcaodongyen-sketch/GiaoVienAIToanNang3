@@ -61,6 +61,18 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
+    "id": "screen-record-v2",
+    "title": "SCREEN RECORD PRO V2 (QUAY MÀN HÌNH BTV)",
+    "description": "Phần mềm quay màn hình máy tính Full HD/2K 60fps, lọc âm tạp âm chuẩn BTV Đài VTV, hiệu ứng con trỏ chuột Halo Spotlight & sóng click Ripple, ghi âm đa luồng Mic + Hệ thống.",
+    "image": "/screenrecord_banner.png",
+    "url": "#screen-record",
+    "category": "CÔNG CỤ BÀI GIẢNG & VIDEO",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "TAODEKTCV7991",
     "title": "TẠO ĐỀ KIỂM TRA THEO CV 7991",
     "description": "Tạo đề kiểm tra các môn học theo CV 7991",

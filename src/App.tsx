@@ -26,6 +26,7 @@ import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
+import { ScreenRecordModal } from './components/ScreenRecordModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function App() {
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
+  const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -46,6 +48,7 @@ export default function App() {
       const hash = window.location.hash;
       if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
       else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
+      else if (hash === '#screen-record') setShowScreenRecordModal(true);
       else if (hash === '#smart-listening') setShowListeningModal(true);
       else if (hash === '#nls-ai') setShowNLSAIModal(true);
       else if (hash === '#admin') setShowAdminDashboard(true);
@@ -103,6 +106,11 @@ export default function App() {
     if (app.id === 'sinhdebienthe' || app.url === '#sinh-de-bien-the') {
       e.preventDefault();
       setShowSinhDeBienTheModal(true);
+      return;
+    }
+    if (app.id === 'screen-record-v2' || app.url === '#screen-record') {
+      e.preventDefault();
+      setShowScreenRecordModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -777,6 +785,13 @@ export default function App() {
       <SinhDeBienTheModal
         isOpen={showSinhDeBienTheModal}
         onClose={() => setShowSinhDeBienTheModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* SCREEN RECORD PRO V2 (3 TABS) */}
+      <ScreenRecordModal
+        isOpen={showScreenRecordModal}
+        onClose={() => setShowScreenRecordModal(false)}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 

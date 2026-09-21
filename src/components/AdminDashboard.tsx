@@ -26,6 +26,7 @@ import { licenseService, LicenseRecord } from '../services/licenseService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
+import { generateRecordLicenseKey } from '../services/recordKeyService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -37,8 +38,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991) và Sinh 3 Đề Biến Thể
-  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe'>('tts');
+  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể và Screen Record V2
+  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record'>('tts');
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,6 +108,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
+  // State cho Tool Tạo Key Bản Quyền - Screen Record Pro V2
+  const [recordMid, setRecordMid] = useState('');
+  const [recordPackage, setRecordPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
+  const [recordKeyResult, setRecordKeyResult] = useState('');
+  const [recordZaloMsg, setRecordZaloMsg] = useState('');
+  const [recordGenError, setRecordGenError] = useState('');
+  const [recordCopiedKey, setRecordCopiedKey] = useState(false);
+  const [recordCopiedMsg, setRecordCopiedMsg] = useState(false);
+  const [recordHistory, setRecordHistory] = useState<Array<{
+    mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
   // Mật khẩu Admin chính thức: Thaythanh2026@
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,6 +158,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         if (savedExamHist) setExamHistory(JSON.parse(savedExamHist));
         const savedBientheHist = localStorage.getItem('gvai_admin_bienthe_key_history');
         if (savedBientheHist) setBientheHistory(JSON.parse(savedBientheHist));
+        const savedRecordHist = localStorage.getItem('gvai_admin_record_key_history');
+        if (savedRecordHist) setRecordHistory(JSON.parse(savedRecordHist));
       } catch (e) {
         console.error(e);
       }
@@ -303,6 +322,66 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
       navigator.clipboard.writeText(bientheZaloMsg);
       setBientheCopiedMsg(true);
       setTimeout(() => setBientheCopiedMsg(false), 2000);
+    }
+  };
+
+  const handleGenerateRecordKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecordGenError('');
+    try {
+      const cleanId = recordMid.trim().toUpperCase();
+      if (!cleanId) {
+        setRecordGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng!');
+        return;
+      }
+      const res = await generateRecordLicenseKey(cleanId, recordPackage);
+      setRecordKeyResult(res.key);
+
+      const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM SCREEN RECORD PRO V2 (QUAY MÀN HÌNH BTV):
+----------------------------------------------------------------------
+📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📞 Hotline/Zalo hỗ trợ: 0915.213717
+💻 Mã máy (Hardware Code): ${cleanId}
+🎁 Gói bản quyền: ${res.packageName}
+⏳ Hạn sử dụng: ${res.expiryDateStr}
+🔑 MÃ KÍCH HOẠT PRO (SHA-256):
+${res.key}
+----------------------------------------------------------------------
+👉 HƯỚNG DẪN KÍCH HOẠT:
+1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang3).
+2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
+3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
+Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm thanh trong trẻo!`;
+      setRecordZaloMsg(msg);
+
+      const newRecord = {
+        mid: cleanId,
+        key: res.key,
+        expDate: res.expiryDateStr,
+        plan: res.packageName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...recordHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      setRecordHistory(updated);
+      localStorage.setItem('gvai_admin_record_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setRecordGenError(err.message || 'Lỗi khi tạo key');
+    }
+  };
+
+  const handleCopyRecordKey = () => {
+    if (recordKeyResult) {
+      navigator.clipboard.writeText(recordKeyResult);
+      setRecordCopiedKey(true);
+      setTimeout(() => setRecordCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyRecordZaloMsg = () => {
+    if (recordZaloMsg) {
+      navigator.clipboard.writeText(recordZaloMsg);
+      setRecordCopiedMsg(true);
+      setTimeout(() => setRecordCopiedMsg(false), 2000);
     }
   };
 
@@ -531,6 +610,17 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
           >
             <Crown className="w-4 h-4" />
             4. Sinh 3 Đề Biến Thể (VIP)
+          </button>
+          <button
+            onClick={() => setAdminTab('record')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'record'
+                ? 'bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-md shadow-rose-600/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            5. Screen Record V2 (VIP)
           </button>
         </div>
 
@@ -1183,6 +1273,166 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
                         <tr key={i} className="hover:bg-slate-900/60">
                           <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
                           <td className="py-2 px-2 font-mono text-amber-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: TOOL TẠO KEY BẢN QUYỀN - SCREEN RECORD PRO V2 */}
+        {adminTab === 'record' && (
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+            {/* CARD TẠO KEY */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-950/60 via-slate-900 to-slate-950 border border-rose-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-rose-300 flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-rose-400" />
+                  MẬT MÃ SHA-256 & TẠO KEY BẢN QUYỀN - SCREEN RECORD PRO V2
+                </h4>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Thuật toán recordKeyService.ts (Thầy Đinh Văn Thành)
+                </span>
+              </div>
+
+              <form onSubmit={handleGenerateRecordKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-300 font-bold mb-1">
+                      1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: DVT-REC-1A2B-3C4D"
+                      value={recordMid}
+                      onChange={(e) => setRecordMid(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-rose-300 focus:outline-none focus:border-rose-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      2. Chọn Gói Bản Quyền:
+                    </label>
+                    <select
+                      value={recordPackage}
+                      onChange={(e) => setRecordPackage(e.target.value as any)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-rose-500"
+                    >
+                      <option value="lifetime">VIP Trọn Đời (200.000 VNĐ - Khuyên dùng)</option>
+                      <option value="1year">1 Năm (100.000 VNĐ)</option>
+                      <option value="2year">2 Năm (150.000 VNĐ)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-rose-600/20 transition-all hover:scale-[1.02] cursor-pointer"
+                  >
+                    <Crown className="w-4 h-4" />
+                    TẠO MÃ KÍCH HOẠT PRO SCREEN RECORD (SHA-256)
+                  </button>
+
+                  {recordGenError && (
+                    <span className="text-rose-400 font-semibold">{recordGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY & TIN NHẮN ZALO */}
+              {recordKeyResult && (
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      Mã Key kích hoạt Pro (REC-prefix-expts-sig):
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={recordKeyResult}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-rose-500/50 font-mono text-xs text-rose-300 font-bold select-all focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyRecordKey}
+                        className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 border border-slate-700 cursor-pointer"
+                      >
+                        {recordCopiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {recordCopiedKey ? 'Đã copy Key!' : 'Copy Key'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-slate-300 font-bold">
+                        Tin nhắn Zalo gửi khách hàng (đã định dạng chuẩn):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleCopyRecordZaloMsg}
+                        className="py-1.5 px-3 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-[11px] flex items-center gap-1.5 shadow cursor-pointer"
+                      >
+                        {recordCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                        {recordCopiedMsg ? 'Đã copy tin nhắn Zalo!' : 'Sao chép tin nhắn Zalo gửi Khách'}
+                      </button>
+                    </div>
+                    <textarea
+                      readOnly
+                      rows={7}
+                      value={recordZaloMsg}
+                      className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed text-slate-200 select-all focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LỊCH SỬ CÁC KEY ĐÃ TẠO GẦN ĐÂY */}
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+              <span className="font-bold text-slate-200 block text-xs">
+                Lịch sử các Key Screen Record đã tạo gần đây ({recordHistory.length} bản ghi):
+              </span>
+              {recordHistory.length === 0 ? (
+                <p className="text-slate-500 py-3 text-center">Chưa có key nào được tạo gần đây.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[11px]">
+                    <thead className="text-slate-400 border-b border-slate-800">
+                      <tr>
+                        <th className="py-2 px-2">Thời gian</th>
+                        <th className="py-2 px-2">Mã máy</th>
+                        <th className="py-2 px-2">Gói</th>
+                        <th className="py-2 px-2">Key Pro</th>
+                        <th className="py-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {recordHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-rose-300 font-bold">{item.mid}</td>
                           <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
                           <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
                           <td className="py-2 px-2 text-right">
