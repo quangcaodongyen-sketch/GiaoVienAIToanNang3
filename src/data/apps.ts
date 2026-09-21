@@ -73,6 +73,18 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
+    "id": "dinhthanh-cleaner-pro",
+    "title": "ĐINH THÀNH CLEANER PRO v4.5 VIP",
+    "description": "Phần mềm dọn rác chuyên sâu & Tăng tốc máy tính giáo viên. Dọn sạch 10 khu vực hệ thống, phân tích thủ phạm phình ổ C (Zalo, CapCut, Premiere), giải phóng RAM an toàn 100%.",
+    "image": "/cleaner_pro_banner.png",
+    "url": "#cleaner-pro",
+    "category": "CÔNG CỤ BÀI GIẢNG & TIỆN ÍCH",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "TAODEKTCV7991",
     "title": "TẠO ĐỀ KIỂM TRA THEO CV 7991",
     "description": "Tạo đề kiểm tra các môn học theo CV 7991",

@@ -27,6 +27,7 @@ import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
 import { generateRecordLicenseKey } from '../services/recordKeyService';
+import { generateCleanerLicenseKey } from '../services/cleanerKeyService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -38,8 +39,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể và Screen Record V2
-  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record'>('tts');
+  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2 và Cleaner Pro
+  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner'>('tts');
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -124,6 +125,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
+  // State cho Tool Tạo Key Bản Quyền - Đinh Thành Cleaner Pro v4.5 VIP
+  const [cleanerMid, setCleanerMid] = useState('');
+  const [cleanerPackage, setCleanerPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
+  const [cleanerKeyResult, setCleanerKeyResult] = useState('');
+  const [cleanerZaloMsg, setCleanerZaloMsg] = useState('');
+  const [cleanerGenError, setCleanerGenError] = useState('');
+  const [cleanerCopiedKey, setCleanerCopiedKey] = useState(false);
+  const [cleanerCopiedMsg, setCleanerCopiedMsg] = useState(false);
+  const [cleanerHistory, setCleanerHistory] = useState<Array<{
+    mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
   // Mật khẩu Admin chính thức: Thaythanh2026@
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,6 +177,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         if (savedBientheHist) setBientheHistory(JSON.parse(savedBientheHist));
         const savedRecordHist = localStorage.getItem('gvai_admin_record_key_history');
         if (savedRecordHist) setRecordHistory(JSON.parse(savedRecordHist));
+        const savedCleanerHist = localStorage.getItem('gvai_admin_cleaner_key_history');
+        if (savedCleanerHist) setCleanerHistory(JSON.parse(savedCleanerHist));
       } catch (e) {
         console.error(e);
       }
@@ -382,6 +401,69 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
       navigator.clipboard.writeText(recordZaloMsg);
       setRecordCopiedMsg(true);
       setTimeout(() => setRecordCopiedMsg(false), 2000);
+    }
+  };
+
+  const handleGenerateCleanerKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCleanerGenError('');
+    try {
+      const cleanId = cleanerMid.trim().toUpperCase();
+      if (!cleanId) {
+        setCleanerGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng (VD: DT-XXXX-XXXX-XXXX)!');
+        return;
+      }
+      const key = await generateCleanerLicenseKey(cleanId, cleanerPackage);
+      setCleanerKeyResult(key);
+
+      const pkgName = cleanerPackage === 'lifetime' ? 'BẢN QUYỀN VIP TRỌN ĐỜI (50.000đ)' : cleanerPackage === '2year' ? 'GÓI 2 NĂM (40.000đ)' : 'GÓI 1 NĂM (30.000đ)';
+      const expStr = cleanerPackage === 'lifetime' ? 'Vĩnh viễn không giới hạn' : cleanerPackage === '2year' ? '730 ngày (2 Năm)' : '365 ngày (1 Năm)';
+
+      const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ĐINH THÀNH CLEANER PRO v4.5 VIP ULTRA:
+----------------------------------------------------------------------
+📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📞 Hotline/Zalo hỗ trợ: 0915.213717
+💻 Mã máy (Hardware Code): ${cleanId}
+🎁 Gói bản quyền: ${pkgName}
+⏳ Thời hạn sử dụng: ${expStr}
+🔑 MÃ KÍCH HOẠT PRO (SHA-256):
+${key}
+----------------------------------------------------------------------
+👉 HƯỚNG DẪN KÍCH HOẠT:
+1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang3).
+2. Chọn Tab "3. Bản Quyền & Kích Hoạt VIP".
+3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Kích Hoạt Bản Quyền VIP" rồi bấm "🚀 KÍCH HOẠT BẢN QUYỀN VIP NGAY".
+Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt và giảng dạy thăng hoa!`;
+      setCleanerZaloMsg(msg);
+
+      const newRecord = {
+        mid: cleanId,
+        key: key,
+        expDate: expStr,
+        plan: pkgName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...cleanerHistory.filter(x => x.key !== key).slice(0, 19)];
+      setCleanerHistory(updated);
+      localStorage.setItem('gvai_admin_cleaner_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setCleanerGenError(err.message || 'Lỗi khi tạo key');
+    }
+  };
+
+  const handleCopyCleanerKey = () => {
+    if (cleanerKeyResult) {
+      navigator.clipboard.writeText(cleanerKeyResult);
+      setCleanerCopiedKey(true);
+      setTimeout(() => setCleanerCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyCleanerZaloMsg = () => {
+    if (cleanerZaloMsg) {
+      navigator.clipboard.writeText(cleanerZaloMsg);
+      setCleanerCopiedMsg(true);
+      setTimeout(() => setCleanerCopiedMsg(false), 2000);
     }
   };
 
@@ -621,6 +703,17 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
           >
             <Crown className="w-4 h-4" />
             5. Screen Record V2 (VIP)
+          </button>
+          <button
+            onClick={() => setAdminTab('cleaner')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'cleaner'
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-600/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            6. Đinh Thành Cleaner Pro (VIP)
           </button>
         </div>
 
@@ -1435,6 +1528,176 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
                           <td className="py-2 px-2 font-mono text-rose-300 font-bold">{item.mid}</td>
                           <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
                           <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 6: TOOL TẠO KEY BẢN QUYỀN - ĐINH THÀNH CLEANER PRO v4.5 VIP */}
+        {adminTab === 'cleaner' && (
+          <div className="space-y-4 my-2">
+            {/* THÔNG BÁO THUẬT TOÁN BẢO MẬT */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/40 text-emerald-200 flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="text-xs space-y-1">
+                <div className="font-bold text-white text-sm">
+                  MẬT MÃ SHA-256 & TẠO KEY BẢN QUYỀN - ĐINH THÀNH CLEANER PRO v4.5 VIP
+                </div>
+                <div>
+                  Thuật toán tương thích 100% với <code>Tao_Key_Ban_Quyen.py</code> và phần mềm desktop <code>DinhThanh_Cleaner_Pro.exe</code> của Thầy Đinh Văn Thành.
+                </div>
+              </div>
+            </div>
+
+            {/* FORM TẠO KEY BẢN QUYỀN */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-4">
+              <form onSubmit={handleGenerateCleanerKey} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Mã Máy Tính của Khách (Hardware Code DT-XXXX-XXXX-XXXX) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: DT-8899-A1B2-C3D4"
+                      value={cleanerMid}
+                      onChange={(e) => setCleanerMid(e.target.value)}
+                      className="w-full py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-xs focus:border-emerald-500 outline-none uppercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Gói Bản Quyền Cần Cấp
+                    </label>
+                    <select
+                      value={cleanerPackage}
+                      onChange={(e) => setCleanerPackage(e.target.value as any)}
+                      className="w-full py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-emerald-500 outline-none"
+                    >
+                      <option value="lifetime">VIP Trọn Đời (50.000đ - Phổ biến nhất)</option>
+                      <option value="2year">Gói 2 Năm (40.000đ - 730 ngày)</option>
+                      <option value="1year">Gói 1 Năm (30.000đ - 365 ngày)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/30 transition-all"
+                  >
+                    <Key className="w-4 h-4" />
+                    ⚡ TẠO MÃ KÍCH HOẠT PRO CLEANER (SHA-256)
+                  </button>
+                  {cleanerGenError && (
+                    <span className="text-rose-400 font-semibold text-xs">{cleanerGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY */}
+              {cleanerKeyResult && (
+                <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-emerald-500/50 space-y-3 animate-fade-in">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-400 font-medium">
+                      Mã Key Bản Quyền VIP vừa tạo (Chuẩn định dạng PRO-XXXX-XXXX-XXXX-XXXX):
+                    </span>
+                    <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+                      SHA-256 HỢP LỆ
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={cleanerKeyResult}
+                      className="flex-1 py-2 px-3 rounded-lg bg-slate-950 border border-slate-800 text-emerald-400 font-mono text-sm font-black select-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCopyCleanerKey}
+                      className="py-2 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shrink-0 cursor-pointer"
+                    >
+                      {cleanerCopiedKey ? <Check className="w-4 h-4 text-emerald-200" /> : <Copy className="w-4 h-4" />}
+                      {cleanerCopiedKey ? 'Đã copy Key!' : 'Copy Key'}
+                    </button>
+                  </div>
+
+                  {/* KHUNG TIN NHẮN ZALO MẪU */}
+                  <div className="space-y-1.5 pt-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">
+                        Tin nhắn Zalo mẫu (Đã điền sẵn mã máy và mã key):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleCopyCleanerZaloMsg}
+                        className="text-[11px] py-1 px-2.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold flex items-center gap-1 transition-all cursor-pointer"
+                      >
+                        {cleanerCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                        {cleanerCopiedMsg ? 'Đã copy tin nhắn Zalo!' : 'Sao chép tin nhắn Zalo gửi Khách'}
+                      </button>
+                    </div>
+                    <textarea
+                      readOnly
+                      rows={7}
+                      value={cleanerZaloMsg}
+                      className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 font-mono text-xs leading-relaxed select-all"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LỊCH SỬ CÁC KEY CLEANER ĐÃ CẤP */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-3">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-emerald-400" />
+                Lịch sử các Key Đinh Thành Cleaner Pro đã tạo gần đây ({cleanerHistory.length} bản ghi):
+              </div>
+              {cleanerHistory.length === 0 ? (
+                <div className="text-center py-6 text-xs text-slate-500">
+                  Chưa có mã bản quyền Cleaner nào được tạo trên trình duyệt này.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-700 text-slate-400">
+                        <th className="pb-2 px-2">Thời gian</th>
+                        <th className="pb-2 px-2">Mã máy (HWID)</th>
+                        <th className="pb-2 px-2">Gói cước</th>
+                        <th className="pb-2 px-2">Key Bản Quyền</th>
+                        <th className="pb-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {cleanerHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-emerald-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-amber-300 truncate max-w-xs">{item.key}</td>
                           <td className="py-2 px-2 text-right">
                             <button
                               type="button"

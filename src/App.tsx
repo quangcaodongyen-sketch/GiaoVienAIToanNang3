@@ -27,6 +27,7 @@ import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
 import { ScreenRecordModal } from './components/ScreenRecordModal';
+import { CleanerModal } from './components/CleanerModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function App() {
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
   const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
+  const [showCleanerModal, setShowCleanerModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -49,6 +51,7 @@ export default function App() {
       if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
       else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
       else if (hash === '#screen-record') setShowScreenRecordModal(true);
+      else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);
       else if (hash === '#smart-listening') setShowListeningModal(true);
       else if (hash === '#nls-ai') setShowNLSAIModal(true);
       else if (hash === '#admin') setShowAdminDashboard(true);
@@ -111,6 +114,11 @@ export default function App() {
     if (app.id === 'screen-record-v2' || app.url === '#screen-record') {
       e.preventDefault();
       setShowScreenRecordModal(true);
+      return;
+    }
+    if (app.id === 'dinhthanh-cleaner-pro' || app.url === '#cleaner-pro' || app.url === '#cleaner') {
+      e.preventDefault();
+      setShowCleanerModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -792,6 +800,13 @@ export default function App() {
       <ScreenRecordModal
         isOpen={showScreenRecordModal}
         onClose={() => setShowScreenRecordModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* ĐINH THÀNH CLEANER PRO v4.5 VIP (3 TABS) */}
+      <CleanerModal
+        isOpen={showCleanerModal}
+        onClose={() => setShowCleanerModal(false)}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
