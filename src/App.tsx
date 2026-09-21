@@ -30,6 +30,7 @@ import { ScreenRecordModal } from './components/ScreenRecordModal';
 import { CleanerModal } from './components/CleanerModal';
 import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
 import { TachGopPDFModal } from './components/TachGopPDFModal';
+import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,6 +45,7 @@ export default function App() {
   const [showCleanerModal, setShowCleanerModal] = useState(false);
   const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
+  const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -58,6 +60,7 @@ export default function App() {
       else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);
       else if (hash === '#chuan-hoa-vb' || hash === '#chuanhoavanban') setShowChuanHoaVBModal(true);
       else if (hash === '#tach-gop-pdf' || hash === '#pdf-suite') setShowTachGopPDFModal(true);
+      else if (hash === '#tao-de-thcs-8mon' || hash === '#tao-de-8mon' || hash === '#thcs-8mon') setShowTaoDeTHCS8MonModal(true);
       else if (hash === '#smart-listening') setShowListeningModal(true);
       else if (hash === '#nls-ai') setShowNLSAIModal(true);
       else if (hash === '#admin') setShowAdminDashboard(true);
@@ -135,6 +138,11 @@ export default function App() {
     if (app.id === 'TACH-GOP-PDF' || app.url === '#tach-gop-pdf') {
       e.preventDefault();
       setShowTachGopPDFModal(true);
+      return;
+    }
+    if (app.id === 'trung-tam-tao-de-thcs-8mon' || app.url === '#tao-de-thcs-8mon') {
+      e.preventDefault();
+      setShowTaoDeTHCS8MonModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -837,6 +845,13 @@ export default function App() {
       <TachGopPDFModal
         isOpen={showTachGopPDFModal}
         onClose={() => setShowTachGopPDFModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN) (3 TABS) */}
+      <TaoDeTHCS8MonModal
+        isOpen={showTaoDeTHCS8MonModal}
+        onClose={() => setShowTaoDeTHCS8MonModal(false)}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 

@@ -30,6 +30,7 @@ import { generateRecordLicenseKey } from '../services/recordKeyService';
 import { generateCleanerLicenseKey } from '../services/cleanerKeyService';
 import { generateCHVBLicenseKey, buildCHVBZaloMessage } from '../services/chuanhoaVBKeyService';
 import { generatePDFLicenseKey, buildPDFZaloMessage } from '../services/pdfSuiteKeyService';
+import { generateTHCS8MLicenseKey, SUBJECT_MAP } from '../services/taoDeTHCS8MonKeyService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -41,8 +42,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite
-  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite'>('tts');
+  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
+  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tts');
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -169,6 +170,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pdfCopiedMsg, setPdfCopiedMsg] = useState(false);
   const [pdfHistory, setPdfHistory] = useState<Array<{
     mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
+  // State cho Tool Tạo Key Bản Quyền - Trung Tâm Tạo Đề THCS (8 Môn) (CV 7991)
+  const [thcs8mMid, setThcs8mMid] = useState('');
+  const [thcs8mScope, setThcs8mScope] = useState<string>('ALL');
+  const [thcs8mPackage, setThcs8mPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
+  const [thcs8mKeyResult, setThcs8mKeyResult] = useState('');
+  const [thcs8mZaloMsg, setThcs8mZaloMsg] = useState('');
+  const [thcs8mGenError, setThcs8mGenError] = useState('');
+  const [thcs8mCopiedKey, setThcs8mCopiedKey] = useState(false);
+  const [thcs8mCopiedMsg, setThcs8mCopiedMsg] = useState(false);
+  const [thcs8mHistory, setThcs8mHistory] = useState<Array<{
+    mid: string;
+    scope: string;
     key: string;
     expDate: string;
     plan: string;
@@ -619,6 +638,55 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
     }
   };
 
+  // Handlers cho Tạo Đề THCS (8 Môn)
+  const handleGenerateTHCS8MKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setThcs8mGenError('');
+    try {
+      const cleanId = thcs8mMid.trim().toUpperCase();
+      if (!cleanId) {
+        setThcs8mGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng (VD: DVT-TH8M-XXXX-XXXX)!');
+        return;
+      }
+      const res = await generateTHCS8MLicenseKey(cleanId, thcs8mScope, thcs8mPackage);
+      setThcs8mKeyResult(res.licenseKey);
+      setThcs8mZaloMsg(res.zaloMessage);
+
+      const scopeName = SUBJECT_MAP[thcs8mScope]?.name || thcs8mScope;
+      const pkgName = `${thcs8mPackage === 'lifetime' ? 'Trọn Đời (Vĩnh Viễn)' : (thcs8mPackage === '1year' ? 'Gói 1 Năm' : 'Gói 2 Năm')} [${scopeName}]`;
+
+      const newRecord = {
+        mid: cleanId,
+        scope: scopeName,
+        key: res.licenseKey,
+        expDate: res.expDateStr,
+        plan: pkgName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...thcs8mHistory.filter(x => x.key !== res.licenseKey).slice(0, 19)];
+      setThcs8mHistory(updated);
+      localStorage.setItem('gvai_admin_thcs8m_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setThcs8mGenError(err.message || 'Lỗi khi tạo key');
+    }
+  };
+
+  const handleCopyTHCS8MKey = () => {
+    if (thcs8mKeyResult) {
+      navigator.clipboard.writeText(thcs8mKeyResult);
+      setThcs8mCopiedKey(true);
+      setTimeout(() => setThcs8mCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyTHCS8MZaloMsg = () => {
+    if (thcs8mZaloMsg) {
+      navigator.clipboard.writeText(thcs8mZaloMsg);
+      setThcs8mCopiedMsg(true);
+      setTimeout(() => setThcs8mCopiedMsg(false), 2000);
+    }
+  };
+
   if (!isOpen) return null;
 
   // Màn hình Đăng nhập bảo mật
@@ -888,6 +956,17 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
           >
             <Crown className="w-4 h-4" />
             8. PDF Suite Pro (Tách/Gộp)
+          </button>
+          <button
+            onClick={() => setAdminTab('thcs8m')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'thcs8m'
+                ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 text-white shadow-md shadow-blue-600/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4 text-amber-300" />
+            9. Tạo Đề 8 Môn THCS (CV 7991)
           </button>
         </div>
 
@@ -2210,6 +2289,192 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                         <tr key={i} className="hover:bg-slate-900/60">
                           <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
                           <td className="py-2 px-2 font-mono text-pink-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-amber-300 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 9: TRUNG TÂM TẠO ĐỀ THCS (8 MÔN) (CV 7991) */}
+        {adminTab === 'thcs8m' && (
+          <div className="space-y-4 my-2 overflow-y-auto max-h-[70vh] pr-1">
+            {/* Form tạo Key 8 Môn THCS */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-700/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <Key className="w-5 h-5 text-amber-400" />
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                    Sinh Key Bản Quyền Tạo Đề THCS (8 Môn Học - Chuẩn CV 7991)
+                  </h3>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono text-xs font-bold border border-blue-500/30">
+                  HMAC-SHA256
+                </span>
+              </div>
+
+              <form onSubmit={handleGenerateTHCS8MKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Mã Máy Khách Hàng (Hardware Code):
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: DVT-TH8M-XXXX-XXXX"
+                      value={thcs8mMid}
+                      onChange={(e) => setThcs8mMid(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white font-mono text-xs uppercase focus:outline-none focus:border-blue-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Phạm vi môn học cấp phép:
+                    </label>
+                    <select
+                      value={thcs8mScope}
+                      onChange={(e) => setThcs8mScope(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs font-semibold focus:outline-none focus:border-blue-400"
+                    >
+                      <option value="ALL">🏛️ TRỌN GÓI TOÀN DIỆN 8 MÔN (VIP)</option>
+                      <option value="TOAN">📐 Môn Toán học</option>
+                      <option value="VAN">📖 Môn Ngữ văn</option>
+                      <option value="ENG">🇬🇧 Môn Tiếng Anh</option>
+                      <option value="KHTN">🔬 Môn Khoa học tự nhiên</option>
+                      <option value="SUDIA">🌍 Môn Lịch sử & Địa lí</option>
+                      <option value="TIN">💻 Môn Tin học</option>
+                      <option value="GDCD">⚖️ Môn Giáo dục công dân</option>
+                      <option value="CN">⚙️ Môn Công nghệ</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Gói thời hạn bản quyền:
+                    </label>
+                    <select
+                      value={thcs8mPackage}
+                      onChange={(e) => setThcs8mPackage(e.target.value as any)}
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs font-semibold focus:outline-none focus:border-blue-400"
+                    >
+                      <option value="1year">Gói 1 Năm</option>
+                      <option value="2year">Gói 2 Năm (Tiết Kiệm)</option>
+                      <option value="lifetime">Gói Trọn Đời VIP (Vĩnh Viễn)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {thcs8mGenError && (
+                  <p className="text-red-400 text-xs font-semibold flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" /> {thcs8mGenError}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer transition-all"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-200" />
+                  <span>TẠO KEY BẢN QUYỀN TẠO ĐỀ THCS (8 MÔN) NGAY</span>
+                </button>
+              </form>
+
+              {thcs8mKeyResult && (
+                <div className="p-3.5 rounded-xl bg-slate-900 border border-blue-800/60 space-y-3 animate-fadeIn">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1">
+                      Mã Key Kích Hoạt (Gửi khách dán vào Tab Bản Quyền):
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={thcs8mKeyResult}
+                        className="flex-1 px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-amber-300 font-mono text-xs font-bold select-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyTHCS8MKey}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                      >
+                        {thcs8mCopiedKey ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{thcs8mCopiedKey ? 'Đã copy!' : 'Copy Key'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] font-bold text-slate-400 uppercase">
+                        Tin nhắn Zalo mẫu (Đã điền sẵn mã máy và key):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleCopyTHCS8MZaloMsg}
+                        className="text-[11px] py-1 px-2.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold flex items-center gap-1 transition-all cursor-pointer"
+                      >
+                        {thcs8mCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                        <span>{thcs8mCopiedMsg ? 'Đã copy tin nhắn Zalo!' : 'Sao chép tin nhắn Zalo gửi Khách'}</span>
+                      </button>
+                    </div>
+                    <textarea
+                      readOnly
+                      rows={8}
+                      value={thcs8mZaloMsg}
+                      className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 font-mono text-xs leading-relaxed select-all"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Lịch sử Key 8 Môn THCS */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-3">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-400" />
+                Lịch sử các Key Tạo Đề THCS đã tạo gần đây ({thcs8mHistory.length} bản ghi):
+              </div>
+              {thcs8mHistory.length === 0 ? (
+                <div className="text-center py-6 text-xs text-slate-500">
+                  Chưa có mã bản quyền Tạo Đề THCS nào được tạo trên trình duyệt này.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-700 text-slate-400">
+                        <th className="pb-2 px-2">Thời gian</th>
+                        <th className="pb-2 px-2">Mã máy (HWID)</th>
+                        <th className="pb-2 px-2">Phạm vi môn</th>
+                        <th className="pb-2 px-2">Gói cước</th>
+                        <th className="pb-2 px-2">Key Bản Quyền</th>
+                        <th className="pb-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {thcs8mHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-blue-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-amber-300 font-semibold">{item.scope}</td>
                           <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
                           <td className="py-2 px-2 font-mono text-amber-300 truncate max-w-xs">{item.key}</td>
                           <td className="py-2 px-2 text-right">

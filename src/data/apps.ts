@@ -49,6 +49,18 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
+    "id": "trung-tam-tao-de-thcs-8mon",
+    "title": "TẠO ĐỀ KIỂM TRA THCS 8 MÔN (CHUẨN CV 7991)",
+    "description": "Hệ thống phần mềm tạo đề định kỳ THCS (Lớp 6, 7, 8, 9) trọn gói 8 môn: Toán, Ngữ văn, Tiếng Anh, KHTN, Lịch sử - Địa lí, Tin học, GDCD, Công nghệ. Tự động sinh Ma trận, Bản đặc tả, đề hoán vị và Đáp án chuẩn Công văn 7991/BGDĐT.",
+    "image": "/taodethcs8mon.png",
+    "url": "#tao-de-thcs-8mon",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "sinhdebienthe",
     "title": "SINH 3 ĐỀ BIẾN THỂ VIP (AI PRO)",
     "description": "Tự động phân tích ma trận đề gốc và sinh 3 đề kiểm tra biến thể tương đương (nhẹ, vừa, sâu) kèm đáp án chi tiết, Audio Script và xuất file Word chuẩn 100%.",

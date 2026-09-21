@@ -12,6 +12,14 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Hệ Thống Tạo Đề Kiểm Tra THCS 8 Môn (CV 7991) -->
+  <url>
+    <loc>https://giaovienai-toannang.vercel.app/#tao-de-thcs-8mon</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
   <!-- Chuẩn Hóa Văn Bản Hành Chính AI (Nghị Định 30/2020) -->
   <url>
     <loc>https://giaovienai-toannang.vercel.app/#chuan-hoa-vb</loc>
