@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Menu, 
   X, 
@@ -24,6 +24,7 @@ import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
+import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,9 +33,24 @@ export default function App() {
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
+  const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
+
+  // Lắng nghe URL hash để mở modal tương ứng khi người dùng truy cập link trực tiếp
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
+      else if (hash === '#smart-listening') setShowListeningModal(true);
+      else if (hash === '#nls-ai') setShowNLSAIModal(true);
+      else if (hash === '#admin') setShowAdminDashboard(true);
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   // Filter only active apps
   const activeApps = apps
@@ -74,6 +90,11 @@ export default function App() {
     if (app.id === 'tichhop-nls-ai-thcs' || app.id === 'soangiaoannanglucso') {
       e.preventDefault();
       setShowNLSAIModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tieng-anh-thcs' || app.url === '#tao-de-tieng-anh') {
+      e.preventDefault();
+      setShowTaoDeModal(true);
       return;
     }
     if (app.id === 'viet-skkn') {
@@ -734,6 +755,13 @@ export default function App() {
       <NLSAIModal
         isOpen={showNLSAIModal}
         onClose={() => setShowNLSAIModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}
+      <TaoDeTiengAnhModal
+        isOpen={showTaoDeModal}
+        onClose={() => setShowTaoDeModal(false)}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 

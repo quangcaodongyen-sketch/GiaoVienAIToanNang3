@@ -44,3 +44,13 @@ export const NLS_RESOURCES = {
   // Link tải video trực tiếp
   videoDownloadUrl: "https://files.catbox.moe/l661sh.mp4"
 };
+
+// Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
+export const EXAM_RESOURCES = {
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) CDN tốc độ cao
+  fullZipUrl: "https://files.catbox.moe/07c2dq.zip",
+  // Link video hướng dẫn
+  videoDirectUrl: "https://files.catbox.moe/l661sh.mp4",
+  videoWatchUrl: "https://files.catbox.moe/l661sh.mp4"
+};
+

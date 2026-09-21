@@ -37,6 +37,18 @@ export const apps: AppCard[] = [
     "order": 0
   },
   {
+    "id": "tao-de-tieng-anh-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991)",
+    "description": "Phần mềm tạo đề kiểm tra Tiếng Anh THCS (Lớp 6, 7, 8, 9) chuẩn Công văn 7991/BGDĐT. Tự động hoán vị đề (601, 602), ma trận đặc tả, đáp án thang điểm và Audio Script bài nghe.",
+    "image": "/Taodektcv7991.jpg",
+    "url": "#tao-de-tieng-anh",
+    "category": "TIẾNG ANH & ĐỀ THI",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 0
+  },
+  {
     "id": "sinhdebienthe",
     "title": "SINH ĐỀ BIẾN THỂ VIP",
     "description": "Sinh đề biến thể từ đề gốc thành 3 đề tương đương",
