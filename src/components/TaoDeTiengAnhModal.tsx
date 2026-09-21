@@ -9,14 +9,12 @@ import {
   FileText,
   Play,
   CheckCircle2,
-  AlertTriangle,
-  FolderDown,
-  Layers,
   FileCheck2,
   Headphones,
-  Award,
   Volume2,
-  Square
+  Square,
+  Mic,
+  MessageSquare
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import {
@@ -57,8 +55,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
   const [examDuration, setExamDuration] = useState<string>('60');
 
-  // Preview sub-tab
-  const [previewSubTab, setPreviewSubTab] = useState<'de1' | 'de2' | 'dapan' | 'matran' | 'audio'>('de1');
+  // Preview sub-tabs: de1 | de2 | speaking | dapan | matran | audio
+  const [previewSubTab, setPreviewSubTab] = useState<'de1' | 'de2' | 'speaking' | 'dapan' | 'matran' | 'audio'>('de1');
 
   // Generation state - Khởi tạo rỗng, khách hàng KHÔNG THỂ xem đề mẫu trước khi bấm Tạo đề!
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -69,9 +67,6 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   // Pro registration form
   const [inputKey, setInputKey] = useState<string>('');
-  const [teacherName, setTeacherName] = useState<string>('');
-  const [teacherPhone, setTeacherPhone] = useState<string>('');
-  const [selectedPackage, setSelectedPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
   // Initialize Hardware Code & Multi-Layer Anti-Tamper Trial Limit on open
@@ -80,7 +75,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       const code = getOrCreateExamHardwareCode();
       setDetectedMid(code);
 
-      // Đọc số lượt dùng thử được ký số mật mã SHA-256 an toàn (Chống can thiệp F12)
+      // Đọc số lượt dùng thử được ký số mật mã SHA-256 an toàn
       getSecureExamTrialRemaining(code).then(trials => {
         setTrialRemaining(trials);
       });
@@ -96,9 +91,6 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
           }
         });
       }
-
-      // Khách hàng KHÔNG THỂ xem trước đề mẫu tiếng anh. Chỉ có thể tạo đề mới!
-      // Không tự động sinh đề tại đây.
     }
   }, [isOpen]);
 
@@ -395,9 +387,9 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-cyan-500"
                   >
                     <option value="GK1">Giữa Học Kì I (GK1)</option>
-                    <option value="CK1">Cuối Học Kì I (CK1 - Kèm Nói)</option>
+                    <option value="CK1">Cuối Học Kì I (CK1 - Kèm Bài Thi Nói 2.0đ)</option>
                     <option value="GK2">Giữa Học Kì II (GK2)</option>
-                    <option value="CK2">Cuối Học Kì II (CK2 - Kèm Nói)</option>
+                    <option value="CK2">Cuối Học Kì II (CK2 - Kèm Bài Thi Nói 2.0đ)</option>
                     <option value="KSCL">Khảo Sát Đầu Năm (KSCL)</option>
                   </select>
                 </div>
@@ -499,7 +491,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 </div>
               </div>
 
-              {/* KHUNG XEM TRƯỚC 5 TAB CON (PREVIEW TABS) */}
+              {/* KHUNG XEM TRƯỚC 6 TAB CON (PREVIEW TABS) */}
               <div className="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
                 {/* Sub-tabs header */}
                 <div className="px-3 py-2 bg-slate-900 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto">
@@ -524,6 +516,16 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     📄 2. Đề thi Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
                   </button>
                   <button
+                    onClick={() => setPreviewSubTab('speaking')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
+                      previewSubTab === 'speaking'
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'text-amber-400 hover:text-white hover:bg-slate-800'
+                    }`}
+                  >
+                    🗣️ 3. Đề Thi Nói (Speaking: 2.0đ)
+                  </button>
+                  <button
                     onClick={() => setPreviewSubTab('dapan')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer ${
                       previewSubTab === 'dapan'
@@ -531,7 +533,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    ✅ 3. Đáp án & Biểu điểm
+                    ✅ 4. Đáp án & Biểu điểm
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('matran')}
@@ -541,7 +543,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📊 4. Ma trận & Đặc tả (CV 7991)
+                    📊 5. Ma trận & Đặc tả (CV 7991)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('audio')}
@@ -551,7 +553,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    🎧 5. File Nghe Audio Scripts
+                    🎧 6. File Nghe Audio Scripts
                   </button>
                 </div>
 
@@ -666,7 +668,180 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         );
                       })()}
 
-                      {/* SUB-TAB 3: ĐÁP ÁN & BIỂU ĐIỂM (BẢNG 4 CỘT 19 HÀNG) */}
+                      {/* SUB-TAB 3: ĐỀ KIỂM TRA NÓI (SPEAKING TEST: 2.0 ĐIỂM CHUẨN 100%) */}
+                      {previewSubTab === 'speaking' && (
+                        <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[11pt] max-h-[500px] overflow-y-auto selection:bg-amber-100 shadow-inner space-y-4">
+                          {/* KHUNG TIÊU ĐỀ ĐỀ THI NÓI */}
+                          <div className="grid grid-cols-2 gap-4 pb-2 text-center text-[11pt] border-b border-slate-300">
+                            <div>
+                              <div className="font-bold uppercase">{examSuite.parentAgency}</div>
+                              <div className="font-bold uppercase underline">{examSuite.schoolName}</div>
+                            </div>
+                            <div>
+                              <div className="font-bold text-[12pt] uppercase text-amber-900">
+                                ĐỀ THI ĐÁNH GIÁ NĂNG LỰC NÓI (SPEAKING TEST)
+                              </div>
+                              <div className="font-bold">MÔN: TIẾNG ANH {examSuite.grade} - HỌC KỲ: {examSuite.termTitle}</div>
+                              <div className="italic text-[10pt] text-slate-600">{examSuite.speakingTest.subtitle}</div>
+                            </div>
+                          </div>
+
+                          <div className="bg-blue-50 border border-blue-200 p-2.5 rounded-lg text-center font-bold text-[10.5pt] text-blue-950">
+                            {examSuite.speakingTest.structureInfo}
+                          </div>
+
+                          {/* OPENING */}
+                          <div>
+                            <div className="font-bold text-[11.5pt] text-slate-900 mb-1">
+                              OPENING – GREETINGS (Khởi động làm quen - Không tính điểm)
+                            </div>
+                            <table className="w-full border-collapse border border-black text-left text-[9.5pt]">
+                              <thead>
+                                <tr className="bg-slate-100 text-center">
+                                  <th className="border border-black p-1.5 w-[16%] font-bold">To do</th>
+                                  <th className="border border-black p-1.5 w-[34%] font-bold">To say (Examiner)</th>
+                                  <th className="border border-black p-1.5 w-[26%] font-bold">Response (Students)</th>
+                                  <th className="border border-black p-1.5 w-[24%] font-bold">Back-up</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.speakingTest.openingRows.map(([todo, say, res, backup], idx) => (
+                                  <tr key={idx}>
+                                    <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
+                                    <td className="border border-black p-1.5">{say}</td>
+                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5">{backup}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* PHASE 1 */}
+                          <div>
+                            <div className="font-bold text-[12pt] text-indigo-900 mb-1">
+                              {examSuite.speakingTest.phase1.title}
+                            </div>
+                            <div className="text-[10pt] text-blue-800 font-bold mb-1">
+                              • Target competence: {examSuite.speakingTest.phase1.targetCompetence}
+                            </div>
+                            {examSuite.speakingTest.phase1.materialOrCard && (
+                              <div className="text-[10pt] italic text-slate-700 mb-1">
+                                {examSuite.speakingTest.phase1.materialOrCard}
+                              </div>
+                            )}
+                            <table className="w-full border-collapse border border-black text-left text-[9.5pt]">
+                              <thead>
+                                <tr className="bg-slate-100 text-center">
+                                  <th className="border border-black p-1.5 w-[16%] font-bold">To do</th>
+                                  <th className="border border-black p-1.5 w-[34%] font-bold">To say (Examiner)</th>
+                                  <th className="border border-black p-1.5 w-[26%] font-bold">Response (Students)</th>
+                                  <th className="border border-black p-1.5 w-[24%] font-bold">Back-up</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.speakingTest.phase1.scriptRows.map(([todo, say, res, backup], idx) => (
+                                  <tr key={idx}>
+                                    <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
+                                    <td className="border border-black p-1.5">{say}</td>
+                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5">{backup}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* PHASE 2 */}
+                          <div>
+                            <div className="font-bold text-[12pt] text-indigo-900 mb-1">
+                              {examSuite.speakingTest.phase2.title}
+                            </div>
+                            <div className="text-[10pt] text-blue-800 font-bold mb-1">
+                              • Target competence: {examSuite.speakingTest.phase2.targetCompetence}
+                            </div>
+                            {examSuite.speakingTest.phase2.materialOrCard && (
+                              <div className="text-[10pt] italic text-slate-700 mb-1 whitespace-pre-line bg-amber-50 p-2 rounded border border-amber-200">
+                                {examSuite.speakingTest.phase2.materialOrCard}
+                              </div>
+                            )}
+                            <table className="w-full border-collapse border border-black text-left text-[9.5pt]">
+                              <thead>
+                                <tr className="bg-slate-100 text-center">
+                                  <th className="border border-black p-1.5 w-[16%] font-bold">To do</th>
+                                  <th className="border border-black p-1.5 w-[34%] font-bold">To say (Examiner)</th>
+                                  <th className="border border-black p-1.5 w-[26%] font-bold">Response (Students)</th>
+                                  <th className="border border-black p-1.5 w-[24%] font-bold">Back-up</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.speakingTest.phase2.scriptRows.map(([todo, say, res, backup], idx) => (
+                                  <tr key={idx}>
+                                    <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
+                                    <td className="border border-black p-1.5">{say}</td>
+                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5">{backup}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* CLOSING */}
+                          <div>
+                            <div className="font-bold text-[11.5pt] text-slate-900 mb-1">
+                              CLOSING (Kết thúc phần thi nói)
+                            </div>
+                            <table className="w-full border-collapse border border-black text-left text-[9.5pt]">
+                              <thead>
+                                <tr className="bg-slate-100 text-center">
+                                  <th className="border border-black p-1.5 w-[16%] font-bold">To do</th>
+                                  <th className="border border-black p-1.5 w-[34%] font-bold">To say (Examiner)</th>
+                                  <th className="border border-black p-1.5 w-[26%] font-bold">Response (Students)</th>
+                                  <th className="border border-black p-1.5 w-[24%] font-bold">Back-up</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.speakingTest.closingRows.map(([todo, say, res, backup], idx) => (
+                                  <tr key={idx}>
+                                    <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
+                                    <td className="border border-black p-1.5">{say}</td>
+                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5">{backup}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* RUBRIC */}
+                          <div>
+                            <div className="font-bold text-[11.5pt] text-slate-900 mb-1">
+                              TIÊU CHÍ VÀ THANG ĐIỂM CHẤM NÓI (SPEAKING RUBRIC: 2.0 ĐIỂM)
+                            </div>
+                            <table className="w-full border-collapse border border-black text-left text-[9.5pt]">
+                              <thead>
+                                <tr className="bg-slate-100 text-center">
+                                  <th className="border border-black p-1.5 w-[30%] font-bold">Tiêu chí đánh giá</th>
+                                  <th className="border border-black p-1.5 w-[15%] font-bold">Điểm</th>
+                                  <th className="border border-black p-1.5 w-[55%] font-bold">Yêu cầu cần đạt</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.speakingTest.rubric.map((r, idx) => (
+                                  <tr key={idx}>
+                                    <td className="border border-black p-1.5 font-bold">{r.criteria}</td>
+                                    <td className="border border-black p-1.5 text-center font-bold">{r.points}</td>
+                                    <td className="border border-black p-1.5">{r.description}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* SUB-TAB 4: ĐÁP ÁN & BIỂU ĐIỂM (BẢNG 4 CỘT 19 HÀNG) */}
                       {previewSubTab === 'dapan' && (
                         <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
                           <div className="text-left font-bold text-[11.5pt] mb-2">
@@ -737,35 +912,6 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                             {examSuite.sampleWriting}
                           </div>
 
-                          {/* PHẦN THI NÓI (SPEAKING) NẾU CÓ */}
-                          {examSuite.hasSpeaking && (
-                            <>
-                              <div className="font-bold text-[13pt] mt-4 mb-2">
-                                III. PHẦN THI NÓI (SPEAKING TEST: 2.0 ĐIỂM)
-                              </div>
-                              <table className="w-full border-collapse border border-black text-left text-[10pt] mb-4">
-                                <thead>
-                                  <tr className="bg-slate-100 text-center">
-                                    <th className="border border-black p-2 w-[15%] font-bold">To do</th>
-                                    <th className="border border-black p-2 w-[32%] font-bold">To say (Examiner)</th>
-                                    <th className="border border-black p-2 w-[28%] font-bold">Response (Students)</th>
-                                    <th className="border border-black p-2 w-[25%] font-bold">Back-up</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {examSuite.speakingRows.map(([todo, say, res, backup], idx) => (
-                                    <tr key={idx}>
-                                      <td className="border border-black p-2 text-center font-bold whitespace-pre-line">{todo}</td>
-                                      <td className="border border-black p-2 whitespace-pre-line">{say}</td>
-                                      <td className="border border-black p-2 whitespace-pre-line">{res}</td>
-                                      <td className="border border-black p-2 whitespace-pre-line">{backup}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </>
-                          )}
-
                           {/* TỔNG ĐIỂM */}
                           <div className="font-bold text-[12.5pt] mt-4 whitespace-pre-line border-t border-slate-300 pt-2">
                             {examSuite.scoreSummary}
@@ -773,7 +919,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         </div>
                       )}
 
-                      {/* SUB-TAB 4: MA TRẬN 15 CỘT & ĐẶC TẢ 7 CỘT CHUẨN CV 7991 */}
+                      {/* SUB-TAB 5: MA TRẬN 15 CỘT & ĐẶC TẢ 7 CỘT CHUẨN CV 7991 */}
                       {previewSubTab === 'matran' && (
                         <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[11pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
                           {/* TIÊU ĐỀ MA TRẬN */}
@@ -851,7 +997,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         </div>
                       )}
 
-                      {/* SUB-TAB 5: FILE NGHE AUDIO VỚI TRÌNH PHÁT MÔ PHỎNG GIỌNG BẢN XỨ */}
+                      {/* SUB-TAB 6: FILE NGHE AUDIO VỚI TRÌNH PHÁT MÔ PHỎNG GIỌNG BẢN XỨ */}
                       {previewSubTab === 'audio' && (
                         <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner space-y-4">
                           <div className="p-4 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-between gap-3">
@@ -1185,7 +1331,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       </button>
                     </div>
                     <p className="text-[11px] text-slate-400 italic">
-                      * Key Pro mở khóa tạo đề không giới hạn, đầy đủ đề thi và ma trận đặc tả chuẩn CV 7991.
+                      * Key Pro mở khóa tạo đề không giới hạn, đầy đủ đề thi, đề thi nói và ma trận đặc tả chuẩn CV 7991.
                     </p>
                   </div>
                 </div>
@@ -1205,6 +1351,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Tạo đề kiểm tra Lớp 6, 7, 8, 9</li>
+                      <li className="flex items-center gap-1.5">✓ Kèm đầy đủ Đề thi nói Speaking Test</li>
                       <li className="flex items-center gap-1.5">✓ Tải file Word chuẩn CV 7991</li>
                       <li className="flex items-center gap-1.5">✓ Hạn sử dụng: 12 tháng</li>
                     </ul>
@@ -1231,6 +1378,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>
+                      <li className="flex items-center gap-1.5">✓ Đầy đủ Đề thi nói Speaking Test</li>
                       <li className="flex items-center gap-1.5">✓ Tặng kèm Add-in Word chạy trực tiếp</li>
                       <li className="flex items-center gap-1.5">✓ Cập nhật đề mới miễn phí</li>
                     </ul>
@@ -1257,6 +1405,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Không giới hạn thời gian</li>
+                      <li className="flex items-center gap-1.5">✓ Đầy đủ Đề thi viết + Đề thi nói</li>
                       <li className="flex items-center gap-1.5">✓ Bản cài Word + Desktop + Web</li>
                       <li className="flex items-center gap-1.5">✓ Hỗ trợ kỹ thuật trực tiếp từ Thầy Thành</li>
                     </ul>
