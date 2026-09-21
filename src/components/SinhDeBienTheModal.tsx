@@ -823,15 +823,23 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   poster="/sinhdebientheVIP.png"
                   className="w-full aspect-video max-h-[320px] object-contain bg-black"
                 >
-                  <source src="https://raw.githubusercontent.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/main/public/Taodektcv7991.mp4" type="video/mp4" />
+                  <source src="/HD_Sinh_3_De_Bien_The_VIP.mp4" type="video/mp4" />
                   Trình duyệt không hỗ trợ xem video trực tiếp.
                 </video>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
                 <span>💡 Hướng dẫn chi tiết cách tải đề gốc, thiết lập mức độ biến thể và xuất file Word chuẩn A4.</span>
-                <a
-                  href={BRAND.zaloUrl}
+                <div className="flex items-center gap-2">
+                  <a
+                    href="/HD_Sinh_3_De_Bien_The_VIP.mp4"
+                    download="HD_Sinh_3_De_Bien_The_VIP.mp4"
+                    className="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Tải Video (.mp4)
+                  </a>
+                  <a
+                    href={BRAND.zaloUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"

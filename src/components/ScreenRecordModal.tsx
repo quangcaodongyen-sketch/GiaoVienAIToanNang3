@@ -27,7 +27,15 @@ import {
   Share2,
   FileDown,
   RefreshCw,
-  Send
+  Send,
+  Palette,
+  Eraser,
+  RotateCcw,
+  PenTool,
+  Type,
+  Cast,
+  Layout,
+  Tv
 } from "lucide-react";
 import { BRAND } from "../config/brand";
 import {
@@ -50,21 +58,29 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
 
+  // Recording mode: "screen" (Display Capture) | "whiteboard" (Studio Bảng Giảng Dạy Trực Tuyến)
+  const [recordMode, setRecordMode] = useState<"screen" | "whiteboard">("screen");
+
   // Recording states
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState<string | null>(null);
+  const [recordedFileSize, setRecordedFileSize] = useState<string>("0 MB");
   const [recordError, setRecordError] = useState<string>("");
 
   // Options
   const [includeMic, setIncludeMic] = useState<boolean>(true);
-  const [includeCamera, setIncludeCamera] = useState<boolean>(false);
   const [enableVtvFilter, setEnableVtvFilter] = useState<boolean>(true);
   const [cursorHaloColor, setCursorHaloColor] = useState<string>("#FFD700"); // Gold
   const [haloRadius, setHaloRadius] = useState<number>(30);
-  const [haloOpacity, setHaloOpacity] = useState<number>(0.5);
+
+  // Whiteboard drawing tools
+  const [penColor, setPenColor] = useState<string>("#00E5FF"); // Cyan neon
+  const [penSize, setPenSize] = useState<number>(4);
+  const [isEraser, setIsEraser] = useState<boolean>(false);
+  const [boardTheme, setBoardTheme] = useState<"chalkboard" | "dark" | "navy">("chalkboard");
 
   // License & Security states
   const [hardwareCode, setHardwareCode] = useState<string>("");
@@ -75,15 +91,66 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   const [activationSuccess, setActivationSuccess] = useState<string>("");
   const [copiedHw, setCopiedHw] = useState<boolean>(false);
 
-  // Audio VU Meter simulation
+  // Audio VU Meter
   const [vuLevel, setVuLevel] = useState<number>(20);
 
   // References
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const timerRef = useRef<any>(null);
-  const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const liveVideoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isDrawingRef = useRef<boolean>(false);
+  const lastPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Khởi tạo bảng vẽ
+  const initBoard = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Nền bảng
+    if (boardTheme === "chalkboard") {
+      ctx.fillStyle = "#0c281e"; // Màu xanh bảng trường học
+    } else if (boardTheme === "navy") {
+      ctx.fillStyle = "#0a192f"; // Xanh navy công nghệ
+    } else {
+      ctx.fillStyle = "#090d16"; // Cyber Dark
+    }
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Kẻ lưới ô ly nhẹ sư phạm
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 40; x < canvas.width; x += 40) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+    for (let y = 40; y < canvas.height; y += 40) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    // Tiêu đề mẫu mở đầu
+    ctx.fillStyle = "#F59E0B";
+    ctx.font = "bold 24px 'Segoe UI', Tahoma, Arial";
+    ctx.fillText("✨ BÀI GIẢNG ĐIỆN TỬ - THẦY GIÁO ĐINH VĂN THÀNH (0915.213717)", 40, 50);
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.font = "16px 'Segoe UI', Tahoma, Arial";
+    ctx.fillText("Dùng chuột hoặc bút cảm ứng viết bảng trực tiếp tại đây, bấm 'Bắt Đầu Ghi Hình' để tạo video bài giảng.", 40, 85);
+  };
+
+  useEffect(() => {
+    if (isOpen && activeTab === "demo" && recordMode === "whiteboard") {
+      setTimeout(initBoard, 100);
+    }
+  }, [isOpen, activeTab, recordMode, boardTheme]);
 
   // Load hardware code & license on open
   useEffect(() => {
@@ -112,9 +179,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     if (isRecording && !isPaused) {
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
-        // Simulate VU Meter jitter
         if (includeMic) {
-          setVuLevel(Math.floor(35 + Math.random() * 55));
+          setVuLevel(Math.floor(40 + Math.random() * 50));
         }
       }, 1000);
     } else {
@@ -126,14 +192,12 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     };
   }, [isRecording, isPaused, includeMic]);
 
-  // Clean up media streams on unmount or close
+  // Clean up on unmount or close
   useEffect(() => {
     return () => {
       stopAllTracks();
     };
   }, []);
-
-  if (!isOpen) return null;
 
   const stopAllTracks = () => {
     if (streamRef.current) {
@@ -142,41 +206,60 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     }
   };
 
-  // Format MM:SS
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60).toString().padStart(2, "0");
     const s = (secs % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
 
-  // Start Screen Recording
+  // Start Recording Handler (cả 2 chế độ Screen và Whiteboard)
   const handleStartRecording = async () => {
     setRecordError("");
 
-    // Security check: Trial Quota
+    // Kiểm tra lượt dùng thử
     if (!isProActive) {
       const rem = await getSecureRecordTrialRemaining(hardwareCode);
       if (rem <= 0) {
-        setRecordError("Bạn đã sử dụng hết 5 lượt quay thử nghiệm trên thiết bị này. Vui lòng kích hoạt Bản Quyền Pro để ghi hình không giới hạn!");
+        setRecordError("Thầy Cô đã sử dụng hết 5 lượt quay thử nghiệm trên thiết bị này. Vui lòng kích hoạt Bản Quyền Pro để ghi hình không giới hạn!");
         setActiveTab("license");
         return;
       }
     }
 
     try {
-      // 1. Capture Display
-      const displayStream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          width: { ideal: 1920 },
-          height: { ideal: 1080 },
-          frameRate: { ideal: 60 }
-        },
-        audio: true
-      });
+      let captureStream: MediaStream;
 
-      let finalStream = displayStream;
+      if (recordMode === "screen") {
+        // Chế độ 1: Quay Màn Hình Thật (Display Media API)
+        try {
+          captureStream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+              frameRate: { ideal: 60 }
+            },
+            audio: true
+          });
+        } catch (displayErr: any) {
+          if (displayErr.name === "NotAllowedError") {
+            setRecordError("Thầy Cô đã bấm hủy chia sẻ màn hình. Thầy Cô có thể bấm lại hoặc chuyển sang chế độ 'Studio Bảng Giảng Dạy' bên cạnh để thử nghiệm ngay lập tức!");
+            return;
+          }
+          throw displayErr;
+        }
+      } else {
+        // Chế độ 2: Studio Bảng Giảng Dạy Trực Tuyến (Interactive Canvas Capture)
+        const canvas = canvasRef.current;
+        if (!canvas) {
+          setRecordError("Không tìm thấy khung bảng giảng dạy.");
+          return;
+        }
+        captureStream = (canvas as any).captureStream(60);
+      }
 
-      // 2. Mix with Microphone if requested
+      let finalStream = captureStream;
+
+      // Hòa trộn Micro nếu người dùng bật
       if (includeMic) {
         try {
           const micStream = await navigator.mediaDevices.getUserMedia({
@@ -187,26 +270,24 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
             }
           });
 
-          // Mix audio tracks
           const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
           const dest = audioContext.createMediaStreamDestination();
 
-          if (displayStream.getAudioTracks().length > 0) {
-            const sysSource = audioContext.createMediaStreamSource(new MediaStream(displayStream.getAudioTracks()));
+          if (captureStream.getAudioTracks().length > 0) {
+            const sysSource = audioContext.createMediaStreamSource(new MediaStream(captureStream.getAudioTracks()));
             sysSource.connect(dest);
           }
 
           if (micStream.getAudioTracks().length > 0) {
             const micSource = audioContext.createMediaStreamSource(new MediaStream(micStream.getAudioTracks()));
-            // VTV filter gain simulation
             const gainNode = audioContext.createGain();
-            gainNode.gain.value = enableVtvFilter ? 1.25 : 1.0;
+            gainNode.gain.value = enableVtvFilter ? 1.3 : 1.0;
             micSource.connect(gainNode);
             gainNode.connect(dest);
           }
 
           const mixedTracks = [
-            ...displayStream.getVideoTracks(),
+            ...captureStream.getVideoTracks(),
             ...dest.stream.getAudioTracks()
           ];
           finalStream = new MediaStream(mixedTracks);
@@ -216,9 +297,14 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
       }
 
       streamRef.current = finalStream;
-      const chunks: Blob[] = [];
 
-      // Create MediaRecorder
+      // Chiếu Live Video Monitor
+      if (liveVideoRef.current && recordMode === "screen") {
+        liveVideoRef.current.srcObject = finalStream;
+        liveVideoRef.current.play().catch(e => console.warn(e));
+      }
+
+      const chunks: Blob[] = [];
       const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
         ? "video/webm;codecs=vp9,opus"
         : MediaRecorder.isTypeSupported("video/webm")
@@ -237,25 +323,29 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
       recorder.onstop = async () => {
         const completeBlob = new Blob(chunks, { type: mimeType });
         const videoUrl = URL.createObjectURL(completeBlob);
+        const sizeMb = (completeBlob.size / (1024 * 1024)).toFixed(2) + " MB";
+        setRecordedFileSize(sizeMb);
         setRecordedVideoUrl(videoUrl);
         setRecordedChunks(chunks);
         setIsRecording(false);
         setIsPaused(false);
         stopAllTracks();
 
-        // Consume trial
+        // Trừ 1 lượt dùng thử
         if (!isProActive) {
           const nextRem = await consumeSecureRecordTrial(hardwareCode);
           setTrialRemaining(nextRem);
         }
       };
 
-      // Handle user clicking "Stop Sharing" on browser banner
-      displayStream.getVideoTracks()[0].onended = () => {
-        if (recorder.state !== "inactive") {
-          recorder.stop();
-        }
-      };
+      // Xử lý khi người dùng ấn nút "Stop Sharing" trên thanh duyệt trình
+      if (captureStream.getVideoTracks().length > 0) {
+        captureStream.getVideoTracks()[0].onended = () => {
+          if (recorder.state !== "inactive") {
+            recorder.stop();
+          }
+        };
+      }
 
       recorder.start(1000);
       setIsRecording(true);
@@ -264,9 +354,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
       setRecordedVideoUrl(null);
     } catch (err: any) {
       console.error(err);
-      if (err.name !== "NotAllowedError") {
-        setRecordError(err.message || "Không thể khởi tạo quay màn hình. Vui lòng cấp quyền truy cập trình duyệt.");
-      }
+      setRecordError(err.message || "Không thể khởi tạo ghi hình. Vui lòng kiểm tra quyền truy cập trình duyệt hoặc thử chế độ Bảng Giảng Dạy.");
     }
   };
 
@@ -302,10 +390,67 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     if (!recordedVideoUrl) return;
     const a = document.createElement("a");
     a.href = recordedVideoUrl;
-    a.download = `Screen_Record_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "_")}.webm`;
+    a.download = `Bai_Giang_Screen_Record_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "_")}.webm`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  };
+
+  // Thao tác vẽ bảng tương tác
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    isDrawingRef.current = true;
+    const rect = e.currentTarget.getBoundingClientRect();
+    lastPosRef.current = {
+      x: (e.clientX - rect.left) * (e.currentTarget.width / rect.width),
+      y: (e.clientY - rect.top) * (e.currentTarget.height / rect.height)
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    // Di chuyển spotlight chuột
+    const rect = e.currentTarget.getBoundingClientRect();
+    const halo = document.getElementById("cursor-halo-preview");
+    if (halo) {
+      halo.style.left = `${e.clientX - rect.left}px`;
+      halo.style.top = `${e.clientY - rect.top}px`;
+      halo.style.opacity = "1";
+    }
+
+    if (!isDrawingRef.current || !lastPosRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const currentX = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const currentY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    ctx.beginPath();
+    ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+    ctx.lineTo(currentX, currentY);
+    ctx.strokeStyle = isEraser ? (boardTheme === "chalkboard" ? "#0c281e" : boardTheme === "navy" ? "#0a192f" : "#090d16") : penColor;
+    ctx.lineWidth = isEraser ? penSize * 5 : penSize;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    lastPosRef.current = { x: currentX, y: currentY };
+  };
+
+  const handleMouseUp = () => {
+    isDrawingRef.current = false;
+    lastPosRef.current = null;
+  };
+
+  const insertTemplateTopic = (title: string) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.fillStyle = penColor;
+    ctx.font = "bold 28px 'Segoe UI', Tahoma, Arial";
+    ctx.fillText(title, 50, 160 + Math.random() * 80);
   };
 
   const handleActivatePro = async (e: React.FormEvent) => {
@@ -456,6 +601,35 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         {activeTab === "demo" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
             
+            {/* CHỌN CHẾ ĐỘ QUAY (SCREEN RECORDING SOURCE MODE) */}
+            <div className="flex flex-col sm:flex-row items-center gap-2 p-1.5 bg-slate-950 rounded-2xl border border-slate-800">
+              <button
+                type="button"
+                onClick={() => { if (!isRecording) { setRecordMode("screen"); setRecordedVideoUrl(null); } }}
+                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${
+                  recordMode === "screen"
+                    ? "bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-lg shadow-rose-600/30"
+                    : "text-slate-400 hover:text-white bg-slate-900/60"
+                }`}
+              >
+                <Monitor className="w-4 h-4" />
+                <span>CHẾ ĐỘ 1: QUAY TOÀN MÀN HÌNH / POWERPOINT / WORD</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => { if (!isRecording) { setRecordMode("whiteboard"); setRecordedVideoUrl(null); } }}
+                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${
+                  recordMode === "whiteboard"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30"
+                    : "text-slate-400 hover:text-white bg-slate-900/60"
+                }`}
+              >
+                <Palette className="w-4 h-4" />
+                <span>CHẾ ĐỘ 2: STUDIO BẢNG GIẢNG DẠY TRỰC TUYẾN (DÙNG THỬ NGAY)</span>
+              </button>
+            </div>
+
             {/* RECORDING CONTROL PANEL */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -464,12 +638,16 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                   <h3 className="font-extrabold text-sm text-white flex items-center gap-2">
                     {isRecording ? (
                       <span className="text-rose-400 flex items-center gap-2">
-                        <span>ĐANG GHI HÌNH:</span>
+                        <span>ĐANG GHI HÌNH BÀI GIẢNG:</span>
                         <span className="font-mono text-base font-black text-amber-300">{formatTime(recordingTime)}</span>
                         {isPaused && <span className="text-xs text-amber-400 font-bold">(ĐANG TẠM DỪNG)</span>}
                       </span>
                     ) : (
-                      <span className="text-slate-200">PHÒNG THU QUAY MÀN HÌNH & GHI ÂM BÀI GIẢNG (ONLINE STUDIO)</span>
+                      <span className="text-slate-200">
+                        {recordMode === "screen" 
+                          ? "PHÒNG THU QUAY MÀN HÌNH & GHI ÂM BÀI GIẢNG (ONLINE BROADCAST)"
+                          : "STUDIO BẢNG GIẢNG DẠY TƯƠNG TÁC KỸ THUẬT SỐ CHUẨN SƯ PHẠM"}
+                      </span>
                     )}
                   </h3>
                 </div>
@@ -521,7 +699,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
                 {/* 3. Halo Spotlight Color */}
                 <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between px-3">
-                  <span className="text-slate-400 font-medium">Spotlight Chuột:</span>
+                  <span className="text-slate-400 font-medium">Spotlight:</span>
                   <div className="flex gap-1">
                     {["#FFD700", "#00E5FF", "#00E676", "#FF3366"].map((color) => (
                       <button
@@ -537,7 +715,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                   </div>
                 </div>
 
-                {/* 4. Halo Radius / Opacity */}
+                {/* 4. Halo Radius */}
                 <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between px-3">
                   <span className="text-slate-400 font-medium">Bán kính: {haloRadius}px</span>
                   <input
@@ -555,7 +733,11 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
               <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800/80">
                 <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
                   <Monitor className="w-3.5 h-3.5 text-blue-400" />
-                  <span>Hỗ trợ quay Toàn màn hình, Cửa sổ PowerPoint, Word hoặc Tab bài giảng.</span>
+                  <span>
+                    {recordMode === "screen"
+                      ? "Hỗ trợ quay Toàn màn hình, Cửa sổ PowerPoint, Word hoặc Tab bài giảng."
+                      : "Ghi hình bảng viết kỹ thuật số thời gian thực, lưu bài giảng Full HD 60fps."}
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -567,11 +749,15 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                       className={`w-full sm:w-auto py-3 px-8 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${
                         !isProActive && trialRemaining <= 0
                           ? "bg-rose-900/60 text-rose-300 border border-rose-500/50 cursor-not-allowed"
-                          : "bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-rose-600/30 hover:scale-[1.02]"
+                          : recordMode === "screen"
+                          ? "bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-rose-600/30 hover:scale-[1.02]"
+                          : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-500 hover:from-emerald-500 hover:to-cyan-400 text-white shadow-emerald-600/30 hover:scale-[1.02]"
                       }`}
                     >
                       <Play className="w-4 h-4 fill-white" />
-                      <span>BẮT ĐẦU QUAY MÀN HÌNH (F9) {!isProActive && `(${trialRemaining} lượt)`}</span>
+                      <span>
+                        {recordMode === "screen" ? "BẮT ĐẦU QUAY MÀN HÌNH (F9)" : "BẮT ĐẦU GHI HÌNH BÀI GIẢNG"} {!isProActive && `(${trialRemaining} lượt)`}
+                      </span>
                     </button>
                   ) : (
                     <>
@@ -581,7 +767,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                         className="py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow"
                       >
                         {isPaused ? <Play className="w-4 h-4 fill-white" /> : <Pause className="w-4 h-4 fill-white" />}
-                        <span>{isPaused ? "Tiếp Tục (Resume)" : "Tạm Dừng (Pause)"}</span>
+                        <span>{isPaused ? "Tiếp Tục" : "Tạm Dừng"}</span>
                       </button>
 
                       <button
@@ -590,7 +776,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                         className="py-2.5 px-6 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs flex items-center gap-1.5 cursor-pointer shadow-lg shadow-rose-600/30"
                       >
                         <Square className="w-4 h-4 fill-white" />
-                        <span>DỪNG & XEM VIDEO</span>
+                        <span>DỪNG & XUẤT VIDEO</span>
                       </button>
 
                       <button
@@ -614,48 +800,250 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
               )}
             </div>
 
-            {/* RECORDED VIDEO PLAYBACK OR SIMULATOR */}
+            {/* VIDEO PLAYBACK SAU KHI DỪNG QUAY THÀNH CÔNG */}
             {recordedVideoUrl ? (
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-extrabold text-sm text-emerald-300 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    KẾT QUẢ GHI HÌNH THÀNH CÔNG
-                  </h4>
-                  <button
-                    type="button"
-                    onClick={handleDownloadVideo}
-                    className="py-2 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>TẢI VIDEO VỀ MÁY (.WEBM / .MP4)</span>
-                  </button>
+              <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-500/50 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-extrabold text-sm text-emerald-300">
+                        GHI HÌNH BÀI GIẢNG HOÀN TẤT XUẤT SẮC!
+                      </h4>
+                      <p className="text-[11px] text-slate-400">
+                        Thời lượng: <strong className="text-white">{formatTime(recordingTime)}</strong> • Dung lượng: <strong className="text-amber-300">{recordedFileSize}</strong> • Định dạng: <span className="text-cyan-400 font-bold">Full HD 60fps</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { setRecordedVideoUrl(null); setRecordingTime(0); }}
+                      className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Quay Thử Bài Mới</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadVideo}
+                      className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>TẢI VIDEO VỀ MÁY ({recordedFileSize})</span>
+                    </button>
+                  </div>
                 </div>
 
-                <div className="relative rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl max-h-[460px] flex items-center justify-center">
+                <div className="relative rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl flex items-center justify-center">
                   <video
                     src={recordedVideoUrl}
                     controls
                     autoPlay
                     playsInline
-                    className="w-full max-h-[440px] object-contain"
+                    className="w-full max-h-[440px] aspect-video object-contain"
+                  />
+                </div>
+              </div>
+            ) : isRecording && recordMode === "screen" ? (
+              /* LIVE BROADCAST MONITOR (KHI ĐANG QUAY MÀN HÌNH THẬT) */
+              <div className="p-4 rounded-2xl bg-slate-950 border-2 border-rose-500 shadow-2xl shadow-rose-950/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
+                    <span className="text-xs font-black text-rose-400 uppercase tracking-wider">
+                      LIVE BROADCAST MONITOR – ĐANG PHẢN CHIẾU MÀN HÌNH TRỰC TIẾP
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md bg-rose-500 text-white font-mono text-[11px] font-black">
+                      REC {formatTime(recordingTime)}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-800 text-cyan-300 font-mono text-[10px]">
+                      1080P 60FPS
+                    </span>
+                  </div>
+                </div>
+
+                <div className="relative rounded-xl overflow-hidden bg-black border border-slate-800 flex items-center justify-center">
+                  <video
+                    ref={liveVideoRef}
+                    autoPlay
+                    muted
+                    playsInline
+                    className="w-full max-h-[420px] aspect-video object-contain bg-black"
+                  />
+                  {/* Spotlight Circle preview overlay */}
+                  <div
+                    id="cursor-halo-preview"
+                    style={{
+                      width: `${haloRadius * 2}px`,
+                      height: `${haloRadius * 2}px`,
+                      backgroundColor: cursorHaloColor,
+                      opacity: 0,
+                      transform: "translate(-50%, -50%)",
+                      boxShadow: `0 0 25px ${cursorHaloColor}`
+                    }}
+                    className="absolute rounded-full pointer-events-none transition-opacity duration-150"
+                  />
+                </div>
+              </div>
+            ) : recordMode === "whiteboard" ? (
+              /* STUDIO BẢNG GIẢNG DẠY TRỰC TUYẾN TƯƠNG TÁC */
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <PenTool className="w-4 h-4 text-emerald-400" />
+                    <span className="font-extrabold text-sm text-slate-200">
+                      BẢNG VIẾT KỸ THUẬT SỐ – VIẾT VÀ QUAY BÀI GIẢNG THỜI GIAN THỰC
+                    </span>
+                  </div>
+
+                  {/* WHITEBOARD TOOLBAR */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Chọn màu phấn */}
+                    <div className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-xl border border-slate-800">
+                      <span className="text-[10px] text-slate-400 mr-1">Màu phấn:</span>
+                      {[
+                        { color: "#00E5FF", label: "Cyan" },
+                        { color: "#FFD700", label: "Vàng" },
+                        { color: "#FF3366", label: "Đỏ" },
+                        { color: "#FFFFFF", label: "Trắng" },
+                        { color: "#00E676", label: "Lá" }
+                      ].map((item) => (
+                        <button
+                          key={item.color}
+                          type="button"
+                          onClick={() => { setPenColor(item.color); setIsEraser(false); }}
+                          style={{ backgroundColor: item.color }}
+                          title={item.label}
+                          className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${
+                            penColor === item.color && !isEraser ? "scale-125 ring-2 ring-white" : "opacity-70 hover:opacity-100"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Nét bút */}
+                    <div className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-xl border border-slate-800">
+                      <span className="text-[10px] text-slate-400">Nét:</span>
+                      {[2, 4, 8].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setPenSize(s)}
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
+                            penSize === s ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          {s}px
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Tẩy & Xóa */}
+                    <button
+                      type="button"
+                      onClick={() => setIsEraser(!isEraser)}
+                      className={`px-2.5 py-1 rounded-xl border text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                        isEraser ? "bg-amber-500 text-black border-amber-400" : "bg-slate-900 border-slate-800 text-slate-300"
+                      }`}
+                    >
+                      <Eraser className="w-3.5 h-3.5" />
+                      <span>{isEraser ? "Đang dùng Tẩy" : "Tẩy"}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={initBoard}
+                      className="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-rose-400 hover:text-rose-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-all"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Xóa Bảng</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* TEMPLATE QUICK CHIPS */}
+                <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
+                  <span className="text-slate-400 flex items-center gap-1 font-semibold">
+                    <Type className="w-3 h-3 text-amber-400" /> Chèn nhanh bài mẫu:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => insertTemplateTopic("UNIT 7: TELEVISION - GRAMMAR & PRACTICE")}
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 font-semibold cursor-pointer"
+                  >
+                    + Tiếng Anh 9: Unit 7
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertTemplateTopic("ĐẠI SỐ 9: CĂN BẬC HAI & HẰNG ĐẲNG THỨC")}
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-amber-300 font-semibold cursor-pointer"
+                  >
+                    + Toán 9: Căn Bậc Hai
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertTemplateTopic("ĐỀ KIỂM TRA CHUẨN CÔNG VĂN 7991")}
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-emerald-300 font-semibold cursor-pointer"
+                  >
+                    + Đề Kiểm Tra CV 7991
+                  </button>
+                </div>
+
+                {/* CANVAS KHUNG BẢNG */}
+                <div className="relative rounded-2xl overflow-hidden border-2 border-slate-800 shadow-2xl bg-black">
+                  {isRecording && (
+                    <div className="absolute top-3 left-3 z-20 flex items-center gap-2 bg-black/80 backdrop-blur px-3 py-1 rounded-full border border-red-500/50 pointer-events-none">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+                      <span className="font-mono text-xs font-black text-rose-300">REC {formatTime(recordingTime)}</span>
+                      <span className="text-[10px] text-amber-300 font-bold">STUDIO 60FPS</span>
+                    </div>
+                  )}
+
+                  <canvas
+                    ref={canvasRef}
+                    width={1280}
+                    height={640}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                    className="w-full aspect-[2/1] max-h-[420px] object-contain cursor-crosshair select-none block"
+                  />
+
+                  {/* Spotlight Circle */}
+                  <div
+                    id="cursor-halo-preview"
+                    style={{
+                      width: `${haloRadius * 2}px`,
+                      height: `${haloRadius * 2}px`,
+                      backgroundColor: cursorHaloColor,
+                      opacity: 0,
+                      transform: "translate(-50%, -50%)",
+                      boxShadow: `0 0 25px ${cursorHaloColor}`
+                    }}
+                    className="absolute rounded-full pointer-events-none transition-opacity duration-150"
                   />
                 </div>
               </div>
             ) : (
-              /* LIVE INTERACTIVE SIMULATION CANVAS (HALO & CURSOR PREVIEW) */
+              /* CHẾ ĐỘ 1 CHỜ QUAY (PRE-RECORDING SCREEN HELPER) */
               <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                    Mô phỏng hiệu ứng Spotlight con trỏ chuột & Sóng nhấp chuột (Click Waves):
+                    Thử nghiệm hiệu ứng Spotlight con trỏ chuột & Sóng nhấp chuột (Click Waves):
                   </span>
                   <span className="text-[11px] text-slate-400">
                     💡 Rê chuột và click thử vào ô bên dưới để trải nghiệm hiệu ứng thực tế
                   </span>
                 </div>
 
-                {/* INTERACTIVE SPOTLIGHT PREVIEW CONTAINER */}
                 <div
                   onMouseMove={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
@@ -688,7 +1076,6 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                   }}
                   className="relative h-64 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center cursor-crosshair select-none"
                 >
-                  {/* Spotlight Circle */}
                   <div
                     id="cursor-halo-preview"
                     style={{
@@ -710,7 +1097,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                       BÀI GIẢNG ĐIỆN TỬ & MÀN HÌNH GIẢNG DẠY
                     </h5>
                     <p className="text-xs text-slate-400 max-w-md mx-auto">
-                      Khi bấm <strong className="text-rose-400">"Bắt đầu quay"</strong>, phần mềm sẽ ghi lại trọn vẹn màn hình bài giảng, lời giảng Micro chuẩn đài truyền hình và hiệu ứng trỏ chuột thu hút sự chú ý của học sinh.
+                      Khi bấm <strong className="text-rose-400">"Bắt đầu quay màn hình (F9)"</strong>, trình duyệt sẽ cho phép Thầy Cô chọn quay toàn màn hình, cửa sổ PowerPoint hoặc tab bài giảng, kèm giọng giảng lọc âm chuẩn đài VTV.
                     </p>
                   </div>
                 </div>
