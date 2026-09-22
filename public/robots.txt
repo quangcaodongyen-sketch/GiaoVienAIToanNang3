@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://giaovienai-toannang.vercel.app/sitemap.xml
+Sitemap: https://giao-vien-ai-toan-nang3.vercel.app/sitemap.xml
