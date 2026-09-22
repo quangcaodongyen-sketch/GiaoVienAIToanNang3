@@ -98,8 +98,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "chuanhoavanbanvip",
-    "title": "CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020)",
-    "description": "Tự động phân tích, sửa lỗi chính tả và chuẩn hóa thể thức 2 cột đầu trang (Cơ quan/Quốc hiệu), trích yếu, căn cứ, nơi nhận và chữ ký đúng quy cách Nghị định 30/2020/NĐ-CP. Định dạng Times New Roman 13pt chuẩn mực sư phạm.",
+    "title": "CHUẨN HÓA NĐ 30 & SOẠN GIÁO ÁN 5512 (AI WORD)",
+    "description": "Trợ lý AI Word Assistant tích hợp trực tiếp vào Microsoft Word: Chuẩn hóa thể thức Nghị định 30/2020/NĐ-CP (Cơ quan, Quốc hiệu, Ký tên NGUYỄN VĂN A), Soạn Giáo án 5512 tất cả các môn bấm 1 phát ăn luôn, kho ký hiệu cấp 1-2-3 hơn cả MathType, sửa lỗi chính tả và phát triển ý tự động không cần API key.",
     "image": "/chuanhoavanbanvip.jpg",
     "url": "#chuan-hoa-vb",
     "category": "VĂN BẢN & TIỆN ÍCH SỐ",

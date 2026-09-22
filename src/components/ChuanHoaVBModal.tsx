@@ -39,6 +39,36 @@ interface ChuanHoaVBModalProps {
 // Mẫu văn bản hành chính thực chiến
 const SAMPLE_DOCS = [
   {
+    id: 'giaoan5512',
+    name: 'Giáo án 5512 (Toán 8 - Định lý Py-ta-go)',
+    raw: `TRUONG THCS DONG YEN
+TO CHUYEN MON KHTN
+Ho va ten giao vien: Dinh Van Thanh
+KE HOACH BAI DAY (GIAO AN)
+TEN BAI DAY: DINH LY PY-TA-GO
+Mon hoc: Toan hoc; Lop: Lop 8
+Thoi luong thuc hien: 1 tiet (45 phut)
+I. MUC TIEU
+1. Ve kien thuc:
+- Phat bieu duoc dinh ly Py-ta-go ve moi quan he giua ba canh cua tam giac vuong.
+- Tinh duoc do dai mot canh cua tam giac vuong khi biet do dai hai canh con lai.
+2. Ve nang luc:
+- Nang luc tu chu va tu hoc: Chu dong doc SGK, hoan thanh phieu hoc tap.
+- Nang luc tu duy toan hoc: So sanh, tinh toan va suy luan logic.
+3. Ve pham chat:
+- Cham chi, trung thuc va co trach nhiem trong hoat dong nhom.
+II. THIET BI DAY HOC
+- GV: Ke hoach bai day, PowerPoint, thuoc ke, e-ke, phieu hoc tap.
+- HS: SGK, vo ghi, thuoc ke, may tinh cam tay.
+III. TIEN TRINH DAY HOC
+- Hoat dong 1: Khoi dong (5 phut) - Tinh huong thuc te do chieu cao cay.
+- Hoat dong 2: Hinh thanh kien thuc (20 phut) - Do dac cac hinh vuong dung tren 3 canh tam giac vuong.
+- Hoat dong 3: Luyen tap (15 phut) - Giai bai tap 1, 2 SGK trang 65.
+- Hoat dong 4: Van dung (5 phut) - Do khoang cach thuc te tren san truong.
+IV. HO SO DAY HOC
+- Phieu hoc tap so 1 va tieu chi danh gia Rubrics.`
+  },
+  {
     id: 'quyetdinh',
     name: 'Quyết định (Kiện toàn Ban Chỉ đạo)',
     raw: `UBND HUYEN BAC QUANG
@@ -785,7 +815,8 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </h4>
                   <div className="space-y-2.5">
                     <a
-                      href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
+                      href="/Cai_Dat_AI_Word.exe"
+                      download="Cai_Dat_AI_Word.exe"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -803,7 +834,27 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </a>
 
                     <a
-                      href="/Smart_Listening_Pro_Pass_123.zip"
+                      href="/AI_Word_Assistant.dotm"
+                      download="AI_Word_Assistant.dotm"
+                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs">
+                          DOTM
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white group-hover:text-purple-300">
+                            Template Word Add-in (.dotm)
+                          </p>
+                          <p className="text-[10px] text-slate-400">Ribbon Soạn 5512 & Chuẩn hóa NĐ 30</p>
+                        </div>
+                      </div>
+                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                    </a>
+
+                    <a
+                      href="/Cai_Dat_AI_Word_Pass_123.zip"
+                      download="Cai_Dat_AI_Word_Pass_123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
