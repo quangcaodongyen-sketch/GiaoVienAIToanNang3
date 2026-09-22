@@ -840,12 +840,13 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   </a>
                   <a
                     href={BRAND.zaloUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
-                >
-                  Kết nối Zalo Thầy Thành ({BRAND.phone})
-                </a>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
+                  >
+                    Kết nối Zalo Thầy Thành ({BRAND.phone})
+                  </a>
+                </div>
               </div>
             </div>
 
