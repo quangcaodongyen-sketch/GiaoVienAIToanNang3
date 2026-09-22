@@ -33,6 +33,11 @@ import {
   activateTHCS8MLicense,
   SUBJECT_MAP
 } from '../services/taoDeTHCS8MonKeyService';
+import {
+  downloadTHCS8MonWordDoc,
+  getTHCS8MonExamSuite,
+  THCS8MonExamData
+} from '../services/thcs8MonWordExportService';
 
 interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
@@ -131,6 +136,8 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [examCode, setExamCode] = useState<string>('701');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [previewSubTab, setPreviewSubTab] = useState<'exam' | 'matrix' | 'answer'>('exam');
+
 
   // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
   useEffect(() => {
@@ -198,6 +205,17 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  // Tải file Word (.doc) chuẩn định dạng mẫu 100% Bộ GD&ĐT & CV 7991
+  const handleDownloadDoc = () => {
+    try {
+      downloadTHCS8MonWordDoc(selectedSubject, selectedGrade, selectedExamType, examCode);
+    } catch (err) {
+      console.error('Download word error:', err);
+      alert('Có lỗi khi tải file Word, vui lòng thử lại.');
+    }
+  };
+
 
   const handleActivateLicense = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -477,9 +495,10 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
             </div>
 
             {/* KHUNG XEM TRƯỚC ĐỀ THI SƯ PHẠM (TIMES NEW ROMAN 13PT) */}
+            {/* KHUNG XEM TRƯỚC ĐỀ THI SƯ PHẠM (TIMES NEW ROMAN 13PT) */}
             <div className="bg-slate-900/90 rounded-xl border border-slate-800 overflow-hidden flex flex-col">
               {/* Toolbar */}
-              <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950/80 border-b border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-slate-950/80 border-b border-slate-800">
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-blue-400" />
                   <span className="text-xs font-bold text-slate-200">
@@ -487,10 +506,55 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   </span>
                 </div>
 
+                {/* Sub-tab chuyển đổi xem Đề thi / Ma trận / Đáp án */}
+                <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px]">
+                  <button
+                    onClick={() => setPreviewSubTab('exam')}
+                    className={`px-2.5 py-1 rounded-md font-bold transition-all ${
+                      previewSubTab === 'exam'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    1. Đề Thi
+                  </button>
+                  <button
+                    onClick={() => setPreviewSubTab('matrix')}
+                    className={`px-2.5 py-1 rounded-md font-bold transition-all ${
+                      previewSubTab === 'matrix'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    2. Ma Trận (CV 7991)
+                  </button>
+                  <button
+                    onClick={() => setPreviewSubTab('answer')}
+                    className={`px-2.5 py-1 rounded-md font-bold transition-all ${
+                      previewSubTab === 'answer'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    3. Đáp Án & Biểu Điểm
+                  </button>
+                </div>
+
+                {/* Các nút thao tác xuất file */}
                 <div className="flex items-center gap-2">
+                  {/* Nút Tải Word (.doc) chuẩn 100% mẫu */}
+                  <button
+                    onClick={handleDownloadDoc}
+                    className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-700/30 transition-all cursor-pointer active:scale-95 border border-emerald-400/40"
+                    title="Tải trọn bộ Đề thi + Ma trận đặc tả + Đáp án thang điểm chi tiết dạng Microsoft Word (.doc)"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Tải File Word (.doc)</span>
+                  </button>
+
                   <button
                     onClick={handleCopyExam}
-                    className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium flex items-center gap-1 border border-slate-700 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium flex items-center gap-1 border border-slate-700 transition-colors cursor-pointer"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? 'Đã chép' : 'Sao chép'}</span>
@@ -498,7 +562,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
                   <button
                     onClick={() => window.print()}
-                    className="px-3 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-lg text-xs font-medium flex items-center gap-1 border border-blue-500/40 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-lg text-xs font-medium flex items-center gap-1 border border-blue-500/40 transition-colors cursor-pointer"
                   >
                     <Printer className="w-3.5 h-3.5" />
                     <span>In đề thi</span>
@@ -507,177 +571,274 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
               </div>
 
               {/* Tờ giấy đề thi trắng chuẩn Times New Roman 13pt */}
-              <div
-                id="thcs-exam-preview-content"
-                className="p-6 sm:p-8 bg-white text-slate-900 font-serif leading-relaxed max-h-[500px] overflow-y-auto select-text text-[13pt]"
-                style={{ fontFamily: '"Times New Roman", Times, serif' }}
-              >
-                {/* Khối tiêu đề đầu đề thi 2 cột */}
-                <div className="grid grid-cols-2 gap-4 pb-4 border-b-2 border-slate-900 text-center">
-                  <div>
-                    <p className="font-bold text-[11pt] uppercase">PHÒNG GD&ĐT BẮC QUANG</p>
-                    <p className="font-bold text-[12pt] uppercase text-blue-900">TRƯỜNG THCS ĐỒNG YÊN</p>
-                    <p className="text-[11pt] italic">Đề thi chính thức</p>
+              {(() => {
+                const examSuite = getTHCS8MonExamSuite(selectedSubject, selectedGrade, selectedExamType, examCode);
+                return (
+                  <div
+                    id="thcs-exam-preview-content"
+                    className="p-6 sm:p-8 bg-white text-slate-900 font-serif leading-relaxed max-h-[520px] overflow-y-auto select-text text-[13pt]"
+                    style={{ fontFamily: '"Times New Roman", Times, serif' }}
+                  >
+                    {/* VIEW 1: ĐỀ THI CHÍNH THỨC */}
+                    {previewSubTab === 'exam' && (
+                      <>
+                        {/* Khối tiêu đề đầu đề thi 2 cột */}
+                        <div className="grid grid-cols-2 gap-4 pb-4 border-b-2 border-slate-900 text-center">
+                          <div>
+                            <p className="font-bold text-[11pt] uppercase">{examSuite.parentAgency}</p>
+                            <p className="font-bold text-[12pt] uppercase text-blue-900">{examSuite.schoolName}</p>
+                            <p className="text-[11pt] italic">Đề thi chính thức</p>
+                          </div>
+                          <div>
+                            <p className="font-bold text-[13pt] uppercase" style={{ color: '#FF0000' }}>
+                              ĐỀ KIỂM TRA {examSuite.termTitle.toUpperCase()}
+                            </p>
+                            <p className="font-bold text-[12pt] uppercase">
+                              NĂM HỌC {examSuite.schoolYear} | MÔN {examSuite.subjectName.toUpperCase()} - LỚP {examSuite.grade}
+                            </p>
+                            <p className="text-[11pt] italic">
+                              Thời gian làm bài: {examSuite.timeMinutes} phút (Không kể thời gian phát đề)
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Bảng điểm & Mã đề */}
+                        <div className="my-3 flex items-center justify-between border border-slate-800 p-2 text-[11pt]">
+                          <div className="flex gap-6">
+                            <span>Họ và tên thí sinh: ..............................................................</span>
+                            <span>Lớp: {examSuite.grade}....</span>
+                          </div>
+                          <div className="font-bold font-mono px-3 py-0.5 bg-slate-100 border border-slate-400">
+                            MÃ ĐỀ: {examSuite.examCode}
+                          </div>
+                        </div>
+
+                        {/* Khung Điểm & Lời nhận xét */}
+                        <div className="mb-4 grid grid-cols-4 border border-slate-800 text-[11pt]">
+                          <div className="border-r border-slate-800 text-center p-1 bg-slate-50">
+                            <span className="font-bold text-[10.5pt]">ĐIỂM SỐ</span>
+                            <div className="grid grid-cols-2 border-t border-slate-800 text-[9.5pt] mt-1">
+                              <div className="border-r border-slate-800 py-0.5">Số</div>
+                              <div className="py-0.5">Chữ</div>
+                            </div>
+                            <div className="h-9"></div>
+                          </div>
+                          <div className="col-span-3 p-2 text-left text-[10pt] leading-snug">
+                            <span className="font-bold">LỜI NHẬN XÉT CỦA GIÁO VIÊN CHẤM THI:</span>
+                            <p className="text-slate-400 mt-1">....................................................................................................................................</p>
+                          </div>
+                        </div>
+
+                        {/* Nội dung đề thi phong phú theo môn */}
+                        <div className="space-y-4 text-justify mt-2">
+                          {examSuite.parts.map((part, pIdx) => (
+                            <div key={pIdx} className="space-y-2">
+                              <p className="font-bold pt-1" style={{ color: '#FF0000' }}>
+                                {part.title} ({part.points})
+                              </p>
+                              {part.instruction && (
+                                <p className="italic text-[11pt] text-slate-700">{part.instruction}</p>
+                              )}
+                              {part.passage && (
+                                <div className="p-3 bg-slate-50 border-l-4 border-slate-400 italic text-[11.5pt] whitespace-pre-line my-2">
+                                  {part.passage}
+                                </div>
+                              )}
+                              {part.questions.map((q, qIdx) => (
+                                <div key={qIdx} className="mt-2 space-y-1">
+                                  <p>
+                                    <strong>
+                                      {typeof q.num === 'number' ? `Câu ${q.num}:` : `${q.num}${q.points ? ` (${q.points}):` : ':'}`}
+                                    </strong>{' '}
+                                    {q.content}
+                                  </p>
+                                  {q.options && q.options.length > 0 && (
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 pl-5 text-[12pt] gap-1">
+                                      {q.options.map((opt, oIdx) => {
+                                        const isCorrect = q.correctKey && (opt.startsWith(q.correctKey + '.') || opt.includes('(Đúng)'));
+                                        return (
+                                          <span key={oIdx} className={isCorrect ? 'font-bold' : ''}>
+                                            {isCorrect ? (
+                                              <span style={{ color: '#FF0000' }}>{opt}</span>
+                                            ) : (
+                                              opt
+                                            )}
+                                          </span>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Hết đề */}
+                        <div className="mt-8 pt-4 border-t border-slate-400 text-center italic text-[11pt]">
+                          ---------- HẾT ----------
+                          <p className="text-[10pt] not-italic mt-1 text-slate-600">
+                            Cán bộ coi thi không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi xuất Word.
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {/* VIEW 2: MA TRẬN & BẢN ĐẶC TẢ THEO CV 7991 */}
+                    {previewSubTab === 'matrix' && (
+                      <div className="space-y-6">
+                        <div>
+                          <div className="text-center mb-3">
+                            <p className="font-bold text-[12pt] text-blue-900 uppercase">
+                              MA TRẬN ĐỀ KIỂM TRA {examSuite.termTitle.toUpperCase()}
+                            </p>
+                            <p className="font-bold text-[11pt]">
+                              MÔN: {examSuite.subjectName.toUpperCase()} {examSuite.grade} (CÔNG VĂN 7991/BGDĐT)
+                            </p>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-slate-800 text-[10pt] text-center">
+                              <thead className="bg-slate-100">
+                                <tr>
+                                  {examSuite.matrix.headers.map((h, i) => (
+                                    <th key={i} className="border border-slate-800 p-2 font-bold">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.matrix.rows.map((r, ri) => (
+                                  <tr key={ri} className={String(r[0]).startsWith('TỔNG') ? 'bg-slate-100 font-bold' : ''}>
+                                    {r.map((c, ci) => (
+                                      <td key={ci} className={`border border-slate-800 p-2 ${ci === 1 ? 'text-left' : 'text-center'}`}>
+                                        {c}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-center mb-3">
+                            <p className="font-bold text-[12pt] text-blue-900 uppercase">
+                              BẢN ĐẶC TẢ KỸ THUẬT ĐỀ KIỂM TRA
+                            </p>
+                            <p className="font-bold text-[11pt]">MÔN: {examSuite.subjectName.toUpperCase()} - LỚP {examSuite.grade}</p>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-slate-800 text-[9.5pt]">
+                              <thead className="bg-slate-100">
+                                <tr>
+                                  {examSuite.specification.headers.map((h, i) => (
+                                    <th key={i} className="border border-slate-800 p-2 font-bold text-center">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.specification.rows.map((r, ri) => (
+                                  <tr key={ri}>
+                                    {r.map((c, ci) => (
+                                      <td key={ci} className={`border border-slate-800 p-2 ${ci === 0 || ci >= 4 ? 'text-center' : 'text-left'}`}>
+                                        {c}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* VIEW 3: ĐÁP ÁN & BIỂU ĐIỂM CHI TIẾT */}
+                    {previewSubTab === 'answer' && (
+                      <div className="space-y-5">
+                        <div className="text-center mb-3">
+                          <p className="font-bold text-[13pt] uppercase" style={{ color: '#FF0000' }}>
+                            HƯỚNG DẪN CHẤM VÀ ĐÁP ÁN CHI TIẾT
+                          </p>
+                          <p className="font-bold text-[11pt]">
+                            MÔN: {examSuite.subjectName.toUpperCase()} - LỚP {examSuite.grade} | MÃ ĐỀ: {examSuite.examCode}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="font-bold text-[11.5pt] mb-2" style={{ color: '#FF0000' }}>
+                            1. ĐÁP ÁN PHẦN TRẮC NGHIỆM:
+                          </p>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-slate-800 text-[11pt] text-center">
+                              <thead className="bg-slate-100">
+                                <tr>
+                                  <th className="border border-slate-800 p-1.5">Câu</th>
+                                  {examSuite.answerGuide.mcqAnswers.map((m) => (
+                                    <th key={m.q} className="border border-slate-800 p-1.5">{m.q}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td className="border border-slate-800 p-1.5 font-bold bg-slate-50">Đáp án</td>
+                                  {examSuite.answerGuide.mcqAnswers.map((m) => (
+                                    <td key={m.q} className="border border-slate-800 p-1.5 font-bold" style={{ color: '#FF0000' }}>
+                                      {m.ans}
+                                    </td>
+                                  ))}
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="font-bold text-[11.5pt] mb-2" style={{ color: '#FF0000' }}>
+                            2. HƯỚNG DẪN CHẤM VÀ THANG ĐIỂM PHẦN TỰ LUẬN:
+                          </p>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-slate-800 text-[10.5pt]">
+                              <thead className="bg-slate-100">
+                                <tr>
+                                  <th className="border border-slate-800 p-2 text-center w-[20%]">Câu / Bài</th>
+                                  <th className="border border-slate-800 p-2 text-center w-[65%]">Nội dung đáp án & Các bước giải</th>
+                                  <th className="border border-slate-800 p-2 text-center w-[15%]">Điểm</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examSuite.answerGuide.essayGuide.map((eg, i) => (
+                                  <tr key={i}>
+                                    <td className="border border-slate-800 p-2 font-bold text-center">{eg.question}</td>
+                                    <td className="border border-slate-800 p-2 whitespace-pre-line">{eg.step}</td>
+                                    <td className="border border-slate-800 p-2 font-bold text-center" style={{ color: '#FF0000' }}>
+                                      {eg.point}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="font-bold text-[12pt] uppercase" style={{ color: '#FF0000' }}>
-                      ĐỀ KIỂM TRA {selectedExamType === 'GK1' ? 'GIỮA HỌC KỲ I' : selectedExamType === 'CK1' ? 'CUỐI HỌC KỲ I' : selectedExamType === 'GK2' ? 'GIỮA HỌC KỲ II' : 'CUỐI HỌC KỲ II'}
-                    </p>
-                    <p className="font-bold text-[12pt] uppercase">
-                      NĂM HỌC 2026 - 2027 | {currentSubjectObj.name} - LỚP {selectedGrade}
-                    </p>
-                    <p className="text-[11pt] italic">
-                      Thời gian làm bài: {selectedSubject === 'VAN' ? '90 phút' : '60 phút'} (Không kể thời gian phát đề)
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bảng điểm & Mã đề */}
-                <div className="my-4 flex items-center justify-between border border-slate-800 p-2 text-[11pt]">
-                  <div className="flex gap-6">
-                    <span>Họ và tên thí sinh: ..............................................................</span>
-                    <span>Lớp: {selectedGrade}....</span>
-                  </div>
-                  <div className="font-bold font-mono px-3 py-0.5 bg-slate-100 border border-slate-400">
-                    MÃ ĐỀ: {examCode}
-                  </div>
-                </div>
-
-                {/* Nội dung đề thi mẫu theo môn */}
-                <div className="space-y-4 text-justify mt-4">
-                  {selectedSubject === 'TOAN' && (
-                    <>
-                      <p className="font-bold" style={{ color: '#FF0000' }}>
-                        PHẦN I. TRẮC NGHIỆM KHÁCH QUAN (3,0 điểm)
-                      </p>
-                      <p className="italic text-[11pt]">Khoanh tròn vào chữ cái A, B, C hoặc D đứng trước câu trả lời đúng:</p>
-                      <p><strong>Câu 1:</strong> Kết quả của phép tính 15 + 45 : 3² bằng bao nhiêu?</p>
-                      <div className="grid grid-cols-4 pl-6 text-[12pt]">
-                        <span>A. 20</span>
-                        <span><strong style={{ color: '#FF0000' }}>B. 20 (Đúng)</strong></span>
-                        <span>C. 18</span>
-                        <span>D. 25</span>
-                      </div>
-                      <p><strong>Câu 2:</strong> Trong các hình sau, hình nào có trục đối xứng?</p>
-                      <div className="grid grid-cols-4 pl-6 text-[12pt]">
-                        <span>A. Hình bình hành</span>
-                        <span><strong style={{ color: '#FF0000' }}>B. Hình thang cân (Đúng)</strong></span>
-                        <span>C. Hình tam giác thường</span>
-                        <span>D. Hình chữ nhật lệch</span>
-                      </div>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        PHẦN II. TỰ LUẬN (7,0 điểm)
-                      </p>
-                      <p><strong>Bài 1 (1,5 điểm):</strong> Thực hiện phép tính hợp lí: a) 37.64 + 37.36; b) 120 : [54 - (50 : 2 + 3²)]</p>
-                      <p><strong>Bài 2 (1,5 điểm):</strong> Tìm số tự nhiên x biết: 3x - 14 = 2² . 5</p>
-                      <p><strong>Bài 3 (2,0 điểm):</strong> Khu vườn hình chữ nhật có chiều dài 20m, chiều rộng 12m. Tính diện tích và chu vi khu vườn.</p>
-                      <p><strong>Bài 4 (1,5 điểm):</strong> Hình học trực quan và ứng dụng thực tế đo đạc góc.</p>
-                      <p><strong>Bài 5 (0,5 điểm):</strong> Bài toán nâng cao chia hết và logic dãy số.</p>
-                    </>
-                  )}
-
-                  {selectedSubject === 'VAN' && (
-                    <>
-                      <p className="font-bold" style={{ color: '#FF0000' }}>
-                        I. ĐỌC HIỂU (6,0 điểm)
-                      </p>
-                      <p className="italic text-[11pt] pl-4 border-l-2 border-slate-300">
-                        "Quê hương là chùm khế ngọt / Cho con trèo hái mỗi ngày / Quê hương là đường đi học / Con về rợp bướm vàng bay..."
-                        <br /><span className="text-[10pt] font-sans text-slate-500">(Trích Quê hương – Đỗ Trung Quân)</span>
-                      </p>
-                      <p><strong>Câu 1:</strong> Xác định phương thức biểu đạt chính của đoạn trích trên.</p>
-                      <p><strong>Câu 2:</strong> Chỉ ra biện pháp tu từ được sử dụng nổi bật trong 4 câu thơ đầu.</p>
-                      <p><strong>Câu 3:</strong> Em hiểu thế nào về hình ảnh "Quê hương là con diều biếc"?</p>
-                      <p><strong>Câu 4:</strong> Thông điệp ý nghĩa nhất mà văn bản gửi đến thế hệ trẻ ngày nay là gì?</p>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        II. VIẾT (4,0 điểm)
-                      </p>
-                      <p>Viết một bài văn biểu cảm (khoảng 400 từ) trình bày cảm nghĩ của em về một người thầy, cô giáo đã để lại ấn tượng sâu sắc nhất trong lòng em.</p>
-                    </>
-                  )}
-
-                  {selectedSubject === 'ENG' && (
-                    <>
-                      <p className="font-bold" style={{ color: '#FF0000' }}>
-                        PART 1. LISTENING (2.0 points)
-                      </p>
-                      <p className="italic text-[11pt]">Listen to the conversation between Phong and Mai about school activities. Choose the best answer:</p>
-                      <p><strong>Question 1:</strong> What time does the science club meet every Thursday?</p>
-                      <div className="grid grid-cols-4 pl-6 text-[12pt]">
-                        <span>A. At 3:00 PM</span>
-                        <span><strong style={{ color: '#FF0000' }}>B. At 3:30 PM (Key)</strong></span>
-                        <span>C. At 4:00 PM</span>
-                        <span>D. At 4:30 PM</span>
-                      </div>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        PART 2. LANGUAGE FOCUS (2.0 points)
-                      </p>
-                      <p><strong>Question 5:</strong> My brother is interested in ________ solar energy models.</p>
-                      <div className="grid grid-cols-4 pl-6 text-[12pt]">
-                        <span>A. make</span>
-                        <span>B. to make</span>
-                        <span><strong style={{ color: '#FF0000' }}>C. making (Key)</strong></span>
-                        <span>D. made</span>
-                      </div>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        PART 3. READING & WRITING (4.0 points)
-                      </p>
-                      <p className="italic text-[11pt]">Đọc hiểu đoạn văn 150 từ và hoàn thành bài viết thư điện tử chuẩn khảo thí.</p>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        PART 4. SPEAKING TEST (2.0 points - Dành cho kỳ Cuối kỳ CK1/CK2)
-                      </p>
-                      <p className="italic text-[11pt]">Examiner's Script 4 cột chuẩn Bộ GD&ĐT: To do | To say | Student's response | Back-up.</p>
-                    </>
-                  )}
-
-                  {selectedSubject !== 'TOAN' && selectedSubject !== 'VAN' && selectedSubject !== 'ENG' && (
-                    <>
-                      <p className="font-bold" style={{ color: '#FF0000' }}>
-                        PHẦN I. CÂU HỎI TRẮC NGHIỆM (4,0 điểm)
-                      </p>
-                      <p className="italic text-[11pt]">Gồm 16 câu hỏi trắc nghiệm bám sát ma trận và bản đặc tả kỹ thuật Công văn 7991/BGDĐT.</p>
-                      <p><strong>Câu 1:</strong> Nội dung kiến thức cốt lõi phân môn chuẩn chương trình GDPT 2018.</p>
-                      <div className="grid grid-cols-4 pl-6 text-[12pt]">
-                        <span>A. Phương án A</span>
-                        <span><strong style={{ color: '#FF0000' }}>B. Phương án B (Đáp án)</strong></span>
-                        <span>C. Phương án C</span>
-                        <span>D. Phương án D</span>
-                      </div>
-
-                      <p className="font-bold pt-2" style={{ color: '#FF0000' }}>
-                        PHẦN II. TỰ LUẬN THỰC TIỄN (6,0 điểm)
-                      </p>
-                      <p><strong>Câu 17 (2,0 điểm):</strong> Trình bày hiểu biết và giải thích hiện tượng theo tình huống thực tế.</p>
-                      <p><strong>Câu 18 (2,5 điểm):</strong> Vận dụng kiến thức bài học để giải quyết vấn đề đời sống.</p>
-                      <p><strong>Câu 19 (1,5 điểm):</strong> Đề xuất giải pháp sáng tạo, năng lực giải quyết vấn đề số.</p>
-                    </>
-                  )}
-                </div>
-
-                {/* Hết đề */}
-                <div className="mt-8 pt-4 border-t border-slate-400 text-center italic text-[11pt]">
-                  ---------- HẾT ----------
-                  <p className="text-[10pt] not-italic mt-1 text-slate-600">
-                    Cán bộ coi thi không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi xuất Word.
-                  </p>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* Footer info */}
               <div className="px-4 py-2 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1.5 text-emerald-400">
+                <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Chuẩn 100% Công văn 7991/BGDĐT & Bộ sách Kết nối tri thức
+                  Chuẩn 100% Công văn 7991/BGDĐT & Định dạng Word Times New Roman 13pt
                 </span>
-                <span>Tự động hoán vị mã đề (601 ↔ 602, 701 ↔ 702...)</span>
+                <span className="text-slate-400">
+                  Hỗ trợ cả 8 môn học THCS: Toán, Văn, Anh, KHTN, Sử - Địa, Tin, GDCD, Công nghệ
+                </span>
               </div>
             </div>
           </div>
+
         )}
 
         {/* TAB 2: TẢI VỀ & HƯỚNG DẪN */}
@@ -779,6 +940,25 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
                     </a>
+
+                    {/* Nút tải trực tiếp Đề Mẫu Word của môn đang chọn */}
+                    <button
+                      onClick={handleDownloadDoc}
+                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-emerald-900/40 to-slate-800 hover:from-emerald-800/60 hover:to-slate-700 border border-emerald-600/40 transition-all group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/30 text-emerald-300 flex items-center justify-center font-bold text-xs">
+                          DOC
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-emerald-300 group-hover:text-white">
+                            Tải Đề Mẫu Word (.doc) Chuẩn 7991
+                          </p>
+                          <p className="text-[10px] text-slate-400">Đầy đủ Đề + Ma trận + Đáp án chi tiết</p>
+                        </div>
+                      </div>
+                      <Download className="w-4 h-4 text-emerald-400 group-hover:text-white" />
+                    </button>
                   </div>
                 </div>
 
