@@ -187,11 +187,29 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
     }
   };
 
+  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="bg-[#0B132B] text-slate-100 w-full max-w-5xl rounded-2xl shadow-2xl border border-red-900/40 flex flex-col max-h-[96vh] overflow-hidden my-auto">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-[#0B132B] text-slate-100 w-full max-w-5xl rounded-2xl shadow-2xl border border-red-900/40 flex flex-col max-h-[96vh] overflow-hidden my-auto cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* HEADER BAR */}
         <div className="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-[#1A0B1E] via-[#2D1236] to-[#0F172A] border-b border-purple-900/40">
           <div className="flex items-center gap-3">

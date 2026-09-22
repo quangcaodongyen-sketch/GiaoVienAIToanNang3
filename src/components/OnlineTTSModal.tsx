@@ -424,11 +424,33 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        stopPlayback();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-[#0f172a] text-slate-100 rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative my-auto border border-slate-700/60 max-h-[96vh] flex flex-col">
+    <div 
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
+      onClick={() => {
+        stopPlayback();
+        onClose();
+      }}
+    >
+      <div 
+        className="bg-[#0f172a] text-slate-100 rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative my-auto border border-slate-700/60 max-h-[96vh] flex flex-col cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* CLOSE BUTTON */}
         <button

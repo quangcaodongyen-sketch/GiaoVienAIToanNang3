@@ -170,11 +170,17 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
     }
   }, [isOpen]);
 
+  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
   useEffect(() => {
-    if (logsEndRef.current) {
-      logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [scanLogs]);
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -304,8 +310,14 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-      <div className="relative w-full max-w-5xl bg-[#0B132B] text-slate-100 rounded-2xl shadow-2xl border border-slate-700/60 flex flex-col my-auto max-h-[92vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="relative w-full max-w-5xl bg-[#0B132B] text-slate-100 rounded-2xl shadow-2xl border border-slate-700/60 flex flex-col my-auto max-h-[92vh] overflow-hidden cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* MODAL HEADER */}
         <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0F172A] border-b border-slate-800">
           <div className="flex items-center gap-3">
