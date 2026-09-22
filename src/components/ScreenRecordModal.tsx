@@ -146,6 +146,18 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     ctx.fillText("Dùng chuột hoặc bút cảm ứng viết bảng trực tiếp tại đây, bấm 'Bắt Đầu Ghi Hình' để tạo video bài giảng.", 40, 85);
   };
 
+  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Esc") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   useEffect(() => {
     if (isOpen && activeTab === "demo" && recordMode === "whiteboard") {
       setTimeout(initBoard, 100);
@@ -308,8 +320,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
       const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
         ? "video/webm;codecs=vp9,opus"
         : MediaRecorder.isTypeSupported("video/webm")
-        ? "video/webm"
-        : "video/mp4";
+          ? "video/webm"
+          : "video/mp4";
 
       const recorder = new MediaRecorder(finalStream, { mimeType });
       mediaRecorderRef.current = recorder;
@@ -480,10 +492,18 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     setTimeout(() => setCopiedHw(false), 2000);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-6xl w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[96vh] flex flex-col">
-        
+    <div 
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-6xl w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[96vh] flex flex-col cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+
         {/* HEADER MODAL */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
@@ -534,11 +554,10 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("demo")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-                activeTab === "demo"
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${activeTab === "demo"
                   ? "bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-md shadow-rose-600/20"
                   : "bg-slate-800 text-slate-400 hover:text-white"
-              }`}
+                }`}
             >
               <Video className="w-4 h-4" />
               1. Trải Nghiệm Quay Trực Tuyến
@@ -546,11 +565,10 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
             <button
               onClick={() => setActiveTab("download")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-                activeTab === "download"
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${activeTab === "download"
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20"
                   : "bg-slate-800 text-slate-400 hover:text-white"
-              }`}
+                }`}
             >
               <Play className="w-4 h-4" />
               2. Tải Về Desktop & Video HD
@@ -558,11 +576,10 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
             <button
               onClick={() => setActiveTab("license")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-                activeTab === "license"
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${activeTab === "license"
                   ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-500/20"
                   : "bg-slate-800 text-slate-400 hover:text-white"
-              }`}
+                }`}
             >
               <Crown className="w-4 h-4" />
               3. Bản Quyền & Kích Hoạt
@@ -600,30 +617,28 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (WEB SCREEN RECORDER STUDIO) */}
         {activeTab === "demo" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
-            
+
             {/* CHỌN CHẾ ĐỘ QUAY (SCREEN RECORDING SOURCE MODE) */}
             <div className="flex flex-col sm:flex-row items-center gap-2 p-1.5 bg-slate-950 rounded-2xl border border-slate-800">
               <button
                 type="button"
                 onClick={() => { if (!isRecording) { setRecordMode("screen"); setRecordedVideoUrl(null); } }}
-                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${
-                  recordMode === "screen"
+                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${recordMode === "screen"
                     ? "bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-lg shadow-rose-600/30"
                     : "text-slate-400 hover:text-white bg-slate-900/60"
-                }`}
+                  }`}
               >
                 <Monitor className="w-4 h-4" />
                 <span>CHẾ ĐỘ 1: QUAY TOÀN MÀN HÌNH / POWERPOINT / WORD</span>
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => { if (!isRecording) { setRecordMode("whiteboard"); setRecordedVideoUrl(null); } }}
-                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${
-                  recordMode === "whiteboard"
+                className={`flex-1 w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-black transition-all cursor-pointer ${recordMode === "whiteboard"
                     ? "bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30"
                     : "text-slate-400 hover:text-white bg-slate-900/60"
-                }`}
+                  }`}
               >
                 <Palette className="w-4 h-4" />
                 <span>CHẾ ĐỘ 2: STUDIO BẢNG GIẢNG DẠY TRỰC TUYẾN (DÙNG THỬ NGAY)</span>
@@ -644,7 +659,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                       </span>
                     ) : (
                       <span className="text-slate-200">
-                        {recordMode === "screen" 
+                        {recordMode === "screen"
                           ? "PHÒNG THU QUAY MÀN HÌNH & GHI ÂM BÀI GIẢNG (ONLINE BROADCAST)"
                           : "STUDIO BẢNG GIẢNG DẠY TƯƠNG TÁC KỸ THUẬT SỐ CHUẨN SƯ PHẠM"}
                       </span>
@@ -673,11 +688,10 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIncludeMic(!includeMic)}
-                  className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${
-                    includeMic
+                  className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${includeMic
                       ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300"
                       : "bg-slate-900 border-slate-800 text-slate-500"
-                  }`}
+                    }`}
                 >
                   {includeMic ? <Mic className="w-4 h-4 text-emerald-400" /> : <MicOff className="w-4 h-4" />}
                   <span>{includeMic ? "Microphone: BẬT" : "Microphone: TẮT"}</span>
@@ -687,11 +701,10 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setEnableVtvFilter(!enableVtvFilter)}
-                  className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${
-                    enableVtvFilter
+                  className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all cursor-pointer ${enableVtvFilter
                       ? "bg-amber-950/40 border-amber-500/50 text-amber-300"
                       : "bg-slate-900 border-slate-800 text-slate-500"
-                  }`}
+                    }`}
                 >
                   <Sparkles className="w-4 h-4 text-amber-400" />
                   <span>{enableVtvFilter ? "Lọc Âm VTV: BẬT" : "Lọc Âm: TẮT"}</span>
@@ -707,9 +720,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                         type="button"
                         onClick={() => setCursorHaloColor(color)}
                         style={{ backgroundColor: color }}
-                        className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${
-                          cursorHaloColor === color ? "scale-125 ring-2 ring-white" : "opacity-70 hover:opacity-100"
-                        }`}
+                        className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${cursorHaloColor === color ? "scale-125 ring-2 ring-white" : "opacity-70 hover:opacity-100"
+                          }`}
                       />
                     ))}
                   </div>
@@ -746,13 +758,12 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                       type="button"
                       onClick={handleStartRecording}
                       disabled={!isProActive && trialRemaining <= 0}
-                      className={`w-full sm:w-auto py-3 px-8 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${
-                        !isProActive && trialRemaining <= 0
+                      className={`w-full sm:w-auto py-3 px-8 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${!isProActive && trialRemaining <= 0
                           ? "bg-rose-900/60 text-rose-300 border border-rose-500/50 cursor-not-allowed"
                           : recordMode === "screen"
-                          ? "bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-rose-600/30 hover:scale-[1.02]"
-                          : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-500 hover:from-emerald-500 hover:to-cyan-400 text-white shadow-emerald-600/30 hover:scale-[1.02]"
-                      }`}
+                            ? "bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-rose-600/30 hover:scale-[1.02]"
+                            : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-500 hover:from-emerald-500 hover:to-cyan-400 text-white shadow-emerald-600/30 hover:scale-[1.02]"
+                        }`}
                     >
                       <Play className="w-4 h-4 fill-white" />
                       <span>
@@ -920,9 +931,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                           onClick={() => { setPenColor(item.color); setIsEraser(false); }}
                           style={{ backgroundColor: item.color }}
                           title={item.label}
-                          className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${
-                            penColor === item.color && !isEraser ? "scale-125 ring-2 ring-white" : "opacity-70 hover:opacity-100"
-                          }`}
+                          className={`w-4 h-4 rounded-full transition-transform cursor-pointer ${penColor === item.color && !isEraser ? "scale-125 ring-2 ring-white" : "opacity-70 hover:opacity-100"
+                            }`}
                         />
                       ))}
                     </div>
@@ -935,9 +945,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                           key={s}
                           type="button"
                           onClick={() => setPenSize(s)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
-                            penSize === s ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
-                          }`}
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold cursor-pointer ${penSize === s ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                            }`}
                         >
                           {s}px
                         </button>
@@ -948,9 +957,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setIsEraser(!isEraser)}
-                      className={`px-2.5 py-1 rounded-xl border text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-all ${
-                        isEraser ? "bg-amber-500 text-black border-amber-400" : "bg-slate-900 border-slate-800 text-slate-300"
-                      }`}
+                      className={`px-2.5 py-1 rounded-xl border text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-all ${isEraser ? "bg-amber-500 text-black border-amber-400" : "bg-slate-900 border-slate-800 text-slate-300"
+                        }`}
                     >
                       <Eraser className="w-3.5 h-3.5" />
                       <span>{isEraser ? "Đang dùng Tẩy" : "Tẩy"}</span>
@@ -1273,7 +1281,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT */}
         {activeTab === "license" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
-            
+
             {/* HARDWARE CODE DISPLAY */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
               <div className="flex items-center justify-between">

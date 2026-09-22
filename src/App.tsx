@@ -50,6 +50,34 @@ export default function App() {
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
+  const closeAllModals = () => {
+    setShowSKKNModal(false);
+    setShowListeningModal(false);
+    setShowNLSAIModal(false);
+    setShowTaoDeModal(false);
+    setShowSinhDeBienTheModal(false);
+    setShowScreenRecordModal(false);
+    setShowCleanerModal(false);
+    setShowChuanHoaVBModal(false);
+    setShowTachGopPDFModal(false);
+    setShowTaoDeTHCS8MonModal(false);
+    setShowAdminDashboard(false);
+    if (window.location.hash && window.location.hash !== '#') {
+      window.history.pushState(null, '', window.location.pathname + window.location.search);
+    }
+  };
+
+  // Lắng nghe phím Escape (Esc) trên toàn trang để đóng modal ngay lập tức
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closeAllModals();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Lắng nghe URL hash để mở modal tương ứng khi người dùng truy cập link trực tiếp
   useEffect(() => {
     const handleHash = () => {
@@ -796,69 +824,69 @@ export default function App() {
       {/* ONLINE TTS & SMART LISTENING PRO MODAL (3 TABS) */}
       <OnlineTTSModal
         isOpen={showListeningModal}
-        onClose={() => setShowListeningModal(false)}
+        onClose={closeAllModals}
       />
 
       {/* TÍCH HỢP NLS - AI THCS (ADD-INS V2) MODAL (3 TABS) */}
       <NLSAIModal
         isOpen={showNLSAIModal}
-        onClose={() => setShowNLSAIModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}
       <TaoDeTiengAnhModal
         isOpen={showTaoDeModal}
-        onClose={() => setShowTaoDeModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* SINH 3 ĐỀ BIẾN THỂ VIP (V1) MODAL (3 TABS) */}
       <SinhDeBienTheModal
         isOpen={showSinhDeBienTheModal}
-        onClose={() => setShowSinhDeBienTheModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* SCREEN RECORD PRO V2 (3 TABS) */}
       <ScreenRecordModal
         isOpen={showScreenRecordModal}
-        onClose={() => setShowScreenRecordModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* ĐINH THÀNH CLEANER PRO v4.5 VIP (3 TABS) */}
       <CleanerModal
         isOpen={showCleanerModal}
-        onClose={() => setShowCleanerModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020) (3 TABS) */}
       <ChuanHoaVBModal
         isOpen={showChuanHoaVBModal}
-        onClose={() => setShowChuanHoaVBModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI) (3 TABS) */}
       <TachGopPDFModal
         isOpen={showTachGopPDFModal}
-        onClose={() => setShowTachGopPDFModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN) (3 TABS) */}
       <TaoDeTHCS8MonModal
         isOpen={showTaoDeTHCS8MonModal}
-        onClose={() => setShowTaoDeTHCS8MonModal(false)}
+        onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* CLOUD ADMIN DASHBOARD 24/7 */}
       <AdminDashboard
         isOpen={showAdminDashboard}
-        onClose={() => setShowAdminDashboard(false)}
+        onClose={closeAllModals}
       />
     </div>
   );

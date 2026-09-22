@@ -132,6 +132,18 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
+  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Esc") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   useEffect(() => {
     if (isOpen) {
       const code = getOrCreateTHCS8MHardwareCode();
@@ -214,8 +226,14 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const currentSubjectObj = SUBJECT_OPTIONS.find(s => s.id === selectedSubject) || SUBJECT_OPTIONS[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="bg-[#0A1128] text-slate-100 w-full max-w-6xl rounded-2xl shadow-2xl border border-blue-900/60 flex flex-col max-h-[96vh] overflow-hidden my-auto">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-[#0A1128] text-slate-100 w-full max-w-6xl rounded-2xl shadow-2xl border border-blue-900/60 flex flex-col max-h-[96vh] overflow-hidden my-auto cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* HEADER BAR */}
         <div className="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#0A1128] border-b border-blue-800/40">
