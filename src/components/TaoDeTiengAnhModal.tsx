@@ -50,8 +50,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [selectedGrade, setSelectedGrade] = useState<string>('6');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [numVariants, setNumVariants] = useState<number>(2);
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................................');
-  const [parentAgency, setParentAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
+  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
+  const [parentAgency, setParentAgency] = useState<string>('UBND XÃ ĐỒNG YÊN');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
   const [examDuration, setExamDuration] = useState<string>('60');
 
@@ -476,7 +476,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     value={parentAgency}
                     onChange={(e) => setParentAgency(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500"
-                    placeholder="Ví dụ: PHÒNG GIÁO DỤC VÀ ĐÀO TẠO"
+                    placeholder="Ví dụ: UBND XÃ ĐỒNG YÊN"
                   />
                 </div>
               </div>
@@ -531,7 +531,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 1. Đề thi Mã {examSuite ? examSuite.code1 : `${selectedGrade}01`}
+                    📄 1. Đề kiểm tra Mã {examSuite ? examSuite.code1 : `${selectedGrade}01`}
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('de2')}
@@ -541,7 +541,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 2. Đề thi Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
+                    📄 2. Đề kiểm tra Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('speaking')}
@@ -551,7 +551,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-amber-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    🗣️ 3. Đề Thi Nói (Speaking: 2.0đ)
+                    🗣️ 3. Phần Kiểm Tra Nói (Speaking: 2.0đ)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('dapan')}

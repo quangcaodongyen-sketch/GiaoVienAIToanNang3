@@ -383,8 +383,8 @@ export interface GenerateExamOptions {
  */
 export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const { grade, term, schoolYear, timeMinutes } = options;
-  const parentAgency = options.parentAgency.trim().toUpperCase() || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO';
-  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ........................................';
+  const parentAgency = options.parentAgency.trim().toUpperCase() || 'UBND XÃ ĐỒNG YÊN';
+  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ĐỒNG YÊN';
 
   const termNames: Record<string, string> = {
     GK1: 'GIỮA HỌC KÌ I',

@@ -58,7 +58,7 @@ export function getTHCS8MonExamSuite(
 
   const termTitle = termTitleMap[termCode] || 'Giữa Học Kỳ I';
   const schoolYear = '2026 - 2027';
-  const parentAgency = 'PHÒNG GD&ĐT BẮC QUANG';
+  const parentAgency = 'UBND XÃ ĐỒNG YÊN';
   const schoolName = 'TRƯỜNG THCS ĐỒNG YÊN';
 
   switch (subjectId) {
@@ -1127,7 +1127,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
           <td style="width: 42%; text-align: center; vertical-align: top; font-size: 11pt; border: none; padding: 0;">
             <b>${parentAgency}</b><br/>
             <b style="text-decoration: underline;">${schoolName}</b><br/>
-            <i>Đề thi chính thức</i>
+            <i>Đề kiểm tra chính thức</i>
           </td>
           <td style="width: 58%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
             <b style="font-size: 13pt; color: #FF0000;">ĐỀ KIỂM TRA ${termTitle.toUpperCase()}</b><br/>
@@ -1161,7 +1161,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
       <!-- Dòng kết thúc đề -->
       <div style="text-align: center; margin-top: 14pt; margin-bottom: 6pt; font-style: italic; font-size: 11pt;">
         ---------- HẾT ----------<br/>
-        <span style="font-size: 10pt;">(Cán bộ coi thi không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi in ấn)</span>
+        <span style="font-size: 10pt;">(Giáo viên coi kiểm tra không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi in ấn)</span>
       </div>
 
       <!-- =================================================================== -->
@@ -1294,7 +1294,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
             ....................................................................
           </td>
           <td style="width: 55%; text-align: center; border: none; font-size: 11pt;">
-            <i>Bắc Quang, ngày ..... tháng ..... năm 2026</i><br/>
+            <i>Đồng Yên, ngày ..... tháng ..... năm 2026</i><br/>
             <b>GIÁO VIÊN BIÊN SOẠN & PHẦN MỀM</b><br/>
             <i>(Đã kiểm duyệt chuẩn 100% CV 7991)</i><br/><br/><br/><br/>
             <b>Thầy giáo Đinh Văn Thành</b><br/>
