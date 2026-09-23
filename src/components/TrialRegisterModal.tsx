@@ -26,7 +26,7 @@ interface TrialRegisterModalProps {
   onClose: () => void;
   initialAppId?: string;
   initialAppName?: string;
-  initialPackage?: 'TRIAL_5' | '1YEAR' | '2YEAR';
+  initialPackage?: 'TRIAL_5' | '1YEAR' | '2YEAR' | 'FULL_WEB';
   onSuccess?: (profile: MachineProfile) => void;
 }
 
@@ -56,7 +56,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
   const [schoolUnit, setSchoolUnit] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedAppId, setSelectedAppId] = useState(initialAppId);
-  const [selectedPackage, setSelectedPackage] = useState<'TRIAL_5' | '1YEAR' | '2YEAR'>(initialPackage);
+  const [selectedPackage, setSelectedPackage] = useState<'TRIAL_5' | '1YEAR' | '2YEAR' | 'FULL_WEB'>(initialPackage);
   const [isCopied, setIsCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationRequest | null>(null);
@@ -193,7 +193,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 <div>
                   <p className="font-bold text-emerald-300 text-base">Gửi đơn đăng ký thành công!</p>
                   <p className="text-xs text-emerald-200/90 mt-1">
-                    Thông tin của Thầy/Cô đã được đồng bộ lên Cloud để Thầy Đinh Văn Thành (Thaythanh2026@) hoặc Cô Mai Tình (Maitinh2026@) duyệt ngay. Máy tính của Thầy/Cô đã được kích hoạt <strong>5 lượt dùng thử miễn phí</strong> ngay bây giờ.
+                    Thông tin của Thầy/Cô đã được đồng bộ lên Cloud để Thầy Đinh Văn Thành (Thaythanh2026@) hoặc Cô Mai Tình (Maitinh2026@) duyệt ngay. Máy tính của Thầy/Cô đã được kích hoạt ngay <strong>5 lượt dùng thử miễn phí tức thì mà không cần chờ Admin phê duyệt</strong>. Thầy/Cô có thể đóng cửa sổ này và trải nghiệm ngay!
                   </p>
                   <div className="mt-2.5 p-2.5 rounded-lg bg-slate-950/70 border border-emerald-500/30 text-xs space-y-1">
                     <div><strong>Họ và tên:</strong> {submittedData.fullName}</div>
@@ -318,7 +318,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                   </span>
                   <span className="text-[11px] text-amber-400 font-bold">1 Năm 200k - 2 Năm 250k</span>
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                   {/* Gói Dùng Thử */}
                   <label
                     onClick={() => setSelectedPackage('TRIAL_5')}
@@ -357,12 +357,29 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                     }`}
                   >
                     <span className="absolute -top-2 right-2 px-1.5 py-0.2 text-[8px] font-black rounded bg-amber-400 text-slate-950">
-                      TIẾT KIỆM 150K
+                      KM HẾT 30/11/2026
                     </span>
                     <div className="text-[11px] font-bold text-amber-300">GÓI 2 NĂM VIP</div>
                     <div className="text-base font-black text-amber-300 mt-1">250.000đ</div>
-                    <div className="text-[10px] text-emerald-400 font-bold mt-0.5">24 tháng (125k/năm)</div>
+                    <div className="text-[10px] text-emerald-400 font-bold mt-0.5">24 tháng (Sau 30/11: 300k)</div>
                   </label>
+                  {/* Gói Full Web: 500k */}
+                  <label
+                    onClick={() => setSelectedPackage('FULL_WEB')}
+                    className={`p-2.5 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition relative ${
+                      selectedPackage === 'FULL_WEB'
+                        ? 'bg-emerald-950/60 border-emerald-400 text-emerald-200 shadow-lg shadow-emerald-500/20'
+                        : 'bg-slate-950 border-emerald-500/40 text-slate-300 hover:border-emerald-400'
+                    }`}
+                  >
+                    <span className="absolute -top-2 right-2 px-1.5 py-0.2 text-[8px] font-black rounded bg-emerald-400 text-slate-950">
+                      👑 FULL WEB
+                    </span>
+                    <div className="text-[11px] font-bold text-emerald-300">TRỌN BỘ HỆ SINH THÁI</div>
+                    <div className="text-base font-black text-emerald-400 mt-1">500.000đ</div>
+                    <div className="text-[10px] text-emerald-300/90 font-medium mt-0.5">Mở khóa tất cả các app</div>
+                  </label>
+
                 </div>
               </div>
 
@@ -380,7 +397,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                           QUÉT MÃ QR THANH TOÁN (MB BANK)
                         </h4>
                         <p className="text-[10px] text-slate-400">
-                          Số tiền: <strong className="text-amber-400 text-xs">{selectedPackage === '1YEAR' ? '200.000đ' : '250.000đ'}</strong> ({selectedPackage === '1YEAR' ? 'Gói 1 Năm' : 'Gói 2 Năm Ưu Đãi'})
+                          Số tiền: <strong className="text-amber-400 text-xs">{selectedPackage === 'FULL_WEB' ? '500.000đ' : selectedPackage === '1YEAR' ? '200.000đ' : '250.000đ'}</strong> ({selectedPackage === 'FULL_WEB' ? 'Gói Full Web (Tất cả phần mềm)' : selectedPackage === '1YEAR' ? 'Gói 1 Năm' : 'Gói 2 Năm Ưu Đãi (KM hết T11/2026)'})
                         </p>
                       </div>
                     </div>

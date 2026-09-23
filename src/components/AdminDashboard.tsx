@@ -288,7 +288,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | 'TRIAL_5', issueNumber?: number) => {
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
     const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
     const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
 
@@ -1308,7 +1308,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                                     ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                                     : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                               }`}>
-                                {req.packageType === '2YEAR' ? '2 Năm (250k)' : req.packageType === '1YEAR' ? '1 Năm (200k)' : 'Dùng thử 5 lần'}
+                                {req.packageType === 'FULL_WEB' ? '👑 Full Web (500k)' : req.packageType === '2YEAR' ? '2 Năm (250k - KM hết T11)' : req.packageType === '1YEAR' ? '1 Năm (200k)' : 'Dùng thử 5 lần'}
                               </span>
                             </td>
                             <td className="py-2.5 px-3">

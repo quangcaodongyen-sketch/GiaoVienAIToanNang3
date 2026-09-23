@@ -55,3 +55,39 @@ export const EXAM_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+
+
+// CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG
+export const PRICING = {
+  // Gói 1 Năm cho từng app
+  year1: {
+    price: 200000,
+    priceFormatted: '200.000đ',
+    duration: '1 năm học (12 tháng)',
+    note: 'Sử dụng trọn vẹn 1 năm cho 1 ứng dụng chuyên môn'
+  },
+  // Gói 2 Năm cho từng app (Khuyến mại đặc biệt đến hết tháng 11/2026)
+  year2: {
+    promoPrice: 250000,
+    promoPriceFormatted: '250.000đ',
+    originalPrice: 300000,
+    originalPriceFormatted: '300.000đ',
+    duration: '2 năm học (24 tháng - chỉ 125k/năm)',
+    promoDeadline: 'Hết tháng 11/2026 (sau đó trở về giá gốc 300.000đ/2 năm)',
+    promoDeadlineShort: 'Hết 30/11/2026',
+    saveAmount: '150.000đ'
+  },
+  // Gói Full Web Hệ Sinh Thái (Mở khóa tất cả các app)
+  fullWeb: {
+    price: 500000,
+    priceFormatted: '500.000đ',
+    title: 'GÓI FULL WEB TOÀN NĂNG (TẤT CẢ PHẦN MỀM)',
+    description: 'Mở khóa trọn bộ toàn bộ các app trên web: Tạo đề 8 môn, Tiếng Anh Global Success, Giáo án 5512 & NĐ 30, Sinh 3 đề biến thể, Dọn rác PC, PDF Suite Pro, Năng lực số AI...',
+    badge: '👑 TIẾT KIỆM 80% - DÙNG FULL APP'
+  },
+  // Số lượt dùng thử miễn phí
+  trial: {
+    count: 5,
+    description: 'Đăng ký thành viên được dùng thử ngay 5 lần miễn phí không cần chờ Admin xác nhận.'
+  }
+};
