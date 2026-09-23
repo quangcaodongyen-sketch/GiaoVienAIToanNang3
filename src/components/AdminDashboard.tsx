@@ -21,7 +21,8 @@ import {
   Copy,
   Send,
   FileCode,
-  Sparkles
+  Sparkles,
+  Laptop
 } from 'lucide-react';
 import { licenseService, LicenseRecord } from '../services/licenseService';
 import { activityTrackingService, MachineProfile } from '../services/activityTrackingService';
@@ -811,7 +812,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
     await loadData();
   };
 
-  const handleExtend = async (mid: string, pkg: '1YEAR' | 'LIFETIME') => {
+  const handleExtend = async (mid: string, pkg: '1YEAR' | '2YEAR' | 'LIFETIME') => {
     await licenseService.extend(mid, pkg, currentAdminName || 'Thầy Đinh Văn Thành');
     await loadData();
   };
@@ -945,6 +946,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             {userRole === 'SUB_ADMIN' ? '👑 Kích Hoạt Bản Quyền Giáo Viên' : '1. Quản Lý Bản Quyền Chung'}
           </button>
           {userRole === 'ADMIN' && (
+          <>
           <button
             onClick={() => setAdminTab('nls')}
             className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
@@ -1033,6 +1035,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <Crown className="w-4 h-4 text-amber-300" />
             9. Tạo Đề 8 Môn THCS (CV 7991)
           </button>
+          </>
           )}
         </div>
 

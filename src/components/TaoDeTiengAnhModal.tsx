@@ -38,6 +38,7 @@ interface TaoDeTiengAnhModalProps {
 export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Navigation tabs: 'experience' | 'download' | 'register'
   const [activeTab, setActiveTab] = useState<'experience' | 'download' | 'register'>('experience');
+  const [showTrialModal, setShowTrialModal] = useState<boolean>(false);
 
   // Trial limit system: 5 uses per computer
   const [trialRemaining, setTrialRemaining] = useState<number>(5);

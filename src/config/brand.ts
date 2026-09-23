@@ -7,6 +7,7 @@ export const BRAND = {
   address: "Xã Đồng Yên, tỉnh Tuyên Quang",
   phone: "0915.213717",
   phoneRaw: "0915213717",
+  zalo: "0915213717",
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
   slogan: "Công nghệ gần gũi – Dạy học hiệu quả",

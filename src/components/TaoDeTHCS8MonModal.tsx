@@ -15,6 +15,7 @@ import {
   Printer,
   CheckCircle2,
   GraduationCap,
+  Crown,
   
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
@@ -117,6 +118,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   initialSubject = 'TOAN'
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-TH8M-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
   const [isVIP, setIsVIP] = useState<boolean>(false);
@@ -1075,12 +1077,12 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
                   <span className="text-xs text-slate-400">Hỗ trợ kỹ thuật 24/7:</span>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    href={`https://zalo.me/${BRAND.phoneRaw}`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-1.5 rounded-lg bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-[#0068FF] hover:text-blue-300 border border-[#0068FF]/40 text-xs font-bold flex items-center gap-1.5 transition-colors"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.author.phone})
+                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.phone})
                   </a>
                 </div>
               </div>
