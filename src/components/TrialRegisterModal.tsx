@@ -1,7 +1,7 @@
-import {
-  QrCode, cloudSyncService } from '../services/cloudSyncService';
+import { cloudSyncService } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
+  QrCode,
   Sparkles, 
   X, 
   CheckCircle2, 

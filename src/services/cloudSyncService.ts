@@ -1,18 +1,8 @@
-/**
- * DỊCH VỤ ĐỒNG BỘ ĐÁM MÂY (CLOUD SYNC SERVICE)
- * Hệ sinh thái Giáo Viên AI Toàn Năng - Thầy Đinh Văn Thành
- * 
- * Lưu trữ và đồng bộ đám mây toàn quốc:
- * 1. Giáo viên đăng ký từ mọi nơi -> Gửi trực tiếp lên Cloud.
- * 2. Thầy Đinh Văn Thành (Thaythanh2026@) hoặc Cô Mai Tình (Maitinh2026@) mở web ở bất kỳ đâu -> Tải đơn từ Cloud về duyệt.
- * 3. Khi duyệt -> Lưu rõ thông tin người kích hoạt (Thầy Thành hay Cô Mai Tình) kèm ngày giờ.
- * 4. Máy tính của giáo viên tự động nhận bản quyền từ Cloud khi được duyệt.
- */
-
 import { RegistrationRequest, BlockedMachineItem } from './activityTrackingService';
 
 const GITHUB_REPO = 'quangcaodongyen-sketch/GiaoVienAIToanNang3';
-// Mã khóa kết nối Cloud đồng bộ bảo mật
+const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_REPO}`;
+
 // Khóa đồng bộ bảo mật qua Environment hoặc LocalStorage an toàn
 const getCloudKey = (): string => {
   if (typeof window !== 'undefined') {
@@ -29,7 +19,7 @@ const getHeaders = (): Record<string, string> => {
     'Content-Type': 'application/json'
   };
   if (token) {
-    headers['Authorization'] = 	oken ;
+    headers['Authorization'] = `token ${token}`;
   }
   return headers;
 };
