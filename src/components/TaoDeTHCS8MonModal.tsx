@@ -12,16 +12,10 @@ import {
   FileText,
   Check,
   AlertCircle,
-  Clock,
   Printer,
-  Sliders,
   CheckCircle2,
-  BookOpen,
   GraduationCap,
-  Layers,
-  ChevronRight,
-  FolderDown,
-  FileCheck
+  
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { activityTrackingService } from '../services/activityTrackingService';
@@ -33,12 +27,12 @@ import {
   isTHCS8MVIPActivated,
   getTHCS8MActivePackage,
   activateTHCS8MLicense,
-  SUBJECT_MAP
+  
 } from '../services/taoDeTHCS8MonKeyService';
 import {
   downloadTHCS8MonWordDoc,
   getTHCS8MonExamSuite,
-  THCS8MonExamData
+  
 } from '../services/thcs8MonWordExportService';
 
 interface TaoDeTHCS8MonModalProps {

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
   BarChart3, 
-  Users, 
-  History, 
   X, 
   CheckCircle2, 
   Clock, 

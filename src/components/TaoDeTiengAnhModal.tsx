@@ -11,10 +11,7 @@ import {
   CheckCircle2,
   FileCheck2,
   Headphones,
-  Volume2,
   Square,
-  Mic,
-  MessageSquare
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import { activityTrackingService } from '../services/activityTrackingService';
