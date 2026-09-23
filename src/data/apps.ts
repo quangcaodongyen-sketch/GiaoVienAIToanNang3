@@ -37,28 +37,100 @@ export const apps: AppCard[] = [
     "order": 2
   },
   {
-    "id": "tao-de-tieng-anh-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991)",
-    "description": "Phần mềm tạo đề kiểm tra Tiếng Anh THCS (Lớp 6, 7, 8, 9) chuẩn Công văn 7991/BGDĐT. Tự động hoán vị đề (601, 602), ma trận đặc tả, đáp án thang điểm và Audio Script bài nghe.",
-    "image": "/Taodektcv7991.jpg",
-    "url": "#tao-de-tieng-anh",
-    "category": "TIẾNG ANH & ĐỀ THI",
+    "id": "tao-de-toan-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN TOÁN HỌC (CV 7991)",
+    "description": "Tự động sinh Ma trận, Bản đặc tả kỹ thuật, Đề thi chuẩn in ấn khổ A4 và Đáp án chi tiết cho môn Toán học THCS (Đại số & Hình học, MathType chuẩn).",
+    "image": "/taode_toan.png",
+    "url": "#tao-de-toan",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
     "order": 3
   },
   {
-    "id": "trung-tam-tao-de-thcs-8mon",
-    "title": "TẠO ĐỀ KIỂM TRA THCS 8 MÔN (CHUẨN CV 7991)",
-    "description": "Hệ thống phần mềm tạo đề định kỳ THCS (Lớp 6, 7, 8, 9) trọn gói 8 môn: Toán, Ngữ văn, Tiếng Anh, KHTN, Lịch sử - Địa lí, Tin học, GDCD, Công nghệ. Tự động sinh Ma trận, Bản đặc tả, đề hoán vị và Đáp án chuẩn Công văn 7991/BGDĐT.",
-    "image": "/taodethcs8mon.png",
-    "url": "#tao-de-thcs-8mon",
+    "id": "tao-de-van-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN NGỮ VĂN (CV 7991)",
+    "description": "Tự động thiết kế đề thi Ngữ văn THCS chuẩn CV 7991: Đọc hiểu 6.0đ (Ngữ liệu ngoài SGK), Viết tự sự / nghị luận 4.0đ kèm Ma trận và Đáp án chi tiết.",
+    "image": "/taode_van.png",
+    "url": "#tao-de-van",
     "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
     "order": 4
+  },
+  {
+    "id": "tao-de-tieng-anh-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991)",
+    "description": "Tạo ma trận, bản đặc tả kỹ thuật, đề thi kèm file nghe MP3 chuẩn Bộ GD&ĐT theo Công văn 7991 (Listening audio, Audio Script, Speaking, Reading, Writing).",
+    "image": "/taode_tienganh.png",
+    "url": "#tao-de-tieng-anh",
+    "category": "TIẾNG ANH & ĐỀ THI",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 5
+  },
+  {
+    "id": "tao-de-khtn-thcs",
+    "title": "TẠO ĐỀ KHOA HỌC TỰ NHIÊN (CV 7991)",
+    "description": "Tích hợp 3 phân môn Vật lí, Hóa học, Sinh học chuẩn CTGDPT 2018 (Trắc nghiệm 4.0đ + Tự luận 6.0đ). Xuất file Word ma trận, bản đặc tả và đề thi A4.",
+    "image": "/taode_khtn.png",
+    "url": "#tao-de-khtn",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 6
+  },
+  {
+    "id": "tao-de-sudia-thcs",
+    "title": "TẠO ĐỀ LỊCH SỬ VÀ ĐỊA LÍ (CV 7991)",
+    "description": "Cấu trúc chuẩn CV 7991: Phân môn Lịch sử 5.0đ + Phân môn Địa lí 5.0đ, kết hợp trắc nghiệm khách quan và tự luận giải quyết tình huống thực tế.",
+    "image": "/taode_sudia.png",
+    "url": "#tao-de-sudia",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 7
+  },
+  {
+    "id": "tao-de-tin-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN TIN HỌC (CV 7991)",
+    "description": "Tự động tạo ma trận và đề thi Tin học THCS: Trắc nghiệm kiến thức số 4.0đ + Tự luận bảng tính Excel, CSDL và Lập trình Python 6.0đ chuẩn CV 7991.",
+    "image": "/taode_tin.png",
+    "url": "#tao-de-tin",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 8
+  },
+  {
+    "id": "tao-de-gdcd-thcs",
+    "title": "TẠO ĐỀ GIÁO DỤC CÔNG DÂN (CV 7991)",
+    "description": "Chuẩn cấu trúc Công văn 7991: Trắc nghiệm chuẩn mực đạo đức 4.0đ + Tự luận xử lý tình huống pháp luật và kỹ năng sống thực tế 6.0đ kèm biểu điểm chi tiết.",
+    "image": "/taode_gdcd.png",
+    "url": "#tao-de-gdcd",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 9
+  },
+  {
+    "id": "tao-de-cn-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN CÔNG NGHỆ (CV 7991)",
+    "description": "Tạo đề thi Công nghệ THCS chuẩn CV 7991: Trắc nghiệm kỹ thuật 4.0đ + Tự luận trồng trọt, bản vẽ cơ khí và thiết kế mạch điện gia đình 6.0đ.",
+    "image": "/taode_cn.png",
+    "url": "#tao-de-cn",
+    "category": "ĐỀ KIỂM TRA & ĐÁNH GIÁ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 10
   },
   {
     "id": "sinhdebienthe",
@@ -70,7 +142,7 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
-    "order": 5
+    "order": 11
   },
   {
     "id": "screen-record-v2",
@@ -82,7 +154,7 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
-    "order": 6
+    "order": 12
   },
   {
     "id": "dinhthanh-cleaner-pro",
@@ -94,7 +166,7 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
-    "order": 7
+    "order": 13
   },
   {
     "id": "chuanhoavanbanvip",
@@ -106,7 +178,7 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
-    "order": 8
+    "order": 14
   },
   {
     "id": "TACH-GOP-PDF",
@@ -118,7 +190,7 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
-    "order": 9
+    "order": 15
   },
   {
     "id": "TAODEKTCV7991",
@@ -130,7 +202,7 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 10
+    "order": 16
   },
   {
     "id": "congthutoan",
@@ -142,7 +214,7 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 11
+    "order": 17
   },
   {
     "id": "trolyGVCN",
@@ -154,6 +226,6 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": false,
-    "order": 12
+    "order": 18
   }
 ];

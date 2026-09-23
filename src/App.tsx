@@ -46,6 +46,7 @@ export default function App() {
   const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
+  const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
@@ -166,6 +167,48 @@ export default function App() {
     if (app.id === 'TACH-GOP-PDF' || app.url === '#tach-gop-pdf') {
       e.preventDefault();
       setShowTachGopPDFModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-toan-thcs' || app.url === '#tao-de-toan') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('TOAN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-van-thcs' || app.url === '#tao-de-van') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('VAN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-khtn-thcs' || app.url === '#tao-de-khtn') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('KHTN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-sudia-thcs' || app.url === '#tao-de-sudia') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('SUDIA');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tin-thcs' || app.url === '#tao-de-tin') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('TIN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-gdcd-thcs' || app.url === '#tao-de-gdcd') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('GDCD');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-cn-thcs' || app.url === '#tao-de-cn') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('CN');
+      setShowTaoDeTHCS8MonModal(true);
       return;
     }
     if (app.id === 'trung-tam-tao-de-thcs-8mon' || app.url === '#tao-de-thcs-8mon') {
@@ -884,6 +927,7 @@ export default function App() {
       <TaoDeTHCS8MonModal
         isOpen={showTaoDeTHCS8MonModal}
         onClose={closeAllModals}
+        initialSubject={thcs8MonSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 

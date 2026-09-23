@@ -43,6 +43,7 @@ interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenAdmin?: () => void;
+  initialSubject?: string;
 }
 
 // Dữ liệu 8 Môn Học THCS chuẩn CV 7991 & Sách Kết nối tri thức
@@ -116,7 +117,8 @@ const SUBJECT_OPTIONS = [
 export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   isOpen,
   onClose,
-  onOpenAdmin
+  onOpenAdmin,
+  initialSubject = 'TOAN'
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
   const [hwid, setHwid] = useState<string>('DVT-TH8M-XXXX-XXXX');
@@ -130,7 +132,13 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [isActivating, setIsActivating] = useState<boolean>(false);
 
   // Online Studio Filter State
-  const [selectedSubject, setSelectedSubject] = useState<string>('TOAN');
+  const [selectedSubject, setSelectedSubject] = useState<string>(initialSubject);
+  useEffect(() => {
+    if (isOpen && initialSubject) {
+      setSelectedSubject(initialSubject);
+    }
+  }, [isOpen, initialSubject]);
+
   const [selectedGrade, setSelectedGrade] = useState<string>('7');
   const [selectedExamType, setSelectedExamType] = useState<string>('GK1');
   const [examCode, setExamCode] = useState<string>('701');
@@ -264,7 +272,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-bold text-white tracking-wide">
-                  HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN)
+                  TẠO ĐỀ KIỂM TRA {currentSubjectObj.name} (CV 7991)
                 </h2>
                 <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
                   CÔNG VĂN 7991/BGDĐT
