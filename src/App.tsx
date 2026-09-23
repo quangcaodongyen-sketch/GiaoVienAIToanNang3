@@ -84,6 +84,13 @@ export default function App() {
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
+      else if (hash === '#tao-de-toan') { setThcs8MonSelectedSubject('TOAN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-van') { setThcs8MonSelectedSubject('VAN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-khtn') { setThcs8MonSelectedSubject('KHTN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-sudia') { setThcs8MonSelectedSubject('SUDIA'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-tin') { setThcs8MonSelectedSubject('TIN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-gdcd') { setThcs8MonSelectedSubject('GDCD'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-cn') { setThcs8MonSelectedSubject('CN'); setShowTaoDeTHCS8MonModal(true); }
       else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
       else if (hash === '#screen-record') setShowScreenRecordModal(true);
       else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);

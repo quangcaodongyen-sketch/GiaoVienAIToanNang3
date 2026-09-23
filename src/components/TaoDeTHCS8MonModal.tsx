@@ -287,7 +287,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 )}
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">
-                Tự động sinh Ma trận, Bản đặc tả kỹ thuật, Đề thi chuẩn in ấn khổ A4 và Đáp án thang điểm chi tiết (Toán, Văn, Anh, KHTN, Sử - Địa, Tin, GDCD, Công nghệ)
+                Hệ thống tự động sinh Ma trận, Bản đặc tả kỹ thuật, Đề thi in ấn A4 và Đáp án chi tiết dành riêng cho {currentSubjectObj.name} chuẩn CV 7991/BGDĐT.
               </p>
             </div>
           </div>
@@ -399,33 +399,34 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
               </div>
             </div>
 
-            {/* BỘ CHỌN MÔN HỌC (8 MÔN) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-blue-400" /> Chọn Môn Học Cần Tạo Đề:
-                </span>
-                <span className="text-[11px] text-amber-300">
-                  Đang chọn: <strong>{currentSubjectObj.name}</strong>
-                </span>
+            {/* THÔNG TIN CHUYÊN MÔN DÀNH RIÊNG CHO MÔN HỌC */}
+            <div className="bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 p-4 rounded-xl border border-blue-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl p-2.5 bg-slate-950/80 rounded-xl border border-blue-500/30 shadow-inner">
+                  {currentSubjectObj.icon}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm sm:text-base font-bold text-white uppercase tracking-wide">
+                      {currentSubjectObj.name}
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      {currentSubjectObj.badge}
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+                      BẢN QUYỀN PRO
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 mt-1">
+                    {currentSubjectObj.desc}
+                  </p>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-                {SUBJECT_OPTIONS.map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => setSelectedSubject(sub.id)}
-                    className={`p-2.5 rounded-xl border flex flex-col items-center text-center transition-all cursor-pointer ${
-                      selectedSubject === sub.id
-                        ? 'bg-gradient-to-b from-blue-900/60 to-slate-900 border-blue-400 text-white shadow-md shadow-blue-500/20 scale-[1.02]'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-                    }`}
-                  >
-                    <span className="text-xl mb-1">{sub.icon}</span>
-                    <span className="text-xs font-bold truncate w-full">{sub.name.replace('MÔN ', '')}</span>
-                    <span className="text-[9px] text-slate-400 truncate w-full mt-0.5">{sub.badge}</span>
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                <span className="px-2.5 py-1 text-[11px] font-semibold text-emerald-300 bg-emerald-950/60 rounded-lg border border-emerald-700/50 flex items-center gap-1">
+                  ✓ Chuẩn CV 7991/BGDĐT
+                </span>
               </div>
             </div>
 
@@ -858,7 +859,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                     <Play className="w-4 h-4 text-blue-500" />
-                    Video Hướng Dẫn Sử Dụng Bảng Điều Khiển Tạo Đề THCS (8 Môn)
+                    Video Hướng Dẫn Soạn Đề {currentSubjectObj.name} (CV 7991)
                   </h3>
                   <span className="px-2 py-0.5 text-[11px] font-semibold bg-blue-500/20 text-blue-300 rounded">
                     Full HD 1080p
@@ -905,9 +906,9 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-blue-300">
-                            Trung Tâm Tạo Đề THCS (.exe)
+                            Bộ Cài Đặt {currentSubjectObj.name} (.exe)
                           </p>
-                          <p className="text-[10px] text-slate-400">Bảng điều khiển 8 môn (28.8 MB)</p>
+                          <p className="text-[10px] text-slate-400">Phòng làm việc chuyên môn (28.8 MB)</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -941,7 +942,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-emerald-300">
-                            Sổ Tay Hướng Dẫn Soạn Đề
+                            Sổ Tay Hướng Dẫn Soạn Đề {currentSubjectObj.name}
                           </p>
                           <p className="text-[10px] text-slate-400">Chuẩn CV 7991/BGDĐT</p>
                         </div>
