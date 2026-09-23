@@ -228,6 +228,72 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   }, [isOpen]);
 
   // Bộ phân tích & Chuẩn hóa văn bản hành chính theo Nghị định 30/2020/NĐ-CP
+    // Tải file Word (.doc) thể thức chuẩn Nghị định 30/2020/NĐ-CP
+  const handleDownloadDocx = () => {
+    const htmlContent = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>${standardResult.tenLoai} - ${standardResult.soKyHieu}</title>
+    <style>
+      @page { size: A4; margin: 20mm 15mm 20mm 20mm; }
+      body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.35; color: #000; }
+      table { width: 100%; border-collapse: collapse; }
+      td { vertical-align: top; }
+    </style>
+    </head>
+    <body>
+      <table>
+        <tr>
+          <td style="width: 45%; text-align: center;">
+            <p style="font-size: 12pt; margin: 0;">${standardResult.coQuanCapTren}</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.coQuanBanHanh}</p>
+            <hr style="width: 35%; margin: 4px auto; border-top: 1px solid black;" />
+            <p style="font-size: 13pt; margin: 4px 0 0 0;">${standardResult.soKyHieu}</p>
+          </td>
+          <td style="width: 55%; text-align: center;">
+            <p style="font-size: 12pt; font-weight: bold; margin: 0;">${standardResult.quocHieu}</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.tieuNgu}</p>
+            <hr style="width: 50%; margin: 4px auto; border-top: 1px solid black;" />
+            <p style="font-size: 13pt; font-style: italic; margin: 4px 0 0 0;">${standardResult.diaDanhNgayThang}</p>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <div style="text-align: center;">
+        <h3 style="font-size: 14pt; font-weight: bold; margin: 0;">${standardResult.tenLoai}</h3>
+        <p style="font-size: 13pt; font-weight: bold; margin: 4px 0;">${standardResult.trichYeu}</p>
+        <hr style="width: 25%; margin: 4px auto; border-top: 1px solid black;" />
+      </div>
+      <br/>
+      <div style="text-align: justify; font-size: 13pt;">
+        ${standardResult.noiDungHtml}
+      </div>
+      <br/>
+      <table>
+        <tr>
+          <td style="width: 50%;">
+            <p style="font-size: 12pt; font-weight: bold; font-style: italic; margin: 0;">Nơi nhận:</p>
+            ${standardResult.noiNhan.map(n => `<p style="font-size: 11pt; margin: 2px 0;">- ${n}</p>`).join('')}
+          </td>
+          <td style="width: 50%; text-align: center;">
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.chucVu}</p>
+            <p style="font-size: 11pt; font-style: italic; margin: 30px 0;">(Ký, đóng dấu)</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.nguoiKy}</p>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>`;
+    const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Van_Ban_Chuan_Hoa_ND30_${standardResult.soKyHieu.replace(/[^a-zA-Z0-9]/g, '_')}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleStandardize = async () => {
     if (!inputText.trim()) {
       alert('Vui lòng nhập nội dung văn bản cần chuẩn hóa!');
@@ -657,8 +723,16 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
+                      onClick={handleDownloadDocx}
+                      className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer"
+                      title="Tải tệp Word (.doc) chuẩn hóa về máy"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Tải Word (.doc)</span>
+                    </button>
+                    <button
                       onClick={handleCopyFormatted}
-                      className="px-2.5 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold flex items-center gap-1 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                       title="Sao chép toàn bộ văn bản"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}

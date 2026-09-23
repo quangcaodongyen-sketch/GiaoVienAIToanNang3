@@ -147,17 +147,27 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   // Tải file Word (.doc) đúng 100% chuẩn văn bản desktop & add-in
   const handleDownloadDoc = () => {
-    if (!examSuite) {
-      alert('Vui lòng tạo đề trước khi tải về!');
-      return;
+    let suite = examSuite;
+    if (!suite) {
+      suite = generateExamSuite({
+        grade: selectedGrade,
+        term: selectedTerm,
+        parentAgency,
+        schoolName,
+        schoolYear,
+        timeMinutes: Number(examDuration) || 60
+      });
+      setExamSuite(suite);
     }
-    const htmlContent = exportToWordHtml(examSuite);
+    const htmlContent = exportToWordHtml(suite);
     const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `De_Kiem_Tra_Tieng_Anh_${selectedGrade}_${selectedTerm}_CV7991.doc`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
