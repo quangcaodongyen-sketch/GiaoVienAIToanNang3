@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
+  BarChart3, 
+  Users, 
+  History, 
   X, 
   CheckCircle2, 
   Clock, 
@@ -23,6 +26,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { licenseService, LicenseRecord } from '../services/licenseService';
+import { activityTrackingService, MachineProfile } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
@@ -43,7 +47,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinError, setPinError] = useState(false);
 
   // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
-  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tts');
+  const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
+  const [currentAdminName, setCurrentAdminName] = useState<string>('');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tracking');
+  const [trackedMachines, setTrackedMachines] = useState<MachineProfile[]>([]);
+  const [trackingSearch, setTrackingSearch] = useState('');
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -194,15 +202,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-  // Mật khẩu Admin chính thức: Thaythanh2026@
+  // Hỗ trợ 2 cấp tài khoản:
+  // 1. Thaythanh2026@ -> Admin Thầy Đinh Văn Thành (Toàn quyền, xem thống kê truy cập, dự đoán người dùng)
+  // 2. Maitinh2026@ -> Tài khoản phụ Mai Tình (Kích hoạt bản quyền giáo viên có lưu vết)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (pinInput === 'Thaythanh2026@') {
       setIsAuthenticated(true);
+      setUserRole('ADMIN');
+      setCurrentAdminName('Thầy Đinh Văn Thành');
+      setAdminTab('tracking');
+      setPinError(false);
+      loadTrackingData();
+    } else if (pinInput === 'Maitinh2026@') {
+      setIsAuthenticated(true);
+      setUserRole('SUB_ADMIN');
+      setCurrentAdminName('Mai Tình');
+      setAdminTab('tts');
       setPinError(false);
     } else {
       setPinError(true);
     }
+  };
+
+  const loadTrackingData = () => {
+    const list = activityTrackingService.getAllTrackedMachines();
+    setTrackedMachines(list);
   };
 
   const loadData = async () => {
@@ -723,9 +748,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 mx-auto flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20">
               <Lock className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-extrabold text-white">QUẢN TRỊ VIÊN BẢN QUYỀN</h3>
+            <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Hệ sinh thái AI Thầy Đinh Văn Thành – Xác thực quyền Admin
+              Nhập mật khẩu Admin (Thầy Thành) hoặc Tài khoản phụ (Mai Tình) để tiếp tục
             </p>
           </div>
 
@@ -784,12 +809,12 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
   const revokedCount = licenses.filter(x => x.status === 'REVOKED').length;
 
   const handleApprove = async (mid: string) => {
-    await licenseService.approve(mid);
+    await licenseService.approve(mid, currentAdminName || 'Thầy Đinh Văn Thành');
     await loadData();
   };
 
   const handleExtend = async (mid: string, pkg: '1YEAR' | 'LIFETIME') => {
-    await licenseService.extend(mid, pkg);
+    await licenseService.extend(mid, pkg, currentAdminName || 'Thầy Đinh Văn Thành');
     await loadData();
   };
 
@@ -821,7 +846,8 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       package_type: newPkg,
       status: 'ACTIVE',
       expiry_timestamp: expTs,
-      notes: 'Admin tạo trực tiếp'
+      notes: 'Admin tạo trực tiếp',
+      activated_by: currentAdminName || 'Thầy Đinh Văn Thành'
     });
 
     setNewMid('');
@@ -861,14 +887,16 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                  QUẢN TRỊ BẢN QUYỀN CLOUD 24/7
+                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ TOÀN DIỆN'}
                 </h2>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold">
-                  ONLINE
+                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
+                  {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN MAI TÌNH' : '👑 ADMIN THẦY THÀNH'}
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Thầy giáo Đinh Văn Thành – Quản lý cấp phép & kích hoạt từ xa
+                {userRole === 'SUB_ADMIN' 
+                  ? 'Tài khoản phụ: Mai Tình – Mọi thao tác kích hoạt được lưu vết tự động vào hệ thống' 
+                  : 'Thầy giáo Đinh Văn Thành – Toàn quyền quản trị, theo dõi người dùng & thống kê hệ thống'}
               </p>
             </div>
           </div>
@@ -891,19 +919,34 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
           </div>
         </div>
 
-        {/* TAB CHUYỂN ĐỔI: 1. SMART LISTENING | 2. NLS-AI V2 | 3. ĐỀ TIẾNG ANH CV 7991 | 4. SINH 3 ĐỀ BIẾN THỂ */}
+        {/* TAB CHUYỂN ĐỔI */}
         <div className="flex gap-2 my-3 border-b border-slate-800 pb-2 text-xs font-bold shrink-0 overflow-x-auto">
+          {userRole === 'ADMIN' && (
+            <button
+              onClick={() => setAdminTab('tracking')}
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+                adminTab === 'tracking'
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              📊 0. Thống Kê Truy Cập & Dùng Thử
+            </button>
+          )}
+
           <button
             onClick={() => setAdminTab('tts')}
             className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
               adminTab === 'tts'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
             <Crown className="w-4 h-4" />
-            1. Smart Listening Pro (Cloud)
+            {userRole === 'SUB_ADMIN' ? '👑 Kích Hoạt Bản Quyền Giáo Viên' : '1. Quản Lý Bản Quyền Chung'}
           </button>
+          {userRole === 'ADMIN' && (
           <button
             onClick={() => setAdminTab('nls')}
             className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
@@ -992,9 +1035,251 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <Crown className="w-4 h-4 text-amber-300" />
             9. Tạo Đề 8 Môn THCS (CV 7991)
           </button>
+          )}
         </div>
 
         {/* TAB 1: SMART LISTENING PRO (CLOUD DATABASE) */}
+        {/* ===================================================================== */}
+        {/* TAB 0: THỐNG KÊ TRUY CẬP, DÙNG THỬ & THEO DÕI THEO ID MÁY (ADMIN)    */}
+        {/* ===================================================================== */}
+        {adminTab === 'tracking' && userRole === 'ADMIN' && (
+          <div className="flex-1 flex flex-col min-h-0 space-y-4">
+            {/* THỐNG KÊ TỔNG QUAN */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                  <Laptop className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-white">{trackedMachines.length}</div>
+                  <div className="text-[11px] text-slate-400">Máy tính đã truy cập</div>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-white">
+                    {trackedMachines.filter(m => m.isRegisteredTrial).length}
+                  </div>
+                  <div className="text-[11px] text-slate-400">Đã đăng ký dùng thử</div>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                  <Crown className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-white">
+                    {licenses.filter(l => l.status === 'ACTIVE').length}
+                  </div>
+                  <div className="text-[11px] text-slate-400">Đã kích hoạt PRO</div>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xl font-black text-white">
+                    {trackedMachines.reduce((acc, m) => acc + (m.trialUsed || 0), 0)}
+                  </div>
+                  <div className="text-[11px] text-slate-400">Lượt thử đã tạo</div>
+                </div>
+              </div>
+            </div>
+
+            {/* THANH TÌM KIẾM & NÚT LÀM MỚI */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="relative w-full sm:w-80">
+                <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Tìm theo ID máy, họ tên, trường, SĐT..."
+                  value={trackingSearch}
+                  onChange={(e) => setTrackingSearch(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 self-end sm:self-auto">
+                <button
+                  onClick={loadTrackingData}
+                  className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition flex items-center gap-1.5 text-xs font-semibold"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Cập nhật danh sách</span>
+                </button>
+              </div>
+            </div>
+
+            {/* BẢNG THEO DÕI & DỰ ĐOÁN THÔNG TIN NGƯỜI DÙNG */}
+            <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/50">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="sticky top-0 bg-slate-800/90 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
+                  <tr>
+                    <th className="py-3 px-3">ID Máy Tính</th>
+                    <th className="py-3 px-3">Họ Tên / Dự Đoán AI</th>
+                    <th className="py-3 px-3">Trường & SĐT Zalo</th>
+                    <th className="py-3 px-3">Dùng Thử</th>
+                    <th className="py-3 px-3">Phần Mềm Đã Vào</th>
+                    <th className="py-3 px-3">Hoạt Động Gần Nhất</th>
+                    <th className="py-3 px-3 text-right">Kích Hoạt Nhanh</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {trackedMachines
+                    .filter(m => {
+                      if (!trackingSearch.trim()) return true;
+                      const q = trackingSearch.toLowerCase();
+                      return (
+                        m.machineId.toLowerCase().includes(q) ||
+                        (m.fullName && m.fullName.toLowerCase().includes(q)) ||
+                        (m.predictedName && m.predictedName.toLowerCase().includes(q)) ||
+                        (m.schoolUnit && m.schoolUnit.toLowerCase().includes(q)) ||
+                        (m.phoneNumber && m.phoneNumber.includes(q))
+                      );
+                    })
+                    .map((item, idx) => {
+                      const activeLicense = licenses.find(l => l.machine_id === item.machineId && l.status === 'ACTIVE');
+                      const apps = Object.values(item.appsVisited || {});
+                      return (
+                        <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
+                          <td className="py-3 px-3 font-mono font-bold text-cyan-300">
+                            {item.machineId}
+                            <div className="text-[10px] text-slate-500 font-sans font-normal mt-0.5">
+                              {item.deviceInfo || 'Windows PC'}
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
+                            {item.isRegisteredTrial && item.fullName ? (
+                              <div>
+                                <span className="font-bold text-white text-sm">{item.fullName}</span>
+                                <span className="ml-2 px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] border border-emerald-500/30">
+                                  Đã đăng ký
+                                </span>
+                              </div>
+                            ) : (
+                              <div>
+                                <span className="font-semibold text-amber-300">{item.predictedName || 'Chưa định danh'}</span>
+                                <span className="ml-2 px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px] border border-amber-500/30">
+                                  Dự đoán AI
+                                </span>
+                              </div>
+                            )}
+                          </td>
+                          <td className="py-3 px-3 text-slate-300">
+                            <div className="flex items-center gap-1">
+                              <Building2 className="w-3 h-3 text-slate-500" />
+                              <span>{item.schoolUnit || 'Chưa rõ đơn vị'}</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-mono mt-0.5">
+                              <Phone className="w-3 h-3 text-slate-500" />
+                              <span>{item.phoneNumber || 'Chưa có SĐT'}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1 font-bold">
+                              <span className={item.trialUsed >= item.trialMax ? 'text-red-400' : 'text-amber-400'}>
+                                {item.trialUsed}
+                              </span>
+                              <span className="text-slate-500">/</span>
+                              <span className="text-slate-300">{item.trialMax}</span>
+                              <span className="text-[10px] text-slate-400 ml-1">lượt</span>
+                            </div>
+                            <div className="w-20 bg-slate-800 rounded-full h-1.5 mt-1 overflow-hidden">
+                              <div
+                                className={`h-full ${item.trialUsed >= item.trialMax ? 'bg-red-500' : 'bg-amber-500'}`}
+                                style={{ width: `${Math.min(100, (item.trialUsed / item.trialMax) * 100)}%` }}
+                              />
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex flex-wrap gap-1 max-w-[220px]">
+                              {apps.length === 0 ? (
+                                <span className="text-slate-500 text-[10px]">Chưa mở app</span>
+                              ) : (
+                                apps.map((app, aIdx) => (
+                                  <span
+                                    key={aIdx}
+                                    className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] border border-slate-700 font-medium"
+                                    title={`${app.appName} (vào ${app.count} lần, lần cuối: ${app.lastVisit})`}
+                                  >
+                                    {app.appName.split(' ')[0]} ({app.count})
+                                  </span>
+                                ))
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3 px-3 text-slate-400 text-[11px]">
+                            {item.lastSeenAt || 'Vừa xong'}
+                          </td>
+                          <td className="py-3 px-3 text-right">
+                            {activeLicense ? (
+                              <span className="px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/40 inline-flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                Đã PRO ({activeLicense.package_type})
+                              </span>
+                            ) : (
+                              <div className="flex items-center justify-end gap-1">
+                                <button
+                                  onClick={async () => {
+                                    const nowTs = Math.floor(Date.now() / 1000);
+                                    await licenseService.createDirect({
+                                      machine_id: item.machineId,
+                                      teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                      phone_zalo: item.phoneNumber || '',
+                                      school_unit: item.schoolUnit || '',
+                                      package_type: '1YEAR',
+                                      status: 'ACTIVE',
+                                      expiry_timestamp: nowTs + 365 * 86400,
+                                      notes: 'Kích hoạt nhanh 1 Năm (200k) từ Thống Kê'
+                                    }, 'Thầy Đinh Văn Thành');
+                                    await loadData();
+                                    loadTrackingData();
+                                  }}
+                                  className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow-sm transition"
+                                  title="Kích hoạt bản quyền 1 Năm (200.000đ)"
+                                >
+                                  + 1 Năm (200k)
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    const nowTs = Math.floor(Date.now() / 1000);
+                                    await licenseService.createDirect({
+                                      machine_id: item.machineId,
+                                      teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                      phone_zalo: item.phoneNumber || '',
+                                      school_unit: item.schoolUnit || '',
+                                      package_type: '2YEAR',
+                                      status: 'ACTIVE',
+                                      expiry_timestamp: nowTs + 730 * 86400,
+                                      notes: 'Kích hoạt nhanh 2 Năm (300k) từ Thống Kê'
+                                    }, 'Thầy Đinh Văn Thành');
+                                    await loadData();
+                                    loadTrackingData();
+                                  }}
+                                  className="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] shadow-sm transition"
+                                  title="Kích hoạt bản quyền 2 Năm (300.000đ)"
+                                >
+                                  + 2 Năm (300k)
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {adminTab === 'tts' && (
           <>
             {/* 4 STATS CARDS */}
@@ -1089,6 +1374,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       <th className="py-3 px-3">Gói Bản Quyền</th>
                       <th className="py-3 px-3">Trạng Thái</th>
                       <th className="py-3 px-3">Ngày Kích Hoạt</th>
+                      <th className="py-3 px-3">Người Kích Hoạt</th>
                       <th className="py-3 px-3 text-right">Thao Tác</th>
                     </tr>
                   </thead>
@@ -1136,6 +1422,19 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                         </td>
                         <td className="py-3 px-3 text-slate-400 text-[11px]">
                           {item.activated_at ? item.activated_at.substring(0, 10) : 'Chưa kích hoạt'}
+                        </td>
+                        <td className="py-3 px-3">
+                          {item.activated_by ? (
+                            <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] inline-flex items-center gap-1 ${
+                              item.activated_by.includes('Thành')
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                            }`}>
+                              {item.activated_by.includes('Thành') ? '👑 Thầy Thành' : '🌸 Mai Tình'}
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 text-[10px]">Tự động / Hệ thống</span>
+                          )}
                         </td>
                         <td className="py-3 px-3 text-right">
                           <div className="flex items-center justify-end gap-1.5">

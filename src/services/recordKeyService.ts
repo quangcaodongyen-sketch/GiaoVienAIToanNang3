@@ -128,13 +128,13 @@ export async function generateRecordLicenseKey(
   if (packageType === '1year') {
     prefix = 'Y1';
     expiryTs = nowTs + 365 * 86400;
-    packageName = 'GÓI 1 NĂM (100.000đ)';
+    packageName = 'GÓI 1 NĂM (200.000đ)';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   } else if (packageType === '2year') {
     prefix = 'Y2';
     expiryTs = nowTs + 730 * 86400;
-    packageName = 'GÓI 2 NĂM (150.000đ)';
+    packageName = 'GÓI 2 NĂM (300.000đ)';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   }
@@ -200,13 +200,13 @@ export async function verifyRecordLicenseKey(key: string, machineId: string): Pr
 
   if (prefix === 'Y1') {
     pkgType = '1year';
-    pkgName = 'GÓI 1 NĂM (100.000đ)';
+    pkgName = 'GÓI 1 NĂM (200.000đ)';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
   } else if (prefix === 'Y2') {
     pkgType = '2year';
-    pkgName = 'GÓI 2 NĂM (150.000đ)';
+    pkgName = 'GÓI 2 NĂM (300.000đ)';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));

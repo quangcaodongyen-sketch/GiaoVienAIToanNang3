@@ -17,6 +17,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
+import { activityTrackingService } from '../services/activityTrackingService';
+import { TrialRegisterModal } from './TrialRegisterModal';
 import {
   getOrCreateExamHardwareCode,
   verifyExamLicenseKey,
@@ -1377,6 +1379,19 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
               </div>
 
               {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN */}
+              <div className="flex items-center justify-between pt-1">
+                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  Bảng Giá Các Gói Bản Quyền Chính Thức
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => setShowTrialModal(true)}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  Đăng Ký Dùng Thử 5 Lần
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {/* Gói 1 Năm */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
@@ -1493,6 +1508,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         </div>
 
       </div>
+      <TrialRegisterModal isOpen={showTrialModal} onClose={() => setShowTrialModal(false)} />
     </div>
   );
 };

@@ -1,3 +1,18 @@
+// Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Thầy Đinh Văn Thành & Nữ miền Bắc)
+export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
+Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
+Thầy Cô có thể chọn môn học, khối lớp, phân môn và xuất file Microsoft Word đầy đủ để sử dụng ngay trong công tác giảng dạy. Chúc quý Thầy Cô thực hiện thành công!`;
+
+export const SAMPLE_VIDEO_ND30 = `Xin chào các đồng chí cán bộ và giáo viên!
+Video hôm nay sẽ hướng dẫn quy trình chuẩn hóa văn bản hành chính theo đúng Nghị định 30 năm 2020 của Chính phủ.
+Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của Ủy ban nhân dân xã Đồng Yên, Trường Trung học cơ sở Đồng Yên, và khung chữ ký của Hiệu trưởng.
+Chỉ trong chưa đầy một giây, văn bản của Thầy Cô sẽ đạt chuẩn khảo thí và thể thức văn bản quốc gia!`;
+
+export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Thầy Đinh Văn Thành, giáo viên Trường Trung học cơ sở Đồng Yên.
+Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assistant tích hợp trực tiếp vào Microsoft Word.
+Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
+Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Crown, 
@@ -147,7 +162,9 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
 
   // Online Studio States
-  const [textInput, setTextInput] = useState(SAMPLE_SECONDARY);
+  const [studioMode, setStudioMode] = useState<'video_guide' | 'english_sgk'>('video_guide');
+  const [vietnameseVoiceType, setVietnameseVoiceType] = useState<'thay_thanh' | 'co_giao_bac'>('thay_thanh');
+  const [textInput, setTextInput] = useState(SAMPLE_VIDEO_TAO_DE);
   const [voiceList, setVoiceList] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceIndex, setSelectedVoiceIndex] = useState<number>(0);
   const [rate, setRate] = useState<number>(1.0);
@@ -227,8 +244,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     const updateVoices = () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         const voices = window.speechSynthesis.getVoices();
-        const enVoices = voices.filter(v => v.lang.startsWith('en'));
-        setVoiceList(enVoices.length > 0 ? enVoices : voices);
+        setVoiceList(voices);
       }
     };
 
@@ -631,40 +647,139 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
               </div>
             )}
 
-            {/* 2. THANH CÔNG CỤ NHANH SGK & CHÈN CHUÔNG / NGHỈ (GIỐNG BẢN DESKTOP) */}
+            {/* BỘ CHỌN CHẾ ĐỘ: 1. THUYẾT MINH VIDEO (TIẾNG VIỆT) | 2. SGK TIẾNG ANH */}
+            <div className="flex gap-2 p-1.5 bg-slate-900 border border-amber-500/30 rounded-2xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setStudioMode('video_guide');
+                  setTextInput(SAMPLE_VIDEO_TAO_DE);
+                }}
+                className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                  studioMode === 'video_guide'
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Crown className="w-4 h-4" />
+                🎙️ Tạo Giọng Thuyết Minh Video Hướng Dẫn (Tiếng Việt)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setStudioMode('english_sgk');
+                  setTextInput(SAMPLE_SECONDARY);
+                }}
+                className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                  studioMode === 'english_sgk'
+                    ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                🎧 Luyện Nghe SGK Tiếng Anh (English Global Success)
+              </button>
+            </div>
+
+            {/* THANH CÔNG CỤ NHANH */}
             <div className="bg-slate-800/80 rounded-2xl p-2.5 border border-slate-700 space-y-2">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Nạp bài mẫu chuẩn SGK:
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    onClick={() => setTextInput(SAMPLE_SECONDARY)}
-                    className="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 font-semibold transition-colors"
-                  >
-                    🏫 Cấp 2 (Nick & Mi)
-                  </button>
-                  <button
-                    onClick={() => setTextInput(SAMPLE_PRIMARY)}
-                    className="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 font-semibold transition-colors"
-                  >
-                    🎒 Cấp 1 (Tom & Mai)
-                  </button>
-                  <button
-                    onClick={() => setTextInput(SAMPLE_DIALOGUE_AB)}
-                    className="px-2.5 py-1 rounded-lg bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-600/40 font-semibold transition-colors"
-                  >
-                    💬 Giao tiếp (A & B)
-                  </button>
-                  <button
-                    onClick={() => setTextInput(SAMPLE_MONOLOGUE)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 font-semibold transition-colors"
-                  >
-                    🎙️ Độc thoại (Monologue)
-                  </button>
+              {studioMode === 'video_guide' ? (
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+                      <Crown className="w-3.5 h-3.5 text-amber-400" />
+                      Chọn giọng đọc thuyết minh:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setVietnameseVoiceType('thay_thanh')}
+                        className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all ${
+                          vietnameseVoiceType === 'thay_thanh'
+                            ? 'bg-amber-500 text-slate-950 shadow-md'
+                            : 'bg-slate-900 text-slate-300 border border-slate-700 hover:text-white'
+                        }`}
+                      >
+                        👑 Giọng Thầy Đinh Văn Thành (Nam Miền Bắc - Trầm Ấm Sư Phạm)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setVietnameseVoiceType('co_giao_bac')}
+                        className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all ${
+                          vietnameseVoiceType === 'co_giao_bac'
+                            ? 'bg-purple-500 text-white shadow-md'
+                            : 'bg-slate-900 text-slate-300 border border-slate-700 hover:text-white'
+                        }`}
+                      >
+                        🌸 Giọng Cô Giáo Miền Bắc (Nữ Miền Bắc - Truyền Cảm Phát Thanh)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-700/60">
+                    <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      Kịch bản video mẫu:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setTextInput(SAMPLE_VIDEO_TAO_DE)}
+                        className="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 text-xs font-semibold"
+                      >
+                        📜 Video 1: Tạo Đề 7991
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTextInput(SAMPLE_VIDEO_ND30)}
+                        className="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 text-xs font-semibold"
+                      >
+                        🏛️ Video 2: Chuẩn Hóa NĐ 30
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTextInput(SAMPLE_VIDEO_ADDIN_WORD)}
+                        className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 text-xs font-semibold"
+                      >
+                        💻 Video 3: Add-in AI Word
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    Nạp bài mẫu chuẩn SGK:
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    <button
+                      onClick={() => setTextInput(SAMPLE_SECONDARY)}
+                      className="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 font-semibold transition-colors"
+                    >
+                      🏫 Cấp 2 (Nick & Mi)
+                    </button>
+                    <button
+                      onClick={() => setTextInput(SAMPLE_PRIMARY)}
+                      className="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 font-semibold transition-colors"
+                    >
+                      🎒 Cấp 1 (Tom & Mai)
+                    </button>
+                    <button
+                      onClick={() => setTextInput(SAMPLE_DIALOGUE_AB)}
+                      className="px-2.5 py-1 rounded-lg bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-600/40 font-semibold transition-colors"
+                    >
+                      💬 Giao tiếp (A & B)
+                    </button>
+                    <button
+                      onClick={() => setTextInput(SAMPLE_MONOLOGUE)}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 font-semibold transition-colors"
+                    >
+                      🎙️ Độc thoại (Monologue)
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Chèn Chuông & Thời gian nghỉ */}
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-700/60">

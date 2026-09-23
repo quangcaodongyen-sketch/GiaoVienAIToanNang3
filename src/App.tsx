@@ -22,6 +22,8 @@ import {
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
+import { TrialRegisterModal } from './components/TrialRegisterModal';
+import { activityTrackingService } from './services/activityTrackingService';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
@@ -48,6 +50,7 @@ export default function App() {
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
   const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  const [showTrialModal, setShowTrialModal] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -81,8 +84,13 @@ export default function App() {
 
   // Lắng nghe URL hash để mở modal tương ứng khi người dùng truy cập link trực tiếp
   useEffect(() => {
+    activityTrackingService.trackAppVisit('home', 'Trang Chủ Giáo Viên AI Toàn Năng 3');
     const handleHash = () => {
       const hash = window.location.hash;
+      if (hash === '#dung-thu' || hash === '#trial') {
+        setShowTrialModal(true);
+        return;
+      }
       if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
       else if (hash === '#tao-de-toan') { setThcs8MonSelectedSubject('TOAN'); setShowTaoDeTHCS8MonModal(true); }
       else if (hash === '#tao-de-van') { setThcs8MonSelectedSubject('VAN'); setShowTaoDeTHCS8MonModal(true); }
@@ -335,6 +343,16 @@ export default function App() {
                 <Phone className="w-4 h-4 text-teal-600" />
                 <span>Liên hệ</span>
               </a>
+
+              {/* Nút Đăng Ký Dùng Thử 5 Lần */}
+              <button
+                onClick={() => setShowTrialModal(true)}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-600/20 transition-all text-xs font-black flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                title="Đăng ký dùng thử 5 lần miễn phí"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Đăng Ký Dùng Thử (5 Lần)</span>
+              </button>
 
               {/* Quản trị Cloud Button */}
               <button
@@ -1044,6 +1062,12 @@ export default function App() {
       <AdminDashboard
         isOpen={showAdminDashboard}
         onClose={closeAllModals}
+      />
+
+      {/* MODAL ĐĂNG KÝ DÙNG THỬ 5 LẦN */}
+      <TrialRegisterModal
+        isOpen={showTrialModal}
+        onClose={() => setShowTrialModal(false)}
       />
       {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
       <a

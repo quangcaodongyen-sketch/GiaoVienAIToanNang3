@@ -944,7 +944,7 @@ startxref
                     <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng tách, gộp, xóa trang rác</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-base font-extrabold text-pink-400">199.000đ</span>
+                    <span className="text-base font-extrabold text-pink-400">200.000đ</span>
                     <span className="block text-[10px] text-slate-500">/ 1 máy</span>
                   </div>
                 </div>
@@ -955,7 +955,7 @@ startxref
                     <p className="text-[11px] text-slate-400">Miễn phí nâng cấp các thuật toán OCR và nén PDF mới</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-base font-extrabold text-pink-400">299.000đ</span>
+                    <span className="text-base font-extrabold text-pink-400">300.000đ</span>
                     <span className="block text-[10px] text-slate-500">/ 1 máy</span>
                   </div>
                 </div>

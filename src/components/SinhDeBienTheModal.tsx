@@ -1071,14 +1071,14 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
                   <span className="font-bold text-slate-300 block text-xs">GÓI 1 NĂM</span>
-                  <div className="text-xl font-extrabold text-white">100.000đ</div>
+                  <div className="text-xl font-extrabold text-white">200.000đ</div>
                   <span className="text-[11px] text-slate-400 block">Sử dụng 365 ngày</span>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
                   <span className="font-bold text-slate-300 block text-xs">GÓI 2 NĂM</span>
-                  <div className="text-xl font-extrabold text-sky-400">150.000đ</div>
-                  <span className="text-[11px] text-slate-400 block">Tiết kiệm 50.000đ</span>
+                  <div className="text-xl font-extrabold text-sky-400">300.000đ</div>
+                  <span className="text-[11px] text-slate-400 block">Tiết kiệm 100.000đ</span>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-500/20 to-slate-900 border border-amber-500/60 text-center space-y-2 shadow-lg shadow-amber-500/10">

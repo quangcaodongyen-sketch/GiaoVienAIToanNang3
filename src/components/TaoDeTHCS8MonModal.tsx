@@ -24,6 +24,8 @@ import {
   FileCheck
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
+import { activityTrackingService } from '../services/activityTrackingService';
+import { TrialRegisterModal } from './TrialRegisterModal';
 import {
   getOrCreateTHCS8MHardwareCode,
   getSecureTHCS8MTrialRemaining,
@@ -1089,49 +1091,58 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 </div>
               </div>
 
-              {/* Bảng Giá Các Gói Bản Quyền */}
+              {/* Bảng Giá Các Gói Bản Quyền & Nút Đăng Ký Dùng Thử 5 Lần */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Bảng Giá Các Gói Bản Quyền Tạo Đề THCS
-                </h4>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-bold text-white">Gói Từng Môn Riêng Lẻ (Toán / Văn / Anh...)</span>
-                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng, cập nhật 1 năm</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-blue-400">199.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 môn / 1 máy</span>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Bảng Giá Bản Quyền Chính Thức
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setShowTrialRegister(true)}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Đăng Ký Dùng Thử 5 Lần
+                  </button>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                {/* Gói 1 Năm: 200.000đ */}
+                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between hover:border-sky-500/40 transition">
                   <div>
-                    <span className="text-xs font-bold text-white">Gói Toàn Diện 8 Môn (1 Năm)</span>
-                    <p className="text-[11px] text-slate-400">Mở khóa toàn bộ 8 môn học THCS (Toán, Văn, Anh, KHTN, Sử Địa, Tin, GDCD, CN)</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-amber-400">499.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ trọn gói 8 môn / 1 năm</span>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border-2 border-amber-500/50 flex items-center justify-between shadow-lg shadow-amber-500/10">
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-extrabold text-white">GÓI TRỌN ĐỜI 8 MÔN (VIP KHUYÊN DÙNG)</span>
-                      <span className="px-1.5 py-0.2 text-[9px] font-extrabold rounded bg-red-600 text-white">
-                        SIÊU TIẾT KIỆM
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-300 mt-0.5">
-                      Sở hữu vĩnh viễn cả 8 môn học THCS, cập nhật ngân hàng câu hỏi định kỳ, hỗ trợ chuyển máy mới
+                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <Crown className="w-3.5 h-3.5 text-sky-400" />
+                      GÓI BẢN QUYỀN 1 NĂM (CHUẨN 200K)
+                    </span>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Sử dụng đầy đủ mọi tính năng tạo đề, ma trận đặc tả & xuất file Word 1 năm không giới hạn
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-lg font-black text-amber-300">990.000đ</span>
-                    <span className="block text-[10px] text-emerald-400 font-bold">TRỌN ĐỜI VĨNH VIỄN</span>
+                    <span className="text-lg font-black text-sky-400">200.000đ</span>
+                    <span className="block text-[10px] text-slate-400">/ 1 năm</span>
+                  </div>
+                </div>
+
+                {/* Gói 2 Năm: 300.000đ */}
+                <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-indigo-950/40 border-2 border-amber-500/60 flex items-center justify-between shadow-lg shadow-amber-500/10">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        GÓI BẢN QUYỀN 2 NĂM (SIÊU TIẾT KIỆM 300K)
+                      </span>
+                      <span className="px-1.5 py-0.2 text-[9px] font-extrabold rounded bg-amber-500 text-slate-950">
+                        TIẾT KIỆM 100K
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 mt-0.5">
+                      Sử dụng 2 năm trọn vẹn, cập nhật ngân hàng đề thi liên tục theo chuẩn khảo thí Bộ GD&ĐT
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xl font-black text-amber-300">300.000đ</span>
+                    <span className="block text-[10px] text-emerald-400 font-bold">/ 2 NĂM TRỌN GÓI</span>
                   </div>
                 </div>
               </div>
@@ -1139,6 +1150,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
           </div>
         )}
       </div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} />
     </div>
   );
 };
