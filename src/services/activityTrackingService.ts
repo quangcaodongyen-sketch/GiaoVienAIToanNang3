@@ -270,6 +270,17 @@ const DEFAULT_ACTIVITY_LOGS: ActivityLogItem[] = [
 ];
 
 class ActivityTrackingService {
+  // Kiểm tra máy tính của Thầy Thành (Đặc quyền VIP dùng thử thoải mái không giới hạn)
+  public isUnlimitedDevMachine(): boolean {
+    if (typeof window === 'undefined') return true;
+    return (
+      localStorage.getItem('gvai_unlimited_machine') === 'true' ||
+      localStorage.getItem('gvai_admin_logged_in') === 'true' ||
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    );
+  }
+
   constructor() {
     this.recordPageView();
   }
@@ -303,6 +314,7 @@ class ActivityTrackingService {
 
   // Kiểm tra máy hiện tại có bị Admin xóa / khóa hay không
   public isCurrentMachineBlocked(): boolean {
+    if (this.isUnlimitedDevMachine()) return false;
     const mid = this.getOrCreateMachineId();
     return this.isMachineBlocked(mid);
   }
@@ -490,6 +502,15 @@ class ActivityTrackingService {
 
   // Sử dụng 1 lượt dùng thử
   public consumeTrial(appId: string, appName: string, actionName: string = 'Dùng thử tính năng'): { allowed: boolean; remaining: number; message: string } {
+    if (this.isUnlimitedDevMachine()) {
+      this.trackAppVisit(appId, appName);
+      this.logActivity(appId, appName, `${actionName} (👑 Máy Thầy Thành: Sử dụng không giới hạn)`);
+      return {
+        allowed: true,
+        remaining: 999999,
+        message: '👑 Đặc quyền Máy Thầy Thành: Sử dụng không giới hạn (VIP Unlimited)!'
+      };
+    }
     if (this.isCurrentMachineBlocked()) {
       return {
         allowed: false,

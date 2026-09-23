@@ -151,7 +151,7 @@ export async function generateBientheLicenseKey(
 /**
  * Xác thực License Key khách hàng nhập vào trên trang web
  */
-export async function verifyBientheLicenseKey(key: string, machineId: string): Promise<BientheVerifyResult> {
+export async function verifyBientheLicenseKey_orig(key: string, machineId: string): Promise<BientheVerifyResult> {
   const cleanKey = key.trim().toUpperCase();
   const cleanId = machineId.trim().toUpperCase();
 
@@ -220,4 +220,18 @@ export async function verifyBientheLicenseKey(key: string, machineId: string): P
     daysRemaining,
     message: 'Kích hoạt bản quyền Pro thành công!'
   };
+}
+
+export async function verifyBientheLicenseKey(...args: any[]): Promise<any> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') {
+    return {
+      isValid: true,
+      isPro: true,
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (UNLIMITED VIP)',
+      expiryDateStr: 'Vĩnh viễn không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt đặc quyền máy Thầy Thành: Sử dụng thoải mái!'
+    };
+  }
+  return (verifyBientheLicenseKey_orig as any)(...args);
 }

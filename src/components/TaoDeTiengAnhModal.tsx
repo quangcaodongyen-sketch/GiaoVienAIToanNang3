@@ -75,6 +75,12 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       const code = getOrCreateExamHardwareCode();
       setDetectedMid(code);
 
+      // Kích hoạt đặc quyền máy Thầy Thành: Dùng thoải mái không giới hạn
+      if (localStorage.getItem('gvai_unlimited_machine') === 'true') {
+        setIsProActive(true);
+        setTrialRemaining(999999);
+      }
+
       // Đọc số lượt dùng thử được ký số mật mã SHA-256 an toàn
       getSecureExamTrialRemaining(code).then(trials => {
         setTrialRemaining(trials);

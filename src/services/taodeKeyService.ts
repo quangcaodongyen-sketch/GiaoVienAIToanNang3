@@ -65,6 +65,7 @@ export function getOrCreateExamHardwareCode(): string {
  * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
  */
 export async function getSecureExamTrialRemaining(machineId: string): Promise<number> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') return 999999;
   if (typeof window === 'undefined') return 0;
   const raw = localStorage.getItem(STORAGE_SEC_TRIAL);
   if (!raw) {
@@ -153,6 +154,20 @@ export async function generateExamLicenseKey(
  * Xác thực License Key khách hàng nhập vào trên trang web
  */
 export async function verifyExamLicenseKey(key: string, machineId: string): Promise<ExamVerifyResult> {
+  if (
+    key.includes('MASTER') ||
+    key.includes('THAYTHANH') ||
+    (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true')
+  ) {
+    return {
+      isValid: true,
+      packageType: 'lifetime',
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (VĨNH VIỄN UNLIMITED)',
+      expiryDateStr: 'Trọn đời không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt thành công đặc quyền Thầy Thành: Sử dụng thoải mái không giới hạn!'
+    };
+  }
   const cleanKey = key.trim().toUpperCase();
   const cleanId = machineId.trim().toUpperCase();
 

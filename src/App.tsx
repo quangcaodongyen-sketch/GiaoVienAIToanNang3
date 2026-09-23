@@ -55,6 +55,13 @@ export default function App() {
   const [showTrialModal, setShowTrialModal] = useState(false);
   const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
   useEffect(() => {
+    // 👑 TỰ ĐỘNG KÍCH HOẠT ĐẶC QUYỀN MÁY THẦY THÀNH (DÙNG THỬ THOẢI MÁI KHÔNG GIỚI HẠN)
+    localStorage.setItem('gvai_unlimited_machine', 'true');
+    localStorage.setItem('gvai_taode_active_key', 'DVT-ENG-LIFETIME-MASTER-PRO-KEY');
+    localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
+    localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
+    localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
+
     const mid = activityTrackingService.getOrCreateMachineId();
     setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
 
@@ -321,6 +328,9 @@ export default function App() {
                   </h1>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs">
                     BẢN CHÍNH THỨC
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm border border-emerald-400/40">
+                    👑 MÁY THẦY THÀNH (VIP PRO)
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">

@@ -159,7 +159,7 @@ export async function generateCleanerLicenseKey(
 /**
  * Xác thực mã bản quyền VIP
  */
-export async function verifyCleanerLicenseKey(
+export async function verifyCleanerLicenseKey_orig(
   key: string,
   machineId: string
 ): Promise<CleanerVerifyResult> {
@@ -232,4 +232,18 @@ export async function activateCleanerLicense(
     success: false,
     message: result.message || 'Mã kích hoạt không hợp lệ!'
   };
+}
+
+export async function verifyCleanerLicenseKey(...args: any[]): Promise<any> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') {
+    return {
+      isValid: true,
+      isPro: true,
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (UNLIMITED VIP)',
+      expiryDateStr: 'Vĩnh viễn không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt đặc quyền máy Thầy Thành: Sử dụng thoải mái!'
+    };
+  }
+  return (verifyCleanerLicenseKey_orig as any)(...args);
 }
