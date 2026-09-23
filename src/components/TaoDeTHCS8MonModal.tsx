@@ -1120,16 +1120,16 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   </div>
                 </div>
 
-                {/* Gói 2 Năm: 300.000đ */}
+                {/* Gói 2 Năm: 250.000đ */}
                 <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-indigo-950/40 border-2 border-amber-500/60 flex items-center justify-between shadow-lg shadow-amber-500/10">
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
                         <Sparkles className="w-4 h-4 text-amber-400" />
-                        GÓI BẢN QUYỀN 2 NĂM (SIÊU TIẾT KIỆM 300K)
+                        GÓI BẢN QUYỀN 2 NĂM (SIÊU TIẾT KIỆM 250K)
                       </span>
                       <span className="px-1.5 py-0.2 text-[9px] font-extrabold rounded bg-amber-500 text-slate-950">
-                        TIẾT KIỆM 100K
+                        TIẾT KIỆM 150K
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-300 mt-0.5">
@@ -1137,7 +1137,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-black text-amber-300">300.000đ</span>
+                    <span className="text-xl font-black text-amber-300">250.000đ</span>
                     <span className="block text-[10px] text-emerald-400 font-bold">/ 2 NĂM TRỌN GÓI</span>
                   </div>
                 </div>

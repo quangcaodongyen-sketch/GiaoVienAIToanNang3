@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -54,6 +55,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-PDF-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
   const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
@@ -934,9 +936,19 @@ startxref
 
               {/* Bảng Giá Các Gói Bản Quyền */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Bảng Giá Các Gói Bản Quyền PDF Suite Pro
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Bảng Giá Bản Quyền PDF Suite Pro (1 Năm 200k - 2 Năm 250k)
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setShowTrialRegister(true)}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Đăng Ký Thành Viên / Dùng Thử
+                  </button>
+                </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div>
@@ -955,7 +967,7 @@ startxref
                     <p className="text-[11px] text-slate-400">Miễn phí nâng cấp các thuật toán OCR và nén PDF mới</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-base font-extrabold text-pink-400">300.000đ</span>
+                    <span className="text-base font-extrabold text-pink-400">250.000đ</span>
                     <span className="block text-[10px] text-slate-500">/ 1 máy</span>
                   </div>
                 </div>
@@ -982,6 +994,7 @@ startxref
           </div>
         )}
       </div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="tach-gop-pdf" initialAppName="PDF Suite Pro (Tách - Gộp PDF)" />
     </div>
   );
 };

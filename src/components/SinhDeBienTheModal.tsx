@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from "react";
 import {
   Sparkles,
@@ -51,6 +52,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [subTab, setSubTab] = useState<"var1" | "var2" | "var3" | "analysis">("var1");
   const [variantViewMode, setVariantViewMode] = useState<"exam" | "answers">("exam");
 
@@ -1077,7 +1079,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
 
                 <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
                   <span className="font-bold text-slate-300 block text-xs">GÓI 2 NĂM</span>
-                  <div className="text-xl font-extrabold text-sky-400">300.000đ</div>
+                  <div className="text-xl font-extrabold text-sky-400">250.000đ</div>
                   <span className="text-[11px] text-slate-400 block">Tiết kiệm 100.000đ</span>
                 </div>
 
@@ -1110,6 +1112,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
         </div>
 
       </div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="sinh-de-bienthe" initialAppName="Sinh 3 Đề Biến Thể Tương Đương" />
     </div>
   );
 };

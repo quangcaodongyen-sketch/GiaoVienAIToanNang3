@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
@@ -57,6 +58,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DT-XXXX-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
   const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
@@ -924,6 +926,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="cleaner" initialAppName="PC Cleaner Pro" />
+</div>
   );
 };

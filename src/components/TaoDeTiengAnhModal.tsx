@@ -1422,11 +1422,11 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                      TIẾT KIỆM 25%
+                      TIẾT KIỆM 150K
                     </span>
                     <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
                     <div className="text-xl font-black text-cyan-400">
-                      300.000đ <span className="text-xs text-slate-400 font-normal">/2 năm</span>
+                      250.000đ <span className="text-xs text-slate-400 font-normal">/2 năm</span>
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>

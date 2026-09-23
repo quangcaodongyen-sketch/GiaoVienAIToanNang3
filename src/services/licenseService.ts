@@ -225,7 +225,7 @@ class LicenseService {
     const nowTs = Math.floor(Date.now() / 1000);
     const expTs = packageType === 'LIFETIME' ? 9999999999 : nowTs + (packageType === '2YEAR' ? 730 : 365) * 86400;
     const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
-    const pkgLabel = packageType === '1YEAR' ? '1 Năm (200k)' : packageType === '2YEAR' ? '2 Năm (300k)' : 'Trọn Đời';
+    const pkgLabel = packageType === '1YEAR' ? '1 Năm (200k)' : packageType === '2YEAR' ? '2 Năm (250k)' : 'Trọn Đời';
 
     if (this.supabase) {
       try {
@@ -311,7 +311,7 @@ class LicenseService {
     record.activated_at = new Date().toISOString().replace('T', ' ').substring(0, 19);
     record.activated_by = activated_by;
     if (!record.notes) {
-      const pkgLabel = record.package_type === '1YEAR' ? '1 Năm (200.000đ)' : record.package_type === '2YEAR' ? '2 Năm (300.000đ)' : 'Trọn Đời';
+      const pkgLabel = record.package_type === '1YEAR' ? '1 Năm (200.000đ)' : record.package_type === '2YEAR' ? '2 Năm (250.000đ)' : 'Trọn Đời';
       record.notes = `Kích hoạt gói ${pkgLabel} bởi ${activated_by}`;
     }
 

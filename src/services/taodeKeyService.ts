@@ -135,7 +135,7 @@ export async function generateExamLicenseKey(
   } else if (packageType === '2year') {
     prefix = 'Y2';
     expiryTs = nowTs + 730 * 86400;
-    packageName = 'GÓI 2 NĂM (300.000đ)';
+    packageName = 'GÓI 2 NĂM (250.000đ)';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   }
@@ -207,7 +207,7 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
   } else if (prefix === 'Y2') {
     pkgType = '2year';
-    pkgName = 'GÓI 2 NĂM (300.000đ)';
+    pkgName = 'GÓI 2 NĂM (250.000đ)';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));

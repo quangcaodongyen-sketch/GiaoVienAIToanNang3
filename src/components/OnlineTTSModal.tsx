@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 // Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Thầy Đinh Văn Thành & Nữ miền Bắc)
 export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
 Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
@@ -153,6 +154,7 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
 
 export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // ID máy tính tự động
   const [detectedMid, setDetectedMid] = useState<string>('MB-E10D-BE85');
@@ -1315,6 +1317,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
           </button>
         </div>
       </div>
-    </div>
+          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="smart-listening" initialAppName="Smart Listening Pro" />
+</div>
   );
 };

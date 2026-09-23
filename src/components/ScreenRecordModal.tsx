@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect, useRef } from "react";
 import {
   Video,
@@ -57,6 +58,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // Recording mode: "screen" (Display Capture) | "whiteboard" (Studio Bảng Giảng Dạy Trực Tuyến)
   const [recordMode, setRecordMode] = useState<"screen" | "whiteboard">("screen");
@@ -1420,6 +1422,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         </div>
 
       </div>
-    </div>
+          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="screen-record" initialAppName="Quay Màn Hình Screen Record Pro" />
+</div>
   );
 };

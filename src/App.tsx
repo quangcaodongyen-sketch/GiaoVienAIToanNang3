@@ -17,7 +17,8 @@ import {
   Layers,
   ArrowRight,
   Crown,
-  Search
+  Search,
+  ShieldAlert
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
@@ -51,6 +52,10 @@ export default function App() {
   const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [showTrialModal, setShowTrialModal] = useState(false);
+  const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
+  useEffect(() => {
+    setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
+  }, []);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -351,7 +356,7 @@ export default function App() {
                 title="Đăng ký dùng thử 5 lần miễn phí"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>Đăng Ký Dùng Thử (5 Lần)</span>
+                <span>ĐĂNG KÝ THÀNH VIÊN</span>
               </button>
 
               {/* Quản trị Cloud Button */}
@@ -1063,6 +1068,36 @@ export default function App() {
         isOpen={showAdminDashboard}
         onClose={closeAllModals}
       />
+
+            {/* CẢNH BÁO KHI MÁY TÍNH BỊ ADMIN XÓA / KHÓA TRUY CẬP */}
+      {isCurrentBlocked && (
+        <div className="fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-slate-900 border-2 border-rose-500/80 rounded-3xl p-6 text-center shadow-2xl shadow-rose-500/20 space-y-4">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/40">
+              <ShieldAlert className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-black text-white">THIẾT BỊ ĐÃ BỊ VÔ HIỆU HÓA</h2>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Tài khoản / Thiết bị này đã bị Quản trị viên xóa hoặc tạm thời vô hiệu hóa quyền truy cập theo chính sách hệ thống.
+            </p>
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-cyan-400">
+              Mã thiết bị: <strong>{activityTrackingService.getOrCreateMachineId()}</strong>
+            </div>
+            <p className="text-xs text-slate-400">
+              Vui lòng liên hệ trực tiếp Thầy giáo <strong>Đinh Văn Thành</strong> để được xem xét mở khóa:
+            </p>
+            <a
+              href={`https://zalo.me/${BRAND.phoneRaw}?text=Thay%20Thanh%20oi,%20may%20toi%20ma%20${activityTrackingService.getOrCreateMachineId()}%20bi%20khoa,%20nho%20Thay%20ho%20tro%20mo%20khoa%20giup%20toi!`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full py-3 rounded-xl bg-[#0068FF] hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Nhắn Zalo Thầy Thành ({BRAND.phone})
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* MODAL ĐĂNG KÝ DÙNG THỬ 5 LẦN */}
       <TrialRegisterModal

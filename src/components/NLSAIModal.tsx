@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -108,6 +109,7 @@ const SAMPLE_LESSONS: Record<string, string[]> = {
 
 export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // State cho Tab 1: Trực tuyến
   const [selectedSubject, setSelectedSubject] = useState<string>('Toán');
@@ -1145,7 +1147,7 @@ ${fullContent}
                 </div>
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
                   <span className="text-slate-400 block text-[11px]">Gói 3 Năm</span>
-                  <span className="text-sm font-bold text-purple-400 block my-0.5">300.000 đ</span>
+                  <span className="text-sm font-bold text-purple-400 block my-0.5">250.000đ</span>
                   <span className="text-[10px] text-slate-500">Khuyên dùng</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/40">
@@ -1274,6 +1276,7 @@ ${fullContent}
         </div>
 
       </div>
-    </div>
+          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI THCS" />
+</div>
   );
 };
