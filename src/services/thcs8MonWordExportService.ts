@@ -996,26 +996,23 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
     parts, matrix, specification, answerGuide
   } = data;
 
-  // Render bảng điểm 2 dòng chuẩn giáo viên
+  // Render bảng điểm chuẩn Trường THCS Đồng Yên (2 dòng kẻ giáo viên phê)
   const renderMarksTable = () => `
     <table style="width: 100%; border-collapse: collapse; margin-top: 4pt; margin-bottom: 8pt; page-break-inside: avoid;">
       <tr>
-        <th colspan="2" style="border: 1px solid #000; padding: 4pt; text-align: center; font-size: 11pt; width: 25%;"><b>ĐIỂM SỐ</b></th>
-        <th rowspan="2" style="border: 1px solid #000; padding: 4pt 8pt; text-align: left; vertical-align: top; font-size: 11pt; width: 75%;">
-          <b>LỜI NHẬN XÉT CỦA GIÁO VIÊN CHẤM THI:</b><br/>
-          <span style="font-size: 10pt; color: #555;">............................................................................................................................................................<br/>
-          ............................................................................................................................................................</span>
-        </th>
+        <th colspan="2" style="border: 1px solid #000; padding: 3pt; text-align: center; font-size: 11.5pt; width: 25%;"><b>Điểm</b></th>
+        <th rowspan="2" style="border: 1px solid #000; padding: 3pt; text-align: center; font-size: 11.5pt; width: 75%;"><b>Lời phê của thầy, cô giáo</b></th>
       </tr>
       <tr>
-        <th style="border: 1px solid #000; padding: 3pt; text-align: center; font-size: 10pt; width: 12.5%;">Bằng số</th>
-        <th style="border: 1px solid #000; padding: 3pt; text-align: center; font-size: 10pt; width: 12.5%;">Bằng chữ</th>
+        <th style="border: 1px solid #000; padding: 2pt; text-align: center; font-size: 11pt; width: 12.5%;"><b>Điểm số</b></th>
+        <th style="border: 1px solid #000; padding: 2pt; text-align: center; font-size: 11pt; width: 12.5%;"><b>Điểm chữ</b></th>
       </tr>
-      <tr style="height: 38pt;">
+      <tr style="height: 46pt;">
         <td style="border: 1px solid #000; padding: 2pt; text-align: center;">&nbsp;</td>
         <td style="border: 1px solid #000; padding: 2pt; text-align: center;">&nbsp;</td>
-        <td style="border: 1px solid #000; padding: 4pt 8pt; text-align: right; vertical-align: bottom; font-size: 10pt; font-style: italic;">
-          Chữ ký giám khảo: .....................................................
+        <td style="border: 1px solid #000; padding: 4pt 8pt; vertical-align: top; font-size: 10.5pt; line-height: 1.6;">
+          ___________________________________________________________<br/>
+          ___________________________________________________________
         </td>
       </tr>
     </table>
@@ -1124,34 +1121,23 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
       <!-- =================================================================== -->
       <table style="width: 100%; border: none; border-collapse: collapse; margin-bottom: 4pt; page-break-inside: avoid;">
         <tr>
-          <td style="width: 42%; text-align: center; vertical-align: top; font-size: 11pt; border: none; padding: 0;">
+          <td style="width: 33%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
             <b>${parentAgency}</b><br/>
-            <b style="text-decoration: underline;">${schoolName}</b><br/>
-            <i>Đề kiểm tra chính thức</i>
+            <b style="text-decoration: underline;">${schoolName}</b>
           </td>
-          <td style="width: 58%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
-            <b style="font-size: 13pt; color: #FF0000;">ĐỀ KIỂM TRA ${termTitle.toUpperCase()}</b><br/>
-            <b>NĂM HỌC ${schoolYear}</b><br/>
-            <b>Môn: ${subjectName.toUpperCase()} - Lớp ${grade}</b><br/>
+          <td style="width: 67%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
+            <b style="font-size: 12.5pt;">BÀI KIỂM TRA ĐÁNH GIÁ ${termTitle.toUpperCase()}</b><br/>
+            <b>NĂM HỌC: ${schoolYear}</b><br/>
+            <b>Môn: ${subjectName} ${grade}</b><br/>
             <i>Thời gian làm bài: ${timeMinutes} phút (Không kể thời gian phát đề)</i>
           </td>
         </tr>
       </table>
 
-      <!-- Khung Họ tên học sinh & Mã đề -->
-      <table style="width: 100%; border: 1px solid #000; border-collapse: collapse; margin-top: 4pt; margin-bottom: 4pt;">
-        <tr>
-          <td style="border: none; padding: 3pt 6pt; font-size: 12pt;">
-            Họ và tên học sinh: .........................................................................................
-          </td>
-          <td style="border: none; padding: 3pt 6pt; font-size: 12pt; width: 22%;">
-            Lớp: <b>${grade}.....</b>
-          </td>
-          <td style="border: 1px solid #000; padding: 3pt 6pt; font-size: 12pt; font-weight: bold; text-align: center; background-color: #F0F0F0; width: 20%;">
-            MÃ ĐỀ: ${examCode}
-          </td>
-        </tr>
-      </table>
+      <!-- Dòng Họ tên học sinh & Mã đề chuẩn THCS Đồng Yên -->
+      <div style="margin-top: 4pt; margin-bottom: 2pt; font-size: 12.5pt;">
+        Họ và tên: __________________________, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lớp: ${grade}A___ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mã đề: ${examCode}</b>
+      </div>
 
       ${renderMarksTable()}
 
@@ -1232,9 +1218,13 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
       <br clear="all" style="page-break-before: always; mso-break-type: section-break;" />
 
       <div style="text-align: center; margin-bottom: 8pt;">
-        <div style="font-size: 11pt;">${parentAgency} - ${schoolName}</div>
-        <div style="font-weight: bold; font-size: 13pt; color: #FF0000;">
-          HƯỚNG DẪN CHẤM VÀ ĐÁP ÁN ĐỀ KIỂM TRA ${termTitle.toUpperCase()}
+        <div style="font-weight: bold; font-size: 11.5pt; text-align: left; margin-bottom: 2pt;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${parentAgency}<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">${schoolName}</span>
+        </div>
+        <div style="text-align: center; margin-top: 2pt;">
+          <div style="font-weight: bold; font-size: 13.5pt; color: #FF0000;">HƯỚNG DẪN CHẤM VÀ ĐÁP ÁN ĐỀ KIỂM TRA ${termTitle.toUpperCase()}</div>
+          <div style="font-weight: bold; font-size: 12pt;">MÔN: ${subjectName.toUpperCase()} - LỚP ${grade} | MÃ ĐỀ: ${examCode}</div>
         </div>
         <div style="font-weight: bold; font-size: 12pt;">
           MÔN: ${subjectName.toUpperCase()} - LỚP ${grade} | MÃ ĐỀ: ${examCode}
@@ -1252,7 +1242,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
         </tr>
         <tr>
           <td style="font-weight: bold; background-color: #F8F9FA;">Đáp án</td>
-          ${answerGuide.mcqAnswers.slice(0, 8).map(m => `<td style="font-weight: bold; color: #FF0000; padding: 3pt;">${m.ans}</td>`).join('')}
+          ${answerGuide.mcqAnswers.slice(0, 8).map(m => `<td style="font-weight: bold; color: #FF0000; font-weight: bold; font-size: 12pt; padding: 3pt;">${m.ans}</td>`).join('')}
         </tr>
         ${answerGuide.mcqAnswers.length > 8 ? `
           <tr class="bg-head">
@@ -1261,7 +1251,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
           </tr>
           <tr>
             <td style="font-weight: bold; background-color: #F8F9FA;">Đáp án</td>
-            ${answerGuide.mcqAnswers.slice(8).map(m => `<td style="font-weight: bold; color: #FF0000; padding: 3pt;">${m.ans}</td>`).join('')}
+            ${answerGuide.mcqAnswers.slice(8).map(m => `<td style="font-weight: bold; color: #FF0000; font-weight: bold; font-size: 12pt; padding: 3pt;">${m.ans}</td>`).join('')}
           </tr>
         ` : ''}
       </table>
@@ -1279,7 +1269,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
         ${answerGuide.essayGuide.map(item => `
           <tr>
             <td style="font-weight: bold; text-align: center; padding: 3pt;">${item.question}</td>
-            <td style="padding: 3pt 6pt; text-align: justify;">${item.step.replace(/\n/g, '<br/>')}</td>
+            <td style="padding: 3pt 6pt; text-align: justify; color: #FF0000; font-weight: 500;">${item.step.replace(/\n/g, '<br/>')}</td>
             <td style="font-weight: bold; text-align: center; padding: 3pt; color: #FF0000;">${item.point}</td>
           </tr>
         `).join('')}

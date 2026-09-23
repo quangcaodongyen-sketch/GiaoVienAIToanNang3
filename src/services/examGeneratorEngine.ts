@@ -820,12 +820,12 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
     let html = `
       <table style="width: 100%; border: none; border-collapse: collapse; margin-bottom: 4pt; page-break-inside: avoid;">
         <tr>
-          <td style="width: 40%; text-align: center; vertical-align: top; font-size: 11pt; border: none; padding: 0;">
+          <td style="width: 33%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
             <b>${parentAgency}</b><br/>
             <b style="text-decoration: underline;">${schoolName}</b>
           </td>
-          <td style="width: 60%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
-            <b style="font-size: 12.5pt;">BÀI KIỂM TRA ĐÁNH GIÁ ${termTitle}</b><br/>
+          <td style="width: 67%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
+            <b style="font-size: 12.5pt;">BÀI KIỂM TRA ĐÁNH GIÁ ${termTitle.toUpperCase()}</b><br/>
             <b>NĂM HỌC: ${schoolYear}</b><br/>
             <b>Môn: Tiếng Anh ${grade}</b><br/>
             <i>Thời gian: ${timeMinutes} phút</i>
@@ -884,7 +884,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
         <tr>
           <td style="padding: 3pt; font-weight: bold; text-align: center;">${todo.replace(/\n/g, '<br/>')}</td>
           <td style="padding: 3pt;">${say.replace(/\n/g, '<br/>')}</td>
-          <td style="padding: 3pt;">${res.replace(/\n/g, '<br/>')}</td>
+          <td style="padding: 3pt; color: #FF0000; font-weight: bold;">${res.replace(/\n/g, '<br/>')}</td>
           <td style="padding: 3pt;">${backup.replace(/\n/g, '<br/>')}</td>
         </tr>
       `).join('')}
@@ -1088,7 +1088,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
       <div style="margin-bottom: 6pt;">
         <div style="font-weight: bold; font-size: 11pt; text-align: left;">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${parentAgency}<br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;${schoolName}
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">${schoolName}</span>
         </div>
         <div style="text-align: center; margin-top: 2pt;">
           <div style="font-weight: bold; font-size: 14pt; color: #FF0000;">HƯỚNG DẪN ĐÁP ÁN VÀ BIỂU ĐIỂM</div>

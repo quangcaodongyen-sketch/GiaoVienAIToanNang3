@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   X,
   Sparkles,
@@ -602,7 +602,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         return (
                           <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
                             {/* KHUNG TIÊU ĐỀ 2 CỘT */}
-                            <div className="grid grid-cols-2 gap-4 pb-2 text-center text-[11.5pt]">
+                            <div className="grid grid-cols-3 gap-4 pb-2 text-center text-[11.5pt] font-serif">
                               <div>
                                 <div className="font-bold uppercase">{examSuite.parentAgency}</div>
                                 <div className="font-bold uppercase underline">{examSuite.schoolName}</div>
@@ -755,7 +755,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -790,7 +790,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -825,7 +825,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -852,7 +852,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}

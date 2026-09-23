@@ -589,19 +589,21 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     {/* VIEW 1: ĐỀ KIỂM TRA CHÍNH THỨC */}
                     {previewSubTab === 'exam' && (
                       <>
-                        {/* Khối tiêu đề đầu đề thi 2 cột */}
-                        <div className="grid grid-cols-2 gap-4 pb-4 border-b-2 border-slate-900 text-center">
-                          <div>
+                        {/* Khung tiêu đề đầu đề thi 2 cột chuẩn Trường THCS Đồng Yên */}
+                        <div className="grid grid-cols-3 gap-4 pb-3 border-b-2 border-slate-900 text-center font-serif">
+                          <div className="col-span-1">
                             <p className="font-bold text-[11pt] uppercase">{examSuite.parentAgency}</p>
-                            <p className="font-bold text-[12pt] uppercase text-blue-900">{examSuite.schoolName}</p>
-                            <p className="text-[11pt] italic">Đề kiểm tra chính thức</p>
+                            <p className="font-bold text-[11.5pt] uppercase underline text-slate-900">{examSuite.schoolName}</p>
                           </div>
-                          <div>
-                            <p className="font-bold text-[13pt] uppercase" style={{ color: '#FF0000' }}>
-                              ĐỀ KIỂM TRA {examSuite.termTitle.toUpperCase()}
+                          <div className="col-span-2">
+                            <p className="font-bold text-[12.5pt] uppercase text-slate-900">
+                              BÀI KIỂM TRA ĐÁNH GIÁ {examSuite.termTitle.toUpperCase()}
                             </p>
-                            <p className="font-bold text-[12pt] uppercase">
-                              NĂM HỌC {examSuite.schoolYear} | MÔN {examSuite.subjectName.toUpperCase()} - LỚP {examSuite.grade}
+                            <p className="font-bold text-[11.5pt]">
+                              NĂM HỌC: {examSuite.schoolYear}
+                            </p>
+                            <p className="font-bold text-[12pt]">
+                              Môn: {examSuite.subjectName} {examSuite.grade}
                             </p>
                             <p className="text-[11pt] italic">
                               Thời gian làm bài: {examSuite.timeMinutes} phút (Không kể thời gian phát đề)
@@ -609,32 +611,36 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                           </div>
                         </div>
 
-                        {/* Bảng điểm & Mã đề */}
-                        <div className="my-3 flex items-center justify-between border border-slate-800 p-2 text-[11pt]">
-                          <div className="flex gap-6">
-                            <span>Họ và tên học sinh: ..............................................................</span>
-                            <span>Lớp: {examSuite.grade}....</span>
-                          </div>
-                          <div className="font-bold font-mono px-3 py-0.5 bg-slate-100 border border-slate-400">
-                            MÃ ĐỀ: {examSuite.examCode}
-                          </div>
+                        {/* Dòng Họ tên học sinh & Mã đề */}
+                        <div className="py-2.5 text-[12.5pt] flex items-center justify-between font-serif border-b border-slate-300">
+                          <span>Họ và tên: __________________________,</span>
+                          <span>Lớp: {examSuite.grade}A___</span>
+                          <span className="font-bold">Mã đề: {examSuite.examCode}</span>
                         </div>
 
-                        {/* Khung Điểm & Lời nhận xét */}
-                        <div className="mb-4 grid grid-cols-4 border border-slate-800 text-[11pt]">
-                          <div className="border-r border-slate-800 text-center p-1 bg-slate-50">
-                            <span className="font-bold text-[10.5pt]">ĐIỂM SỐ</span>
-                            <div className="grid grid-cols-2 border-t border-slate-800 text-[9.5pt] mt-1">
-                              <div className="border-r border-slate-800 py-0.5">Số</div>
-                              <div className="py-0.5">Chữ</div>
-                            </div>
-                            <div className="h-9"></div>
-                          </div>
-                          <div className="col-span-3 p-2 text-left text-[10pt] leading-snug">
-                            <span className="font-bold">LỜI NHẬN XÉT CỦA GIÁO VIÊN CHẤM THI:</span>
-                            <p className="text-slate-400 mt-1">....................................................................................................................................</p>
-                          </div>
-                        </div>
+                        {/* Bảng Điểm & Lời phê chuẩn Trường THCS Đồng Yên (2 dòng kẻ) */}
+                        <table className="w-full border-collapse border border-black text-center text-[11pt] my-3 font-serif">
+                          <thead>
+                            <tr>
+                              <th colSpan={2} className="border border-black p-1.5 w-1/4 font-bold">Điểm</th>
+                              <th rowSpan={2} className="border border-black p-1.5 font-bold">Lời phê của thầy, cô giáo</th>
+                            </tr>
+                            <tr>
+                              <th className="border border-black p-1 w-1/8 font-bold">Điểm số</th>
+                              <th className="border border-black p-1 w-1/8 font-bold">Điểm chữ</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="h-14">
+                              <td className="border border-black p-1"></td>
+                              <td className="border border-black p-1"></td>
+                              <td className="border border-black p-2 text-left align-top text-[10pt] leading-loose">
+                                <div>___________________________________________________________</div>
+                                <div>___________________________________________________________</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
                         {/* Nội dung đề thi phong phú theo môn */}
                         <div className="space-y-4 text-justify mt-2">
@@ -817,7 +823,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                                 {examSuite.answerGuide.essayGuide.map((eg, i) => (
                                   <tr key={i}>
                                     <td className="border border-slate-800 p-2 font-bold text-center">{eg.question}</td>
-                                    <td className="border border-slate-800 p-2 whitespace-pre-line">{eg.step}</td>
+                                    <td className="border border-slate-800 p-2 whitespace-pre-line font-medium text-red-600">{eg.step}</td>
                                     <td className="border border-slate-800 p-2 font-bold text-center" style={{ color: '#FF0000' }}>
                                       {eg.point}
                                     </td>
