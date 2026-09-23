@@ -193,18 +193,6 @@ export const apps: AppCard[] = [
     "order": 15
   },
   {
-    "id": "TAODEKTCV7991",
-    "title": "TẠO ĐỀ KIỂM TRA THEO CV 7991",
-    "description": "Tự động sinh ma trận đặc tả, câu hỏi trắc nghiệm đúng sai, trả lời ngắn chuẩn cấu trúc Công văn 7991 cho tất cả các môn học.",
-    "image": "/Taodektcv7991.jpg",
-    "url": "https://kiem-tra-cv-7991.vercel.app/",
-    "category": "ĐỀ KIỂM TRA",
-    "badge": "BẢN QUYỀN PRO",
-    "active": true,
-    "featured": false,
-    "order": 16
-  },
-  {
     "id": "congthutoan",
     "title": "CHUYỂN CÔNG THỨC AI SANG MATHTYPE WORD",
     "description": "Chuyển đổi tức thì công thức LaTeX, AI từ Gemini và ChatGPT sang MathType Word chuẩn xác 100%, không bị vỡ định dạng toán học.",
@@ -214,7 +202,7 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 17
+    "order": 16
   },
   {
     "id": "trolyGVCN",
@@ -226,6 +214,6 @@ export const apps: AppCard[] = [
     "badge": "MIỄN PHÍ",
     "active": true,
     "featured": false,
-    "order": 18
+    "order": 17
   }
 ];
