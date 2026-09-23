@@ -286,11 +286,11 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-base sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
-                    {BRAND.websiteTitle}
+                  <h1 className="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
+                    GIÁO VIÊN AI TOÀN NĂNG 3
                   </h1>
-                  <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
-                    AI 4.0
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs">
+                    V3.0 CHÍNH THỨC
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
@@ -422,7 +422,109 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="flex-1">
+            <main className="flex-1">
+        {/* HERO SECTION - GIÁO VIÊN AI TOÀN NĂNG 3 */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-[#081329] via-[#0E1E38] to-[#122B4F] text-white pt-10 pb-14 sm:pt-14 sm:pb-20 border-b border-blue-900/40">
+          {/* Ambient Lighting Gradients */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/20 to-teal-400/10 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 -left-24 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          {/* Grid pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '28px 28px'
+            }}
+          />
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Version 3.0 Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-teal-500/20 border border-blue-400/40 text-blue-200 text-xs font-black uppercase tracking-wider shadow-lg shadow-blue-500/10 mb-5">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+              </span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG 3.0 • BẢN CHÍNH THỨC 2026</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight max-w-4xl mx-auto">
+              Đột Phá Giảng Dạy & Quản Lý Với{' '}
+              <span className="bg-gradient-to-r from-amber-300 via-rose-400 to-cyan-400 bg-clip-text text-transparent">
+                Giáo Viên AI Toàn Năng 3
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+              Trọn bộ 17 siêu công cụ trí tuệ nhân tạo chuyên sâu dành cho giáo viên: Tạo đề 8 môn THCS chuẩn CV 7991, Chuẩn hóa văn bản hành chính NĐ 30, Soạn giáo án 5512, Luyện nghe tiếng Anh, Quay video bài giảng và tối ưu máy tính.
+            </p>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mt-8 sm:mt-10">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-amber-400 font-extrabold text-xl sm:text-2xl">
+                  <span>17+</span>
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Siêu Công Cụ AI Thực Chiến</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-cyan-400 font-extrabold text-xl sm:text-2xl">
+                  <span>100%</span>
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Chuẩn CV 7991, 5512 & NĐ 30</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-emerald-400 font-extrabold text-xl sm:text-2xl">
+                  <span>1-Click</span>
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Add-in Word & Bản PC Cài Đặt</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-rose-400 font-extrabold text-xl sm:text-2xl">
+                  <span>24/7</span>
+                  <Crown className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Bản Quyền Đám Mây An Toàn</div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <a
+                href="#apps"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-blue-600/30 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95"
+              >
+                <span>Khám Phá 17 Công Cụ Ngay</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+
+              <button
+                onClick={() => setShowAdminDashboard(true)}
+                className="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm sm:text-base border border-white/20 backdrop-blur-md flex items-center gap-2 transition-all hover:border-amber-400/50"
+              >
+                <Crown className="w-4 h-4 text-amber-400" />
+                <span>Quản Trị Bản Quyền Cloud</span>
+              </button>
+
+              <a
+                href={BRAND.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3.5 rounded-2xl bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/40 font-bold text-sm sm:text-base flex items-center gap-2 transition-all"
+              >
+                <MessageCircle className="w-4 h-4 text-teal-400" />
+                <span>Zalo Hỗ Trợ: {BRAND.phone}</span>
+              </a>
+            </div>
+          </div>
+        </section>
         {/* APPS SECTION (PRIMARY SHOWCASE) */}
         <section id="apps" className="pt-6 pb-16 sm:pt-8 sm:pb-20 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -589,10 +691,10 @@ export default function App() {
                         onClick={(e) => handleAppClick(app, e)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md"
+                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]"
                       >
-                        Truy cập ứng dụng
-                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                        Mở công cụ ngay
+                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>
@@ -936,6 +1038,21 @@ export default function App() {
         isOpen={showAdminDashboard}
         onClose={closeAllModals}
       />
+      {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
+      <a
+        href={BRAND.zaloUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-40 p-3 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-[#0D9488] to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-teal-900/40 flex items-center gap-2 hover:scale-105 transition-all border border-teal-400/30 group"
+        title="Chat Zalo Thầy Đinh Văn Thành (0915.213717)"
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-300"></span>
+        </span>
+        <MessageCircle className="w-5 h-5 text-white" />
+        <span className="hidden sm:inline font-semibold">Zalo Thầy Thành: {BRAND.phone}</span>
+      </a>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 export const BRAND = {
-  websiteTitle: "GIÁO VIÊN AI TOÀN NĂNG",
-  shortTitle: "GV AI TOÀN NĂNG",
+  websiteTitle: "GIÁO VIÊN AI TOÀN NĂNG 3",
+  shortTitle: "GV AI TOÀN NĂNG 3",
   author: "Đinh Văn Thành",
   job: "Giáo viên Tiếng Anh",
   organization: "Trường THCS Đồng Yên",
@@ -14,7 +14,7 @@ export const BRAND = {
   copyright: "© 2026 Đinh Văn Thành. All rights reserved.",
   
   hero: {
-    title: "GIÁO VIÊN AI TOÀN NĂNG",
+    title: "GIÁO VIÊN AI TOÀN NĂNG 3",
     subtitle: "Công cụ AI thiết thực dành cho giáo viên",
     description: "Khám phá hệ sinh thái công cụ hỗ trợ soạn giảng, tạo đề kiểm tra, thiết kế học liệu, chuẩn hóa văn bản và ứng dụng trí tuệ nhân tạo trong giáo dục."
   },
