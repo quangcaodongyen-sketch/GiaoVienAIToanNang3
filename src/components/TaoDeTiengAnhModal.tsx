@@ -660,10 +660,15 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                         <div className="pl-5 flex flex-wrap gap-x-6 gap-y-1 text-[13pt] mt-0.5">
                                           {q.options.map((opt, oIdx) => {
                                             const letter = String.fromCharCode(65 + oIdx);
+                                            const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
                                             return (
-                                              <span key={oIdx}>
+                                              <span key={oIdx} className={isCorrect ? 'font-bold' : ''}>
                                                 <strong className="mr-1">{opt.startsWith(letter + '.') ? '' : `${letter}.`}</strong>
-                                                {opt}
+                                                {isCorrect ? (
+                                                  <span style={{ color: '#FF0000', fontWeight: 'bold' }}>{opt}</span>
+                                                ) : (
+                                                  opt
+                                                )}
                                               </span>
                                             );
                                           })}
@@ -900,7 +905,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                           </div>
 
                           {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM 4 CỘT */}
-                          <div className="font-bold text-[13pt] mt-3 mb-2">
+                          <div className="font-bold text-[13pt] mt-3 mb-2" style={{ color: '#FF0000' }}>
                             I. PHẦN TRẮC NGHIỆM KHÁCH QUAN (36 CÂU = {examSuite.mcqTotalPts} ĐIỂM TRÊN ĐỀ VIẾT)
                           </div>
                           <table className="w-full border-collapse border border-black text-center text-[11pt] mb-4">
@@ -915,17 +920,17 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                             <tbody>
                               {examSuite.answerRows.map((row, idx) => (
                                 <tr key={idx} className={idx % 2 === 1 ? 'bg-slate-50' : ''}>
-                                  <td className="border border-black p-1">{row.col1Num}</td>
-                                  <td className="border border-black p-1">{row.col1Ans}</td>
-                                  <td className="border border-black p-1">{row.col2Num}</td>
-                                  <td className="border border-black p-1">{row.col2Ans}</td>
+                                  <td className="border border-black p-1 text-center font-bold">{row.col1Num}</td>
+                                  <td className="border border-black p-1 text-center font-bold" style={{ color: '#FF0000' }}>{row.col1Ans}</td>
+                                  <td className="border border-black p-1 text-center font-bold">{row.col2Num}</td>
+                                  <td className="border border-black p-1 text-center font-bold" style={{ color: '#FF0000' }}>{row.col2Ans}</td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
 
                           {/* TỰ LUẬN VIẾT */}
-                          <div className="font-bold text-[13pt] mt-4 mb-1">
+                          <div className="font-bold text-[13pt] mt-4 mb-1" style={{ color: '#FF0000' }}>
                             II. PHẦN TỰ LUẬN VIẾT (PART 8: {examSuite.hasSpeaking ? '0.8 pt' : '1.5 pts'})
                           </div>
                           <div className="text-[12pt] space-y-1 mb-2">
@@ -936,7 +941,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                           <div className="font-bold italic text-[12.5pt] mt-3 mb-1">
                             * Đoạn văn mẫu tham khảo (Sample writing):
                           </div>
-                          <div className="text-justify indent-8 text-[12.5pt] mb-4 text-slate-800">
+                          <div className="text-justify indent-8 text-[12.5pt] mb-4 font-bold" style={{ color: '#FF0000' }}>
                             {examSuite.sampleWriting}
                           </div>
 
