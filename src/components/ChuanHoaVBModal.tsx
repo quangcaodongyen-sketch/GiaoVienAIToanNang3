@@ -71,7 +71,7 @@ IV. HO SO DAY HOC
   {
     id: 'quyetdinh',
     name: 'Quyết định (Kiện toàn Ban Chỉ đạo)',
-    raw: `UBND HUYEN BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 15/qd-thcsdy
 Dong yen, ngay 15 thang 9 nam 2026
@@ -79,7 +79,7 @@ QUYET DINH
 Ve viec kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong giao duc nam hoc 2026 - 2027
 HIEU TRUONG TRUONG THCS DONG YEN
 Can cu Dieu le truong trung hoc co so ban hanh kem theo Thong tu so 32/2020/TT-BGDDT;
-Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Phong GD&DT Bac Quang;
+Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Truong THCS Dong Yen;
 Xet de nghi cua Pho Hieu truong phu trach chuyen mon va To truong chuyen mon.
 QUYET DINH:
 Dieu 1. Kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong day hoc gom cac ong (ba) co ten sau:
@@ -90,7 +90,7 @@ Dieu 2. Ban Chi dao co trach nhiem xay dung ke hoach va trien khai ung dung he s
 Dieu 3. Cac to chuyen mon va cac ca nhan co ten tai Dieu 1 chiu trach nhiem thi hanh quyet dinh nay./.
 Noi nhan:
 - Nhu Dieu 3;
-- Phong GD&DT (de b/c);
+- UBND xa Dong Yen (de b/c);
 - Luu: VT, Ban CD.
 HIEU TRUONG
 (Ky, ghi ro ho ten va dong dau)
@@ -99,13 +99,13 @@ Nguyen Van A`
   {
     id: 'baocao',
     name: 'Báo cáo (Tổng kết ứng dụng AI)',
-    raw: `PHONG GD&DT BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 28/bc-thcsdy
 Dong Yen, ngay 20 thang 10 nam 2026
 BAO CAO
 Ket qua trien khai he sinh thai Giao vien AI Toan nang trong hoc ky I
-Kinh gui: Phong Giao duc va Dao tao Bac Quang.
+Kinh gui: Ban Giam hieu Truong THCS Dong Yen.
 Thuc hien Huong dan so 102/HD-PGDDT ve viec day manh chuyen doi so trong truong hoc;
 Truong THCS Dong Yen bao cao ket qua trien khai nhu sau:
 I. TINH HINH TRIEN KHAI
@@ -128,7 +128,7 @@ Nguyen Van A`
   {
     id: 'kehoach',
     name: 'Kế hoạch (Ngày hội STEM - AI)',
-    raw: `UBND HUYEN BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 08/kh-thcsdy
 Dong Yen, ngay 05 thang 11 nam 2026
@@ -193,7 +193,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       wordsCount: number;
     };
   }>({
-    coQuanCapTren: 'UBND HUYỆN BẮC QUANG',
+    coQuanCapTren: 'UBND XÃ ĐỒNG YÊN',
     coQuanBanHanh: 'TRƯỜNG THCS ĐỒNG YÊN',
     soKyHieu: 'Số: 15/QĐ-THCSĐY',
     quocHieu: 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
@@ -202,7 +202,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     tenLoai: 'QUYẾT ĐỊNH',
     trichYeu: 'Về việc kiện toàn Ban Chỉ đạo Chuyển đổi số và Ứng dụng AI trong giáo dục năm học 2026 - 2027',
     noiDungHtml: '',
-    noiNhan: ['Như Điều 3;', 'Phòng GD&ĐT (để b/c);', 'Lưu: VT, Ban CĐ.'],
+    noiNhan: ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT, Ban CĐ.'],
     chucVu: 'HIỆU TRƯỞNG',
     nguoiKy: 'Nguyễn Văn A',
     stats: {
@@ -313,7 +313,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       await new Promise((r) => setTimeout(r, 450));
 
       const lines = inputText.split('\n').map(l => l.trim()).filter(Boolean);
-      let coQuanCapTren = 'UBND HUYỆN BẮC QUANG';
+      let coQuanCapTren = 'UBND XÃ ĐỒNG YÊN';
       let coQuanBanHanh = 'TRƯỜNG THCS ĐỒNG YÊN';
       let soKyHieu = 'Số: .../QĐ-THCSĐY';
       let diaDanhNgayThang = 'Đồng Yên, ngày ... tháng ... năm 2026';
@@ -412,7 +412,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         tenLoai,
         trichYeu,
         noiDungHtml: generatedHtml,
-        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'Phòng GD&ĐT (để b/c);', 'Lưu: VT.'],
+        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT.'],
         chucVu,
         nguoiKy,
         stats: {
