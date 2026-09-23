@@ -84,7 +84,7 @@ export default function App() {
 
   // Lắng nghe URL hash để mở modal tương ứng khi người dùng truy cập link trực tiếp
   useEffect(() => {
-    activityTrackingService.trackAppVisit('home', 'Trang Chủ Giáo Viên AI Toàn Năng 3');
+    activityTrackingService.trackAppVisit('home', 'Trang Chủ Giáo Viên AI Toàn Năng');
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash === '#dung-thu' || hash === '#trial') {
@@ -302,10 +302,10 @@ export default function App() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <h1 className="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
-                    GIÁO VIÊN AI TOÀN NĂNG 3
+                    GIÁO VIÊN AI TOÀN NĂNG
                   </h1>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs">
-                    V3.0 CHÍNH THỨC
+                    BẢN CHÍNH THỨC
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
@@ -448,7 +448,7 @@ export default function App() {
       </header>
 
             <main className="flex-1">
-        {/* HERO SECTION - GIÁO VIÊN AI TOÀN NĂNG 3 */}
+        {/* HERO SECTION - GIÁO VIÊN AI TOÀN NĂNG */}
         <section className="relative overflow-hidden bg-gradient-to-b from-[#081329] via-[#0E1E38] to-[#122B4F] text-white pt-10 pb-14 sm:pt-14 sm:pb-20 border-b border-blue-900/40">
           {/* Ambient Lighting Gradients */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/20 to-teal-400/10 blur-[120px] rounded-full pointer-events-none" />
@@ -472,14 +472,14 @@ export default function App() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
               </span>
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG 3.0 • BẢN CHÍNH THỨC 2026</span>
+              <span>HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG • BẢN CHÍNH THỨC 2026</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight max-w-4xl mx-auto">
               Đột Phá Giảng Dạy & Quản Lý Với{' '}
               <span className="bg-gradient-to-r from-amber-300 via-rose-400 to-cyan-400 bg-clip-text text-transparent">
-                Giáo Viên AI Toàn Năng 3
+                Giáo Viên AI Toàn Năng
               </span>
             </h1>
 

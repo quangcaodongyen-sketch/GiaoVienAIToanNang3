@@ -389,7 +389,7 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
 ${res.key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang3.
+1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang.
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
 Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết kiệm tối đa thời gian!`;
@@ -449,7 +449,7 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
 ${res.key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang3).
+1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
 Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm thanh trong trẻo!`;
@@ -512,7 +512,7 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
 ${key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang3).
+1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt VIP".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Kích Hoạt Bản Quyền VIP" rồi bấm "🚀 KÍCH HOẠT BẢN QUYỀN VIP NGAY".
 Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt và giảng dạy thăng hoa!`;
