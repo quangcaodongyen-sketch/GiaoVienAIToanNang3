@@ -663,12 +663,18 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                             const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
                                             return (
                                               <span key={oIdx} className={isCorrect ? 'font-bold' : ''}>
-                                                <strong className="mr-1">{opt.startsWith(letter + '.') ? '' : `${letter}.`}</strong>
-                                                {isCorrect ? (
-                                                  <span style={{ color: '#FF0000', fontWeight: 'bold' }}>{opt}</span>
-                                                ) : (
-                                                  opt
-                                                )}
+                                                {(() => {
+                                                  const fullOpt = opt.startsWith(letter + '.') ? opt : `${letter}. ${opt}`;
+                                                  const cleanOpt = opt.startsWith(letter + '.') ? opt.slice(2).trim() : opt;
+                                                  return isCorrect ? (
+                                                    <span style={{ color: '#FF0000', fontWeight: 'bold' }}>{fullOpt}</span>
+                                                  ) : (
+                                                    <span>
+                                                      <strong className="mr-1">{letter}.</strong>
+                                                      {cleanOpt}
+                                                    </span>
+                                                  );
+                                                })()}
                                               </span>
                                             );
                                           })}

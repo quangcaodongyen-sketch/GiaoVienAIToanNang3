@@ -852,7 +852,9 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
           q.options.forEach((opt, idx) => {
             const letter = String.fromCharCode(65 + idx);
             const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
-            html += `<span style="margin-right: 22pt;"><b>${opt.startsWith(letter + '.') ? '' : letter + '. '}</b>${isCorrect ? `<b style="color: #FF0000;">${opt}</b>` : opt}</span>`;
+            const fullOpt = opt.startsWith(letter + '.') ? opt : `${letter}. ${opt}`;
+            const cleanOpt = opt.startsWith(letter + '.') ? opt.slice(2).trim() : opt;
+            html += `<span style="margin-right: 22pt;">${isCorrect ? `<b style="color: #FF0000;">${fullOpt}</b>` : `<b>${letter}. </b>${cleanOpt}`}</span>`;
           });
           html += `</div>`;
         }
