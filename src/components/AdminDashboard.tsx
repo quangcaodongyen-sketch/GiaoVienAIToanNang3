@@ -1,3 +1,4 @@
+import { cloudSyncService } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -241,37 +242,85 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const loadTrackingData = () => {
+  const loadTrackingData = async () => {
     const list = activityTrackingService.getAllTrackedMachines();
     setTrackedMachines(list);
     setActivityLogs(activityTrackingService.getActivityLogs());
-    setRegistrationRequests(activityTrackingService.getAllRegistrations());
+
+    // 1. Lấy đơn từ Local Storage
+    let localRegs = activityTrackingService.getAllRegistrations();
+
+    // 2. ĐỒNG BỘ ĐƠN ĐĂNG KÝ TRỰC TIẾP TỪ CLOUD (TOÀN QUỐC)
+    try {
+      const cloudRegs = await cloudSyncService.fetchRegistrationsFromCloud();
+      if (cloudRegs.length > 0) {
+        const mergedMap = new Map<string, any>();
+        for (const cr of cloudRegs) {
+          mergedMap.set(cr.machineId, cr);
+        }
+        for (const lr of localRegs) {
+          if (!mergedMap.has(lr.machineId)) {
+            mergedMap.set(lr.machineId, lr);
+          }
+        }
+        localRegs = Array.from(mergedMap.values());
+      }
+    } catch (e) {
+      console.warn('Lỗi kết nối Cloud:', e);
+    }
+
+    setRegistrationRequests(localRegs);
     setWebStats(activityTrackingService.getWebStats());
-    setBlockedMachines(activityTrackingService.getBlockedMachines());
-  };
 
-  const handleApproveReq = (id: string, pkg?: '1YEAR' | '2YEAR' | 'TRIAL_5') => {
-    const res = activityTrackingService.approveRegistration(id, currentAdminName || 'Thầy Đinh Văn Thành', pkg);
-    if (res.success) {
-      alert(res.message);
-      loadTrackingData();
-      loadData();
+    // 3. Đồng bộ danh sách máy bị khóa từ Cloud
+    try {
+      const cloudBlocked = await cloudSyncService.fetchBlockedMachinesFromCloud();
+      const localBlocked = activityTrackingService.getBlockedMachines();
+      const allBlocked = [...cloudBlocked];
+      for (const lb of localBlocked) {
+        if (!allBlocked.some(b => b.machineId === lb.machineId)) {
+          allBlocked.push(lb);
+        }
+      }
+      setBlockedMachines(allBlocked);
+    } catch {
+      setBlockedMachines(activityTrackingService.getBlockedMachines());
     }
   };
 
-  const handleRejectReq = (id: string) => {
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | 'TRIAL_5', issueNumber?: number) => {
+    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
+    const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
+
+    // Đồng bộ duyệt lên Cloud
+    if (issueNumber) {
+      await cloudSyncService.approveRegistrationOnCloud(issueNumber, reviewer, pkg || '1YEAR');
+    }
+
+    alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
+    await loadTrackingData();
+    await loadData();
+  };
+
+  const handleRejectReq = async (id: string, issueNumber?: number) => {
+    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
     if (window.confirm('Thầy/Cô có chắc chắn muốn TỪ CHỐI đơn đăng ký này?')) {
-      activityTrackingService.rejectRegistration(id, currentAdminName || 'Thầy Đinh Văn Thành');
-      loadTrackingData();
+      activityTrackingService.rejectRegistration(id, reviewer);
+      if (issueNumber) {
+        await cloudSyncService.rejectRegistrationOnCloud(issueNumber, reviewer);
+      }
+      await loadTrackingData();
     }
   };
 
-  const handleDeleteAndBlockMachine = (machineId: string) => {
-    if (window.confirm(`CẢNH BÁO: Thầy có chắc chắn muốn XÓA TÀI KHOẢN và KHÓA VĨNH VIỄN máy [${machineId}]?\n\nSau khi xóa, máy này sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa!`)) {
-      activityTrackingService.deleteAndBlockMachine(machineId, currentAdminName || 'Thầy Đinh Văn Thành');
-      loadTrackingData();
-      loadData();
-      alert(`Đã xóa tài khoản và khóa vĩnh viễn máy ${machineId}!`);
+  const handleDeleteAndBlockMachine = async (machineId: string) => {
+    const adminName = currentAdminName || 'Thầy Đinh Văn Thành';
+    if (window.confirm(`CẢNH BÁO: Thầy có chắc chắn muốn XÓA TÀI KHOẢN và KHÓA VĨNH VIỄN máy [${machineId}]?\n\nSau khi xóa, máy này sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa trên toàn bộ hệ thống Cloud!`)) {
+      activityTrackingService.deleteAndBlockMachine(machineId, adminName);
+      await cloudSyncService.blockMachineOnCloud(machineId, adminName, 'Admin xóa tài khoản');
+      await loadTrackingData();
+      await loadData();
+      alert(`Đã xóa tài khoản và khóa vĩnh viễn máy ${machineId} trên toàn bộ hệ thống Cloud!`);
     }
   };
 
@@ -1286,7 +1335,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                                 <div className="flex items-center justify-end gap-1">
                                   <button
                                     type="button"
-                                    onClick={() => handleApproveReq(req.id, '1YEAR')}
+                                    onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
                                     className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
                                     title="Duyệt Gói 1 Năm (200.000đ)"
                                   >
@@ -1294,7 +1343,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleApproveReq(req.id, '2YEAR')}
+                                    onClick={() => handleApproveReq(req.id, '2YEAR', (req as any).issueNumber)}
                                     className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
                                     title="Duyệt Gói 2 Năm (250.000đ)"
                                   >
@@ -1302,7 +1351,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleApproveReq(req.id, 'TRIAL_5')}
+                                    onClick={() => handleApproveReq(req.id, 'TRIAL_5', (req as any).issueNumber)}
                                     className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
                                     title="Cấp 5 Lần Dùng Thử"
                                   >
@@ -1310,7 +1359,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleRejectReq(req.id)}
+                                    onClick={() => handleRejectReq(req.id, (req as any).issueNumber)}
                                     className="px-1.5 py-1 rounded bg-slate-800 hover:bg-red-900/60 text-slate-400 hover:text-red-200 text-[10px] border border-slate-700 transition cursor-pointer"
                                     title="Từ chối đơn"
                                   >

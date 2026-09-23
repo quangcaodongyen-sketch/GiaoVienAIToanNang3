@@ -236,7 +236,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         <div className="px-4 sm:px-6 py-3.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-              <FileCheck2 className="w-5 h-5 text-white" />
+              <img src="/logo_tienganh_pro.png" alt="English Pro" className="w-9 h-9 rounded-xl object-contain shadow-md" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -1472,6 +1472,72 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   </a>
                 </div>
               </div>
+
+              
+              {/* KHỐI QUÉT MÃ QR THANH TOÁN CHO CÔNG CỤ TIẾNG ANH */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/70 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/logo_tienganh_pro.png" alt="English Exam Pro" className="w-7 h-7 object-contain" />
+                    <div>
+                      <h4 className="text-sm font-black text-amber-300 uppercase tracking-wide">
+                        QUÉT MÃ QR CHUYỂN KHOẢN KÍCH HOẠT PRO (MB BANK)
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        Gói 1 Năm: <span className="text-white font-bold">200.000đ</span> | Gói 2 Năm: <span className="text-cyan-300 font-bold">250.000đ (Tiết kiệm 150k)</span> | Vĩnh Viễn: <span className="text-amber-400 font-bold">500.000đ</span>
+                      </p>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    KÍCH HOẠT TỨC THÌ
+                  </span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-5 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                  <div className="shrink-0 relative">
+                    <img
+                      src="/qr_payment.png"
+                      alt="Mã QR MB Bank Thầy Thành"
+                      className="w-44 h-auto rounded-xl border-2 border-amber-500/50 shadow-lg bg-white p-1.5 object-contain"
+                    />
+                  </div>
+
+                  <div className="flex-1 text-xs space-y-3 text-slate-300 w-full">
+                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                      <div className="text-sm"><strong>Ngân hàng:</strong> <span className="text-cyan-300 font-bold">MB Bank (Ngân hàng Quân đội)</span></div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span><strong>Số tài khoản:</strong> <span className="text-amber-300 font-mono font-black text-base">0915213717</span></span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('0915213717');
+                            alert('Đã sao chép Số tài khoản MB Bank: 0915213717');
+                          }}
+                          className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 cursor-pointer font-bold"
+                        >
+                          Sao chép STK
+                        </button>
+                      </div>
+                      <div className="text-sm"><strong>Chủ tài khoản:</strong> <span className="text-white font-bold">DINH VAN THANH</span></div>
+                    </div>
+
+                    {/* CẢNH BÁO ĐỎ RỰC THEO YÊU CẦU CỦA THẦY THÀNH */}
+                    <div className="p-3 rounded-xl bg-red-950/95 border-2 border-red-500 text-center shadow-xl shadow-red-950/60">
+                      <p className="text-sm font-black text-red-200 uppercase tracking-wide flex items-center justify-center gap-2">
+                        ⚠️ LƯU Ý BẮT BUỘC: KHÔNG GHI NỘI DUNG CHUYỂN KHOẢN
+                      </p>
+                      <p className="text-xs text-red-300/90 mt-1 font-semibold">
+                        (Thầy/Cô vui lòng XÓA TRỐNG / ĐỂ TRỐNG toàn bộ phần nội dung khi chuyển khoản)
+                      </p>
+                    </div>
+
+                    <p className="text-[11px] text-slate-400 italic">
+                      * Sau khi chuyển khoản xong, Thầy/Cô chỉ cần chụp màn hình giao dịch và bấm nút nhắn Zalo Thầy Thành bên dưới để nhận License Key Pro ngay lập tức!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
 
               {/* THÔNG TIN TÁC GIẢ & HỖ TRỢ */}
               <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3">

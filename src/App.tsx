@@ -1,3 +1,4 @@
+import { cloudSyncService } from './services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Menu, 
@@ -54,7 +55,16 @@ export default function App() {
   const [showTrialModal, setShowTrialModal] = useState(false);
   const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
   useEffect(() => {
+    const mid = activityTrackingService.getOrCreateMachineId();
     setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
+
+    // Kiểm tra trạng thái máy tính từ Cloud
+    cloudSyncService.checkCurrentMachineCloudStatus(mid).then(res => {
+      if (res.isBlocked) {
+        activityTrackingService.blockMachine(mid, 'Đồng bộ khóa từ Cloud');
+        setIsCurrentBlocked(true);
+      }
+    });
   }, []);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});

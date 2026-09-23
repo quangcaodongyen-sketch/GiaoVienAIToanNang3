@@ -1,3 +1,5 @@
+import {
+  QrCode, cloudSyncService } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
@@ -85,7 +87,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
 
   const currentAppName = APP_OPTIONS.find(a => a.id === selectedAppId)?.name || initialAppName;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim()) {
       setErrorMessage('Vui lòng nhập Họ và tên của Thầy/Cô.');
@@ -111,6 +113,17 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
 
       // 2. Gửi đơn đăng ký gói đã chọn
       const reg = activityTrackingService.submitRegistration({
+        machineId,
+        fullName: fullName.trim(),
+        schoolUnit: schoolUnit.trim() || 'Trường THCS Đồng Yên',
+        phoneNumber: phoneNumber.trim(),
+        appId: selectedAppId,
+        appName: currentAppName,
+        packageType: selectedPackage
+      });
+
+      // 3. GỬI TRỰC TIẾP LÊN CLOUD CHO ADMIN THẦY THÀNH & CÔ MAI TÌNH DUYỆT
+      await cloudSyncService.submitRegistrationToCloud({
         machineId,
         fullName: fullName.trim(),
         schoolUnit: schoolUnit.trim() || 'Trường THCS Đồng Yên',
@@ -180,7 +193,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 <div>
                   <p className="font-bold text-emerald-300 text-base">Gửi đơn đăng ký thành công!</p>
                   <p className="text-xs text-emerald-200/90 mt-1">
-                    Thông tin của Thầy/Cô đã được chuyển đến Trung tâm Quản trị của Thầy Đinh Văn Thành. Máy tính của Thầy/Cô đã được kích hoạt <strong>5 lượt dùng thử miễn phí</strong> ngay bây giờ.
+                    Thông tin của Thầy/Cô đã được đồng bộ lên Cloud để Thầy Đinh Văn Thành (Thaythanh2026@) hoặc Cô Mai Tình (Maitinh2026@) duyệt ngay. Máy tính của Thầy/Cô đã được kích hoạt <strong>5 lượt dùng thử miễn phí</strong> ngay bây giờ.
                   </p>
                   <div className="mt-2.5 p-2.5 rounded-lg bg-slate-950/70 border border-emerald-500/30 text-xs space-y-1">
                     <div><strong>Họ và tên:</strong> {submittedData.fullName}</div>
@@ -353,6 +366,71 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 </div>
               </div>
 
+              
+              {/* KHỐI QR CHUYỂN KHOẢN KHI CHỌN GÓI 1 NĂM HOẶC 2 NĂM */}
+              {selectedPackage !== 'TRIAL_5' && (
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/60 shadow-xl space-y-3.5 animate-in fade-in duration-300">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
+                        <QrCode className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-black text-amber-300 uppercase tracking-wide">
+                          QUÉT MÃ QR THANH TOÁN (MB BANK)
+                        </h4>
+                        <p className="text-[10px] text-slate-400">
+                          Số tiền: <strong className="text-amber-400 text-xs">{selectedPackage === '1YEAR' ? '200.000đ' : '250.000đ'}</strong> ({selectedPackage === '1YEAR' ? 'Gói 1 Năm' : 'Gói 2 Năm Ưu Đãi'})
+                        </p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      KÍCH HOẠT NHANH
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+                    <div className="shrink-0 relative">
+                      <img
+                        src="/qr_payment.png"
+                        alt="Mã QR MB Bank Thầy Thành"
+                        className="w-36 h-auto rounded-xl border border-slate-700 shadow-md bg-white p-1 object-contain"
+                      />
+                    </div>
+
+                    <div className="flex-1 text-xs space-y-2 text-slate-300 w-full">
+                      <div className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1.5">
+                        <div><strong>Ngân hàng:</strong> <span className="text-cyan-300 font-bold">MB Bank (Quân đội)</span></div>
+                        <div className="flex items-center justify-between">
+                          <span><strong>Số tài khoản:</strong> <span className="text-amber-300 font-mono font-bold text-sm">0915213717</span></span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText('0915213717');
+                              alert('Đã sao chép Số tài khoản MB Bank: 0915213717');
+                            }}
+                            className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-200 border border-slate-700 cursor-pointer font-bold"
+                          >
+                            Sao chép STK
+                          </button>
+                        </div>
+                        <div><strong>Chủ tài khoản:</strong> <span className="text-white font-bold">DINH VAN THANH</span></div>
+                      </div>
+
+                      {/* CẢNH BÁO BẮT BUỘC THEO YÊU CẦU CỦA THẦY THÀNH */}
+                      <div className="p-2.5 rounded-xl bg-red-950/90 border-2 border-red-500 text-center shadow-lg shadow-red-950/50">
+                        <p className="text-xs font-black text-red-200 uppercase tracking-wide">
+                          ⚠️ KHÔNG GHI NỘI DUNG CHUYỂN KHOẢN
+                        </p>
+                        <p className="text-[10px] text-red-300/90 mt-0.5 font-medium">
+                          (Thầy/Cô vui lòng XÓA TRỐNG / ĐỂ TRỐNG phần lời nhắn khi chuyển khoản)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* 6. ID Máy tự động tạo */}
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center justify-between">
@@ -401,7 +479,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                   className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.98] transition cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
-                  {isSubmitting ? 'ĐANG GỬI THÔNG TIN...' : 'GỬI ĐĂNG KÝ CHO ADMIN DUYỆT & NHẬN 5 LẦN THỬ'}
+                  {isSubmitting ? 'ĐANG GỬI THÔNG TIN...' : 'BẤM GỬI LÊN CLOUD ĐỂ ADMIN DUYỆT & NHẬN 5 LẦN THỬ'}
                 </button>
               </div>
 
