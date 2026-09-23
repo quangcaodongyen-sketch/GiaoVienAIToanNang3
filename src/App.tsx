@@ -516,7 +516,11 @@ export default function App() {
                             HOT
                           </span>
                         )}
-                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#123A63]/90 text-white backdrop-blur-xs shadow-xs">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-xs shadow-xs ${
+                          app.badge === 'MIỄN PHÍ'
+                            ? 'bg-emerald-600 text-white border border-emerald-400/40'
+                            : 'bg-gradient-to-r from-amber-600 to-rose-600 text-white border border-amber-400/30'
+                        }`}>
                           {app.badge}
                         </span>
                       </div>

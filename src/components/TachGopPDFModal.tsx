@@ -56,7 +56,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
   const [hwid, setHwid] = useState<string>('DVT-PDF-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
-  const [isVIP, setIsVIP] = useState<boolean>(false);
+  const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
   const [licenseKeyInput, setLicenseKeyInput] = useState<string>('');
   const [activationMsg, setActivationMsg] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
   const [isActivating, setIsActivating] = useState<boolean>(false);
@@ -93,10 +93,10 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
     if (isOpen) {
       const code = getOrCreatePDFHardwareCode();
       setHwid(code);
-      const vip = isPDFVIPActivated();
-      setIsVIP(vip);
+      const vip = true;
+      setIsVIP(true);
       if (!vip) {
-        getSecurePDFTrialRemaining().then(setRemainingTrials);
+        setRemainingTrials(999999);
       } else {
         setRemainingTrials(999);
       }

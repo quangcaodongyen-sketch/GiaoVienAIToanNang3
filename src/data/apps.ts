@@ -79,7 +79,7 @@ export const apps: AppCard[] = [
     "image": "/screenrecord_banner.png",
     "url": "#screen-record",
     "category": "CÔNG CỤ BÀI GIẢNG & VIDEO",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
     "order": 6
@@ -91,7 +91,7 @@ export const apps: AppCard[] = [
     "image": "/cleaner_pro_banner.png",
     "url": "#cleaner-pro",
     "category": "CÔNG CỤ BÀI GIẢNG & TIỆN ÍCH",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
     "order": 7
@@ -103,7 +103,7 @@ export const apps: AppCard[] = [
     "image": "/chuanhoavanbanvip.jpg",
     "url": "#chuan-hoa-vb",
     "category": "VĂN BẢN & TIỆN ÍCH SỐ",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
     "order": 8
@@ -115,7 +115,7 @@ export const apps: AppCard[] = [
     "image": "/tachgoppdf.jpg",
     "url": "#tach-gop-pdf",
     "category": "VĂN BẢN & TIỆN ÍCH SỐ",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "MIỄN PHÍ",
     "active": true,
     "featured": true,
     "order": 9
@@ -127,7 +127,7 @@ export const apps: AppCard[] = [
     "image": "/Taodektcv7991.jpg",
     "url": "https://kiem-tra-cv-7991.vercel.app/",
     "category": "ĐỀ KIỂM TRA",
-    "badge": "TRẢI NGHIỆM",
+    "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
     "order": 10
@@ -139,7 +139,7 @@ export const apps: AppCard[] = [
     "image": "/congthucmathtype.jpg",
     "url": "https://web-to-mathtype-word.vercel.app/",
     "category": "BỘ TRỢ LÝ AI",
-    "badge": "MIỄN PHÍ",
+    "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
     "order": 11
@@ -151,7 +151,7 @@ export const apps: AppCard[] = [
     "image": "/trolygvnn.jpg",
     "url": "https://tro-ly-gvcn.vercel.app/",
     "category": "BỘ TRỢ LÝ AI",
-    "badge": "TRẢI NGHIỆM",
+    "badge": "MIỄN PHÍ",
     "active": true,
     "featured": false,
     "order": 12

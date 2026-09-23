@@ -59,7 +59,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
   const [hwid, setHwid] = useState<string>('DT-XXXX-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
-  const [isVIP, setIsVIP] = useState<boolean>(false);
+  const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
   const [licenseKeyInput, setLicenseKeyInput] = useState<string>('');
   const [activationMsg, setActivationMsg] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
   const [isActivating, setIsActivating] = useState<boolean>(false);
@@ -163,10 +163,8 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
     if (isOpen) {
       const code = getOrCreateCleanerHardwareCode();
       setHwid(code);
-      setIsVIP(isCleanerVIPActivated());
-      getSecureCleanerTrialRemaining().then((res) => {
-        setRemainingTrials(res);
-      });
+      setIsVIP(true);
+      setRemainingTrials(999999);
     }
   }, [isOpen]);
 

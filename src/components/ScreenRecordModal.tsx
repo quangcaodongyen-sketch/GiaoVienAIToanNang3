@@ -85,7 +85,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   // License & Security states
   const [hardwareCode, setHardwareCode] = useState<string>("");
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
-  const [isProActive, setIsProActive] = useState<boolean>(false);
+  const [isProActive, setIsProActive] = useState<boolean>(true); // Miễn phí 100%
   const [licenseInputKey, setLicenseInputKey] = useState<string>("");
   const [activationError, setActivationError] = useState<string>("");
   const [activationSuccess, setActivationSuccess] = useState<string>("");
@@ -176,12 +176,13 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
           if (res.isValid) {
             setIsProActive(true);
           } else {
-            setIsProActive(false);
-            getSecureRecordTrialRemaining(hw).then(rem => setTrialRemaining(rem));
+            setIsProActive(true);
+            setTrialRemaining(999999);
           }
         });
       } else {
-        getSecureRecordTrialRemaining(hw).then(rem => setTrialRemaining(rem));
+        setIsProActive(true);
+        setTrialRemaining(999999);
       }
     }
   }, [isOpen]);

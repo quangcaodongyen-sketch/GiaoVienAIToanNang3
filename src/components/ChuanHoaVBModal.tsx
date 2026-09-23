@@ -160,7 +160,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
   const [hwid, setHwid] = useState<string>('DVT-CHVB-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
-  const [isVIP, setIsVIP] = useState<boolean>(false);
+  const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
   const [licenseKeyInput, setLicenseKeyInput] = useState<string>('');
   const [activationMsg, setActivationMsg] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
   const [isActivating, setIsActivating] = useState<boolean>(false);
@@ -217,10 +217,10 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     if (isOpen) {
       const code = getOrCreateCHVBHardwareCode();
       setHwid(code);
-      const vip = isCHVBVIPActivated();
-      setIsVIP(vip);
+      const vip = true;
+      setIsVIP(true);
       if (!vip) {
-        getSecureCHVBTrialRemaining().then(setRemainingTrials);
+        setRemainingTrials(999999);
       } else {
         setRemainingTrials(999);
       }
