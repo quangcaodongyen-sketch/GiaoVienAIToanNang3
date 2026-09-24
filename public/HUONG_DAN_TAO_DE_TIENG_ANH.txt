@@ -1,0 +1,52 @@
+================================================================================
+  HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG CÔNG CỤ TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS
+================================================================================
+Tác giả: Thầy giáo Đinh Văn Thành - Đơn vị: Trường THCS Đồng Yên
+Hotline / Zalo: 0915.213717
+Áp dụng: Toàn bộ Lớp 6, 7, 8, 9 - Bộ sách Tiếng Anh Global Success (Kết nối tri thức)
+Quy chuẩn: Chuẩn Công văn 7991/BGDĐT-GDTrH về Khung ma trận & bản đặc tả đề kiểm tra
+================================================================================
+
+A. CÁCH CÀI ĐẶT (CHẠY 1 PHÁT ĂN NGAY):
+--------------------------------------------------------------------------------
+1. Nháy đúp vào tệp: "Cai_Dat_Chay_Tren_Word.exe"
+2. Bấm nút: "CÀI ĐẶT NGAY"
+3. Khi có thông báo thành công, bấm "Mở Word Ngay" (hoặc tự mở Microsoft Word).
+
+* LƯU Ý: Sau khi cài xong, Thầy/Cô có thể xoá luôn tệp cài đặt ngoài màn hình,
+  phần mềm đã được lưu vĩnh viễn trong máy và chạy tự động cùng Word!
+
+--------------------------------------------------------------------------------
+B. CÁCH DÙNG TRỰC TIẾP TRÊN MICROSOFT WORD (CỰC KỲ ĐƠN GIẢN):
+--------------------------------------------------------------------------------
+1. Mở Microsoft Word lên.
+2. Trên thanh menu trên cùng, bấm vào thẻ: "📝 TẠO ĐỀ TIẾNG ANH THCS".
+3. Bấm vào nút lớn: "Tạo đề Tiếng Anh".
+4. Chọn Khối lớp (Lớp 6, 7, 8 hoặc 9) và chọn Kỳ kiểm tra:
+   - GK1: Giữa Học kì 1 (10.0 điểm viết)
+   - CK1: Cuối Học kì 1 (8.0 điểm viết + 2.0 điểm Nói Speaking Test)
+   - GK2: Giữa Học kì 2 (10.0 điểm viết)
+   - CK2: Cuối Học kì 2 (8.0 điểm viết + 2.0 điểm Nói Speaking Test)
+   - KSCL: Khảo sát chất lượng đầu năm
+   - DECUONG: Đề cương ôn tập toàn diện 6 trang chuẩn
+5. Bấm: "🎲 TẠO ĐỀ MỚI NGẪU NHIÊN" ➔ Hệ thống tự động sinh ra file Word gồm:
+   ✓ Khung ma trận 7991 & Bản đặc tả kỹ thuật chi tiết
+   ✓ 02 Mã đề tương đương (Mã đề 1 & Mã đề 2) hoán vị câu hỏi và đáp án
+   ✓ Bảng đáp án, biểu điểm chi tiết từng câu
+   ✓ Toàn bộ Audio Scripts (Lời thoại bài nghe đối thoại & độc thoại)
+   ✓ Đề thi Nói Speaking Test 4 phần kèm Hướng dẫn giám khảo (đối với Cuối kỳ)
+6. Bấm "Mở file Word vừa tạo" để xem, chỉnh sửa hoặc in ấn cho học sinh!
+
+--------------------------------------------------------------------------------
+C. NẾU KHÔNG MUỐN DÙNG TRÊN WORD:
+--------------------------------------------------------------------------------
+Thầy/Cô vào thư mục "Ban_Chay_Truc_Tiep_Desktop", nháy đúp file:
+"Tao_De_Tieng_Anh_Desktop.exe" để dùng trực tiếp ngoài màn hình máy tính.
+
+* CHÍNH SÁCH DÙNG THỬ: Mỗi máy tính được dùng thử miễn phí 5 bài kiểm tra
+  đầy đủ tính năng trước khi kích hoạt bản quyền Pro sử dụng vĩnh viễn.
+
+================================================================================
+KÍNH CHÚC QUÝ THẦY/CÔ CÔNG TÁC TỐT VÀ CÓ NHỮNG TIẾT DẠY HIỆU QUẢ!
+Liên hệ hỗ trợ kỹ thuật / Kích hoạt bản quyền: Thầy Đinh Văn Thành (0915.213717)
+================================================================================

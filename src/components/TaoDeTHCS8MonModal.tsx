@@ -12,12 +12,10 @@ import {
   FileText,
   Check,
   AlertCircle,
-  Clock,
   Printer,
-  Sliders,
   CheckCircle2,
-  BookOpen,
   GraduationCap,
+  Crown,
   Layers,
   ChevronRight,
   FolderDown,
@@ -25,6 +23,8 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
+import { activityTrackingService } from '../services/activityTrackingService';
+import { TrialRegisterModal } from './TrialRegisterModal';
 import {
   getOrCreateTHCS8MHardwareCode,
   getSecureTHCS8MTrialRemaining,
@@ -32,18 +32,19 @@ import {
   isTHCS8MVIPActivated,
   getTHCS8MActivePackage,
   activateTHCS8MLicense,
-  SUBJECT_MAP
+  
 } from '../services/taoDeTHCS8MonKeyService';
 import {
   downloadTHCS8MonWordDoc,
   getTHCS8MonExamSuite,
-  THCS8MonExamData
+  
 } from '../services/thcs8MonWordExportService';
 
 interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenAdmin?: () => void;
+  initialSubject?: string;
 }
 
 // Dữ liệu 8 Môn Học THCS chuẩn CV 7991 & Sách Kết nối tri thức
@@ -117,9 +118,11 @@ const SUBJECT_OPTIONS = [
 export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   isOpen,
   onClose,
-  onOpenAdmin
+  onOpenAdmin,
+  initialSubject = 'TOAN'
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-TH8M-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
   const [isVIP, setIsVIP] = useState<boolean>(false);
@@ -131,7 +134,13 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [isActivating, setIsActivating] = useState<boolean>(false);
 
   // Online Studio Filter State
-  const [selectedSubject, setSelectedSubject] = useState<string>('TOAN');
+  const [selectedSubject, setSelectedSubject] = useState<string>(initialSubject);
+  useEffect(() => {
+    if (isOpen && initialSubject) {
+      setSelectedSubject(initialSubject);
+    }
+  }, [isOpen, initialSubject]);
+
   const [selectedGrade, setSelectedGrade] = useState<string>('7');
   const [selectedExamType, setSelectedExamType] = useState<string>('GK1');
   const [examCode, setExamCode] = useState<string>('701');
@@ -265,7 +274,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-bold text-white tracking-wide">
-                  HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN)
+                  TẠO ĐỀ KIỂM TRA {currentSubjectObj.name} (CV 7991)
                 </h2>
                 <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
                   CÔNG VĂN 7991/BGDĐT
@@ -280,7 +289,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 )}
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">
-                Tự động sinh Ma trận, Bản đặc tả kỹ thuật, Đề thi chuẩn in ấn khổ A4 và Đáp án thang điểm chi tiết (Toán, Văn, Anh, KHTN, Sử - Địa, Tin, GDCD, Công nghệ)
+                Hệ thống tự động sinh Ma trận, Bản đặc tả kỹ thuật, Đề thi in ấn A4 và Đáp án chi tiết dành riêng cho {currentSubjectObj.name} chuẩn CV 7991/BGDĐT.
               </p>
             </div>
           </div>
@@ -392,33 +401,34 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
               </div>
             </div>
 
-            {/* BỘ CHỌN MÔN HỌC (8 MÔN) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-blue-400" /> Chọn Môn Học Cần Tạo Đề:
-                </span>
-                <span className="text-[11px] text-amber-300">
-                  Đang chọn: <strong>{currentSubjectObj.name}</strong>
-                </span>
+            {/* THÔNG TIN CHUYÊN MÔN DÀNH RIÊNG CHO MÔN HỌC */}
+            <div className="bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 p-4 rounded-xl border border-blue-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl p-2.5 bg-slate-950/80 rounded-xl border border-blue-500/30 shadow-inner">
+                  {currentSubjectObj.icon}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm sm:text-base font-bold text-white uppercase tracking-wide">
+                      {currentSubjectObj.name}
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      {currentSubjectObj.badge}
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+                      BẢN QUYỀN PRO
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 mt-1">
+                    {currentSubjectObj.desc}
+                  </p>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-                {SUBJECT_OPTIONS.map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => setSelectedSubject(sub.id)}
-                    className={`p-2.5 rounded-xl border flex flex-col items-center text-center transition-all cursor-pointer ${
-                      selectedSubject === sub.id
-                        ? 'bg-gradient-to-b from-blue-900/60 to-slate-900 border-blue-400 text-white shadow-md shadow-blue-500/20 scale-[1.02]'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
-                    }`}
-                  >
-                    <span className="text-xl mb-1">{sub.icon}</span>
-                    <span className="text-xs font-bold truncate w-full">{sub.name.replace('MÔN ', '')}</span>
-                    <span className="text-[9px] text-slate-400 truncate w-full mt-0.5">{sub.badge}</span>
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                <span className="px-2.5 py-1 text-[11px] font-semibold text-emerald-300 bg-emerald-950/60 rounded-lg border border-emerald-700/50 flex items-center gap-1">
+                  ✓ Chuẩn CV 7991/BGDĐT
+                </span>
               </div>
             </div>
 
@@ -513,7 +523,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-blue-400" />
                   <span className="text-xs font-bold text-slate-200">
-                    BẢN XEM TRƯỚC ĐỀ THI SƯ PHẠM (FONT TIMES NEW ROMAN 13PT - CHUẨN IN ẤN A4)
+                    BẢN XEM TRƯỚC ĐỀ KIỂM TRA SƯ PHẠM (FONT TIMES NEW ROMAN 13PT - CHUẨN IN ẤN A4)
                   </span>
                 </div>
 
@@ -527,7 +537,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         : 'text-slate-400 hover:text-white'
                     }`}
                   >
-                    1. Đề Thi
+                    1. Đề Kiểm Tra
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('matrix')}
@@ -557,7 +567,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   <button
                     onClick={handleDownloadDoc}
                     className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-700/30 transition-all cursor-pointer active:scale-95 border border-emerald-400/40"
-                    title="Tải trọn bộ Đề thi + Ma trận đặc tả + Đáp án thang điểm chi tiết dạng Microsoft Word (.doc)"
+                    title="Tải trọn bộ Đề kiểm tra + Ma trận đặc tả + Đáp án thang điểm chi tiết dạng Microsoft Word (.doc)"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Tải File Word (.doc)</span>
@@ -576,7 +586,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     className="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-lg text-xs font-medium flex items-center gap-1 border border-blue-500/40 transition-colors cursor-pointer"
                   >
                     <Printer className="w-3.5 h-3.5" />
-                    <span>In đề thi</span>
+                    <span>In đề kiểm tra</span>
                   </button>
                 </div>
               </div>
@@ -590,22 +600,24 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     className="p-6 sm:p-8 bg-white text-slate-900 font-serif leading-relaxed max-h-[520px] overflow-y-auto select-text text-[13pt]"
                     style={{ fontFamily: '"Times New Roman", Times, serif' }}
                   >
-                    {/* VIEW 1: ĐỀ THI CHÍNH THỨC */}
+                    {/* VIEW 1: ĐỀ KIỂM TRA CHÍNH THỨC */}
                     {previewSubTab === 'exam' && (
                       <>
-                        {/* Khối tiêu đề đầu đề thi 2 cột */}
-                        <div className="grid grid-cols-2 gap-4 pb-4 border-b-2 border-slate-900 text-center">
-                          <div>
+                        {/* Khung tiêu đề đầu đề thi 2 cột chuẩn Trường THCS Đồng Yên */}
+                        <div className="grid grid-cols-3 gap-4 pb-3 border-b-2 border-slate-900 text-center font-serif">
+                          <div className="col-span-1">
                             <p className="font-bold text-[11pt] uppercase">{examSuite.parentAgency}</p>
-                            <p className="font-bold text-[12pt] uppercase text-blue-900">{examSuite.schoolName}</p>
-                            <p className="text-[11pt] italic">Đề thi chính thức</p>
+                            <p className="font-bold text-[11.5pt] uppercase underline text-slate-900">{examSuite.schoolName}</p>
                           </div>
-                          <div>
-                            <p className="font-bold text-[13pt] uppercase" style={{ color: '#FF0000' }}>
-                              ĐỀ KIỂM TRA {examSuite.termTitle.toUpperCase()}
+                          <div className="col-span-2">
+                            <p className="font-bold text-[12.5pt] uppercase text-slate-900">
+                              BÀI KIỂM TRA ĐÁNH GIÁ {examSuite.termTitle.toUpperCase()}
                             </p>
-                            <p className="font-bold text-[12pt] uppercase">
-                              NĂM HỌC {examSuite.schoolYear} | MÔN {examSuite.subjectName.toUpperCase()} - LỚP {examSuite.grade}
+                            <p className="font-bold text-[11.5pt]">
+                              NĂM HỌC: {examSuite.schoolYear}
+                            </p>
+                            <p className="font-bold text-[12pt]">
+                              Môn: {examSuite.subjectName} {examSuite.grade}
                             </p>
                             <p className="text-[11pt] italic">
                               Thời gian làm bài: {examSuite.timeMinutes} phút (Không kể thời gian phát đề)
@@ -613,32 +625,36 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                           </div>
                         </div>
 
-                        {/* Bảng điểm & Mã đề */}
-                        <div className="my-3 flex items-center justify-between border border-slate-800 p-2 text-[11pt]">
-                          <div className="flex gap-6">
-                            <span>Họ và tên thí sinh: ..............................................................</span>
-                            <span>Lớp: {examSuite.grade}....</span>
-                          </div>
-                          <div className="font-bold font-mono px-3 py-0.5 bg-slate-100 border border-slate-400">
-                            MÃ ĐỀ: {examSuite.examCode}
-                          </div>
+                        {/* Dòng Họ tên học sinh & Mã đề */}
+                        <div className="py-2.5 text-[12.5pt] flex items-center justify-between font-serif border-b border-slate-300">
+                          <span>Họ và tên: __________________________,</span>
+                          <span>Lớp: {examSuite.grade}A___</span>
+                          <span className="font-bold">Mã đề: {examSuite.examCode}</span>
                         </div>
 
-                        {/* Khung Điểm & Lời nhận xét */}
-                        <div className="mb-4 grid grid-cols-4 border border-slate-800 text-[11pt]">
-                          <div className="border-r border-slate-800 text-center p-1 bg-slate-50">
-                            <span className="font-bold text-[10.5pt]">ĐIỂM SỐ</span>
-                            <div className="grid grid-cols-2 border-t border-slate-800 text-[9.5pt] mt-1">
-                              <div className="border-r border-slate-800 py-0.5">Số</div>
-                              <div className="py-0.5">Chữ</div>
-                            </div>
-                            <div className="h-9"></div>
-                          </div>
-                          <div className="col-span-3 p-2 text-left text-[10pt] leading-snug">
-                            <span className="font-bold">LỜI NHẬN XÉT CỦA GIÁO VIÊN CHẤM THI:</span>
-                            <p className="text-slate-400 mt-1">....................................................................................................................................</p>
-                          </div>
-                        </div>
+                        {/* Bảng Điểm & Lời phê chuẩn Trường THCS Đồng Yên (2 dòng kẻ) */}
+                        <table className="w-full border-collapse border border-black text-center text-[11pt] my-3 font-serif">
+                          <thead>
+                            <tr>
+                              <th colSpan={2} className="border border-black p-1.5 w-1/4 font-bold">Điểm</th>
+                              <th rowSpan={2} className="border border-black p-1.5 font-bold">Lời phê của thầy, cô giáo</th>
+                            </tr>
+                            <tr>
+                              <th className="border border-black p-1 w-1/8 font-bold">Điểm số</th>
+                              <th className="border border-black p-1 w-1/8 font-bold">Điểm chữ</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="h-14">
+                              <td className="border border-black p-1"></td>
+                              <td className="border border-black p-1"></td>
+                              <td className="border border-black p-2 text-left align-top text-[10pt] leading-loose">
+                                <div>___________________________________________________________</div>
+                                <div>___________________________________________________________</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
                         {/* Nội dung đề thi phong phú theo môn */}
                         <div className="space-y-4 text-justify mt-2">
@@ -689,7 +705,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         <div className="mt-8 pt-4 border-t border-slate-400 text-center italic text-[11pt]">
                           ---------- HẾT ----------
                           <p className="text-[10pt] not-italic mt-1 text-slate-600">
-                            Cán bộ coi thi không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi xuất Word.
+                            Giáo viên coi kiểm tra không giải thích gì thêm. Giữ nguyên định dạng chuẩn Times New Roman 13pt khi xuất Word.
                           </p>
                         </div>
                       </>
@@ -821,7 +837,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                                 {examSuite.answerGuide.essayGuide.map((eg, i) => (
                                   <tr key={i}>
                                     <td className="border border-slate-800 p-2 font-bold text-center">{eg.question}</td>
-                                    <td className="border border-slate-800 p-2 whitespace-pre-line">{eg.step}</td>
+                                    <td className="border border-slate-800 p-2 whitespace-pre-line font-medium text-red-600">{eg.step}</td>
                                     <td className="border border-slate-800 p-2 font-bold text-center" style={{ color: '#FF0000' }}>
                                       {eg.point}
                                     </td>
@@ -861,7 +877,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                     <Play className="w-4 h-4 text-blue-500" />
-                    Video Hướng Dẫn Sử Dụng Bảng Điều Khiển Tạo Đề THCS (8 Môn)
+                    Video Hướng Dẫn Soạn Đề Kiểm Tra {currentSubjectObj.name} (CV 7991)
                   </h3>
                   <span className="px-2 py-0.5 text-[11px] font-semibold bg-blue-500/20 text-blue-300 rounded">
                     Full HD 1080p
@@ -908,9 +924,9 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-blue-300">
-                            Trung Tâm Tạo Đề THCS (.exe)
+                            Bộ Cài Đặt {currentSubjectObj.name} (.exe)
                           </p>
-                          <p className="text-[10px] text-slate-400">Bảng điều khiển 8 môn (28.8 MB)</p>
+                          <p className="text-[10px] text-slate-400">Phòng làm việc chuyên môn (28.8 MB)</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -945,7 +961,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-emerald-300">
-                            Sổ Tay Hướng Dẫn Soạn Đề
+                            Sổ Tay Hướng Dẫn Soạn Đề Kiểm Tra {currentSubjectObj.name}
                           </p>
                           <p className="text-[10px] text-slate-400">Chuẩn CV 7991/BGDĐT</p>
                         </div>
@@ -1082,12 +1098,12 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
                   <span className="text-xs text-slate-400">Hỗ trợ kỹ thuật 24/7:</span>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    href={`https://zalo.me/${BRAND.phoneRaw}`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-1.5 rounded-lg bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-[#0068FF] hover:text-blue-300 border border-[#0068FF]/40 text-xs font-bold flex items-center gap-1.5 transition-colors"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.author.phone})
+                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.phone})
                   </a>
                 </div>
               </div>
@@ -1098,7 +1114,14 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Các Gói Bản Quyền Tạo Đề THCS (Chuẩn CV 7991)
                   </h4>
-                  <span className="text-[11px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowTrialRegister(true)}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Đăng Ký Dùng Thử 5 Lần
+                  </button>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
@@ -1118,7 +1141,8 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   </a>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                {/* Gói Toàn Diện 8 Môn */}
+                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between hover:border-sky-500/40 transition">
                   <div>
                     <span className="text-xs font-bold text-white">Gói Toàn Diện 8 Môn (1 Năm)</span>
                     <p className="text-[11px] text-slate-400">Mở khóa toàn bộ 8 môn học THCS (Toán, Văn, Anh, KHTN, Sử Địa, Tin, GDCD, CN)</p>
@@ -1158,6 +1182,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
                   </a>
                 </div>
+                </div>
 
                 <p className="text-[11px] text-slate-400 italic px-1 pt-1">
                   * Chính sách giá ưu đãi đặc biệt dành cho giáo viên và các nhà trường. Quý Thầy/Cô vui lòng bấm nút nhắn tin Zalo để nhận báo giá chi tiết và hỗ trợ kích hoạt trực tiếp từ Thầy Thành.
@@ -1167,6 +1192,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
           </div>
         )}
       </div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} />
     </div>
   );
 };

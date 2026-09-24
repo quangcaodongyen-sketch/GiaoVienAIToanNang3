@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect, useRef } from "react";
 import {
   Video,
@@ -57,6 +58,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // Recording mode: "screen" (Display Capture) | "whiteboard" (Studio Bảng Giảng Dạy Trực Tuyến)
   const [recordMode, setRecordMode] = useState<"screen" | "whiteboard">("screen");
@@ -85,7 +87,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   // License & Security states
   const [hardwareCode, setHardwareCode] = useState<string>("");
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
-  const [isProActive, setIsProActive] = useState<boolean>(false);
+  const [isProActive, setIsProActive] = useState<boolean>(true); // Miễn phí 100%
   const [licenseInputKey, setLicenseInputKey] = useState<string>("");
   const [activationError, setActivationError] = useState<string>("");
   const [activationSuccess, setActivationSuccess] = useState<string>("");
@@ -176,12 +178,13 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
           if (res.isValid) {
             setIsProActive(true);
           } else {
-            setIsProActive(false);
-            getSecureRecordTrialRemaining(hw).then(rem => setTrialRemaining(rem));
+            setIsProActive(true);
+            setTrialRemaining(999999);
           }
         });
       } else {
-        getSecureRecordTrialRemaining(hw).then(rem => setTrialRemaining(rem));
+        setIsProActive(true);
+        setTrialRemaining(999999);
       }
     }
   }, [isOpen]);
@@ -1460,6 +1463,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         </div>
 
       </div>
-    </div>
+          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="screen-record" initialAppName="Quay Màn Hình Screen Record Pro" />
+</div>
   );
 };

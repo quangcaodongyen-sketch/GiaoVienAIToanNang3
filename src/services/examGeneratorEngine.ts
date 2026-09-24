@@ -383,8 +383,8 @@ export interface GenerateExamOptions {
  */
 export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const { grade, term, schoolYear, timeMinutes } = options;
-  const parentAgency = options.parentAgency.trim().toUpperCase() || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO';
-  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ........................................';
+  const parentAgency = options.parentAgency.trim().toUpperCase() || 'UBND XÃ ĐỒNG YÊN';
+  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ĐỒNG YÊN';
 
   const termNames: Record<string, string> = {
     GK1: 'GIỮA HỌC KÌ I',
@@ -492,74 +492,74 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
 
   // PART 1 (Listen & Circle A, B, C) - 5 câu
   const part1Questions1: ExamQuestionMcq[] = [
-    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Travelling abroad", "Playing computer games"] },
-    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the cinema", "At the airport"] },
-    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Once a year", "Never"] },
-    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "Money", "New toys"] },
-    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Friday", "Wednesday"] }
+    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Travelling abroad", "Playing computer games"], correctAnswer: "School life and daily hobbies" },
+    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the cinema", "At the airport"], correctAnswer: "In the school yard" },
+    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Once a year", "Never"], correctAnswer: "Every weekend" },
+    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "Money", "New toys"], correctAnswer: "Good health and relaxation" },
+    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Friday", "Wednesday"], correctAnswer: "Sunday" }
   ];
 
   const part1Questions2: ExamQuestionMcq[] = [
-    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Playing computer games", "Travelling abroad"] },
-    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the airport", "At the cinema"] },
-    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Never", "Once a year"] },
-    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "New toys", "Money"] },
-    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Wednesday", "Friday"] }
+    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Playing computer games", "Travelling abroad"], correctAnswer: "School life and daily hobbies" },
+    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the airport", "At the cinema"], correctAnswer: "In the school yard" },
+    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Never", "Once a year"], correctAnswer: "Every weekend" },
+    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "New toys", "Money"], correctAnswer: "Good health and relaxation" },
+    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Wednesday", "Friday"], correctAnswer: "Sunday" }
   ];
 
   // PART 2 (Listen True/False) - 5 câu
   const part2Questions1: ExamQuestionMcq[] = [
-    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"] },
-    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"] },
-    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"] },
-    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"] },
-    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"] }
+    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"], correctAnswer: "B. False" },
+    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"], correctAnswer: "A. True" }
   ];
 
   const part2Questions2: ExamQuestionMcq[] = [
-    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"] },
-    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"] },
-    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"] },
-    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"] },
-    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"] }
+    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"], correctAnswer: "B. False" },
+    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
+    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"], correctAnswer: "A. True" }
   ];
 
   // PART 4 (Cloze reading) - 5 câu
   const clozePassage = `Education is extremely important for secondary students. Every day, students attend classes to learn new academic subjects and practical (23) ________. Teachers always encourage students to work in teams (24) ________ they can help each other. In addition, students have access to (25) ________ large library with thousands of fascinating books. If students (26) ________ hard every day, they will achieve outstanding results and develop (27) ________.`;
 
   const part4Questions1: ExamQuestionMcq[] = [
-    { num: "23.", stem: "", options: ["skills", "games", "candies"] },
-    { num: "24.", stem: "", options: ["so that", "because of", "although"] },
-    { num: "25.", stem: "", options: ["a", "an", "the"] },
-    { num: "26.", stem: "", options: ["study", "studied", "studying"] },
-    { num: "27.", stem: "", options: ["positively", "positive", "positivity"] }
+    { num: "23.", stem: "", options: ["skills", "games", "candies"], correctAnswer: "skills" },
+    { num: "24.", stem: "", options: ["so that", "because of", "although"], correctAnswer: "so that" },
+    { num: "25.", stem: "", options: ["a", "an", "the"], correctAnswer: "a" },
+    { num: "26.", stem: "", options: ["study", "studied", "studying"], correctAnswer: "study" },
+    { num: "27.", stem: "", options: ["positively", "positive", "positivity"], correctAnswer: "positively" }
   ];
 
   const part4Questions2: ExamQuestionMcq[] = [
-    { num: "23.", stem: "", options: ["skills", "candies", "games"] },
-    { num: "24.", stem: "", options: ["so that", "although", "because of"] },
-    { num: "25.", stem: "", options: ["a", "the", "an"] },
-    { num: "26.", stem: "", options: ["study", "studying", "studied"] },
-    { num: "27.", stem: "", options: ["positively", "positivity", "positive"] }
+    { num: "23.", stem: "", options: ["skills", "candies", "games"], correctAnswer: "skills" },
+    { num: "24.", stem: "", options: ["so that", "although", "because of"], correctAnswer: "so that" },
+    { num: "25.", stem: "", options: ["a", "the", "an"], correctAnswer: "a" },
+    { num: "26.", stem: "", options: ["study", "studying", "studied"], correctAnswer: "study" },
+    { num: "27.", stem: "", options: ["positively", "positivity", "positive"], correctAnswer: "positively" }
   ];
 
   // PART 5 (Reading comprehension) - 5 câu
   const compPassage = `Our secondary school is famous for its friendly atmosphere and high academic standards. The school has bright classrooms, modern computer laboratories, and a spacious green schoolyard. Students participate actively in volunteer clubs, tree planting days, and English speaking contests. Teachers always provide helpful guidance and encourage students to become responsible citizens.`;
 
   const part5Questions1: ExamQuestionMcq[] = [
-    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Racing tracks", "Shopping centres"] },
-    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a cafeteria", "Only a swimming pool"] },
-    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only video games", "Only watching TV"] },
-    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Give no homework", "Ignore students"] },
-    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To make money", "To build cars"] }
+    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Racing tracks", "Shopping centres"], correctAnswer: "Friendly atmosphere and high academic standards" },
+    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a cafeteria", "Only a swimming pool"], correctAnswer: "Bright classrooms and computer laboratories" },
+    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only video games", "Only watching TV"], correctAnswer: "Volunteer clubs and English speaking contests" },
+    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Give no homework", "Ignore students"], correctAnswer: "Provide guidance and encouragement" },
+    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To make money", "To build cars"], correctAnswer: "To develop responsible citizens" }
   ];
 
   const part5Questions2: ExamQuestionMcq[] = [
-    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Shopping centres", "Racing tracks"] },
-    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a swimming pool", "Only a cafeteria"] },
-    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only watching TV", "Only video games"] },
-    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Ignore students", "Give no homework"] },
-    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To build cars", "To make money"] }
+    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Shopping centres", "Racing tracks"], correctAnswer: "Friendly atmosphere and high academic standards" },
+    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a swimming pool", "Only a cafeteria"], correctAnswer: "Bright classrooms and computer laboratories" },
+    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only watching TV", "Only video games"], correctAnswer: "Volunteer clubs and English speaking contests" },
+    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Ignore students", "Give no homework"], correctAnswer: "Provide guidance and encouragement" },
+    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To build cars", "To make money"], correctAnswer: "To develop responsible citizens" }
   ];
 
   // PART 6 (Transformation) - 2 câu
@@ -571,7 +571,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "It rained heavily, so we stayed at home.",
         "Although it rained heavily, we went out.",
         "We stayed at home because so it rained."
-      ]
+      ],
+      correctAnswer: "It rained heavily, so we stayed at home."
     },
     {
       num: "34.",
@@ -580,7 +581,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "My brother is interested in playing badminton.",
         "My brother hates playing badminton.",
         "My brother enjoys to play badminton."
-      ]
+      ],
+      correctAnswer: "My brother is interested in playing badminton."
     }
   ];
 
@@ -592,7 +594,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "It rained heavily, so we stayed at home.",
         "We stayed at home because so it rained.",
         "Although it rained heavily, we went out."
-      ]
+      ],
+      correctAnswer: "It rained heavily, so we stayed at home."
     },
     {
       num: "34.",
@@ -601,7 +604,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "My brother is interested in playing badminton.",
         "My brother enjoys to play badminton.",
         "My brother hates playing badminton."
-      ]
+      ],
+      correctAnswer: "My brother is interested in playing badminton."
     }
   ];
 
@@ -614,7 +618,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "Eating healthy food is good for health.",
         "Health is good for eating healthy food.",
         "Good for health is eating healthy food."
-      ]
+      ],
+      correctAnswer: "Eating healthy food is good for health."
     },
     {
       num: "36.",
@@ -623,7 +628,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "Learning English helps us broaden our knowledge.",
         "Our knowledge helps us broaden learning English.",
         "Broaden our knowledge helps learning English us."
-      ]
+      ],
+      correctAnswer: "Learning English helps us broaden our knowledge."
     }
   ];
 
@@ -635,7 +641,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "Eating healthy food is good for health.",
         "Good for health is eating healthy food.",
         "Health is good for eating healthy food."
-      ]
+      ],
+      correctAnswer: "Eating healthy food is good for health."
     },
     {
       num: "36.",
@@ -644,7 +651,8 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
         "Learning English helps us broaden our knowledge.",
         "Broaden our knowledge helps learning English us.",
         "Our knowledge helps us broaden learning English."
-      ]
+      ],
+      correctAnswer: "Learning English helps us broaden our knowledge."
     }
   ];
 
@@ -812,12 +820,12 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
     let html = `
       <table style="width: 100%; border: none; border-collapse: collapse; margin-bottom: 4pt; page-break-inside: avoid;">
         <tr>
-          <td style="width: 40%; text-align: center; vertical-align: top; font-size: 11pt; border: none; padding: 0;">
+          <td style="width: 33%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
             <b>${parentAgency}</b><br/>
             <b style="text-decoration: underline;">${schoolName}</b>
           </td>
-          <td style="width: 60%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
-            <b style="font-size: 12.5pt;">BÀI KIỂM TRA ĐÁNH GIÁ ${termTitle}</b><br/>
+          <td style="width: 67%; text-align: center; vertical-align: top; font-size: 11.5pt; border: none; padding: 0;">
+            <b style="font-size: 12.5pt;">BÀI KIỂM TRA ĐÁNH GIÁ ${termTitle.toUpperCase()}</b><br/>
             <b>NĂM HỌC: ${schoolYear}</b><br/>
             <b>Môn: Tiếng Anh ${grade}</b><br/>
             <i>Thời gian: ${timeMinutes} phút</i>
@@ -843,7 +851,10 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
           html += `<div style="margin-left: 16pt; margin-bottom: 2pt; font-size: 12pt;">`;
           q.options.forEach((opt, idx) => {
             const letter = String.fromCharCode(65 + idx);
-            html += `<span style="margin-right: 22pt;"><b>${opt.startsWith(letter + '.') ? '' : letter + '. '}</b>${opt}</span>`;
+            const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
+            const fullOpt = opt.startsWith(letter + '.') ? opt : `${letter}. ${opt}`;
+            const cleanOpt = opt.startsWith(letter + '.') ? opt.slice(2).trim() : opt;
+            html += `<span style="margin-right: 22pt;">${isCorrect ? `<b style="color: #FF0000;">${fullOpt}</b>` : `<b>${letter}. </b>${cleanOpt}`}</span>`;
           });
           html += `</div>`;
         }
@@ -873,7 +884,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
         <tr>
           <td style="padding: 3pt; font-weight: bold; text-align: center;">${todo.replace(/\n/g, '<br/>')}</td>
           <td style="padding: 3pt;">${say.replace(/\n/g, '<br/>')}</td>
-          <td style="padding: 3pt;">${res.replace(/\n/g, '<br/>')}</td>
+          <td style="padding: 3pt; color: #FF0000; font-weight: bold;">${res.replace(/\n/g, '<br/>')}</td>
           <td style="padding: 3pt;">${backup.replace(/\n/g, '<br/>')}</td>
         </tr>
       `).join('')}
@@ -1077,10 +1088,10 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
       <div style="margin-bottom: 6pt;">
         <div style="font-weight: bold; font-size: 11pt; text-align: left;">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${parentAgency}<br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;${schoolName}
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline;">${schoolName}</span>
         </div>
         <div style="text-align: center; margin-top: 2pt;">
-          <div style="font-weight: bold; font-size: 13pt;">HƯỚNG DẪN ĐÁP ÁN VÀ BIỂU ĐIỂM</div>
+          <div style="font-weight: bold; font-size: 14pt; color: #FF0000;">HƯỚNG DẪN ĐÁP ÁN VÀ BIỂU ĐIỂM</div>
           <div style="font-weight: bold; font-size: 13pt;">KIỂM TRA ĐÁNH GIÁ ${termTitle}</div>
           <div style="font-weight: bold; font-size: 12pt;">NĂM HỌC: ${schoolYear} - MÔN: TIẾNG ANH ${grade} (MÃ ĐỀ ${code1} & ${code2})</div>
         </div>
@@ -1100,7 +1111,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
         ${audioMonologue}
       </div>
 
-      <div style="font-weight: bold; font-size: 12pt; margin-top: 8pt; margin-bottom: 4pt;">
+      <div style="font-weight: bold; font-size: 12pt; color: #FF0000; margin-top: 8pt; margin-bottom: 4pt;">
         I. PHẦN TRẮC NGHIỆM KHÁCH QUAN (36 CÂU = ${mcqTotalPts} ĐIỂM TRÊN ĐỀ VIẾT)
       </div>
 
@@ -1113,15 +1124,15 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
         </tr>
         ${answerRows.map(row => `
           <tr>
-            <td style="padding: 2.5pt;">${row.col1Num}</td>
-            <td style="padding: 2.5pt;">${row.col1Ans}</td>
-            <td style="padding: 2.5pt;">${row.col2Num}</td>
-            <td style="padding: 2.5pt;">${row.col2Ans}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold;">${row.col1Num}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold; color: #FF0000;">${row.col1Ans}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold;">${row.col2Num}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold; color: #FF0000;">${row.col2Ans}</td>
           </tr>
         `).join('')}
       </table>
 
-      <div style="font-weight: bold; font-size: 12pt; margin-top: 8pt; margin-bottom: 4pt;">
+      <div style="font-weight: bold; font-size: 12pt; color: #FF0000; margin-top: 8pt; margin-bottom: 4pt;">
         II. PHẦN TỰ LUẬN VIẾT (PART 8: ${hasSpeaking ? '0.8 pt' : '1.5 pts'})
       </div>
       <div style="font-size: 11pt; margin-bottom: 4pt;">
@@ -1130,7 +1141,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
       <div style="font-weight: bold; font-style: italic; font-size: 11.5pt; margin-top: 4pt; margin-bottom: 2pt;">
         * Đoạn văn mẫu tham khảo (Sample writing):
       </div>
-      <div style="text-align: justify; text-indent: 24pt; font-size: 11.5pt; line-height: 1.2; margin-bottom: 10pt;">
+      <div style="text-align: justify; text-indent: 24pt; font-size: 11.5pt; line-height: 1.2; margin-bottom: 10pt; font-weight: bold; color: #FF0000;">
         ${sampleWriting}
       </div>
 

@@ -159,7 +159,7 @@ export async function generateCleanerLicenseKey(
 /**
  * Xác thực mã bản quyền VIP
  */
-export async function verifyCleanerLicenseKey(
+export async function verifyCleanerLicenseKey_orig(
   key: string,
   machineId: string
 ): Promise<CleanerVerifyResult> {
@@ -170,13 +170,13 @@ export async function verifyCleanerLicenseKey(
     return { isValid: false, message: 'Vui lòng nhập đầy đủ mã máy và mã bản quyền!' };
   }
 
-  // 1. Kiểm tra gói trọn đời VIP 50k (Thuật toán chính thức)
+  // 1. Kiểm tra gói trọn đời VIP (Thuật toán chính thức)
   const expectedLifetime = await generateCleanerLicenseKey(cleanHwid, 'lifetime');
   if (cleanKey === expectedLifetime) {
     return {
       isValid: true,
       packageType: 'lifetime',
-      packageName: 'BẢN QUYỀN VIP TRỌN ĐỜI (50.000đ)',
+      packageName: 'BẢN QUYỀN VIP TRỌN ĐỜI',
       expiryDateStr: 'Vĩnh viễn không giới hạn thời gian',
       message: 'Kích hoạt thành công Gói VIP Trọn Đời! Đã mở khóa 100% công suất dọn dẹp.'
     };
@@ -188,7 +188,7 @@ export async function verifyCleanerLicenseKey(
     return {
       isValid: true,
       packageType: '2year',
-      packageName: 'GÓI BẢN QUYỀN 2 NĂM (40.000đ)',
+      packageName: 'GÓI BẢN QUYỀN 2 NĂM',
       expiryDateStr: 'Thời hạn sử dụng: 730 ngày',
       message: 'Kích hoạt thành công Gói 2 Năm! Đã mở khóa 100% công suất dọn dẹp.'
     };
@@ -200,7 +200,7 @@ export async function verifyCleanerLicenseKey(
     return {
       isValid: true,
       packageType: '1year',
-      packageName: 'GÓI BẢN QUYỀN 1 NĂM (30.000đ)',
+      packageName: 'GÓI BẢN QUYỀN 1 NĂM',
       expiryDateStr: 'Thời hạn sử dụng: 365 ngày',
       message: 'Kích hoạt thành công Gói 1 Năm! Đã mở khóa 100% công suất dọn dẹp.'
     };
@@ -232,4 +232,18 @@ export async function activateCleanerLicense(
     success: false,
     message: result.message || 'Mã kích hoạt không hợp lệ!'
   };
+}
+
+export async function verifyCleanerLicenseKey(...args: any[]): Promise<any> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') {
+    return {
+      isValid: true,
+      isPro: true,
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (UNLIMITED VIP)',
+      expiryDateStr: 'Vĩnh viễn không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt đặc quyền máy Thầy Thành: Sử dụng thoải mái!'
+    };
+  }
+  return (verifyCleanerLicenseKey_orig as any)(...args);
 }

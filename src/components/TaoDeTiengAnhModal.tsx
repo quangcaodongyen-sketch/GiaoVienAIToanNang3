@@ -11,12 +11,12 @@ import {
   CheckCircle2,
   FileCheck2,
   Headphones,
-  Volume2,
   Square,
-  Mic,
-  MessageSquare
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
+import { activityTrackingService } from '../services/activityTrackingService';
+import { TrialRegisterModal } from './TrialRegisterModal';
+import { ExpiredTrialPricingModal } from './ExpiredTrialPricingModal';
 import {
   getOrCreateExamHardwareCode,
   verifyExamLicenseKey,
@@ -39,6 +39,8 @@ interface TaoDeTiengAnhModalProps {
 export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Navigation tabs: 'experience' | 'download' | 'register'
   const [activeTab, setActiveTab] = useState<'experience' | 'download' | 'register'>('experience');
+  const [showTrialModal, setShowTrialModal] = useState<boolean>(false);
+  const [showExpiredModal, setShowExpiredModal] = useState<boolean>(false);
 
   // Trial limit system: 5 uses per computer
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -50,8 +52,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [selectedGrade, setSelectedGrade] = useState<string>('6');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [numVariants, setNumVariants] = useState<number>(2);
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................................');
-  const [parentAgency, setParentAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
+  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
+  const [parentAgency, setParentAgency] = useState<string>('UBND XÃ ĐỒNG YÊN');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
   const [examDuration, setExamDuration] = useState<string>('60');
 
@@ -74,6 +76,12 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     if (isOpen) {
       const code = getOrCreateExamHardwareCode();
       setDetectedMid(code);
+
+      // Kích hoạt đặc quyền máy Thầy Thành: Dùng thoải mái không giới hạn
+      if (localStorage.getItem('gvai_unlimited_machine') === 'true') {
+        setIsProActive(true);
+        setTrialRemaining(999999);
+      }
 
       // Đọc số lượt dùng thử được ký số mật mã SHA-256 an toàn
       getSecureExamTrialRemaining(code).then(trials => {
@@ -99,8 +107,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     if (!isProActive) {
       const currentTrials = await getSecureExamTrialRemaining(detectedMid);
       if (currentTrials <= 0) {
-        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tạo đề tiếng Anh miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
-        setActiveTab('register');
+        setShowExpiredModal(true);
         return;
       }
       // Trừ 1 lượt an toàn kèm chữ ký số SHA-256 chống can thiệp F12 DevTools
@@ -147,17 +154,27 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   // Tải file Word (.doc) đúng 100% chuẩn văn bản desktop & add-in
   const handleDownloadDoc = () => {
-    if (!examSuite) {
-      alert('Vui lòng tạo đề trước khi tải về!');
-      return;
+    let suite = examSuite;
+    if (!suite) {
+      suite = generateExamSuite({
+        grade: selectedGrade,
+        term: selectedTerm,
+        parentAgency,
+        schoolName,
+        schoolYear,
+        timeMinutes: Number(examDuration) || 60
+      });
+      setExamSuite(suite);
     }
-    const htmlContent = exportToWordHtml(examSuite);
+    const htmlContent = exportToWordHtml(suite);
     const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `De_Kiem_Tra_Tieng_Anh_${selectedGrade}_${selectedTerm}_CV7991.doc`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
@@ -226,7 +243,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         <div className="px-4 sm:px-6 py-3.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-              <FileCheck2 className="w-5 h-5 text-white" />
+              <img src="/logo_tienganh_pro.png" alt="English Pro" className="w-9 h-9 rounded-xl object-contain shadow-md" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -466,7 +483,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     value={parentAgency}
                     onChange={(e) => setParentAgency(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500"
-                    placeholder="Ví dụ: PHÒNG GIÁO DỤC VÀ ĐÀO TẠO"
+                    placeholder="Ví dụ: UBND XÃ ĐỒNG YÊN"
                   />
                 </div>
               </div>
@@ -529,7 +546,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 1. Đề thi Mã {examSuite ? examSuite.code1 : `${selectedGrade}01`}
+                    📄 1. Đề kiểm tra Mã {examSuite ? examSuite.code1 : `${selectedGrade}01`}
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('de2')}
@@ -539,7 +556,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    📄 2. Đề thi Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
+                    📄 2. Đề kiểm tra Mã {examSuite ? examSuite.code2 : `${selectedGrade}02`} (Hoán vị)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('speaking')}
@@ -549,7 +566,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         : 'text-amber-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
-                    🗣️ 3. Đề Thi Nói (Speaking: 2.0đ)
+                    🗣️ 3. Phần Kiểm Tra Nói (Speaking: 2.0đ)
                   </button>
                   <button
                     onClick={() => setPreviewSubTab('dapan')}
@@ -593,7 +610,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                         return (
                           <div className="p-6 rounded-xl bg-white text-slate-900 font-serif leading-relaxed text-[13pt] max-h-[500px] overflow-y-auto selection:bg-cyan-100 shadow-inner">
                             {/* KHUNG TIÊU ĐỀ 2 CỘT */}
-                            <div className="grid grid-cols-2 gap-4 pb-2 text-center text-[11.5pt]">
+                            <div className="grid grid-cols-3 gap-4 pb-2 text-center text-[11.5pt] font-serif">
                               <div>
                                 <div className="font-bold uppercase">{examSuite.parentAgency}</div>
                                 <div className="font-bold uppercase underline">{examSuite.schoolName}</div>
@@ -658,10 +675,21 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                         <div className="pl-5 flex flex-wrap gap-x-6 gap-y-1 text-[13pt] mt-0.5">
                                           {q.options.map((opt, oIdx) => {
                                             const letter = String.fromCharCode(65 + oIdx);
+                                            const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
                                             return (
-                                              <span key={oIdx}>
-                                                <strong className="mr-1">{opt.startsWith(letter + '.') ? '' : `${letter}.`}</strong>
-                                                {opt}
+                                              <span key={oIdx} className={isCorrect ? 'font-bold' : ''}>
+                                                {(() => {
+                                                  const fullOpt = opt.startsWith(letter + '.') ? opt : `${letter}. ${opt}`;
+                                                  const cleanOpt = opt.startsWith(letter + '.') ? opt.slice(2).trim() : opt;
+                                                  return isCorrect ? (
+                                                    <span style={{ color: '#FF0000', fontWeight: 'bold' }}>{fullOpt}</span>
+                                                  ) : (
+                                                    <span>
+                                                      <strong className="mr-1">{letter}.</strong>
+                                                      {cleanOpt}
+                                                    </span>
+                                                  );
+                                                })()}
                                               </span>
                                             );
                                           })}
@@ -735,7 +763,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -770,7 +798,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -805,7 +833,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -832,7 +860,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                                   <tr key={idx}>
                                     <td className="border border-black p-1.5 font-bold text-center">{todo}</td>
                                     <td className="border border-black p-1.5">{say}</td>
-                                    <td className="border border-black p-1.5">{res}</td>
+                                    <td className="border border-black p-1.5 text-red-600 font-bold">{res}</td>
                                     <td className="border border-black p-1.5">{backup}</td>
                                   </tr>
                                 ))}
@@ -898,7 +926,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                           </div>
 
                           {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM 4 CỘT */}
-                          <div className="font-bold text-[13pt] mt-3 mb-2">
+                          <div className="font-bold text-[13pt] mt-3 mb-2" style={{ color: '#FF0000' }}>
                             I. PHẦN TRẮC NGHIỆM KHÁCH QUAN (36 CÂU = {examSuite.mcqTotalPts} ĐIỂM TRÊN ĐỀ VIẾT)
                           </div>
                           <table className="w-full border-collapse border border-black text-center text-[11pt] mb-4">
@@ -913,17 +941,17 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                             <tbody>
                               {examSuite.answerRows.map((row, idx) => (
                                 <tr key={idx} className={idx % 2 === 1 ? 'bg-slate-50' : ''}>
-                                  <td className="border border-black p-1">{row.col1Num}</td>
-                                  <td className="border border-black p-1">{row.col1Ans}</td>
-                                  <td className="border border-black p-1">{row.col2Num}</td>
-                                  <td className="border border-black p-1">{row.col2Ans}</td>
+                                  <td className="border border-black p-1 text-center font-bold">{row.col1Num}</td>
+                                  <td className="border border-black p-1 text-center font-bold" style={{ color: '#FF0000' }}>{row.col1Ans}</td>
+                                  <td className="border border-black p-1 text-center font-bold">{row.col2Num}</td>
+                                  <td className="border border-black p-1 text-center font-bold" style={{ color: '#FF0000' }}>{row.col2Ans}</td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
 
                           {/* TỰ LUẬN VIẾT */}
-                          <div className="font-bold text-[13pt] mt-4 mb-1">
+                          <div className="font-bold text-[13pt] mt-4 mb-1" style={{ color: '#FF0000' }}>
                             II. PHẦN TỰ LUẬN VIẾT (PART 8: {examSuite.hasSpeaking ? '0.8 pt' : '1.5 pts'})
                           </div>
                           <div className="text-[12pt] space-y-1 mb-2">
@@ -934,7 +962,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                           <div className="font-bold italic text-[12.5pt] mt-3 mb-1">
                             * Đoạn văn mẫu tham khảo (Sample writing):
                           </div>
-                          <div className="text-justify indent-8 text-[12.5pt] mb-4 text-slate-800">
+                          <div className="text-justify indent-8 text-[12.5pt] mb-4 font-bold" style={{ color: '#FF0000' }}>
                             {examSuite.sampleWriting}
                           </div>
 
@@ -1274,9 +1302,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </p>
                   </div>
                   <a
-                    href={EXAM_RESOURCES.fullZipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/HUONG_DAN_TAO_DE_TIENG_ANH.txt"
+                    download="HUONG_DAN_TAO_DE_TIENG_ANH.txt"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1364,6 +1391,19 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
               </div>
 
               {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN - ẨN GIÁ CẢ ĐỂ TẾ NHỊ & LIÊN HỆ ZALO */}
+              <div className="flex items-center justify-between pt-1">
+                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  Các Gói Bản Quyền Chính Thức
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => setShowTrialModal(true)}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  Đăng Ký Dùng Thử 5 Lần
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {/* Gói 1 Năm */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
@@ -1403,6 +1443,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
                     <div className="text-base font-extrabold text-cyan-400">
                       Báo Giá Qua Zalo
+                    </div>
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>
@@ -1453,6 +1494,103 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 </div>
               </div>
 
+              
+              {/* KHỐI QUÉT MÃ QR THANH TOÁN CHO CÔNG CỤ TIẾNG ANH */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/70 shadow-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/logo_tienganh_pro.png" alt="English Exam Pro" className="w-7 h-7 object-contain" />
+                    <div>
+                      <h4 className="text-sm font-black text-amber-300 uppercase tracking-wide">
+                        QUÉT MÃ QR CHUYỂN KHOẢN KÍCH HOẠT PRO (MB BANK)
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        Chính sách trợ giá sư phạm — Quý Thầy/Cô vui lòng nhắn tin Zalo để nhận báo giá ưu đãi kín đáo!
+                      </p>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    KÍCH HOẠT TỨC THÌ
+                  </span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-5 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                  <div className="shrink-0 relative">
+                    <img
+                      src="/qr_payment.png"
+                      alt="Mã QR MB Bank Thầy Thành"
+                      className="w-44 h-auto rounded-xl border-2 border-amber-500/50 shadow-lg bg-white p-1.5 object-contain"
+                    />
+                  </div>
+
+                  <div className="flex-1 text-xs space-y-3 text-slate-300 w-full">
+                    <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                      <div className="text-sm"><strong>Ngân hàng:</strong> <span className="text-cyan-300 font-bold">MB Bank (Ngân hàng Quân đội)</span></div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span><strong>Số tài khoản:</strong> <span className="text-amber-300 font-mono font-black text-base">0915213717</span></span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('0915213717');
+                            alert('Đã sao chép Số tài khoản MB Bank: 0915213717');
+                          }}
+                          className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 cursor-pointer font-bold"
+                        >
+                          Sao chép STK
+                        </button>
+                      </div>
+                      <div className="text-sm"><strong>Chủ tài khoản:</strong> <span className="text-white font-bold">DINH VAN THANH</span></div>
+                    </div>
+
+                    {/* CẢNH BÁO ĐỎ RỰC THEO YÊU CẦU CỦA THẦY THÀNH */}
+                    <div className="p-3 rounded-xl bg-red-950/95 border-2 border-red-500 text-center shadow-xl shadow-red-950/60">
+                      <p className="text-sm font-black text-red-200 uppercase tracking-wide flex items-center justify-center gap-2">
+                        ⚠️ LƯU Ý BẮT BUỘC: KHÔNG GHI NỘI DUNG CHUYỂN KHOẢN
+                      </p>
+                      <p className="text-xs text-red-300/90 mt-1 font-semibold">
+                        (Thầy/Cô vui lòng XÓA TRỐNG / ĐỂ TRỐNG toàn bộ phần nội dung khi chuyển khoản)
+                      </p>
+                    </div>
+
+                    <p className="text-[11px] text-slate-400 italic">
+                      * Sau khi chuyển khoản xong, Thầy/Cô chỉ cần chụp màn hình giao dịch và bấm nút nhắn Zalo Thầy Thành bên dưới để nhận License Key Pro ngay lập tức!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+              
+                {/* Gói Full Web Toàn Năng */}
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-emerald-950/40 via-slate-950 to-slate-950 border-2 border-emerald-500/60 space-y-3 flex flex-col justify-between shadow-xl shadow-emerald-500/10 md:col-span-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500 text-slate-950">
+                          👑 FULL WEB HỆ SINH THÁI
+                        </span>
+                        <h5 className="font-black text-white text-sm">Gói Dùng Full Tất Cả Phần Mềm Trên Website</h5>
+                      </div>
+                      <p className="text-xs text-emerald-300/90 mt-1">Mở khóa toàn bộ: Tạo đề 8 môn THCS, Tiếng Anh Global Success & Audio MP3, Sinh 3 đề biến thể VIP, Chuẩn hóa NĐ 30 & Soạn 5512, Cleaner Pro, PDF Suite Pro...</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-base font-black text-emerald-400">Báo Giá VIP Trọn Bộ</div>
+                      <span className="text-[10px] text-emerald-300 font-semibold">Ưu Đãi Đặc Biệt Cho Giáo Viên</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <a
+                      href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20nhan%20bao%20gia%20Goi%20Full%20Web%20Tron%20Bo.%20Ma%20may:%20${detectedMid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black text-center shadow-lg shadow-emerald-600/20 cursor-pointer"
+                    >
+                      👑 Báo Giá Gói Full Web Qua Zalo Thầy Thành
+                    </a>
+                  </div>
+                </div>
+
+
               {/* THÔNG TIN TÁC GIẢ & HỖ TRỢ */}
               <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div>
@@ -1486,6 +1624,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         </div>
 
       </div>
+      <TrialRegisterModal isOpen={showTrialModal} onClose={() => setShowTrialModal(false)} />
     </div>
   );
 };

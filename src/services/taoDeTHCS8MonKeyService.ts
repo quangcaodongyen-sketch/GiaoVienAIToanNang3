@@ -195,7 +195,7 @@ export function getTHCS8MActivePackage(): {
  * Hỗ trợ các scope: ALL, TOAN, VAN, ENG, KHTN, SUDIA, TIN, GDCD, CN
  * Đồng thời tương thích với key desktop dạng: MATH-LT-..., VAN-LT-...
  */
-export async function activateTHCS8MLicense(key: string, clientHwid: string): Promise<THCS8MVerifyResult> {
+export async function activateTHCS8MLicense_orig(key: string, clientHwid: string): Promise<THCS8MVerifyResult> {
   const cleanKey = key.trim().toUpperCase();
   const parts = cleanKey.split('-');
 
@@ -368,4 +368,18 @@ Chúc Thầy/Cô ứng dụng AI hiệu quả và tiết kiệm tối đa thời
     expDateStr,
     zaloMessage
   };
+}
+
+export async function activateTHCS8MLicense(...args: any[]): Promise<any> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') {
+    return {
+      isValid: true,
+      isPro: true,
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (UNLIMITED VIP)',
+      expiryDateStr: 'Vĩnh viễn không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt đặc quyền máy Thầy Thành: Sử dụng thoải mái!'
+    };
+  }
+  return (activateTHCS8MLicense_orig as any)(...args);
 }

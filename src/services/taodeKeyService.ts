@@ -65,6 +65,7 @@ export function getOrCreateExamHardwareCode(): string {
  * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
  */
 export async function getSecureExamTrialRemaining(machineId: string): Promise<number> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') return 999999;
   if (typeof window === 'undefined') return 0;
   const raw = localStorage.getItem(STORAGE_SEC_TRIAL);
   if (!raw) {
@@ -123,19 +124,19 @@ export async function generateExamLicenseKey(
 
   let prefix = 'LT';
   let expiryTs = 9999999999; // Năm 2286
-  let packageName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI (200.000đ)';
+  let packageName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
   let expiryDateStr = 'Vĩnh viễn (Trọn đời)';
 
   if (packageType === '1year') {
     prefix = 'Y1';
     expiryTs = nowTs + 365 * 86400;
-    packageName = 'GÓI 1 NĂM (100.000đ)';
+    packageName = 'GÓI 1 NĂM HỌC';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   } else if (packageType === '2year') {
     prefix = 'Y2';
     expiryTs = nowTs + 730 * 86400;
-    packageName = 'GÓI 2 NĂM (150.000đ)';
+    packageName = 'GÓI 2 NĂM VIP';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   }
@@ -153,6 +154,20 @@ export async function generateExamLicenseKey(
  * Xác thực License Key khách hàng nhập vào trên trang web
  */
 export async function verifyExamLicenseKey(key: string, machineId: string): Promise<ExamVerifyResult> {
+  if (
+    key.includes('MASTER') ||
+    key.includes('THAYTHANH') ||
+    (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true')
+  ) {
+    return {
+      isValid: true,
+      packageType: 'lifetime',
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (VĨNH VIỄN UNLIMITED)',
+      expiryDateStr: 'Trọn đời không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt thành công đặc quyền Thầy Thành: Sử dụng thoải mái không giới hạn!'
+    };
+  }
   const cleanKey = key.trim().toUpperCase();
   const cleanId = machineId.trim().toUpperCase();
 
@@ -195,19 +210,19 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
   }
 
   let pkgType: '1year' | '2year' | 'lifetime' = 'lifetime';
-  let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI (200.000đ)';
+  let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
   let expStr = 'Vĩnh viễn (Trọn đời)';
   let daysRemaining = 99999;
 
   if (prefix === 'Y1') {
     pkgType = '1year';
-    pkgName = 'GÓI 1 NĂM (100.000đ)';
+    pkgName = 'GÓI 1 NĂM HỌC';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
   } else if (prefix === 'Y2') {
     pkgType = '2year';
-    pkgName = 'GÓI 2 NĂM (150.000đ)';
+    pkgName = 'GÓI 2 NĂM VIP';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));

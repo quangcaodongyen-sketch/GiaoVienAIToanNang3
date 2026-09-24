@@ -1,3 +1,4 @@
+import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -40,9 +41,39 @@ interface ChuanHoaVBModalProps {
 // Mẫu văn bản hành chính thực chiến
 const SAMPLE_DOCS = [
   {
+    id: 'giaoan5512',
+    name: 'Giáo án 5512 (Toán 8 - Định lý Py-ta-go)',
+    raw: `TRUONG THCS DONG YEN
+TO CHUYEN MON KHTN
+Ho va ten giao vien: Dinh Van Thanh
+KE HOACH BAI DAY (GIAO AN)
+TEN BAI DAY: DINH LY PY-TA-GO
+Mon hoc: Toan hoc; Lop: Lop 8
+Thoi luong thuc hien: 1 tiet (45 phut)
+I. MUC TIEU
+1. Ve kien thuc:
+- Phat bieu duoc dinh ly Py-ta-go ve moi quan he giua ba canh cua tam giac vuong.
+- Tinh duoc do dai mot canh cua tam giac vuong khi biet do dai hai canh con lai.
+2. Ve nang luc:
+- Nang luc tu chu va tu hoc: Chu dong doc SGK, hoan thanh phieu hoc tap.
+- Nang luc tu duy toan hoc: So sanh, tinh toan va suy luan logic.
+3. Ve pham chat:
+- Cham chi, trung thuc va co trach nhiem trong hoat dong nhom.
+II. THIET BI DAY HOC
+- GV: Ke hoach bai day, PowerPoint, thuoc ke, e-ke, phieu hoc tap.
+- HS: SGK, vo ghi, thuoc ke, may tinh cam tay.
+III. TIEN TRINH DAY HOC
+- Hoat dong 1: Khoi dong (5 phut) - Tinh huong thuc te do chieu cao cay.
+- Hoat dong 2: Hinh thanh kien thuc (20 phut) - Do dac cac hinh vuong dung tren 3 canh tam giac vuong.
+- Hoat dong 3: Luyen tap (15 phut) - Giai bai tap 1, 2 SGK trang 65.
+- Hoat dong 4: Van dung (5 phut) - Do khoang cach thuc te tren san truong.
+IV. HO SO DAY HOC
+- Phieu hoc tap so 1 va tieu chi danh gia Rubrics.`
+  },
+  {
     id: 'quyetdinh',
     name: 'Quyết định (Kiện toàn Ban Chỉ đạo)',
-    raw: `UBND HUYEN BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 15/qd-thcsdy
 Dong yen, ngay 15 thang 9 nam 2026
@@ -50,7 +81,7 @@ QUYET DINH
 Ve viec kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong giao duc nam hoc 2026 - 2027
 HIEU TRUONG TRUONG THCS DONG YEN
 Can cu Dieu le truong trung hoc co so ban hanh kem theo Thong tu so 32/2020/TT-BGDDT;
-Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Phong GD&DT Bac Quang;
+Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Truong THCS Dong Yen;
 Xet de nghi cua Pho Hieu truong phu trach chuyen mon va To truong chuyen mon.
 QUYET DINH:
 Dieu 1. Kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong day hoc gom cac ong (ba) co ten sau:
@@ -61,7 +92,7 @@ Dieu 2. Ban Chi dao co trach nhiem xay dung ke hoach va trien khai ung dung he s
 Dieu 3. Cac to chuyen mon va cac ca nhan co ten tai Dieu 1 chiu trach nhiem thi hanh quyet dinh nay./.
 Noi nhan:
 - Nhu Dieu 3;
-- Phong GD&DT (de b/c);
+- UBND xa Dong Yen (de b/c);
 - Luu: VT, Ban CD.
 HIEU TRUONG
 (Ky, ghi ro ho ten va dong dau)
@@ -70,13 +101,13 @@ Nguyen Van A`
   {
     id: 'baocao',
     name: 'Báo cáo (Tổng kết ứng dụng AI)',
-    raw: `PHONG GD&DT BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 28/bc-thcsdy
 Dong Yen, ngay 20 thang 10 nam 2026
 BAO CAO
 Ket qua trien khai he sinh thai Giao vien AI Toan nang trong hoc ky I
-Kinh gui: Phong Giao duc va Dao tao Bac Quang.
+Kinh gui: Ban Giam hieu Truong THCS Dong Yen.
 Thuc hien Huong dan so 102/HD-PGDDT ve viec day manh chuyen doi so trong truong hoc;
 Truong THCS Dong Yen bao cao ket qua trien khai nhu sau:
 I. TINH HINH TRIEN KHAI
@@ -99,7 +130,7 @@ Nguyen Van A`
   {
     id: 'kehoach',
     name: 'Kế hoạch (Ngày hội STEM - AI)',
-    raw: `UBND HUYEN BAC QUANG
+    raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 08/kh-thcsdy
 Dong Yen, ngay 05 thang 11 nam 2026
@@ -129,9 +160,10 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   onOpenAdmin
 }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-CHVB-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
-  const [isVIP, setIsVIP] = useState<boolean>(false);
+  const [isVIP, setIsVIP] = useState<boolean>(true); // Miễn phí 100%
   const [licenseKeyInput, setLicenseKeyInput] = useState<string>('');
   const [activationMsg, setActivationMsg] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
   const [isActivating, setIsActivating] = useState<boolean>(false);
@@ -164,7 +196,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       wordsCount: number;
     };
   }>({
-    coQuanCapTren: 'UBND HUYỆN BẮC QUANG',
+    coQuanCapTren: 'UBND XÃ ĐỒNG YÊN',
     coQuanBanHanh: 'TRƯỜNG THCS ĐỒNG YÊN',
     soKyHieu: 'Số: 15/QĐ-THCSĐY',
     quocHieu: 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
@@ -173,7 +205,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     tenLoai: 'QUYẾT ĐỊNH',
     trichYeu: 'Về việc kiện toàn Ban Chỉ đạo Chuyển đổi số và Ứng dụng AI trong giáo dục năm học 2026 - 2027',
     noiDungHtml: '',
-    noiNhan: ['Như Điều 3;', 'Phòng GD&ĐT (để b/c);', 'Lưu: VT, Ban CĐ.'],
+    noiNhan: ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT, Ban CĐ.'],
     chucVu: 'HIỆU TRƯỞNG',
     nguoiKy: 'Nguyễn Văn A',
     stats: {
@@ -188,10 +220,10 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     if (isOpen) {
       const code = getOrCreateCHVBHardwareCode();
       setHwid(code);
-      const vip = isCHVBVIPActivated();
-      setIsVIP(vip);
+      const vip = true;
+      setIsVIP(true);
       if (!vip) {
-        getSecureCHVBTrialRemaining().then(setRemainingTrials);
+        setRemainingTrials(999999);
       } else {
         setRemainingTrials(999);
       }
@@ -199,6 +231,72 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   }, [isOpen]);
 
   // Bộ phân tích & Chuẩn hóa văn bản hành chính theo Nghị định 30/2020/NĐ-CP
+    // Tải file Word (.doc) thể thức chuẩn Nghị định 30/2020/NĐ-CP
+  const handleDownloadDocx = () => {
+    const htmlContent = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>${standardResult.tenLoai} - ${standardResult.soKyHieu}</title>
+    <style>
+      @page { size: A4; margin: 20mm 15mm 20mm 20mm; }
+      body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.35; color: #000; }
+      table { width: 100%; border-collapse: collapse; }
+      td { vertical-align: top; }
+    </style>
+    </head>
+    <body>
+      <table>
+        <tr>
+          <td style="width: 45%; text-align: center;">
+            <p style="font-size: 12pt; margin: 0;">${standardResult.coQuanCapTren}</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.coQuanBanHanh}</p>
+            <hr style="width: 35%; margin: 4px auto; border-top: 1px solid black;" />
+            <p style="font-size: 13pt; margin: 4px 0 0 0;">${standardResult.soKyHieu}</p>
+          </td>
+          <td style="width: 55%; text-align: center;">
+            <p style="font-size: 12pt; font-weight: bold; margin: 0;">${standardResult.quocHieu}</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.tieuNgu}</p>
+            <hr style="width: 50%; margin: 4px auto; border-top: 1px solid black;" />
+            <p style="font-size: 13pt; font-style: italic; margin: 4px 0 0 0;">${standardResult.diaDanhNgayThang}</p>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <div style="text-align: center;">
+        <h3 style="font-size: 14pt; font-weight: bold; margin: 0;">${standardResult.tenLoai}</h3>
+        <p style="font-size: 13pt; font-weight: bold; margin: 4px 0;">${standardResult.trichYeu}</p>
+        <hr style="width: 25%; margin: 4px auto; border-top: 1px solid black;" />
+      </div>
+      <br/>
+      <div style="text-align: justify; font-size: 13pt;">
+        ${standardResult.noiDungHtml}
+      </div>
+      <br/>
+      <table>
+        <tr>
+          <td style="width: 50%;">
+            <p style="font-size: 12pt; font-weight: bold; font-style: italic; margin: 0;">Nơi nhận:</p>
+            ${standardResult.noiNhan.map(n => `<p style="font-size: 11pt; margin: 2px 0;">- ${n}</p>`).join('')}
+          </td>
+          <td style="width: 50%; text-align: center;">
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.chucVu}</p>
+            <p style="font-size: 11pt; font-style: italic; margin: 30px 0;">(Ký, đóng dấu)</p>
+            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.nguoiKy}</p>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>`;
+    const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Van_Ban_Chuan_Hoa_ND30_${standardResult.soKyHieu.replace(/[^a-zA-Z0-9]/g, '_')}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleStandardize = async () => {
     if (!inputText.trim()) {
       alert('Vui lòng nhập nội dung văn bản cần chuẩn hóa!');
@@ -218,7 +316,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       await new Promise((r) => setTimeout(r, 450));
 
       const lines = inputText.split('\n').map(l => l.trim()).filter(Boolean);
-      let coQuanCapTren = 'UBND HUYỆN BẮC QUANG';
+      let coQuanCapTren = 'UBND XÃ ĐỒNG YÊN';
       let coQuanBanHanh = 'TRƯỜNG THCS ĐỒNG YÊN';
       let soKyHieu = 'Số: .../QĐ-THCSĐY';
       let diaDanhNgayThang = 'Đồng Yên, ngày ... tháng ... năm 2026';
@@ -317,7 +415,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         tenLoai,
         trichYeu,
         noiDungHtml: generatedHtml,
-        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'Phòng GD&ĐT (để b/c);', 'Lưu: VT.'],
+        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT.'],
         chucVu,
         nguoiKy,
         stats: {
@@ -642,8 +740,16 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
+                      onClick={handleDownloadDocx}
+                      className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer"
+                      title="Tải tệp Word (.doc) chuẩn hóa về máy"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Tải Word (.doc)</span>
+                    </button>
+                    <button
                       onClick={handleCopyFormatted}
-                      className="px-2.5 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold flex items-center gap-1 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                       title="Sao chép toàn bộ văn bản"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -830,6 +936,44 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </h4>
                   <div className="space-y-2.5">
                     <a
+                      href="/Cai_Dat_AI_Word.exe"
+                      download="Cai_Dat_AI_Word.exe"
+                      className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
+                          EXE
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white group-hover:text-blue-300">
+                            Bộ Cài Desktop (.exe)
+                          </p>
+                          <p className="text-[10px] text-slate-400">Cài đặt tự động vào Windows</p>
+                        </div>
+                      </div>
+                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                    </a>
+
+                    <a
+                      href="/AI_Word_Assistant.dotm"
+                      download="AI_Word_Assistant.dotm"
+                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xs">
+                          DOTM
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white group-hover:text-purple-300">
+                            Template Word Add-in (.dotm)
+                          </p>
+                          <p className="text-[10px] text-slate-400">Ribbon Soạn 5512 & Chuẩn hóa NĐ 30</p>
+                        </div>
+                      </div>
+                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                    </a>
+
+                    <a
                       href="/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
                       download="Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-900/40 to-slate-800 hover:from-amber-800/60 hover:to-slate-700 border border-amber-600/40 transition-all group"
@@ -976,12 +1120,12 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                 <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
                   <span className="text-xs text-slate-400">Hỗ trợ kỹ thuật 24/7:</span>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    href={`https://zalo.me/${BRAND.phoneRaw}`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-1.5 rounded-lg bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-[#0068FF] hover:text-blue-300 border border-[#0068FF]/40 text-xs font-bold flex items-center gap-1.5 transition-colors"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.author.phone})
+                    <ExternalLink className="w-3.5 h-3.5" /> Nhắn Zalo Thầy Thành ({BRAND.phone})
                   </a>
                 </div>
               </div>
@@ -992,7 +1136,14 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Các Gói Bản Quyền Chuẩn Hóa Văn Bản AI
                   </h4>
-                  <span className="text-[11px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowTrialRegister(true)}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Đăng Ký Thành Viên / Dùng Thử
+                  </button>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
@@ -1061,6 +1212,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
           </div>
         )}
       </div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="chuan-hoa-nd30" initialAppName="Chuẩn Hóa Văn Bản NĐ 30 & Soạn 5512" />
     </div>
   );
 };

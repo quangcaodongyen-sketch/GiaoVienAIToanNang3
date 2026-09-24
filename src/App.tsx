@@ -1,3 +1,4 @@
+import { cloudSyncService } from './services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Menu, 
@@ -17,11 +18,14 @@ import {
   Layers,
   ArrowRight,
   Crown,
-  Search
+  Search,
+  ShieldAlert
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
+import { TrialRegisterModal } from './components/TrialRegisterModal';
+import { activityTrackingService } from './services/activityTrackingService';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
@@ -46,7 +50,29 @@ export default function App() {
   const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
+  const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  const [showTrialModal, setShowTrialModal] = useState(false);
+  const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
+  useEffect(() => {
+    // 👑 TỰ ĐỘNG KÍCH HOẠT ĐẶC QUYỀN MÁY THẦY THÀNH (DÙNG THỬ THOẢI MÁI KHÔNG GIỚI HẠN)
+    localStorage.setItem('gvai_unlimited_machine', 'true');
+    localStorage.setItem('gvai_taode_active_key', 'DVT-ENG-LIFETIME-MASTER-PRO-KEY');
+    localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
+    localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
+    localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
+
+    const mid = activityTrackingService.getOrCreateMachineId();
+    setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
+
+    // Kiểm tra trạng thái máy tính từ Cloud
+    cloudSyncService.checkCurrentMachineCloudStatus(mid).then(res => {
+      if (res.isBlocked) {
+        activityTrackingService.blockMachine(mid, 'Đồng bộ khóa từ Cloud');
+        setIsCurrentBlocked(true);
+      }
+    });
+  }, []);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -80,9 +106,21 @@ export default function App() {
 
   // Lắng nghe URL hash để mở modal tương ứng khi người dùng truy cập link trực tiếp
   useEffect(() => {
+    activityTrackingService.trackAppVisit('home', 'Trang Chủ Giáo Viên AI Toàn Năng');
     const handleHash = () => {
       const hash = window.location.hash;
+      if (hash === '#dung-thu' || hash === '#trial') {
+        setShowTrialModal(true);
+        return;
+      }
       if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
+      else if (hash === '#tao-de-toan') { setThcs8MonSelectedSubject('TOAN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-van') { setThcs8MonSelectedSubject('VAN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-khtn') { setThcs8MonSelectedSubject('KHTN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-sudia') { setThcs8MonSelectedSubject('SUDIA'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-tin') { setThcs8MonSelectedSubject('TIN'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-gdcd') { setThcs8MonSelectedSubject('GDCD'); setShowTaoDeTHCS8MonModal(true); }
+      else if (hash === '#tao-de-cn') { setThcs8MonSelectedSubject('CN'); setShowTaoDeTHCS8MonModal(true); }
       else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
       else if (hash === '#screen-record') setShowScreenRecordModal(true);
       else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);
@@ -168,6 +206,48 @@ export default function App() {
       setShowTachGopPDFModal(true);
       return;
     }
+    if (app.id === 'tao-de-toan-thcs' || app.url === '#tao-de-toan') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('TOAN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-van-thcs' || app.url === '#tao-de-van') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('VAN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-khtn-thcs' || app.url === '#tao-de-khtn') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('KHTN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-sudia-thcs' || app.url === '#tao-de-sudia') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('SUDIA');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tin-thcs' || app.url === '#tao-de-tin') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('TIN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-gdcd-thcs' || app.url === '#tao-de-gdcd') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('GDCD');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-cn-thcs' || app.url === '#tao-de-cn') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('CN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
     if (app.id === 'trung-tam-tao-de-thcs-8mon' || app.url === '#tao-de-thcs-8mon') {
       e.preventDefault();
       setShowTaoDeTHCS8MonModal(true);
@@ -243,11 +323,14 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-base sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
-                    {BRAND.websiteTitle}
+                  <h1 className="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-[#0f2b48] via-[#123A63] to-[#2563EB] bg-clip-text text-transparent">
+                    GIÁO VIÊN AI TOÀN NĂNG
                   </h1>
-                  <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
-                    AI 4.0
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs">
+                    BẢN CHÍNH THỨC
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm border border-emerald-400/40">
+                    👑 MÁY THẦY THÀNH (VIP PRO)
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
@@ -285,6 +368,16 @@ export default function App() {
                 <Phone className="w-4 h-4 text-teal-600" />
                 <span>Liên hệ</span>
               </a>
+
+              {/* Nút Đăng Ký Dùng Thử 5 Lần */}
+              <button
+                onClick={() => setShowTrialModal(true)}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-600/20 transition-all text-xs font-black flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                title="Đăng ký dùng thử 5 lần miễn phí"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>ĐĂNG KÝ THÀNH VIÊN</span>
+              </button>
 
               {/* Quản trị Cloud Button */}
               <button
@@ -379,7 +472,109 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="flex-1">
+            <main className="flex-1">
+        {/* HERO SECTION - GIÁO VIÊN AI TOÀN NĂNG */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-[#081329] via-[#0E1E38] to-[#122B4F] text-white pt-10 pb-14 sm:pt-14 sm:pb-20 border-b border-blue-900/40">
+          {/* Ambient Lighting Gradients */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/20 to-teal-400/10 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 -left-24 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          {/* Grid pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '28px 28px'
+            }}
+          />
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Version 3.0 Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-teal-500/20 border border-blue-400/40 text-blue-200 text-xs font-black uppercase tracking-wider shadow-lg shadow-blue-500/10 mb-5">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+              </span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG • BẢN CHÍNH THỨC 2026</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight max-w-4xl mx-auto">
+              Đột Phá Giảng Dạy & Quản Lý Với{' '}
+              <span className="bg-gradient-to-r from-amber-300 via-rose-400 to-cyan-400 bg-clip-text text-transparent">
+                Giáo Viên AI Toàn Năng
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+              Trọn bộ 17 siêu công cụ trí tuệ nhân tạo chuyên sâu dành cho giáo viên: Tạo đề 8 môn THCS chuẩn CV 7991, Chuẩn hóa văn bản hành chính NĐ 30, Soạn giáo án 5512, Luyện nghe tiếng Anh, Quay video bài giảng và tối ưu máy tính.
+            </p>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mt-8 sm:mt-10">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-amber-400 font-extrabold text-xl sm:text-2xl">
+                  <span>17+</span>
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Siêu Công Cụ AI Thực Chiến</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-cyan-400 font-extrabold text-xl sm:text-2xl">
+                  <span>100%</span>
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Chuẩn CV 7991, 5512 & NĐ 30</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-emerald-400 font-extrabold text-xl sm:text-2xl">
+                  <span>1-Click</span>
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Add-in Word & Bản PC Cài Đặt</div>
+              </div>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-2 text-rose-400 font-extrabold text-xl sm:text-2xl">
+                  <span>24/7</span>
+                  <Crown className="w-4 h-4" />
+                </div>
+                <div className="text-xs text-slate-300 font-medium mt-1">Bản Quyền Đám Mây An Toàn</div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <a
+                href="#apps"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-blue-600/30 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95"
+              >
+                <span>Khám Phá 17 Công Cụ Ngay</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+
+              <button
+                onClick={() => setShowAdminDashboard(true)}
+                className="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm sm:text-base border border-white/20 backdrop-blur-md flex items-center gap-2 transition-all hover:border-amber-400/50"
+              >
+                <Crown className="w-4 h-4 text-amber-400" />
+                <span>Quản Trị Bản Quyền Cloud</span>
+              </button>
+
+              <a
+                href={BRAND.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3.5 rounded-2xl bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/40 font-bold text-sm sm:text-base flex items-center gap-2 transition-all"
+              >
+                <MessageCircle className="w-4 h-4 text-teal-400" />
+                <span>Zalo Hỗ Trợ: {BRAND.phone}</span>
+              </a>
+            </div>
+          </div>
+        </section>
         {/* APPS SECTION (PRIMARY SHOWCASE) */}
         <section id="apps" className="pt-6 pb-16 sm:pt-8 sm:pb-20 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -516,7 +711,11 @@ export default function App() {
                             HOT
                           </span>
                         )}
-                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-[#123A63]/90 text-white backdrop-blur-xs shadow-xs">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-xs shadow-xs ${
+                          app.badge === 'MIỄN PHÍ'
+                            ? 'bg-emerald-600 text-white border border-emerald-400/40'
+                            : 'bg-gradient-to-r from-amber-600 to-rose-600 text-white border border-amber-400/30'
+                        }`}>
                           {app.badge}
                         </span>
                       </div>
@@ -542,10 +741,10 @@ export default function App() {
                         onClick={(e) => handleAppClick(app, e)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-xs group-hover:shadow-md"
+                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]"
                       >
-                        Truy cập ứng dụng
-                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                        Mở công cụ ngay
+                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>
@@ -880,6 +1079,7 @@ export default function App() {
       <TaoDeTHCS8MonModal
         isOpen={showTaoDeTHCS8MonModal}
         onClose={closeAllModals}
+        initialSubject={thcs8MonSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
@@ -888,6 +1088,57 @@ export default function App() {
         isOpen={showAdminDashboard}
         onClose={closeAllModals}
       />
+
+            {/* CẢNH BÁO KHI MÁY TÍNH BỊ ADMIN XÓA / KHÓA TRUY CẬP */}
+      {isCurrentBlocked && (
+        <div className="fixed inset-0 z-[99999] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-slate-900 border-2 border-rose-500/80 rounded-3xl p-6 text-center shadow-2xl shadow-rose-500/20 space-y-4">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/40">
+              <ShieldAlert className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-black text-white">THIẾT BỊ ĐÃ BỊ VÔ HIỆU HÓA</h2>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Tài khoản / Thiết bị này đã bị Quản trị viên xóa hoặc tạm thời vô hiệu hóa quyền truy cập theo chính sách hệ thống.
+            </p>
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-cyan-400">
+              Mã thiết bị: <strong>{activityTrackingService.getOrCreateMachineId()}</strong>
+            </div>
+            <p className="text-xs text-slate-400">
+              Vui lòng liên hệ trực tiếp Thầy giáo <strong>Đinh Văn Thành</strong> để được xem xét mở khóa:
+            </p>
+            <a
+              href={`https://zalo.me/${BRAND.phoneRaw}?text=Thay%20Thanh%20oi,%20may%20toi%20ma%20${activityTrackingService.getOrCreateMachineId()}%20bi%20khoa,%20nho%20Thay%20ho%20tro%20mo%20khoa%20giup%20toi!`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full py-3 rounded-xl bg-[#0068FF] hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Nhắn Zalo Thầy Thành ({BRAND.phone})
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ĐĂNG KÝ DÙNG THỬ 5 LẦN */}
+      <TrialRegisterModal
+        isOpen={showTrialModal}
+        onClose={() => setShowTrialModal(false)}
+      />
+      {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
+      <a
+        href={BRAND.zaloUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-40 p-3 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-[#0D9488] to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-teal-900/40 flex items-center gap-2 hover:scale-105 transition-all border border-teal-400/30 group"
+        title="Chat Zalo Thầy Đinh Văn Thành (0915.213717)"
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-300"></span>
+        </span>
+        <MessageCircle className="w-5 h-5 text-white" />
+        <span className="hidden sm:inline font-semibold">Zalo Thầy Thành: {BRAND.phone}</span>
+      </a>
     </div>
   );
 }

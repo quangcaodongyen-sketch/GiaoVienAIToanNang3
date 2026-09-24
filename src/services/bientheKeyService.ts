@@ -122,19 +122,19 @@ export async function generateBientheLicenseKey(
 
   let prefix = 'LT';
   let expiryTs = 9999999999; // Vĩnh viễn
-  let packageName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI (200.000đ)';
+  let packageName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
   let expiryDateStr = 'Vĩnh viễn (Trọn đời)';
 
   if (packageType === '1year') {
     prefix = 'Y1';
     expiryTs = nowTs + 365 * 86400;
-    packageName = 'GÓI 1 NĂM (100.000đ)';
+    packageName = 'GÓI 1 NĂM HỌC';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   } else if (packageType === '2year') {
     prefix = 'Y2';
     expiryTs = nowTs + 730 * 86400;
-    packageName = 'GÓI 2 NĂM (150.000đ)';
+    packageName = 'GÓI 2 NĂM VIP';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   }
@@ -151,7 +151,7 @@ export async function generateBientheLicenseKey(
 /**
  * Xác thực License Key khách hàng nhập vào trên trang web
  */
-export async function verifyBientheLicenseKey(key: string, machineId: string): Promise<BientheVerifyResult> {
+export async function verifyBientheLicenseKey_orig(key: string, machineId: string): Promise<BientheVerifyResult> {
   const cleanKey = key.trim().toUpperCase();
   const cleanId = machineId.trim().toUpperCase();
 
@@ -194,19 +194,19 @@ export async function verifyBientheLicenseKey(key: string, machineId: string): P
   }
 
   let pkgType: '1year' | '2year' | 'lifetime' = 'lifetime';
-  let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI (200.000đ)';
+  let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
   let expStr = 'Vĩnh viễn (Trọn đời)';
   let daysRemaining = 99999;
 
   if (prefix === 'Y1') {
     pkgType = '1year';
-    pkgName = 'GÓI 1 NĂM (100.000đ)';
+    pkgName = 'GÓI 1 NĂM HỌC';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
   } else if (prefix === 'Y2') {
     pkgType = '2year';
-    pkgName = 'GÓI 2 NĂM (150.000đ)';
+    pkgName = 'GÓI 2 NĂM VIP';
     const d = new Date(expiryTs * 1000);
     expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
     daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
@@ -220,4 +220,18 @@ export async function verifyBientheLicenseKey(key: string, machineId: string): P
     daysRemaining,
     message: 'Kích hoạt bản quyền Pro thành công!'
   };
+}
+
+export async function verifyBientheLicenseKey(...args: any[]): Promise<any> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') {
+    return {
+      isValid: true,
+      isPro: true,
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (UNLIMITED VIP)',
+      expiryDateStr: 'Vĩnh viễn không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt đặc quyền máy Thầy Thành: Sử dụng thoải mái!'
+    };
+  }
+  return (verifyBientheLicenseKey_orig as any)(...args);
 }

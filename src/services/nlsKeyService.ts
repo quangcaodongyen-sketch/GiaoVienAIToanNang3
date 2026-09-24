@@ -125,9 +125,9 @@ export async function generateEd25519Key(
     expDate = `${yyyy}-${mm}-${dd}`;
     planName = `${years} Năm`;
     const priceMap: Record<number, string> = {
-      1: '150.000 VNĐ',
-      2: '250.000 VNĐ',
-      3: '300.000 VNĐ'
+      1: 'Gói 1 Năm',
+      2: 'Gói 2 Năm',
+      3: 'Gói 3 Năm'
     };
     price = priceMap[years] || `${years} Năm`;
   }

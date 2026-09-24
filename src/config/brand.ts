@@ -7,6 +7,7 @@ export const BRAND = {
   address: "Xã Đồng Yên, tỉnh Tuyên Quang",
   phone: "0915.213717",
   phoneRaw: "0915213717",
+  zalo: "0915213717",
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
   slogan: "Công nghệ gần gũi – Dạy học hiệu quả",
@@ -54,3 +55,39 @@ export const EXAM_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+
+
+// CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG
+export const PRICING = {
+  // Gói 1 Năm cho từng app
+  year1: {
+    price: 0,
+    priceFormatted: 'Báo giá qua Zalo',
+    duration: '1 năm học (12 tháng)',
+    note: 'Sử dụng trọn vẹn 1 năm cho 1 ứng dụng chuyên môn'
+  },
+  // Gói 2 Năm cho từng app (Khuyến mại đặc biệt đến hết tháng 11/2026)
+  year2: {
+    promoPrice: 0,
+    promoPriceFormatted: 'Báo giá qua Zalo',
+    originalPrice: 0,
+    originalPriceFormatted: 'Báo giá qua Zalo',
+    duration: '2 năm học (24 tháng - ưu đãi sư phạm)',
+    promoDeadline: 'Ưu đãi năm học 2026 - 2027',
+    promoDeadlineShort: 'Ưu đãi 2026',
+    saveAmount: 'Ưu đãi sư phạm'
+  },
+  // Gói Full Web Hệ Sinh Thái (Mở khóa tất cả các app)
+  fullWeb: {
+    price: 0,
+    priceFormatted: 'Báo giá qua Zalo',
+    title: 'GÓI FULL WEB TOÀN NĂNG (TẤT CẢ PHẦN MỀM)',
+    description: 'Mở khóa trọn bộ toàn bộ các app trên web: Tạo đề 8 môn, Tiếng Anh Global Success, Giáo án 5512 & NĐ 30, Sinh 3 đề biến thể, Dọn rác PC, PDF Suite Pro, Năng lực số AI...',
+    badge: '👑 ƯU ĐÃI SƯ PHẠM - DÙNG FULL APP'
+  },
+  // Số lượt dùng thử miễn phí
+  trial: {
+    count: 5,
+    description: 'Đăng ký thành viên được dùng thử ngay 5 lần miễn phí không cần chờ Admin xác nhận.'
+  }
+};

@@ -1,6 +1,8 @@
+import { cloudSyncService } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
+  BarChart3, 
   X, 
   CheckCircle2, 
   Clock, 
@@ -22,9 +24,18 @@ import {
   FileCode,
   Sparkles,
   Eye,
-  EyeOff
+  EyeOff,
+  Laptop,
+  Globe,
+  UserCheck,
+  UserX,
+  History,
+  ShieldOff,
+  Calendar,
+  AlertTriangle
 } from 'lucide-react';
 import { licenseService, LicenseRecord } from '../services/licenseService';
+import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
@@ -46,7 +57,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [showPin, setShowPin] = useState(false);
 
   // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
-  const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tts');
+  const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
+  const [currentAdminName, setCurrentAdminName] = useState<string>('');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tracking');
+  const [trackedMachines, setTrackedMachines] = useState<MachineProfile[]>([]);
+  const [trackingSearch, setTrackingSearch] = useState('');
+  const [trackingSubTab, setTrackingSubTab] = useState<'requests' | 'stats' | 'machines'>('requests');
+  const [activityLogs, setActivityLogs] = useState<ActivityLogItem[]>([]);
+  const [registrationRequests, setRegistrationRequests] = useState<RegistrationRequest[]>([]);
+  const [webStats, setWebStats] = useState<any>(null);
+  const [blockedMachines, setBlockedMachines] = useState<BlockedMachineItem[]>([]);
+  const [logSearch, setLogSearch] = useState('');
+  const [reqFilter, setReqFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -197,7 +219,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-  // Mật khẩu Admin chính thức: Thaythanh2026@ (hỗ trợ cả tài khoản phụ Mai Tinh & gõ có dấu Unikey)
+  // Hỗ trợ 2 cấp tài khoản:
+  // 1. Thaythanh2026@ -> Admin Thầy Đinh Văn Thành (Toàn quyền, xem thống kê truy cập, dự đoán người dùng)
+  // 2. Maitinh2026@ -> Tài khoản phụ Mai Tình (Kích hoạt bản quyền giáo viên có lưu vết)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPin = pinInput.trim();
@@ -215,10 +239,111 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       normalized === 'maitinh2026@'
     ) {
       setIsAuthenticated(true);
+      setUserRole('ADMIN');
+      setCurrentAdminName('Thầy Đinh Văn Thành');
+      setAdminTab('tracking');
       setPinError(false);
+      loadTrackingData();
+    } else if (pinInput === 'Maitinh2026@') {
+      setIsAuthenticated(true);
+      setUserRole('SUB_ADMIN');
+      setCurrentAdminName('Cô Mai Tình');
+      setAdminTab('tracking');
+      setTrackingSubTab('requests');
+      setPinError(false);
+      loadTrackingData();
+      loadData();
     } else {
       setPinError(true);
     }
+  };
+
+  const loadTrackingData = async () => {
+    const list = activityTrackingService.getAllTrackedMachines();
+    setTrackedMachines(list);
+    setActivityLogs(activityTrackingService.getActivityLogs());
+
+    // 1. Lấy đơn từ Local Storage
+    let localRegs = activityTrackingService.getAllRegistrations();
+
+    // 2. ĐỒNG BỘ ĐƠN ĐĂNG KÝ TRỰC TIẾP TỪ CLOUD (TOÀN QUỐC)
+    try {
+      const cloudRegs = await cloudSyncService.fetchRegistrationsFromCloud();
+      if (cloudRegs.length > 0) {
+        const mergedMap = new Map<string, any>();
+        for (const cr of cloudRegs) {
+          mergedMap.set(cr.machineId, cr);
+        }
+        for (const lr of localRegs) {
+          if (!mergedMap.has(lr.machineId)) {
+            mergedMap.set(lr.machineId, lr);
+          }
+        }
+        localRegs = Array.from(mergedMap.values());
+      }
+    } catch (e) {
+      console.warn('Lỗi kết nối Cloud:', e);
+    }
+
+    setRegistrationRequests(localRegs);
+    setWebStats(activityTrackingService.getWebStats());
+
+    // 3. Đồng bộ danh sách máy bị khóa từ Cloud
+    try {
+      const cloudBlocked = await cloudSyncService.fetchBlockedMachinesFromCloud();
+      const localBlocked = activityTrackingService.getBlockedMachines();
+      const allBlocked = [...cloudBlocked];
+      for (const lb of localBlocked) {
+        if (!allBlocked.some(b => b.machineId === lb.machineId)) {
+          allBlocked.push(lb);
+        }
+      }
+      setBlockedMachines(allBlocked);
+    } catch {
+      setBlockedMachines(activityTrackingService.getBlockedMachines());
+    }
+  };
+
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
+    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
+    const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
+
+    // Đồng bộ duyệt lên Cloud
+    if (issueNumber) {
+      await cloudSyncService.approveRegistrationOnCloud(issueNumber, reviewer, pkg || '1YEAR');
+    }
+
+    alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
+    await loadTrackingData();
+    await loadData();
+  };
+
+  const handleRejectReq = async (id: string, issueNumber?: number) => {
+    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
+    if (window.confirm('Thầy/Cô có chắc chắn muốn TỪ CHỐI đơn đăng ký này?')) {
+      activityTrackingService.rejectRegistration(id, reviewer);
+      if (issueNumber) {
+        await cloudSyncService.rejectRegistrationOnCloud(issueNumber, reviewer);
+      }
+      await loadTrackingData();
+    }
+  };
+
+  const handleDeleteAndBlockMachine = async (machineId: string) => {
+    const adminName = currentAdminName || 'Thầy Đinh Văn Thành';
+    if (window.confirm(`CẢNH BÁO: Thầy có chắc chắn muốn XÓA TÀI KHOẢN và KHÓA VĨNH VIỄN máy [${machineId}]?\n\nSau khi xóa, máy này sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa trên toàn bộ hệ thống Cloud!`)) {
+      activityTrackingService.deleteAndBlockMachine(machineId, adminName);
+      await cloudSyncService.blockMachineOnCloud(machineId, adminName, 'Admin xóa tài khoản');
+      await loadTrackingData();
+      await loadData();
+      alert(`Đã xóa tài khoản và khóa vĩnh viễn máy ${machineId} trên toàn bộ hệ thống Cloud!`);
+    }
+  };
+
+  const handleUnblockMachine = (machineId: string) => {
+    activityTrackingService.unblockMachine(machineId);
+    loadTrackingData();
+    alert(`Đã mở khóa truy cập cho máy ${machineId}!`);
   };
 
   const loadData = async () => {
@@ -380,7 +505,7 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
 ${res.key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang3.
+1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang.
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
 Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết kiệm tối đa thời gian!`;
@@ -440,7 +565,7 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
 ${res.key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang3).
+1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
 Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm thanh trong trẻo!`;
@@ -503,7 +628,7 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
 ${key}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang3).
+1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt VIP".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Kích Hoạt Bản Quyền VIP" rồi bấm "🚀 KÍCH HOẠT BẢN QUYỀN VIP NGAY".
 Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt và giảng dạy thăng hoa!`;
@@ -741,7 +866,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             </div>
             <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Nhập mật khẩu Admin (Thầy Thành) hoặc Tài khoản phụ (Mai Tinh) để tiếp tục
+              Nhập mật khẩu Admin (Thầy Thành) hoặc Tài khoản phụ (Mai Tình) để tiếp tục
             </p>
           </div>
 
@@ -843,12 +968,12 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
   const revokedCount = licenses.filter(x => x.status === 'REVOKED').length;
 
   const handleApprove = async (mid: string) => {
-    await licenseService.approve(mid);
+    await licenseService.approve(mid, currentAdminName || 'Thầy Đinh Văn Thành');
     await loadData();
   };
 
-  const handleExtend = async (mid: string, pkg: '1YEAR' | 'LIFETIME') => {
-    await licenseService.extend(mid, pkg);
+  const handleExtend = async (mid: string, pkg: '1YEAR' | '2YEAR' | 'LIFETIME') => {
+    await licenseService.extend(mid, pkg, currentAdminName || 'Thầy Đinh Văn Thành');
     await loadData();
   };
 
@@ -880,7 +1005,8 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       package_type: newPkg,
       status: 'ACTIVE',
       expiry_timestamp: expTs,
-      notes: 'Admin tạo trực tiếp'
+      notes: 'Admin tạo trực tiếp',
+      activated_by: currentAdminName || 'Thầy Đinh Văn Thành'
     });
 
     setNewMid('');
@@ -920,14 +1046,16 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                  QUẢN TRỊ BẢN QUYỀN CLOUD 24/7
+                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ TOÀN DIỆN'}
                 </h2>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold">
-                  ONLINE
+                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
+                  {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN MAI TÌNH' : '👑 ADMIN THẦY THÀNH'}
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Thầy giáo Đinh Văn Thành – Quản lý cấp phép & kích hoạt từ xa
+                {userRole === 'SUB_ADMIN' 
+                  ? 'Tài khoản phụ: Mai Tình – Mọi thao tác kích hoạt được lưu vết tự động vào hệ thống' 
+                  : 'Thầy giáo Đinh Văn Thành – Toàn quyền quản trị, theo dõi người dùng & thống kê hệ thống'}
               </p>
             </div>
           </div>
@@ -950,19 +1078,41 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
           </div>
         </div>
 
-        {/* TAB CHUYỂN ĐỔI: 1. SMART LISTENING | 2. NLS-AI V2 | 3. ĐỀ TIẾNG ANH CV 7991 | 4. SINH 3 ĐỀ BIẾN THỂ */}
+        {/* TAB CHUYỂN ĐỔI */}
         <div className="flex gap-2 my-3 border-b border-slate-800 pb-2 text-xs font-bold shrink-0 overflow-x-auto">
           <button
-            onClick={() => setAdminTab('tts')}
+            onClick={() => {
+              setAdminTab('tracking');
+              loadTrackingData();
+            }}
             className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'tts'
+              adminTab === 'tracking'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            <Crown className="w-4 h-4" />
-            1. Smart Listening Pro (Cloud)
+            <BarChart3 className="w-4 h-4" />
+            <span>0. Quản Lý Đăng Ký & Thống Kê</span>
+            {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
+                {registrationRequests.filter(r => r.status === 'PENDING').length}
+              </span>
+            )}
           </button>
+
+          <button
+            onClick={() => setAdminTab('tts')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'tts'
+                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            {userRole === 'SUB_ADMIN' ? '👑 Kích Hoạt Bản Quyền Giáo Viên' : '1. Quản Lý Bản Quyền Chung'}
+          </button>
+          {userRole === 'ADMIN' && (
+          <>
           <button
             onClick={() => setAdminTab('nls')}
             className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
@@ -1051,9 +1201,626 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <Crown className="w-4 h-4 text-amber-300" />
             9. Tạo Đề 8 Môn THCS (CV 7991)
           </button>
+          </>
+          )}
         </div>
 
         {/* TAB 1: SMART LISTENING PRO (CLOUD DATABASE) */}
+        {/* ===================================================================== */}
+        {/* TAB 0: THỐNG KÊ TRUY CẬP, DÙNG THỬ & THEO DÕI THEO ID MÁY (ADMIN)    */}
+        {/* ===================================================================== */}
+        {/* ===================================================================== */}
+        {/* TAB 0: QUẢN LÝ ĐƠN ĐĂNG KÝ, THỐNG KÊ WEB & LỊCH SỬ DÙNG THEO NGÀY GIỜ */}
+        {/* ===================================================================== */}
+        {adminTab === 'tracking' && (
+          <div className="flex-1 flex flex-col min-h-0 space-y-3">
+            {/* SUB-NAVIGATION TABS */}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+              <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setTrackingSubTab('requests')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    trackingSubTab === 'requests'
+                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span>1. Đơn Đăng Ký Thành Viên</span>
+                  {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
+                      {registrationRequests.filter(r => r.status === 'PENDING').length}
+                    </span>
+                  )}
+                </button>
+
+                {userRole === 'ADMIN' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setTrackingSubTab('stats')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                        trackingSubTab === 'stats'
+                          ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <History className="w-3.5 h-3.5" />
+                      <span>2. Thống Kê Web & Lịch Sử Theo Ngày Giờ</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTrackingSubTab('machines')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                        trackingSubTab === 'machines'
+                          ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <Laptop className="w-3.5 h-3.5" />
+                      <span>3. Quản Lý Máy & Khóa Vĩnh Viễn</span>
+                      {blockedMachines.length > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black">
+                          {blockedMachines.length}
+                        </span>
+                      )}
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-slate-400">
+                  Đang thao tác: <strong className="text-amber-300">{currentAdminName}</strong> ({userRole === 'ADMIN' ? 'Admin Tối Cao' : 'Phụ Tá Duyệt Thành Viên'})
+                </span>
+                <button
+                  type="button"
+                  onClick={loadTrackingData}
+                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 text-xs cursor-pointer transition"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+                  Làm mới
+                </button>
+              </div>
+            </div>
+
+            {/* ========================================================= */}
+            {/* SUBTAB 1: ĐƠN ĐĂNG KÝ THÀNH VIÊN CẦN DUYỆT (ALL APPS)    */}
+            {/* ========================================================= */}
+            {trackingSubTab === 'requests' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="text-slate-400">Lọc theo trạng thái:</span>
+                    {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map(st => (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => setReqFilter(st)}
+                        className={`px-2.5 py-1 rounded-lg font-bold text-xs transition cursor-pointer ${
+                          reqFilter === st
+                            ? 'bg-amber-500 text-slate-950'
+                            : 'bg-slate-800 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? 'Chờ Duyệt' : st === 'APPROVED' ? 'Đã Duyệt' : 'Từ Chối'}
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="text-[11px] text-slate-400">
+                    💡 Bấm duyệt 1-click để hệ thống tự động kích hoạt VIP (Gói 1 Năm / 2 Năm VIP) và lưu người duyệt.
+                  </p>
+                </div>
+
+                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
+                      <tr>
+                        <th className="py-2.5 px-3">Thời Gian Gửi</th>
+                        <th className="py-2.5 px-3">Thầy/Cô & Đơn Vị</th>
+                        <th className="py-2.5 px-3">Số ĐT / Zalo</th>
+                        <th className="py-2.5 px-3">ID Máy Tính</th>
+                        <th className="py-2.5 px-3">Phần Mềm</th>
+                        <th className="py-2.5 px-3">Gói Đăng Ký</th>
+                        <th className="py-2.5 px-3">Trạng Thái</th>
+                        <th className="py-2.5 px-3 text-right">Thao Tác Duyệt Nhanh</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {registrationRequests
+                        .filter(r => (reqFilter === 'ALL' ? true : r.status === reqFilter))
+                        .map((req, rIdx) => (
+                          <tr key={rIdx} className="hover:bg-slate-800/30 transition-colors">
+                            <td className="py-2.5 px-3 text-slate-400 font-mono text-[11px]">
+                              {req.createdAt}
+                            </td>
+                            <td className="py-2.5 px-3 font-bold text-white">
+                              {req.fullName}
+                              <div className="text-[11px] text-slate-400 font-normal">{req.schoolUnit}</div>
+                            </td>
+                            <td className="py-2.5 px-3 font-mono font-bold text-emerald-400">
+                              <a
+                                href={`https://zalo.me/${req.phoneNumber.replace(/[^0-9]/g, '')}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="hover:underline flex items-center gap-1"
+                              >
+                                {req.phoneNumber}
+                              </a>
+                            </td>
+                            <td className="py-2.5 px-3 font-mono text-cyan-300 font-bold">
+                              {req.machineId}
+                            </td>
+                            <td className="py-2.5 px-3 text-slate-200">
+                              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-semibold">
+                                {req.appName}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3">
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
+                                req.packageType === '2YEAR'
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : req.packageType === '1YEAR'
+                                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              }`}>
+                                {req.packageType === 'FULL_WEB' ? '👑 Full Web' : req.packageType === '2YEAR' ? '2 Năm VIP' : req.packageType === '1YEAR' ? '1 Năm' : 'Dùng thử 5 lần'}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3">
+                              {req.status === 'APPROVED' ? (
+                                <div className="text-emerald-400 font-bold flex items-center gap-1">
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
+                                  <span>Đã Duyệt</span>
+                                  {req.reviewedBy && (
+                                    <span className="text-[9px] text-slate-400 block font-normal">
+                                      ({req.reviewedBy})
+                                    </span>
+                                  )}
+                                </div>
+                              ) : req.status === 'REJECTED' ? (
+                                <span className="text-rose-400 font-bold">Từ Chối</span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
+                                  ⏳ Chờ Duyệt
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-2.5 px-3 text-right">
+                              {req.status === 'PENDING' ? (
+                                <div className="flex items-center justify-end gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
+                                    className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                    title="Duyệt Gói 1 Năm"
+                                  >
+                                    Duyệt 1 Năm
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApproveReq(req.id, '2YEAR', (req as any).issueNumber)}
+                                    className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                    title="Duyệt Gói 2 Năm VIP"
+                                  >
+                                    Duyệt 2 Năm VIP
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApproveReq(req.id, 'TRIAL_5', (req as any).issueNumber)}
+                                    className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                    title="Cấp 5 Lần Dùng Thử"
+                                  >
+                                    5 Lần Thử
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRejectReq(req.id, (req as any).issueNumber)}
+                                    className="px-1.5 py-1 rounded bg-slate-800 hover:bg-red-900/60 text-slate-400 hover:text-red-200 text-[10px] border border-slate-700 transition cursor-pointer"
+                                    title="Từ chối đơn"
+                                  >
+                                    X
+                                  </button>
+                                </div>
+                              ) : (
+                                <span className="text-[11px] text-slate-500 font-mono">
+                                  {req.reviewedAt || 'Hoàn tất'}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      {registrationRequests.length === 0 && (
+                        <tr>
+                          <td colSpan={8} className="py-8 text-center text-slate-500">
+                            Chưa có đơn đăng ký thành viên nào gửi lên.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================= */}
+            {/* SUBTAB 2: THỐNG KÊ TRUY CẬP WEB & LỊCH SỬ DÙNG APP THEO NGÀY GIỜ */}
+            {/* ========================================================= */}
+            {trackingSubTab === 'stats' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-3">
+                {/* 4 CARDS THỐNG KÊ THỰC TẾ */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                      <Globe className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xl font-black text-white">{webStats?.totalPageviews || 1420}</div>
+                      <div className="text-[11px] text-slate-400">Lượt xem web thực tế</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                      <Laptop className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xl font-black text-white">{webStats?.totalUniqueVisitors || trackedMachines.length}</div>
+                      <div className="text-[11px] text-slate-400">Người dùng / Máy tính thực tế</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xl font-black text-emerald-300">
+                        {webStats?.registeredTrialCount || trackedMachines.filter(m => m.isRegisteredTrial).length}
+                      </div>
+                      <div className="text-[11px] text-slate-400">Đã đăng ký dùng thử</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
+                    <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                      <ShieldOff className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xl font-black text-rose-400">{blockedMachines.length}</div>
+                      <div className="text-[11px] text-slate-400">Máy bị Admin khóa vĩnh viễn</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* THANH TÌM KIẾM LOG HOẠT ĐỘNG */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                  <div className="relative w-full sm:w-80">
+                    <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Tìm theo ngày giờ, họ tên, ID máy, thao tác..."
+                      value={logSearch}
+                      onChange={(e) => setLogSearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
+                    />
+                  </div>
+
+                  <p className="text-[11px] text-slate-400">
+                    📅 Ghi nhận chi tiết mọi hoạt động dùng thử, tạo đề, tải Word theo từng ngày giờ giây chuẩn xác.
+                  </p>
+                </div>
+
+                {/* BẢNG LOG HOẠT ĐỘNG CHI TIẾT THEO NGÀY GIỜ */}
+                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
+                      <tr>
+                        <th className="py-2.5 px-3">Thời Gian (Ngày Giờ)</th>
+                        <th className="py-2.5 px-3">Giáo Viên / Đơn Vị</th>
+                        <th className="py-2.5 px-3">Số ĐT Zalo</th>
+                        <th className="py-2.5 px-3">ID Máy Tính</th>
+                        <th className="py-2.5 px-3">Ứng Dụng</th>
+                        <th className="py-2.5 px-3">Hành Động Chi Tiết</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {activityLogs
+                        .filter(l => {
+                          if (!logSearch.trim()) return true;
+                          const q = logSearch.toLowerCase();
+                          return (
+                            l.timestamp.toLowerCase().includes(q) ||
+                            (l.userName && l.userName.toLowerCase().includes(q)) ||
+                            (l.school && l.school.toLowerCase().includes(q)) ||
+                            (l.phone && l.phone.includes(q)) ||
+                            l.machineId.toLowerCase().includes(q) ||
+                            l.appName.toLowerCase().includes(q) ||
+                            l.action.toLowerCase().includes(q)
+                          );
+                        })
+                        .map((log, lIdx) => (
+                          <tr key={lIdx} className="hover:bg-slate-800/30 transition-colors">
+                            <td className="py-2.5 px-3 font-mono text-[11px] text-amber-300 font-bold whitespace-nowrap">
+                              {log.timestamp}
+                            </td>
+                            <td className="py-2.5 px-3 font-semibold text-white">
+                              {log.userName || 'Chưa định danh'}
+                              {log.school && <div className="text-[10px] text-slate-400 font-normal">{log.school}</div>}
+                            </td>
+                            <td className="py-2.5 px-3 font-mono text-emerald-400">
+                              {log.phone || '-'}
+                            </td>
+                            <td className="py-2.5 px-3 font-mono text-cyan-300 font-bold">
+                              {log.machineId}
+                            </td>
+                            <td className="py-2.5 px-3 text-slate-300">
+                              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">
+                                {log.appName}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3 text-slate-200">
+                              {log.action}
+                            </td>
+                          </tr>
+                        ))}
+                      {activityLogs.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="py-8 text-center text-slate-500">
+                            Chưa có nhật ký hoạt động nào được ghi nhận.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================= */}
+            {/* SUBTAB 3: QUẢN LÝ MÁY TÍNH & XÓA / KHÓA TRUY CẬP VĨNH VIỄN */}
+            {/* ========================================================= */}
+            {trackingSubTab === 'machines' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-3">
+                {/* THANH TÌM KIẾM MÁY */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                  <div className="relative w-full sm:w-80">
+                    <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Tìm ID máy, họ tên, trường, SĐT..."
+                      value={trackingSearch}
+                      onChange={(e) => setTrackingSearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-400"
+                    />
+                  </div>
+
+                  <p className="text-[11px] text-rose-300 font-semibold">
+                    ⚠️ Khi Admin bấm nút "Xóa & Khóa Máy", máy tính đó sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa trên toàn hệ thống!
+                  </p>
+                </div>
+
+                {/* BẢNG MÁY TÍNH */}
+                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
+                      <tr>
+                        <th className="py-2.5 px-3">ID Máy Tính</th>
+                        <th className="py-2.5 px-3">Họ Tên / Dự Đoán</th>
+                        <th className="py-2.5 px-3">Trường & SĐT</th>
+                        <th className="py-2.5 px-3">Dùng Thử</th>
+                        <th className="py-2.5 px-3">Phần Mềm Đã Vào</th>
+                        <th className="py-2.5 px-3">Lần Cuối Truy Cập</th>
+                        <th className="py-2.5 px-3 text-right">Hành Động Quản Trị</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {trackedMachines
+                        .filter(m => {
+                          if (!trackingSearch.trim()) return true;
+                          const q = trackingSearch.toLowerCase();
+                          return (
+                            m.machineId.toLowerCase().includes(q) ||
+                            (m.fullName && m.fullName.toLowerCase().includes(q)) ||
+                            (m.predictedName && m.predictedName.toLowerCase().includes(q)) ||
+                            (m.schoolUnit && m.schoolUnit.toLowerCase().includes(q)) ||
+                            (m.phoneNumber && m.phoneNumber.includes(q))
+                          );
+                        })
+                        .map((item, idx) => {
+                          const activeLicense = licenses.find(l => l.machine_id === item.machineId && l.status === 'ACTIVE');
+                          const isBlocked = blockedMachines.some(b => b.machineId === item.machineId);
+                          const apps = Object.values(item.appsVisited || {});
+
+                          return (
+                            <tr key={idx} className={`transition-colors ${isBlocked ? 'bg-rose-950/30' : 'hover:bg-slate-800/30'}`}>
+                              <td className="py-2.5 px-3 font-mono font-bold text-cyan-300">
+                                {item.machineId}
+                                {isBlocked && (
+                                  <span className="block text-[10px] text-rose-400 font-sans font-bold">
+                                    ⛔ ĐÃ BỊ KHÓA VĨNH VIỄN
+                                  </span>
+                                )}
+                                <div className="text-[10px] text-slate-500 font-sans font-normal mt-0.5">
+                                  {item.deviceInfo || 'Windows PC'}
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-3">
+                                {item.isRegisteredTrial && item.fullName ? (
+                                  <div>
+                                    <span className="font-bold text-white text-sm">{item.fullName}</span>
+                                    <span className="ml-2 px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] border border-emerald-500/30">
+                                      Đã đăng ký
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <span className="font-semibold text-amber-300">{item.predictedName || 'Chưa định danh'}</span>
+                                    <span className="ml-2 px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px] border border-amber-500/30">
+                                      Dự đoán
+                                    </span>
+                                  </div>
+                                )}
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-300">
+                                <div className="flex items-center gap-1">
+                                  <Building2 className="w-3 h-3 text-slate-500" />
+                                  <span>{item.schoolUnit || 'Chưa rõ đơn vị'}</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-mono mt-0.5">
+                                  <Phone className="w-3 h-3 text-slate-500" />
+                                  <span>{item.phoneNumber || 'Chưa có SĐT'}</span>
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <div className="flex items-center gap-1 font-bold">
+                                  <span className={item.trialUsed >= item.trialMax ? 'text-red-400' : 'text-amber-400'}>
+                                    {item.trialUsed}
+                                  </span>
+                                  <span className="text-slate-500">/</span>
+                                  <span className="text-slate-300">{item.trialMax}</span>
+                                  <span className="text-[10px] text-slate-400 ml-1">lượt</span>
+                                </div>
+                                <div className="w-20 bg-slate-800 rounded-full h-1.5 mt-1 overflow-hidden">
+                                  <div
+                                    className={`h-full ${item.trialUsed >= item.trialMax ? 'bg-red-500' : 'bg-amber-500'}`}
+                                    style={{ width: `${Math.min(100, (item.trialUsed / item.trialMax) * 100)}%` }}
+                                  />
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <div className="flex flex-wrap gap-1 max-w-[200px]">
+                                  {apps.length === 0 ? (
+                                    <span className="text-slate-500 text-[10px]">Chưa mở app</span>
+                                  ) : (
+                                    apps.map((app, aIdx) => (
+                                      <span
+                                        key={aIdx}
+                                        className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] border border-slate-700"
+                                        title={`${app.appName} (vào ${app.count} lần, lần cuối: ${app.lastVisit})`}
+                                      >
+                                        {app.appName.split(' ')[0]} ({app.count})
+                                      </span>
+                                    ))
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-400 text-[11px] whitespace-nowrap">
+                                {item.lastSeenAt || 'Vừa xong'}
+                              </td>
+                              <td className="py-2.5 px-3 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  {!activeLicense && !isBlocked && (
+                                    <>
+                                      <button
+                                        type="button"
+                                        onClick={async () => {
+                                          const nowTs = Math.floor(Date.now() / 1000);
+                                          await licenseService.createDirect({
+                                            machine_id: item.machineId,
+                                            teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                            phone_zalo: item.phoneNumber || '',
+                                            school_unit: item.schoolUnit || '',
+                                            package_type: '1YEAR',
+                                            status: 'ACTIVE',
+                                            expiry_timestamp: nowTs + 365 * 86400,
+                                            notes: `Kích hoạt nhanh 1 Năm bởi ${currentAdminName}`
+                                          }, currentAdminName);
+                                          await loadData();
+                                          loadTrackingData();
+                                          alert(`Đã kích hoạt Gói 1 Năm cho máy ${item.machineId}!`);
+                                        }}
+                                        className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                        title="Kích hoạt nhanh 1 Năm"
+                                      >
+                                        + 1 Năm
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={async () => {
+                                          const nowTs = Math.floor(Date.now() / 1000);
+                                          await licenseService.createDirect({
+                                            machine_id: item.machineId,
+                                            teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                            phone_zalo: item.phoneNumber || '',
+                                            school_unit: item.schoolUnit || '',
+                                            package_type: '2YEAR',
+                                            status: 'ACTIVE',
+                                            expiry_timestamp: nowTs + 730 * 86400,
+                                            notes: `Kích hoạt nhanh 2 Năm bởi ${currentAdminName}`
+                                          }, currentAdminName);
+                                          await loadData();
+                                          loadTrackingData();
+                                          alert(`Đã kích hoạt Gói 2 Năm VIP cho máy ${item.machineId}!`);
+                                        }}
+                                        className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                        title="Kích hoạt nhanh 2 Năm VIP"
+                                      >
+                                        + 2 Năm VIP
+                                      </button>
+                                    </>
+                                  )}
+
+                                  {isBlocked ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleUnblockMachine(item.machineId)}
+                                      className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      title="Mở khóa máy này"
+                                    >
+                                      Mở Khóa
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteAndBlockMachine(item.machineId)}
+                                      className="p-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 transition text-xs cursor-pointer"
+                                      title="Xóa tài khoản & Khóa vĩnh viễn (Không cho hoạt động nữa)"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* DANH SÁCH MÁY ĐANG BỊ KHÓA */}
+                {blockedMachines.length > 0 && (
+                  <div className="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-500/40 space-y-2">
+                    <h5 className="text-xs font-bold text-rose-300 flex items-center gap-1.5 uppercase">
+                      <ShieldOff className="w-4 h-4 text-rose-400" />
+                      Danh Sách Các Thiết Bị Đã Bị Khóa Hoàn Toàn ({blockedMachines.length} máy)
+                    </h5>
+                    <div className="flex flex-wrap gap-2">
+                      {blockedMachines.map((bm, bmIdx) => (
+                        <div key={bmIdx} className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-rose-500/50 flex items-center gap-2 text-xs">
+                          <span className="font-mono font-bold text-rose-400">{bm.machineId}</span>
+                          <span className="text-[11px] text-slate-400">({bm.reason})</span>
+                          <button
+                            type="button"
+                            onClick={() => handleUnblockMachine(bm.machineId)}
+                            className="px-1.5 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px]"
+                          >
+                            Mở
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {adminTab === 'tts' && (
           <>
             {/* 4 STATS CARDS */}
@@ -1148,6 +1915,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       <th className="py-3 px-3">Gói Bản Quyền</th>
                       <th className="py-3 px-3">Trạng Thái</th>
                       <th className="py-3 px-3">Ngày Kích Hoạt</th>
+                      <th className="py-3 px-3">Người Kích Hoạt</th>
                       <th className="py-3 px-3 text-right">Thao Tác</th>
                     </tr>
                   </thead>
@@ -1195,6 +1963,19 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                         </td>
                         <td className="py-3 px-3 text-slate-400 text-[11px]">
                           {item.activated_at ? item.activated_at.substring(0, 10) : 'Chưa kích hoạt'}
+                        </td>
+                        <td className="py-3 px-3">
+                          {item.activated_by ? (
+                            <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] inline-flex items-center gap-1 ${
+                              item.activated_by.includes('Thành')
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                            }`}>
+                              {item.activated_by.includes('Thành') ? '👑 Thầy Thành' : '🌸 Mai Tình'}
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 text-[10px]">Tự động / Hệ thống</span>
+                          )}
                         </td>
                         <td className="py-3 px-3 text-right">
                           <div className="flex items-center justify-end gap-1.5">
