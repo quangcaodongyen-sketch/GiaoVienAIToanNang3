@@ -12,6 +12,7 @@ import {
   FileCheck2,
   Headphones,
   Square,
+  MessageSquare
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import { activityTrackingService } from '../services/activityTrackingService';
@@ -1443,7 +1444,6 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
                     <div className="text-base font-extrabold text-cyan-400">
                       Báo Giá Qua Zalo
-                    </div>
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>

@@ -482,7 +482,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
               {/* Nút bấm sinh đề */}
               {!isVIP && remainingTrials <= 0 ? (
                 <a
-                  href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                  href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                     `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tạo đề kiểm tra THCS 8 môn. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
                   )}`}
                   target="_blank"
@@ -1130,7 +1130,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng theo từng bộ môn, cập nhật 1 năm</p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Từng Môn Riêng Lẻ phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
@@ -1148,7 +1148,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     <p className="text-[11px] text-slate-400">Mở khóa toàn bộ 8 môn học THCS (Toán, Văn, Anh, KHTN, Sử Địa, Tin, GDCD, CN)</p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Trọn Bộ 8 Môn (1 Năm) phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
@@ -1172,7 +1172,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     </p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời 8 Môn phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
@@ -1181,7 +1181,6 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   >
                     <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
                   </a>
-                </div>
                 </div>
 
                 <p className="text-[11px] text-slate-400 italic px-1 pt-1">

@@ -698,7 +698,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </span>
                   {!isVIP && remainingTrials <= 0 ? (
                     <a
-                      href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                         `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt Chuẩn hóa văn bản hành chính AI. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
                       )}`}
                       target="_blank"
@@ -918,12 +918,12 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                 <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
                   <span>Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)</span>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
                   >
-                    <MessageCircle className="w-3.5 h-3.5" /> Hỗ trợ kỹ thuật Zalo ({BRAND.author.phone})
+                    <MessageCircle className="w-3.5 h-3.5" /> Hỗ trợ kỹ thuật Zalo ({BRAND.phone})
                   </a>
                 </div>
               </div>
@@ -1152,7 +1152,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng, cập nhật 1 năm</p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
@@ -1169,7 +1169,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     <p className="text-[11px] text-slate-400">Tặng kèm kho mẫu văn bản hành chính sư phạm</p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
@@ -1193,7 +1193,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </p>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                       `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
                     )}`}
                     target="_blank"
