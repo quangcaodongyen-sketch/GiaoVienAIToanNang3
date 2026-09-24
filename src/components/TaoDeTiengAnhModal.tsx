@@ -99,7 +99,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     if (!isProActive) {
       const currentTrials = await getSecureExamTrialRemaining(detectedMid);
       if (currentTrials <= 0) {
-        alert('⚠️ Thầy/Cô đã sử dụng hết 5 lượt dùng thử tạo đề tiếng Anh miễn phí trên máy tính này!\n\nVui lòng kích hoạt bản quyền Pro (hoặc liên hệ Thầy Thành: 0915.213717) để mở khóa tạo đề không giới hạn.');
+        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tạo đề tiếng Anh miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
         setActiveTab('register');
         return;
       }
@@ -473,24 +473,32 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
               {/* NÚT THAO TÁC SINH ĐỀ */}
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <button
-                  onClick={handleGenerateExam}
-                  disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                  className={`py-3 px-6 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all ${
-                    !isProActive && trialRemaining <= 0
-                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                      : 'bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white shadow-cyan-600/30 hover:scale-105 cursor-pointer'
-                  }`}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  {isGenerating
-                    ? 'AI Đang Biên Soạn Đề Chuẩn 100% CV 7991...'
-                    : !isProActive && trialRemaining <= 0
-                    ? 'Đã Hết Lượt Tạo Thử (0/5) - Nâng Cấp Pro'
-                    : isProActive
-                    ? '⚡ TẠO ĐỀ KIỂM TRA MỚI (CV 7991) - PRO'
-                    : `⚡ TẠO ĐỀ KIỂM TRA MỚI (Còn ${trialRemaining}/5 đề thử)`}
-                </button>
+                {!isProActive && trialRemaining <= 0 ? (
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tạo đề Tiếng Anh THCS Global Success (CV 7991). Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${detectedMid}).`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="py-3 px-6 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                  </a>
+                ) : (
+                  <button
+                    onClick={handleGenerateExam}
+                    disabled={isGenerating}
+                    className="py-3 px-6 rounded-2xl font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white shadow-cyan-600/30 hover:scale-105 cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    {isGenerating
+                      ? 'AI Đang Biên Soạn Đề Chuẩn 100% CV 7991...'
+                      : isProActive
+                      ? '⚡ TẠO ĐỀ KIỂM TRA MỚI (CV 7991) - PRO'
+                      : `⚡ TẠO ĐỀ KIỂM TRA MỚI (Còn ${trialRemaining}/5 đề thử)`}
+                  </button>
+                )}
 
                 <div className="flex items-center gap-2">
                   <button
@@ -1355,7 +1363,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 </div>
               </div>
 
-              {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN */}
+              {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN - ẨN GIÁ CẢ ĐỂ TẾ NHỊ & LIÊN HỆ ZALO */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {/* Gói 1 Năm */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
@@ -1364,8 +1372,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       GÓI 1 NĂM HỌC
                     </span>
                     <h5 className="font-black text-white text-sm">Gói Cơ Bản</h5>
-                    <div className="text-xl font-black text-white">
-                      200.000đ <span className="text-xs text-slate-400 font-normal">/năm</span>
+                    <div className="text-base font-extrabold text-blue-400">
+                      Báo Giá Qua Zalo
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Tạo đề kiểm tra Lớp 6, 7, 8, 9</li>
@@ -1375,12 +1383,14 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </ul>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%201%20Nam%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition-colors cursor-pointer"
+                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-300 hover:text-white text-xs font-bold text-center block transition-colors cursor-pointer border border-slate-700"
                   >
-                    Đăng Ký Qua Zalo
+                    💬 Báo Giá Qua Zalo
                   </a>
                 </div>
 
@@ -1388,11 +1398,11 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                      TIẾT KIỆM 25%
+                      TIẾT KIỆM
                     </span>
                     <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
-                    <div className="text-xl font-black text-cyan-400">
-                      300.000đ <span className="text-xs text-slate-400 font-normal">/2 năm</span>
+                    <div className="text-base font-extrabold text-cyan-400">
+                      Báo Giá Qua Zalo
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>
@@ -1402,12 +1412,14 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </ul>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%202%20Nam%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center block transition-colors cursor-pointer"
+                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white text-xs font-bold text-center block transition-colors cursor-pointer border border-slate-700"
                   >
-                    Đăng Ký Qua Zalo
+                    💬 Báo Giá Qua Zalo
                   </a>
                 </div>
 
@@ -1418,8 +1430,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                       👑 PHỔ BIẾN NHẤT
                     </span>
                     <h5 className="font-black text-white text-sm">Gói Vĩnh Viễn (Lifetime)</h5>
-                    <div className="text-xl font-black text-amber-400">
-                      500.000đ <span className="text-xs text-slate-400 font-normal">/trọn đời</span>
+                    <div className="text-base font-black text-amber-400">
+                      Báo Giá Ưu Đãi VIP
                     </div>
                     <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
                       <li className="flex items-center gap-1.5">✓ Không giới hạn thời gian</li>
@@ -1429,12 +1441,14 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </ul>
                   </div>
                   <a
-                    href={`https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20dang%20ky%20Goi%20Vinh%20Vien%20Tao%20de%20Tieng%20Anh%20THCS.%20Ma%20may:%20${detectedMid}`}
+                    href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Vĩnh Viễn phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold text-center block shadow-md shadow-amber-600/20 cursor-pointer"
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold text-center block shadow-md shadow-amber-600/20 cursor-pointer"
                   >
-                    Đăng Ký Trọn Đời Qua Zalo
+                    💬 Báo Giá Trọn Đời Qua Zalo
                   </a>
                 </div>
               </div>

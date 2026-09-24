@@ -34,8 +34,8 @@ import {
   PenTool,
   Type,
   Cast,
-  Layout,
-  Tv
+  Tv,
+  MessageCircle
 } from "lucide-react";
 import { BRAND } from "../config/brand";
 import {
@@ -754,22 +754,33 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   {!isRecording ? (
-                    <button
-                      type="button"
-                      onClick={handleStartRecording}
-                      disabled={!isProActive && trialRemaining <= 0}
-                      className={`w-full sm:w-auto py-3 px-8 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${!isProActive && trialRemaining <= 0
-                          ? "bg-rose-900/60 text-rose-300 border border-rose-500/50 cursor-not-allowed"
-                          : recordMode === "screen"
+                    !isProActive && trialRemaining <= 0 ? (
+                      <a
+                        href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                          `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt quay màn hình Screen Record Pro (Mã máy: ${hardwareCode}). Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt Pro giúp nhé!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto py-3 px-6 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-900/40 hover:scale-[1.02]"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>Hết 5 Lượt Thử - Báo Giá Kín Qua Zalo</span>
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleStartRecording}
+                        className={`w-full sm:w-auto py-3 px-8 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${recordMode === "screen"
                             ? "bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-rose-600/30 hover:scale-[1.02]"
                             : "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-500 hover:from-emerald-500 hover:to-cyan-400 text-white shadow-emerald-600/30 hover:scale-[1.02]"
-                        }`}
-                    >
-                      <Play className="w-4 h-4 fill-white" />
-                      <span>
-                        {recordMode === "screen" ? "BẮT ĐẦU QUAY MÀN HÌNH (F9)" : "BẮT ĐẦU GHI HÌNH BÀI GIẢNG"} {!isProActive && `(${trialRemaining} lượt)`}
-                      </span>
-                    </button>
+                          }`}
+                      >
+                        <Play className="w-4 h-4 fill-white" />
+                        <span>
+                          {recordMode === "screen" ? "BẮT ĐẦU QUAY MÀN HÌNH (F9)" : "BẮT ĐẦU GHI HÌNH BÀI GIẢNG"} {!isProActive && `(${trialRemaining}/5 lượt)`}
+                        </span>
+                      </button>
+                    )
                   ) : (
                     <>
                       <button
@@ -1374,29 +1385,59 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
             {/* PRICING TABLE */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
               <h4 className="font-extrabold text-xs text-slate-300 uppercase tracking-wide">
-                BẢNG GIÁ CÁC GÓI BẢN QUYỀN CHÍNH THỨC:
+                CÁC GÓI BẢN QUYỀN SCREEN RECORD PRO:
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-                  <span className="font-bold text-slate-300 block text-xs">GÓI 1 NĂM</span>
-                  <div className="text-xl font-extrabold text-white">100.000đ</div>
-                  <span className="text-[11px] text-slate-400 block">Sử dụng 365 ngày</span>
+                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2.5 flex flex-col justify-between">
+                  <div>
+                    <span className="font-bold text-slate-300 block text-xs">GÓI 1 NĂM</span>
+                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-xs">Cá Nhân</span>
+                    <span className="text-[11px] text-slate-400 block">Sử dụng đầy đủ tính năng trong 365 ngày</span>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 1 Năm Screen Record Pro (Mã máy: ${hardwareCode}). Xin Thầy tư vấn giúp tôi!`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
+                  >
+                    Báo Giá Qua Zalo
+                  </a>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-                  <span className="font-bold text-slate-300 block text-xs">GÓI 2 NĂM</span>
-                  <div className="text-xl font-extrabold text-sky-400">150.000đ</div>
-                  <span className="text-[11px] text-slate-400 block">Tiết kiệm 50.000đ</span>
+                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2.5 flex flex-col justify-between">
+                  <div>
+                    <span className="font-bold text-slate-300 block text-xs">GÓI 2 NĂM</span>
+                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-xs">Tiết Kiệm</span>
+                    <span className="text-[11px] text-slate-400 block">Sử dụng ổn định trong 730 ngày</span>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 2 Năm Screen Record Pro (Mã máy: ${hardwareCode}). Xin Thầy tư vấn giúp tôi!`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
+                  >
+                    Báo Giá Qua Zalo
+                  </a>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-gradient-to-b from-rose-500/20 to-slate-900 border border-rose-500/60 text-center space-y-2 shadow-lg shadow-rose-500/10">
-                  <span className="font-extrabold text-rose-300 block text-xs flex items-center justify-center gap-1">
-                    <Crown className="w-3.5 h-3.5 text-amber-400" />
-                    GÓI TRỌN ĐỜI (VIP)
-                  </span>
-                  <div className="text-2xl font-black text-rose-400">200.000đ</div>
-                  <span className="text-[11px] text-rose-200 font-semibold block">Sử dụng vĩnh viễn không giới hạn</span>
+                <div className="p-4 rounded-2xl bg-gradient-to-b from-rose-500/20 to-slate-900 border border-rose-500/60 text-center space-y-2.5 shadow-lg shadow-rose-500/10 flex flex-col justify-between">
+                  <div>
+                    <span className="font-extrabold text-rose-300 block text-xs flex items-center justify-center gap-1">
+                      <Crown className="w-3.5 h-3.5 text-amber-400" />
+                      GÓI TRỌN ĐỜI (VIP)
+                    </span>
+                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold text-xs">👑 Vĩnh Viễn</span>
+                    <span className="text-[11px] text-rose-200 font-semibold block">Sử dụng vĩnh viễn theo máy, nâng cấp miễn phí</span>
+                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói VIP Trọn Đời Screen Record Pro (Mã máy: ${hardwareCode}). Xin Thầy tư vấn ưu đãi tốt nhất giúp tôi!`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs transition shadow-md shadow-rose-500/20"
+                  >
+                    Báo Giá Ưu Đãi VIP
+                  </a>
                 </div>
               </div>
             </div>

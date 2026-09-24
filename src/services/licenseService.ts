@@ -23,33 +23,8 @@ export interface SupabaseConfig {
   anonKey: string;
 }
 
-// Khởi tạo dữ liệu mẫu ban đầu nếu chưa có
-const INITIAL_LICENSES: LicenseRecord[] = [
-  {
-    id: 1,
-    machine_id: 'MB-E10D-BE85',
-    teacher_name: 'Cô Nguyễn Thị Mai',
-    phone_zalo: '0988.123456',
-    school_unit: 'THCS Lê Quý Đôn',
-    package_type: 'LIFETIME',
-    status: 'ACTIVE',
-    expiry_timestamp: 9999999999,
-    activated_at: '2026-09-20 10:30:00',
-    notes: 'Kích hoạt trọn đời - Đã thanh toán 150k'
-  },
-  {
-    id: 2,
-    machine_id: 'MB-8F22-A109',
-    teacher_name: 'Thầy Trần Văn Tuấn',
-    phone_zalo: '0977.654321',
-    school_unit: 'THPT Chu Văn An',
-    package_type: '1YEAR',
-    status: 'PENDING',
-    expiry_timestamp: Math.floor(Date.now() / 1000) + 365 * 86400,
-    activated_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
-    notes: 'Đăng ký online qua Web - Chờ xác nhận bill Zalo'
-  }
-];
+// Khởi tạo danh sách bản quyền rỗng ban đầu (không tạo dữ liệu người dùng ảo)
+const INITIAL_LICENSES: LicenseRecord[] = [];
 
 class LicenseService {
   private supabase: SupabaseClient | null = null;
@@ -97,18 +72,35 @@ class LicenseService {
     try {
       const data = localStorage.getItem(STORAGE_KEY_LICENSES);
       if (data) {
-        return JSON.parse(data);
+        const list: LicenseRecord[] = JSON.parse(data);
+        // Tự động dọn dẹp các tài khoản ảo do hệ thống từng tự sinh demo
+        const cleaned = list.filter(item => 
+          item.teacher_name !== 'Cô Nguyễn Thị Mai' &&
+          item.teacher_name !== 'Thầy Trần Văn Tuấn' &&
+          item.machine_id !== 'MB-E10D-BE85' &&
+          item.machine_id !== 'MB-8F22-A109'
+        );
+        if (cleaned.length !== list.length) {
+          localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(cleaned));
+        }
+        return cleaned;
       }
-      localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(INITIAL_LICENSES));
-      return INITIAL_LICENSES;
+      localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify([]));
+      return [];
     } catch (e) {
-      return INITIAL_LICENSES;
+      return [];
     }
   }
 
   private setLocalLicenses(licenses: LicenseRecord[]) {
     try {
-      localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(licenses));
+      const cleaned = licenses.filter(item => 
+        item.teacher_name !== 'Cô Nguyễn Thị Mai' &&
+        item.teacher_name !== 'Thầy Trần Văn Tuấn' &&
+        item.machine_id !== 'MB-E10D-BE85' &&
+        item.machine_id !== 'MB-8F22-A109'
+      );
+      localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(cleaned));
     } catch (e) {
       console.error(e);
     }
@@ -123,8 +115,24 @@ class LicenseService {
           .select('*')
           .order('id', { ascending: false });
         if (!error && data) {
-          this.setLocalLicenses(data);
-          return data;
+          // Xóa các bản ghi demo nếu còn tồn tại trên Cloud Supabase
+          const hasDemo = data.some(x => 
+            x.teacher_name === 'Cô Nguyễn Thị Mai' || 
+            x.teacher_name === 'Thầy Trần Văn Tuấn' ||
+            x.machine_id === 'MB-E10D-BE85' || 
+            x.machine_id === 'MB-8F22-A109'
+          );
+          if (hasDemo) {
+            this.supabase.from('licenses').delete().in('machine_id', ['MB-E10D-BE85', 'MB-8F22-A109']).then();
+          }
+          const cleaned = data.filter(x => 
+            x.teacher_name !== 'Cô Nguyễn Thị Mai' &&
+            x.teacher_name !== 'Thầy Trần Văn Tuấn' &&
+            x.machine_id !== 'MB-E10D-BE85' && 
+            x.machine_id !== 'MB-8F22-A109'
+          );
+          this.setLocalLicenses(cleaned);
+          return cleaned;
         }
       } catch (e) {
         console.warn('Lỗi kết nối Supabase, chuyển sang chế độ Local Cache:', e);
@@ -324,7 +332,7 @@ class LicenseService {
   }> {
     const mid = machine_id.trim().toUpperCase();
     if (!mid) {
-      return { isValid: false, message: 'Vui lòng nhập mã máy (ví dụ: MB-E10D-BE85).' };
+      return { isValid: false, message: 'Vui lòng nhập mã máy (ví dụ: MB-A1B2-C3D4).' };
     }
 
     if (this.supabase) {

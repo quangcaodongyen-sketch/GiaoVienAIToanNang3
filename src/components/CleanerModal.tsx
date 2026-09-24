@@ -400,7 +400,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
             }`}
           >
             <Key className="w-4 h-4 text-amber-400" />
-            <span>3. Bản Quyền & Kích Hoạt VIP (50.000đ)</span>
+            <span>3. Bản Quyền & Kích Hoạt VIP</span>
           </button>
         </div>
 
@@ -645,22 +645,34 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                   {isScanning ? 'Đang Quét Hệ Thống...' : '1. Quét Sâu Rác Hệ Thống'}
                 </button>
 
-                <button
-                  onClick={handleStartClean}
-                  disabled={isCleaning || isScanning || (!isVIP && remainingTrials <= 0)}
-                  className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/40 transition"
-                >
-                  <Zap className={`w-4 h-4 text-amber-300 ${isCleaning ? 'animate-bounce' : ''}`} />
-                  {isCleaning ? (
-                    'Đang Dọn Dẹp An Toàn...'
-                  ) : !isVIP && remainingTrials <= 0 ? (
-                    'Hết 5 Lượt Thử - Kích Hoạt VIP Ngay'
-                  ) : isVIP ? (
-                    '2. Tiến Hành Dọn Rác & Tối Ưu VIP'
-                  ) : (
-                    `2. Tiến Hành Dọn Rác (Còn ${remainingTrials}/5 lượt)`
-                  )}
-                </button>
+                {!isVIP && remainingTrials <= 0 ? (
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt dọn rác DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt VIP giúp nhé!`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/40 transition hover:scale-105"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Hết 5 Lượt Thử - Báo Giá Kín Qua Zalo
+                  </a>
+                ) : (
+                  <button
+                    onClick={handleStartClean}
+                    disabled={isCleaning || isScanning}
+                    className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/40 transition"
+                  >
+                    <Zap className={`w-4 h-4 text-amber-300 ${isCleaning ? 'animate-bounce' : ''}`} />
+                    {isCleaning ? (
+                      'Đang Dọn Dẹp An Toàn...'
+                    ) : isVIP ? (
+                      '2. Tiến Hành Dọn Rác & Tối Ưu VIP'
+                    ) : (
+                      `2. Tiến Hành Dọn Rác (Còn ${remainingTrials}/5 lượt)`
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -823,32 +835,62 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
               <div className="space-y-3">
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  Bảng Giá Gói Bản Quyền Chính Thức:
+                  Các Gói Bản Quyền Dọn Rác Máy Tính:
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* Gói 1 Năm */}
-                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2 text-center">
-                    <div className="text-xs font-bold text-slate-400">GÓI 1 NĂM</div>
-                    <div className="text-xl font-black text-white">30.000đ</div>
-                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng trong 365 ngày</p>
+                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5 text-center flex flex-col justify-between">
+                    <div>
+                      <div className="text-xs font-bold text-slate-400">GÓI 1 NĂM</div>
+                      <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-xs">Cá Nhân</span>
+                      <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng trong 365 ngày</p>
+                    </div>
+                    <a
+                      href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 1 Năm DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy tư vấn giúp tôi!`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
+                    >
+                      Báo Giá Qua Zalo
+                    </a>
                   </div>
 
                   {/* Gói 2 Năm */}
-                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2 text-center">
-                    <div className="text-xs font-bold text-slate-400">GÓI 2 NĂM</div>
-                    <div className="text-xl font-black text-white">40.000đ</div>
-                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng trong 730 ngày</p>
+                  <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5 text-center flex flex-col justify-between">
+                    <div>
+                      <div className="text-xs font-bold text-slate-400">GÓI 2 NĂM</div>
+                      <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-xs">Tiết Kiệm</span>
+                      <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng trong 730 ngày</p>
+                    </div>
+                    <a
+                      href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 2 Năm DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy tư vấn giúp tôi!`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
+                    >
+                      Báo Giá Qua Zalo
+                    </a>
                   </div>
 
                   {/* Gói Trọn Đời (Hot) */}
-                  <div className="p-4 rounded-xl bg-gradient-to-b from-amber-950/40 via-slate-900 to-slate-900 border-2 border-amber-500/60 space-y-2 text-center relative overflow-hidden shadow-lg shadow-amber-950/20">
+                  <div className="p-4 rounded-xl bg-gradient-to-b from-amber-950/40 via-slate-900 to-slate-900 border-2 border-amber-500/60 space-y-2.5 text-center relative overflow-hidden shadow-lg shadow-amber-950/20 flex flex-col justify-between">
                     <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 font-black text-[9px] px-2 py-0.5 uppercase tracking-wider rounded-bl-lg">
                       PHỔ BIẾN NHẤT
                     </div>
-                    <div className="text-xs font-bold text-amber-300">GÓI TRỌN ĐỜI (VIP)</div>
-                    <div className="text-2xl font-black text-amber-400">50.000đ</div>
-                    <p className="text-[11px] text-slate-300 font-medium">Kích hoạt vĩnh viễn theo máy tính, cập nhật miễn phí</p>
+                    <div>
+                      <div className="text-xs font-bold text-amber-300">GÓI TRỌN ĐỜI (VIP)</div>
+                      <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs">👑 Vĩnh Viễn</span>
+                      <p className="text-[11px] text-slate-300 font-medium">Kích hoạt vĩnh viễn theo máy tính, cập nhật miễn phí</p>
+                    </div>
+                    <a
+                      href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói VIP Trọn Đời DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy tư vấn ưu đãi tốt nhất giúp tôi!`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20"
+                    >
+                      Báo Giá Ưu Đãi VIP
+                    </a>
                   </div>
                 </div>
               </div>

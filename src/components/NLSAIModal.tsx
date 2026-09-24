@@ -191,7 +191,7 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
     // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActive) {
       if (trialRemaining <= 0) {
-        alert('⚠️ Thầy/Cô đã sử dụng hết 5 lượt dùng thử tích hợp NLS miễn phí trên máy tính này!\n\nVui lòng kích hoạt bản quyền Pro (hoặc liên hệ Thầy Thành: 0915.213717) để mở khóa sử dụng không giới hạn.');
+        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tích hợp NLS miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
         setActiveTab('register');
         return;
       }
@@ -752,21 +752,33 @@ ${fullContent}
 
               {/* NÚT THỰC THI SINH NỘI DUNG */}
               <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
-                <button
-                  type="button"
-                  onClick={handleGenerateContent}
-                  disabled={isGenerating}
-                  className="w-full sm:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] disabled:opacity-50"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  {isGenerating 
-                    ? 'Đang phân tích sư phạm AI...' 
-                    : !isProActive && trialRemaining <= 0
-                    ? 'Đã Hết 5 Lượt Dùng Thử - Mở Bản Quyền Pro'
-                    : !isProActive
-                    ? `Sinh Nội Dung Tích Hợp AI (Còn ${trialRemaining}/5 lượt)`
-                    : 'Sinh Nội Dung Tích Hợp AI (Chuẩn CV 5512)'}
-                </button>
+                {!isProActive && trialRemaining <= 0 ? (
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tích hợp NLS - AI THCS V2. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${detectedMid}).`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full sm:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] cursor-pointer animate-pulse"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleGenerateContent}
+                    disabled={isGenerating}
+                    className="w-full sm:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    {isGenerating 
+                      ? 'Đang phân tích sư phạm AI...' 
+                      : !isProActive
+                      ? `Sinh Nội Dung Tích Hợp AI (Còn ${trialRemaining}/5 lượt)`
+                      : 'Sinh Nội Dung Tích Hợp AI (Chuẩn CV 5512)'}
+                  </button>
+                )}
 
                 {generatedObjectives && (
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
@@ -1131,28 +1143,56 @@ ${fullContent}
                 </button>
               </div>
 
-              {/* BẢNG BÁO GIÁ CÁC GÓI */}
+              {/* BẢNG BÁO GIÁ CÁC GÓI - ẨN GIÁ ĐỂ TẾ NHỊ & LIÊN HỆ ZALO */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid}.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/60 transition-all cursor-pointer block"
+                >
                   <span className="text-slate-400 block text-[11px]">Gói 1 Năm</span>
-                  <span className="text-sm font-bold text-emerald-400 block my-0.5">150.000 đ</span>
+                  <span className="text-xs font-bold text-emerald-400 block my-1">Báo Giá Zalo</span>
                   <span className="text-[10px] text-slate-500">1 Máy tính</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                </a>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid}.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-500/60 transition-all cursor-pointer block"
+                >
                   <span className="text-slate-400 block text-[11px]">Gói 2 Năm</span>
-                  <span className="text-sm font-bold text-cyan-400 block my-0.5">250.000 đ</span>
-                  <span className="text-[10px] text-slate-500">Tiết kiệm 50k</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                  <span className="text-xs font-bold text-cyan-400 block my-1">Báo Giá Zalo</span>
+                  <span className="text-[10px] text-slate-500">Tiết kiệm chi phí</span>
+                </a>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 3 Năm Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid}.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-purple-500/60 transition-all cursor-pointer block"
+                >
                   <span className="text-slate-400 block text-[11px]">Gói 3 Năm</span>
-                  <span className="text-sm font-bold text-purple-400 block my-0.5">300.000 đ</span>
+                  <span className="text-xs font-bold text-purple-400 block my-1">Báo Giá Zalo</span>
                   <span className="text-[10px] text-slate-500">Khuyên dùng</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/40">
+                </a>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid}.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 rounded-xl bg-slate-950 border border-amber-500/40 hover:border-amber-400 transition-all cursor-pointer block"
+                >
                   <span className="text-amber-300 block text-[11px] font-bold">Gói VIP Trọn Đời</span>
-                  <span className="text-sm font-bold text-amber-400 block my-0.5">Liên Hệ</span>
+                  <span className="text-xs font-bold text-amber-400 block my-1">Báo Giá VIP</span>
                   <span className="text-[10px] text-slate-400">Vĩnh viễn không hết hạn</span>
-                </div>
+                </a>
               </div>
 
               {/* FORM ĐĂNG KÝ BẢN QUYỀN TRỰC TIẾP */}
@@ -1222,10 +1262,10 @@ ${fullContent}
                         onChange={(e) => setRegPlan(e.target.value as any)}
                         className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
                       >
-                        <option value="1YEAR">1 Năm (150.000 VNĐ)</option>
-                        <option value="2YEAR">2 Năm (250.000 VNĐ)</option>
-                        <option value="3YEAR">3 Năm (300.000 VNĐ)</option>
-                        <option value="LIFETIME">Trọn Đời (VIP)</option>
+                        <option value="1YEAR">Gói 1 Năm (Hạn dùng 365 ngày)</option>
+                        <option value="2YEAR">Gói 2 Năm (Khuyên dùng)</option>
+                        <option value="3YEAR">Gói 3 Năm (Tiết kiệm)</option>
+                        <option value="LIFETIME">Gói VIP Trọn Đời (Vĩnh viễn)</option>
                       </select>
                     </div>
                   </div>

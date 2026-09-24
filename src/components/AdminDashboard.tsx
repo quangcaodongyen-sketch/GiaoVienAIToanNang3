@@ -20,7 +20,9 @@ import {
   Copy,
   Send,
   FileCode,
-  Sparkles
+  Sparkles,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { licenseService, LicenseRecord } from '../services/licenseService';
 import { generateEd25519Key } from '../services/nlsKeyService';
@@ -41,6 +43,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
   const [adminTab, setAdminTab] = useState<'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tts');
@@ -194,10 +197,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-  // Mật khẩu Admin chính thức: Thaythanh2026@
+  // Mật khẩu Admin chính thức: Thaythanh2026@ (hỗ trợ cả tài khoản phụ Mai Tinh & gõ có dấu Unikey)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === 'Thaythanh2026@') {
+    const cleanPin = pinInput.trim();
+    const normalized = cleanPin.toLowerCase();
+    if (
+      cleanPin === 'Thaythanh2026@' ||
+      normalized === 'thaythanh2026@' ||
+      normalized === 'thaythanh2026' ||
+      cleanPin === 'Thầythành2026@' ||
+      normalized === 'thầythành2026@' ||
+      cleanPin === 'Thaythanh' ||
+      normalized === 'thaythanh' ||
+      normalized === 'maitinh' ||
+      normalized === 'maitinh2026' ||
+      normalized === 'maitinh2026@'
+    ) {
       setIsAuthenticated(true);
       setPinError(false);
     } else {
@@ -473,7 +489,7 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
       const key = await generateCleanerLicenseKey(cleanId, cleanerPackage);
       setCleanerKeyResult(key);
 
-      const pkgName = cleanerPackage === 'lifetime' ? 'BẢN QUYỀN VIP TRỌN ĐỜI (50.000đ)' : cleanerPackage === '2year' ? 'GÓI 2 NĂM (40.000đ)' : 'GÓI 1 NĂM (30.000đ)';
+      const pkgName = cleanerPackage === 'lifetime' ? 'BẢN QUYỀN VIP TRỌN ĐỜI' : cleanerPackage === '2year' ? 'GÓI 2 NĂM' : 'GÓI 1 NĂM';
       const expStr = cleanerPackage === 'lifetime' ? 'Vĩnh viễn không giới hạn' : cleanerPackage === '2year' ? '730 ngày (2 Năm)' : '365 ngày (1 Năm)';
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ĐINH THÀNH CLEANER PRO v4.5 VIP ULTRA:
@@ -537,13 +553,13 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       const key = await generateCHVBLicenseKey(cleanId, chvbPackage);
       setChvbKeyResult(key);
 
-      let pkgName = 'BẢN QUYỀN VIP TRỌN ĐỜI (499.000đ)';
+      let pkgName = 'BẢN QUYỀN VIP TRỌN ĐỜI';
       let expDateStr = 'Vĩnh viễn không giới hạn';
       if (chvbPackage === '1year') {
-        pkgName = 'GÓI BẢN QUYỀN 1 NĂM (199.000đ)';
+        pkgName = 'GÓI BẢN QUYỀN 1 NĂM';
         expDateStr = '1 Năm';
       } else if (chvbPackage === '2year') {
-        pkgName = 'GÓI BẢN QUYỀN 2 NĂM (299.000đ)';
+        pkgName = 'GÓI BẢN QUYỀN 2 NĂM';
         expDateStr = '2 Năm';
       }
 
@@ -594,13 +610,13 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       const key = await generatePDFLicenseKey(cleanId, pdfPackage);
       setPdfKeyResult(key);
 
-      let pkgName = 'BẢN QUYỀN VIP TRỌN ĐỜI (499.000đ)';
+      let pkgName = 'BẢN QUYỀN VIP TRỌN ĐỜI';
       let expDateStr = 'Vĩnh viễn không giới hạn';
       if (pdfPackage === '1year') {
-        pkgName = 'GÓI BẢN QUYỀN 1 NĂM (199.000đ)';
+        pkgName = 'GÓI BẢN QUYỀN 1 NĂM';
         expDateStr = '1 Năm';
       } else if (pdfPackage === '2year') {
-        pkgName = 'GÓI BẢN QUYỀN 2 NĂM (299.000đ)';
+        pkgName = 'GÓI BẢN QUYỀN 2 NĂM';
         expDateStr = '2 Năm';
       }
 
@@ -723,43 +739,86 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 mx-auto flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20">
               <Lock className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-extrabold text-white">QUẢN TRỊ VIÊN BẢN QUYỀN</h3>
+            <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Hệ sinh thái AI Thầy Đinh Văn Thành – Xác thực quyền Admin
+              Nhập mật khẩu Admin (Thầy Thành) hoặc Tài khoản phụ (Mai Tinh) để tiếp tục
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Mật khẩu Quản trị (PIN):
-              </label>
-              <input
-                type="password"
-                placeholder="Nhập mật khẩu Admin..."
-                value={pinInput}
-                onChange={(e) => {
-                  setPinInput(e.target.value);
-                  setPinError(false);
-                }}
-                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm font-mono"
-                autoFocus
-              />
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300">
+                  Mật khẩu Quản trị (PIN):
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="text-[11px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-medium transition-colors cursor-pointer select-none"
+                >
+                  {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  <span>{showPin ? 'Ẩn mật khẩu' : 'Xem mật khẩu'}</span>
+                </button>
+              </div>
+
+              <div className="relative">
+                <input
+                  type={showPin ? "text" : "password"}
+                  placeholder="Nhập mật khẩu Admin..."
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    setPinError(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      e.stopPropagation();
+                      if (pinInput) {
+                        setPinInput('');
+                        setPinError(false);
+                      } else {
+                        onClose();
+                      }
+                    }
+                  }}
+                  className="w-full pl-4 pr-11 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 text-sm font-mono tracking-wider"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-amber-400 rounded-lg hover:bg-slate-700/50 transition-colors cursor-pointer"
+                  title={showPin ? "Ẩn mật khẩu" : "Xem mật khẩu"}
+                >
+                  {showPin ? <EyeOff className="w-4 h-4 text-amber-400" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
               {pinError && (
-                <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  Mật khẩu không chính xác! Vui lòng kiểm tra lại.
-                </p>
+                <div className="p-2.5 mt-2 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>Mật khẩu không chính xác! Vui lòng bấm <b>"Xem mật khẩu"</b> để kiểm tra lại ký tự và bộ gõ tiếng Việt.</span>
+                </div>
               )}
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
-            >
-              <Unlock className="w-4 h-4" />
-              Mở Bảng Điều Khiển
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Unlock className="w-4 h-4" />
+                Mở Bảng Điều Khiển
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition-colors cursor-pointer"
+                title="Đóng cửa sổ quản trị"
+              >
+                Đóng
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -1227,9 +1286,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500"
                     >
                       <option value={99}>VIP Trọn Đời (Khuyên dùng)</option>
-                      <option value={1}>1 Năm (150.000 VNĐ)</option>
-                      <option value={2}>2 Năm (250.000 VNĐ)</option>
-                      <option value={3}>3 Năm (300.000 VNĐ)</option>
+                      <option value={1}>1 Năm</option>
+                      <option value={2}>2 Năm</option>
+                      <option value={3}>3 Năm</option>
                     </select>
                   </div>
                 </div>
@@ -1387,9 +1446,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setExamPackage(e.target.value as any)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-sky-500"
                     >
-                      <option value="lifetime">VIP Trọn Đời (200.000 VNĐ - Khuyên dùng)</option>
-                      <option value="1year">1 Năm (100.000 VNĐ)</option>
-                      <option value="2year">2 Năm (150.000 VNĐ)</option>
+                      <option value="lifetime">VIP Trọn Đời (Khuyên dùng)</option>
+                      <option value="1year">1 Năm</option>
+                      <option value="2year">2 Năm</option>
                     </select>
                   </div>
                 </div>
@@ -1547,9 +1606,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setBienthePackage(e.target.value as any)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-amber-500"
                     >
-                      <option value="lifetime">VIP Trọn Đời (200.000 VNĐ - Khuyên dùng)</option>
-                      <option value="1year">1 Năm (100.000 VNĐ)</option>
-                      <option value="2year">2 Năm (150.000 VNĐ)</option>
+                      <option value="lifetime">VIP Trọn Đời (Khuyên dùng)</option>
+                      <option value="1year">1 Năm</option>
+                      <option value="2year">2 Năm</option>
                     </select>
                   </div>
                 </div>
@@ -1707,9 +1766,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setRecordPackage(e.target.value as any)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-rose-500"
                     >
-                      <option value="lifetime">VIP Trọn Đời (200.000 VNĐ - Khuyên dùng)</option>
-                      <option value="1year">1 Năm (100.000 VNĐ)</option>
-                      <option value="2year">2 Năm (150.000 VNĐ)</option>
+                      <option value="lifetime">VIP Trọn Đời (Khuyên dùng)</option>
+                      <option value="1year">1 Năm</option>
+                      <option value="2year">2 Năm</option>
                     </select>
                   </div>
                 </div>
@@ -1870,9 +1929,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setCleanerPackage(e.target.value as any)}
                       className="w-full py-2 px-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:border-emerald-500 outline-none"
                     >
-                      <option value="lifetime">VIP Trọn Đời (50.000đ - Phổ biến nhất)</option>
-                      <option value="2year">Gói 2 Năm (40.000đ - 730 ngày)</option>
-                      <option value="1year">Gói 1 Năm (30.000đ - 365 ngày)</option>
+                      <option value="lifetime">VIP Trọn Đời (Phổ biến nhất)</option>
+                      <option value="2year">Gói 2 Năm (730 ngày)</option>
+                      <option value="1year">Gói 1 Năm (365 ngày)</option>
                     </select>
                   </div>
                 </div>
@@ -2045,9 +2104,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setChvbPackage(e.target.value as any)}
                       className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs font-semibold focus:outline-none focus:border-red-400"
                     >
-                      <option value="1year">Gói 1 Năm (199.000đ)</option>
-                      <option value="2year">Gói 2 Năm (299.000đ)</option>
-                      <option value="lifetime">Gói Trọn Đời VIP (499.000đ)</option>
+                      <option value="1year">Gói 1 Năm</option>
+                      <option value="2year">Gói 2 Năm</option>
+                      <option value="lifetime">Gói Trọn Đời VIP (Khuyên dùng)</option>
                     </select>
                   </div>
                 </div>
@@ -2215,9 +2274,9 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                       onChange={(e) => setPdfPackage(e.target.value as any)}
                       className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs font-semibold focus:outline-none focus:border-pink-400"
                     >
-                      <option value="1year">Gói 1 Năm (199.000đ)</option>
-                      <option value="2year">Gói 2 Năm (299.000đ)</option>
-                      <option value="lifetime">Gói Trọn Đời VIP (499.000đ)</option>
+                      <option value="1year">Gói 1 Năm</option>
+                      <option value="2year">Gói 2 Năm</option>
+                      <option value="lifetime">Gói Trọn Đời VIP (Khuyên dùng)</option>
                     </select>
                   </div>
                 </div>
@@ -2543,7 +2602,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
                   <input
                     type="text"
                     required
-                    placeholder="Ví dụ: MB-E10D-BE85"
+                    placeholder="Ví dụ: MB-A1B2-C3D4"
                     value={newMid}
                     onChange={(e) => setNewMid(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-mono focus:outline-none focus:border-amber-400"

@@ -19,7 +19,8 @@ import {
   Sliders,
   RotateCcw,
   CheckCircle2,
-  FileDown
+  FileDown,
+  MessageCircle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import {
@@ -205,7 +206,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     }
 
     if (!isVIP && remainingTrials <= 0) {
-      alert('Thầy/Cô đã dùng hết 5 lượt trải nghiệm miễn phí! Vui lòng kích hoạt Bản quyền Pro để tiếp tục sử dụng không giới hạn.');
+      alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền sử dụng không giới hạn.');
       setActiveTab('license');
       return;
     }
@@ -597,22 +598,36 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   <span className="text-[11px] text-slate-400">
                     Số từ: {inputText.trim().split(/\s+/).filter(Boolean).length} từ | {inputText.length} ký tự
                   </span>
-                  <button
-                    onClick={handleStandardize}
-                    disabled={isProcessing || (!isVIP && remainingTrials <= 0)}
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 disabled:from-slate-800 disabled:to-slate-800 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" /> Đang chuẩn hóa NĐ 30...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 text-amber-300" />
-                        <span>CHUẨN HÓA NGAY ({isVIP ? 'VIP' : `${remainingTrials} lượt còn`})</span>
-                      </>
-                    )}
-                  </button>
+                  {!isVIP && remainingTrials <= 0 ? (
+                    <a
+                      href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                        `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt Chuẩn hóa văn bản hành chính AI. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                    </a>
+                  ) : (
+                    <button
+                      onClick={handleStandardize}
+                      disabled={isProcessing}
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 disabled:from-slate-800 disabled:to-slate-800 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-red-600/30 transition-all cursor-pointer"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin" /> Đang chuẩn hóa NĐ 30...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4 text-amber-300" />
+                          <span>CHUẨN HÓA NGAY ({isVIP ? 'VIP' : `${remainingTrials} lượt còn`})</span>
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -742,37 +757,67 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         {activeTab === 'download' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Video Player HD */}
-              <div className="lg:col-span-2 bg-slate-900 rounded-2xl p-4 border border-slate-800 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    <Play className="w-4 h-4 text-red-500" />
-                    Video Hướng Dẫn Chuẩn Hóa Văn Bản Nghị Định 30/2020
-                  </h3>
-                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-red-500/20 text-red-400 rounded">
-                    Full HD 1080p
-                  </span>
+              {/* Infographic Quy Trình 4 Bước Chuẩn Hóa NĐ 30 */}
+              <div className="lg:col-span-2 bg-slate-900 rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      Quy Chuẩn Thể Thức Văn Bản Theo Nghị Định 30/2020/NĐ-CP
+                    </h3>
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/30">
+                      Chuẩn Mực Sư Phạm
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 1. Khối Đầu Trang (2 Cột Song Song)
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Cột trái: Cơ quan chủ quản cấp trên & Đơn vị ban hành văn bản. Cột phải: Quốc hiệu, Tiêu ngữ in hoa đậm & Địa danh, ngày tháng năm (chữ nghiêng).
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 2. Tên Loại & Trích Yếu Nội Dung
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Tên loại văn bản in hoa đậm đứng giữa trang (QUYẾT ĐỊNH, KẾ HOẠCH...). Trích yếu nội dung chữ thường, đứng dưới tên loại văn bản.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 3. Nội Dung Chuẩn Times New Roman 13pt
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Tự động sửa lỗi chính tả tiếng Việt, dấu câu, thụt đầu dòng 1cm đến 1.27cm, giãn dòng 1.3 - 1.4 line đúng quy chuẩn kỹ thuật văn bản.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 4. Nơi Nhận & Chữ Ký Chuẩn Thẩm Quyền
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Khối nơi nhận bên trái cỡ 11pt, khối chức vụ & người ký bên phải in hoa đậm kèm khoảng cách để ký số hoặc đóng dấu đỏ.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner flex items-center justify-center group">
-                  <video
-                    className="w-full h-full object-cover"
-                    controls
-                    poster="/chuanhoavanbanvip.jpg"
-                  >
-                    <source src="/cleaner_demo.mp4" type="video/mp4" />
-                    Trình duyệt của bạn không hỗ trợ phát video HTML5.
-                  </video>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
-                  <span>Trình bày: Thầy giáo Đinh Văn Thành</span>
+                <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                  <span>Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)</span>
                   <a
-                    href="/cleaner_demo.mp4"
-                    download="HD_Chuan_Hoa_Van_Ban_ND30.mp4"
-                    className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
                   >
-                    <Download className="w-3.5 h-3.5" /> Tải video MP4 (Về máy)
+                    <MessageCircle className="w-3.5 h-3.5" /> Hỗ trợ kỹ thuật Zalo ({BRAND.author.phone})
                   </a>
                 </div>
               </div>
@@ -785,26 +830,9 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </h4>
                   <div className="space-y-2.5">
                     <a
-                      href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
-                      className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
-                          EXE
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-white group-hover:text-blue-300">
-                            Bộ Cài Desktop (.exe)
-                          </p>
-                          <p className="text-[10px] text-slate-400">Cài đặt tự động vào Windows</p>
-                        </div>
-                      </div>
-                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
-                    </a>
-
-                    <a
-                      href="/Smart_Listening_Pro_Pass_123.zip"
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
+                      href="/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
+                      download="Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
+                      className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-900/40 to-slate-800 hover:from-amber-800/60 hover:to-slate-700 border border-amber-600/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
@@ -812,9 +840,9 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-amber-300">
-                            Bản Nén (.zip) Pass: 123
+                            Bản Nén Đầy Đủ (.zip) Pass: 123
                           </p>
-                          <p className="text-[10px] text-slate-400">Trình duyệt không chặn tải</p>
+                          <p className="text-[10px] text-slate-400">Trọn gói mã nguồn & công cụ chạy nhanh</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -822,6 +850,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
                     <a
                       href="/HUONG_DAN_SU_DUNG.docx"
+                      download="Tai_Lieu_Nghi_Dinh_30_2020.docx"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -830,9 +859,9 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-emerald-300">
-                            Tài Liệu Nghị Định 30/2020
+                            Tài Liệu Hướng Dẫn & Mẫu NĐ 30/2020
                           </p>
-                          <p className="text-[10px] text-slate-400">Quy cách cỡ chữ, lề văn bản</p>
+                          <p className="text-[10px] text-slate-400">Quy cách cỡ chữ, lề văn bản chuẩn</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -893,7 +922,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Gửi mã máy này qua Zalo <strong className="text-white">0915.213717</strong> cho Thầy Thành để nhận Key kích hoạt.
+                    Gửi mã máy này qua Zalo <strong className="text-white">0915.213717</strong> cho Thầy Thành để nhận báo giá ưu đãi và Key kích hoạt.
                   </p>
                 </div>
 
@@ -957,21 +986,30 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                 </div>
               </div>
 
-              {/* Bảng Giá Các Gói Bản Quyền */}
+              {/* Bảng Các Gói Bản Quyền - Ẩn Giá Cả Để Tế Nhị & Liên Hệ Zalo */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Bảng Giá Các Gói Bản Quyền Chuẩn Hóa Văn Bản AI
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Các Gói Bản Quyền Chuẩn Hóa Văn Bản AI
+                  </h4>
+                  <span className="text-[11px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-white">Gói 1 Năm</span>
+                    <span className="text-xs font-bold text-white">Gói 1 Năm Học</span>
                     <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng, cập nhật 1 năm</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-amber-400">199.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 máy</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-amber-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
@@ -979,10 +1017,16 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     <span className="text-xs font-bold text-white">Gói 2 Năm (Tiết Kiệm)</span>
                     <p className="text-[11px] text-slate-400">Tặng kèm kho mẫu văn bản hành chính sư phạm</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-amber-400">299.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 máy</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-cyan-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-red-950/30 to-slate-900 border-2 border-amber-500/50 flex items-center justify-between shadow-lg shadow-amber-500/10">
@@ -994,14 +1038,24 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-300 mt-0.5">
-                      Không giới hạn thời gian, bảo hành trọn đời, hỗ trợ chuyển đổi máy mới
+                      Không giới hạn thời gian, cập nhật vĩnh viễn, hỗ trợ chuyển đổi máy mới
                     </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-lg font-black text-amber-300">499.000đ</span>
-                    <span className="block text-[10px] text-emerald-400 font-bold">VĨNH VIỄN</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời phần mềm Chuẩn hóa văn bản hành chính AI. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-red-600 hover:from-amber-400 hover:to-red-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all shrink-0 ml-2"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
+                  </a>
                 </div>
+
+                <p className="text-[11px] text-slate-400 italic px-1 pt-1">
+                  * Chính sách giá ưu đãi đặc biệt dành cho giáo viên và các nhà trường. Quý Thầy/Cô vui lòng bấm nút nhắn tin Zalo để nhận báo giá chi tiết và hỗ trợ kích hoạt trực tiếp từ Thầy Thành.
+                </p>
               </div>
             </div>
           </div>

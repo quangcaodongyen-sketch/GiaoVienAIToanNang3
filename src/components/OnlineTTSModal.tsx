@@ -61,6 +61,10 @@ Earth is the only planet known to support life, thanks to its perfect distance f
 // Hàm sinh hoặc đọc mã máy tính duy nhất cho từng trình duyệt/máy tính
 const getOrCreateMachineId = (): string => {
   let mid = localStorage.getItem('gvai_detected_machine_id');
+  if (mid === 'MB-E10D-BE85' || mid === 'MB-8F22-A109') {
+    localStorage.removeItem('gvai_detected_machine_id');
+    mid = null;
+  }
   if (!mid || !mid.startsWith('MB-')) {
     // Tạo mã định danh duy nhất dựa trên màn hình + trình duyệt + ngẫu nhiên
     try {
@@ -76,7 +80,9 @@ const getOrCreateMachineId = (): string => {
       const part2 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
       mid = `MB-${part1}-${part2}`;
     } catch {
-      mid = 'MB-8F22-A109';
+      const p1 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
+      const p2 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
+      mid = `MB-${p1}-${p2}`;
     }
     localStorage.setItem('gvai_detected_machine_id', mid);
   }
@@ -140,7 +146,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
   // ID máy tính tự động
-  const [detectedMid, setDetectedMid] = useState<string>('MB-E10D-BE85');
+  const [detectedMid, setDetectedMid] = useState<string>('');
   const [copiedMid, setCopiedMid] = useState(false);
 
   // Hệ thống 5 lượt dùng thử miễn phí
@@ -299,7 +305,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActivated) {
       if (trialRemaining <= 0) {
-        alert('⚠️ Thầy/Cô đã sử dụng hết 5 lượt dùng thử miễn phí trên máy tính này!\n\nVui lòng đăng ký kích hoạt bản quyền Pro vĩnh viễn (hoặc liên hệ Thầy Thành: 0915.213717) để mở khóa tạo bài không giới hạn.');
+        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tạo bài nghe tiếng Anh miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
         setActiveTab('register');
         return;
       }
@@ -779,23 +785,30 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
             <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 {/* Play / Pause / Stop Buttons */}
-                <div className="flex items-center gap-1.5">
                   {!isPlaying ? (
-                    <button
-                      onClick={handlePlayStudio}
-                      className={`py-2 px-4 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md transition-all hover:scale-105 ${
-                        !isProActivated && trialRemaining <= 0
-                          ? 'bg-rose-900/80 text-rose-200 border border-rose-600/40 hover:bg-rose-800'
-                          : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/30'
-                      }`}
-                    >
-                      <Play className="w-4 h-4 fill-white" />
-                      {!isProActivated && trialRemaining <= 0
-                        ? 'Đã Hết 5 Lượt Thử (Kích hoạt Pro)'
-                        : isProActivated
-                        ? 'Phát Toàn Bộ Bài Nghe'
-                        : `Phát Bài Nghe (Còn ${trialRemaining}/5 lượt)`}
-                    </button>
+                    !isProActivated && trialRemaining <= 0 ? (
+                      <a
+                        href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                          `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt tạo bài nghe Smart Listening Pro (Mã máy: ${detectedMid}). Nhờ Thầy tư vấn và báo giá ưu đãi sư phạm giúp tôi!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2 px-4 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition-all hover:scale-105"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        Hết 5 Lượt Thử - Nhận Báo Giá Ưu Đãi Qua Zalo
+                      </a>
+                    ) : (
+                      <button
+                        onClick={handlePlayStudio}
+                        className="py-2 px-4 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md transition-all hover:scale-105 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/30"
+                      >
+                        <Play className="w-4 h-4 fill-white" />
+                        {isProActivated
+                          ? 'Phát Toàn Bộ Bài Nghe'
+                          : `Phát Bài Nghe (Còn ${trialRemaining}/5 lượt)`}
+                      </button>
+                    )
                   ) : (
                     <>
                       <button
@@ -1043,6 +1056,68 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
               </p>
             )}
 
+            {/* BẢNG CÁC GÓI BẢN QUYỀN (ẨN GIÁ CÔNG KHAI - BÁO GIÁ RIÊNG QUA ZALO) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-slate-200">Gói 1 Năm</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold">Cá nhân</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mb-2">Đầy đủ tính năng tạo bài nghe SGK tiếng Anh 365 ngày.</p>
+                </div>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi quan tâm Gói 1 Năm Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi giúp tôi!`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-center text-[11px] transition-colors"
+                >
+                  Báo Giá Qua Zalo
+                </a>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-slate-200">Gói 2 Năm</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold">Tiết kiệm</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mb-2">Sử dụng ổn định 2 năm học, cập nhật giọng mới miễn phí.</p>
+                </div>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi quan tâm Gói 2 Năm Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi giúp tôi!`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-center text-[11px] transition-colors"
+                >
+                  Báo Giá Qua Zalo
+                </a>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-gradient-to-b from-amber-950/40 to-slate-900 border border-amber-500/40 relative flex flex-col justify-between">
+                <span className="absolute -top-2.5 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[10px] font-black shadow-md">
+                  KHUYÊN DÙNG
+                </span>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-amber-300 flex items-center gap-1">
+                      <Crown className="w-3.5 h-3.5 text-amber-400" />
+                      VIP Trọn Đời
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mb-2">Bản quyền vĩnh viễn theo máy, hỗ trợ kỹ thuật trọn đời.</p>
+                </div>
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn đăng ký Gói VIP Trọn Đời Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi tốt nhất giúp tôi!`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-center text-[11px] transition-colors shadow-md shadow-amber-500/20"
+                >
+                  Báo Giá Ưu Đãi VIP
+                </a>
+              </div>
+            </div>
+
             {/* FORM ĐĂNG KÝ MỚI LÊN CLOUD */}
             {regSuccess ? (
               <div className="p-6 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-center space-y-3">
@@ -1111,7 +1186,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                     <input
                       type="text"
                       required
-                      placeholder="Ví dụ: Nguyễn Thị Mai"
+                      placeholder="Ví dụ: Thầy Nguyễn Văn A hoặc Cô Lê Thị B"
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
@@ -1143,9 +1218,9 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                       onChange={(e) => setRegPackage(e.target.value as any)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-amber-300 focus:outline-none focus:border-blue-500"
                     >
-                      <option value="LIFETIME">👑 Trọn Đời (Vĩnh Viễn) - 150.000đ</option>
-                      <option value="1YEAR">1 Năm (365 ngày) - 100.000đ</option>
-                      <option value="2YEAR">2 Năm - 150.000đ</option>
+                      <option value="LIFETIME">👑 Gói Bản Quyền VIP Trọn Đời (Khuyên Dùng)</option>
+                      <option value="1YEAR">Gói Bản Quyền 1 Năm (365 ngày)</option>
+                      <option value="2YEAR">Gói Bản Quyền 2 Năm</option>
                     </select>
                   </div>
                 </div>

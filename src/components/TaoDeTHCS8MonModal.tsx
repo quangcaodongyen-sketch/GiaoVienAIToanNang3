@@ -21,7 +21,8 @@ import {
   Layers,
   ChevronRight,
   FolderDown,
-  FileCheck
+  FileCheck,
+  MessageCircle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import {
@@ -173,7 +174,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
   const handleGenerateExam = async () => {
     if (!isVIP && remainingTrials <= 0) {
-      alert('Thầy/Cô đã sử dụng hết 5 lượt dùng thử trực tuyến miễn phí! Vui lòng kích hoạt Bản quyền Pro để tiếp tục tạo đề không giới hạn.');
+      alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử trực tuyến miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
       setActiveTab('license');
       return;
     }
@@ -469,29 +470,39 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
               </div>
 
               {/* Nút bấm sinh đề */}
-              <button
-                onClick={handleGenerateExam}
-                disabled={isGenerating || (!isVIP && remainingTrials <= 0)}
-                className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all cursor-pointer ${
-                  !isVIP && remainingTrials <= 0
-                    ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                    : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-600 text-white shadow-blue-600/30 active:scale-95'
-                }`}
-              >
-                {isGenerating ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin text-amber-300" />
-                    <span>AI Đang Sinh Đề Chuẩn 7991...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>
-                      TẠO ĐỀ KIỂM TRA MỚI ({isVIP ? 'VIP' : `${remainingTrials}/5 lượt`})
-                    </span>
-                  </>
-                )}
-              </button>
+              {!isVIP && remainingTrials <= 0 ? (
+                <a
+                  href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tạo đề kiểm tra THCS 8 môn. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                </a>
+              ) : (
+                <button
+                  onClick={handleGenerateExam}
+                  disabled={isGenerating}
+                  className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all cursor-pointer bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-600 text-white shadow-blue-600/30 active:scale-95"
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-amber-300" />
+                      <span>AI Đang Sinh Đề Chuẩn 7991...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-amber-300" />
+                      <span>
+                        TẠO ĐỀ KIỂM TRA MỚI ({isVIP ? 'VIP' : `${remainingTrials}/5 lượt`})
+                      </span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
 
             {/* KHUNG XEM TRƯỚC ĐỀ THI SƯ PHẠM (TIMES NEW ROMAN 13PT) */}
@@ -906,7 +917,8 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     </a>
 
                     <a
-                      href="/Smart_Listening_Pro_Pass_123.zip"
+                      href="/Trung_Tam_Tao_De_THCS_Pass_123.zip"
+                      download="Trung_Tam_Tao_De_THCS_Pass_123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -917,7 +929,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                           <p className="text-xs font-bold text-white group-hover:text-amber-300">
                             Gói Nén Đầy Đủ (.zip) Pass: 123
                           </p>
-                          <p className="text-[10px] text-slate-400">Trình duyệt không chặn tải</p>
+                          <p className="text-[10px] text-slate-400">Trọn bộ 8 môn kèm tài liệu (Pass: 123)</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -1080,21 +1092,30 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                 </div>
               </div>
 
-              {/* Bảng Giá Các Gói Bản Quyền */}
+              {/* Bảng Các Gói Bản Quyền - Ẩn Giá Cả Để Tế Nhị & Liên Hệ Zalo */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Bảng Giá Các Gói Bản Quyền Tạo Đề THCS
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Các Gói Bản Quyền Tạo Đề THCS (Chuẩn CV 7991)
+                  </h4>
+                  <span className="text-[11px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold text-white">Gói Từng Môn Riêng Lẻ (Toán / Văn / Anh...)</span>
-                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng, cập nhật 1 năm</p>
+                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ mọi tính năng theo từng bộ môn, cập nhật 1 năm</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-blue-400">199.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 môn / 1 máy</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Từng Môn Riêng Lẻ phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-blue-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-blue-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
@@ -1102,10 +1123,16 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     <span className="text-xs font-bold text-white">Gói Toàn Diện 8 Môn (1 Năm)</span>
                     <p className="text-[11px] text-slate-400">Mở khóa toàn bộ 8 môn học THCS (Toán, Văn, Anh, KHTN, Sử Địa, Tin, GDCD, CN)</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-amber-400">499.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ trọn gói 8 môn / 1 năm</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Trọn Bộ 8 Môn (1 Năm) phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-amber-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-4 rounded-xl bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border-2 border-amber-500/50 flex items-center justify-between shadow-lg shadow-amber-500/10">
@@ -1113,18 +1140,28 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs font-extrabold text-white">GÓI TRỌN ĐỜI 8 MÔN (VIP KHUYÊN DÙNG)</span>
                       <span className="px-1.5 py-0.2 text-[9px] font-extrabold rounded bg-red-600 text-white">
-                        SIÊU TIẾT KIỆM
+                        HOT
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-300 mt-0.5">
                       Sở hữu vĩnh viễn cả 8 môn học THCS, cập nhật ngân hàng câu hỏi định kỳ, hỗ trợ chuyển máy mới
                     </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-lg font-black text-amber-300">990.000đ</span>
-                    <span className="block text-[10px] text-emerald-400 font-bold">TRỌN ĐỜI VĨNH VIỄN</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời 8 Môn phần mềm Tạo đề THCS. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all shrink-0 ml-2"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
+                  </a>
                 </div>
+
+                <p className="text-[11px] text-slate-400 italic px-1 pt-1">
+                  * Chính sách giá ưu đãi đặc biệt dành cho giáo viên và các nhà trường. Quý Thầy/Cô vui lòng bấm nút nhắn tin Zalo để nhận báo giá chi tiết và hỗ trợ kích hoạt trực tiếp từ Thầy Thành.
+                </p>
               </div>
             </div>
           </div>

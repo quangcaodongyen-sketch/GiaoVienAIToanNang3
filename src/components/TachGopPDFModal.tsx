@@ -24,7 +24,8 @@ import {
   UploadCloud,
   FileBox,
   CheckCircle2,
-  Plus
+  Plus,
+  MessageCircle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import {
@@ -105,7 +106,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
 
   const handleExecuteTool = async () => {
     if (!isVIP && remainingTrials <= 0) {
-      alert('Thầy/Cô đã dùng hết 5 lượt trải nghiệm miễn phí! Vui lòng kích hoạt Bản quyền Pro để sử dụng không giới hạn.');
+      alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền sử dụng không giới hạn.');
       setActiveTab('license');
       return;
     }
@@ -622,27 +623,41 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                   Thời gian xử lý: ~0.5s | Bảo mật 100% không upload lên máy chủ ngoài
                 </span>
 
-                <button
-                  onClick={handleExecuteTool}
-                  disabled={isProcessing || (!isVIP && remainingTrials <= 0)}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-pink-600/30 transition-all cursor-pointer disabled:cursor-not-allowed"
-                >
-                  {isProcessing ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin" /> Đang xử lý...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 text-amber-300" />
-                      <span>
-                        {currentTool === 'split' && 'TIẾN HÀNH TÁCH TRANG'}
-                        {currentTool === 'merge' && 'TIẾN HÀNH GỘP FILE'}
-                        {currentTool === 'clean' && 'QUÉT & XÓA TRANG TRẮNG NGAY'}
-                        {' '}({isVIP ? 'VIP' : `${remainingTrials} lượt còn`})
-                      </span>
-                    </>
-                  )}
-                </button>
+                {!isVIP && remainingTrials <= 0 ? (
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm PDF Suite Pro. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                  </a>
+                ) : (
+                  <button
+                    onClick={handleExecuteTool}
+                    disabled={isProcessing}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-pink-600/30 transition-all cursor-pointer"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" /> Đang xử lý...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-amber-300" />
+                        <span>
+                          {currentTool === 'split' && 'TIẾN HÀNH TÁCH TRANG'}
+                          {currentTool === 'merge' && 'TIẾN HÀNH GỘP FILE'}
+                          {currentTool === 'clean' && 'QUÉT & XÓA TRANG TRẮNG NGAY'}
+                          {' '}({isVIP ? 'VIP' : `${remainingTrials} lượt còn`})
+                        </span>
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -652,37 +667,67 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
         {activeTab === 'download' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Video Player HD */}
-              <div className="lg:col-span-2 bg-slate-900 rounded-2xl p-4 border border-slate-800 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    <Play className="w-4 h-4 text-pink-500" />
-                    Video Hướng Dẫn Sử Dụng Bộ Công Cụ PDF Suite Pro
-                  </h3>
-                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-pink-500/20 text-pink-300 rounded">
-                    Full HD 1080p
-                  </span>
+              {/* Hướng dẫn kỹ thuật xử lý PDF sư phạm */}
+              <div className="lg:col-span-2 bg-slate-900 rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-pink-400" />
+                      Quy Chuẩn Xử Lý Tệp PDF Sư Phạm Chuyên Nghiệp
+                    </h3>
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-pink-500/20 text-pink-300 rounded border border-pink-500/30">
+                      Bảo Mật Nội Bộ 100%
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-pink-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 1. Tách Dải Trang Linh Hoạt
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Tách nhanh theo số trang lẻ (1, 3, 5...), trang chẵn (2, 4, 6...) hoặc dải trang bất kỳ (1-5, 8-12) phục vụ in ấn hai mặt tiết kiệm giấy.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 2. Gộp Giáo Án & Đề Thi Siêu Tốc
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Kéo thả sắp xếp thứ tự các tệp bài giảng, tài liệu ôn tập và đề thi thành 1 file duy nhất với tốc độ tức thì, không làm giảm chất lượng chữ và hình.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 3. Quét & Lọc Bỏ Trang Trắng AI
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Tự động phân tích mật độ điểm ảnh để phát hiện các trang trắng rác phát sinh khi scan sách, tài liệu hai mặt, loại bỏ sạch sẽ 100%.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5" /> 4. Xử Lý Offline Trực Tiếp Trên Máy
+                      </span>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                        Dữ liệu được xử lý trực tiếp bằng công nghệ WebAssembly ngay trên máy tính của bạn, tuyệt đối không gửi lên server, bảo vệ 100% bí mật đề thi.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner flex items-center justify-center group">
-                  <video
-                    className="w-full h-full object-cover"
-                    controls
-                    poster="/tachgoppdf.jpg"
-                  >
-                    <source src="/cleaner_demo.mp4" type="video/mp4" />
-                    Trình duyệt không hỗ trợ video HTML5.
-                  </video>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
-                  <span>Trình bày: Thầy giáo Đinh Văn Thành</span>
+                <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                  <span>Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)</span>
                   <a
-                    href="/cleaner_demo.mp4"
-                    download="HD_PDF_Suite_Pro.mp4"
-                    className="text-pink-400 hover:text-pink-300 font-medium flex items-center gap-1"
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-pink-400 hover:text-pink-300 font-semibold flex items-center gap-1"
                   >
-                    <Download className="w-3.5 h-3.5" /> Tải video MP4
+                    <MessageCircle className="w-3.5 h-3.5" /> Hỗ trợ kỹ thuật Zalo ({BRAND.author.phone})
                   </a>
                 </div>
               </div>
@@ -695,36 +740,19 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                   </h4>
                   <div className="space-y-2.5">
                     <a
-                      href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
-                      className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-900/40 to-slate-800 hover:from-purple-800/60 hover:to-slate-700 border border-purple-700/40 transition-all group"
+                      href="/PDF_Suite_Pro_Pass_123.zip"
+                      download="PDF_Suite_Pro_Pass_123.zip"
+                      className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-pink-900/40 to-slate-800 hover:from-pink-800/60 hover:to-slate-700 border border-pink-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-xs">
-                          EXE
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-white group-hover:text-pink-300">
-                            Bộ Cài Desktop (.exe)
-                          </p>
-                          <p className="text-[10px] text-slate-400">Chạy offline tốc độ siêu tốc</p>
-                        </div>
-                      </div>
-                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
-                    </a>
-
-                    <a
-                      href="/Smart_Listening_Pro_Pass_123.zip"
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs">
                           ZIP
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-white group-hover:text-amber-300">
-                            Bản Nén (.zip) Pass: 123
+                          <p className="text-xs font-bold text-white group-hover:text-pink-300">
+                            Bản Nén Đầy Đủ (.zip) Pass: 123
                           </p>
-                          <p className="text-[10px] text-slate-400">Trình duyệt không chặn tải</p>
+                          <p className="text-[10px] text-slate-400">Trọn gói công cụ xử lý PDF máy tính</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -732,6 +760,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
 
                     <a
                       href="/HUONG_DAN_SU_DUNG.docx"
+                      download="So_Tay_Xu_Ly_PDF_Su_Pham.docx"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -742,7 +771,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                           <p className="text-xs font-bold text-white group-hover:text-emerald-300">
                             Sổ Tay Xử Lý PDF Sư Phạm
                           </p>
-                          <p className="text-[10px] text-slate-400">Mẹo scan và in ấn tài liệu</p>
+                          <p className="text-[10px] text-slate-400">Mẹo scan và in ấn tài liệu chuẩn</p>
                         </div>
                       </div>
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
@@ -803,7 +832,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Gửi mã máy này qua Zalo <strong className="text-white">0915.213717</strong> cho Thầy Thành để nhận Key kích hoạt.
+                    Gửi mã máy này qua Zalo <strong className="text-white">0915.213717</strong> cho Thầy Thành để nhận báo giá ưu đãi và Key kích hoạt.
                   </p>
                 </div>
 
@@ -867,21 +896,30 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                 </div>
               </div>
 
-              {/* Bảng Giá Các Gói Bản Quyền */}
+              {/* Bảng Các Gói Bản Quyền - Ẩn Giá Cả Để Tế Nhị & Liên Hệ Zalo */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Bảng Giá Các Gói Bản Quyền PDF Suite Pro
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Các Gói Bản Quyền PDF Suite Pro
+                  </h4>
+                  <span className="text-[11px] text-pink-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-white">Gói 1 Năm</span>
+                    <span className="text-xs font-bold text-white">Gói 1 Năm Học</span>
                     <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng tách, gộp, xóa trang rác</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-pink-400">199.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 máy</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-pink-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-pink-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
@@ -889,10 +927,16 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                     <span className="text-xs font-bold text-white">Gói 2 Năm (Tiết Kiệm)</span>
                     <p className="text-[11px] text-slate-400">Miễn phí nâng cấp các thuật toán OCR và nén PDF mới</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-base font-extrabold text-pink-400">299.000đ</span>
-                    <span className="block text-[10px] text-slate-500">/ 1 máy</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-cyan-400" /> Báo Giá Qua Zalo
+                  </a>
                 </div>
 
                 <div className="p-4 rounded-xl bg-gradient-to-r from-purple-950/40 via-pink-950/30 to-slate-900 border-2 border-pink-500/50 flex items-center justify-between shadow-lg shadow-pink-500/10">
@@ -907,11 +951,21 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
                       Không giới hạn thời gian, cập nhật vĩnh viễn, hỗ trợ kỹ thuật trọn đời
                     </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-lg font-black text-pink-300">499.000đ</span>
-                    <span className="block text-[10px] text-emerald-400 font-bold">VĨNH VIỄN</span>
-                  </div>
+                  <a
+                    href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all shrink-0 ml-2"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
+                  </a>
                 </div>
+
+                <p className="text-[11px] text-slate-400 italic px-1 pt-1">
+                  * Chính sách giá ưu đãi đặc biệt dành cho giáo viên và các nhà trường. Quý Thầy/Cô vui lòng bấm nút nhắn tin Zalo để nhận báo giá chi tiết và hỗ trợ kích hoạt trực tiếp từ Thầy Thành.
+                </p>
               </div>
             </div>
           </div>
