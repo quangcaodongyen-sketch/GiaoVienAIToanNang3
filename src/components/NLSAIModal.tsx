@@ -21,7 +21,10 @@ import {
   ExternalLink,
   ChevronRight,
   Info,
-  Award
+  Award,
+  Sliders,
+  HelpCircle,
+  HeartHandshake
 } from 'lucide-react';
 import { BRAND, NLS_RESOURCES } from '../config/brand';
 import { getOrCreateNLSHardwareCode, verifyKeyFormat } from '../services/nlsKeyService';
@@ -107,6 +110,14 @@ const SAMPLE_LESSONS: Record<string, string[]> = {
   ]
 };
 
+// Gợi ý prompt văn bản tùy biến nhanh cho giáo viên (Bản V3)
+const PROMPT_PRESETS = [
+  'Tích hợp ngắn gọn, chú ý học sinh khiếm thính',
+  'Tích hợp chi tiết, lồng ghép kỹ năng sống và phòng chống bạo lực học đường',
+  'Lớp có học sinh tự kỷ, tiếp thu chậm, cần hỗ trợ trực quan',
+  'Lồng ghép Bảo vệ môi trường và Giáo dục tài chính cá nhân'
+];
+
 export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
@@ -118,8 +129,18 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
     'Bài 1: Khái niệm phương trình và hệ hai phương trình bậc nhất hai ẩn'
   );
   const [integrationMode, setIntegrationMode] = useState<'exact' | 'ai_deep'>('ai_deep');
+  
+  // TÍNH NĂNG MỚI V3: Mức độ chi tiết
+  const [detailLevel, setDetailLevel] = useState<'standard' | 'short' | 'detailed'>('standard');
 
-  // Checkboxes nội dung tích hợp
+  // TÍNH NĂNG MỚI V3: Tùy chọn "Chỉ tích hợp giáo dục học sinh khuyết tật hòa nhập"
+  const [onlyDisability, setOnlyDisability] = useState<boolean>(false);
+
+  // TÍNH NĂNG MỚI V3: Ô yêu cầu bổ sung bằng văn bản do giáo viên nhập
+  const [enableCustomPrompt, setEnableCustomPrompt] = useState<boolean>(false);
+  const [customPrompt, setCustomPrompt] = useState<string>('');
+
+  // Checkboxes nội dung tích hợp chung
   const [integrateNLS, setIntegrateNLS] = useState(true);
   const [integrateAI, setIntegrateAI] = useState(true);
   const [integrateSTEM, setIntegrateSTEM] = useState(false);
@@ -128,11 +149,14 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
   const [integrateBVMT, setIntegrateBVMT] = useState(false);
   const [integrateGDTC, setIntegrateGDTC] = useState(false);
   const [integrateXBHTLH, setIntegrateXBHTLH] = useState(false);
-  const [integrateDisability, setIntegrateDisability] = useState(false);
+  const [integrateDisability, setIntegrateDisability] = useState(true);
 
-  // Kết quả sinh ra
-  const [generatedObjectives, setGeneratedObjectives] = useState<string>('');
-  const [generatedProcedures, setGeneratedProcedures] = useState<string>('');
+  // Kết quả sinh ra (phân tách rõ màu đỏ #FF0000 và màu xanh #0070C0)
+  const [generatedPrimaryObjectives, setGeneratedPrimaryObjectives] = useState<string>('');
+  const [generatedDisabilityObjectives, setGeneratedDisabilityObjectives] = useState<string>('');
+  const [generatedPrimaryProcedures, setGeneratedPrimaryProcedures] = useState<string>('');
+  const [generatedDisabilityProcedures, setGeneratedDisabilityProcedures] = useState<string>('');
+
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [copiedSection, setCopiedSection] = useState<'obj' | 'proc' | 'all' | null>(null);
 
@@ -188,7 +212,34 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
     }
   };
 
-  // Sinh nội dung tích hợp mẫu chuẩn xác theo bộ quy tắc Thầy Thành
+  // Phân tích prompt văn bản tùy biến (theo thuật toán V3)
+  const analyzePrompt = (text: string) => {
+    const p = (text || '').toLowerCase().trim();
+    let detectedLevel = detailLevel;
+    if (p.includes('ngắn gọn') || p.includes('ngắn') || p.includes('tóm tắt') || p.includes('súc tích') || p.includes('tối giản')) {
+      detectedLevel = 'short';
+    } else if (p.includes('chi tiết') || p.includes('chuyên sâu') || p.includes('kỹ lưỡng') || p.includes('đầy đủ')) {
+      detectedLevel = 'detailed';
+    }
+
+    const disabilities: string[] = [];
+    if (p.includes('khiếm thính') || p.includes('nghe kém') || p.includes('điếc')) disabilities.push('khiếm thính');
+    if (p.includes('khiếm thị') || p.includes('nhìn kém') || p.includes('mù') || p.includes('mắt kém')) disabilities.push('khiếm thị');
+    if (p.includes('tự kỷ') || p.includes('tăng động') || p.includes('adhd')) disabilities.push('tự kỷ');
+    if (p.includes('chậm') || p.includes('tiếp thu chậm') || p.includes('trí tuệ')) disabilities.push('chậm tiếp thu');
+    if (p.includes('vận động') || p.includes('liệt')) disabilities.push('vận động');
+
+    const topics: string[] = [];
+    if (p.includes('kỹ năng sống') || p.includes('kns')) topics.push('KNS');
+    if (p.includes('bạo lực') || p.includes('pcblhđ') || p.includes('pcblhd')) topics.push('PCBLHĐ');
+    if (p.includes('môi trường') || p.includes('bvmt') || p.includes('rác')) topics.push('BVMT');
+    if (p.includes('tài chính') || p.includes('gdtc') || p.includes('tiết kiệm')) topics.push('GDTC');
+    if (p.includes('giao thông') || p.includes('atgt')) topics.push('ATGT');
+
+    return { detectedLevel, disabilities, topics };
+  };
+
+  // Sinh nội dung tích hợp mẫu chuẩn xác theo bộ quy tắc Thầy Thành (Phiên bản V3)
   const handleGenerateContent = () => {
     // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActive) {
@@ -207,102 +258,188 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
 
     setTimeout(() => {
       const isEnglish = selectedSubject === 'Tiếng Anh';
+      const promptInfo = enableCustomPrompt ? analyzePrompt(customPrompt) : { detectedLevel: detailLevel, disabilities: [], topics: [] };
+      const effectiveLevel = promptInfo.detectedLevel || detailLevel;
 
+      // 1. SINH NỘI DUNG MÔN TIẾNG ANH (100% English)
       if (isEnglish) {
-        // Môn Tiếng Anh: 100% tiếng Anh
-        setGeneratedObjectives(
-          `I. OBJECTIVES / MỤC TIÊU BÀI DẠY (TÍCH HỢP CHUẨN):\n` +
-          `* Language Competences: Master vocabulary and grammatical structures related to "${lessonName}".\n` +
-          (integrateNLS ? `* Digital Competence [NLS.1.2 - NLS.3.1]: Use digital learning platforms, online dictionaries (Oxford, Cambridge), and educational quiz apps to enhance interactive language acquisition.\n` : '') +
-          (integrateAI ? `* AI [AI.2 - AI.3]: Use generative AI tools to practice natural conversation, check pronunciation nuances, and verify grammar accuracy responsibly.\n` : '') +
-          (integrateSTEM ? `* STEM [STEM.1]: Apply technical design and multimedia presentation skills to create interactive English vocabulary mindmaps.\n` : '') +
-          (integrateBVMT ? `* Environmental Protection [BVMT.1]: Raise awareness of ecological balance, saving resources, and green lifestyle through topical discussions.\n` : '') +
-          (integrateDisability ? `* For students with disabilities: Acquire core vocabulary at basic recognition level with visual flashcards, simplified tasks, and peer assistance.\n` : '')
-        );
+        let pObj = '';
+        let dObj = '';
+        let pProc = '';
+        let dProc = '';
 
-        setGeneratedProcedures(
-          `III. TEACHING PROCEDURES / TIẾN TRÌNH DẠY HỌC (4 HOẠT ĐỘNG TÍCH HỢP SƯ PHẠM):\n\n` +
-          `1. WARM-UP (KHỞI ĐỘNG) [NLS.1.1, AI.1]:\n` +
-          `- T plays a multimedia video clip / audio dialogue to introduce the topic.\n` +
-          `- Ss interact on digital devices / respond to quick lead-in questions.\n` +
-          `- Expected product: High engagement, topic identification, and initial vocabulary activation.\n\n` +
-          `2. KNOWLEDGE DISCOVERY (KHÁM PHÁ KIẾN THỨC) [NLS.1.2, AI.2]:\n` +
-          `- T guides Ss to examine the dialogue, look up new words via digital dictionaries, and analyze grammar patterns.\n` +
-          `- Ss work in pairs/groups, listen attentively to native pronunciations, and record key language points.\n` +
-          `- Expected product: Completed vocabulary charts and accurate grammar comprehension notes.\n\n` +
-          `3. PRACTICE (LUYỆN TẬP) [NLS.3.1, AI.3]:\n` +
-          `- T assigns interactive digital practice tasks (gap-filling, sentence building, dialogue role-play).\n` +
-          `- Ss practice speaking and writing, using AI assistant feedback to self-correct pronunciation and grammar errors.\n` +
-          `- Expected product: Pairs perform communicative dialogues fluently with correct intonation.\n\n` +
-          `4. APPLICATION (VẬN DỤNG) [NLS.5.2, STEM.1]:\n` +
-          `- T sets a real-world communicative scenario or creative mini-project related to the topic.\n` +
-          `- Ss collaborate in groups, design digital presentation slides/posters, and share practical viewpoints.\n` +
-          `- Expected product: Group multimedia presentation and peer assessment report.`
-        );
+        if (!onlyDisability) {
+          pObj = `I. OBJECTIVES / MỤC TIÊU BÀI DẠY (TÍCH HỢP CHUẨN CV 5512 - V3):\n` +
+            `* Language Competences: Master key vocabulary and grammatical structures related to "${lessonName}".\n` +
+            (integrateNLS ? `* Digital Competence [NLS.1.2 - NLS.3.1]: Use digital learning platforms, online dictionaries (Oxford, Cambridge), and interactive quiz tools for language acquisition.\n` : '') +
+            (integrateAI ? `* AI [AI.2 - AI.3]: Utilize generative AI assistants responsibly to practice authentic dialogues, check pronunciation nuances, and verify sentence grammar.\n` : '') +
+            (integrateSTEM ? `* STEM [STEM.1]: Design multimedia English vocabulary mindmaps and structured digital concept charts.\n` : '') +
+            (integrateBVMT || promptInfo.topics.includes('BVMT') ? `* Environmental Protection [BVMT.1]: Raise ecological awareness, resource conservation, and green lifestyle through topical discussions.\n` : '') +
+            (promptInfo.topics.includes('KNS') ? `* Life Skills [KNS.1]: Foster proactive communication, active listening, and constructive team collaboration in English.\n` : '') +
+            (promptInfo.topics.includes('PCBLHĐ') ? `* Human Rights & Safety [QCN.1]: Promote inclusive friendship, mutual respect, and safe, civilized school communication.\n` : '');
+
+          pProc = `III. TEACHING PROCEDURES / TIẾN TRÌNH DẠY HỌC (TÍCH HỢP SƯ PHẠM 4 HOẠT ĐỘNG):\n\n` +
+            `1. WARM-UP (KHỞI ĐỘNG) [NLS.1.1, AI.1]:\n` +
+            (effectiveLevel === 'short' 
+              ? `- T plays a digital multimedia clip; Ss interact on mobile/smart screens to identify key terms.\n`
+              : `- T presents an interactive multimedia video clip / audio dialogue introducing "${lessonName}".\n- Ss interact on digital devices / respond to rapid quiz questions.\n- Expected product: High engagement and initial vocabulary activation.\n`) +
+            `\n2. KNOWLEDGE DISCOVERY (KHÁM PHÁ KIẾN THỨC) [NLS.1.2, AI.2]:\n` +
+            (effectiveLevel === 'short'
+              ? `- T guides Ss to look up keywords via digital dictionary; Ss extract language patterns in pairs.\n`
+              : `- T guides Ss to analyze target texts, look up unfamiliar words via digital dictionaries, and examine grammar points.\n- Ss work in pairs/groups, listen attentively to authentic native recordings, and record grammar rules.\n- Expected product: Structured vocabulary charts and accurate grammar notes.\n`) +
+            `\n3. PRACTICE (LUYỆN TẬP) [NLS.3.1, AI.3]:\n` +
+            (effectiveLevel === 'short'
+              ? `- T assigns digital gap-filling/speaking exercises; Ss use AI assistant feedback to self-correct.\n`
+              : `- T assigns communicative practice tasks (gap-filling, sentence building, pair role-play).\n- Ss practice speaking and writing, using AI assistant feedback to self-correct pronunciation and grammar.\n- Expected product: Fluent communicative dialogues with correct intonation.\n`) +
+            `\n4. APPLICATION (VẬN DỤNG) [NLS.5.2, STEM.1]:\n` +
+            (effectiveLevel === 'short'
+              ? `- T gives a real-life mini-project; Ss design digital posters and share findings.\n`
+              : `- T introduces a real-world communicative scenario or creative mini-project related to the topic.\n- Ss collaborate in groups, design digital presentation slides/posters, and share practical viewpoints.\n- Expected product: Group multimedia presentation and peer assessment report.\n`);
+        }
+
+        // Nội dung Khuyết tật hòa nhập (Màu xanh #0070C0)
+        if (integrateDisability || onlyDisability) {
+          const hasHearing = promptInfo.disabilities.includes('khiếm thính');
+          const hasVisual = promptInfo.disabilities.includes('khiếm thị');
+          const hasAutism = promptInfo.disabilities.includes('tự kỷ');
+
+          if (hasHearing) {
+            dObj = `* For students with hearing difficulties: Focus on visual learning materials, flashcards, and gestures to recognize key vocabulary and actively participate in communicative activities.`;
+            dProc = `[SUPPORT FOR STUDENTS WITH HEARING IMPAIRMENT]:\n` +
+              `- T provides illustrated flashcards, subtitle cues, and visual body language during all activities.\n` +
+              `- Pair with a supportive classmate to verify pronunciation steps and written tasks.\n` +
+              `- Expected outcome: Confident recognition and written production of core target words.`;
+          } else if (hasVisual) {
+            dObj = `* For students with visual difficulties: Develop listening comprehension, oral repetition of basic words, and self-confidence in group participation.`;
+            dProc = `[SUPPORT FOR STUDENTS WITH VISUAL IMPAIRMENT]:\n` +
+              `- T reads out text slowly with clear intonation and provides large-print audio materials.\n` +
+              `- Ss participate through spoken responses, audio repetition, and supportive partner guidance.\n` +
+              `- Expected outcome: Confident listening and oral reproduction of basic vocabulary.`;
+          } else if (hasAutism) {
+            dObj = `* For students with autism / attention difficulties: Follow structured step-by-step instructions, complete small achievable tasks, and receive timely teacher encouragement.`;
+            dProc = `[SUPPORT FOR STUDENTS WITH AUTISM / ATTENTION CHALLENGES]:\n` +
+              `- T segments tasks into small, concrete milestones with predictable visual schedules.\n` +
+              `- Foster a calm, encouraging environment with peer buddy support.\n` +
+              `- Expected outcome: Active participation in basic recognition activities without anxiety.`;
+          } else {
+            dObj = `* For students with disabilities: Acquire core vocabulary at basic recognition level with visual flashcards, simplified tasks, and peer assistance.`;
+            dProc = `[INCLUSIVE EDUCATION SUPPORT FOR STUDENTS WITH DISABILITIES]:\n` +
+              `- T assigns simplified recognition tasks, offers visual aids, and provides patient 1-on-1 guidance.\n` +
+              `- Ss participate within group activities, assisted by friendly peer buddies.\n` +
+              `- Expected outcome: Recognition of core vocabulary and positive attitude toward learning.`;
+          }
+        }
+
+        setGeneratedPrimaryObjectives(pObj);
+        setGeneratedDisabilityObjectives(dObj);
+        setGeneratedPrimaryProcedures(pProc);
+        setGeneratedDisabilityProcedures(dProc);
+
       } else {
-        // 11 Môn học còn lại (tiếng Việt chuẩn Times New Roman 13pt)
-        let objs = `I. MỤC TIÊU BÀI DẠY (TÍCH HỢP THEO CV 5512, TT 02/2025, QĐ 2422 & TT 08/2024):\n`;
-        objs += `1. Kiến thức, kĩ năng chung của bài: Nắm vững và vận dụng kiến thức trọng tâm của bài "${lessonName}".\n`;
-        objs += `2. Năng lực đặc thù & Nội dung tích hợp có mã chỉ báo chuẩn:\n`;
-        if (integrateNLS) {
-          objs += `   * NLS [NLS.1.2 - NLS.3.1]: Khai thác học liệu số, phần mềm chuyên dụng (GeoGebra/mô phỏng 3D/PhET/bảng tính điện tử) và thiết bị số để tra cứu, xử lí dữ liệu và trực quan hóa kiến thức bài học.\n`;
-        }
-        if (integrateAI) {
-          objs += `   * AI [AI.2 - AI.3]: Sử dụng công cụ AI (trợ lí ngôn ngữ, AI hỗ trợ giải toán/khoa học) để đối chiếu kết quả, kiểm tra nghiệm, hỗ trợ tìm kiếm tài liệu và nâng cao năng lực tự học có trách nhiệm.\n`;
-        }
-        if (integrateSTEM) {
-          objs += `   * STEM [STEM.1]: Vận dụng kiến thức liên môn, kĩ năng thiết kế mô hình và giải quyết vấn đề thực tiễn gắn với nội dung bài học.\n`;
-        }
-        if (integrateANQP) {
-          objs += `   * ANQP [ANQP.1 - ANQP.2]: Giáo dục tinh thần yêu nước, ý thức bảo vệ chủ quyền biên giới, biển đảo và tự hào về truyền thống lực lượng vũ trang nhân dân (theo Thông tư 08/2024/TT-BGDĐT).\n`;
-        }
-        if (integrateQCN) {
-          objs += `   * QCN [QCN.1]: Giáo dục quyền con người, tinh thần tôn trọng bạn bè, hợp tác nhóm và phòng chống bạo lực học đường (theo Quyết định 1309/QĐ-TTg).\n`;
-        }
-        if (integrateBVMT) {
-          objs += `   * BVMT [BVMT.1]: Nâng cao ý thức bảo vệ môi trường, giữ gìn cảnh quan lớp học, tiết kiệm năng lượng và ứng phó biến đổi khí hậu.\n`;
-        }
-        if (integrateGDTC) {
-          objs += `   * GDTC [GDTC.1]: Giáo dục tài chính, nâng cao kĩ năng lập kế hoạch và quản lí chi tiêu thông minh, hiệu quả.\n`;
-        }
-        if (integrateXBHTLH) {
-          objs += `   * XBHTLH [XBHTLH.1]: Tuyên truyền xóa bỏ các hủ tục, phong tục lạc hậu, xây dựng nếp sống văn minh hiện đại trong gia đình và nhà trường.\n`;
-        }
-        if (integrateDisability) {
-          objs += `   * Hỗ trợ HS khuyết tật: Tiếp thu kiến thức cốt lõi ở mức độ nhận biết cơ bản, rèn luyện tính tự tin, hòa nhập thông qua sự đồng hành của giáo viên và các bạn trong nhóm.\n`;
-        }
-        setGeneratedObjectives(objs);
+        // 2. SINH NỘI DUNG 11 MÔN TIẾNG VIỆT (Chuẩn Times New Roman 13pt)
+        let pObj = '';
+        let dObj = '';
+        let pProc = '';
+        let dProc = '';
 
-        let procs = `III. TIẾN TRÌNH DẠY HỌC (PHÂN TÍCH SƯ PHẠM CHI TIẾT 4 HOẠT ĐỘNG):\n\n`;
-        procs += `1. HOẠT ĐỘNG 1: KHỞI ĐỘNG (XÁC ĐỊNH VẤN ĐỀ) [NLS.1.1, AI.1]\n`;
-        procs += `- Mục tiêu: Tạo tâm thế hứng thú, kết nối kiến thức đã có với vấn đề mới của bài học.\n`;
-        procs += `- Hoạt động của GV: Trình chiếu video mô phỏng số / câu hỏi tình huống trên màn hình tương tác; giao nhiệm vụ cho cả lớp.\n`;
-        procs += `- Hoạt động của HS: Quan sát, thảo luận nhanh theo cặp/bàn, tương tác trả lời câu hỏi khởi động.\n`;
-        procs += `- Sản phẩm dự kiến: Câu trả lời của HS, tâm thế sẵn sàng tiếp cận nội dung bài học.\n\n`;
+        if (!onlyDisability) {
+          pObj = `I. MỤC TIÊU BÀI DẠY (TÍCH HỢP THEO CV 5512, TT 02/2025, QĐ 2422 & TT 08/2024 - BẢN V3):\n` +
+            `1. Yêu cầu cần đạt chung: Nắm vững và vận dụng các kiến thức, kĩ năng trọng tâm của bài "${lessonName}".\n` +
+            `2. Năng lực đặc thù & Nội dung giáo dục tích hợp (Gắn mã chỉ báo chuẩn):\n`;
 
-        procs += `2. HOẠT ĐỘNG 2: HÌNH THÀNH KIẾN THỨC MỚI [NLS.1.2, AI.2, STEM.1]\n`;
-        procs += `- Mục tiêu: Giúp HS lĩnh hội bản chất kiến thức trọng tâm bài "${lessonName}".\n`;
-        procs += `- Hoạt động của GV: Hướng dẫn HS khai thác học liệu số, mô hình thực hành / phần mềm chuyên dụng (GeoGebra, PhET, bảng số liệu); định hướng HS phân tích rút ra quy tắc, định lí.\n`;
-        procs += `- Hoạt động của HS: Thao tác trên thiết bị số/phiếu học tập, phân tích số liệu, thảo luận nhóm và đại diện báo cáo kết quả.\n`;
-        procs += `- Sản phẩm dự kiến: Nội dung ghi bài hoàn chỉnh, các công thức, định nghĩa và kết luận khoa học được chuẩn hóa.\n\n`;
+          if (integrateNLS) {
+            pObj += `   * NLS [NLS.1.2 - NLS.3.1]: Khai thác học liệu số, phần mềm chuyên dụng (GeoGebra/mô phỏng 3D/PhET/bảng tính điện tử) và thiết bị số để tra cứu, xử lí dữ liệu và trực quan hóa kiến thức bài học.\n`;
+          }
+          if (integrateAI) {
+            pObj += `   * AI [AI.2 - AI.3]: Sử dụng công cụ AI (trợ lí ngôn ngữ, AI hỗ trợ giải toán/khoa học) để đối chiếu kết quả, kiểm tra nghiệm, hỗ trợ tìm kiếm tài liệu và nâng cao năng lực tự học có trách nhiệm.\n`;
+          }
+          if (integrateSTEM) {
+            pObj += `   * STEM [STEM.1]: Vận dụng kiến thức liên môn, kĩ năng thiết kế mô hình và giải quyết vấn đề thực tiễn gắn với nội dung bài học.\n`;
+          }
+          if (integrateANQP) {
+            pObj += `   * ANQP [ANQP.1 - ANQP.2]: Giáo dục tinh thần yêu nước, ý thức bảo vệ chủ quyền biên giới, biển đảo và tự hào về truyền thống lực lượng vũ trang nhân dân (theo Thông tư 08/2024/TT-BGDĐT).\n`;
+          }
+          if (integrateQCN || promptInfo.topics.includes('PCBLHĐ')) {
+            pObj += `   * QCN & KNS [QCN.1, KNS.1]: Giáo dục quyền con người, tinh thần tôn trọng bạn bè, hợp tác nhóm văn minh và phòng chống bạo lực học đường (theo Quyết định 1309/QĐ-TTg).\n`;
+          }
+          if (integrateBVMT || promptInfo.topics.includes('BVMT')) {
+            pObj += `   * BVMT [BVMT.1]: Nâng cao ý thức bảo vệ môi trường, giữ gìn cảnh quan lớp học, tiết kiệm năng lượng và ứng phó biến đổi khí hậu.\n`;
+          }
+          if (integrateGDTC || promptInfo.topics.includes('GDTC')) {
+            pObj += `   * GDTC [GDTC.1]: Giáo dục tài chính, nâng cao kĩ năng lập kế hoạch và quản lí chi tiêu thông minh, hiệu quả.\n`;
+          }
+          if (integrateXBHTLH) {
+            pObj += `   * XBHTLH [XBHTLH.1]: Tuyên truyền xóa bỏ các hủ tục, phong tục lạc hậu, xây dựng nếp sống văn minh hiện đại trong gia đình và nhà trường.\n`;
+          }
+          if (promptInfo.topics.includes('ATGT')) {
+            pObj += `   * ATGT [ATGT.1]: Nâng cao văn hóa chấp hành luật an toàn giao thông đường bộ khi đến trường.\n`;
+          }
 
-        procs += `3. HOẠT ĐỘNG 3: LUYỆN TẬP [NLS.3.1, AI.2, AI.3]\n`;
-        procs += `- Mục tiêu: Củng cố, khắc sâu kiến thức, rèn kĩ năng giải bài tập và sử dụng công cụ số thành thạo.\n`;
-        procs += `- Hoạt động của GV: Giao hệ thống bài tập phân hóa; hướng dẫn HS dùng máy tính cầm tay (MTCT) / phần mềm số / trợ lí AI để kiểm tra, đối chiếu nghiệm và kết quả.\n`;
-        procs += `- Hoạt động của HS: Làm bài tập độc lập và thảo luận cặp đôi; tự đối chiếu kết quả, phát hiện và tự sửa lỗi sai.\n`;
-        procs += `- Sản phẩm dự kiến: Lời giải chi tiết các bài tập trong vở và trên bảng nhóm.\n\n`;
+          pProc = `III. TIẾN TRÌNH DẠY HỌC (PHÂN TÍCH SƯ PHẠM CHI TIẾT 4 HOẠT ĐỘNG CHUẨN CV 5512):\n\n` +
+            `1. HOẠT ĐỘNG 1: KHỞI ĐỘNG (XÁC ĐỊNH VẤN ĐỀ) [NLS.1.1, AI.1]\n` +
+            (effectiveLevel === 'short'
+              ? `- GV trình chiếu tình huống/video số; HS quan sát, trao đổi nhanh theo cặp và nêu nhận xét ban đầu.\n- Sản phẩm: Câu trả lời khởi động của HS, tâm thế chủ động tiếp nhận bài mới.\n`
+              : `- Mục tiêu: Tạo tâm thế hứng thú, kích hoạt kiến thức nền tảng gắn với "${lessonName}".\n- Hoạt động của GV: Trình chiếu video mô phỏng số / câu hỏi tình huống trên màn hình tương tác; giao nhiệm vụ cho cả lớp.\n- Hoạt động của HS: Quan sát, thảo luận nhanh theo cặp/bàn, tương tác trả lời câu hỏi khởi động.\n- Sản phẩm dự kiến: Câu trả lời của HS, sự hào hứng tiếp cận kiến thức mới.\n`) +
+            `\n2. HOẠT ĐỘNG 2: HÌNH THÀNH KIẾN THỨC MỚI [NLS.1.2, AI.2, STEM.1]\n` +
+            (effectiveLevel === 'short'
+              ? `- GV hướng dẫn HS khai thác học liệu số, mô hình trực quan; HS thảo luận nhóm và ghi nhận quy tắc/định lí.\n- Sản phẩm: Nội dung ghi bài và kết luận trọng tâm được chuẩn hóa.\n`
+              : `- Mục tiêu: Giúp HS lĩnh hội bản chất kiến thức trọng tâm bài "${lessonName}".\n- Hoạt động của GV: Hướng dẫn HS khai thác học liệu số, mô hình thực hành / phần mềm chuyên dụng (GeoGebra, PhET, bảng số liệu); định hướng HS phân tích rút ra quy tắc, định lí.\n- Hoạt động của HS: Thao tác trên thiết bị số/phiếu học tập, phân tích số liệu, thảo luận nhóm và đại diện báo cáo kết quả.\n- Sản phẩm dự kiến: Nội dung ghi bài hoàn chỉnh, các công thức, định nghĩa và kết luận khoa học được chuẩn hóa.\n`) +
+            `\n3. HOẠT ĐỘNG 3: LUYỆN TẬP [NLS.3.1, AI.2, AI.3]\n` +
+            (effectiveLevel === 'short'
+              ? `- GV giao bài tập phân hóa; HS làm bài, sử dụng MTCT/phần mềm/AI kiểm tra đối chiếu kết quả.\n- Sản phẩm: Lời giải hoàn thiện của bài tập trong vở.\n`
+              : `- Mục tiêu: Củng cố, khắc sâu kiến thức, rèn kĩ năng giải bài tập và sử dụng công cụ số thành thạo.\n- Hoạt động của GV: Giao hệ thống bài tập phân hóa; hướng dẫn HS dùng máy tính cầm tay (MTCT) / phần mềm số / trợ lí AI để kiểm tra, đối chiếu nghiệm và kết quả.\n- Hoạt động của HS: Làm bài tập độc lập và thảo luận cặp đôi; tự đối chiếu kết quả, phát hiện và tự sửa lỗi sai.\n- Sản phẩm dự kiến: Lời giải chi tiết các bài tập trong vở và trên bảng nhóm.\n`) +
+            `\n4. HOẠT ĐỘNG 4: VẬN DỤNG & MỞ RỘNG [NLS.5.2, STEM.1, BVMT.1]\n` +
+            (effectiveLevel === 'short'
+              ? `- GV giao nhiệm vụ thực tiễn/dự án nhỏ; HS lập kế hoạch tìm hiểu và hoàn thành báo cáo số.\n- Sản phẩm: Báo cáo thực hành hoặc sản phẩm ứng dụng bài học.\n`
+              : `- Mục tiêu: Vận dụng kiến thức bài học để giải quyết các vấn đề thực tiễn trong cuộc sống và học tập.\n- Hoạt động của GV: Nêu tình huống thực tế hoặc giao dự án học tập nhỏ về nhà; hướng dẫn tìm kiếm tư liệu chính thống trên Internet.\n- Hoạt động của HS: Lập kế hoạch thực hiện theo nhóm, thu thập thông tin, chuẩn bị bài trình bày hoặc sản phẩm học tập.\n- Sản phẩm dự kiến: Báo cáo thực hành, bài thuyết trình số hoặc sản phẩm ứng dụng thực tiễn của nhóm.\n`);
+        }
 
-        procs += `4. HOẠT ĐỘNG 4: VẬN DỤNG & MỞ RỘNG [NLS.5.2, STEM.1, BVMT.1]\n`;
-        procs += `- Mục tiêu: Vận dụng kiến thức bài học để giải quyết các vấn đề thực tiễn trong cuộc sống và học tập.\n`;
-        procs += `- Hoạt động của GV: Nêu tình huống thực tế hoặc giao dự án học tập nhỏ về nhà; hướng dẫn tìm kiếm tư liệu chính thống trên Internet.\n`;
-        procs += `- Hoạt động của HS: Lập kế hoạch thực hiện theo nhóm, thu thập thông tin, chuẩn bị bài trình bày hoặc sản phẩm học tập.\n`;
-        procs += `- Sản phẩm dự kiến: Báo cáo thực hành, bài thuyết trình số hoặc sản phẩm ứng dụng thực tiễn của nhóm.`;
+        // Nội dung Khuyết tật hòa nhập (Màu xanh #0070C0)
+        if (integrateDisability || onlyDisability) {
+          const hasHearing = promptInfo.disabilities.includes('khiếm thính');
+          const hasVisual = promptInfo.disabilities.includes('khiếm thị');
+          const hasAutism = promptInfo.disabilities.includes('tự kỷ');
+          const hasSlow = promptInfo.disabilities.includes('chậm tiếp thu');
 
-        setGeneratedProcedures(procs);
+          if (hasHearing) {
+            dObj = `* Giáo dục học sinh khuyết tật hòa nhập (Khiếm thính): Tiếp thu kiến thức cốt lõi thông qua kênh hình ảnh trực quan, cử chỉ mô tả, sơ đồ tư duy; tham gia trả lời câu hỏi bằng cách chỉ bảng, viết vào bảng con với sự hỗ trợ của bạn học.`;
+            dProc = `[CHỈ DẪN GIÁO DỤC HỌC SINH KHIẾM THÍNH HÒA NHẬP]:\n` +
+              `- GV bố trí HS khiếm thính ngồi vị trí đầu dãy, dễ quan sát bảng và cử chỉ của thầy cô.\n` +
+              `- Tăng cường sử dụng hình ảnh, video có phụ đề, sơ đồ trực quan và phiếu học tập in sẵn.\n` +
+              `- Phân công 1 bạn học bên cạnh hỗ trợ nhắc việc và đối chiếu kết quả.\n` +
+              `- Dự kiến sản phẩm: HS hoàn thành các bài tập nhận biết cơ bản và tích cực tương tác qua cử chỉ/bảng phụ.`;
+          } else if (hasVisual) {
+            dObj = `* Giáo dục học sinh khuyết tật hòa nhập (Khiếm thị / Thị lực kém): Tiếp thu kiến thức cốt lõi thông qua kênh nghe và lời giảng trực tiếp; tham gia phát biểu miệng, trao đổi cùng nhóm bạn và rèn luyện tính tự tin hòa nhập.`;
+            dProc = `[CHỈ DẪN GIÁO DỤC HỌC SINH KHIẾM THỊ HÒA NHẬP]:\n` +
+              `- GV giảng bài to rõ, mô tả chi tiết bằng lời các hình vẽ, công thức trên bảng.\n` +
+              `- Cung cấp tài liệu phóng to chữ hoặc hướng dẫn HS nghe học liệu âm thanh.\n` +
+              `- Khuyến khích HS trả lời miệng, thảo luận nhóm để phát huy thế mạnh ngôn ngữ.\n` +
+              `- Dự kiến sản phẩm: HS ghi nhớ các khái niệm chính và tự tin trình bày câu trả lời bằng lời nói.`;
+          } else if (hasAutism || hasSlow) {
+            dObj = `* Giáo dục học sinh khuyết tật hòa nhập (Tự kỷ / Chậm tiếp thu): Nắm được kiến thức cơ bản ở mức nhận biết; được chia nhỏ nhiệm vụ, hỗ trợ từng bước và khích lệ kịp thời để tự tin tham gia học tập cùng các bạn.`;
+            dProc = `[CHỈ DẪN GIÁO DỤC HỌC SINH TỰ KỶ / CHẬM TIẾP THU HÒA NHẬP]:\n` +
+              `- GV chia nhỏ từng thao tác học tập, giao nhiệm vụ vừa sức (nhận biết, điền từ đơn giản).\n` +
+              `- Tạo bầu không khí lớp học thân thiện, kiên nhẫn hướng dẫn và động viên khen ngợi kịp thời.\n` +
+              `- Bạn trong nhóm đồng hành hướng dẫn thao tác, không tạo áp lực thời gian.\n` +
+              `- Dự kiến sản phẩm: HS hoàn thành nhiệm vụ mức độ cơ bản trong phiếu học tập riêng.`;
+          } else {
+            dObj = `* Giáo dục học sinh khuyết tật hòa nhập: Tiếp thu kiến thức cốt lõi ở mức độ nhận biết cơ bản, rèn luyện tính tự tin, hòa nhập thông qua sự đồng hành của giáo viên và các bạn trong nhóm.`;
+            dProc = `[CHỈ DẪN GIÁO DỤC HỌC SINH KHUYẾT TẬT HÒA NHẬP]:\n` +
+              `- Hoạt động 1 (Khởi động): GV khích lệ HS tham gia trả lời câu hỏi nhận biết đơn giản cùng cả lớp.\n` +
+              `- Hoạt động 2 (Khám phá): GV giao phiếu học tập có hình ảnh minh họa, bạn nhóm trưởng hỗ trợ giải thích.\n` +
+              `- Hoạt động 3 (Luyện tập): HS hoàn thành bài tập nhận biết mức 1, được GV chấm chữa động viên kịp thời.\n` +
+              `- Hoạt động 4 (Vận dụng): HS cùng nhóm quan sát sản phẩm thực tế, hòa nhập vào không khí học tập chung.`;
+          }
+        }
+
+        setGeneratedPrimaryObjectives(pObj);
+        setGeneratedDisabilityObjectives(dObj);
+        setGeneratedPrimaryProcedures(pProc);
+        setGeneratedDisabilityProcedures(dProc);
       }
 
       setIsGenerating(false);
-    }, 600);
+    }, 500);
   };
 
   // Copy to clipboard
@@ -312,34 +449,52 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
     setTimeout(() => setCopiedSection(null), 2500);
   };
 
-  // Tải file Word giả lập (.doc với HTML format để Word mở chuẩn 100%)
+  // Tải file Word giả lập (.doc với HTML format định dạng OpenXML chuẩn: Chữ đỏ #FF0000 và Chữ xanh #0070C0)
   const handleDownloadDoc = () => {
-    const fullContent = `${generatedObjectives}\n\n${generatedProcedures}`;
-    const htmlDoc = `
+    const fullHtml = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head><meta charset='utf-8'><title>${lessonName}</title>
       <style>
         body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.3; }
-        .integrated-text { color: #FF0000; font-family: 'Times New Roman', serif; font-size: 13pt; text-align: justify; }
+        .text-red { color: #FF0000; font-family: 'Times New Roman', serif; font-size: 13pt; text-align: justify; }
+        .text-blue { color: #0070C0; font-family: 'Times New Roman', serif; font-size: 13pt; text-align: justify; font-weight: normal; }
         h1, h2 { font-family: 'Times New Roman', serif; font-size: 14pt; font-weight: bold; }
       </style>
       </head>
       <body>
-        <h2>GIÁO ÁN TÍCH HỢP NLS & AI - CHUẨN CÔNG VĂN 5512</h2>
-        <p><b>Môn:</b> ${selectedSubject} - <b>Lớp:</b> ${selectedGrade}</p>
+        <h2>GIÁO ÁN TÍCH HỢP NLS & AI - CHUẨN CÔNG VĂN 5512 (PHIÊN BẢN V3)</h2>
+        <p><b>Môn học:</b> ${selectedSubject} - <b>Lớp:</b> ${selectedGrade}</p>
         <p><b>Bài dạy:</b> ${lessonName}</p>
+        <p><b>Tác giả phần mềm:</b> Thầy giáo Đinh Văn Thành – ĐT/Zalo: 0915.213717 – Trường THCS Đồng Yên</p>
         <hr/>
-        <div class="integrated-text" style="white-space: pre-wrap;">
-${fullContent}
-        </div>
+        
+        ${generatedPrimaryObjectives ? `
+        <div class="text-red" style="white-space: pre-wrap; margin-bottom: 12pt;">
+${generatedPrimaryObjectives}
+        </div>` : ''}
+
+        ${generatedDisabilityObjectives ? `
+        <div class="text-blue" style="white-space: pre-wrap; margin-bottom: 16pt;">
+${generatedDisabilityObjectives}
+        </div>` : ''}
+
+        ${generatedPrimaryProcedures ? `
+        <div class="text-red" style="white-space: pre-wrap; margin-bottom: 12pt;">
+${generatedPrimaryProcedures}
+        </div>` : ''}
+
+        ${generatedDisabilityProcedures ? `
+        <div class="text-blue" style="white-space: pre-wrap; margin-bottom: 16pt;">
+${generatedDisabilityProcedures}
+        </div>` : ''}
       </body>
       </html>
     `;
-    const blob = new Blob(['\ufeff' + htmlDoc], { type: 'application/msword' });
+    const blob = new Blob(['\ufeff' + fullHtml], { type: 'application/msword' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Tich_Hop_NLS_AI_${selectedSubject}_${lessonName.substring(0, 30)}.doc`;
+    a.download = `Tich_Hop_NLS_AI_V3_${selectedSubject}_${lessonName.substring(0, 30)}.doc`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -380,6 +535,8 @@ ${fullContent}
 
   if (!isOpen) return null;
 
+  const hasResult = !!(generatedPrimaryObjectives || generatedDisabilityObjectives);
+
   return (
     <div 
       className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
@@ -397,12 +554,12 @@ ${fullContent}
               <FileCode className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
-                  TÍCH HỢP NLS - AI THCS (ADD-INS V2)
+                  TÍCH HỢP NLS - AI THCS (ADD-INS V3)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  CV 5512 CHUẨN 2026
+                  CV 5512 CHUẨN 2026 - BẢN NÂNG CẤP V3
                 </span>
                 {isProActive && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
@@ -447,7 +604,7 @@ ${fullContent}
             }`}
           >
             <Sparkles className="w-4 h-4 text-amber-300" />
-            1. Dùng Thử Trực Tuyến
+            1. Dùng Thử Trực Tuyến V3
           </button>
 
           <button
@@ -459,7 +616,7 @@ ${fullContent}
             }`}
           >
             <Download className="w-4 h-4 text-cyan-300" />
-            2. Tải Bản Máy Tính (.exe)
+            2. Tải Bản Máy Tính & Add-in (.exe/.dotm)
           </button>
 
           <button
@@ -479,20 +636,20 @@ ${fullContent}
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 text-xs">
 
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE AI INTEGRATION GENERATOR) */}
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE AI INTEGRATION GENERATOR V3) */}
           {/* ========================================================================= */}
           {activeTab === 'online' && (
             <div className="space-y-4">
-              {/* Box hướng dẫn nhanh */}
-              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              {/* Box giới thiệu tính năng nâng cấp V3 */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/50 via-slate-900 to-cyan-950/50 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-3">
                   <Info className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                   <div className="space-y-1">
                     <p className="font-semibold text-emerald-200">
-                      Hệ thống tự động thiết kế nội dung tích hợp Năng lực số (NLS), AI, STEM, ANQP vào giáo án Word chuẩn thể thức:
+                      Hệ thống tự động tích hợp Năng lực số, AI, STEM và Giáo dục Khuyết tật hòa nhập (Bản V3):
                     </p>
                     <p className="text-[11px] text-slate-300 leading-relaxed">
-                      Định dạng chuẩn <b>Times New Roman, 13pt, màu đỏ chuẩn (#FF0000)</b>, gắn mã chỉ báo chuẩn quốc gia (<code className="text-amber-300">[NLS.1.2 - NLS.3.1]</code>, <code className="text-amber-300">[AI.2 - AI.3]</code>, <code className="text-amber-300">[STEM.1]</code>) đồng bộ cho Mục I và Mục III (4 hoạt động dạy học).
+                      Định dạng chuẩn <b>Times New Roman, 13pt</b>. Màu đỏ chuẩn (<span className="text-rose-400 font-bold">#FF0000</span>) cho NLS/AI/STEM và màu xanh dương chuẩn (<span className="text-cyan-400 font-bold">#0070C0</span>) cho Học sinh khuyết tật hòa nhập.
                     </p>
                   </div>
                 </div>
@@ -516,11 +673,11 @@ ${fullContent}
                     </div>
                     <div>
                       <div className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                        👑 BẢN QUYỀN PRO: ĐÃ KÍCH HOẠT CHÍNH THỨC
+                        👑 BẢN QUYỀN PRO V3: ĐÃ KÍCH HOẠT CHÍNH THỨC
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                       </div>
                       <div className="text-[11px] text-slate-400">
-                        Mã máy: <b className="text-cyan-300 font-mono">{detectedMid}</b> – Không giới hạn số lần tích hợp NLS & AI cho 12 môn THCS.
+                        Mã máy: <b className="text-cyan-300 font-mono">{detectedMid}</b> – Không giới hạn số lần tích hợp NLS, AI & Khuyết tật hòa nhập cho 12 môn THCS.
                       </div>
                     </div>
                   </div>
@@ -541,7 +698,7 @@ ${fullContent}
                     <div className="flex items-center gap-2">
                       <span className="text-base">🎁</span>
                       <span className="font-bold text-xs sm:text-sm text-white">
-                        DÙNG THỬ TÍCH HỢP NLS MIỄN PHÍ TRÊN MÁY TÍNH NÀY:
+                        DÙNG THỬ TÍCH HỢP NLS - AI MIỄN PHÍ TRÊN MÁY TÍNH NÀY:
                       </span>
                       <span className="text-[11px] text-slate-300">
                         Đã sử dụng {5 - trialRemaining}/5 lượt
@@ -574,14 +731,14 @@ ${fullContent}
                       ))}
                     </div>
                     <span className="text-[10px] text-slate-400 italic ml-auto hidden sm:inline">
-                      (Mỗi máy tính được tặng 5 lượt tích hợp NLS miễn phí)
+                      (Mỗi máy tính được tặng đúng 5 lượt tích hợp NLS miễn phí)
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* BỘ LỌC CẤU HÌNH TÍCH HỢP */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
+              {/* BỘ LỌC CẤU HÌNH TÍCH HỢP CHUẨN V3 */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
                 {/* 1. Chọn Môn học */}
                 <div>
                   <label className="block text-slate-300 font-bold mb-1">
@@ -625,13 +782,29 @@ ${fullContent}
                     onChange={(e) => setIntegrationMode(e.target.value as any)}
                     className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-emerald-500"
                   >
-                    <option value="ai_deep">Phân tích Sư phạm AI chi tiết (Mục I & III)</option>
+                    <option value="ai_deep">Phân tích Sư phạm AI (Mục I & III)</option>
                     <option value="exact">Tích hợp Nguyên văn Phụ lục III</option>
                   </select>
                 </div>
 
+                {/* 4. Mức độ chi tiết (Mới V3) */}
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">
+                    4. Mức độ chi tiết (V3)
+                  </label>
+                  <select
+                    value={detailLevel}
+                    onChange={(e) => setDetailLevel(e.target.value as any)}
+                    className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-cyan-300 focus:outline-none focus:border-cyan-500"
+                  >
+                    <option value="standard">Tiêu chuẩn (Chuẩn CV 5512)</option>
+                    <option value="short">Ngắn gọn, súc tích (Short)</option>
+                    <option value="detailed">Chuyên sâu, đa tầng (Detailed)</option>
+                  </select>
+                </div>
+
                 {/* Tên bài học / Chủ đề */}
-                <div className="md:col-span-3">
+                <div className="md:col-span-4">
                   <label className="block text-slate-300 font-bold mb-1">
                     Tên bài dạy / Chủ đề giảng dạy:
                   </label>
@@ -647,7 +820,7 @@ ${fullContent}
                   {SAMPLE_LESSONS[selectedSubject] && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       <span className="text-[11px] text-slate-400 font-medium self-center mr-1">
-                        Gợi ý:
+                        Gợi ý nhanh:
                       </span>
                       {SAMPLE_LESSONS[selectedSubject].map((preset, idx) => (
                         <button
@@ -664,10 +837,36 @@ ${fullContent}
                 </div>
               </div>
 
-              {/* NỘI DUNG TÍCH HỢP (CHECKBOXES) */}
-              <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+              {/* TÍNH NĂNG ĐẶC BIỆT MỚI V3: CHẾ ĐỘ CHỈ KHUYẾT TẬT HÒA NHẬP */}
+              <div className="p-3 rounded-2xl bg-cyan-950/40 border border-cyan-500/40 flex items-center justify-between gap-3">
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={onlyDisability}
+                    onChange={(e) => setOnlyDisability(e.target.checked)}
+                    className="w-4 h-4 rounded accent-cyan-400 cursor-pointer"
+                  />
+                  <div>
+                    <div className="font-bold text-xs text-cyan-300 flex items-center gap-1.5">
+                      <HeartHandshake className="w-4 h-4 text-cyan-400" />
+                      Tùy chọn V3: Chỉ tích hợp Giáo dục học sinh khuyết tật hòa nhập (Chuyên đề độc lập)
+                    </div>
+                    <p className="text-[11px] text-slate-300">
+                      Khi bật: Tự động tập trung tích hợp nội dung dành cho học sinh khuyết tật (màu xanh dương <b className="text-cyan-300">#0070C0</b>), không chèn đè các nội dung chuyên đề khác.
+                    </p>
+                  </div>
+                </label>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0 hidden sm:inline">
+                  Mới V3
+                </span>
+              </div>
+
+              {/* NỘI DUNG TÍCH HỢP CHUYÊN ĐỀ (Ẩn hoặc làm mờ khi chọn onlyDisability) */}
+              <div className={`bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2 transition-all ${
+                onlyDisability ? 'opacity-40 pointer-events-none' : ''
+              }`}>
                 <span className="font-bold text-slate-200 block">
-                  Chọn các chuyên đề tích hợp vào bài giảng này:
+                  Chọn các chuyên đề tích hợp vào bài giảng này (Màu đỏ chuẩn #FF0000):
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 pt-1">
                   <label className="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 cursor-pointer">
@@ -743,13 +942,56 @@ ${fullContent}
                   <label className="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={integrateDisability}
-                      onChange={(e) => setIntegrateDisability(e.target.checked)}
+                      checked={integrateXBHTLH}
+                      onChange={(e) => setIntegrateXBHTLH(e.target.checked)}
                       className="rounded accent-emerald-500"
                     />
-                    <span className="text-slate-200 font-medium">HS khuyết tật/hòa nhập</span>
+                    <span className="text-slate-200 font-medium">XBHTLH (Xóa hủ tục)</span>
                   </label>
                 </div>
+              </div>
+
+              {/* TÍNH NĂNG MỚI V3: Ô YÊU CẦU BỔ SUNG BẰNG VĂN BẢN (CUSTOM PROMPT) */}
+              <div className="bg-slate-950/80 p-4 rounded-2xl border border-indigo-500/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 font-bold text-indigo-300 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={enableCustomPrompt}
+                      onChange={(e) => setEnableCustomPrompt(e.target.checked)}
+                      className="w-4 h-4 rounded accent-indigo-400 cursor-pointer"
+                    />
+                    <span>✍️ Yêu cầu bổ sung đặc thù bằng văn bản (Tùy biến Prompt sư phạm - Bản V3)</span>
+                  </label>
+                  <span className="text-[11px] text-slate-400 hidden sm:inline">
+                    Tự nhận diện độ chi tiết, dạng khuyết tật và chuyên đề mở rộng
+                  </span>
+                </div>
+
+                {enableCustomPrompt && (
+                  <div className="space-y-2 pt-1 animate-in fade-in duration-150">
+                    <textarea
+                      rows={2}
+                      value={customPrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      placeholder="Nhập yêu cầu bổ sung bằng văn bản tự do, ví dụ: 'Tích hợp ngắn gọn, chú ý học sinh khiếm thính', 'Lớp có học sinh tự kỷ, lồng ghép kỹ năng sống và phòng chống bạo lực học đường'..."
+                      className="w-full p-2.5 rounded-xl bg-slate-900 border border-indigo-400/40 text-xs text-indigo-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-400"
+                    />
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                      <span className="text-[11px] text-slate-400 font-medium">Mẫu gợi ý:</span>
+                      {PROMPT_PRESETS.map((p, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCustomPrompt(p)}
+                          className="px-2 py-0.5 rounded-lg bg-indigo-950/60 hover:bg-indigo-900/60 text-[11px] text-indigo-300 border border-indigo-500/30 transition-colors"
+                        >
+                          {p}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* NÚT THỰC THI SINH NỘI DUNG */}
@@ -757,7 +999,7 @@ ${fullContent}
                 {!isProActive && trialRemaining <= 0 ? (
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tích hợp NLS - AI THCS V2. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${detectedMid}).`
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm Tích hợp NLS - AI THCS V3. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${detectedMid}).`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -775,18 +1017,21 @@ ${fullContent}
                   >
                     <Sparkles className="w-4 h-4" />
                     {isGenerating 
-                      ? 'Đang phân tích sư phạm AI...' 
+                      ? 'Đang phân tích sư phạm AI V3...' 
                       : !isProActive
-                      ? `Sinh Nội Dung Tích Hợp AI (Còn ${trialRemaining}/5 lượt)`
-                      : 'Sinh Nội Dung Tích Hợp AI (Chuẩn CV 5512)'}
+                      ? `Sinh Nội Dung Tích Hợp AI V3 (Còn ${trialRemaining}/5 lượt)`
+                      : 'Sinh Nội Dung Tích Hợp AI V3 (Chuẩn CV 5512)'}
                   </button>
                 )}
 
-                {generatedObjectives && (
+                {hasResult && (
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                     <button
                       type="button"
-                      onClick={() => handleCopy(`${generatedObjectives}\n\n${generatedProcedures}`, 'all')}
+                      onClick={() => handleCopy(
+                        `${generatedPrimaryObjectives}\n\n${generatedDisabilityObjectives}\n\n${generatedPrimaryProcedures}\n\n${generatedDisabilityProcedures}`.trim(),
+                        'all'
+                      )}
                       className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
                     >
                       {copiedSection === 'all' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -798,32 +1043,44 @@ ${fullContent}
                       className="px-3.5 py-2 rounded-xl bg-emerald-700/80 hover:bg-emerald-600 text-white font-bold flex items-center gap-1.5 transition-colors shadow"
                     >
                       <Download className="w-4 h-4" />
-                      Tải File Word (.doc)
+                      Tải File Word (.doc V3)
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* KẾT QUẢ HIỂN THỊ */}
-              {generatedObjectives ? (
+              {/* KẾT QUẢ HIỂN THỊ CHUẨN OPENXML V3 (MÀU ĐỎ #FF0000 & MÀU XANH #0070C0) */}
+              {hasResult ? (
                 <div className="space-y-3 pt-2">
                   {/* Mục I: Mục tiêu */}
                   <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                       <span className="font-bold text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
                         <BookOpen className="w-4 h-4 text-amber-400" />
-                        MỤC I. MỤC TIÊU BÀI DẠY (CÓ GẮN MÃ CHỈ BÁO)
+                        MỤC I. MỤC TIÊU BÀI DẠY (GẮN MÃ CHỈ BÁO CHUẨN V3)
                       </span>
                       <button
-                        onClick={() => handleCopy(generatedObjectives, 'obj')}
+                        onClick={() => handleCopy(`${generatedPrimaryObjectives}\n\n${generatedDisabilityObjectives}`.trim(), 'obj')}
                         className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 flex items-center gap-1"
                       >
                         {copiedSection === 'obj' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         {copiedSection === 'obj' ? 'Đã sao chép' : 'Sao chép Mục I'}
                       </button>
                     </div>
-                    <div className="font-serif text-[13px] leading-relaxed text-rose-400 whitespace-pre-wrap pl-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
-                      {generatedObjectives}
+
+                    <div className="font-serif text-[13px] leading-relaxed pl-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                      {/* Phần màu đỏ: NLS, AI, STEM, ANQP... */}
+                      {generatedPrimaryObjectives && (
+                        <div className="text-rose-400 whitespace-pre-wrap">
+                          {generatedPrimaryObjectives}
+                        </div>
+                      )}
+                      {/* Phần màu xanh dương: Khuyết tật hòa nhập chuẩn OpenXML #0070C0 */}
+                      {generatedDisabilityObjectives && (
+                        <div className="text-cyan-400 font-medium whitespace-pre-wrap pt-1 border-t border-slate-800/60">
+                          {generatedDisabilityObjectives}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -832,18 +1089,30 @@ ${fullContent}
                     <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                       <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-xs sm:text-sm">
                         <Layers className="w-4 h-4 text-cyan-400" />
-                        MỤC III. TIẾN TRÌNH DẠY HỌC (4 HOẠT ĐỘNG PHÂN TÍCH SƯ PHẠM CHI TIẾT)
+                        MỤC III. TIẾN TRÌNH DẠY HỌC (4 HOẠT ĐỘNG SƯ PHẠM V3)
                       </span>
                       <button
-                        onClick={() => handleCopy(generatedProcedures, 'proc')}
+                        onClick={() => handleCopy(`${generatedPrimaryProcedures}\n\n${generatedDisabilityProcedures}`.trim(), 'proc')}
                         className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 flex items-center gap-1"
                       >
                         {copiedSection === 'proc' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         {copiedSection === 'proc' ? 'Đã sao chép' : 'Sao chép Mục III'}
                       </button>
                     </div>
-                    <div className="font-serif text-[13px] leading-relaxed text-rose-400 whitespace-pre-wrap pl-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
-                      {generatedProcedures}
+
+                    <div className="font-serif text-[13px] leading-relaxed pl-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                      {/* Phần màu đỏ: 4 hoạt động NLS & AI */}
+                      {generatedPrimaryProcedures && (
+                        <div className="text-rose-400 whitespace-pre-wrap">
+                          {generatedPrimaryProcedures}
+                        </div>
+                      )}
+                      {/* Phần màu xanh dương: Chỉ dẫn khuyết tật hòa nhập */}
+                      {generatedDisabilityProcedures && (
+                        <div className="text-cyan-400 font-medium whitespace-pre-wrap pt-2 border-t border-slate-800/60">
+                          {generatedDisabilityProcedures}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -851,10 +1120,10 @@ ${fullContent}
                 <div className="text-center py-10 border border-dashed border-slate-800 rounded-2xl p-6 text-slate-500">
                   <Sparkles className="w-8 h-8 mx-auto mb-2 text-slate-600" />
                   <p className="font-medium text-slate-400">
-                    Bấm nút "Sinh Nội Dung Tích Hợp AI" ở trên để tạo tự động nội dung chuẩn xác cho giáo án.
+                    Bấm nút "Sinh Nội Dung Tích Hợp AI V3" ở trên để tạo tự động nội dung chuẩn xác cho giáo án.
                   </p>
                   <p className="text-[11px] text-slate-500 mt-1">
-                    Hỗ trợ đầy đủ 12 môn học THCS và tất cả các chuyên đề NLS, AI, STEM, ANQP, QCN theo quy định mới nhất.
+                    Phiên bản V3 bổ sung phân tích chuyên sâu Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0) và Prompt văn bản tùy biến.
                   </p>
                 </div>
               )}
@@ -862,7 +1131,7 @@ ${fullContent}
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 2: TẢI BẢN CÀI DESKTOP, VIDEO HD & WORD ADD-IN (.DOTM / .EXE) */}
+          {/* TAB 2: TẢI BẢN CÀI DESKTOP, VIDEO HD & WORD ADD-IN V3 (.DOTM / .EXE) */}
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-4">
@@ -921,22 +1190,22 @@ ${fullContent}
                       className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
                     >
                       <Download className="w-3 h-3" />
-                      Tải Video HD (12 MB)
+                      Tải Video HD
                     </a>
                   </div>
                 </div>
               </div>
 
-              {/* 2. BANNER TẢI TRỌN BỘ CÀI ĐẶT */}
+              {/* 2. BANNER TẢI TRỌN BỘ CÀI ĐẶT V3 */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/70 via-slate-900 to-blue-950/70 border border-cyan-500/40">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <h4 className="text-sm font-bold text-cyan-200 flex items-center gap-1.5">
                       <Download className="w-4 h-4 text-cyan-400" />
-                      Trọn Bộ Cài Đặt Desktop & Word Add-in Tích Hợp NLS-AI V2
+                      Trọn Bộ Cài Đặt Desktop & Word Add-in Tích Hợp NLS-AI V3
                     </h4>
                     <p className="text-[11px] text-slate-300 mt-1">
-                      Bao gồm bộ cài tự động 1-click, file Word Add-in thanh Ribbon và toàn bộ tài liệu hướng dẫn chuẩn CV 5512.
+                      Bản V3 nâng cấp: Bổ sung chế độ chuyên sâu Học sinh khuyết tật hòa nhập (#0070C0), ô tùy biến prompt văn bản và cơ chế Single Instance.
                     </p>
                   </div>
 
@@ -948,24 +1217,24 @@ ${fullContent}
                     className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    Tải Trọn Bộ (Pass: 123)
+                    Tải Trọn Bộ V3 (Pass: 123)
                   </a>
                 </div>
               </div>
 
-              {/* 3. 4 LỰA CHỌN TẢI TỪNG PHẦN */}
+              {/* 3. 4 LỰA CHỌN TẢI TỪNG PHẦN BẢN V3 */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {/* 1. Bản Cài Đặt Tự Động */}
+                {/* 1. Bản Cài Đặt Tự Động V3 */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
                   <div className="space-y-1.5">
                     <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
                       .EXE
                     </div>
                     <h5 className="font-bold text-slate-200 text-xs">
-                      Bộ Cài Đặt Tự Động (.exe)
+                      Bộ Cài Tự Động V3 (.exe)
                     </h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>Cai_Dat_Tich_Hop_NLS_AI_THCS.exe</code> (77 MB). Tự động tạo biểu tượng trên Desktop và cấu hình hệ thống.
+                      File: <code>Cai_Dat_Tich_Hop_NLS_AI_THCS.exe</code> (77 MB). Tự động cấu hình Desktop và Add-in Word 1-click.
                     </p>
                   </div>
                   <a
@@ -976,21 +1245,21 @@ ${fullContent}
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Tải File Cài Đặt (.exe)
+                    Tải File Cài Đặt V3 (.exe)
                   </a>
                 </div>
 
-                {/* 2. File Add-in Word */}
+                {/* 2. File Add-in Word V3 */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
                   <div className="space-y-1.5">
                     <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
                       .DOTM
                     </div>
                     <h5 className="font-bold text-slate-200 text-xs">
-                      Word Add-in Ribbon (.dotm)
+                      Word Add-in Ribbon V3 (.dotm)
                     </h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>TichHop_NLS_AI_THCS.dotm</code>. Gắn trực tiếp tab "TÍCH HỢP NLS & AI" trên thanh Ribbon của Microsoft Word.
+                      File: <code>TichHop_NLS_AI_THCS.dotm</code> (51.5 KB). Tab "TÍCH HỢP NLS & AI" trên thanh Ribbon Word với các nút tính năng mới V3.
                     </p>
                   </div>
                   <a
@@ -999,7 +1268,7 @@ ${fullContent}
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Tải File Add-in (.dotm)
+                    Tải Add-in Ribbon V3 (.dotm)
                   </a>
                 </div>
 
@@ -1010,10 +1279,10 @@ ${fullContent}
                       .MP4
                     </div>
                     <h5 className="font-bold text-slate-200 text-xs">
-                      Video Hướng Dẫn Chi Tiết
+                      Video Hướng Dẫn Full HD
                     </h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>HD_tich_hop_NLS_AI.mp4</code> (52 MB). Video chất lượng Full HD hướng dẫn chi tiết từng thao tác.
+                      File: <code>HD_tich_hop_NLS_AI.mp4</code>. Video chất lượng cao hướng dẫn chi tiết từng thao tác thực chiến.
                     </p>
                   </div>
                   <a
@@ -1026,17 +1295,17 @@ ${fullContent}
                   </a>
                 </div>
 
-                {/* 4. Hướng Dẫn Sử Dụng */}
+                {/* 4. Hướng Dẫn Sử Dụng & Phụ Lục Mẫu */}
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
                   <div className="space-y-1.5">
                     <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
                       .DOCX
                     </div>
                     <h5 className="font-bold text-slate-200 text-xs">
-                      Hướng Dẫn & Phụ Lục Mẫu
+                      Hướng Dẫn & Phụ Lục Mẫu V3
                     </h5>
                     <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>HUONG_DAN_SU_DUNG.docx</code>. Hướng dẫn chi tiết từng bước cài đặt, tích hợp vào Word và chuẩn bị giáo án.
+                      File: <code>HUONG_DAN_SU_DUNG.docx</code>. Hướng dẫn chi tiết nạp Phụ lục III và tùy chọn khuyết tật hòa nhập.
                     </p>
                   </div>
                   <a
@@ -1050,15 +1319,61 @@ ${fullContent}
                 </div>
               </div>
 
+              {/* 5 ĐIỂM NÂNG CẤP ĐẮT GIÁ CỦA PHIÊN BẢN V3 */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <Award className="w-4 h-4 text-amber-400" />
+                  Các điểm nâng cấp nổi bật trên Phiên bản V3 so với Bản cũ (V2):
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-[11px]">
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">1. Giáo dục Khuyết tật hòa nhập:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Tích hợp chế độ riêng biệt cho học sinh khuyết tật hòa nhập (khiếm thính, khiếm thị, tự kỷ, chậm tiếp thu) với màu chữ xanh dương chuẩn <code>#0070C0</code>.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">2. Ô Yêu Cầu Prompt Tự Do:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Giáo viên có thể gõ trực tiếp yêu cầu văn bản riêng (ngắn gọn/chi tiết/lồng ghép chuyên đề), AI tự động nhận diện và đáp ứng đúng mong muốn.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">3. Cơ Chế Single Instance:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Chống mở trùng lặp nhiều cửa sổ ứng dụng gây xung đột tệp Word và hao tốn tài nguyên CPU/RAM của máy tính.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">4. Add-in Word Ribbon V3 Mới:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Nâng cấp dung lượng 51.5 KB, tối ưu thanh Ribbon với các nút bấm trực quan, hỗ trợ Word 2013, 2016, 2019, 2021 và Office 365.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">5. Multi-Anchor Mirror 4 Chốt:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Bảo vệ tích lũy số lần dùng thử chống reset khi gỡ cài đặt, kiểm soát hạn ngạch cài đặt 5 máy tính an toàn tuyệt đối.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                    <b className="text-cyan-300 block">6. Bảo Toàn File Gốc 100%:</b>
+                    <p className="text-slate-300 leading-relaxed">
+                      Giữ nguyên vẹn 100% công thức toán học MathType/OMML, sơ đồ, tranh ảnh và bảng biểu theo chuẩn OpenXML của Microsoft Word.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* HƯỚNG DẪN 3 BƯỚC THIẾT LẬP TRONG WORD */}
               <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5">
                 <span className="font-bold text-slate-200 flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  Hướng dẫn kích hoạt tab "TÍCH HỢP NLS & AI" trên thanh Ribbon của Word:
+                  Hướng dẫn kích hoạt tab "TÍCH HỢP NLS & AI THCS" trên thanh Ribbon của Word:
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
                   <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <b className="text-cyan-400 block mb-1">Bước 1: Tải file .dotm</b>
+                    <b className="text-cyan-400 block mb-1">Bước 1: Tải file .dotm V3</b>
                     <p className="text-slate-300">
                       Tải file <code>TichHop_NLS_AI_THCS.dotm</code> ở trên và lưu vào một thư mục cố định trên máy (ví dụ: ổ D hoặc C).
                     </p>
@@ -1081,7 +1396,7 @@ ${fullContent}
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN ED25519 PRO (MÃ MÁY & KÍCH HOẠT KEY) */}
+          {/* TAB 3: BẢN QUYỀN ED25519 PRO (MÃ MÁY & KÍCH HOẠT KEY V3) */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4">
@@ -1151,7 +1466,7 @@ ${fullContent}
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                        👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
+                        👑 CHÍNH SÁCH BẢN QUYỀN V3 CHÍNH THỨC
                       </span>
                       <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
                     </div>
@@ -1175,7 +1490,7 @@ ${fullContent}
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Tích hợp Năng lực số & AI:</strong> Tự động tích hợp khung năng lực số theo thông tư của Bộ GD&ĐT cho 12 môn học THCS.</span>
+                      <span><strong>Tích hợp NLS, AI & Khuyết tật hòa nhập V3:</strong> Tự động tích hợp khung năng lực số và học sinh hòa nhập cho 12 môn học THCS.</span>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -1185,7 +1500,7 @@ ${fullContent}
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các bản cập nhật theo công văn mới của Bộ GD&ĐT.</span>
+                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí nâng cấp các phiên bản tiếp theo theo thông tư mới của Bộ GD&ĐT.</span>
                     </div>
                   </div>
                 </div>
@@ -1194,7 +1509,7 @@ ${fullContent}
                 <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Tích Hợp NLS - AI THCS. Mã máy của tôi: ${detectedMid}.`
+                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Tích Hợp NLS - AI THCS V3. Mã máy của tôi: ${detectedMid}.`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1211,14 +1526,14 @@ ${fullContent}
                 <div className="p-5 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-center space-y-3">
                   <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
                   <h4 className="text-sm font-bold text-emerald-300">
-                    ĐÃ GHI NHẬN ĐĂNG KÝ BẢN QUYỀN!
+                    ĐÃ GHI NHẬN ĐĂNG KÝ BẢN QUYỀN V3!
                   </h4>
                   <p className="text-slate-300 text-xs max-w-md mx-auto">
                     Thông tin máy <b className="text-cyan-300 font-mono">{detectedMid}</b> của Thầy/Cô đã được lưu lại. Vui lòng bấm nút bên dưới để mở Zalo gửi xác nhận cho Thầy Thành.
                   </p>
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid} (Gói: ${regPlan}, Tên: ${regName || 'Giáo viên'}, Trường: ${regSchool || 'THCS'}). Nhờ Thầy gửi giúp mã kích hoạt nhé!`
+                      `Chào Thầy Thành, tôi đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V3 cho máy ${detectedMid} (Gói: ${regPlan}, Tên: ${regName || 'Giáo viên'}, Trường: ${regSchool || 'THCS'}). Nhờ Thầy gửi giúp mã kích hoạt nhé!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1231,7 +1546,7 @@ ${fullContent}
               ) : (
                 <form onSubmit={handleSubmitRegister} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                   <span className="font-bold text-slate-200 block">
-                    Đăng ký thông tin nhận Key kích hoạt Ed25519:
+                    Đăng ký thông tin nhận Key kích hoạt Ed25519 V3:
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -1291,7 +1606,7 @@ ${fullContent}
 
                     <a
                       href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                        `Chào Thầy Thành, tôi muốn đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V2 cho máy ${detectedMid}.`
+                        `Chào Thầy Thành, tôi muốn đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V3 cho máy ${detectedMid}.`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -1312,7 +1627,7 @@ ${fullContent}
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Phần mềm Tích hợp NLS - AI THCS V2 – Bản quyền: Thầy giáo Đinh Văn Thành</span>
+            <span>Phần mềm Tích hợp NLS - AI THCS V3 (Chuẩn CV 5512) – Bản quyền: Thầy giáo Đinh Văn Thành</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -1325,7 +1640,7 @@ ${fullContent}
         </div>
 
       </div>
-          <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI THCS" />
-</div>
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI THCS V3" />
+    </div>
   );
 };

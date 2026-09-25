@@ -1037,7 +1037,7 @@ export default function App() {
         onClose={closeAllModals}
       />
 
-      {/* TÍCH HỢP NLS - AI THCS (ADD-INS V2) MODAL (3 TABS) */}
+      {/* TÍCH HỢP NLS - AI THCS (ADD-INS V3) MODAL (3 TABS) */}
       <NLSAIModal
         isOpen={showNLSAIModal}
         onClose={closeAllModals}

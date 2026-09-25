@@ -147,13 +147,18 @@ export async function generateEd25519Key(
   const key = `KEY-${dateCompact}-${sigFormatted}`;
 
   const zaloMessage = `Kính gửi Thầy/Cô,
-Thầy Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Phần mềm Tích hợp NLS, AI & Các nội dung giáo dục cấp THCS (CV 5512):
+Thầy Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Phần mềm Tích hợp NLS, AI & Các nội dung giáo dục cấp THCS (Phiên bản V3 - Chuẩn CV 5512):
 
 🔹 Gói bản quyền: ${planName} (${price})
 🔹 Hạn sử dụng: Đến ngày ${expDate}
 🔹 Mã máy: ${cleanCode}
-🔹 Mã kích hoạt (Key Pro):
+🔹 Mã kích hoạt (Key Pro V3):
 ${key}
+
+Tính năng nổi bật trên Bản V3:
+✨ Hỗ trợ tích hợp chuyên sâu Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0 chuẩn mực).
+✨ Ô yêu cầu bổ sung văn bản tự do: Tùy biến mức độ ngắn gọn/chi tiết và các chuyên đề đặc thù.
+✨ Add-in Ribbon Word V3 tối ưu 1-click & Cơ chế Single Instance chống trùng lặp.
 
 Hướng dẫn kích hoạt:
 1. Mở phần mềm (hoặc mở Word), bấm vào nút "Kích hoạt Pro" (hoặc menu Bản quyền).

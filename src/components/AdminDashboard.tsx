@@ -1303,7 +1303,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             }`}
           >
             <FileCode className="w-4 h-4" />
-            2. NLS-AI V2 (Ed25519)
+            2. NLS-AI V3 (Ed25519)
           </button>
           <button
             onClick={() => setAdminTab('taode')}
@@ -2428,7 +2428,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
           </>
         )}
 
-        {/* TAB 2: TOOL TẠO KEY ED25519 - TÍCH HỢP NLS-AI V2 */}
+        {/* TAB 2: TOOL TẠO KEY ED25519 - TÍCH HỢP NLS-AI V3 */}
         {adminTab === 'nls' && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
             {/* CARD TẠO KEY ED25519 */}
@@ -2436,10 +2436,10 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-bold text-emerald-300 flex items-center gap-2">
                   <FileCode className="w-4 h-4 text-emerald-400" />
-                  KÝ SỐ ED25519 & TẠO KEY BẢN QUYỀN PRO THCS 2026
+                  KÝ SỐ ED25519 & TẠO KEY BẢN QUYỀN PRO THCS V3 (2026)
                 </h4>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  Chuẩn thuật toán Admin_Tao_Key_Pro.exe
+                  Chuẩn thuật toán Admin_Tao_Key_Pro.exe (Bản V3)
                 </span>
               </div>
 

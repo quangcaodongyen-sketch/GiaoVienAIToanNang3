@@ -137,8 +137,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "tichhop-nls-ai-thcs",
-    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V2)",
-    "description": "Tự động bổ sung Năng lực số, STEM và ứng dụng AI vào giáo án 12 môn THCS chuẩn CV 5512. Tặng kèm thanh công cụ Ribbon trên Word.",
+    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V3)",
+    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0) vào giáo án 12 môn THCS chuẩn CV 5512. Tùy biến prompt văn bản và Add-in Ribbon Word V3.",
     "image": "/giaoanNLS.png",
     "url": "#nls-ai",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
