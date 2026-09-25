@@ -292,13 +292,24 @@ export default function App() {
               <span>Zalo hỗ trợ: <strong className="text-white">{BRAND.phone}</strong></span>
             </a>
             <span className="text-blue-400/40 hidden md:inline">|</span>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText('https://giao-vien-ai-toan-nang3.vercel.app/');
+                alert('Đã sao chép liên kết Website Giáo Viên AI Toàn Năng!\nThầy/Cô hãy dán (Paste) vào Zalo hoặc Facebook để chia sẻ cho đồng nghiệp trong trường/tổ chuyên môn cùng sử dụng nhé!');
+              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 hover:bg-blue-500/40 text-blue-200 hover:text-white transition cursor-pointer text-[11px] font-semibold border border-blue-400/30"
+              title="Sao chép liên kết website để gửi Zalo cho đồng nghiệp"
+            >
+              <Share2 className="w-3 h-3 text-cyan-300" />
+              <span>Chia sẻ cho đồng nghiệp</span>
+            </button>
+            <span className="text-blue-400/40 hidden lg:inline">|</span>
             <a
               href={BRAND.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1 text-blue-200 hover:text-white transition-colors"
+              className="hidden lg:inline-flex items-center gap-1 text-blue-200 hover:text-white transition-colors"
             >
-              <Share2 className="w-3 h-3" />
               <span>Facebook</span>
             </a>
           </div>
