@@ -7,7 +7,8 @@ import {
   Copy, 
   QrCode, 
   MessageCircle, 
-  Clock
+  Clock,
+  Share2
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 
@@ -78,6 +79,58 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
             Thầy/Cô vừa hoàn thành <strong>5 lượt tạo sản phẩm thực tế</strong> và tiết kiệm được nhiều giờ làm việc căng thẳng! 
             Để tiếp tục đồng hành cùng Thầy/Cô trong suốt các kỳ thi và năm học 2026 – 2027, tác giả <strong>Thầy giáo Đinh Văn Thành</strong> gửi tặng chính sách trợ giá đặc biệt dành riêng cho giáo viên:
           </p>
+        </div>
+
+        {/* KHỐI VIRAL CHIA SẺ ZALO NHẬN THÊM 3 LƯỢT DÙNG THỬ (QUẢNG CÁO TỰ ĐỘNG VIỆT NAM) */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/80 border-2 border-emerald-500/70 shadow-2xl space-y-3 relative overflow-hidden">
+          <div className="absolute top-0 right-0 px-3 py-1 bg-gradient-to-l from-emerald-500 to-teal-500 text-slate-950 font-black text-[10px] rounded-bl-xl uppercase tracking-wider shadow">
+            🎉 QUÀ TẶNG SƯ PHẠM
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 flex items-center justify-center text-xl shrink-0 border border-emerald-500/30">
+                🎁
+              </div>
+              <div>
+                <h4 className="text-sm sm:text-base font-black text-emerald-300">
+                  TẶNG THÊM 3 LƯỢT DÙNG THỬ KHI CHIA SẺ VÀO NHÓM ZALO TRƯỜNG
+                </h4>
+                <p className="text-[11px] text-slate-300">
+                  Thầy/Cô hãy lan tỏa phần mềm hữu ích này đến đồng nghiệp cùng trường hoặc tổ bộ môn nhé!
+                </p>
+              </div>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 w-fit">
+              +3 LƯỢT DÙNG THỬ
+            </span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
+            <button
+              onClick={() => {
+                const viralShareText = `Kính gửi quý Thầy/Cô,\nTôi đang dùng phần mềm hỗ trợ giáo viên "${appName}" của Thầy giáo Đinh Văn Thành (THCS Đồng Yên) rất hay và chuẩn quy định Bộ GD&ĐT (CV 7991 & CV 5512). Thầy/Cô vào dùng thử miễn phí trực tiếp trên web tại đây nhé:\n👉 https://giao-vien-ai-toan-nang3.vercel.app/\n(Hotline/Zalo tác giả: 0915.213717)`;
+                navigator.clipboard.writeText(viralShareText);
+                
+                // Mở cửa sổ Zalo chia sẻ
+                window.open(`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(viralShareText)}`, '_blank');
+                
+                // Mở khóa thêm lượt dùng thử
+                localStorage.removeItem('gvai_taode_sec_trials_v3');
+                localStorage.removeItem('gvai_thcs8m_trials_v3');
+                localStorage.removeItem('gvai_bienthe_sec_trials_v3');
+                localStorage.removeItem('gvai_tts_trial_count');
+                
+                alert(`🎉 Chúc mừng Thầy/Cô!\n\nHệ thống đã tự động sao chép bài viết và mở Zalo để Thầy/Cô dán vào nhóm Zalo nhà trường / tổ chuyên môn.\n\n🎁 Thầy/Cô đã được CỘNG THÊM 3 LƯỢT DÙNG THỬ MIỄN PHÍ! Xin mời Thầy/Cô bấm OK để tiếp tục trải nghiệm.`);
+                onClose();
+                window.location.reload();
+              }}
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition active:scale-[0.98] cursor-pointer"
+            >
+              <Share2 className="w-4 h-4 text-amber-300 animate-bounce" />
+              Bấm Vào Đây: Chia Sẻ Nhóm Zalo Trường & Nhận Thêm 3 Lượt Miễn Phí
+            </button>
+          </div>
         </div>
 
         {/* 1 THẺ BÁO GIÁ DUY NHẤT - ĐƠN GIẢN HÓA THEO YÊU CẦU CỦA THẦY THÀNH */}

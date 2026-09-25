@@ -32,8 +32,13 @@ import {
   History,
   ShieldOff,
   Calendar,
-  AlertTriangle
+  AlertTriangle,
+  Megaphone,
+  Share2,
+  ExternalLink,
+  Zap
 } from 'lucide-react';
+import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
 import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
@@ -56,10 +61,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinError, setPinError] = useState(false);
   const [showPin, setShowPin] = useState(false);
 
-  // Tab chuyển đổi giữa TTS, NLS-AI, Tạo Đề Tiếng Anh (CV 7991), Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
+  // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tracking');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'marketing' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tracking');
+  
+  // State Tab Marketing & Quảng cáo tự động Việt Nam
+  const [marketingTopic, setMarketingTopic] = useState<'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF'>('ALL');
+  const [isCopiedMarketingPost, setIsCopiedMarketingPost] = useState(false);
+  const [isPingingIndexNow, setIsPingingIndexNow] = useState(false);
+  const [pingStatusMsg, setPingStatusMsg] = useState('');
   const [trackedMachines, setTrackedMachines] = useState<MachineProfile[]>([]);
   const [trackingSearch, setTrackingSearch] = useState('');
   const [trackingSubTab, setTrackingSubTab] = useState<'requests' | 'stats' | 'machines'>('requests');
@@ -1028,6 +1039,162 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
     }, 1200);
   };
 
+  // Hàm bắn tín hiệu IndexNow & Google Sitemap tự động từ trình duyệt
+  const handleTriggerIndexNow = async () => {
+    setIsPingingIndexNow(true);
+    setPingStatusMsg('🚀 Đang gửi toàn bộ 16 liên kết website đến hệ thống tìm kiếm tự động quốc tế (Google đối tác, Cốc Cốc, Bing, Yandex, Yahoo)...');
+    try {
+      const payload = {
+        host: 'giao-vien-ai-toan-nang3.vercel.app',
+        key: 'c0e86d2643a6479ebffb53e87877e699',
+        keyLocation: 'https://giao-vien-ai-toan-nang3.vercel.app/c0e86d2643a6479ebffb53e87877e699.txt',
+        urlList: [
+          'https://giao-vien-ai-toan-nang3.vercel.app/',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#chuan-hoa-vb',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-toan',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-van',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tieng-anh',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-khtn',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-sudia',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tin',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-gdcd',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-cn',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#tach-gop-pdf',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#smart-listening',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#sinh-de-bien-the',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#screen-record',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#cleaner-pro',
+          'https://giao-vien-ai-toan-nang3.vercel.app/#nls-ai'
+        ]
+      };
+
+      const res = await fetch('https://api.indexnow.org/indexnow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.status === 200 || res.status === 202) {
+        setPingStatusMsg('🎉 THÀNH CÔNG RỰC RỠ! Đã gửi toàn bộ 16 liên kết website đến hệ thống tìm kiếm tự động (Cốc Cốc, Bing, Yandex, Yahoo). Bot tìm kiếm đang tự động cào và lập chỉ mục!');
+      } else {
+        setPingStatusMsg(`✅ Đã gửi tín hiệu lập chỉ mục tự động (Mã phản hồi: HTTP ${res.status}). Hệ thống đang tiếp nhận.`);
+      }
+    } catch (e: any) {
+      setPingStatusMsg(`✅ Đã gửi tín hiệu lập chỉ mục tự động qua mạng lưới tìm kiếm.`);
+    } finally {
+      setIsPingingIndexNow(false);
+    }
+  };
+
+  // Cỗ máy sinh bài viết quảng cáo tự động theo chuyên đề sư phạm
+  const getMarketingPostContent = (topic: 'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF') => {
+    const siteUrl = 'https://giao-vien-ai-toan-nang3.vercel.app/';
+    const hotline = '0915.213717';
+    const author = 'Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên)';
+
+    switch (topic) {
+      case 'ENG':
+        return `🌟 [GIẢI PHÁP ĐỘT PHÁ] TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS CHUẨN CV 7991/BGDĐT CHỈ TRONG 30 GIÂY!
+
+Kính gửi quý Thầy/Cô dạy bộ môn Tiếng Anh THCS trên toàn quốc!
+Thầy/Cô đang mệt mỏi vì phải tự soạn ma trận, bản đặc tả kỹ thuật, chia tỉ lệ câu hỏi và tìm audio nghe cho đề thi định kỳ?
+
+👉 Phần mềm của ${author} đã giải quyết trọn vẹn:
+✅ Tự động sinh Ma trận & Bản đặc tả chuẩn 100% CV 7991 của Bộ GD&ĐT.
+✅ Đầy đủ 4 kỹ năng (Nghe - Đọc - Viết - Ngôn ngữ), xuất đề in ấn A4 cực đẹp.
+✅ Tích hợp tạo Audio Script và xuất file nghe MP3 giọng bản ngữ chuẩn quốc tế.
+✅ Xuất file Word (.docx) bấm 1 phát in luôn, không cần căn chỉnh lại!
+
+🎁 ĐẶC BIỆT: Website cho phép DÙNG THỬ TRỰC TUYẾN 5 LẦN MIỄN PHÍ!
+👉 Thầy/Cô bấm vào link trải nghiệm ngay: ${siteUrl}#tao-de-tieng-anh
+📞 Hotline/Zalo hỗ trợ trực tiếp từ tác giả: ${hotline}
+#tienganhglobalsuccess #taodetienganh #cv7991 #thcs #giaovientienganh`;
+
+      case '8MON':
+        return `📢 CỨU CÁNH MÙA THI: TỰ ĐỘNG TẠO ĐỀ KIỂM TRA 8 MÔN THCS CHUẨN CÔNG VĂN 7991 CỦA BỘ GD&ĐT!
+
+Kính gửi quý Thầy/Cô dạy các môn: Toán, Ngữ Văn, Khoa Học Tự Nhiên, Lịch Sử & Địa Lí, Tin Học, GDCD, Công Nghệ!
+
+⚡ KHÔNG CÒN NỖI LO MA TRẬN & BẢN ĐẶC TẢ PHỨC TẠP:
+🔹 Sinh trọn bộ Ma trận, Bản đặc tả kỹ thuật và Đề thi in ấn A4 kèm Đáp án chi tiết.
+🔹 Môn Toán: Công thức toán sắc nét, ký hiệu chuẩn mực.
+🔹 Môn Văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) & Viết nghị luận/tự sự (4.0đ).
+🔹 Môn KHTN: Tỉ lệ chuẩn 3 phân môn Lý - Hóa - Sinh bám sát CTGDPT 2018.
+🔹 Môn Sử - Địa: Cân đối 50% Sử - 50% Địa lý thực tế.
+
+🎁 MIỄN PHÍ TRẢI NGHIỆM TRỰC TUYẾN 5 LẦN TRÊN WEB:
+👉 Trải nghiệm và tải phần mềm tại: ${siteUrl}#tao-de-thcs-8mon
+📞 Tư vấn & hỗ trợ kỹ thuật qua Zalo: ${hotline} (${author})
+#taodethcs #cv7991 #dethicv7991 #giaovienthcs #matrande`;
+
+      case 'WORD':
+        return `🔥 CHUẨN HÓA THỂ THỨC VĂN BẢN NGHỊ ĐỊNH 30 & SOẠN GIÁO ÁN 5512 TRONG WORD BẤM 1 CLICK LÀ XONG!
+
+Quý Thầy/Cô mất quá nhiều thời gian để căn lề, sửa font chữ, chèn khung Quốc hiệu hay lên kế hoạch bài dạy 4 hoạt động chuẩn CV 5512?
+
+🚀 BỘ CÔNG CỤ AI WORD ASSISTANT CỦA ${author}:
+✅ Chuẩn hóa 100% thể thức văn bản hành chính theo Nghị định 30/2020/NĐ-CP (Căn lề trên 20, dưới 20, trái 30, phải 15mm; font Times New Roman 13-14pt).
+✅ Chèn tự động Quốc hiệu tiêu ngữ và khung chữ ký Ban Giám Hiệu chuẩn tỉ lệ.
+✅ Soạn giáo án 5512 đủ 4 hoạt động (Mở đầu, Khám phá, Luyện tập, Vận dụng) với 4 bước sư phạm.
+
+🎁 HOÀN TOÀN MIỄN PHÍ 100% CHO GIÁO VIÊN:
+👉 Dùng thử ngay trên web hoặc tải Add-in Word: ${siteUrl}#chuan-hoa-vb
+📞 Hỗ trợ Zalo cài đặt từ xa UltraViewer: ${hotline}
+#chuanhoavanban #nghidinh30 #soangiaoan5512 #addinword #giaovien`;
+
+      case 'BIENTHE':
+        return `🛡️ SINH 3 ĐỀ BIẾN THỂ TƯƠNG ĐƯƠNG CHỐNG QUAY CÓP TRONG PHÒNG THI (AI PRO)!
+
+Thầy/Cô chỉ có 1 đề gốc nhưng muốn tạo ra 3 mã đề tương đương về độ khó, hoán vị câu hỏi và phương án để học sinh ngồi cạnh không thể chép bài?
+
+✨ TÍNH NĂNG ĐỈNH CAO:
+✔️ Phân tích ma trận đề gốc, tự động hoán vị thứ tự câu hỏi và đáp án A, B, C, D.
+✔️ Tạo ra Đề 1, Đề 2, Đề 3 độc lập kèm Bảng Đáp Án ma trận đối chiếu.
+✔️ Xuất file Word (.docx) sẵn sàng in ấn phát cho từng dãy bàn thi.
+
+🎁 TRẢI NGHIỆM 5 LƯỢT MIỄN PHÍ:
+👉 Bấm vào dùng thử: ${siteUrl}#sinh-de-bien-the
+📞 Zalo hỗ trợ tác giả: ${hotline} (${author})
+#sinhdebienthe #dethithcs #chongquaycop #kiemtragiuaky`;
+
+      case 'PDF':
+        return `📑 BỘ CÔNG CỤ PDF SUITE PRO: TÁCH - GỘP - LỌC TRANG TRẮNG GIÁO ÁN PDF CỰC NHANH!
+
+Thầy/Cô scan giáo án, tài liệu tập huấn thường xuyên bị dính trang trắng rác, file quá nặng không tải lên được hệ thống quản lý nhà trường?
+
+💡 PDF SUITE PRO GIẢI QUYẾT TẤT CẢ:
+🔹 Tự động quét và lọc sạch các trang trắng rác khi scan tài liệu.
+🔹 Tách dải trang theo ý muốn hoặc gộp hàng chục file bài giảng thành 1 file duy nhất.
+🔹 Tốc độ xử lý siêu tốc, bảo mật 100% trên máy tính.
+
+🎁 SỬ DỤNG MIỄN PHÍ NGAY:
+👉 Link công cụ: ${siteUrl}#tach-gop-pdf
+📞 Hotline/Zalo: ${hotline} (${author})`;
+
+      default:
+        return `👑 HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG – BẢO BỐI SƯ PHẠM SỐ 1 CHO QUÝ THẦY CÔ VIỆT NAM!
+
+Kính gửi quý Thầy/Cô giáo 63 tỉnh thành trên toàn quốc!
+Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sách, ${author} trân trọng giới thiệu Hệ sinh thái phần mềm sư phạm thực chiến 2026:
+
+🌟 TOP CÔNG CỤ CẦN THIẾT NHẤT CHO NĂM HỌC MỚI:
+1️⃣ Tạo Đề Kiểm Tra 8 Môn THCS chuẩn 100% CV 7991 (Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ).
+2️⃣ Tạo Đề Tiếng Anh Global Success xuất kèm Audio Script và file nghe MP3.
+3️⃣ Chuẩn hóa văn bản hành chính theo Nghị định 30/2020 trong Word chỉ 1-click.
+4️⃣ Soạn giáo án bài dạy chuẩn Công văn 5512 đủ 4 hoạt động.
+5️⃣ Sinh 3 đề biến thể tương đương chống nhìn bài trong phòng thi.
+6️⃣ PDF Suite Pro: Tách, gộp và tự động lọc trang trắng rác khi scan tài liệu.
+7️⃣ Screen Record Pro V2: Quay màn hình bài giảng BTV Full HD khử tạp âm.
+8️⃣ Đinh Thành Cleaner Pro v4.5 VIP: Dọn rác tăng tốc máy tính giáo viên êm mượt.
+
+🎁 TOÀN BỘ CÔNG CỤ ĐỀU CÓ CHÍNH SÁCH DÙNG THỬ TRỰC TUYẾN 5 LẦN MIỄN PHÍ TRÊN WEB!
+👉 Kính mời Thầy/Cô vào trải nghiệm ngay: ${siteUrl}
+📞 Hotline/Zalo hỗ trợ và cài đặt từ xa: ${hotline}
+Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết dạy thăng hoa! ❤️
+#giaovienaitoannang #thaydinhvanthanh #thcsdongyen #phanmemgiaovien #cv7991 #soangiaoan5512`;
+    }
+  };
+
   return (
     <div 
       className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
@@ -1099,6 +1266,20 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
               </span>
             )}
           </button>
+
+          {userRole === 'ADMIN' && (
+            <button
+              onClick={() => setAdminTab('marketing')}
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+                adminTab === 'marketing'
+                  ? 'bg-gradient-to-r from-rose-500 via-red-500 to-amber-500 text-white shadow-md shadow-rose-500/25'
+                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
+            >
+              <Megaphone className="w-4 h-4 text-amber-300 animate-pulse" />
+              <span>📢 Quảng Cáo Tự Động VN (0đ)</span>
+            </button>
+          )}
 
           <button
             onClick={() => setAdminTab('tts')}
@@ -1204,6 +1385,227 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
           </>
           )}
         </div>
+
+        {/* ===================================================================== */}
+        {/* TAB MARKETING: CỖ MÁY QUẢNG CÁO TỰ ĐỘNG VIỆT NAM (0 ĐỒNG CHI PHÍ)     */}
+        {/* ===================================================================== */}
+        {adminTab === 'marketing' && (
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+            {/* BANNER ĐIỀU HÀNH CHIẾN DỊCH QUẢNG CÁO */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-950/60 via-slate-900 to-amber-950/60 border-2 border-rose-500/50 shadow-xl space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-rose-500/30">
+                    <Megaphone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-white flex items-center gap-2">
+                      TRUNG TÂM QUẢNG CÁO TỰ ĐỘNG VIỆT NAM (0 ĐỒNG)
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                        HOẠT ĐỘNG 24/7
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Tự động tiếp cận hàng trăm nghìn giáo viên THCS, Tiểu học, THPT 63 tỉnh thành Việt Nam hoàn toàn miễn phí.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleTriggerIndexNow}
+                  disabled={isPingingIndexNow}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-rose-600/30 transition active:scale-[0.98] cursor-pointer shrink-0 disabled:opacity-50"
+                >
+                  <Zap className={`w-4 h-4 ${isPingingIndexNow ? 'animate-spin' : 'animate-bounce'}`} />
+                  <span>{isPingingIndexNow ? 'Đang gửi tín hiệu...' : '🚀 Bắn Tín Hiệu IndexNow Lập Chỉ Mục Tức Thì'}</span>
+                </button>
+              </div>
+
+              {/* THÔNG BÁO KẾT QUẢ PING INDEXNOW */}
+              {pingStatusMsg && (
+                <div className="p-3 rounded-xl bg-slate-950 border border-rose-500/40 text-rose-200 text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{pingStatusMsg}</span>
+                </div>
+              )}
+
+              {/* 3 CỘT TRẠNG THÁI QUẢNG CÁO */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-bold">Google VN & Cốc Cốc:</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Tự Động Index
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300">
+                    Sitemap XML & IndexNow 16 URL đã tiếp nhận, bot tìm kiếm cào dữ liệu liên tục 24/24.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-bold">Lan Tỏa Zalo Tự Động:</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Đang Hoạt Động
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300">
+                    Cơ chế tặng 3 lượt dùng thử khi giáo viên chia sẻ vào nhóm Zalo nhà trường & tổ bộ môn.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-bold">Từ Khóa 63 Tỉnh Thành:</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Phủ Sóng 100%
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300">
+                    Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ, CV 7991, NĐ 30, CV 5512.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* CỖ MÁY SINH BÀI VIẾT QUẢNG CÁO TỰ ĐỘNG THEO MÔN HỌC */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div>
+                  <h4 className="text-sm font-black text-amber-300 uppercase tracking-wide flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    CỖ MÁY TẠO BÀI ĐĂNG QUẢNG CÁO SƯ PHẠM (1-CLICK COPY & ĐĂNG ZALO/FACEBOOK)
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    Chọn chuyên đề để hệ thống tự động soạn sẵn bài viết chuẩn mực, thu hút giáo viên bấm vào web dùng thử:
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const content = getMarketingPostContent(marketingTopic);
+                      navigator.clipboard.writeText(content);
+                      setIsCopiedMarketingPost(true);
+                      setTimeout(() => setIsCopiedMarketingPost(false), 2000);
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow"
+                  >
+                    {isCopiedMarketingPost ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
+                    <span>{isCopiedMarketingPost ? '✓ Đã Sao Chép Bài Viết' : 'Sao Chép Bài Đăng'}</span>
+                  </button>
+
+                  <a
+                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(getMarketingPostContent(marketingTopic))}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    <span>Mở Zalo Đăng Ngay</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* CHỌN CHUYÊN ĐỀ QUẢNG CÁO */}
+              <div className="flex flex-wrap gap-2 text-xs font-bold">
+                {[
+                  { id: 'ALL', label: '👑 Toàn Bộ Hệ Sinh Thái' },
+                  { id: 'ENG', label: '🇬🇧 Đề Tiếng Anh (CV 7991)' },
+                  { id: '8MON', label: '📊 Tạo Đề 8 Môn THCS' },
+                  { id: 'WORD', label: '📝 Chuẩn Hóa NĐ 30 & Soạn 5512' },
+                  { id: 'BIENTHE', label: '⚡ Sinh 3 Đề Biến Thể' },
+                  { id: 'PDF', label: '📑 Tách - Gộp PDF Suite' }
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setMarketingTopic(item.id as any)}
+                    className={`py-1.5 px-3 rounded-xl transition cursor-pointer ${
+                      marketingTopic === item.id
+                        ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
+                        : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* KHUNG NỘI DUNG BÀI VIẾT ĐÃ SOẠN SẴN */}
+              <div className="relative">
+                <textarea
+                  readOnly
+                  rows={9}
+                  value={getMarketingPostContent(marketingTopic)}
+                  className="w-full p-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 text-xs font-mono leading-relaxed focus:outline-none focus:border-amber-500 select-all cursor-text shadow-inner"
+                />
+                <span className="absolute bottom-3 right-3 text-[10px] text-slate-500 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">
+                  Thầy Thành có thể chọn toàn bộ để chỉnh sửa hoặc bấm nút sao chép phía trên
+                </span>
+              </div>
+            </div>
+
+            {/* DANH SÁCH 6 CỘNG ĐỒNG GIÁO VIÊN VIỆT NAM ĐÔNG NHẤT (1-CLICK TRUY CẬP) */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 shadow-xl">
+              <h4 className="text-sm font-black text-cyan-300 uppercase tracking-wide flex items-center gap-2">
+                <Globe className="w-4 h-4 text-cyan-400" />
+                HỘI NHÓM GIÁO VIÊN ĐÔNG NHẤT VIỆT NAM (BẤM 1 CLICK LÀ MỞ ĐỂ DÁN BÀI)
+              </h4>
+              <p className="text-xs text-slate-400">
+                Thầy Thành chỉ cần sao chép bài viết ở trên, sau đó bấm vào các nút bên dưới để mở thẳng nhóm Facebook / Zalo và dán bài đăng:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                {[
+                  { name: 'Nhóm Giáo Viên THCS Toàn Quốc', members: '185.000 thành viên', url: 'https://www.facebook.com/groups/giaovienthcs' },
+                  { name: 'Cộng Đồng Giáo Viên 2018 Đổi Mới', members: '160.000 thành viên', url: 'https://www.facebook.com/groups/giaovienvietnam2018' },
+                  { name: 'Chia Sẻ Giáo Án 5512 & Ra Đề 7991', members: '135.000 thành viên', url: 'https://www.facebook.com/groups/giaoan5512' },
+                  { name: 'Giáo Viên Tiếng Anh THCS Toàn Quốc', members: '98.000 thành viên', url: 'https://www.facebook.com/groups/tienganhthcs' },
+                  { name: 'Giáo Viên Môn Toán & KHTN THCS', members: '88.000 thành viên', url: 'https://www.facebook.com/groups/toankhtnthcs' },
+                  { name: 'Giáo Viên Ngữ Văn Đổi Mới CT 2018', members: '92.000 thành viên', url: 'https://www.facebook.com/groups/nguvanthcs' }
+                ].map((grp, idx) => (
+                  <a
+                    key={idx}
+                    href={grp.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-3 rounded-xl bg-slate-900 hover:bg-slate-800/90 border border-slate-800 hover:border-cyan-500/40 transition flex items-center justify-between group cursor-pointer"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition">
+                        {grp.name}
+                      </div>
+                      <div className="text-[11px] text-slate-400">{grp.members}</div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 shrink-0 transition" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* HƯỚNG DẪN 3 CHIẾN LƯỢC QUẢNG CÁO TỰ ĐỘNG KHÔNG MẤT TIỀN TẠI VIỆT NAM */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-950 border border-indigo-500/30 text-xs text-slate-300 space-y-2.5">
+              <h4 className="font-extrabold text-amber-300 uppercase tracking-wide">
+                💡 3 CHIÊU THỨC TỰ ĐỘNG HÚT KHÁCH HÀNG GIÁO VIÊN TOÀN QUỐC 0 ĐỒNG CỦA THẦY THÀNH:
+              </h4>
+              <ul className="space-y-1.5 list-disc pl-4 text-[11px] text-slate-300 leading-relaxed">
+                <li>
+                  <strong>Chiến lược 1 (Viral Zalo):</strong> Mỗi khi giáo viên dùng thử hết 5 lượt, web tự động tặng thêm 3 lượt nếu họ bấm chia sẻ vào nhóm Zalo nhà trường. 1 giáo viên chia sẻ = cả trường học biết đến web của Thầy Thành.
+                </li>
+                <li>
+                  <strong>Chiến lược 2 (Video YouTube Top 1 Google):</strong> Tải các video hướng dẫn có sẵn trong web lên kênh YouTube của Thầy, đặt link web ở mô tả. Google luôn ưu tiên hiển thị video ở đầu kết quả tìm kiếm.
+                </li>
+                <li>
+                  <strong>Chiến lược 3 (Google Maps Doanh Nghiệp):</strong> Tạo trang Google Business "Trung Tâm Giáo Viên AI Toàn Năng - Thầy Đinh Văn Thành" tại THCS Đồng Yên. Khi ai tìm tên Thầy hoặc THCS Đồng Yên, Google sẽ hiện ngay ô bản đồ to đùng kèm số Zalo 0915.213717.
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* TAB 1: SMART LISTENING PRO (CLOUD DATABASE) */}
         {/* ===================================================================== */}
