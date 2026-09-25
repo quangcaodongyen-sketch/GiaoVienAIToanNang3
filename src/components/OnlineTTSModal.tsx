@@ -542,7 +542,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
             }`}
           >
             <Zap className="w-4 h-4 text-amber-400" />
-            Studio Tạo Bài Nghe (Dùng Online)
+            1. Dùng Thử Trực Tuyến
           </button>
 
           <button
@@ -557,7 +557,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
             }`}
           >
             <Download className="w-4 h-4 text-emerald-400" />
-            Tải Bản Cài Đặt Desktop & Video HD
+            2. Tải Bản Máy Tính (.exe)
           </button>
 
           <button
@@ -571,8 +571,8 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <FileText className="w-4 h-4 text-purple-400" />
-            Đăng Ký Bản Quyền Pro
+            <Crown className="w-4 h-4 text-amber-400" />
+            3. Bản Quyền & Kích Hoạt
           </button>
         </div>
 
@@ -1172,64 +1172,63 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
               </p>
             )}
 
-            {/* BẢNG CÁC GÓI BẢN QUYỀN (ẨN GIÁ CÔNG KHAI - BÁO GIÁ RIÊNG QUA ZALO) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 flex flex-col justify-between">
+            {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-200">Gói 1 Năm</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold">Cá nhân</span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 mb-2">Đầy đủ tính năng tạo bài nghe SGK tiếng Anh 365 ngày.</p>
-                </div>
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi quan tâm Gói 1 Năm Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi giúp tôi!`)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-center text-[11px] transition-colors"
-                >
-                  Báo Giá Qua Zalo
-                </a>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-700/60 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-200">Gói 2 Năm</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold">Tiết kiệm</span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 mb-2">Sử dụng ổn định 2 năm học, cập nhật giọng mới miễn phí.</p>
-                </div>
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi quan tâm Gói 2 Năm Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi giúp tôi!`)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-center text-[11px] transition-colors"
-                >
-                  Báo Giá Qua Zalo
-                </a>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-gradient-to-b from-amber-950/40 to-slate-900 border border-amber-500/40 relative flex flex-col justify-between">
-                <span className="absolute -top-2.5 right-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[10px] font-black shadow-md">
-                  KHUYÊN DÙNG
-                </span>
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-amber-300 flex items-center gap-1">
-                      <Crown className="w-3.5 h-3.5 text-amber-400" />
-                      VIP Trọn Đời
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                      👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
                     </span>
+                    <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
                   </div>
-                  <p className="text-[11px] text-slate-400 mb-2">Bản quyền vĩnh viễn theo máy, hỗ trợ kỹ thuật trọn đời.</p>
+                  <h4 className="text-base sm:text-lg font-black text-white mt-1">
+                    Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                  </h4>
                 </div>
+                <div className="text-left sm:text-right shrink-0">
+                  <div className="text-sm sm:text-base font-black text-cyan-400">
+                    Liên Hệ Admin Thầy Thành
+                  </div>
+                  <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Tạo bài nghe SGK tiếng Anh:</strong> Giọng đọc Anh - Mỹ tự nhiên chuẩn bản xứ, xuất file MP3 không giới hạn số từ.</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các giọng đọc và thuật toán AI tổng hợp giọng nói mới nhất.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                 <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn đăng ký Gói VIP Trọn Đời Smart Listening Pro (Mã máy: ${detectedMid}). Xin thầy báo giá ưu đãi tốt nhất giúp tôi!`)}`}
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Smart Listening Pro. Mã máy của tôi: ${detectedMid}.`
+                  )}`}
                   target="_blank"
-                  rel="noreferrer"
-                  className="py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-center text-[11px] transition-colors shadow-md shadow-amber-500/20"
+                  rel="noopener noreferrer"
+                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
                 >
-                  Báo Giá Ưu Đãi VIP
+                  <MessageCircle className="w-5 h-5 text-amber-300" />
+                  Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
                 </a>
               </div>
             </div>

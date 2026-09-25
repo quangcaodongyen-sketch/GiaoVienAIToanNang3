@@ -331,7 +331,7 @@ startxref
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Trải nghiệm Trực Tuyến</span>
+              <span>1. Dùng Thử Trực Tuyến</span>
               {!isVIP && (
                 <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-800 text-amber-300 font-mono border border-slate-700">
                   {remainingTrials}/5 lượt
@@ -348,7 +348,7 @@ startxref
               }`}
             >
               <Download className="w-4 h-4 text-blue-400" />
-              <span>Tải Về & Hướng Dẫn</span>
+              <span>2. Tải Bản Máy Tính (.exe)</span>
             </button>
 
             <button
@@ -360,7 +360,7 @@ startxref
               }`}
             >
               <Key className="w-4 h-4 text-amber-400" />
-              <span>Bản Quyền & Kích Hoạt</span>
+              <span>3. Bản Quyền & Kích Hoạt</span>
               {isVIP ? (
                 <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700">
                   ĐÃ KÍCH HOẠT
@@ -963,83 +963,73 @@ startxref
                 </div>
               </div>
 
-              {/* Bảng Các Gói Bản Quyền - Ẩn Giá Cả Để Tế Nhị & Liên Hệ Zalo */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    Các Gói Bản Quyền PDF Suite Pro
-                  </h4>
+              {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
+                      </span>
+                      <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                    </div>
+                    <h4 className="text-base sm:text-lg font-black text-white mt-1">
+                      Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                    </h4>
+                  </div>
+                  <div className="text-left sm:text-right shrink-0">
+                    <div className="text-sm sm:text-base font-black text-cyan-400">
+                      Liên Hệ Admin Thầy Thành
+                    </div>
+                    <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Bộ công cụ PDF toàn năng:</strong> Tách trang, gộp file, nén PDF giảm dung lượng, xoay trang, xóa trang rác không giới hạn.</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các thuật toán xử lý tài liệu mới nhất.</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                  <a
+                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
+                  >
+                    <MessageCircle className="w-5 h-5 text-amber-300" />
+                    Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
+                  </a>
                   <button
                     type="button"
                     onClick={() => setShowTrialRegister(true)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 cursor-pointer shrink-0"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    Đăng Ký Thành Viên / Dùng Thử
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    Đăng Ký Dùng Thử 5 Lần
                   </button>
                 </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-bold text-white">Gói 1 Năm Học</span>
-                    <p className="text-[11px] text-slate-400">Sử dụng đầy đủ tính năng tách, gộp, xóa trang rác</p>
-                  </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-pink-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 text-pink-400" /> Báo Giá Qua Zalo
-                  </a>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-bold text-white">Gói 2 Năm (Tiết Kiệm)</span>
-                    <p className="text-[11px] text-slate-400">Miễn phí nâng cấp các thuật toán OCR và nén PDF mới</p>
-                  </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 text-cyan-400" /> Báo Giá Qua Zalo
-                  </a>
-                </div>
-
-                <div className="p-4 rounded-xl bg-gradient-to-r from-purple-950/40 via-pink-950/30 to-slate-900 border-2 border-pink-500/50 flex items-center justify-between shadow-lg shadow-pink-500/10">
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-extrabold text-white">GÓI TRỌN ĐỜI (SIÊU TIẾT KIỆM)</span>
-                      <span className="px-1.5 py-0.2 text-[9px] font-extrabold rounded bg-pink-600 text-white">
-                        HOT
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-300 mt-0.5">
-                      Không giới hạn thời gian, cập nhật vĩnh viễn, hỗ trợ kỹ thuật trọn đời
-                    </p>
-                  </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói VIP Trọn Đời phần mềm PDF Suite Pro. Mã máy của tôi: ${hwid}.`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all shrink-0 ml-2"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" /> Báo Giá Ưu Đãi VIP
-                  </a>
-                </div>
-
-                <p className="text-[11px] text-slate-400 italic px-1 pt-1">
-                  * Chính sách giá ưu đãi đặc biệt dành cho giáo viên và các nhà trường. Quý Thầy/Cô vui lòng bấm nút nhắn tin Zalo để nhận báo giá chi tiết và hỗ trợ kích hoạt trực tiếp từ Thầy Thành.
-                </p>
               </div>
             </div>
           </div>

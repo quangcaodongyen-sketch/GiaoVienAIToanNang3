@@ -16,7 +16,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-toan-thcs",
     "title": "TẠO ĐỀ KIỂM TRA MÔN TOÁN HỌC (CV 7991)",
-    "description": "Tự động sinh Ma trận, Bản đặc tả và Đề thi in ấn A4 kèm Đáp án chi tiết chuẩn 100% CV 7991/BGDĐT. Công thức toán sắc nét, xuất Word chỉ trong 30 giây.",
+    "description": "Tự động sinh Ma trận, Bản đặc tả và Đề thi in ấn A4 kèm Đáp án chi tiết CV 7991/BGDĐT. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật phần mềm theo đúng ý muốn!).",
     "image": "/taode_toan.png",
     "url": "#tao-de-toan",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -28,7 +28,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-van-thcs",
     "title": "TẠO ĐỀ KIỂM TRA MÔN NGỮ VĂN (CV 7991)",
-    "description": "Thiết kế đề Ngữ văn chuẩn cấu trúc: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) và Viết nghị luận/tự sự (4.0đ). Kèm Ma trận, Bản đặc tả và Hướng dẫn chấm chi tiết.",
+    "description": "Thiết kế đề Ngữ văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) và Viết (4.0đ) kèm Ma trận, Bản đặc tả. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_van.png",
     "url": "#tao-de-van",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -52,7 +52,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-khtn-thcs",
     "title": "TẠO ĐỀ KHOA HỌC TỰ NHIÊN (CV 7991)",
-    "description": "Tích hợp chuẩn tỉ lệ 3 phân môn Lý - Hóa - Sinh theo CTGDPT 2018 (Trắc nghiệm 4.0đ + Tự luận 6.0đ). Xuất trọn bộ Ma trận và Đề thi Word in ấn.",
+    "description": "Tích hợp chuẩn tỉ lệ 3 phân môn Lý - Hóa - Sinh CTGDPT 2018 (Trắc nghiệm 4.0đ + Tự luận 6.0đ). (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_khtn.png",
     "url": "#tao-de-khtn",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -64,7 +64,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-sudia-thcs",
     "title": "TẠO ĐỀ LỊCH SỬ VÀ ĐỊA LÍ (CV 7991)",
-    "description": "Cân đối chuẩn 50% Lịch sử - 50% Địa lí với câu hỏi trắc nghiệm và tự luận tình huống thực tiễn. Đầy đủ ma trận, bản đặc tả theo CV 7991.",
+    "description": "Cân đối chuẩn 50% Lịch sử - 50% Địa lí với câu hỏi trắc nghiệm và tự luận tình huống. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_sudia.png",
     "url": "#tao-de-sudia",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -76,7 +76,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-tin-thcs",
     "title": "TẠO ĐỀ KIỂM TRA MÔN TIN HỌC (CV 7991)",
-    "description": "Sinh đề thi Tin học kết hợp lý thuyết số học và bài tập thực hành thuật toán, lập trình Python, Excel. Xuất file Word chuẩn mực.",
+    "description": "Sinh đề thi Tin học kết hợp lý thuyết số học và bài tập thực hành Python, Excel. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_tin.png",
     "url": "#tao-de-tin",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -88,7 +88,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-gdcd-thcs",
     "title": "TẠO ĐỀ GIÁO DỤC CÔNG DÂN (CV 7991)",
-    "description": "Đề thi chuẩn cấu trúc: Nhận biết chuẩn mực đạo đức (4.0đ) và Tình huống pháp luật thực tế (6.0đ). Kèm biểu điểm chi tiết từng ý.",
+    "description": "Đề thi chuẩn: Nhận biết chuẩn mực đạo đức (4.0đ) và Tình huống pháp luật (6.0đ). (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_gdcd.png",
     "url": "#tao-de-gdcd",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -100,7 +100,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-cn-thcs",
     "title": "TẠO ĐỀ KIỂM TRA MÔN CÔNG NGHỆ (CV 7991)",
-    "description": "Tự động ra đề bám sát chương trình: Nông nghiệp, cơ khí chế tạo và thiết kế mạch điện. Đầy đủ ma trận phân loại học sinh.",
+    "description": "Tự động ra đề: Nông nghiệp, cơ khí chế tạo và mạch điện bám sát CTGDPT 2018. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_cn.png",
     "url": "#tao-de-cn",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -112,7 +112,7 @@ export const apps: AppCard[] = [
   {
     "id": "sinhdebienthe",
     "title": "SINH 3 ĐỀ BIẾN THỂ VIP (AI PRO)",
-    "description": "Phân tích đề gốc để sinh ngay 3 đề biến thể tương đương chống quay cóp trong phòng thi. Giữ nguyên độ khó, xuất Word kèm đáp án tức thì.",
+    "description": "Phân tích đề gốc để sinh ngay 3 đề biến thể tương đương chống quay cóp trong phòng thi. (App đang tiếp tục cập nhật – Thầy/Cô có thể góp ý cấu trúc hoán vị đề qua Zalo để Thầy Thành hoàn thiện theo ý muốn!).",
     "image": "/sinhdebientheVIP.png",
     "url": "#sinh-de-bien-the",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",

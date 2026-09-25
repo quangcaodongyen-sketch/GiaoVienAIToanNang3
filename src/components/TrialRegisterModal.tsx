@@ -146,14 +146,10 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
 
   const pkgLabel = selectedPackage === 'TRIAL_5' 
     ? 'Dùng thử 5 lần miễn phí' 
-    : selectedPackage === '1YEAR' 
-      ? 'Gói 1 Năm (Báo giá qua Zalo)' 
-      : selectedPackage === '2YEAR'
-        ? 'Gói 2 Năm Siêu Tiết Kiệm (Báo giá qua Zalo)'
-        : 'Gói Full Web Trọn Bộ Hệ Sinh Thái (Báo giá qua Zalo)';
+    : 'Bản quyền Pro chính thức (Admin gửi báo giá chi tiết qua Zalo)';
 
   const zaloMessage = encodeURIComponent(
-    `Kính gửi Thầy Đinh Văn Thành,\nTôi là: ${fullName} - Đơn vị: ${schoolUnit || 'Giáo viên THCS'}\nSố điện thoại/Zalo: ${phoneNumber}\nTôi xin đăng ký: ${pkgLabel}\nCho phần mềm: ${currentAppName}\nMã máy (ID) của tôi: ${machineId}\nNhờ Thầy duyệt và nâng cấp thành viên giúp tôi ạ!`
+    `Kính gửi Thầy Đinh Văn Thành,\nTôi là: ${fullName} - Đơn vị: ${schoolUnit || 'Giáo viên THCS'}\nSố điện thoại/Zalo: ${phoneNumber}\nTôi xin đăng ký: ${pkgLabel}\nCho phần mềm: ${currentAppName}\nMã máy (ID) của tôi: ${machineId}\nNhờ Thầy tư vấn báo giá chi tiết và hướng dẫn kích hoạt giúp tôi ạ!`
   );
 
   return (
@@ -320,73 +316,48 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                   </span>
                   <span className="text-[11px] text-amber-400 font-bold">Chính Sách Ưu Đãi Giáo Viên</span>
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  {/* Gói Dùng Thử */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Lựa chọn 1: Dùng Thử */}
                   <label
                     onClick={() => setSelectedPackage('TRIAL_5')}
-                    className={`p-2.5 rounded-xl border flex flex-col justify-between cursor-pointer transition ${
+                    className={`p-3.5 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition ${
                       selectedPackage === 'TRIAL_5'
-                        ? 'bg-emerald-950/40 border-emerald-500 text-emerald-200'
+                        ? 'bg-emerald-950/50 border-emerald-500 text-emerald-200 shadow-md shadow-emerald-500/20'
                         : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
                     }`}
                   >
-                    <div className="text-[11px] font-bold">DÙNG THỬ 5 LẦN</div>
-                    <div className="text-base font-black text-emerald-400 mt-1">Miễn Phí</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">5 lượt thử đầy đủ tính năng</div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black uppercase text-emerald-400">1. DÙNG THỬ TRỰC TUYẾN</span>
+                      <Zap className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <div className="text-base font-black text-white mt-1">Miễn Phí 5 Lượt</div>
+                    <div className="text-[11px] text-slate-400 mt-1">Trải nghiệm đầy đủ tính năng thực tế, không yêu cầu thanh toán</div>
                   </label>
 
-                  {/* Gói 1 Năm */}
+                  {/* Lựa chọn 2: Đăng Ký Bản Quyền Pro */}
                   <label
                     onClick={() => setSelectedPackage('1YEAR')}
-                    className={`p-2.5 rounded-xl border flex flex-col justify-between cursor-pointer transition ${
-                      selectedPackage === '1YEAR'
-                        ? 'bg-sky-950/40 border-sky-500 text-sky-200'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
-                    }`}
-                  >
-                    <div className="text-[11px] font-bold">GÓI 1 NĂM HỌC</div>
-                    <div className="text-sm font-black text-sky-400 mt-1">Báo Giá Ưu Đãi</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">Sử dụng 12 tháng trọn vẹn</div>
-                  </label>
-
-                  {/* Gói 2 Năm (Ưu đãi) */}
-                  <label
-                    onClick={() => setSelectedPackage('2YEAR')}
-                    className={`p-2.5 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition relative ${
-                      selectedPackage === '2YEAR'
+                    className={`p-3.5 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition relative ${
+                      selectedPackage !== 'TRIAL_5'
                         ? 'bg-amber-950/50 border-amber-400 text-amber-200 shadow-lg shadow-amber-500/20'
-                        : 'bg-slate-950 border-amber-500/50 text-slate-300 hover:border-amber-400'
+                        : 'bg-slate-950 border-amber-500/40 text-slate-300 hover:border-amber-400'
                     }`}
                   >
-                    <span className="absolute -top-2 right-2 px-1.5 py-0.2 text-[8px] font-black rounded bg-amber-400 text-slate-950">
-                      TIẾT KIỆM NHẤT
+                    <span className="absolute -top-2.5 right-2 px-2 py-0.5 text-[9px] font-black rounded-full bg-gradient-to-r from-amber-400 to-rose-400 text-slate-950 shadow">
+                      👑 BẢN QUYỀN PRO
                     </span>
-                    <div className="text-[11px] font-bold text-amber-300">GÓI 2 NĂM VIP</div>
-                    <div className="text-sm font-black text-amber-300 mt-1">Báo Giá Tiết Kiệm</div>
-                    <div className="text-[10px] text-emerald-400 font-bold mt-0.5">24 tháng (Ưu đãi sư phạm)</div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black uppercase text-amber-300">2. BẢN QUYỀN PRO</span>
+                      <Crown className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div className="text-base font-black text-white mt-1">Báo Giá Qua Zalo</div>
+                    <div className="text-[11px] text-amber-200/90 font-medium mt-1">Admin gửi báo giá chi tiết theo nhu cầu & hỗ trợ cài đặt trọn đời</div>
                   </label>
-                  {/* Gói Full Web */}
-                  <label
-                    onClick={() => setSelectedPackage('FULL_WEB')}
-                    className={`p-2.5 rounded-xl border-2 flex flex-col justify-between cursor-pointer transition relative ${
-                      selectedPackage === 'FULL_WEB'
-                        ? 'bg-emerald-950/60 border-emerald-400 text-emerald-200 shadow-lg shadow-emerald-500/20'
-                        : 'bg-slate-950 border-emerald-500/40 text-slate-300 hover:border-emerald-400'
-                    }`}
-                  >
-                    <span className="absolute -top-2 right-2 px-1.5 py-0.2 text-[8px] font-black rounded bg-emerald-400 text-slate-950">
-                      👑 FULL WEB
-                    </span>
-                    <div className="text-[11px] font-bold text-emerald-300">TRỌN BỘ HỆ SINH THÁI</div>
-                    <div className="text-sm font-black text-emerald-400 mt-1">Báo Giá Trọn Bộ</div>
-                    <div className="text-[10px] text-emerald-300/90 font-medium mt-0.5">Mở khóa tất cả các app</div>
-                  </label>
-
                 </div>
               </div>
 
               
-              {/* KHỐI QR CHUYỂN KHOẢN KHI CHỌN GÓI 1 NĂM HOẶC 2 NĂM */}
+              {/* KHỐI QR CHUYỂN KHOẢN KHI ĐĂNG KÝ BẢN QUYỀN PRO */}
               {selectedPackage !== 'TRIAL_5' && (
                 <div className="p-4 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/60 shadow-xl space-y-3.5 animate-in fade-in duration-300">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
@@ -396,10 +367,10 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                       </div>
                       <div>
                         <h4 className="text-xs font-black text-amber-300 uppercase tracking-wide">
-                          QUÉT MÃ QR CHUYỂN KHOẢN (MB BANK)
+                          THÔNG TIN BÁO GIÁ & CHUYỂN KHOẢN (MB BANK)
                         </h4>
                         <p className="text-[10px] text-slate-400">
-                          Đang chọn: <strong className="text-white">{selectedPackage === 'FULL_WEB' ? 'Gói Full Web (Tất cả phần mềm)' : selectedPackage === '1YEAR' ? 'Gói 1 Năm' : 'Gói 2 Năm Ưu Đãi VIP'}</strong> — <span className="text-emerald-400">Nhắn Zalo Thầy Thành để nhận mức báo giá ưu đãi</span>
+                          Đang chọn: <strong className="text-white">Đăng ký Bản Quyền Pro</strong> — <span className="text-emerald-400">Nhắn Zalo Thầy Thành để nhận báo giá ưu đãi sư phạm</span>
                         </p>
                       </div>
                     </div>

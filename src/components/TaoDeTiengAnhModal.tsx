@@ -12,7 +12,8 @@ import {
   FileCheck2,
   Headphones,
   Square,
-  MessageSquare
+  MessageSquare,
+  MessageCircle
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import { activityTrackingService } from '../services/activityTrackingService';
@@ -282,8 +283,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
-            Tab 1: Trải Nghiệm Trực Tuyến
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            1. Dùng Thử Trực Tuyến
           </button>
 
           <button
@@ -294,8 +295,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
           >
-            <Download className="w-4 h-4" />
-            Tab 2: Tải Về & Hướng Dẫn
+            <Download className="w-4 h-4 text-cyan-300" />
+            2. Tải Bản Máy Tính (.exe)
           </button>
 
           <button
@@ -307,7 +308,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            Tab 3: Bản Quyền & Kích Hoạt
+            3. Bản Quyền & Kích Hoạt
           </button>
         </div>
 
@@ -1391,106 +1392,72 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                 </div>
               </div>
 
-              {/* BẢNG GIÁ CÁC GÓI BẢN QUYỀN - ẨN GIÁ CẢ ĐỂ TẾ NHỊ & LIÊN HỆ ZALO */}
-              <div className="flex items-center justify-between pt-1">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Các Gói Bản Quyền Chính Thức
-                </h4>
-                <button
-                  type="button"
-                  onClick={() => setShowTrialModal(true)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                  Đăng Ký Dùng Thử 5 Lần
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* Gói 1 Năm */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                      GÓI 1 NĂM HỌC
-                    </span>
-                    <h5 className="font-black text-white text-sm">Gói Cơ Bản</h5>
-                    <div className="text-base font-extrabold text-blue-400">
-                      Báo Giá Qua Zalo
+              {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
+                      </span>
+                      <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
                     </div>
-                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                      <li className="flex items-center gap-1.5">✓ Tạo đề kiểm tra Lớp 6, 7, 8, 9</li>
-                      <li className="flex items-center gap-1.5">✓ Kèm đầy đủ Đề thi nói Speaking Test</li>
-                      <li className="flex items-center gap-1.5">✓ Tải file Word chuẩn CV 7991</li>
-                      <li className="flex items-center gap-1.5">✓ Hạn sử dụng: 12 tháng</li>
-                    </ul>
+                    <h4 className="text-base sm:text-lg font-black text-white mt-1">
+                      Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                    </h4>
                   </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 1 Năm phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-300 hover:text-white text-xs font-bold text-center block transition-colors cursor-pointer border border-slate-700"
-                  >
-                    💬 Báo Giá Qua Zalo
-                  </a>
+                  <div className="text-left sm:text-right shrink-0">
+                    <div className="text-sm sm:text-base font-black text-cyan-400">
+                      Liên Hệ Admin Thầy Thành
+                    </div>
+                    <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
+                  </div>
                 </div>
 
-                {/* Gói 2 Năm */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
                   <div className="space-y-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                      TIẾT KIỆM
-                    </span>
-                    <h5 className="font-black text-white text-sm">Gói 2 Năm Học</h5>
-                    <div className="text-base font-extrabold text-cyan-400">
-                      Báo Giá Qua Zalo
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên bộ môn Tiếng Anh cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
                     </div>
-                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                      <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro</li>
-                      <li className="flex items-center gap-1.5">✓ Đầy đủ Đề thi nói Speaking Test</li>
-                      <li className="flex items-center gap-1.5">✓ Tặng kèm Add-in Word chạy trực tiếp</li>
-                      <li className="flex items-center gap-1.5">✓ Cập nhật đề mới miễn phí</li>
-                    </ul>
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Đầy đủ tính năng:</strong> Đề thi trắc nghiệm + tự luận, bài thi nói Speaking Test 2.0đ, Audio Script và tích hợp tạo file nghe MP3.</span>
+                    </div>
                   </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói 2 Năm phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 hover:text-white text-xs font-bold text-center block transition-colors cursor-pointer border border-slate-700"
-                  >
-                    💬 Báo Giá Qua Zalo
-                  </a>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Hỗ trợ trọn gói:</strong> Tặng kèm Add-in Word chạy trực tiếp trên máy tính, hỗ trợ cài đặt từ xa UltraViewer miễn phí.</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Cập nhật đề mới:</strong> Miễn phí cập nhật mẫu đề và ngân hàng câu hỏi mới nhất từ Bộ GD&ĐT.</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Gói Vĩnh Viễn */}
-                <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-950/40 via-slate-950 to-slate-950 border-2 border-amber-500/50 space-y-3 flex flex-col justify-between shadow-xl shadow-amber-500/10">
-                  <div className="space-y-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/40">
-                      👑 PHỔ BIẾN NHẤT
-                    </span>
-                    <h5 className="font-black text-white text-sm">Gói Vĩnh Viễn (Lifetime)</h5>
-                    <div className="text-base font-black text-amber-400">
-                      Báo Giá Ưu Đãi VIP
-                    </div>
-                    <ul className="text-xs text-slate-300 space-y-1.5 pt-1">
-                      <li className="flex items-center gap-1.5">✓ Không giới hạn thời gian</li>
-                      <li className="flex items-center gap-1.5">✓ Đầy đủ Đề thi viết + Đề thi nói</li>
-                      <li className="flex items-center gap-1.5">✓ Bản cài Word + Desktop + Web</li>
-                      <li className="flex items-center gap-1.5">✓ Hỗ trợ kỹ thuật trực tiếp từ Thầy Thành</li>
-                    </ul>
-                  </div>
+                {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                   <a
                     href={`https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận báo giá ưu đãi Gói Vĩnh Viễn phần mềm Tạo đề Tiếng Anh THCS (CV 7991). Mã máy của tôi: ${detectedMid}`
+                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Tạo Đề Tiếng Anh THCS Global Success (CV 7991). Mã máy của tôi: ${detectedMid}.`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold text-center block shadow-md shadow-amber-600/20 cursor-pointer"
+                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
                   >
-                    💬 Báo Giá Trọn Đời Qua Zalo
+                    <MessageCircle className="w-5 h-5 text-amber-300" />
+                    Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
                   </a>
+                  <button
+                    type="button"
+                    onClick={() => setShowTrialModal(true)}
+                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 cursor-pointer shrink-0"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    Đăng Ký Dùng Thử 5 Lần
+                  </button>
                 </div>
               </div>
 

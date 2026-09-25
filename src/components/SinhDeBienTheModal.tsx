@@ -335,8 +335,8 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   : "bg-slate-800 text-slate-400 hover:text-white"
               }`}
             >
-              <Sparkles className="w-4 h-4" />
-              1. Trải Nghiệm Trực Tuyến (Sinh 3 Đề)
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              1. Dùng Thử Trực Tuyến
             </button>
 
             <button
@@ -347,8 +347,8 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   : "bg-slate-800 text-slate-400 hover:text-white"
               }`}
             >
-              <Play className="w-4 h-4" />
-              2. Tải Về & Video Hướng Dẫn
+              <Download className="w-4 h-4 text-cyan-300" />
+              2. Tải Bản Máy Tính (.exe)
             </button>
 
             <button
@@ -359,7 +359,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   : "bg-slate-800 text-slate-400 hover:text-white"
               }`}
             >
-              <Crown className="w-4 h-4" />
+              <Crown className="w-4 h-4 text-amber-400" />
               3. Bản Quyền & Kích Hoạt
             </button>
           </div>
@@ -396,6 +396,34 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
         {activeTab === "demo" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
             
+            {/* THÔNG BÁO CẬP NHẬT & NHẬN GÓP Ý MẪU ĐỀ TỪ GIÁO VIÊN */}
+            <div className="bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/15 border-l-4 border-amber-500 p-3.5 rounded-r-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-start gap-2.5">
+                <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="text-xs text-slate-200 leading-relaxed">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <strong className="text-amber-300 font-bold text-sm">
+                      📢 Thông Báo Từ Tác Giả (Thầy Thành):
+                    </strong>
+                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      ĐANG TIẾP TỤC CẬP NHẬT & TIẾP NHẬN GÓP Ý
+                    </span>
+                  </div>
+                  Phần mềm Sinh 3 đề biến thể hiện <strong>đang được tiếp tục cập nhật và hoàn thiện</strong> thuật toán hoán vị và đảo đề thi. Do mỗi bộ môn và nhà trường có thể có dạng đề đặc thù riêng, Thầy/Cô có mẫu đề chuẩn hoặc ý tưởng mong muốn xin vui lòng <strong>góp ý qua Zalo ({BRAND.phone})</strong> để Thầy Thành tối ưu thuật toán tạo ra sản phẩm như ý muốn của Thầy/Cô!
+                </div>
+              </div>
+              <a
+                href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                  `Chào Thầy Thành, tôi đang trải nghiệm tính năng Sinh đề biến thể và muốn gửi góp ý dạng đề để Thầy hoàn thiện theo ý tôi.`
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="shrink-0 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition shadow-md self-end sm:self-center cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" /> Góp Ý Mẫu Đề Zalo
+              </a>
+            </div>
+
             {/* TOP NOTICE & CONTROLS */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1069,63 +1097,64 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               </form>
             </div>
 
-            {/* PRICING TABLE */}
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <h4 className="font-extrabold text-xs text-slate-300 uppercase tracking-wide">
-                CÁC GÓI BẢN QUYỀN SINH ĐỀ BIẾN THỂ VIP V1:
-              </h4>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2.5 flex flex-col justify-between">
-                  <div>
-                    <span className="font-bold text-slate-300 block text-xs">GÓI 1 NĂM</span>
-                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-xs">Cá Nhân</span>
-                    <span className="text-[11px] text-slate-400 block">Sử dụng đầy đủ tính năng trong 365 ngày</span>
-                  </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 1 Năm Sinh Đề Biến Thể VIP V1 (Mã máy: ${hardwareCode}). Xin Thầy tư vấn giúp tôi!`)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
-                  >
-                    Báo Giá Qua Zalo
-                  </a>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2.5 flex flex-col justify-between">
-                  <div>
-                    <span className="font-bold text-slate-300 block text-xs">GÓI 2 NĂM</span>
-                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold text-xs">Tiết Kiệm</span>
-                    <span className="text-[11px] text-slate-400 block">Sử dụng ổn định trong 730 ngày</span>
-                  </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói 2 Năm Sinh Đề Biến Thể VIP V1 (Mã máy: ${hardwareCode}). Xin Thầy tư vấn giúp tôi!`)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs transition"
-                  >
-                    Báo Giá Qua Zalo
-                  </a>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-500/20 to-slate-900 border border-amber-500/60 text-center space-y-2.5 shadow-lg shadow-amber-500/10 flex flex-col justify-between">
-                  <div>
-                    <span className="font-extrabold text-amber-300 block text-xs flex items-center justify-center gap-1">
-                      <Crown className="w-3.5 h-3.5 text-amber-400" />
-                      GÓI TRỌN ĐỜI (VIP)
+            {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                      👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
                     </span>
-                    <span className="inline-block my-1 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs">👑 Vĩnh Viễn</span>
-                    <span className="text-[11px] text-amber-200 font-semibold block">Sử dụng vĩnh viễn theo máy, nâng cấp miễn phí</span>
+                    <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
                   </div>
-                  <a
-                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Chào Thầy Thành, tôi muốn nhận báo giá Gói VIP Trọn Đời Sinh Đề Biến Thể VIP V1 (Mã máy: ${hardwareCode}). Xin Thầy tư vấn ưu đãi tốt nhất giúp tôi!`)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition shadow-md shadow-amber-500/20"
-                  >
-                    Báo Giá Ưu Đãi VIP
-                  </a>
+                  <h4 className="text-base sm:text-lg font-black text-white mt-1">
+                    Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                  </h4>
                 </div>
+                <div className="text-left sm:text-right shrink-0">
+                  <div className="text-sm sm:text-base font-black text-cyan-400">
+                    Liên Hệ Admin Thầy Thành
+                  </div>
+                  <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Thuật toán hoán vị AI:</strong> Tự động phân tích đề gốc và tạo 3 đề biến thể tương đương chống quay cóp trong phòng thi.</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các thuật toán và mẫu đề mới nhất.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                    `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Sinh 3 Đề Biến Thể VIP. Mã máy của tôi: ${hardwareCode}.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
+                >
+                  <MessageCircle className="w-5 h-5 text-amber-300" />
+                  Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
+                </a>
               </div>
             </div>
 

@@ -42,11 +42,9 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
     }
   };
 
-  const currentPlanName = 
-    selectedPlan === '1YEAR' ? `Gói 1 Năm (${appName})` : 
-    selectedPlan === '2YEAR' ? `Gói 2 Năm VIP (${appName})` : 'Gói Full Web Trọn Bộ Hệ Sinh Thái (Tất Cả Phần Mềm)';
-
-  const zaloLink = `https://zalo.me/${BRAND.zalo}?text=Thay%20Thanh%20oi,%20toi%20muon%20nhan%20bao%20gia%20kich%20hoat%20${encodeURIComponent(currentPlanName)}.%20Ma%20may:%20${encodeURIComponent(hardwareCode)}`;
+  const zaloLink = `https://zalo.me/${BRAND.zalo}?text=${encodeURIComponent(
+    `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt phần mềm ${appName}. Nhờ Thầy tư vấn và báo giá chi tiết giúp tôi (Mã máy: ${hardwareCode}).`
+  )}`;
 
   return (
     <div 
@@ -82,118 +80,62 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
           </p>
         </div>
 
-        {/* 3 THẺ BẢNG GIÁ LÔI CUỐN - ẨN GIÁ CÔNG KHAI */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-2">
-          
-          {/* THẺ 1: GÓI 1 NĂM */}
-          <div
-            onClick={() => setSelectedPlan('1YEAR')}
-            className={`p-4 rounded-2xl border-2 flex flex-col justify-between cursor-pointer transition-all ${
-              selectedPlan === '1YEAR'
-                ? 'bg-gradient-to-b from-blue-950/60 to-slate-900 border-blue-400 shadow-lg shadow-blue-500/20 scale-[1.02]'
-                : 'bg-slate-950/70 border-slate-800 hover:border-slate-700 opacity-90'
-            }`}
-          >
-            <div className="space-y-2.5">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                GÓI 1 NĂM HỌC
-              </span>
-              <h4 className="font-bold text-sm text-white">{appName}</h4>
-              <div className="text-xl font-black text-blue-400">
-                Báo Giá Ưu Đãi
-              </div>
-              <p className="text-[11px] text-blue-300/90 font-medium">Chi phí hỗ trợ giáo dục cực kỳ tiết kiệm</p>
-              <ul className="text-xs text-slate-300 space-y-1.5 pt-1 border-t border-slate-800">
-                <li className="flex items-center gap-1.5">✓ Sử dụng 12 tháng trọn vẹn</li>
-                <li className="flex items-center gap-1.5">✓ Đầy đủ tính năng Pro cao cấp</li>
-                <li className="flex items-center gap-1.5">✓ Xuất file Word chuẩn in ấn A4</li>
-              </ul>
-            </div>
-            <button className={`w-full mt-4 py-2 rounded-xl text-xs font-bold transition ${
-              selectedPlan === '1YEAR' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'
-            }`}>
-              {selectedPlan === '1YEAR' ? '✓ ĐANG CHỌN GÓI NÀY' : 'Chọn Gói 1 Năm'}
-            </button>
-          </div>
-
-          {/* THẺ 2: GÓI 2 NĂM VIP */}
-          <div
-            onClick={() => setSelectedPlan('2YEAR')}
-            className={`p-4 rounded-2xl border-2 flex flex-col justify-between cursor-pointer transition-all relative ${
-              selectedPlan === '2YEAR'
-                ? 'bg-gradient-to-b from-amber-950/60 to-slate-900 border-amber-400 shadow-xl shadow-amber-500/25 scale-[1.04]'
-                : 'bg-slate-950/70 border-amber-500/50 hover:border-amber-400'
-            }`}
-          >
-            {/* BADGE ƯU ĐÃI */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white font-black text-[9px] tracking-wider uppercase shadow-md flex items-center gap-1 shrink-0 whitespace-nowrap">
-              <Clock className="w-3 h-3 animate-spin" />
-              ƯU ĐÃI NĂM HỌC 2026 - 2027
-            </div>
-
-            <div className="space-y-2.5 pt-1">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  🔥 TIẾT KIỆM NHẤT
+        {/* 1 THẺ BÁO GIÁ DUY NHẤT - ĐƠN GIẢN HÓA THEO YÊU CẦU CỦA THẦY THÀNH */}
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
                 </span>
-                <span className="text-[10px] text-amber-400 font-semibold">Gói Được Chọn Nhiều</span>
+                <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
               </div>
-              <h4 className="font-bold text-sm text-white">Gói 2 Năm VIP Ưu Đãi</h4>
-              <div className="text-xl font-black text-amber-300">
-                Báo Giá Tiết Kiệm
-              </div>
-              <p className="text-[11px] text-emerald-400 font-bold">Lựa chọn phổ biến & tiết kiệm nhất</p>
-              <ul className="text-xs text-slate-300 space-y-1.5 pt-1 border-t border-slate-800">
-                <li className="flex items-center gap-1.5">✓ Sử dụng 24 tháng liên tục</li>
-                <li className="flex items-center gap-1.5">✓ Tặng kèm Add-in Word & kho tài liệu</li>
-                <li className="flex items-center gap-1.5">✓ Cập nhật đề mẫu mới miễn phí</li>
-                <li className="flex items-center gap-1.5 text-amber-300 font-semibold">
-                  ⭐️ Hỗ trợ kỹ thuật 24/7 trực tiếp từ Thầy Thành
-                </li>
-              </ul>
+              <h4 className="text-base sm:text-lg font-black text-white mt-1">
+                Đăng Ký Bản Quyền & Nhận Báo Giá Chi Tiết Qua Zalo
+              </h4>
             </div>
-            <button className={`w-full mt-4 py-2 rounded-xl text-xs font-black transition ${
-              selectedPlan === '2YEAR' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md' : 'bg-slate-800 text-slate-300'
-            }`}>
-              {selectedPlan === '2YEAR' ? '👑 LỰA CHỌN ƯU ĐÃI NHẤT' : 'Chọn Gói 2 Năm VIP'}
-            </button>
+            <div className="text-left sm:text-right shrink-0">
+              <div className="text-sm sm:text-base font-black text-cyan-400">
+                Liên Hệ Thầy Thành (Admin)
+              </div>
+              <p className="text-[11px] text-slate-400">Tư vấn linh hoạt theo nhu cầu của Thầy/Cô</p>
+            </div>
           </div>
 
-          {/* THẺ 3: GÓI FULL WEB - TẤT CẢ PHẦN MỀM */}
-          <div
-            onClick={() => setSelectedPlan('FULL_WEB')}
-            className={`p-4 rounded-2xl border-2 flex flex-col justify-between cursor-pointer transition-all relative ${
-              selectedPlan === 'FULL_WEB'
-                ? 'bg-gradient-to-b from-emerald-950/60 to-slate-900 border-emerald-400 shadow-xl shadow-emerald-500/25 scale-[1.02]'
-                : 'bg-slate-950/70 border-emerald-500/40 hover:border-emerald-400 opacity-90'
-            }`}
-          >
-            <div className="absolute -top-3 right-3 px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black text-[9px] uppercase tracking-wider shadow">
-              TIẾT KIỆM 80%
-            </div>
-
-            <div className="space-y-2.5">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                👑 TRỌN BỘ HỆ SINH THÁI
-              </span>
-              <h4 className="font-bold text-sm text-white">Gói Full Web Toàn Năng</h4>
-              <div className="text-xl font-black text-emerald-400">
-                Báo Giá Trọn Bộ
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-emerald-400 font-bold">✓</span>
+                <span><strong>Trợ giá giáo dục:</strong> Mức giá ưu đãi đặc biệt dành riêng cho giáo viên và các nhà trường, cực kỳ tiết kiệm.</span>
               </div>
-              <p className="text-[11px] text-emerald-300 font-semibold">Mở khóa 100% tất cả các app trên web</p>
-              <ul className="text-xs text-slate-300 space-y-1.5 pt-1 border-t border-slate-800">
-                <li className="flex items-center gap-1.5">✓ Tạo đề 8 môn THCS (CV 7991)</li>
-                <li className="flex items-center gap-1.5">✓ Tạo đề Tiếng Anh & File Nghe MP3</li>
-                <li className="flex items-center gap-1.5">✓ Sinh 3 đề biến thể VIP chống cóp</li>
-                <li className="flex items-center gap-1.5">✓ Chuẩn hóa văn bản NĐ 30 & Giáo án 5512</li>
-                <li className="flex items-center gap-1.5">✓ Đinh Thành Cleaner Pro, PDF Suite Pro...</li>
-              </ul>
+              <div className="flex items-start gap-2">
+                <span className="text-emerald-400 font-bold">✓</span>
+                <span><strong>Tùy chọn đa dạng:</strong> Thầy Thành sẽ báo giá chi tiết theo từng môn học, theo năm học hoặc trọn gói hệ thống phần mềm.</span>
+              </div>
             </div>
-            <button className={`w-full mt-4 py-2 rounded-xl text-xs font-bold transition ${
-              selectedPlan === 'FULL_WEB' ? 'bg-emerald-600 text-white shadow-md' : 'bg-slate-800 text-slate-300'
-            }`}>
-              {selectedPlan === 'FULL_WEB' ? '✓ ĐANG CHỌN FULL WEB' : 'Chọn Gói Full Web'}
-            </button>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-emerald-400 font-bold">✓</span>
+                <span><strong>Hỗ trợ cài đặt trọn gói:</strong> Kết nối UltraViewer / TeamViewer cài đặt trực tiếp lên máy tính của Thầy/Cô hoàn toàn miễn phí.</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-emerald-400 font-bold">✓</span>
+                <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật mẫu đề, ngân hàng câu hỏi mới nhất từ Bộ GD&ĐT.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* NÚT BẤM ZALO NỔI BẬT */}
+          <div className="pt-1">
+            <a
+              href={zaloLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
+            >
+              <MessageCircle className="w-5 h-5 text-amber-300 animate-pulse" />
+              Bấm Vào Đây Để Nhắn Zalo Thầy Thành Nhận Báo Giá Chi Tiết ({BRAND.phone})
+            </a>
           </div>
         </div>
 
@@ -206,10 +148,10 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
               </div>
               <div>
                 <h4 className="text-sm font-black text-amber-300 uppercase tracking-wide">
-                  QUÉT MÃ QR THANH TOÁN (MB BANK) - KÍCH HOẠT TỨC THÌ
+                  THÔNG TIN TÀI KHOẢN THANH TOÁN (MB BANK)
                 </h4>
                 <p className="text-xs text-slate-400">
-                  Đang chọn: <strong className="text-white">{currentPlanName}</strong> — <span className="text-emerald-400 font-semibold">Nhắn Zalo Thầy Thành để nhận báo giá ưu đãi sư phạm</span>
+                  Phần mềm: <strong className="text-white">{appName}</strong> — <span className="text-emerald-400 font-semibold">Nhắn Zalo Thầy Thành để nhận báo giá ưu đãi và kích hoạt tức thì</span>
                 </p>
               </div>
             </div>
