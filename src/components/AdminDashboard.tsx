@@ -2452,7 +2452,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     <input
                       type="text"
                       required
-                      placeholder="Ví dụ: DVT-0B1D-A6A7-5A14"
+                      placeholder="Ví dụ: NLS-DVT-0B1D-A6A7-5A14"
                       value={nlsMid}
                       onChange={(e) => setNlsMid(e.target.value)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-cyan-300 focus:outline-none focus:border-emerald-500"

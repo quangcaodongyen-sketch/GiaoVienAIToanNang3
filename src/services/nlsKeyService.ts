@@ -10,6 +10,9 @@ export const MASTER_PUBLIC_KEY_HEX = 'A171FCD66F6485934CD74ECBDEE47D7B21FA999E86
 // Khóa bí mật Ed25519 duy nhất của Thầy Thành (dùng cho Admin tạo key)
 export const MASTER_PRIVATE_KEY_HEX = 'B3B24950EE7A4E041FF4C1AA1256E46261DA965C2378EC5D916CADA7DAE0B90A';
 
+export const PRODUCT_ID = 'NLS_AI_THCS';
+export const PRODUCT_NAME = 'Tích hợp NLS, AI & Nội dung GD THCS (CV 5512)';
+
 // Base32 RFC 4648 không padding
 function base32Encode(buffer: Uint8Array): string {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -39,15 +42,15 @@ function hexToBytes(hex: string): Uint8Array {
   return bytes;
 }
 
-// Sinh hoặc đọc Hardware Code duy nhất cho máy tính (dạng DVT-XXXX-XXXX-XXXX)
+// Sinh hoặc đọc Hardware Code duy nhất cho máy tính (dạng NLS-DVT-XXXX-XXXX-XXXX)
 export const getOrCreateNLSHardwareCode = (): string => {
   const STORAGE_KEY = 'nls_detected_hardware_code';
   let code = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
-  if (!code || !code.startsWith('DVT-')) {
+  if (!code || !code.startsWith('NLS-DVT-')) {
     try {
       const scr = `${window.screen?.width || 1920}x${window.screen?.height || 1080}_${window.screen?.colorDepth || 24}`;
       const nav = `${navigator.userAgent}_${navigator.language}_${navigator.hardwareConcurrency || 4}`;
-      const raw = 'DVT_NLS_' + scr + nav;
+      const raw = 'NLS_DVT_' + scr + nav;
       let hash = 0;
       for (let i = 0; i < raw.length; i++) {
         hash = ((hash << 5) - hash) + raw.charCodeAt(i);
@@ -56,9 +59,9 @@ export const getOrCreateNLSHardwareCode = (): string => {
       const p1 = Math.abs(hash & 0xffff).toString(16).padStart(4, '0').toUpperCase();
       const p2 = Math.abs((hash >> 16) & 0xffff).toString(16).padStart(4, '0').toUpperCase();
       const p3 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
-      code = `DVT-${p1}-${p2}-${p3}`;
+      code = `NLS-DVT-${p1}-${p2}-${p3}`;
     } catch {
-      code = 'DVT-8F22-A109-5B3C';
+      code = 'NLS-DVT-8F22-A109-5B3C';
     }
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, code);
@@ -67,10 +70,9 @@ export const getOrCreateNLSHardwareCode = (): string => {
   return code;
 };
 
-// Ký số Ed25519 sử dụng Web Crypto API (hỗ trợ bởi tất cả trình duyệt hiện đại)
+// Ký số Ed25519 sử dụng Web Crypto API
 async function signEd25519(payloadBytes: Uint8Array, privateKeyHex: string): Promise<Uint8Array> {
   const privRaw = hexToBytes(privateKeyHex);
-  // PKCS#8 DER Header cho Ed25519: 30 2e 02 01 00 30 05 06 03 2b 65 70 04 22 04 20 + 32-byte seed
   const pkcs8Header = new Uint8Array([
     0x30, 0x2e, 0x02, 0x01, 0x00, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20
   ]);
@@ -96,10 +98,13 @@ async function signEd25519(payloadBytes: Uint8Array, privateKeyHex: string): Pro
 
 /**
  * Sinh Key Ed25519 cho khách hàng (dành cho Admin Thầy Đinh Văn Thành)
+ * Ràng buộc chặt chẽ với PRODUCT:NLS_AI_THCS và tiền tố KEY-NLS-...
  */
 export async function generateEd25519Key(
   machineCode: string,
-  years: number
+  years: number,
+  productTag: string = 'NLS',
+  productId: string = 'NLS_AI_THCS'
 ): Promise<{
   key: string;
   expDate: string;
@@ -113,8 +118,8 @@ export async function generateEd25519Key(
   }
 
   let expDate = '2099-12-31';
-  let planName = 'Trọn Đời (VIP)';
-  let price = 'VIP Trọn Đời';
+  let planName = 'Trọn đời (VIP)';
+  let price = 'VIP Trọn đời';
 
   if (years < 90) {
     const d = new Date();
@@ -125,14 +130,15 @@ export async function generateEd25519Key(
     expDate = `${yyyy}-${mm}-${dd}`;
     planName = `${years} Năm`;
     const priceMap: Record<number, string> = {
-      1: 'Gói 1 Năm',
-      2: 'Gói 2 Năm',
-      3: 'Gói 3 Năm'
+      1: 'Gói 1 Năm (150.000 VNĐ)',
+      2: 'Gói 2 Năm (250.000 VNĐ)',
+      3: 'Gói 3 Năm (300.000 VNĐ)'
     };
     price = priceMap[years] || `${years} Năm`;
   }
 
-  const payloadStr = `${cleanCode}#${expDate}`;
+  // Payload ràng buộc chặt với Product ID
+  const payloadStr = `PRODUCT:${productId}#${cleanCode}#${expDate}`;
   const payloadBytes = new TextEncoder().encode(payloadStr);
 
   const sig = await signEd25519(payloadBytes, MASTER_PRIVATE_KEY_HEX);
@@ -144,27 +150,29 @@ export async function generateEd25519Key(
   }
   const sigFormatted = chunks.join('-');
   const dateCompact = expDate.replace(/-/g, '');
-  const key = `KEY-${dateCompact}-${sigFormatted}`;
+  const key = `KEY-${productTag}-${dateCompact}-${sigFormatted}`;
 
   const zaloMessage = `Kính gửi Thầy/Cô,
-Thầy Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Phần mềm Tích hợp NLS, AI & Các nội dung giáo dục cấp THCS (Phiên bản V3 - Chuẩn CV 5512):
+Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chính hãng:
 
-🔹 Gói bản quyền: ${planName} (${price})
-🔹 Hạn sử dụng: Đến ngày ${expDate}
-🔹 Mã máy: ${cleanCode}
-🔹 Mã kích hoạt (Key Pro V3):
+• Phần mềm: ${PRODUCT_NAME} (Bản V3)
+• Gói bản quyền: ${planName} (${price})
+• Hạn sử dụng: Đến ngày ${expDate}
+• Mã máy: ${cleanCode}
+• Mã kích hoạt Pro (Độc quyền phần mềm):
 ${key}
 
-Tính năng nổi bật trên Bản V3:
-✨ Hỗ trợ tích hợp chuyên sâu Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0 chuẩn mực).
-✨ Ô yêu cầu bổ sung văn bản tự do: Tùy biến mức độ ngắn gọn/chi tiết và các chuyên đề đặc thù.
-✨ Add-in Ribbon Word V3 tối ưu 1-click & Cơ chế Single Instance chống trùng lặp.
+Tính năng nổi bật mới nâng cấp:
+✔ Quản lý Phụ lục 3 Đa môn học: nạp nhiều file cùng lúc, tự nhận diện 12 môn THCS và khối lớp.
+✔ Tích hợp siêu tốc 1-click vào Word: tự nhận diện bài dạy, chữ đỏ 13pt Times New Roman, bảo toàn 100% công thức toán & hình vẽ.
+✔ Hỗ trợ học sinh khuyết tật hòa nhập, tích hợp khởi động, khám phá, luyện tập, vận dụng chuẩn CV 5512.
+✔ Bản quyền độc quyền theo từng phần mềm, bảo mật tối đa.
 
 Hướng dẫn kích hoạt:
-1. Mở phần mềm (hoặc mở Word), bấm vào nút "Kích hoạt Pro" (hoặc menu Bản quyền).
-2. Dán mã key ở trên vào ô và bấm "Kích hoạt ngay".
+1. Mở phần mềm (hoặc mở Word), bấm vào nút 'Kích hoạt Pro' (hoặc menu Bản quyền).
+2. Dán mã key ở trên vào ô và bấm 'Kích hoạt ngay'.
 Chúc Thầy/Cô có những tiết dạy thành công và ứng dụng công nghệ hiệu quả!
-Mọi hỗ trợ xin liên hệ Thầy Đinh Văn Thành - ĐT/Zalo: 0915.213717.`;
+Mọi hỗ trợ xin liên hệ Thầy Đinh Văn Thành - Hotline / Zalo: 0915.213717.`;
 
   return {
     key,
@@ -195,8 +203,19 @@ export function verifyKeyFormat(key: string, machineCode: string): {
     return { isValid: false, message: 'Cấu trúc mã Key không hợp lệ.' };
   }
 
-  const dateStr = parts[1]; // YYYYMMDD
-  if (dateStr.length !== 8) {
+  let dateStr = parts[1]; // YYYYMMDD hoặc product prefix
+  if (parts.length >= 4 && parts[1].length <= 5 && isNaN(Number(parts[1]))) {
+    const prodTag = parts[1];
+    if (prodTag !== 'NLS') {
+      return {
+        isValid: false,
+        message: `Mã kích hoạt này thuộc về phần mềm khác (${prodTag}) của Thầy Thành, không áp dụng cho phần mềm Tích hợp NLS - AI THCS!`
+      };
+    }
+    dateStr = parts[2];
+  }
+
+  if (dateStr.length !== 8 || isNaN(Number(dateStr))) {
     return { isValid: false, message: 'Ngày hết hạn trong Key không hợp lệ.' };
   }
 

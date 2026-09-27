@@ -1413,7 +1413,7 @@ ${generatedDisabilityProcedures}
                     type="text"
                     value={inputKey}
                     onChange={(e) => setInputKey(e.target.value)}
-                    placeholder="Dán mã kích hoạt dạng: KEY-YYYYMMDD-XXXXXX-..."
+                    placeholder="Dán mã kích hoạt dạng: KEY-NLS-YYYYMMDD-XXXXXX-..."
                     className="flex-1 p-2.5 rounded-xl bg-slate-950 border border-amber-400/40 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400"
                   />
                   <button
@@ -1441,7 +1441,7 @@ ${generatedDisabilityProcedures}
                       Mã máy tính của Thầy/Cô (Hardware Code):
                     </span>
                     <span className="font-mono text-cyan-300 font-bold text-sm">
-                      {detectedMid || 'DVT-8F22-A109-5B3C'}
+                      {detectedMid || 'NLS-DVT-8F22-A109-5B3C'}
                     </span>
                   </div>
                 </div>
