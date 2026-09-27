@@ -1062,16 +1062,26 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                 </video>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
                 <span>💡 Video hướng dẫn chi tiết các bước lấy ID máy tính và mở khóa vĩnh viễn.</span>
-                <a
-                  href="/tao-bai-nghe-listening.mp4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-cyan-400 hover:underline font-semibold"
-                >
-                  ▶ Mở xem video tab mới
-                </a>
+                <div className="flex items-center gap-3 shrink-0">
+                  <a
+                    href="/tao-bai-nghe-listening.mp4"
+                    download="HuongDan_Smart_Listening_Pro_TaoFileNgheTiengAnh.mp4"
+                    className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Tải Video (.mp4)
+                  </a>
+                  <a
+                    href="/tao-bai-nghe-listening.mp4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:underline font-semibold"
+                  >
+                    ▶ Xem tab mới
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -1090,8 +1100,8 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
 
                 {/* NÚT TẢI TRỰC TIẾP FILE ZIP BẢN CÀI ĐẶT */}
                 <a
-                  href="/Smart_Listening_Pro.zip"
-                  download="Smart_Listening_Pro.zip"
+                  href="/Smart_Listening_Pro_Pass_123.zip"
+                  download="Smart_Listening_Pro_TaoFileNgheTiengAnh_Pass123.zip"
                   className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0"
                 >
                   <Download className="w-4 h-4" />

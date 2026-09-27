@@ -808,7 +808,7 @@ startxref
                   <div className="space-y-2.5">
                     <a
                       href="/PDF_Suite_Pro_Pass_123.zip"
-                      download="PDF_Suite_Pro_Pass_123.zip"
+                      download="PDF_Suite_Pro_TachGopPDF_TronBo_Pass123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-pink-900/40 to-slate-800 hover:from-pink-800/60 hover:to-slate-700 border border-pink-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -827,7 +827,7 @@ startxref
 
                     <a
                       href="/HUONG_DAN_SU_DUNG.docx"
-                      download="So_Tay_Xu_Ly_PDF_Su_Pham.docx"
+                      download="SoTay_HuongDan_XuLyPDF_SuPham.docx"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">

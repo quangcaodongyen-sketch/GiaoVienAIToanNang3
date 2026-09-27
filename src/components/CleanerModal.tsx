@@ -691,7 +691,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                   </h3>
                   <a
                     href="/cleaner_demo.mp4"
-                    download="Video_Huong_Dan_DinhThanh_Cleaner_Pro.mp4"
+                    download="HuongDan_DinhThanh_Cleaner_Pro_DonRacMayTinh.mp4"
                     className="text-xs px-3 py-1.5 rounded-lg bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 border border-sky-500/40 font-semibold flex items-center gap-1.5 transition"
                   >
                     <Download className="w-3.5 h-3.5" /> Tải Video (.mp4)
@@ -727,7 +727,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                   </div>
                   <a
                     href="/DinhThanh_Cleaner_Pro.exe"
-                    download="DinhThanh_Cleaner_Pro.exe"
+                    download="CaiDat_DinhThanh_Cleaner_Pro_DonRacMayTinh.exe"
                     className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-950/30"
                   >
                     <Download className="w-4 h-4" /> Tải DinhThanh_Cleaner_Pro.exe (11.2 MB)
@@ -752,7 +752,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                   </div>
                   <a
                     href="/DinhThanh_Cleaner_Pro_v4.5.zip"
-                    download="DinhThanh_Cleaner_Pro_v4.5.zip"
+                    download="DinhThanh_Cleaner_Pro_v4.5_TronBo_Pass123.zip"
                     className="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-sky-950/30"
                   >
                     <Download className="w-4 h-4" /> Tải Gói Nén .ZIP (10.9 MB)

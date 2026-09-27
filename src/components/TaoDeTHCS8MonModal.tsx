@@ -929,7 +929,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   <span>Trình bày: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)</span>
                   <a
                     href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
-                    download="HD_Tao_De_THCS_8_Mon.mp4"
+                    download="HuongDan_TrungTam_TaoDe_THCS_8Mon_CV7991.mp4"
                     className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
                   >
                     <Download className="w-3.5 h-3.5" /> Tải video MP4 về máy
@@ -946,6 +946,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
                   <div className="space-y-2.5">
                     <a
                       href="/Trung_Tam_Tao_De_THCS.exe"
+                      download={`TrungTam_TaoDe_THCS_${currentSubjectObj?.name?.replace(/\s+/g,'') || '8Mon'}_CV7991.exe`}
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -964,7 +965,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
                     <a
                       href="/Trung_Tam_Tao_De_THCS_Pass_123.zip"
-                      download="Trung_Tam_Tao_De_THCS_Pass_123.zip"
+                      download="TrungTam_TaoDe_THCS_8Mon_CV7991_TronBo_Pass123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -983,6 +984,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
                     <a
                       href="/HUONG_DAN_TAO_DE_THCS_8_MON.docx"
+                      download="HuongDan_TrungTam_TaoDe_THCS_8Mon_CV7991.docx"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">

@@ -31,25 +31,29 @@ export const BRAND = {
   }
 };
 
-// Cấu hình link lưu trữ đám mây cho các file nặng (> 25MB) của Tích hợp NLS - AI
+// Cấu hình link lưu trữ trực tiếp tốc độ cao cho Tích hợp NLS - AI THCS V3
 export const NLS_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) CDN tốc độ cao vĩnh viễn
-  fullZipUrl: "https://files.catbox.moe/lwzhrw.zip",
-  // Link tải file cài đặt .exe từ gói nén an toàn
-  exeUrl: "https://files.catbox.moe/lwzhrw.zip",
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
+  fullZipUrl: "/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
+  // Link tải file cài đặt .exe trực tiếp
+  exeUrl: "/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
   // Link Video HD Streaming trực tiếp cho web
-  videoDirectUrl: "https://files.catbox.moe/l661sh.mp4",
+  videoDirectUrl: "/HD_tich_hop_NLS_AI.mp4",
   videoEmbedUrl: "",
   // Link xem video trên tab mới
-  videoWatchUrl: "https://files.catbox.moe/l661sh.mp4",
+  videoWatchUrl: "/HD_tich_hop_NLS_AI.mp4",
   // Link tải video trực tiếp
-  videoDownloadUrl: "https://files.catbox.moe/l661sh.mp4"
+  videoDownloadUrl: "/HD_tich_hop_NLS_AI.mp4"
 };
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
 export const EXAM_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) CDN tốc độ cao
-  fullZipUrl: "https://files.catbox.moe/07c2dq.zip",
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
+  fullZipUrl: "/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  // Link tải bộ cài Word .exe trực tiếp
+  exeWordUrl: "/Cai_Dat_Chay_Tren_Word.exe",
+  // Link tải bản Desktop .exe trực tiếp
+  exeDesktopUrl: "/Tao_De_Tieng_Anh_Desktop.exe",
   // Link video hướng dẫn
   videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"

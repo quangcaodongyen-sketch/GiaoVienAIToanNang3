@@ -1185,7 +1185,7 @@ ${generatedDisabilityProcedures}
                     <a
                       href={NLS_RESOURCES.videoDownloadUrl || NLS_RESOURCES.videoWatchUrl || "/HD_tich_hop_NLS_AI.mp4"}
                       target={NLS_RESOURCES.videoDownloadUrl?.startsWith('http') || NLS_RESOURCES.videoWatchUrl?.startsWith('http') ? "_blank" : undefined}
-                      download={!NLS_RESOURCES.videoDownloadUrl?.startsWith('http') ? "HD_tich_hop_NLS_AI.mp4" : undefined}
+                      download={!NLS_RESOURCES.videoDownloadUrl?.startsWith('http') ? "HuongDan_TichHop_NLS_AI_THCS_V3.mp4" : undefined}
                       rel="noopener noreferrer"
                       className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
                     >
@@ -1211,9 +1211,7 @@ ${generatedDisabilityProcedures}
 
                   <a
                     href={NLS_RESOURCES.fullZipUrl || "/Tich_Hop_NLS_AI_THCS_Pass_123.zip"}
-                    target={NLS_RESOURCES.fullZipUrl?.startsWith('http') ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    download={!NLS_RESOURCES.fullZipUrl?.startsWith('http') ? "Tich_Hop_NLS_AI_THCS_Pass_123.zip" : undefined}
+                    download="TichHop_NLS_AI_THCS_V3_TronBo_Pass123.zip"
                     className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
@@ -1239,9 +1237,7 @@ ${generatedDisabilityProcedures}
                   </div>
                   <a
                     href={NLS_RESOURCES.exeUrl || "/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"}
-                    target={NLS_RESOURCES.exeUrl?.startsWith('http') ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    download={!NLS_RESOURCES.exeUrl?.startsWith('http') ? "Cai_Dat_Tich_Hop_NLS_AI_THCS.exe" : undefined}
+                    download="CaiDat_TichHop_NangLucSo_AI_THCS_V3.exe"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1264,7 +1260,7 @@ ${generatedDisabilityProcedures}
                   </div>
                   <a
                     href="/TichHop_NLS_AI_THCS.dotm"
-                    download="TichHop_NLS_AI_THCS.dotm"
+                    download="TichHop_NangLucSo_AI_THCS_V3_WordAddIn.dotm"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1287,7 +1283,7 @@ ${generatedDisabilityProcedures}
                   </div>
                   <a
                     href="/HD_tich_hop_NLS_AI.mp4"
-                    download="HD_tich_hop_NLS_AI.mp4"
+                    download="HuongDan_TichHop_NangLucSo_AI_THCS_V3.mp4"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1310,7 +1306,7 @@ ${generatedDisabilityProcedures}
                   </div>
                   <a
                     href="/HUONG_DAN_SU_DUNG.docx"
-                    download="HUONG_DAN_SU_DUNG.docx"
+                    download="HuongDan_SuDung_TichHop_NangLucSo_AI_THCS_V3.docx"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <Download className="w-3.5 h-3.5" />

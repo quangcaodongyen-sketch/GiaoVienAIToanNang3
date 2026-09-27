@@ -1180,6 +1180,14 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   <span>💡 Video hướng dẫn chi tiết từng bước tạo đề thi hoán vị và xuất ra Microsoft Word.</span>
                   <div className="flex items-center gap-3 shrink-0">
                     <a
+                      href={EXAM_RESOURCES.videoDirectUrl || "/HD_Tao_De_Tieng_Anh_THCS.mp4"}
+                      download="HuongDan_TaoDe_TiengAnh_THCS_CV7991.mp4"
+                      className="text-emerald-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                    >
+                      <Download className="w-3 h-3" />
+                      Tải Video (.mp4)
+                    </a>
+                    <a
                       href={EXAM_RESOURCES.videoWatchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -1206,8 +1214,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
                   <a
                     href={EXAM_RESOURCES.fullZipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    download="TaoDe_TiengAnh_THCS_CV7991_TronBo_Pass123.zip"
                     className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
@@ -1232,9 +1239,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </p>
                   </div>
                   <a
-                    href={EXAM_RESOURCES.fullZipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={EXAM_RESOURCES.exeWordUrl || EXAM_RESOURCES.fullZipUrl}
+                    download="CaiDat_TaoDe_TiengAnh_Word_AddIn_CV7991.exe"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1256,9 +1262,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                     </p>
                   </div>
                   <a
-                    href={EXAM_RESOURCES.fullZipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={EXAM_RESOURCES.exeDesktopUrl || EXAM_RESOURCES.fullZipUrl}
+                    download="TaoDe_TiengAnh_THCS_Desktop_CV7991.exe"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1281,12 +1286,11 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   </div>
                   <a
                     href={EXAM_RESOURCES.fullZipUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    download="TaoDe_TiengAnh_THCS_DeMau_MaTran_CV7991_TronBo.zip"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Tải Đề Mẫu (.docx)
+                    Tải Đề Mẫu (.zip)
                   </a>
                 </div>
 
@@ -1305,7 +1309,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
                   </div>
                   <a
                     href="/HUONG_DAN_TAO_DE_TIENG_ANH.txt"
-                    download="HUONG_DAN_TAO_DE_TIENG_ANH.txt"
+                    download="HuongDan_TaoDe_TiengAnh_THCS_CV7991.txt"
                     className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" />

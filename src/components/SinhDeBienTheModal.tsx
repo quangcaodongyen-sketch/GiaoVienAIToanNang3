@@ -887,7 +887,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                 <div className="flex items-center gap-2">
                   <a
                     href="/HD_Sinh_3_De_Bien_The_VIP.mp4"
-                    download="HD_Sinh_3_De_Bien_The_VIP.mp4"
+                    download="HuongDan_Sinh3De_BienThe_VIP_TiengAnh.mp4"
                     className="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" /> Tải Video (.mp4)
@@ -939,7 +939,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                 </div>
                 <a
                   href="/Sinh_3_De_Bien_The_VIP_Pass_123.zip"
-                  download="Sinh_3_De_Bien_The_VIP_Pass_123.zip"
+                  download="Sinh3De_BienThe_VIP_TiengAnh_TronBo_Pass123.zip"
                   className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
                 >
                   <Download className="w-3.5 h-3.5" />

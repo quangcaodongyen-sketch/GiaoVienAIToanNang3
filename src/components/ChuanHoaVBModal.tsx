@@ -937,7 +937,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   <div className="space-y-2.5">
                     <a
                       href="/Cai_Dat_AI_Word.exe"
-                      download="Cai_Dat_AI_Word.exe"
+                      download="CaiDat_ChuanHoaVanBan_AIWord_NghiDinh30.exe"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -956,7 +956,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
                     <a
                       href="/AI_Word_Assistant.dotm"
-                      download="AI_Word_Assistant.dotm"
+                      download="ChuanHoaVanBan_AIWord_WordAddIn_NghiDinh30.dotm"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -975,7 +975,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
                     <a
                       href="/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
-                      download="Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
+                      download="ChuanHoaVanBan_AIWord_VIP_TronBo_Pass123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-900/40 to-slate-800 hover:from-amber-800/60 hover:to-slate-700 border border-amber-600/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -994,7 +994,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
                     <a
                       href="/HUONG_DAN_SU_DUNG.docx"
-                      download="Tai_Lieu_Nghi_Dinh_30_2020.docx"
+                      download="TaiLieu_HuongDan_ChuanHoaVanBan_NghiDinh30_2020.docx"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
                       <div className="flex items-center gap-3">

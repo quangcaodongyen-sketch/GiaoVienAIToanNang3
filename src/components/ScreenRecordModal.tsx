@@ -1159,7 +1159,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 <span>💡 Video quay thực tế trên màn hình máy tính của Thầy Thành thể hiện độ nét cao và âm thanh lọc trong trẻo.</span>
                 <a
                   href="/screen_record_demo.mp4"
-                  download="Screen_Record_Pro_V2_Demo.mp4"
+                  download="HuongDan_Screen_Record_Pro_V2_QuayManHinh.mp4"
                   className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -1183,7 +1183,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
                 <a
                   href="/Screen_Record_Pro_V2.exe"
-                  download="Screen_Record_Pro_V2.exe"
+                  download="CaiDat_Screen_Record_Pro_V2_QuayManHinh.exe"
                   className="py-3 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
@@ -1206,7 +1206,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 </div>
                 <a
                   href="/Screen_Record_Pro_V2.exe"
-                  download="Screen_Record_Pro_V2.exe"
+                  download="Screen_Record_Pro_V2_QuayManHinh_Portable.exe"
                   className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700"
                 >
                   <Download className="w-3.5 h-3.5" />
