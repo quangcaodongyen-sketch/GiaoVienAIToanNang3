@@ -34,9 +34,10 @@ export const BRAND = {
 // Cấu hình link lưu trữ trực tiếp tốc độ cao cho Tích hợp NLS - AI THCS V3
 export const NLS_RESOURCES = {
   // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
-  fullZipUrl: "/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
   // Link tải file cài đặt .exe trực tiếp
-  exeUrl: "/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
+  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
+  addinUrl: "/TichHop_NLS_AI_THCS.dotm",
   // Link Video HD Streaming trực tiếp cho web
   videoDirectUrl: "/HD_tich_hop_NLS_AI.mp4",
   videoEmbedUrl: "",

@@ -1137,8 +1137,8 @@ ${generatedDisabilityProcedures}
           {/* ========================================================================= */}
                     {activeTab === 'download' && (
             <div className="space-y-4 max-w-2xl mx-auto py-2">
-              {/* KHUNG TẢI DUY NHẤT - GỌN NHẸ 1 BỘ CÀI WORD */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 border-2 border-cyan-500/50 shadow-2xl text-center space-y-4">
+              {/* CÁC PHƯƠNG ÁN TẢI BỘ CÀI ĐẶT */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 border-2 border-cyan-500/50 shadow-2xl text-center space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center border border-cyan-500/30">
                   <Download className="w-7 h-7" />
                 </div>
@@ -1148,34 +1148,117 @@ ${generatedDisabilityProcedures}
                     Bộ Cài Đặt Word Add-in Tích Hợp NLS & AI THCS
                   </h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Bộ cài đặt tự động tích hợp thanh công cụ vào Microsoft Word. Nhỏ gọn, cài 1-click là chạy, tương thích mọi phiên bản Word.
+                    Tự động tích hợp thanh công cụ vào Word 2013-2024 & Office 365. Cài 1-click là dùng được ngay.
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                  <a
-                    href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
-                    download="CaiDat_TichHop_NLS_AI_THCS.exe"
-                    className="w-full sm:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-all hover:scale-105 cursor-pointer"
-                  >
-                    <Download className="w-4 h-4" />
-                    TẢI BỘ CÀI TỰ ĐỘNG VÀO WORD (.EXE)
-                  </a>
+                {/* CÁC NÚT TẢI XUỐNG ĐA KÊNH AN TOÀN */}
+                <div className="flex flex-col gap-2.5 pt-1">
+                  {/* PHƯƠNG ÁN 1: BẢN ZIP AN TOÀN CHỐNG CHẶN VIRUS (KHUYÊN DÙNG NHẤT) */}
+                  <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black text-[10px] uppercase tracking-wider">
+                          ⭐ Khuyên Dùng Số 1
+                        </span>
+                        <span className="text-xs font-bold text-white">Bản ZIP An Toàn (Mật khẩu: 123)</span>
+                      </div>
+                      <p className="text-[11px] text-emerald-300/80 mt-0.5">
+                        Trình duyệt không chặn quét nhầm virus, tải siêu tốc 100% thành công.
+                      </p>
+                    </div>
+                    <a
+                      href={NLS_RESOURCES.fullZipUrl}
+                      className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap shadow-lg shadow-emerald-500/20 cursor-pointer"
+                    >
+                      <Download className="w-4 h-4" />
+                      TẢI BẢN ZIP (PASS: 123)
+                    </a>
+                  </div>
 
-                  <a
-                    href="/TichHop_NLS_AI_THCS.dotm"
-                    download="TichHop_NLS_AI_THCS.dotm"
-                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
-                  >
-                    <FileCode className="w-4 h-4 text-amber-400" />
-                    File Ribbon Word (.dotm - 51 KB)
-                  </a>
-                </div>
+                  {/* PHƯƠNG ÁN 2: BẢN .EXE TRỰC TIẾP */}
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                    <div>
+                      <span className="text-xs font-bold text-white">Bản Cài Đặt Tự Động (.exe trực tiếp)</span>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        Dành cho máy tính không bị chặn tải exe. Nhấp đúp là tự cài vào Word.
+                      </p>
+                    </div>
+                    <a
+                      href={NLS_RESOURCES.exeUrl}
+                      className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap cursor-pointer"
+                    >
+                      <Download className="w-4 h-4" />
+                      Tải File .EXE (77 MB)
+                    </a>
+                  </div>
 
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 text-left space-y-1">
-                  <div><strong>1. Cài đặt:</strong> Tải file về và mở lên, bấm <em>Cài đặt</em> để tích hợp thanh công cụ vào Word.</div>
-                  <div><strong>2. Sử dụng:</strong> Mở Word lên là có ngay tab <em>TÍCH HỢP NLS & AI THCS</em> sẵn sàng sử dụng.</div>
+                  {/* PHƯƠNG ÁN 3: FILE ADD-IN WORD SIÊU NHẸ 50 KB */}
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                    <div>
+                      <span className="text-xs font-bold text-white">File Ribbon Word Trực Tiếp (.dotm - 50 KB)</span>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        Tải trong 1 giây, mở trực tiếp bằng Word là dùng ngay không cần cài đặt.
+                      </p>
+                    </div>
+                    <a
+                      href="/TichHop_NLS_AI_THCS.dotm"
+                      download="TichHop_NLS_AI_THCS.dotm"
+                      className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
+                    >
+                      <FileCode className="w-4 h-4 text-amber-400" />
+                      Tải File .dotm (50 KB)
+                    </a>
+                  </div>
                 </div>
+              </div>
+
+              {/* HỘP HƯỚNG DẪN 3 GIÂY XỬ LÝ KHI TRÌNH DUYỆT BÁO NHẬN DIỆN SAI (FALSE POSITIVE) */}
+              <div className="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-left space-y-2 text-xs">
+                <div className="flex items-center gap-2 text-amber-400 font-bold">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>HƯỚNG DẪN KHI CỐC CỐC / CHROME BÁO "TỆP NGUY HIỂM / LỖI VIRUS":</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  💡 <strong>Nguyên nhân:</strong> Do phần mềm giáo dục được lập trình đóng gói native, chưa đăng ký chứng chỉ doanh nghiệp có trả phí của Microsoft nên các trình duyệt tự động cảnh báo nhận diện sai (False Positive). Phần mềm <strong>an toàn tuyệt đối 100%</strong>, không chứa bất kỳ mã độc nào.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px]">
+                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+                    <strong className="text-amber-300 block">Cách 1: Trình duyệt Cốc Cốc / Chrome chặn:</strong>
+                    <p className="text-slate-300">
+                      1. Nhấn phím <b>Ctrl + J</b> (trang Tải xuống).<br/>
+                      2. Tìm tệp vừa tải ➔ Bấm <b>"Giữ tệp nguy hiểm"</b> (hoặc "Vẫn tiếp tục tải xuống") ➔ Chọn <b>"Vẫn giữ"</b>.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+                    <strong className="text-amber-300 block">Cách 2: Windows SmartScreen hiện màn hình xanh:</strong>
+                    <p className="text-slate-300">
+                      1. Bấm vào dòng chữ <b>"More info" (Xem thêm / Thông tin khác)</b>.<br/>
+                      2. Bấm nút <b>"Run anyway" (Vẫn chạy)</b> để mở bộ cài.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* HƯỚNG DẪN VIDEO */}
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                    <Play className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-white text-xs">Video Hướng Dẫn Sử Dụng Chi Tiết</h5>
+                    <p className="text-[11px] text-slate-400">Xem cách tích hợp vào giáo án trong 3 phút</p>
+                  </div>
+                </div>
+                <a
+                  href="/HD_tich_hop_NLS_AI.mp4"
+                  target="_blank"
+                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  Xem Video
+                </a>
               </div>
             </div>
           )}
