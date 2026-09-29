@@ -997,7 +997,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             </div>
             <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Khu vực bảo mật nội bộ. Vui lòng nhập mật khẩu Quản trị để xác thực truy cập.
+              Khu vực bảo mật nội bộ dành cho Ban Quản trị hệ thống. Vui lòng nhập mật khẩu xác thực để tiếp tục.
             </p>
           </div>
 
@@ -1020,7 +1020,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
               <div className="relative">
                 <input
                   type={showPin ? "text" : "password"}
-                  placeholder="Nhập mật khẩu Quản trị viên..."
+                  placeholder="Nhập mật khẩu quản trị..."
                   value={pinInput}
                   onChange={(e) => {
                     setPinInput(e.target.value);
