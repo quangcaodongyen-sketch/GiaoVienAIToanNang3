@@ -234,21 +234,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-    // Hỗ trợ 2 cấp tài khoản quản trị:
-  // 1. Thaythanh2026@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
-  // 2. Tiem2026@ -> Phó Quản trị: Thầy Nguyễn Văn Tiềm (Kích hoạt bản quyền giáo viên có lưu vết danh tính rõ ràng)
+    // Hỗ trợ 2 cấp tài khoản quản trị bảo mật cao (Ẩn tuyệt đối khỏi giao diện người dùng):
+  // 1. Kichhoat123@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
+  // 2. Tiemgiang123@ -> Phó Quản trị: Thầy Nguyễn Văn Tiềm (Hỗ trợ duyệt và kích hoạt có lưu vết)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPin = pinInput.trim();
     const normalized = cleanPin.toLowerCase();
     if (
-      cleanPin === 'Thaythanh2026@' ||
-      normalized === 'thaythanh2026@' ||
-      normalized === 'thaythanh2026' ||
-      cleanPin === 'Thầythành2026@' ||
-      normalized === 'thầythành2026@' ||
-      cleanPin === 'Thaythanh' ||
-      normalized === 'thaythanh'
+      cleanPin === 'Kichhoat123@' ||
+      normalized === 'kichhoat123@' ||
+      normalized === 'kichhoat123' ||
+      cleanPin === 'Kíchhoạt123@' ||
+      normalized === 'kíchhoạt123@'
     ) {
       setIsAuthenticated(true);
       setUserRole('ADMIN');
@@ -257,13 +255,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setPinError(false);
       loadTrackingData();
     } else if (
-      cleanPin === 'Tiem2026@' ||
-      normalized === 'tiem2026@' ||
-      normalized === 'tiem2026' ||
-      normalized === 'tiem' ||
-      cleanPin === 'ThầyTiềm2026@' || cleanPin === 'ThayTiem2026@' ||
-      cleanPin === 'NguyễnVănTiềm2026@' ||
-      cleanPin === 'Tiem'
+      cleanPin === 'Tiemgiang123@' ||
+      normalized === 'tiemgiang123@' ||
+      normalized === 'tiemgiang123' ||
+      cleanPin === 'Tiệmgiảng123@' ||
+      normalized === 'tiệmgiảng123@'
     ) {
       setIsAuthenticated(true);
       setUserRole('SUB_ADMIN');
@@ -1001,7 +997,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             </div>
             <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Nhập mật khẩu Admin (Thầy Đinh Văn Thành) hoặc Phó Quản trị (Thầy Nguyễn Văn Tiềm: Tiem2026@) để tiếp tục
+              Khu vực bảo mật nội bộ. Vui lòng nhập mật khẩu Quản trị để xác thực truy cập.
             </p>
           </div>
 
@@ -1024,7 +1020,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
               <div className="relative">
                 <input
                   type={showPin ? "text" : "password"}
-                  placeholder="Nhập mật khẩu Admin..."
+                  placeholder="Nhập mật khẩu Quản trị viên..."
                   value={pinInput}
                   onChange={(e) => {
                     setPinInput(e.target.value);
