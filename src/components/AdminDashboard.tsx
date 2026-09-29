@@ -230,9 +230,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-  // Hỗ trợ 2 cấp tài khoản:
-  // 1. Thaythanh2026@ -> Admin Thầy Đinh Văn Thành (Toàn quyền, xem thống kê truy cập, dự đoán người dùng)
-  // 2. Maitinh2026@ -> Tài khoản phụ Mai Tình (Kích hoạt bản quyền giáo viên có lưu vết)
+    // Hỗ trợ 2 cấp tài khoản quản trị:
+  // 1. Thaythanh2026@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
+  // 2. Tiem2026@ -> Tài khoản phụ tá: Cô Tiệm (Kích hoạt bản quyền giáo viên có lưu vết danh tính rõ ràng)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPin = pinInput.trim();
@@ -244,21 +244,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       cleanPin === 'Thầythành2026@' ||
       normalized === 'thầythành2026@' ||
       cleanPin === 'Thaythanh' ||
-      normalized === 'thaythanh' ||
-      normalized === 'maitinh' ||
-      normalized === 'maitinh2026' ||
-      normalized === 'maitinh2026@'
+      normalized === 'thaythanh'
     ) {
       setIsAuthenticated(true);
       setUserRole('ADMIN');
-      setCurrentAdminName('Thầy Đinh Văn Thành');
+      setCurrentAdminName('Thầy Đinh Văn Thành (Admin)');
       setAdminTab('tracking');
       setPinError(false);
       loadTrackingData();
-    } else if (pinInput === 'Maitinh2026@') {
+    } else if (
+      cleanPin === 'Tiem2026@' ||
+      normalized === 'tiem2026@' ||
+      normalized === 'tiem2026' ||
+      normalized === 'tiem' ||
+      cleanPin === 'CôTiệm2026@' ||
+      cleanPin === 'CoTiem2026@' ||
+      cleanPin === 'Tiem'
+    ) {
       setIsAuthenticated(true);
       setUserRole('SUB_ADMIN');
-      setCurrentAdminName('Cô Mai Tình');
+      setCurrentAdminName('Cô Tiệm (Phụ tá)');
       setAdminTab('tracking');
       setTrackingSubTab('requests');
       setPinError(false);
@@ -267,6 +272,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     } else {
       setPinError(true);
     }
+  };
   };
 
   const loadTrackingData = async () => {
@@ -379,7 +385,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
     const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
     const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
 
@@ -1846,8 +1852,13 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   👑 Kích hoạt 1 Năm (365 ngày)
                                 </span>
                                 {req.status === 'APPROVED' && (
-                                  <div className="text-[10px] text-emerald-400 font-mono">
-                                    Đã kích hoạt trực tuyến
+                                  <div className="space-y-0.5 mt-1">
+                                    <div className="text-[10px] text-emerald-400 font-mono font-bold">
+                                      Đã kích hoạt trực tuyến
+                                    </div>
+                                    <div className="text-[10px] text-amber-300 font-medium">
+                                      👤 Kích hoạt bởi: <b>{req.reviewedBy || 'Admin Thầy Thành'}</b>
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -1870,22 +1881,40 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             <td className="py-2.5 px-3 text-right">
                               <div className="flex items-center justify-end gap-1.5">
                                 {req.status === 'PENDING' && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
-                                    className="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] shadow transition cursor-pointer"
-                                    title="Kích hoạt Bản quyền 1 Năm"
-                                  >
-                                    ⚡ Kích Hoạt 1 Năm
-                                  </button>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
+                                      className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                      title="Kích hoạt Bản quyền 1 Năm (365 ngày)"
+                                    >
+                                      ⚡ 1 Năm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApproveReq(req.id, '2YEAR', (req as any).issueNumber)}
+                                      className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                      title="Kích hoạt Bản quyền 2 Năm (730 ngày)"
+                                    >
+                                      ⭐ 2 Năm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApproveReq(req.id, '3YEAR', (req as any).issueNumber)}
+                                      className="px-2 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
+                                      title="Kích hoạt Bản quyền 3 Năm (1095 ngày)"
+                                    >
+                                      🔥 3 Năm
+                                    </button>
+                                  </div>
                                 )}
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteRegistration(req.id, req.machineId, (req as any).issueNumber)}
-                                  className="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[11px] shadow transition cursor-pointer flex items-center gap-1"
-                                  title="Xóa vĩnh viễn thành viên này"
+                                  className="px-2 py-1 rounded bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[10px] shadow transition cursor-pointer flex items-center gap-1"
+                                  title="Xóa vĩnh viễn đơn đăng ký và tài khoản thành viên này"
                                 >
-                                  🗑️ Xóa Thành Viên
+                                  🗑️ Xóa Đơn
                                 </button>
                               </div>
                             </td>
@@ -2189,6 +2218,11 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   }`}>
                                     {licenseInfoText}
                                   </span>
+                                  {activeLicense && (
+                                    <div className="text-[10px] text-amber-300 font-medium mt-0.5">
+                                      👤 Kích hoạt bởi: <b>{activeLicense.activated_by || 'Thầy Đinh Văn Thành (Admin)'}</b>
+                                    </div>
+                                  )}
                                   {!activeLicense && (
                                     <div className="w-24 bg-slate-800 rounded-full h-1.5 overflow-hidden">
                                       <div
@@ -2214,76 +2248,119 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               </td>
                               <td className="py-2.5 px-3 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
-                                  {!activeLicense && !isBlocked && (
-                                    <>
-                                      <button
-                                        type="button"
-                                        onClick={async () => {
-                                          const nowTs = Math.floor(Date.now() / 1000);
-                                          await licenseService.createDirect({
-                                            machine_id: item.machineId,
-                                            teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
-                                            phone_zalo: item.phoneNumber || '',
-                                            school_unit: item.schoolUnit || '',
-                                            package_type: '1YEAR',
-                                            status: 'ACTIVE',
-                                            expiry_timestamp: nowTs + 365 * 86400,
-                                            notes: `Kích hoạt nhanh 1 Năm bởi ${currentAdminName}`
-                                          }, currentAdminName);
-                                          await loadData();
-                                          loadTrackingData();
-                                          alert(`Đã kích hoạt Gói 1 Năm cho máy ${item.machineId}!`);
-                                        }}
-                                        className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition cursor-pointer"
-                                        title="Kích hoạt nhanh 1 Năm"
-                                      >
-                                        + 1 Năm
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={async () => {
-                                          const nowTs = Math.floor(Date.now() / 1000);
-                                          await licenseService.createDirect({
-                                            machine_id: item.machineId,
-                                            teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
-                                            phone_zalo: item.phoneNumber || '',
-                                            school_unit: item.schoolUnit || '',
-                                            package_type: '2YEAR',
-                                            status: 'ACTIVE',
-                                            expiry_timestamp: nowTs + 730 * 86400,
-                                            notes: `Kích hoạt nhanh 2 Năm bởi ${currentAdminName}`
-                                          }, currentAdminName);
-                                          await loadData();
-                                          loadTrackingData();
-                                          alert(`Đã kích hoạt Gói 2 Năm VIP cho máy ${item.machineId}!`);
-                                        }}
-                                        className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] transition cursor-pointer"
-                                        title="Kích hoạt nhanh 2 Năm VIP"
-                                      >
-                                        + 2 Năm VIP
-                                      </button>
-                                    </>
-                                  )}
+                                  {/* CÁC NÚT KÍCH HOẠT 1, 2, 3 NĂM */}
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        const nowTs = Math.floor(Date.now() / 1000);
+                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
+                                        await licenseService.createDirect({
+                                          machine_id: item.machineId,
+                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                          phone_zalo: item.phoneNumber || '',
+                                          school_unit: item.schoolUnit || '',
+                                          package_type: '1YEAR',
+                                          status: 'ACTIVE',
+                                          expiry_timestamp: currentExp + 365 * 86400,
+                                          notes: `Kích hoạt 1 Năm bởi ${currentAdminName}`
+                                        }, currentAdminName);
+                                        await loadData();
+                                        loadTrackingData();
+                                        alert(`Đã kích hoạt Gói 1 Năm cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
+                                      }}
+                                      className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      title="Kích hoạt hoặc gia hạn thêm 1 Năm (365 ngày)"
+                                    >
+                                      + 1 Năm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        const nowTs = Math.floor(Date.now() / 1000);
+                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
+                                        await licenseService.createDirect({
+                                          machine_id: item.machineId,
+                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                          phone_zalo: item.phoneNumber || '',
+                                          school_unit: item.schoolUnit || '',
+                                          package_type: '2YEAR',
+                                          status: 'ACTIVE',
+                                          expiry_timestamp: currentExp + 730 * 86400,
+                                          notes: `Kích hoạt 2 Năm bởi ${currentAdminName}`
+                                        }, currentAdminName);
+                                        await loadData();
+                                        loadTrackingData();
+                                        alert(`Đã kích hoạt Gói 2 Năm cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
+                                      }}
+                                      className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      title="Kích hoạt hoặc gia hạn thêm 2 Năm (730 ngày)"
+                                    >
+                                      + 2 Năm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        const nowTs = Math.floor(Date.now() / 1000);
+                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
+                                        await licenseService.createDirect({
+                                          machine_id: item.machineId,
+                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
+                                          phone_zalo: item.phoneNumber || '',
+                                          school_unit: item.schoolUnit || '',
+                                          package_type: '3YEAR',
+                                          status: 'ACTIVE',
+                                          expiry_timestamp: currentExp + 1095 * 86400,
+                                          notes: `Kích hoạt 3 Năm bởi ${currentAdminName}`
+                                        }, currentAdminName);
+                                        await loadData();
+                                        loadTrackingData();
+                                        alert(`Đã kích hoạt Gói 3 Năm Pro cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
+                                      }}
+                                      className="px-2 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      title="Kích hoạt hoặc gia hạn thêm 3 Năm (1095 ngày)"
+                                    >
+                                      + 3 Năm
+                                    </button>
+                                  </div>
 
+                                  {/* NÚT TẠM KHÓA / MỞ KHÓA TÀI KHOẢN */}
                                   {isBlocked ? (
                                     <button
                                       type="button"
                                       onClick={() => handleUnblockMachine(item.machineId)}
-                                      className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition cursor-pointer"
-                                      title="Mở khóa máy này"
+                                      className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition cursor-pointer flex items-center gap-1"
+                                      title="Mở khóa tài khoản cho giáo viên sử dụng lại"
                                     >
-                                      Mở Khóa
+                                      🔓 Mở Khóa
                                     </button>
                                   ) : (
                                     <button
                                       type="button"
-                                      onClick={() => handleDeleteAndBlockMachine(item.machineId)}
-                                      className="p-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 transition text-xs cursor-pointer"
-                                      title="Xóa tài khoản & Khóa vĩnh viễn (Không cho hoạt động nữa)"
+                                      onClick={async () => {
+                                        if (window.confirm(`Thầy/Cô có chắc chắn muốn TẠM KHÓA tài khoản máy [${item.machineId}]?`)) {
+                                          activityTrackingService.blockMachine(item.machineId, `Tạm khóa bởi ${currentAdminName}`);
+                                          await cloudSyncService.blockMachineOnCloud(item.machineId, currentAdminName, 'Tạm khóa tài khoản');
+                                          loadTrackingData();
+                                          alert(`Đã tạm khóa tài khoản máy ${item.machineId}!`);
+                                        }
+                                      }}
+                                      className="px-2 py-1 rounded bg-amber-700/80 hover:bg-amber-600 text-white font-bold text-[10px] transition cursor-pointer flex items-center gap-1"
+                                      title="Tạm khóa tài khoản của giáo viên này"
                                     >
-                                      <Trash2 className="w-3.5 h-3.5" />
+                                      🔒 Tạm Khóa
                                     </button>
                                   )}
+
+                                  {/* NÚT XÓA TÀI KHOẢN */}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteAndBlockMachine(item.machineId)}
+                                    className="p-1.5 rounded-lg bg-rose-600/30 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 transition text-xs cursor-pointer"
+                                    title="Xóa hoàn toàn tài khoản của giáo viên khỏi hệ thống"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
                                 </div>
                               </td>
                             </tr>

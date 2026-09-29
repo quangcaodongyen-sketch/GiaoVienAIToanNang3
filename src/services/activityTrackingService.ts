@@ -51,7 +51,7 @@ export interface RegistrationRequest {
   phoneNumber: string;
   appId: string;
   appName: string;
-  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | 'FULL_WEB';
+  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB';
   price: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
@@ -442,7 +442,7 @@ class ActivityTrackingService {
     phoneNumber: string;
     appId: string;
     appName: string;
-    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | 'FULL_WEB';
+    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB';
     price?: string;
   }): RegistrationRequest {
     const list = this.getAllRegistrations();

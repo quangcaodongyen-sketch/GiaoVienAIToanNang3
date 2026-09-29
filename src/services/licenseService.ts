@@ -6,7 +6,7 @@ export interface LicenseRecord {
   teacher_name: string;
   phone_zalo: string;
   school_unit: string;
-  package_type: '1YEAR' | '2YEAR' | 'LIFETIME' | 'TRIAL';
+  package_type: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME' | 'TRIAL';
   status: 'ACTIVE' | 'PENDING' | 'EXPIRED' | 'REVOKED';
   expiry_timestamp: number;
   activated_at?: string;

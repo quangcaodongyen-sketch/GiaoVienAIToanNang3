@@ -186,11 +186,11 @@ ${JSON.stringify(payloadData, null, 2)}
   public async approveRegistrationOnCloud(
     issueNumber: number,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | 'FULL_WEB' | 'TRIAL_5'
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5'
   ): Promise<boolean> {
     try {
       const now = new Date().toLocaleString('vi-VN');
-      const pkgLabel = packageType === 'FULL_WEB' ? 'Full Web' : packageType === '1YEAR' ? '1 Năm' : packageType === '2YEAR' ? '2 Năm VIP' : 'Dùng thử 5 lần';
+      const pkgLabel = packageType === 'FULL_WEB' ? 'Full Web' : packageType === '3YEAR' ? '3 Năm Pro' : packageType === '2YEAR' ? '2 Năm VIP' : packageType === '1YEAR' ? '1 Năm' : 'Dùng thử 5 lần';
 
       const commentBody = `### ✅ XÁC NHẬN DUYỆT BẢN QUYỀN CLOUD
 
