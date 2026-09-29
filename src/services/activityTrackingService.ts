@@ -1,4 +1,15 @@
 
+export const isAdminMachine = (mid?: string): boolean => {
+  if (!mid) return false;
+  const upper = mid.toUpperCase();
+  return ADMIN_WHITELIST_MACHINES.includes(mid) ||
+         ADMIN_WHITELIST_MACHINES.includes(upper) ||
+         upper.includes('DVT') ||
+         upper.includes('ADMIN') ||
+         mid === 'GV-33B3-4A70' ||
+         mid === 'GV-0DAD-F76C';
+};
+
 export const ADMIN_WHITELIST_MACHINES = [
   'GV-0DAD-F76C',
   'GV-33B3-4A70',
@@ -606,8 +617,11 @@ class ActivityTrackingService {
     };
   }
 
-  // Đồng bộ máy hiện tại vào danh sách toàn cục để Admin xem
+  // Đồng bộ máy hiện tại vào danh sách toàn cục để Admin xem (Loại trừ 100% máy Admin / Thầy Thành)
   private syncToGlobalList(profile: MachineProfile) {
+    if (isAdminMachine(profile.machineId)) {
+      return; // Tuyệt đối không bao giờ đưa máy Admin vào danh sách khách hàng theo dõi
+    }
     let list = this.getAllTrackedMachines();
     const idx = list.findIndex(m => m.machineId === profile.machineId);
     if (idx >= 0) {
@@ -634,10 +648,10 @@ class ActivityTrackingService {
     }
 
     const DEMO_IDS = ['GV-A7B8-90F1', 'GV-8F22-A109', 'GV-3E11-9B5C', 'GV-4C91-D3F0', 'MB-E10D-BE85', 'MB-8F22-A109'];
-    list = list.filter(m => !DEMO_IDS.includes(m.machineId) && m.fullName !== 'Cô Hoàng Thu Thảo' && m.fullName !== 'Thầy Trần Văn Tuấn');
+    list = list.filter(m => !isAdminMachine(m.machineId) && !DEMO_IDS.includes(m.machineId) && m.fullName !== 'Cô Hoàng Thu Thảo' && m.fullName !== 'Thầy Trần Văn Tuấn');
 
     const currentMid = this.getOrCreateMachineId();
-    if (!DEMO_IDS.includes(currentMid) && !list.some(m => m.machineId === currentMid)) {
+    if (!isAdminMachine(currentMid) && !DEMO_IDS.includes(currentMid) && !list.some(m => m.machineId === currentMid)) {
       list.unshift(this.getCurrentProfile());
     }
 

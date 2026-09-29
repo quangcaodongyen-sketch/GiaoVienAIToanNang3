@@ -282,18 +282,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       const rawR = localStorage.getItem('gvai_registration_requests');
       if (rawR) {
         const parsed = JSON.parse(rawR);
-        const filtered = parsed.filter((x: any) => !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
-        if (filtered.length !== parsed.length) {
-          localStorage.setItem('gvai_registration_requests', JSON.stringify(filtered));
-        }
+        const filtered = parsed.filter((x: any) => !isAdminMachine(x.machineId) && !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
+        localStorage.setItem('gvai_registration_requests', JSON.stringify(filtered));
       }
       const rawM = localStorage.getItem('gvai_all_tracked_machines');
       if (rawM) {
         const parsed = JSON.parse(rawM);
-        const filtered = parsed.filter((x: any) => !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
-        if (filtered.length !== parsed.length) {
-          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(filtered));
-        }
+        const filtered = parsed.filter((x: any) => !isAdminMachine(x.machineId) && !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
+        localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(filtered));
+      }
+      const rawB = localStorage.getItem('gvai_blocked_machines');
+      if (rawB) {
+        const parsed = JSON.parse(rawB);
+        const filtered = parsed.filter((x: any) => !isAdminMachine(x.machineId));
+        localStorage.setItem('gvai_blocked_machines', JSON.stringify(filtered));
       }
     } catch {}
 
@@ -1976,7 +1978,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   </div>
 
                   <p className="text-[11px] text-rose-300 font-semibold">
-                    ⚠️ Khi Admin bấm nút "Xóa & Khóa Máy", máy tính đó sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa trên toàn hệ thống!
+                    💡 Danh sách các máy tính giáo viên truy cập web. Admin có thể kích hoạt nhanh hoặc xóa vĩnh viễn tài khoản.
                   </p>
                 </div>
 
@@ -1995,6 +1997,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
                       {trackedMachines
+                        .filter(m => !isAdminMachine(m.machineId))
                         .filter(m => {
                           if (!trackingSearch.trim()) return true;
                           const q = trackingSearch.toLowerCase();
