@@ -232,7 +232,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
 
     // Hỗ trợ 2 cấp tài khoản quản trị:
   // 1. Thaythanh2026@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
-  // 2. Tiem2026@ -> Tài khoản phụ tá: Cô Tiệm (Kích hoạt bản quyền giáo viên có lưu vết danh tính rõ ràng)
+  // 2. Tiem2026@ -> Phó Quản trị: Thầy Nguyễn Văn Tiềm (Kích hoạt bản quyền giáo viên có lưu vết danh tính rõ ràng)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanPin = pinInput.trim();
@@ -257,13 +257,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       normalized === 'tiem2026@' ||
       normalized === 'tiem2026' ||
       normalized === 'tiem' ||
-      cleanPin === 'CôTiệm2026@' ||
-      cleanPin === 'CoTiem2026@' ||
+      cleanPin === 'ThầyTiềm2026@' || cleanPin === 'ThayTiem2026@' ||
+      cleanPin === 'NguyễnVănTiềm2026@' ||
       cleanPin === 'Tiem'
     ) {
       setIsAuthenticated(true);
       setUserRole('SUB_ADMIN');
-      setCurrentAdminName('Cô Tiệm (Phụ tá)');
+      setCurrentAdminName('Thầy Nguyễn Văn Tiềm - Phó Quản trị');
       setAdminTab('tracking');
       setTrackingSubTab('requests');
       setPinError(false);
@@ -956,7 +956,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
             </div>
             <h3 className="text-xl font-extrabold text-white">CỔNG QUẢN TRỊ BẢN QUYỀN</h3>
             <p className="text-xs text-slate-400">
-              Nhập mật khẩu Admin (Thầy Thành) hoặc Tài khoản phụ (Mai Tình) để tiếp tục
+              Nhập mật khẩu Admin (Thầy Đinh Văn Thành) hoặc Phó Quản trị (Thầy Nguyễn Văn Tiềm: Tiem2026@) để tiếp tục
             </p>
           </div>
 
