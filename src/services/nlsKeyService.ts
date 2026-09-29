@@ -128,17 +128,13 @@ export async function generateEd25519Key(
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     expDate = `${yyyy}-${mm}-${dd}`;
-    planName = `${years} Năm`;
-    const priceMap: Record<number, string> = {
-      1: 'Gói 1 Năm (150.000 VNĐ)',
-      2: 'Gói 2 Năm (250.000 VNĐ)',
-      3: 'Gói 3 Năm (300.000 VNĐ)'
-    };
-    price = priceMap[years] || `${years} Năm`;
+    planName = `${years} Năm (Hạn dùng: ${expDate})`;
+    price = '';
   }
 
-  // Payload ràng buộc chặt với Product ID
-  const payloadStr = `PRODUCT:${productId}#${cleanCode}#${expDate}`;
+  // Hỗ trợ cả Master Key All-in-One và Product Key riêng
+  const isMaster = productTag === 'ALL' || productTag === 'MASTER';
+  const payloadStr = isMaster ? `MASTER#${cleanCode}#${expDate}` : `PRODUCT:${productId}#${cleanCode}#${expDate}`;
   const payloadBytes = new TextEncoder().encode(payloadStr);
 
   const sig = await signEd25519(payloadBytes, MASTER_PRIVATE_KEY_HEX);
@@ -153,25 +149,20 @@ export async function generateEd25519Key(
   const key = `KEY-${productTag}-${dateCompact}-${sigFormatted}`;
 
   const zaloMessage = `Kính gửi Thầy/Cô,
-Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chính hãng:
+Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chính thức:
 
-• Phần mềm: ${PRODUCT_NAME} (Bản V3)
-• Gói bản quyền: ${planName} (${price})
+• Phần mềm: ${isMaster ? 'Hệ sinh thái Phần mềm Giáo viên THCS (Master All-in-One)' : PRODUCT_NAME}
+• Thời hạn bản quyền: ${planName}
 • Hạn sử dụng: Đến ngày ${expDate}
-• Mã máy: ${cleanCode}
-• Mã kích hoạt Pro (Độc quyền phần mềm):
+• Mã máy kích hoạt: ${cleanCode}
+• MÃ KÍCH HOẠT PRO:
 ${key}
 
-Tính năng nổi bật mới nâng cấp:
-✔ Quản lý Phụ lục 3 Đa môn học: nạp nhiều file cùng lúc, tự nhận diện 12 môn THCS và khối lớp.
-✔ Tích hợp siêu tốc 1-click vào Word: tự nhận diện bài dạy, chữ đỏ 13pt Times New Roman, bảo toàn 100% công thức toán & hình vẽ.
-✔ Hỗ trợ học sinh khuyết tật hòa nhập, tích hợp khởi động, khám phá, luyện tập, vận dụng chuẩn CV 5512.
-✔ Bản quyền độc quyền theo từng phần mềm, bảo mật tối đa.
-
 Hướng dẫn kích hoạt:
-1. Mở phần mềm (hoặc mở Word), bấm vào nút 'Kích hoạt Pro' (hoặc menu Bản quyền).
-2. Dán mã key ở trên vào ô và bấm 'Kích hoạt ngay'.
-Chúc Thầy/Cô có những tiết dạy thành công và ứng dụng công nghệ hiệu quả!
+1. Mở phần mềm (hoặc mở Word), bấm vào nút 'Kích hoạt Bản quyền'.
+2. Dán mã kích hoạt ở trên vào ô và bấm 'Kích hoạt ngay'.
+
+Chúc Thầy/Cô công tác tốt và ứng dụng công nghệ hiệu quả trong giảng dạy!
 Mọi hỗ trợ xin liên hệ Thầy Đinh Văn Thành - Hotline / Zalo: 0915.213717.`;
 
   return {
@@ -204,9 +195,9 @@ export function verifyKeyFormat(key: string, machineCode: string): {
   }
 
   let dateStr = parts[1]; // YYYYMMDD hoặc product prefix
-  if (parts.length >= 4 && parts[1].length <= 5 && isNaN(Number(parts[1]))) {
+  if (parts.length >= 4 && parts[1].length <= 6 && isNaN(Number(parts[1]))) {
     const prodTag = parts[1];
-    if (prodTag !== 'NLS') {
+    if (!['NLS', 'ALL', 'MASTER', 'PRO', 'GVAI'].includes(prodTag)) {
       return {
         isValid: false,
         message: `Mã kích hoạt này thuộc về phần mềm khác (${prodTag}) của Thầy Thành, không áp dụng cho phần mềm Tích hợp NLS - AI THCS!`

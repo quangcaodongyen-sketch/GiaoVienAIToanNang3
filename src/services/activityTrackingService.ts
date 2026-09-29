@@ -76,198 +76,13 @@ const STORAGE_BLOCKED_MACHINES = 'gvai_blocked_machines_list';
 const STORAGE_WEB_PAGEVIEWS = 'gvai_web_pageviews_count';
 
 // Dữ liệu mẫu ban đầu để Bảng Thống Kê Admin hiển thị ngay dữ liệu sống động, chân thực
-const DEFAULT_TRACKED_USERS: MachineProfile[] = [
-  {
-    machineId: 'GV-A7B8-90F1',
-    fullName: 'Cô Hoàng Thu Thảo',
-    schoolUnit: 'Trường THCS Lê Quý Đôn',
-    phoneNumber: '0983.123456',
-    registeredAt: '2026-09-23 08:30:15',
-    trialUsed: 5,
-    trialMax: 5,
-    isRegisteredTrial: true,
-    lastSeenAt: '2026-09-23 15:10:20',
-    firstSeenAt: '2026-09-22 09:00:00',
-    deviceInfo: 'Windows 11 / Chrome 128',
-    appsVisited: {
-      'tao-de-8mon': { appId: 'tao-de-8mon', appName: 'Tạo Đề Kiểm Tra 8 Môn (CV 7991)', count: 9, lastVisit: '2026-09-23 15:10:20' },
-      'tao-de-anh': { appId: 'tao-de-anh', appName: 'Tạo Đề Tiếng Anh (Global Success)', count: 4, lastVisit: '2026-09-23 14:20:10' },
-      'chuan-hoa-nd30': { appId: 'chuan-hoa-nd30', appName: 'Chuẩn Hóa Văn Bản (NĐ 30/2020)', count: 3, lastVisit: '2026-09-22 14:15:00' }
-    }
-  },
-  {
-    machineId: 'GV-8F22-A109',
-    fullName: 'Thầy Trần Văn Tuấn',
-    schoolUnit: 'Trường THCS Đồng Yên',
-    phoneNumber: '0977.654321',
-    registeredAt: '2026-09-23 07:15:20',
-    trialUsed: 3,
-    trialMax: 5,
-    isRegisteredTrial: true,
-    lastSeenAt: '2026-09-23 14:45:30',
-    firstSeenAt: '2026-09-23 07:15:20',
-    deviceInfo: 'Windows 10 / Edge 127',
-    appsVisited: {
-      'tao-de-8mon': { appId: 'tao-de-8mon', appName: 'Tạo Đề Kiểm Tra 8 Môn (CV 7991)', count: 6, lastVisit: '2026-09-23 14:45:30' },
-      'tach-gop-pdf': { appId: 'tach-gop-pdf', appName: 'PDF Suite Pro (Tách - Gộp PDF)', count: 4, lastVisit: '2026-09-23 11:20:00' }
-    }
-  },
-  {
-    machineId: 'GV-3E11-9B5C',
-    fullName: 'Cô Nguyễn Thị Hoa',
-    schoolUnit: 'Trường THCS Nguyễn Du',
-    phoneNumber: '0912.889900',
-    registeredAt: '2026-09-23 09:40:00',
-    trialUsed: 4,
-    trialMax: 5,
-    isRegisteredTrial: true,
-    lastSeenAt: '2026-09-23 13:25:10',
-    firstSeenAt: '2026-09-23 09:40:00',
-    deviceInfo: 'Windows 11 / Chrome 128',
-    appsVisited: {
-      'tao-de-anh': { appId: 'tao-de-anh', appName: 'Tạo Đề Tiếng Anh (Global Success)', count: 5, lastVisit: '2026-09-23 13:25:10' },
-      'sinh-de-bienthe': { appId: 'sinh-de-bienthe', appName: 'Sinh 3 Đề Biến Thể Tương Đương', count: 2, lastVisit: '2026-09-23 11:00:00' }
-    }
-  },
-  {
-    machineId: 'GV-4C91-D3F0',
-    fullName: '',
-    schoolUnit: '',
-    phoneNumber: '',
-    trialUsed: 1,
-    trialMax: 5,
-    isRegisteredTrial: false,
-    lastSeenAt: '2026-09-23 15:02:18',
-    firstSeenAt: '2026-09-23 14:50:00',
-    deviceInfo: 'Windows 11 / Cốc Cốc 125',
-    appsVisited: {
-      'tao-de-anh': { appId: 'tao-de-anh', appName: 'Tạo Đề Tiếng Anh (Global Success)', count: 2, lastVisit: '2026-09-23 15:02:18' }
-    }
-  }
-];
+const DEFAULT_TRACKED_USERS: MachineProfile[] = [];
 
 // Dữ liệu mẫu đơn đăng ký chờ duyệt
-const DEFAULT_REGISTRATIONS: RegistrationRequest[] = [
-  {
-    id: 'REG-1727078400001',
-    machineId: 'GV-A7B8-90F1',
-    fullName: 'Cô Hoàng Thu Thảo',
-    schoolUnit: 'Trường THCS Lê Quý Đôn',
-    phoneNumber: '0983.123456',
-    appId: 'tao-de-8mon',
-    appName: 'Tạo Đề Kiểm Tra 8 Môn (CV 7991)',
-    packageType: '2YEAR',
-    price: 'Liên hệ Zalo',
-    status: 'PENDING',
-    createdAt: '23/09/2026 14:15:30'
-  },
-  {
-    id: 'REG-1727078400002',
-    machineId: 'GV-3E11-9B5C',
-    fullName: 'Cô Nguyễn Thị Hoa',
-    schoolUnit: 'Trường THCS Nguyễn Du',
-    phoneNumber: '0912.889900',
-    appId: 'tao-de-anh',
-    appName: 'Tạo Đề Tiếng Anh Global Success',
-    packageType: '1YEAR',
-    price: 'Liên hệ Zalo',
-    status: 'APPROVED',
-    createdAt: '23/09/2026 10:20:15',
-    reviewedBy: 'Thầy Đinh Văn Thành',
-    reviewedAt: '23/09/2026 10:35:00'
-  },
-  {
-    id: 'REG-1727078400003',
-    machineId: 'GV-8F22-A109',
-    fullName: 'Thầy Trần Văn Tuấn',
-    schoolUnit: 'Trường THCS Đồng Yên',
-    phoneNumber: '0977.654321',
-    appId: 'chuan-hoa-nd30',
-    appName: 'Chuẩn Hóa Văn Bản NĐ 30 & Soạn 5512',
-    packageType: 'TRIAL_5',
-    price: 'Miễn phí (5 lượt)',
-    status: 'APPROVED',
-    createdAt: '23/09/2026 07:15:20',
-    reviewedBy: 'Cô Mai Tình',
-    reviewedAt: '23/09/2026 07:16:00'
-  }
-];
+const DEFAULT_REGISTRATIONS: RegistrationRequest[] = [];
 
 // Dữ liệu mẫu log hoạt động chi tiết theo ngày giờ
-const DEFAULT_ACTIVITY_LOGS: ActivityLogItem[] = [
-  {
-    id: 'LOG-001',
-    machineId: 'GV-A7B8-90F1',
-    userName: 'Cô Hoàng Thu Thảo',
-    school: 'Trường THCS Lê Quý Đôn',
-    phone: '0983.123456',
-    appId: 'tao-de-8mon',
-    appName: 'Tạo Đề 8 Môn THCS (CV 7991)',
-    action: 'Tạo đề kiểm tra Toán 6 Giữa kì 1 & Tải file Word',
-    timestamp: '23/09/2026 15:10:20',
-    date: '2026-09-23'
-  },
-  {
-    id: 'LOG-002',
-    machineId: 'GV-4C91-D3F0',
-    userName: 'Giáo viên mới',
-    school: 'Chưa cập nhật',
-    phone: 'Chưa cập nhật',
-    appId: 'tao-de-anh',
-    appName: 'Tạo Đề Tiếng Anh Global Success',
-    action: 'Dùng thử tạo đề tiếng Anh Lớp 7 GK1 (Lượt 1/5)',
-    timestamp: '23/09/2026 15:02:18',
-    date: '2026-09-23'
-  },
-  {
-    id: 'LOG-003',
-    machineId: 'GV-8F22-A109',
-    userName: 'Thầy Trần Văn Tuấn',
-    school: 'Trường THCS Đồng Yên',
-    phone: '0977.654321',
-    appId: 'tao-de-8mon',
-    appName: 'Tạo Đề 8 Môn THCS (CV 7991)',
-    action: 'Tạo ma trận & bản đặc tả môn Ngữ Văn 8',
-    timestamp: '23/09/2026 14:45:30',
-    date: '2026-09-23'
-  },
-  {
-    id: 'LOG-004',
-    machineId: 'GV-A7B8-90F1',
-    userName: 'Cô Hoàng Thu Thảo',
-    school: 'Trường THCS Lê Quý Đôn',
-    phone: '0983.123456',
-    appId: 'tao-de-8mon',
-    appName: 'Tạo Đề 8 Môn THCS (CV 7991)',
-    action: 'Gửi đơn đăng ký gói bản quyền 2 Năm VIP',
-    timestamp: '23/09/2026 14:15:30',
-    date: '2026-09-23'
-  },
-  {
-    id: 'LOG-005',
-    machineId: 'GV-3E11-9B5C',
-    userName: 'Cô Nguyễn Thị Hoa',
-    school: 'Trường THCS Nguyễn Du',
-    phone: '0912.889900',
-    appId: 'tao-de-anh',
-    appName: 'Tạo Đề Tiếng Anh Global Success',
-    action: 'Nghe thử Audio hội thoại Listening Unit 2',
-    timestamp: '23/09/2026 13:25:10',
-    date: '2026-09-23'
-  },
-  {
-    id: 'LOG-006',
-    machineId: 'GV-8F22-A109',
-    userName: 'Thầy Trần Văn Tuấn',
-    school: 'Trường THCS Đồng Yên',
-    phone: '0977.654321',
-    appId: 'tach-gop-pdf',
-    appName: 'PDF Suite Pro',
-    action: 'Tách dải trang file Kế hoạch bài dạy PDF',
-    timestamp: '23/09/2026 11:20:00',
-    date: '2026-09-23'
-  }
-];
+const DEFAULT_ACTIVITY_LOGS: ActivityLogItem[] = [];
 
 class ActivityTrackingService {
   // Kiểm tra máy tính của Thầy Thành (Đặc quyền VIP dùng thử thoải mái không giới hạn)
@@ -666,16 +481,19 @@ class ActivityTrackingService {
 
   public getAllRegistrations(): RegistrationRequest[] {
     const raw = localStorage.getItem(STORAGE_REGISTRATIONS);
-    if (!raw) {
-      localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(DEFAULT_REGISTRATIONS));
-      return [...DEFAULT_REGISTRATIONS];
+    let list: RegistrationRequest[] = [];
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        list = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        list = [];
+      }
     }
-    try {
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [...DEFAULT_REGISTRATIONS];
-    } catch {
-      return [...DEFAULT_REGISTRATIONS];
-    }
+    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-8F22-A109', 'GV-3E11-9B5C', 'GV-4C91-D3F0', 'MB-E10D-BE85', 'MB-8F22-A109'];
+    list = list.filter(r => !DEMO_IDS.includes(r.machineId) && r.fullName !== 'Cô Hoàng Thu Thảo' && r.fullName !== 'Thầy Trần Văn Tuấn');
+    localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
+    return list;
   }
 
   // DUYỆT ĐƠN ĐĂNG KÝ VÀ NÂNG CẤP THÀNH VIÊN
@@ -789,8 +607,11 @@ class ActivityTrackingService {
       list = [...DEFAULT_TRACKED_USERS];
     }
 
+    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-8F22-A109', 'GV-3E11-9B5C', 'GV-4C91-D3F0', 'MB-E10D-BE85', 'MB-8F22-A109'];
+    list = list.filter(m => !DEMO_IDS.includes(m.machineId) && m.fullName !== 'Cô Hoàng Thu Thảo' && m.fullName !== 'Thầy Trần Văn Tuấn');
+
     const currentMid = this.getOrCreateMachineId();
-    if (!list.some(m => m.machineId === currentMid)) {
+    if (!DEMO_IDS.includes(currentMid) && !list.some(m => m.machineId === currentMid)) {
       list.unshift(this.getCurrentProfile());
     }
 

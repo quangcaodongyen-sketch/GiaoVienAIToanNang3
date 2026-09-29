@@ -1133,278 +1133,59 @@ ${generatedDisabilityProcedures}
           {/* ========================================================================= */}
           {/* TAB 2: TẢI BẢN CÀI DESKTOP, VIDEO HD & WORD ADD-IN V3 (.DOTM / .EXE) */}
           {/* ========================================================================= */}
-          {activeTab === 'download' && (
-            <div className="space-y-4">
-              
-              {/* 1. VIDEO PLAYER HƯỚNG DẪN CHI TIẾT */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                    <Play className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-                    Video hướng dẫn cài đặt, kích hoạt Add-in Word & tích hợp NLS - AI vào giáo án:
-                  </span>
-                  <span className="text-[11px] text-cyan-400 font-mono">Full HD 1080p</span>
+                    {activeTab === 'download' && (
+            <div className="space-y-4 max-w-2xl mx-auto py-2">
+              {/* KHUNG TẢI DUY NHẤT - GỌN NHẸ 1 BỘ CÀI WORD */}
+              <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 border-2 border-cyan-500/50 shadow-2xl text-center space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center border border-cyan-500/30">
+                  <Download className="w-7 h-7" />
                 </div>
 
-                <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl">
-                  {NLS_RESOURCES.videoEmbedUrl ? (
-                    <iframe
-                      src={NLS_RESOURCES.videoEmbedUrl}
-                      title="Video hướng dẫn tích hợp NLS-AI"
-                      className="w-full aspect-video max-h-[360px] border-0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <video 
-                      controls 
-                      playsInline
-                      preload="metadata"
-                      poster="/giaoanNLS.png"
-                      className="w-full aspect-video max-h-[320px] object-contain bg-black"
-                    >
-                      <source src={NLS_RESOURCES.videoDirectUrl || "/HD_tich_hop_NLS_AI.mp4"} type="video/mp4" />
-                      <source src="/HD_tich_hop_NLS_AI.mp4" type="video/mp4" />
-                      <source src="/HD%20t%C3%ADch%20h%E1%BB%A3p%20NLS-AI.mp4" type="video/mp4" />
-                      Trình duyệt không hỗ trợ thẻ video.
-                    </video>
-                  )}
+                <div className="space-y-1.5">
+                  <h4 className="text-lg font-black text-white">
+                    Bộ Cài Đặt Word Add-in Tích Hợp NLS & AI THCS
+                  </h4>
+                  <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
+                    Bộ cài đặt tự động tích hợp thanh công cụ vào Microsoft Word. Nhỏ gọn, cài 1-click là chạy, tương thích mọi phiên bản Word.
+                  </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
-                  <span>💡 Video hướng dẫn thực chiến từng thao tác cài đặt và soạn giáo án chuẩn CV 5512.</span>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <a
-                      href={NLS_RESOURCES.videoWatchUrl || "/HD_tich_hop_NLS_AI.mp4"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
-                    >
-                      ▶ Mở tab mới
-                    </a>
-                    <a
-                      href={NLS_RESOURCES.videoDownloadUrl || NLS_RESOURCES.videoWatchUrl || "/HD_tich_hop_NLS_AI.mp4"}
-                      target={NLS_RESOURCES.videoDownloadUrl?.startsWith('http') || NLS_RESOURCES.videoWatchUrl?.startsWith('http') ? "_blank" : undefined}
-                      download={!NLS_RESOURCES.videoDownloadUrl?.startsWith('http') ? "HuongDan_TichHop_NLS_AI_THCS_V3.mp4" : undefined}
-                      rel="noopener noreferrer"
-                      className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
-                    >
-                      <Download className="w-3 h-3" />
-                      Tải Video HD
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* 2. BANNER TẢI TRỌN BỘ CÀI ĐẶT V3 */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/70 via-slate-900 to-blue-950/70 border border-cyan-500/40">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h4 className="text-sm font-bold text-cyan-200 flex items-center gap-1.5">
-                      <Download className="w-4 h-4 text-cyan-400" />
-                      Trọn Bộ Cài Đặt Desktop & Word Add-in Tích Hợp NLS-AI V3
-                    </h4>
-                    <p className="text-[11px] text-slate-300 mt-1">
-                      Bản V3 nâng cấp: Bổ sung chế độ chuyên sâu Học sinh khuyết tật hòa nhập (#0070C0), ô tùy biến prompt văn bản và cơ chế Single Instance.
-                    </p>
-                  </div>
-
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                   <a
-                    href={NLS_RESOURCES.fullZipUrl || "/Tich_Hop_NLS_AI_THCS_Pass_123.zip"}
-                    download="TichHop_NLS_AI_THCS_V3_TronBo_Pass123.zip"
-                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
+                    href="/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"
+                    download="CaiDat_TichHop_NLS_AI_THCS.exe"
+                    className="w-full sm:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-all hover:scale-105 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    Tải Trọn Bộ V3 (Pass: 123)
+                    TẢI BỘ CÀI TỰ ĐỘNG VÀO WORD (.EXE)
                   </a>
-                </div>
-              </div>
 
-              {/* 3. 4 LỰA CHỌN TẢI TỪNG PHẦN BẢN V3 */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {/* 1. Bản Cài Đặt Tự Động V3 */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1.5">
-                    <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                      .EXE
-                    </div>
-                    <h5 className="font-bold text-slate-200 text-xs">
-                      Bộ Cài Tự Động V3 (.exe)
-                    </h5>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>Cai_Dat_Tich_Hop_NLS_AI_THCS.exe</code> (77 MB). Tự động cấu hình Desktop và Add-in Word 1-click.
-                    </p>
-                  </div>
-                  <a
-                    href={NLS_RESOURCES.exeUrl || "/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe"}
-                    download="CaiDat_TichHop_NangLucSo_AI_THCS_V3.exe"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Tải File Cài Đặt V3 (.exe)
-                  </a>
-                </div>
-
-                {/* 2. File Add-in Word V3 */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1.5">
-                    <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
-                      .DOTM
-                    </div>
-                    <h5 className="font-bold text-slate-200 text-xs">
-                      Word Add-in Ribbon V3 (.dotm)
-                    </h5>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>TichHop_NLS_AI_THCS.dotm</code> (51.5 KB). Tab "TÍCH HỢP NLS & AI" trên thanh Ribbon Word với các nút tính năng mới V3.
-                    </p>
-                  </div>
                   <a
                     href="/TichHop_NLS_AI_THCS.dotm"
-                    download="TichHop_NangLucSo_AI_THCS_V3_WordAddIn.dotm"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
+                    download="TichHop_NLS_AI_THCS.dotm"
+                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
                   >
-                    <Download className="w-3.5 h-3.5" />
-                    Tải Add-in Ribbon V3 (.dotm)
+                    <FileCode className="w-4 h-4 text-amber-400" />
+                    File Ribbon Word (.dotm - 51 KB)
                   </a>
                 </div>
 
-                {/* 3. Video Hướng Dẫn */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1.5">
-                    <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">
-                      .MP4
-                    </div>
-                    <h5 className="font-bold text-slate-200 text-xs">
-                      Video Hướng Dẫn Full HD
-                    </h5>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>HD_tich_hop_NLS_AI.mp4</code>. Video chất lượng cao hướng dẫn chi tiết từng thao tác thực chiến.
-                    </p>
-                  </div>
-                  <a
-                    href="/HD_tich_hop_NLS_AI.mp4"
-                    download="HuongDan_TichHop_NangLucSo_AI_THCS_V3.mp4"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Tải Video HD (.mp4)
-                  </a>
-                </div>
-
-                {/* 4. Hướng Dẫn Sử Dụng & Phụ Lục Mẫu */}
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1.5">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                      .DOCX
-                    </div>
-                    <h5 className="font-bold text-slate-200 text-xs">
-                      Hướng Dẫn & Phụ Lục Mẫu V3
-                    </h5>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      File: <code>HUONG_DAN_SU_DUNG.docx</code>. Hướng dẫn chi tiết nạp Phụ lục III và tùy chọn khuyết tật hòa nhập.
-                    </p>
-                  </div>
-                  <a
-                    href="/HUONG_DAN_SU_DUNG.docx"
-                    download="HuongDan_SuDung_TichHop_NangLucSo_AI_THCS_V3.docx"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Tải Hướng Dẫn (.docx)
-                  </a>
-                </div>
-              </div>
-
-              {/* 5 ĐIỂM NÂNG CẤP ĐẮT GIÁ CỦA PHIÊN BẢN V3 */}
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                  <Award className="w-4 h-4 text-amber-400" />
-                  Các điểm nâng cấp nổi bật trên Phiên bản V3 so với Bản cũ (V2):
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-[11px]">
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">1. Giáo dục Khuyết tật hòa nhập:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Tích hợp chế độ riêng biệt cho học sinh khuyết tật hòa nhập (khiếm thính, khiếm thị, tự kỷ, chậm tiếp thu) với màu chữ xanh dương chuẩn <code>#0070C0</code>.
-                    </p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">2. Ô Yêu Cầu Prompt Tự Do:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Giáo viên có thể gõ trực tiếp yêu cầu văn bản riêng (ngắn gọn/chi tiết/lồng ghép chuyên đề), AI tự động nhận diện và đáp ứng đúng mong muốn.
-                    </p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">3. Cơ Chế Single Instance:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Chống mở trùng lặp nhiều cửa sổ ứng dụng gây xung đột tệp Word và hao tốn tài nguyên CPU/RAM của máy tính.
-                    </p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">4. Add-in Word Ribbon V3 Mới:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Nâng cấp dung lượng 51.5 KB, tối ưu thanh Ribbon với các nút bấm trực quan, hỗ trợ Word 2013, 2016, 2019, 2021 và Office 365.
-                    </p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">5. Multi-Anchor Mirror 4 Chốt:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Bảo vệ tích lũy số lần dùng thử chống reset khi gỡ cài đặt, kiểm soát hạn ngạch cài đặt 5 máy tính an toàn tuyệt đối.
-                    </p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                    <b className="text-cyan-300 block">6. Bảo Toàn File Gốc 100%:</b>
-                    <p className="text-slate-300 leading-relaxed">
-                      Giữ nguyên vẹn 100% công thức toán học MathType/OMML, sơ đồ, tranh ảnh và bảng biểu theo chuẩn OpenXML của Microsoft Word.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* HƯỚNG DẪN 3 BƯỚC THIẾT LẬP TRONG WORD */}
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5">
-                <span className="font-bold text-slate-200 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  Hướng dẫn kích hoạt tab "TÍCH HỢP NLS & AI THCS" trên thanh Ribbon của Word:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <b className="text-cyan-400 block mb-1">Bước 1: Tải file .dotm V3</b>
-                    <p className="text-slate-300">
-                      Tải file <code>TichHop_NLS_AI_THCS.dotm</code> ở trên và lưu vào một thư mục cố định trên máy (ví dụ: ổ D hoặc C).
-                    </p>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <b className="text-cyan-400 block mb-1">Bước 2: Thêm Trusted Location</b>
-                    <p className="text-slate-300">
-                      Mở Word &gt; <b>File</b> &gt; <b>Options</b> &gt; <b>Trust Center</b> &gt; <b>Trust Center Settings</b> &gt; <b>Trusted Locations</b> &gt; bấm <b>Add new location</b> chọn thư mục vừa lưu file.
-                    </p>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                    <b className="text-cyan-400 block mb-1">Bước 3: Mở giáo án & Sử dụng</b>
-                    <p className="text-slate-300">
-                      Mở file Word giáo án bất kì, tab <b>TÍCH HỢP NLS & AI THCS</b> sẽ xuất hiện trên thanh Ribbon để Thầy/Cô tích hợp 1-click!
-                    </p>
-                  </div>
+                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 text-left space-y-1">
+                  <div><strong>1. Cài đặt:</strong> Tải file về và mở lên, bấm <em>Cài đặt</em> để tích hợp thanh công cụ vào Word.</div>
+                  <div><strong>2. Sử dụng:</strong> Mở Word lên là có ngay tab <em>TÍCH HỢP NLS & AI THCS</em> sẵn sàng sử dụng.</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN ED25519 PRO (MÃ MÁY & KÍCH HOẠT KEY V3) */}
-          {/* ========================================================================= */}
           {activeTab === 'register' && (
-            <div className="space-y-4">
-              {/* KHUNG NHẬP KEY HOẶC KIỂM TRA BẢN QUYỀN */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-emerald-950/70 border border-amber-500/40 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="space-y-4 max-w-2xl mx-auto py-1">
+              {/* KHUNG 1: NHẬP MÃ KÍCH HOẠT NẾU ĐÃ CÓ KEY */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-emerald-950/60 border border-amber-500/40 space-y-3">
+                <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-amber-200 flex items-center gap-1.5">
                     <Crown className="w-4 h-4 text-amber-400" />
-                    Đã nhận được mã kích hoạt từ Thầy Thành? Kích hoạt ngay:
-                  </span>
-                  <span className="text-[11px] text-slate-400">
-                    Bảo mật Chữ ký số Ed25519 (Chống bẻ khóa 100%)
+                    Đã có Mã kích hoạt từ Admin? Dán mã vào đây:
                   </span>
                 </div>
 
@@ -1413,13 +1194,13 @@ ${generatedDisabilityProcedures}
                     type="text"
                     value={inputKey}
                     onChange={(e) => setInputKey(e.target.value)}
-                    placeholder="Dán mã kích hoạt dạng: KEY-NLS-YYYYMMDD-XXXXXX-..."
+                    placeholder="Dán mã kích hoạt tại đây (KEY-YYYYMMDD-...)"
                     className="flex-1 p-2.5 rounded-xl bg-slate-950 border border-amber-400/40 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400"
                   />
                   <button
                     type="button"
                     onClick={handleActivateKey}
-                    className="py-2.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs whitespace-nowrap transition-colors shadow-md"
+                    className="py-2.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs whitespace-nowrap transition-colors shadow-md cursor-pointer"
                   >
                     Kích Hoạt Ngay
                   </button>
@@ -1432,186 +1213,114 @@ ${generatedDisabilityProcedures}
                 )}
               </div>
 
-              {/* THÔNG TIN MÃ MÁY TÍNH HIỆN TẠI */}
-              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <Laptop className="w-5 h-5 text-cyan-400" />
-                  <div>
-                    <span className="text-slate-400 text-[11px] block">
-                      Mã máy tính của Thầy/Cô (Hardware Code):
-                    </span>
-                    <span className="font-mono text-cyan-300 font-bold text-sm">
-                      {detectedMid || 'NLS-DVT-8F22-A109-5B3C'}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleCopy(detectedMid, 'all')}
-                  className="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold flex items-center gap-1.5 border border-slate-700"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  Sao chép Mã máy
-                </button>
-              </div>
-
-              {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                        👑 CHÍNH SÁCH BẢN QUYỀN V3 CHÍNH THỨC
-                      </span>
-                      <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
-                    </div>
-                    <h4 className="text-base sm:text-lg font-black text-white mt-1">
-                      Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
-                    </h4>
-                  </div>
-                  <div className="text-left sm:text-right shrink-0">
-                    <div className="text-sm sm:text-base font-black text-cyan-400">
-                      Liên Hệ Admin Thầy Thành
-                    </div>
-                    <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Tích hợp NLS, AI & Khuyết tật hòa nhập V3:</strong> Tự động tích hợp khung năng lực số và học sinh hòa nhập cho 12 môn học THCS.</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí nâng cấp các phiên bản tiếp theo theo thông tư mới của Bộ GD&ĐT.</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
-                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                  <a
-                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Tích Hợp NLS - AI THCS V3. Mã máy của tôi: ${detectedMid}.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
-                  >
-                    <MessageCircle className="w-5 h-5 text-amber-300" />
-                    Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
-                  </a>
-                </div>
-              </div>
-
-              {/* FORM ĐĂNG KÝ BẢN QUYỀN TRỰC TIẾP */}
+              {/* KHUNG 2: ĐĂNG KÝ BẢN QUYỀN GỬI ADMIN KÍCH HOẠT THEO NĂM */}
               {regSuccess ? (
                 <div className="p-5 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-center space-y-3">
                   <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
                   <h4 className="text-sm font-bold text-emerald-300">
-                    ĐÃ GHI NHẬN ĐĂNG KÝ BẢN QUYỀN V3!
+                    ĐÃ GỬI THÔNG TIN ĐĂNG KÝ CHO ADMIN THÀNH!
                   </h4>
                   <p className="text-slate-300 text-xs max-w-md mx-auto">
-                    Thông tin máy <b className="text-cyan-300 font-mono">{detectedMid}</b> của Thầy/Cô đã được lưu lại. Vui lòng bấm nút bên dưới để mở Zalo gửi xác nhận cho Thầy Thành.
+                    Mã máy <b className="text-cyan-300 font-mono">{detectedMid}</b> của Thầy/Cô đã được cập nhật lên hệ thống để Admin kích hoạt trực tuyến theo năm.
                   </p>
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V3 cho máy ${detectedMid} (Gói: ${regPlan}, Tên: ${regName || 'Giáo viên'}, Trường: ${regSchool || 'THCS'}). Nhờ Thầy gửi giúp mã kích hoạt nhé!`
+                      `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM
+• Họ tên: ${regName}
+• SĐT/Zalo: ${regPhone}
+• Trường: ${regSchool}
+• Mã máy: ${detectedMid}
+Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 py-2.5 px-5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow"
+                    className="inline-flex items-center gap-1.5 py-2.5 px-5 rounded-xl bg-[#0068FF] hover:bg-blue-600 text-white font-bold text-xs shadow"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    Mở Zalo Gửi Cho Thầy Thành ({BRAND.phone})
+                    Nhắn Tin Zalo Thầy Thành ({BRAND.phone})
                   </a>
                 </div>
               ) : (
-                <form onSubmit={handleSubmitRegister} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                  <span className="font-bold text-slate-200 block">
-                    Đăng ký thông tin nhận Key kích hoạt Ed25519 V3:
-                  </span>
+                <form onSubmit={handleSubmitRegister} className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                  <div className="border-b border-slate-800 pb-2">
+                    <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                      <User className="w-4 h-4 text-blue-400" />
+                      Đăng Ký Bản Quyền Kích Hoạt Theo Năm
+                    </h4>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Điền thông tin và bấm gửi, Admin nhận thông tin và kích hoạt trực tuyến theo năm.
+                    </p>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-slate-400 mb-1">Họ và tên Thầy/Cô *</label>
+                      <label className="block text-slate-400 text-[11px] mb-1">Họ và tên Giáo viên *</label>
                       <input
                         type="text"
                         required
                         value={regName}
                         onChange={(e) => setRegName(e.target.value)}
-                        placeholder="Thầy/Cô Nguyễn Văn A"
-                        className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        placeholder="Ví dụ: Nguyễn Thị Mai"
+                        className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-400 mb-1">Số điện thoại / Zalo *</label>
+                      <label className="block text-slate-400 text-[11px] mb-1">Số điện thoại / Zalo *</label>
                       <input
                         type="text"
                         required
                         value={regPhone}
                         onChange={(e) => setRegPhone(e.target.value)}
-                        placeholder="09xx.xxx.xxx"
+                        placeholder="Ví dụ: 0988.123456"
                         className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-slate-400 mb-1">Trường học / Đơn vị</label>
-                      <input
-                        type="text"
-                        value={regSchool}
-                        onChange={(e) => setRegSchool(e.target.value)}
-                        placeholder="Trường THCS..."
-                        className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-400 mb-1">Gói bản quyền đăng ký</label>
-                      <select
-                        value={regPlan}
-                        onChange={(e) => setRegPlan(e.target.value as any)}
-                        className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500"
-                      >
-                        <option value="1YEAR">Gói 1 Năm (Hạn dùng 365 ngày)</option>
-                        <option value="2YEAR">Gói 2 Năm (Khuyên dùng)</option>
-                        <option value="3YEAR">Gói 3 Năm (Tiết kiệm)</option>
-                        <option value="LIFETIME">Gói VIP Trọn Đời (Vĩnh viễn)</option>
-                      </select>
                     </div>
                   </div>
 
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2">
+                  <div>
+                    <label className="block text-slate-400 text-[11px] mb-1">Trường / Đơn vị công tác *</label>
+                    <input
+                      type="text"
+                      required
+                      value={regSchool}
+                      onChange={(e) => setRegSchool(e.target.value)}
+                      placeholder="Ví dụ: Trường THCS Đồng Yên"
+                      className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 text-[11px] mb-1 flex items-center justify-between">
+                      <span>Mã máy tính (Tự động nhận diện):</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(detectedMid, 'all')}
+                        className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1"
+                      >
+                        <Copy className="w-3 h-3" /> Copy ID
+                      </button>
+                    </label>
+                    <input
+                      type="text"
+                      readOnly
+                      value={detectedMid}
+                      className="w-full p-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 text-xs font-mono font-bold text-cyan-300 select-all cursor-default"
+                    />
+                  </div>
+
+                  <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow"
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
                     >
-                      Gửi Đăng Ký Lên Hệ Thống
+                      <Send className="w-4 h-4" />
+                      GỬI CHO ADMIN ĐỂ KÍCH HOẠT THEO NĂM
                     </button>
-
-                    <a
-                      href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                        `Chào Thầy Thành, tôi muốn đăng ký bản quyền Phần mềm Tích hợp NLS-AI THCS V3 cho máy ${detectedMid}.`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-teal-400 hover:underline text-[11px] font-semibold flex items-center gap-1"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      Chat trực tiếp Zalo: {BRAND.phone}
-                    </a>
                   </div>
+
+                  <p className="text-[11px] text-slate-400 text-center">
+                    Admin Thầy Đinh Văn Thành (Hotline / Zalo: 0915.213717).
+                  </p>
                 </form>
               )}
             </div>
