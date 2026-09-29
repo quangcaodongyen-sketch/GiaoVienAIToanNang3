@@ -353,42 +353,45 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  // Hàm Xóa Triệt Để Thành Viên / Đơn Đăng Ký (Xóa hoàn toàn khỏi máy và cloud)
+  // Hàm Xóa Triệt Để Đơn Đăng Ký (Biến mất ngay lập tức trong 0.01s trên UI và Cloud)
   const handleDeleteRegistration = async (id: string, machineId: string, issueNumber?: number) => {
-    if (window.confirm(`Thầy có chắc chắn muốn XÓA VĨNH VIỄN thành viên này [${machineId}] khỏi hệ thống?`)) {
-      // 1. Xóa trong localStorage đơn đăng ký
+    if (window.confirm(`Thầy có chắc chắn muốn XÓA VĨNH VIỄN đơn đăng ký của máy [${machineId}]?\n\nSau khi xóa, đơn này sẽ BIẾN MẤT NGAY TỨC THÌ khỏi hệ thống để có thể đăng ký mới.`)) {
+      // 1. CẬP NHẬT STATE BIẾN MẤT TỨC KHẮC TRONG 0.01 GIÂY
+      setRegistrationRequests(prev => prev.filter(r => r.id !== id && r.machineId !== machineId));
+
+      // 2. Xóa trong localStorage đơn đăng ký
       const rawR = localStorage.getItem('gvai_registration_requests');
       if (rawR) {
         try {
           const list = JSON.parse(rawR);
-          const filtered = list.filter((x: any) => x.id !== id && x.machineId !== machineId);
-          localStorage.setItem('gvai_registration_requests', JSON.stringify(filtered));
+          localStorage.setItem('gvai_registration_requests', JSON.stringify(list.filter((x: any) => x.id !== id && x.machineId !== machineId)));
         } catch {}
       }
 
-      // 2. Xóa trong danh sách máy
+      // 3. Xóa trong danh sách máy
       const rawM = localStorage.getItem('gvai_all_tracked_machines');
       if (rawM) {
         try {
           const list = JSON.parse(rawM);
-          const filtered = list.filter((x: any) => x.machineId !== machineId);
-          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(filtered));
+          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(list.filter((x: any) => x.machineId !== machineId)));
         } catch {}
       }
 
-      // 3. Xóa bản quyền trong licenseService
+      // 4. Xóa bản quyền
       await licenseService.deleteLicense(machineId);
 
-      // 4. Đóng issue trên cloud nếu có
+      // 5. Đóng và gán nhãn status:deleted trên Cloud
       if (issueNumber) {
         try {
-          await cloudSyncService.rejectRegistrationOnCloud(issueNumber, 'Admin đã xóa vĩnh viễn');
-        } catch {}
+          await cloudSyncService.deleteRegistrationOnCloud(issueNumber, machineId);
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       await loadTrackingData();
       await loadData();
-      alert(`Đã xóa vĩnh viễn thành viên [${machineId}] thành công!`);
+      alert(`Đã xóa vĩnh viễn đơn đăng ký của máy [${machineId}]. Đơn đã biến mất hoàn toàn!`);
     }
   };
 

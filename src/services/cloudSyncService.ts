@@ -112,8 +112,17 @@ ${JSON.stringify(payloadData, null, 2)}
       const results: Array<RegistrationRequest & { issueNumber?: number }> = [];
 
       for (const issue of issues) {
+        // Bỏ qua ngay các đơn đã xóa hoặc issue khóa
+        const isDeleted = issue.labels?.some((l: any) => l.name === 'status:deleted') || issue.title?.includes('[ĐÃ XÓA]');
+        if (isDeleted) continue;
+
         const isReg = issue.labels?.some((l: any) => l.name === 'registration') || issue.title?.includes('[ĐĂNG KÝ');
         if (!isReg) continue;
+
+        // Nếu issue đã closed mà không phải status:approved -> Bỏ qua hoàn toàn
+        if (issue.state === 'closed' && !issue.labels?.some((l: any) => l.name === 'status:approved')) {
+          continue;
+        }
 
         const body: string = issue.body || '';
         const match = body.match(/```gvai-reg\s*([\s\S]*?)\s*```/);
@@ -251,6 +260,25 @@ ${JSON.stringify(payloadData, null, 2)}
   }
 
   // Admin hoặc Phụ tá TỪ CHỐI đơn trên Cloud
+    // XÓA VĨNH VIỄN ĐƠN ĐĂNG KÝ TRÊN CLOUD
+  public async deleteRegistrationOnCloud(issueNumber: number, machineId: string): Promise<boolean> {
+    try {
+      await fetch(`${GITHUB_API_URL}/issues/${issueNumber}`, {
+        method: 'PATCH',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          title: `[ĐÃ XÓA] ${machineId}`,
+          state: 'closed',
+          labels: ['registration', 'status:deleted']
+        })
+      });
+      return true;
+    } catch (e) {
+      console.error('Lỗi xóa đơn trên Cloud:', e);
+      return false;
+    }
+  }
+
   public async rejectRegistrationOnCloud(issueNumber: number, reviewerName: string): Promise<boolean> {
     try {
       const now = new Date().toLocaleString('vi-VN');
