@@ -227,10 +227,10 @@ class LicenseService {
   }
 
   // Admin Gia hạn
-  public async extend(machine_id: string, packageType: '1YEAR' | '2YEAR' | 'LIFETIME', activated_by: string = 'Thầy Đinh Văn Thành'): Promise<boolean> {
+  public async extend(machine_id: string, packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME', activated_by: string = 'Thầy Đinh Văn Thành'): Promise<boolean> {
     const mid = machine_id.trim().toUpperCase();
     const nowTs = Math.floor(Date.now() / 1000);
-    const expTs = packageType === 'LIFETIME' ? 9999999999 : nowTs + (packageType === '2YEAR' ? 730 : 365) * 86400;
+    const expTs = packageType === 'LIFETIME' ? 9999999999 : nowTs + (packageType === '3YEAR' ? 1095 : packageType === '2YEAR' ? 730 : 365) * 86400;
     const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
     const pkgLabel = packageType === '1YEAR' ? '1 Năm' : packageType === '2YEAR' ? '2 Năm' : 'Trọn Đời';
 

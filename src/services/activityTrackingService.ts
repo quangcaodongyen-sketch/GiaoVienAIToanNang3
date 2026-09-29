@@ -500,7 +500,7 @@ class ActivityTrackingService {
   public approveRegistration(
     id: string,
     reviewerName: string,
-    pkgOverride?: '1YEAR' | '2YEAR' | 'FULL_WEB' | 'TRIAL_5'
+    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5'
   ): { success: boolean; message: string } {
     const list = this.getAllRegistrations();
     const item = list.find(r => r.id === id);
@@ -515,7 +515,7 @@ class ActivityTrackingService {
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
 
     // Kích hoạt VIP hoặc dùng thử
-    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR') {
+    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR' || effectivePkg === '3YEAR') {
       licenseService.extend(item.machineId, effectivePkg, reviewerName);
     } else {
       // Cấp thêm 5 lượt dùng thử

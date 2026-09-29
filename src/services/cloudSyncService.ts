@@ -339,7 +339,7 @@ ${JSON.stringify(payloadData, null, 2)}
   // Kiểm tra máy tính hiện tại trên Cloud xem đã được duyệt hay bị khóa chưa
   public async checkCurrentMachineCloudStatus(machineId: string): Promise<{
     isApproved: boolean;
-    packageType?: '1YEAR' | '2YEAR' | 'TRIAL_5' | 'FULL_WEB';
+    packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'FULL_WEB';
     approvedBy?: string;
     approvedAt?: string;
     isBlocked: boolean;

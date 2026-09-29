@@ -273,7 +273,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setPinError(true);
     }
   };
-  };
 
   const loadTrackingData = async () => {
     // Tự động dọn sạch triệt để mọi mã test demo rác cũ (GV-TEST-9999, Thầy Nguyễn Văn An...)

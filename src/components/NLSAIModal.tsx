@@ -24,7 +24,9 @@ import {
   Award,
   Sliders,
   HelpCircle,
-  HeartHandshake
+  HeartHandshake,
+  User,
+  Send
 } from 'lucide-react';
 import { BRAND, NLS_RESOURCES } from '../config/brand';
 import { getOrCreateNLSHardwareCode, verifyKeyFormat } from '../services/nlsKeyService';
