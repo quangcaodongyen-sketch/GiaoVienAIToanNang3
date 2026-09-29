@@ -281,6 +281,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const loadTrackingData = async () => {
     // Tự động dọn sạch triệt để mọi mã test demo rác cũ (GV-TEST-9999, Thầy Nguyễn Văn An...)
     const DEMO_TEST_IDS = ['GV-TEST-9999', 'GV-TEST', 'GV-A7B8-90F1', 'GV-8F22-A109', 'MB-E10D-BE85'];
+    activityTrackingService.unblockMachine('GV-33B3-4A70');
     try {
       const rawR = localStorage.getItem('gvai_registration_requests');
       if (rawR) {
@@ -418,16 +419,52 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const handleDeleteAndBlockMachine = async (machineId: string) => {
-    const adminName = currentAdminName || 'Thầy Đinh Văn Thành';
-    if (window.confirm(`CẢNH BÁO: Thầy có chắc chắn muốn XÓA TÀI KHOẢN và KHÓA VĨNH VIỄN máy [${machineId}]?\n\nSau khi xóa, máy này sẽ KHÔNG THỂ HOẠT ĐỘNG được nữa trên toàn bộ hệ thống Cloud!`)) {
-      activityTrackingService.deleteAndBlockMachine(machineId, adminName);
-      await cloudSyncService.blockMachineOnCloud(machineId, adminName, 'Admin xóa tài khoản');
+  const handleDeleteMachinePermanently = async (machineId: string) => {
+    if (window.confirm(`Thầy có chắc chắn muốn XÓA HOÀN TOÀN máy [${machineId}] khỏi danh sách hệ thống?\n\nSau khi xóa, bản ghi này sẽ BIẾN MẤT VĨNH VIỄN khỏi bảng.`)) {
+      // 1. Xóa khỏi danh sách máy bị khóa
+      activityTrackingService.unblockMachine(machineId);
+      const rawB = localStorage.getItem('gvai_blocked_machines');
+      if (rawB) {
+        try {
+          const list = JSON.parse(rawB);
+          localStorage.setItem('gvai_blocked_machines', JSON.stringify(list.filter((b: any) => b.machineId !== machineId)));
+        } catch {}
+      }
+
+      // 2. Xóa khỏi danh sách tất cả các máy
+      activityTrackingService.deleteAndBlockMachine(machineId, currentAdminName || 'Admin');
+      const rawM = localStorage.getItem('gvai_all_tracked_machines');
+      if (rawM) {
+        try {
+          const list = JSON.parse(rawM);
+          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(list.filter((m: any) => m.machineId !== machineId)));
+        } catch {}
+      }
+
+      // 3. Xóa đơn đăng ký nếu có
+      const rawR = localStorage.getItem('gvai_registration_requests');
+      if (rawR) {
+        try {
+          const list = JSON.parse(rawR);
+          localStorage.setItem('gvai_registration_requests', JSON.stringify(list.filter((r: any) => r.machineId !== machineId)));
+        } catch {}
+      }
+
+      // 4. Xóa bản quyền
+      await licenseService.deleteLicense(machineId);
+
+      // 5. Cập nhật state ngay lập tức để dòng BIẾN MẤT TỨC THÌ
+      setTrackedMachines(prev => prev.filter(m => m.machineId !== machineId));
+      setBlockedMachines(prev => prev.filter(b => b.machineId !== machineId));
+      setRegistrationRequests(prev => prev.filter(r => r.machineId !== machineId));
+
       await loadTrackingData();
       await loadData();
-      alert(`Đã xóa tài khoản và khóa vĩnh viễn máy ${machineId} trên toàn bộ hệ thống Cloud!`);
+      alert(`Đã xóa hoàn toàn máy [${machineId}]. Bản ghi đã biến mất khỏi hệ thống!`);
     }
   };
+
+  const handleDeleteAndBlockMachine = handleDeleteMachinePermanently;
 
   const handleUnblockMachine = (machineId: string) => {
     activityTrackingService.unblockMachine(machineId);
@@ -2214,7 +2251,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                     type="button"
                                     onClick={() => handleDeleteAndBlockMachine(item.machineId)}
                                     className="p-1.5 rounded-lg bg-rose-600/30 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 transition text-xs cursor-pointer"
-                                    title="Xóa hoàn toàn tài khoản của giáo viên khỏi hệ thống"
+                                    title="Xóa vĩnh viễn tài khoản và thiết bị này (biến mất hoàn toàn)"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
@@ -2242,9 +2279,19 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           <button
                             type="button"
                             onClick={() => handleUnblockMachine(bm.machineId)}
-                            className="px-1.5 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px]"
+                            className="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] cursor-pointer"
+                            title="Mở khóa máy này"
                           >
                             Mở
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMachinePermanently(bm.machineId)}
+                            className="px-2 py-0.5 rounded bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] cursor-pointer flex items-center gap-1"
+                            title="Xóa vĩnh viễn và biến mất khỏi danh sách"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            Xóa
                           </button>
                         </div>
                       ))}

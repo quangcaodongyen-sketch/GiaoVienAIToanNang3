@@ -1,6 +1,7 @@
 
 export const ADMIN_WHITELIST_MACHINES = [
   'GV-0DAD-F76C',
+  'GV-33B3-4A70',
   'NLS-DVT-0B1D-A6A7-5A14'
 ];
 /**
@@ -210,22 +211,22 @@ class ActivityTrackingService {
 
   // XÓA TÀI KHOẢN VÀ KHÓA VĨNH VIỄN (Admin đã xóa tk nào thì tk đó không hoạt động được nữa)
   public deleteAndBlockMachine(machineId: string, adminName: string = 'Thầy Đinh Văn Thành'): void {
-    // 1. Đưa vào Blacklist
-    this.blockMachine(machineId, `Tài khoản bị xóa bởi ${adminName}`);
+    // Xóa triệt để khỏi danh sách máy bị khóa để không hiện lại
+    this.unblockMachine(machineId);
 
-    // 2. Xóa khỏi danh sách theo dõi thông thường
+    // Xóa khỏi danh sách theo dõi
     let list = this.getAllTrackedMachines().filter(m => m.machineId !== machineId);
     localStorage.setItem(STORAGE_ALL_MACHINES, JSON.stringify(list));
 
-    // 3. Xóa đơn đăng ký nếu có
+    // Xóa đơn đăng ký nếu có
     let regs = this.getAllRegistrations().filter(r => r.machineId !== machineId);
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(regs));
 
-    // 4. Ghi log
+    // Ghi log
     this.logActivity(
       'system',
       'Quản Trị Admin',
-      `${adminName} đã XÓA TÀI KHOẢN & KHÓA VĨNH VIỄN máy [${machineId}] - Máy này không còn hoạt động được nữa.`
+      `${adminName} đã XÓA VĨNH VIỄN máy [${machineId}] khỏi hệ thống.`
     );
   }
 
