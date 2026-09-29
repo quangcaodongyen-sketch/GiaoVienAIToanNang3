@@ -1,4 +1,4 @@
-import { RegistrationRequest, BlockedMachineItem } from './activityTrackingService';
+import { RegistrationRequest, BlockedMachineItem, ADMIN_WHITELIST_MACHINES } from './activityTrackingService';
 
 const GITHUB_REPO = 'quangcaodongyen-sketch/GiaoVienAIToanNang3';
 const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_REPO}`;
@@ -175,7 +175,26 @@ ${JSON.stringify(payloadData, null, 2)}
         console.warn('Lỗi đọc static cloud_registrations.json:', e);
       }
 
-      return results;
+      // Khử trùng lặp thông minh:
+      // Mỗi cặp (machineId + appId) chỉ giữ 1 bản ghi mới nhất hoặc đã duyệt
+      // Giữ nguyên các bản ghi nếu cùng máy nhưng đăng ký NHIỀU APP KHÁC NHAU!
+      const uniqueMap = new Map<string, RegistrationRequest & { issueNumber?: number }>();
+      for (const item of results) {
+        const key = `${item.machineId}__${item.appId || 'all'}`;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, item);
+        } else {
+          const prev = uniqueMap.get(key)!;
+          // Ưu tiên bản ghi đã APPROVED
+          if (item.status === 'APPROVED' && prev.status !== 'APPROVED') {
+            uniqueMap.set(key, item);
+          } else if (item.status === prev.status) {
+            // Cập nhật thông tin mới nhất
+            uniqueMap.set(key, { ...prev, ...item });
+          }
+        }
+      }
+      return Array.from(uniqueMap.values());
     } catch (e) {
       console.warn('Lỗi đọc đơn từ Cloud:', e);
       return [];
@@ -305,7 +324,7 @@ ${JSON.stringify(payloadData, null, 2)}
   // Tải danh sách các máy bị khóa từ Cloud
   public async fetchBlockedMachinesFromCloud(): Promise<BlockedMachineItem[]> {
     try {
-      const response = await fetch(`${GITHUB_API_URL}/issues?labels=blocked:machine&state=all`, {
+      const response = await fetch(`${GITHUB_API_URL}/issues?labels=blocked:machine&state=open`, {
         headers: getHeaders()
       });
       if (!response.ok) return [];
@@ -319,11 +338,13 @@ ${JSON.stringify(payloadData, null, 2)}
         if (match && match[1]) {
           try {
             const data = JSON.parse(match[1]);
-            list.push({
-              machineId: data.machineId,
-              blockedAt: data.blockedAt,
-              reason: data.reason
-            });
+            if (!ADMIN_WHITELIST_MACHINES.includes(data.machineId) && !data.machineId.includes('DVT')) {
+              list.push({
+                machineId: data.machineId,
+                blockedAt: data.blockedAt,
+                reason: data.reason
+              });
+            }
           } catch {
             // ignore
           }

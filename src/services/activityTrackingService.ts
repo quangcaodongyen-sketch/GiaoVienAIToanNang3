@@ -1,3 +1,8 @@
+
+export const ADMIN_WHITELIST_MACHINES = [
+  'GV-0DAD-F76C',
+  'NLS-DVT-0B1D-A6A7-5A14'
+];
 /**
  * DỊCH VỤ THEO DÕI HOẠT ĐỘNG, ĐĂNG KÝ THÀNH VIÊN & QUẢN TRỊ MÁY TÍNH
  * Hệ sinh thái Giáo Viên AI Toàn Năng - Thầy Đinh Văn Thành
@@ -136,6 +141,8 @@ class ActivityTrackingService {
 
   // Kiểm tra một machineId cụ thể có bị khóa không
   public isMachineBlocked(machineId: string): boolean {
+    if (ADMIN_WHITELIST_MACHINES.includes(machineId) || machineId.includes('DVT')) return false;
+    if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') return false;
     const blockedList = this.getBlockedMachines();
     return blockedList.some(b => b.machineId === machineId);
   }
@@ -452,21 +459,40 @@ class ActivityTrackingService {
     if (req.packageType === '2YEAR') priceText = 'Liên hệ Zalo';
     if (req.packageType === 'FULL_WEB') priceText = 'Liên hệ Zalo';
 
-    const newReq: RegistrationRequest = {
-      id: `REG-${Date.now()}`,
-      machineId: req.machineId,
-      fullName: req.fullName,
-      schoolUnit: req.schoolUnit,
-      phoneNumber: req.phoneNumber,
-      appId: req.appId,
-      appName: req.appName,
-      packageType: req.packageType,
-      price: req.price || priceText,
-      status: 'PENDING',
-      createdAt: now
-    };
-
-    list.unshift(newReq);
+    // Cặp định danh duy nhất: (machineId + appId)
+    // Nếu cùng máy và cùng App: CẬP NHẬT đè thông tin mới (không tạo rác nhiều bản ghi)
+    // Nếu cùng máy nhưng App khác: Thêm bản ghi cho App mới (cho phép đăng ký nhiều App)
+    const existingIndex = list.findIndex(r => r.machineId === req.machineId && (r.appId === req.appId || (!r.appId && !req.appId)));
+    
+    let resultReq: RegistrationRequest;
+    if (existingIndex !== -1) {
+      resultReq = {
+        ...list[existingIndex],
+        fullName: req.fullName,
+        schoolUnit: req.schoolUnit,
+        phoneNumber: req.phoneNumber,
+        appName: req.appName,
+        packageType: req.packageType,
+        price: req.price || priceText,
+        createdAt: now
+      };
+      list[existingIndex] = resultReq;
+    } else {
+      resultReq = {
+        id: `REG-${Date.now()}`,
+        machineId: req.machineId,
+        fullName: req.fullName,
+        schoolUnit: req.schoolUnit,
+        phoneNumber: req.phoneNumber,
+        appId: req.appId,
+        appName: req.appName,
+        packageType: req.packageType,
+        price: req.price || priceText,
+        status: 'PENDING',
+        createdAt: now
+      };
+      list.unshift(resultReq);
+    }
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
 
     // Ghi log hoạt động
@@ -476,7 +502,7 @@ class ActivityTrackingService {
       `Gửi đơn đăng ký gói ${req.packageType === 'TRIAL_5' ? 'Dùng thử 5 lần' : req.packageType === '1YEAR' ? 'Gói 1 Năm' : req.packageType === '2YEAR' ? 'Gói 2 Năm VIP' : 'Gói Full Web'}`
     );
 
-    return newReq;
+    return resultReq;
   }
 
   public getAllRegistrations(): RegistrationRequest[] {

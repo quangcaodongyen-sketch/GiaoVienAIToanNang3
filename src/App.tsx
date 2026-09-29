@@ -25,7 +25,7 @@ import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
 import { TrialRegisterModal } from './components/TrialRegisterModal';
-import { activityTrackingService } from './services/activityTrackingService';
+import { activityTrackingService, ADMIN_WHITELIST_MACHINES } from './services/activityTrackingService';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
@@ -62,16 +62,24 @@ export default function App() {
     localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
     localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
 
-    const mid = activityTrackingService.getOrCreateMachineId();
-    setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
-
-    // Kiểm tra trạng thái máy tính từ Cloud
-    cloudSyncService.checkCurrentMachineCloudStatus(mid).then(res => {
-      if (res.isBlocked) {
-        activityTrackingService.blockMachine(mid, 'Đồng bộ khóa từ Cloud');
-        setIsCurrentBlocked(true);
-      }
-    });
+        const mid = activityTrackingService.getOrCreateMachineId();
+    
+    // TỰ ĐỘNG MỞ KHÓA VÀ MIỄN TRỪ VĨNH VIỄN CHO MÁY ADMIN / THẦY THÀNH
+    if (ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT')) {
+      activityTrackingService.unblockMachine(mid);
+      setIsCurrentBlocked(false);
+    } else {
+      setIsCurrentBlocked(activityTrackingService.isCurrentMachineBlocked());
+      // Kiểm tra trạng thái máy tính từ Cloud
+      cloudSyncService.checkCurrentMachineCloudStatus(mid).then(res => {
+        if (res.isBlocked && !ADMIN_WHITELIST_MACHINES.includes(mid)) {
+          activityTrackingService.blockMachine(mid, 'Đồng bộ khóa từ Cloud');
+          setIsCurrentBlocked(true);
+        } else if (!res.isBlocked) {
+          setIsCurrentBlocked(false);
+        }
+      });
+    }
   }, []);
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});

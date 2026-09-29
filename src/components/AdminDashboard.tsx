@@ -80,6 +80,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [blockedMachines, setBlockedMachines] = useState<BlockedMachineItem[]>([]);
   const [logSearch, setLogSearch] = useState('');
   const [reqFilter, setReqFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
+  const [regSearchTerm, setRegSearchTerm] = useState('');
+  const [regAppFilter, setRegAppFilter] = useState('ALL');
+  const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
+
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -309,12 +313,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       const cloudRegs = await cloudSyncService.fetchRegistrationsFromCloud();
       if (cloudRegs.length > 0) {
         const mergedMap = new Map<string, any>();
+        // Key kết hợp (machineId + appId): Mỗi máy đăng ký app nào thì quản lý app đó
+        // Nếu cùng máy gửi lại cập nhật app đó thì đè lên (không tạo nhiều tên trùng lặp)
+        // Nếu cùng máy đăng ký thêm app khác thì vẫn hiển thị đầy đủ từng app!
         for (const cr of cloudRegs) {
-          mergedMap.set(cr.machineId, cr);
+          const k = `${cr.machineId}__${cr.appId || cr.appName || 'all'}`;
+          mergedMap.set(k, cr);
         }
         for (const lr of localRegs) {
-          if (!mergedMap.has(lr.machineId)) {
-            mergedMap.set(lr.machineId, lr);
+          const k = `${lr.machineId}__${lr.appId || lr.appName || 'all'}`;
+          if (!mergedMap.has(k)) {
+            mergedMap.set(k, lr);
           }
         }
         localRegs = Array.from(mergedMap.values());
@@ -1773,234 +1782,97 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             {/* ========================================================= */}
             {/* SUBTAB 1: ĐƠN ĐĂNG KÝ THÀNH VIÊN CẦN DUYỆT (ALL APPS)    */}
             {/* ========================================================= */}
-            {trackingSubTab === 'requests' && (
+                        {trackingSubTab === 'requests' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-slate-400">Lọc theo trạng thái:</span>
-                    {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map(st => (
-                      <button
-                        key={st}
-                        type="button"
-                        onClick={() => setReqFilter(st)}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-xs transition cursor-pointer ${
-                          reqFilter === st
-                            ? 'bg-amber-500 text-slate-950'
-                            : 'bg-slate-800 text-slate-400 hover:text-white'
-                        }`}
+                {/* THANH ĐIỀU KHIỂN BỘ LỌC, TÌM KIẾM & SẮP XẾP ĐA NĂNG */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2.5">
+                    {/* 1. Lọc theo trạng thái */}
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-slate-400 font-semibold">Trạng thái:</span>
+                      {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map(st => {
+                        const count = registrationRequests.filter(r => st === 'ALL' ? true : r.status === st).length;
+                        return (
+                          <button
+                            key={st}
+                            type="button"
+                            onClick={() => setReqFilter(st)}
+                            className={`px-2.5 py-1 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1 ${
+                              reqFilter === st
+                                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                                : 'bg-slate-800 text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <span>{st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? 'Chờ Duyệt' : st === 'APPROVED' ? 'Đã Duyệt' : 'Từ Chối'}</span>
+                            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                              st === 'PENDING' && count > 0 ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-950/60 text-slate-300'
+                            }`}>
+                              {count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* 2. Sắp xếp đa dạng */}
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-slate-400 font-semibold">Sắp xếp:</span>
+                      <select
+                        value={regSortBy}
+                        onChange={(e) => setRegSortBy(e.target.value as any)}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
                       >
-                        {st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? 'Chờ Duyệt' : st === 'APPROVED' ? 'Đã Duyệt' : 'Từ Chối'}
-                      </button>
-                    ))}
+                        <option value="newest">⏰ Mới nhất (Thời gian gửi)</option>
+                        <option value="name_asc">👤 Tên Giáo viên (A - Z)</option>
+                        <option value="school">🏫 Theo Trường / Đơn vị</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-400">
-                    💡 Bấm duyệt 1-click để hệ thống tự động kích hoạt VIP (Gói 1 Năm / 2 Năm VIP) và lưu người duyệt.
-                  </p>
-                </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 border-t border-slate-800/80">
+                    {/* 3. Lọc theo Ứng dụng cụ thể */}
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-slate-400 font-semibold">Lọc Ứng Dụng:</span>
+                      <select
+                        value={regAppFilter}
+                        onChange={(e) => setRegAppFilter(e.target.value)}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
+                      >
+                        <option value="ALL">📦 Tất Cả Ứng Dụng ({registrationRequests.length})</option>
+                        <option value="nls">⚡ Tích Hợp NLS - AI</option>
+                        <option value="taode">📝 Trung Tâm Tạo Đề THCS (8 Môn)</option>
+                        <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
+                        <option value="tts">🎙️ Text To Speech</option>
+                        <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
+                        <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
+                        <option value="pdfsuite">📄 PDF Suite Pro</option>
+                        <option value="record">🎥 Screen Record Pro V2</option>
+                        <option value="eng">🇬🇧 Tiếng Anh Global Success</option>
+                      </select>
+                    </div>
 
-                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60">
-                  <table className="w-full text-left text-xs border-collapse">
-                    <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
-                      <tr>
-                        <th className="py-2.5 px-3">Thời Gian Gửi</th>
-                        <th className="py-2.5 px-3">Thầy/Cô & Đơn Vị</th>
-                        <th className="py-2.5 px-3">Số ĐT / Zalo</th>
-                        <th className="py-2.5 px-3">ID Máy Tính</th>
-                        <th className="py-2.5 px-3">Cụ Thể Đang Dùng App Nào</th>
-                        <th className="py-2.5 px-3">Bản Quyền Kích Hoạt Bao Lâu</th>
-                        <th className="py-2.5 px-3">Trạng Thái</th>
-                        <th className="py-2.5 px-3 text-right">Thao Tác Duyệt & Xóa</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/60">
-                      {registrationRequests
-                        .filter(r => (reqFilter === 'ALL' ? true : r.status === reqFilter))
-                        .map((req, rIdx) => (
-                          <tr key={rIdx} className="hover:bg-slate-800/30 transition-colors">
-                            <td className="py-2.5 px-3 text-slate-400 font-mono text-[11px]">
-                              {req.createdAt}
-                            </td>
-                            <td className="py-2.5 px-3 font-bold text-white">
-                              {req.fullName}
-                              <div className="text-[11px] text-slate-400 font-normal">{req.schoolUnit}</div>
-                            </td>
-                            <td className="py-2.5 px-3 font-mono font-bold text-emerald-400">
-                              <a
-                                href={`https://zalo.me/${req.phoneNumber.replace(/[^0-9]/g, '')}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="hover:underline flex items-center gap-1"
-                              >
-                                {req.phoneNumber}
-                              </a>
-                            </td>
-                            <td className="py-2.5 px-3 font-mono text-cyan-300 font-bold">
-                              {req.machineId}
-                            </td>
-                            {/* CỤ THỂ ĐANG DÙNG APP NÀO */}
-                            <td className="py-2.5 px-3">
-                              <span className="px-2.5 py-1 rounded-lg bg-blue-950/70 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold block w-fit">
-                                {req.appName}
-                              </span>
-                            </td>
-                            {/* BẢN QUYỀN KÍCH HOẠT BAO LÂU */}
-                            <td className="py-2.5 px-3">
-                              <div className="space-y-0.5">
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/40 inline-flex items-center gap-1">
-                                  👑 Kích hoạt 1 Năm (365 ngày)
-                                </span>
-                                {req.status === 'APPROVED' && (
-                                  <div className="space-y-0.5 mt-1">
-                                    <div className="text-[10px] text-emerald-400 font-mono font-bold">
-                                      Đã kích hoạt trực tuyến
-                                    </div>
-                                    <div className="text-[10px] text-amber-300 font-medium">
-                                      👤 Kích hoạt bởi: <b>{req.reviewedBy || 'Admin Thầy Thành'}</b>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                            <td className="py-2.5 px-3">
-                              {req.status === 'APPROVED' ? (
-                                <div className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  <span>Đã Kích Hoạt</span>
-                                </div>
-                              ) : req.status === 'REJECTED' ? (
-                                <span className="text-rose-400 font-bold text-[11px]">Đã Tắt</span>
-                              ) : (
-                                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
-                                  ⏳ Chờ Kích Hoạt
-                                </span>
-                              )}
-                            </td>
-                            {/* THAO TÁC DUYỆT & XÓA THÀNH VIÊN */}
-                            <td className="py-2.5 px-3 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                {req.status === 'PENDING' && (
-                                  <div className="flex items-center gap-1">
-                                    <button
-                                      type="button"
-                                      onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
-                                      className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                      title="Kích hoạt Bản quyền 1 Năm (365 ngày)"
-                                    >
-                                      ⚡ 1 Năm
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleApproveReq(req.id, '2YEAR', (req as any).issueNumber)}
-                                      className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                      title="Kích hoạt Bản quyền 2 Năm (730 ngày)"
-                                    >
-                                      ⭐ 2 Năm
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleApproveReq(req.id, '3YEAR', (req as any).issueNumber)}
-                                      className="px-2 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                      title="Kích hoạt Bản quyền 3 Năm (1095 ngày)"
-                                    >
-                                      🔥 3 Năm
-                                    </button>
-                                  </div>
-                                )}
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteRegistration(req.id, req.machineId, (req as any).issueNumber)}
-                                  className="px-2 py-1 rounded bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[10px] shadow transition cursor-pointer flex items-center gap-1"
-                                  title="Xóa vĩnh viễn đơn đăng ký và tài khoản thành viên này"
-                                >
-                                  🗑️ Xóa Đơn
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      {registrationRequests.length === 0 && (
-                        <tr>
-                          <td colSpan={8} className="py-8 text-center text-slate-500">
-                            Chưa có đơn đăng ký thành viên nào gửi lên.
-                          </td>
-                        </tr>
+                    {/* 4. Ô tìm kiếm trực tiếp */}
+                    <div className="relative min-w-[260px]">
+                      <input
+                        type="text"
+                        placeholder="🔍 Tìm Tên GV / SĐT / Trường / Mã máy..."
+                        value={regSearchTerm}
+                        onChange={(e) => setRegSearchTerm(e.target.value)}
+                        className="w-full px-3 py-1 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-medium"
+                      />
+                      {regSearchTerm && (
+                        <button
+                          type="button"
+                          onClick={() => setRegSearchTerm('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                        >
+                          ✕
+                        </button>
                       )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* ========================================================= */}
-            {/* SUBTAB 2: THỐNG KÊ TRUY CẬP WEB & LỊCH SỬ DÙNG APP THEO NGÀY GIỜ */}
-            {/* ========================================================= */}
-            {trackingSubTab === 'stats' && (
-              <div className="flex-1 flex flex-col min-h-0 space-y-3">
-                {/* 4 CARDS THỐNG KÊ THỰC TẾ */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
-                      <Globe className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xl font-black text-white">{webStats?.totalPageviews || 1420}</div>
-                      <div className="text-[11px] text-slate-400">Lượt xem web thực tế</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
-                      <Laptop className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xl font-black text-white">{webStats?.totalUniqueVisitors || trackedMachines.length}</div>
-                      <div className="text-[11px] text-slate-400">Người dùng / Máy tính thực tế</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xl font-black text-emerald-300">
-                        {webStats?.registeredTrialCount || trackedMachines.filter(m => m.isRegisteredTrial).length}
-                      </div>
-                      <div className="text-[11px] text-slate-400">Đã đăng ký dùng thử</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 flex items-center gap-3 shadow-md">
-                    <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
-                      <ShieldOff className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xl font-black text-rose-400">{blockedMachines.length}</div>
-                      <div className="text-[11px] text-slate-400">Máy bị Admin khóa vĩnh viễn</div>
                     </div>
                   </div>
                 </div>
 
-                {/* THANH TÌM KIẾM LOG HOẠT ĐỘNG */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <div className="relative w-full sm:w-80">
-                    <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="Tìm theo ngày giờ, họ tên, ID máy, thao tác..."
-                      value={logSearch}
-                      onChange={(e) => setLogSearch(e.target.value)}
-                      className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
-                    />
-                  </div>
-
-                  <p className="text-[11px] text-slate-400">
-                    📅 Ghi nhận chi tiết mọi hoạt động dùng thử, tạo đề, tải Word theo từng ngày giờ giây chuẩn xác.
-                  </p>
-                </div>
-
-                {/* BẢNG LOG HOẠT ĐỘNG CHI TIẾT THEO NGÀY GIỜ */}
                 <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
