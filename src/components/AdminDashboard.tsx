@@ -270,9 +270,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   };
 
   const loadTrackingData = async () => {
-    const list = activityTrackingService.getAllTrackedMachines();
+    // Tự động dọn sạch triệt để mọi mã test demo rác cũ (GV-TEST-9999, Thầy Nguyễn Văn An...)
+    const DEMO_TEST_IDS = ['GV-TEST-9999', 'GV-TEST', 'GV-A7B8-90F1', 'GV-8F22-A109', 'MB-E10D-BE85'];
+    try {
+      const rawR = localStorage.getItem('gvai_registration_requests');
+      if (rawR) {
+        const parsed = JSON.parse(rawR);
+        const filtered = parsed.filter((x: any) => !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
+        if (filtered.length !== parsed.length) {
+          localStorage.setItem('gvai_registration_requests', JSON.stringify(filtered));
+        }
+      }
+      const rawM = localStorage.getItem('gvai_all_tracked_machines');
+      if (rawM) {
+        const parsed = JSON.parse(rawM);
+        const filtered = parsed.filter((x: any) => !DEMO_TEST_IDS.includes(x.machineId) && x.fullName !== 'Thầy Nguyễn Văn An');
+        if (filtered.length !== parsed.length) {
+          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(filtered));
+        }
+      }
+    } catch {}
+
+    let list = activityTrackingService.getAllTrackedMachines();
+    list = list.filter(m => !DEMO_TEST_IDS.includes(m.machineId) && m.fullName !== 'Thầy Nguyễn Văn An');
     setTrackedMachines(list);
-    setActivityLogs(activityTrackingService.getActivityLogs());
+    setActivityLogs(activityTrackingService.getActivityLogs().filter(l => !DEMO_TEST_IDS.includes(l.machineId)));
 
     // 1. Lấy đơn từ Local Storage
     let localRegs = activityTrackingService.getAllRegistrations();
@@ -296,6 +318,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       console.warn('Lỗi kết nối Cloud:', e);
     }
 
+    // Lọc sạch dứt điểm thành viên demo
+    localRegs = localRegs.filter(r => !DEMO_TEST_IDS.includes(r.machineId) && r.fullName !== 'Thầy Nguyễn Văn An');
+
     setRegistrationRequests(localRegs);
     setWebStats(activityTrackingService.getWebStats());
 
@@ -312,6 +337,45 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setBlockedMachines(allBlocked);
     } catch {
       setBlockedMachines(activityTrackingService.getBlockedMachines());
+    }
+  };
+
+  // Hàm Xóa Triệt Để Thành Viên / Đơn Đăng Ký (Xóa hoàn toàn khỏi máy và cloud)
+  const handleDeleteRegistration = async (id: string, machineId: string, issueNumber?: number) => {
+    if (window.confirm(`Thầy có chắc chắn muốn XÓA VĨNH VIỄN thành viên này [${machineId}] khỏi hệ thống?`)) {
+      // 1. Xóa trong localStorage đơn đăng ký
+      const rawR = localStorage.getItem('gvai_registration_requests');
+      if (rawR) {
+        try {
+          const list = JSON.parse(rawR);
+          const filtered = list.filter((x: any) => x.id !== id && x.machineId !== machineId);
+          localStorage.setItem('gvai_registration_requests', JSON.stringify(filtered));
+        } catch {}
+      }
+
+      // 2. Xóa trong danh sách máy
+      const rawM = localStorage.getItem('gvai_all_tracked_machines');
+      if (rawM) {
+        try {
+          const list = JSON.parse(rawM);
+          const filtered = list.filter((x: any) => x.machineId !== machineId);
+          localStorage.setItem('gvai_all_tracked_machines', JSON.stringify(filtered));
+        } catch {}
+      }
+
+      // 3. Xóa bản quyền trong licenseService
+      await licenseService.deleteLicense(machineId);
+
+      // 4. Đóng issue trên cloud nếu có
+      if (issueNumber) {
+        try {
+          await cloudSyncService.rejectRegistrationOnCloud(issueNumber, 'Admin đã xóa vĩnh viễn');
+        } catch {}
+      }
+
+      await loadTrackingData();
+      await loadData();
+      alert(`Đã xóa vĩnh viễn thành viên [${machineId}] thành công!`);
     }
   };
 
@@ -370,6 +434,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   useEffect(() => {
     if (isOpen && isAuthenticated) {
       loadData();
+      loadTrackingData();
+
+      // TỰ ĐỘNG CẬP NHẬT TRỰC TIẾP (REALTIME LIVE 4s/lần)
+      const liveInterval = setInterval(() => {
+        loadTrackingData();
+        loadData();
+      }, 4000);
       const cfg = licenseService.getSavedConfig();
       setSupabaseUrl(cfg.url);
       setSupabaseKey(cfg.anonKey);
@@ -391,6 +462,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       } catch (e) {
         console.error(e);
       }
+
+      return () => clearInterval(liveInterval);
     }
   }, [isOpen, isAuthenticated]);
 
@@ -1674,8 +1747,12 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
               </div>
 
               <div className="flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[11px] animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                  🟢 TỰ ĐỘNG CẬP NHẬT TRỰC TIẾP (4s/lần)
+                </div>
                 <span className="text-slate-400">
-                  Đang thao tác: <strong className="text-amber-300">{currentAdminName}</strong> ({userRole === 'ADMIN' ? 'Admin Tối Cao' : 'Phụ Tá Duyệt Thành Viên'})
+                  Admin: <strong className="text-amber-300">{currentAdminName}</strong>
                 </span>
                 <button
                   type="button"
@@ -1725,10 +1802,10 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         <th className="py-2.5 px-3">Thầy/Cô & Đơn Vị</th>
                         <th className="py-2.5 px-3">Số ĐT / Zalo</th>
                         <th className="py-2.5 px-3">ID Máy Tính</th>
-                        <th className="py-2.5 px-3">Phần Mềm</th>
-                        <th className="py-2.5 px-3">Gói Đăng Ký</th>
+                        <th className="py-2.5 px-3">Cụ Thể Đang Dùng App Nào</th>
+                        <th className="py-2.5 px-3">Bản Quyền Kích Hoạt Bao Lâu</th>
                         <th className="py-2.5 px-3">Trạng Thái</th>
-                        <th className="py-2.5 px-3 text-right">Thao Tác Duyệt Nhanh</th>
+                        <th className="py-2.5 px-3 text-right">Thao Tác Duyệt & Xóa</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
@@ -1756,82 +1833,61 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             <td className="py-2.5 px-3 font-mono text-cyan-300 font-bold">
                               {req.machineId}
                             </td>
-                            <td className="py-2.5 px-3 text-slate-200">
-                              <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-semibold">
+                            {/* CỤ THỂ ĐANG DÙNG APP NÀO */}
+                            <td className="py-2.5 px-3">
+                              <span className="px-2.5 py-1 rounded-lg bg-blue-950/70 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold block w-fit">
                                 {req.appName}
                               </span>
                             </td>
+                            {/* BẢN QUYỀN KÍCH HOẠT BAO LÂU */}
                             <td className="py-2.5 px-3">
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
-                                req.packageType === '2YEAR'
-                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                                  : req.packageType === '1YEAR'
-                                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
-                                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                              }`}>
-                                {req.packageType === 'FULL_WEB' ? '👑 Full Web' : req.packageType === '2YEAR' ? '2 Năm VIP' : req.packageType === '1YEAR' ? '1 Năm' : 'Dùng thử 5 lần'}
-                              </span>
+                              <div className="space-y-0.5">
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/40 inline-flex items-center gap-1">
+                                  👑 Kích hoạt 1 Năm (365 ngày)
+                                </span>
+                                {req.status === 'APPROVED' && (
+                                  <div className="text-[10px] text-emerald-400 font-mono">
+                                    Đã kích hoạt trực tuyến
+                                  </div>
+                                )}
+                              </div>
                             </td>
                             <td className="py-2.5 px-3">
                               {req.status === 'APPROVED' ? (
-                                <div className="text-emerald-400 font-bold flex items-center gap-1">
+                                <div className="text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
                                   <CheckCircle2 className="w-3.5 h-3.5" />
-                                  <span>Đã Duyệt</span>
-                                  {req.reviewedBy && (
-                                    <span className="text-[9px] text-slate-400 block font-normal">
-                                      ({req.reviewedBy})
-                                    </span>
-                                  )}
+                                  <span>Đã Kích Hoạt</span>
                                 </div>
                               ) : req.status === 'REJECTED' ? (
-                                <span className="text-rose-400 font-bold">Từ Chối</span>
+                                <span className="text-rose-400 font-bold text-[11px]">Đã Tắt</span>
                               ) : (
                                 <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">
-                                  ⏳ Chờ Duyệt
+                                  ⏳ Chờ Kích Hoạt
                                 </span>
                               )}
                             </td>
+                            {/* THAO TÁC DUYỆT & XÓA THÀNH VIÊN */}
                             <td className="py-2.5 px-3 text-right">
-                              {req.status === 'PENDING' ? (
-                                <div className="flex items-center justify-end gap-1">
+                              <div className="flex items-center justify-end gap-1.5">
+                                {req.status === 'PENDING' && (
                                   <button
                                     type="button"
                                     onClick={() => handleApproveReq(req.id, '1YEAR', (req as any).issueNumber)}
-                                    className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                    title="Duyệt Gói 1 Năm"
+                                    className="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] shadow transition cursor-pointer"
+                                    title="Kích hoạt Bản quyền 1 Năm"
                                   >
-                                    Duyệt 1 Năm
+                                    ⚡ Kích Hoạt 1 Năm
                                   </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleApproveReq(req.id, '2YEAR', (req as any).issueNumber)}
-                                    className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                    title="Duyệt Gói 2 Năm VIP"
-                                  >
-                                    Duyệt 2 Năm VIP
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleApproveReq(req.id, 'TRIAL_5', (req as any).issueNumber)}
-                                    className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] shadow transition cursor-pointer"
-                                    title="Cấp 5 Lần Dùng Thử"
-                                  >
-                                    5 Lần Thử
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRejectReq(req.id, (req as any).issueNumber)}
-                                    className="px-1.5 py-1 rounded bg-slate-800 hover:bg-red-900/60 text-slate-400 hover:text-red-200 text-[10px] border border-slate-700 transition cursor-pointer"
-                                    title="Từ chối đơn"
-                                  >
-                                    X
-                                  </button>
-                                </div>
-                              ) : (
-                                <span className="text-[11px] text-slate-500 font-mono">
-                                  {req.reviewedAt || 'Hoàn tất'}
-                                </span>
-                              )}
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteRegistration(req.id, req.machineId, (req as any).issueNumber)}
+                                  className="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-[11px] shadow transition cursor-pointer flex items-center gap-1"
+                                  title="Xóa vĩnh viễn thành viên này"
+                                >
+                                  🗑️ Xóa Thành Viên
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -2010,13 +2066,12 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   <table className="w-full text-left text-xs border-collapse">
                     <thead className="sticky top-0 bg-slate-800/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-700">
                       <tr>
-                        <th className="py-2.5 px-3">ID Máy Tính</th>
-                        <th className="py-2.5 px-3">Họ Tên / Dự Đoán</th>
-                        <th className="py-2.5 px-3">Trường & SĐT</th>
-                        <th className="py-2.5 px-3">Dùng Thử</th>
-                        <th className="py-2.5 px-3">Phần Mềm Đã Vào</th>
-                        <th className="py-2.5 px-3">Lần Cuối Truy Cập</th>
-                        <th className="py-2.5 px-3 text-right">Hành Động Quản Trị</th>
+                        <th className="py-2.5 px-3">ID Máy Tính & Thiết Bị</th>
+                        <th className="py-2.5 px-3">Giáo Viên & Đơn Vị</th>
+                        <th className="py-2.5 px-3">Cụ Thể Đang Dùng App Nào</th>
+                        <th className="py-2.5 px-3">Bản Quyền Kích Hoạt Bao Lâu</th>
+                        <th className="py-2.5 px-3">Trạng Thái Hoạt Động</th>
+                        <th className="py-2.5 px-3 text-right">Thao Tác Quản Trị</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
@@ -2037,10 +2092,43 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           const isBlocked = blockedMachines.some(b => b.machineId === item.machineId);
                           const apps = Object.values(item.appsVisited || {});
 
+                          // Tính số ngày còn lại của bản quyền
+                          let licenseInfoText = '⏳ Dùng thử (Chưa kích hoạt VIP)';
+                          let daysLeft = 0;
+                          if (activeLicense) {
+                            if (activeLicense.package_type === 'LIFETIME' || activeLicense.expiry_timestamp > 9000000000) {
+                              licenseInfoText = '👑 Bản quyền Trọn Đời (Vĩnh viễn)';
+                            } else {
+                              const nowTs = Math.floor(Date.now() / 1000);
+                              daysLeft = Math.max(0, Math.ceil((activeLicense.expiry_timestamp - nowTs) / 86400));
+                              const expDateStr = new Date(activeLicense.expiry_timestamp * 1000).toLocaleDateString('vi-VN');
+                              licenseInfoText = `👑 Bản quyền 1 Năm - Còn ${daysLeft} ngày (Hạn: ${expDateStr})`;
+                            }
+                          } else {
+                            licenseInfoText = `⏳ Dùng thử: Đã dùng ${item.trialUsed}/${item.trialMax} lượt`;
+                          }
+
+                          // Xác định trạng thái Online (trong vòng 10 phút)
+                          let isOnlineNow = false;
+                          if (item.lastSeenAt) {
+                            try {
+                              const lastTs = new Date(item.lastSeenAt.replace(' ', 'T')).getTime();
+                              if (!isNaN(lastTs) && (Date.now() - lastTs) < 10 * 60 * 1000) {
+                                isOnlineNow = true;
+                              }
+                            } catch {}
+                          }
+
                           return (
                             <tr key={idx} className={`transition-colors ${isBlocked ? 'bg-rose-950/30' : 'hover:bg-slate-800/30'}`}>
+                              {/* 1. ID MÁY TÍNH & THIẾT BỊ */}
                               <td className="py-2.5 px-3 font-mono font-bold text-cyan-300">
-                                {item.machineId}
+                                <div className="flex items-center gap-1.5">
+                                  <span>{item.machineId}</span>
+                                  {isOnlineNow && (
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping" title="Đang trực tuyến" />
+                                  )}
+                                </div>
                                 {isBlocked && (
                                   <span className="block text-[10px] text-rose-400 font-sans font-bold">
                                     ⛔ ĐÃ BỊ KHÓA VĨNH VIỄN
@@ -2050,68 +2138,79 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   {item.deviceInfo || 'Windows PC'}
                                 </div>
                               </td>
+
+                              {/* 2. GIÁO VIÊN & ĐƠN VỊ */}
                               <td className="py-2.5 px-3">
-                                {item.isRegisteredTrial && item.fullName ? (
-                                  <div>
-                                    <span className="font-bold text-white text-sm">{item.fullName}</span>
-                                    <span className="ml-2 px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] border border-emerald-500/30">
-                                      Đã đăng ký
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <span className="font-semibold text-amber-300">{item.predictedName || 'Chưa định danh'}</span>
-                                    <span className="ml-2 px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px] border border-amber-500/30">
-                                      Dự đoán
-                                    </span>
+                                <div className="font-bold text-white text-xs">
+                                  {item.fullName || item.predictedName || 'Giáo viên THCS'}
+                                </div>
+                                <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                  <Building2 className="w-3 h-3 text-slate-500" />
+                                  <span>{item.schoolUnit || 'Chưa rõ trường'}</span>
+                                </div>
+                                {item.phoneNumber && (
+                                  <div className="text-[11px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5">
+                                    <Phone className="w-3 h-3 text-slate-500" />
+                                    <span>{item.phoneNumber}</span>
                                   </div>
                                 )}
                               </td>
-                              <td className="py-2.5 px-3 text-slate-300">
-                                <div className="flex items-center gap-1">
-                                  <Building2 className="w-3 h-3 text-slate-500" />
-                                  <span>{item.schoolUnit || 'Chưa rõ đơn vị'}</span>
-                                </div>
-                                <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-mono mt-0.5">
-                                  <Phone className="w-3 h-3 text-slate-500" />
-                                  <span>{item.phoneNumber || 'Chưa có SĐT'}</span>
-                                </div>
-                              </td>
+
+                              {/* 3. CỤ THỂ ĐANG DÙNG APP NÀO */}
                               <td className="py-2.5 px-3">
-                                <div className="flex items-center gap-1 font-bold">
-                                  <span className={item.trialUsed >= item.trialMax ? 'text-red-400' : 'text-amber-400'}>
-                                    {item.trialUsed}
-                                  </span>
-                                  <span className="text-slate-500">/</span>
-                                  <span className="text-slate-300">{item.trialMax}</span>
-                                  <span className="text-[10px] text-slate-400 ml-1">lượt</span>
-                                </div>
-                                <div className="w-20 bg-slate-800 rounded-full h-1.5 mt-1 overflow-hidden">
-                                  <div
-                                    className={`h-full ${item.trialUsed >= item.trialMax ? 'bg-red-500' : 'bg-amber-500'}`}
-                                    style={{ width: `${Math.min(100, (item.trialUsed / item.trialMax) * 100)}%` }}
-                                  />
-                                </div>
-                              </td>
-                              <td className="py-2.5 px-3">
-                                <div className="flex flex-wrap gap-1 max-w-[200px]">
-                                  {apps.length === 0 ? (
-                                    <span className="text-slate-500 text-[10px]">Chưa mở app</span>
-                                  ) : (
-                                    apps.map((app, aIdx) => (
-                                      <span
+                                {apps.length === 0 ? (
+                                  <span className="text-slate-500 text-[11px]">Chưa thao tác app</span>
+                                ) : (
+                                  <div className="space-y-1">
+                                    {apps.map((app, aIdx) => (
+                                      <div
                                         key={aIdx}
-                                        className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] border border-slate-700"
-                                        title={`${app.appName} (vào ${app.count} lần, lần cuối: ${app.lastVisit})`}
+                                        className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[11px] flex items-center justify-between gap-2 max-w-[260px]"
                                       >
-                                        {app.appName.split(' ')[0]} ({app.count})
-                                      </span>
-                                    ))
+                                        <span className="font-semibold text-cyan-200 truncate">
+                                          {app.appName}
+                                        </span>
+                                        <span className="text-[10px] text-amber-400 font-bold shrink-0">
+                                          {app.count} lần
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </td>
+
+                              {/* 4. BẢN QUYỀN KÍCH HOẠT BAO LÂU */}
+                              <td className="py-2.5 px-3">
+                                <div className="space-y-1">
+                                  <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold border inline-block ${
+                                    activeLicense 
+                                      ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' 
+                                      : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                                  }`}>
+                                    {licenseInfoText}
+                                  </span>
+                                  {!activeLicense && (
+                                    <div className="w-24 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                      <div
+                                        className={`h-full ${item.trialUsed >= item.trialMax ? 'bg-red-500' : 'bg-amber-500'}`}
+                                        style={{ width: `${Math.min(100, (item.trialUsed / item.trialMax) * 100)}%` }}
+                                      />
+                                    </div>
                                   )}
                                 </div>
                               </td>
-                              <td className="py-2.5 px-3 text-slate-400 text-[11px] whitespace-nowrap">
-                                {item.lastSeenAt || 'Vừa xong'}
+
+                              {/* 5. TRẠNG THÁI HOẠT ĐỘNG ONLINE */}
+                              <td className="py-2.5 px-3 text-[11px]">
+                                {isOnlineNow ? (
+                                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold inline-flex items-center gap-1">
+                                    🟢 Đang Online
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400">
+                                    {item.lastSeenAt || 'Vừa xong'}
+                                  </span>
+                                )}
                               </td>
                               <td className="py-2.5 px-3 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
