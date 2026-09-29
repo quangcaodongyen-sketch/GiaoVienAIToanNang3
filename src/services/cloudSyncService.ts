@@ -308,7 +308,7 @@ ${JSON.stringify(payloadData, null, 2)}
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({
-          title: `[KHÓA MÁY VĨNH VIỄN] ${machineId}`,
+          title: `[GHI CHÚ QUẢN TRỊ] Khóa bản quyền ${machineId}`, state: 'closed',
           body: bodyText,
           labels: ['blocked:machine']
         })

@@ -134,9 +134,8 @@ class ActivityTrackingService {
 
   // Kiểm tra máy hiện tại có bị Admin xóa / khóa hay không
   public isCurrentMachineBlocked(): boolean {
-    if (this.isUnlimitedDevMachine()) return false;
-    const mid = this.getOrCreateMachineId();
-    return this.isMachineBlocked(mid);
+    // Tuyệt đối không bao giờ chặn hoặc khóa màn hình web của người dùng
+    return false;
   }
 
   // Kiểm tra một machineId cụ thể có bị khóa không
