@@ -291,8 +291,7 @@ export default function App() {
             <button
               onClick={() => {
                 navigator.clipboard.writeText('https://giao-vien-ai-toan-nang3.vercel.app/');
-                alert('Đã sao chép liên kết Website Giáo Viên AI Toàn Năng!
-Thầy/Cô hãy gửi Zalo hoặc Facebook để chia sẻ cho đồng nghiệp trong trường nhé!');
+                alert('Đã sao chép liên kết Website Giáo Viên AI Toàn Năng! Thầy/Cô hãy gửi Zalo hoặc Facebook để chia sẻ cho đồng nghiệp trong trường nhé!');
               }}
               className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white transition cursor-pointer text-[11px] font-semibold border border-slate-700/80"
               title="Sao chép link gửi cho đồng nghiệp"
