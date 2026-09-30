@@ -1,10 +1,11 @@
 {
-  "version": "3.2.0",
-  "app_name": "Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)",
-  "release_date": "2026-09-30",
-  "changelog": "Cập nhật ContinuousSyncWorker: Tự động đồng bộ bản quyền từ Web Admin tức thì.\nThêm nút Kiểm Tra Cập Nhật trên Ribbon Word.\nCải thiện hiệu năng tạo đề kiểm tra 8 môn.",
-  "download_url": "https://giaovienai-toannang3.vercel.app/Trung_Tam_Tao_De_THCS_Pass_123.zip",
-  "download_url_exe": "https://giaovienai-toannang3.vercel.app/Cai_Dat_TaoDe_8Mon_THCS.exe",
-  "min_version": "3.0.0",
-  "force_update": false
+  "appId": "exam-8mon",
+  "appName": "Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)",
+  "currentVersion": "3.2.0",
+  "latestVersion": "3.2.0",
+  "releaseDate": "30/09/2026",
+  "changelog": "• Tự động kích hoạt bản quyền Pro tức thì từ Web Admin ngay khi được phê duyệt\n• Tự động đồng bộ ngầm và kiểm tra phiên bản mới định kỳ\n• Thêm hộp thoại thông báo cập nhật phiên bản mới hiện đại\n• Trọn bộ 8 môn: Toán, Văn, KHTN, Sử Địa, GDCD, Tin, Công nghệ, Tiếng Anh\n• Chuẩn ma trận đặc tả Công văn 7991/BGDĐT - 4 mức độ nhận thức",
+  "downloadUrl": "https://giaovienai-toannang3.vercel.app/Trung_Tam_Tao_De_THCS.exe",
+  "zipUrl": "https://giaovienai-toannang3.vercel.app/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
 }
