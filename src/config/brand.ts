@@ -22,11 +22,11 @@ export const BRAND = {
   
   about: {
     title: "Về tác giả",
-    greeting: "Xin chào! Tôi là Đinh Văn Thành, giáo viên Tiếng Anh tại Trường THCS Đồng Yên.",
-    paragraph1: "Trong quá trình giảng dạy, tôi luôn trăn trở về việc làm thế nào để giảm bớt áp lực hồ sơ, tiết kiệm thời gian soạn giảng và giúp giáo viên tiếp cận công nghệ một cách đơn giản nhất. Chính vì vậy, tôi đã nghiên cứu và ứng dụng Trí tuệ nhân tạo (AI) để xây dựng những công cụ hỗ trợ thiết thực dành cho giáo viên.",
-    paragraph2: "Các ứng dụng tôi phát triển hướng đến việc hỗ trợ toàn diện các công việc chuyên môn như: soạn giáo án, xây dựng đề kiểm tra, tạo ma trận và đặc tả, chuẩn hóa văn bản, xử lý hồ sơ, thiết kế học liệu, tích hợp AI vào dạy học và nhiều tiện ích khác phục vụ công tác quản lý, giảng dạy.",
-    paragraph3: "Với phương châm “Đơn giản – Hiệu quả – Thiết thực”, tôi luôn nỗ lực tạo ra những công cụ dễ sử dụng, giúp giáo viên tiết kiệm thời gian, nâng cao hiệu quả công việc và góp phần thúc đẩy chuyển đổi số trong giáo dục.",
-    quote: "“Công nghệ chỉ thực sự có ý nghĩa khi giúp giáo viên dạy tốt hơn và học sinh học hiệu quả hơn.”",
+    greeting: "Tôi là Đinh Văn Thành – Giáo viên Tiếng Anh tại Trường THCS Đồng Yên.",
+    paragraph1: "Là giáo viên trực tiếp giảng dạy cấp THCS, tôi chủ động xây dựng và hoàn thiện bộ phần mềm này xuất phát từ chính nhu cầu công việc thực tế hàng ngày của mình và đồng nghiệp, bám sát các văn bản quy định mới nhất của Bộ Giáo dục & Đào tạo.",
+    paragraph2: "Hệ thống tập trung giải quyết 4 nhóm công việc chuyên môn cốt lõi: Tích hợp Năng lực số (NLS) & AI vào Giáo án theo CV 5512 (12 bộ môn); Tạo đề kiểm tra định kỳ 8 môn THCS chuẩn ma trận, bản đặc tả CV 7991 và sinh đề biến thể; Tạo bài nghe Tiếng Anh Global Success (Online TTS); cùng các tiện ích Chuẩn hóa thể thức văn bản NĐ 30, tách gộp PDF và tối ưu máy tính.",
+    paragraph3: "Các phần mềm đều được đóng gói đơn giản, bấm chạy trực tiếp trên máy tính của thầy cô, không phụ thuộc mạng phức tạp, tiết kiệm thời gian và giải quyết đúng công việc cần làm mỗi ngày.",
+    quote: "“Phần mềm phục vụ giáo viên phải thiết thực, dễ dùng và giải quyết chính xác công việc hàng ngày.”",
     photoAlt: "Đinh Văn Thành – Giáo viên Tiếng Anh Trường THCS Đồng Yên"
   }
 };

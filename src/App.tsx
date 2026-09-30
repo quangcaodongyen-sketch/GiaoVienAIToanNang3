@@ -658,21 +658,51 @@ export default function App() {
               </div>
 
               {/* Bio Content Column */}
-              <div className="lg:col-span-7 space-y-6">
-                <div className="space-y-4 text-slate-700 text-base leading-relaxed">
-                  <p className="text-lg font-bold text-[#123A63]">
+              <div className="lg:col-span-7 space-y-5">
+                <div className="space-y-3.5 text-slate-700 text-sm sm:text-base leading-relaxed">
+                  <p className="text-lg sm:text-xl font-bold text-[#123A63]">
                     {BRAND.about.greeting}
                   </p>
-                  <p>{BRAND.about.paragraph1}</p>
-                  <p>{BRAND.about.paragraph2}</p>
-                  <p>{BRAND.about.paragraph3}</p>
+                  <p className="text-slate-600">
+                    {BRAND.about.paragraph1}
+                  </p>
+
+                  {/* Khung tính năng cốt lõi bám sát ứng dụng */}
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/90 text-xs sm:text-sm space-y-2">
+                    <div className="font-bold text-[#123A63] flex items-center gap-1.5 mb-1.5">
+                      <Sparkles className="w-4 h-4 text-blue-600" />
+                      <span>Hệ thống tập trung giải quyết 4 công việc chuyên môn chính:</span>
+                    </div>
+                    <ul className="space-y-1.5 text-slate-700">
+                      <li className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 shrink-0"></span>
+                        <span><strong>Tích hợp NLS & AI (CV 5512):</strong> Tự động tích hợp mục tiêu và tiến trình dạy học cho toàn bộ 12 môn THCS theo đúng Phụ lục III của giáo viên.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-2 shrink-0"></span>
+                        <span><strong>Tạo đề kiểm tra 8 môn THCS (CV 7991):</strong> Đầy đủ ma trận, bản đặc tả chuẩn cho Toán, Văn, Anh, KHTN, Sử - Địa, GDCD, Tin, Công nghệ và sinh đề biến thể chống chép.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-2 shrink-0"></span>
+                        <span><strong>Tạo bài nghe Tiếng Anh:</strong> Chuyển văn bản thành audio MP3 giọng bản xứ chuẩn chương trình Global Success.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-2 shrink-0"></span>
+                        <span><strong>Tiện ích chuyên môn:</strong> Chuẩn hóa thể thức văn bản theo NĐ 30, tách gộp file PDF giáo án, ghi hình bài giảng và tối ưu máy tính.</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <p className="text-slate-600">
+                    {BRAND.about.paragraph3}
+                  </p>
                 </div>
 
                 {/* Quote Card */}
-                <div className="p-5 rounded-xl bg-blue-50/60 border-l-4 border-[#2563EB] space-y-2">
-                  <div className="flex gap-3">
-                    <Quote className="w-6 h-6 text-[#2563EB] shrink-0 mt-0.5" />
-                    <p className="italic font-medium text-slate-800 text-base">
+                <div className="p-4 rounded-xl bg-blue-50/60 border-l-4 border-[#2563EB] space-y-1.5">
+                  <div className="flex gap-2.5 items-start">
+                    <Quote className="w-5 h-5 text-[#2563EB] shrink-0 mt-0.5" />
+                    <p className="italic font-medium text-slate-800 text-sm sm:text-base">
                       {BRAND.about.quote}
                     </p>
                   </div>
