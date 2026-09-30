@@ -12,31 +12,22 @@ export interface AppCard {
 }
 
 export const apps: AppCard[] = [
-  // ==================== NHÓM 1: ĐỀ THI & ĐÁNH GIÁ (CV 7991) ====================
+
+  // ==================== ƯU TIÊN 1: APP NĂNG LỰC SỐ (FLAGSHIP) ====================
   {
-    "id": "tao-de-toan-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN TOÁN HỌC (CV 7991)",
-    "description": "Tự động sinh Ma trận, Bản đặc tả và Đề thi in ấn A4 kèm Đáp án chi tiết CV 7991/BGDĐT. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật phần mềm theo đúng ý muốn!).",
-    "image": "/taode_toan.png",
-    "url": "#tao-de-toan",
-    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "id": "tichhop-nls-ai-thcs",
+    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V3)",
+    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0) vào giáo án 12 môn THCS chuẩn CV 5512. Tùy biến prompt văn bản và Add-in Ribbon Word V3.",
+    "image": "/giaoanNLS.png",
+    "url": "#nls-ai",
+    "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
     "order": 1
   },
-  {
-    "id": "tao-de-van-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN NGỮ VĂN (CV 7991)",
-    "description": "Thiết kế đề Ngữ văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) và Viết (4.0đ) kèm Ma trận, Bản đặc tả. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
-    "image": "/taode_van.png",
-    "url": "#tao-de-van",
-    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
-    "badge": "BẢN QUYỀN PRO",
-    "active": true,
-    "featured": true,
-    "order": 2
-  },
+
+  // ==================== ƯU TIÊN 2: APP RA ĐỀ TIẾNG ANH GLOBAL SUCCESS ====================
   {
     "id": "tao-de-tieng-anh-thcs",
     "title": "TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991)",
@@ -47,19 +38,59 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
+    "order": 2
+  },
+
+  // ==================== ƯU TIÊN 3: APP TẠO BÀI NGHE MP3 ====================
+  {
+    "id": "smart-listening-pro",
+    "title": "SMART LISTENING PRO (LUYỆN NGHE & PHÁT ÂM)",
+    "description": "Chuyển bài đọc tiếng Anh thành file nghe MP3 giọng bản ngữ chuẩn quốc tế. Tự động ngắt nghỉ câu và chèn chuông hiệu lệnh làm bài thi.",
+    "image": "/smart_listening_icon.png",
+    "url": "#smart-listening",
+    "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
     "order": 3
+  },
+
+  // ==================== ƯU TIÊN 4: CÁC APP RA ĐỀ 7 MÔN ====================
+  {
+    "id": "tao-de-toan-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN TOÁN HỌC (CV 7991)",
+    "description": "Tự động sinh Ma trận, Bản đặc tả và Đề thi in ấn A4 kèm Đáp án chi tiết CV 7991/BGDĐT. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật phần mềm theo đúng ý muốn!).",
+    "image": "/taode_toan.png",
+    "url": "#tao-de-toan",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 4
+  },
+  {
+    "id": "tao-de-van-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN NGỮ VĂN (CV 7991)",
+    "description": "Thiết kế đề Ngữ văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) và Viết (4.0đ) kèm Ma trận, Bản đặc tả. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "image": "/taode_van.png",
+    "url": "#tao-de-van",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 5
   },
   {
     "id": "tao-de-khtn-thcs",
     "title": "TẠO ĐỀ KHOA HỌC TỰ NHIÊN (CV 7991)",
-    "description": "Tích hợp chuẩn tỉ lệ 3 phân môn Lý - Hóa - Sinh CTGDPT 2018 (Trắc nghiệm 4.0đ + Tự luận 6.0đ). (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "description": "Tích hợp 3 phân môn Vật lí, Hóa học, Sinh học chuẩn chương trình 2018. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
     "image": "/taode_khtn.png",
     "url": "#tao-de-khtn",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 4
+    "order": 6
   },
   {
     "id": "tao-de-sudia-thcs",
@@ -71,19 +102,7 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 5
-  },
-  {
-    "id": "tao-de-tin-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN TIN HỌC (CV 7991)",
-    "description": "Sinh đề thi Tin học kết hợp lý thuyết số học và bài tập thực hành Python, Excel. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
-    "image": "/taode_tin.png",
-    "url": "#tao-de-tin",
-    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
-    "badge": "BẢN QUYỀN PRO",
-    "active": true,
-    "featured": false,
-    "order": 6
+    "order": 7
   },
   {
     "id": "tao-de-gdcd-thcs",
@@ -95,7 +114,19 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 7
+    "order": 8
+  },
+  {
+    "id": "tao-de-tin-thcs",
+    "title": "TẠO ĐỀ KIỂM TRA MÔN TIN HỌC (CV 7991)",
+    "description": "Sinh đề thi Tin học kết hợp lý thuyết số học và bài tập thực hành Python, Excel. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "image": "/taode_tin.png",
+    "url": "#tao-de-tin",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": false,
+    "order": 9
   },
   {
     "id": "tao-de-cn-thcs",
@@ -107,8 +138,10 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 8
+    "order": 10
   },
+
+  // ==================== ƯU TIÊN 5: SINH ĐỀ BIẾN THỂ ====================
   {
     "id": "sinhdebienthe",
     "title": "SINH 3 ĐỀ BIẾN THỂ VIP (AI PRO)",
@@ -119,10 +152,10 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
-    "order": 9
+    "order": 11
   },
 
-  // ==================== NHÓM 2: GIÁO ÁN & VĂN BẢN (5512 & NĐ 30) ====================
+  // ==================== NHÓM CUỐI: TIỆN ÍCH & VĂN BẢN ====================
   {
     "id": "chuanhoavanbanvip",
     "title": "CHUẨN HÓA NĐ 30 & SOẠN GIÁO ÁN 5512 (AI WORD)",
@@ -132,20 +165,8 @@ export const apps: AppCard[] = [
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
     "badge": "MIỄN PHÍ",
     "active": true,
-    "featured": true,
-    "order": 10
-  },
-  {
-    "id": "tichhop-nls-ai-thcs",
-    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V3)",
-    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0) vào giáo án 12 môn THCS chuẩn CV 5512. Tùy biến prompt văn bản và Add-in Ribbon Word V3.",
-    "image": "/giaoanNLS.png",
-    "url": "#nls-ai",
-    "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
-    "badge": "BẢN QUYỀN PRO",
-    "active": true,
-    "featured": true,
-    "order": 11
+    "featured": false,
+    "order": 12
   },
   {
     "id": "congthutoan",
@@ -157,20 +178,6 @@ export const apps: AppCard[] = [
     "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": false,
-    "order": 12
-  },
-
-  // ==================== NHÓM 3: BÀI GIẢNG SỐ & NGOẠI NGỮ ====================
-  {
-    "id": "smart-listening-pro",
-    "title": "SMART LISTENING PRO (LUYỆN NGHE & PHÁT ÂM)",
-    "description": "Chuyển bài đọc tiếng Anh thành file nghe MP3 giọng bản ngữ chuẩn quốc tế. Tự động ngắt nghỉ câu và chèn chuông hiệu lệnh làm bài thi.",
-    "image": "/smart_listening_icon.png",
-    "url": "#smart-listening",
-    "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
-    "badge": "BẢN QUYỀN PRO",
-    "active": true,
-    "featured": true,
     "order": 13
   },
   {
@@ -182,11 +189,9 @@ export const apps: AppCard[] = [
     "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
     "badge": "MIỄN PHÍ",
     "active": true,
-    "featured": true,
+    "featured": false,
     "order": 14
   },
-
-  // ==================== NHÓM 4: TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM ====================
   {
     "id": "TACH-GOP-PDF",
     "title": "PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI)",
@@ -196,7 +201,7 @@ export const apps: AppCard[] = [
     "category": "TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM",
     "badge": "MIỄN PHÍ",
     "active": true,
-    "featured": true,
+    "featured": false,
     "order": 15
   },
   {
@@ -208,7 +213,7 @@ export const apps: AppCard[] = [
     "category": "TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM",
     "badge": "MIỄN PHÍ",
     "active": true,
-    "featured": true,
+    "featured": false,
     "order": 16
   },
   {

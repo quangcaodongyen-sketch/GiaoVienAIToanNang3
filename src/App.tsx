@@ -525,40 +525,8 @@ export default function App() {
 
             {/* Subtitle */}
             <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
-              Trọn bộ 17 siêu công cụ trí tuệ nhân tạo chuyên sâu dành cho giáo viên: Tạo đề 8 môn THCS chuẩn CV 7991, Chuẩn hóa văn bản hành chính NĐ 30, Soạn giáo án 5512, Luyện nghe tiếng Anh, Quay video bài giảng và tối ưu máy tính.
+              Trọn bộ 17 siêu công cụ trí tuệ nhân tạo chuyên sâu dành cho giáo viên: Tạo đề 7 môn THCS chuẩn CV 7991, Chuẩn hóa văn bản hành chính NĐ 30, Soạn giáo án 5512, Luyện nghe tiếng Anh, Quay video bài giảng và tối ưu máy tính.
             </p>
-
-            {/* Quick Metrics Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mt-8 sm:mt-10">
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
-                <div className="flex items-center gap-2 text-amber-400 font-extrabold text-xl sm:text-2xl">
-                  <span>17+</span>
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div className="text-xs text-slate-300 font-medium mt-1">Siêu Công Cụ AI Thực Chiến</div>
-              </div>
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
-                <div className="flex items-center gap-2 text-cyan-400 font-extrabold text-xl sm:text-2xl">
-                  <span>100%</span>
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div className="text-xs text-slate-300 font-medium mt-1">Chuẩn CV 7991, 5512 & NĐ 30</div>
-              </div>
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
-                <div className="flex items-center gap-2 text-emerald-400 font-extrabold text-xl sm:text-2xl">
-                  <span>1-Click</span>
-                  <Layers className="w-4 h-4" />
-                </div>
-                <div className="text-xs text-slate-300 font-medium mt-1">Add-in Word & Bản PC Cài Đặt</div>
-              </div>
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-left hover:bg-white/10 transition-colors">
-                <div className="flex items-center gap-2 text-rose-400 font-extrabold text-xl sm:text-2xl">
-                  <span>24/7</span>
-                  <Crown className="w-4 h-4" />
-                </div>
-                <div className="text-xs text-slate-300 font-medium mt-1">Bản Quyền Đám Mây An Toàn</div>
-              </div>
-            </div>
 
             {/* Action Buttons */}
             <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -1090,12 +1058,14 @@ export default function App() {
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
-      {/* HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN) (3 TABS) */}
+      {/* HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (7 MÔN & 7 APP ĐỘC LẬP) */}
       <TaoDeTHCS8MonModal
         isOpen={showTaoDeTHCS8MonModal}
         onClose={closeAllModals}
         initialSubject={thcs8MonSelectedSubject}
+        selectedSubject={thcs8MonSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
+        onSwitchToEnglish={() => setShowTaoDeModal(true)}
       />
 
       {/* CLOUD ADMIN DASHBOARD 24/7 */}

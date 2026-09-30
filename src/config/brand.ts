@@ -60,16 +60,76 @@ export const EXAM_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
-// Cấu hình link tài nguyên của Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)
-export const EXAM_8MON_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc từ GitHub Releases
+// Cấu hình link tài nguyên của Trung Tâm Tạo Đề 7 Môn THCS & 7 App Độc Lập (CV 7991)
+export const EXAM_7MON_RESOURCES = {
+  // Link tải trọn bộ tổng hợp 7 môn Hub .zip (Pass: 123)
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS_Pass_123.zip",
-  // Link tải bản Desktop .exe trực tiếp
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS.exe",
-  // Link video hướng dẫn
   videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  
+  // Link tải 7 Ứng dụng Độc lập theo từng bộ môn (.ZIP - Pass: 123):
+  subjects: {
+    TOAN: {
+      name: "Toán học",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Toan_THCS.exe",
+      size: "127 MB",
+      icon: "📐",
+      color: "from-blue-600 to-indigo-600"
+    },
+    VAN: {
+      name: "Ngữ văn",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Van_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Van_THCS.exe",
+      size: "34 MB",
+      icon: "📖",
+      color: "from-rose-600 to-red-600"
+    },
+    KHTN: {
+      name: "Khoa học tự nhiên",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_KHTN_THCS.exe",
+      size: "34 MB",
+      icon: "🔬",
+      color: "from-emerald-600 to-teal-600"
+    },
+    SUDIA: {
+      name: "Lịch sử & Địa lí",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Su_Dia_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Su_Dia_THCS.exe",
+      size: "34 MB",
+      icon: "🌍",
+      color: "from-amber-600 to-orange-600"
+    },
+    GDCD: {
+      name: "Giáo dục công dân",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDCD_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_GDCD_THCS.exe",
+      size: "34 MB",
+      icon: "⚖️",
+      color: "from-red-600 to-pink-600"
+    },
+    TIN: {
+      name: "Tin học",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Tin_Hoc_THCS.exe",
+      size: "34 MB",
+      icon: "💻",
+      color: "from-sky-600 to-cyan-600"
+    },
+    CN: {
+      name: "Công nghệ",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Cong_Nghe_THCS.exe",
+      size: "34 MB",
+      icon: "⚙️",
+      color: "from-slate-600 to-zinc-600"
+    }
+  }
 };
+
+export const EXAM_8MON_RESOURCES = EXAM_7MON_RESOURCES;
 
 
 // CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG
@@ -97,7 +157,7 @@ export const PRICING = {
     price: 0,
     priceFormatted: 'Báo giá qua Zalo',
     title: 'GÓI FULL WEB TOÀN NĂNG (TẤT CẢ PHẦN MỀM)',
-    description: 'Mở khóa trọn bộ toàn bộ các app trên web: Tạo đề 8 môn, Tiếng Anh Global Success, Giáo án 5512 & NĐ 30, Sinh 3 đề biến thể, Dọn rác PC, PDF Suite Pro, Năng lực số AI...',
+    description: 'Mở khóa trọn bộ toàn bộ các app trên web: Tạo đề 7 môn, Tiếng Anh Global Success, Giáo án 5512 & NĐ 30, Sinh 3 đề biến thể, Dọn rác PC, PDF Suite Pro, Năng lực số AI...',
     badge: '👑 ƯU ĐÃI SƯ PHẠM - DÙNG FULL APP'
   },
   // Số lượt dùng thử miễn phí

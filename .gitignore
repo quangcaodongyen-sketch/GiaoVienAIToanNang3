@@ -28,3 +28,6 @@ public/Tich_Hop_NLS_AI_THCS_Pass_123.zip
 public/HD_tich_hop_NLS_AI_Web.mp4
 
 *.tsbuildinfo
+
+public/*.exe
+public/*.zip
