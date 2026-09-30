@@ -52,7 +52,7 @@ export const EXAM_RESOURCES = {
   // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
   fullZipUrl: "/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   // Link tải bộ cài Word .exe trực tiếp
-  exeWordUrl: "/Cai_Dat_Chay_Tren_Word.exe",
+  exeWordUrl: "/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   // Link tải bản Desktop .exe trực tiếp
   exeDesktopUrl: "/Tao_De_Tieng_Anh_Desktop.exe",
   // Link video hướng dẫn
