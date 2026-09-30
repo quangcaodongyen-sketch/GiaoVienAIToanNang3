@@ -488,123 +488,56 @@ export default function App() {
       </header>
 
             <main className="flex-1">
-        {/* HERO SECTION - GIÁO VIÊN AI TOÀN NĂNG */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#081329] via-[#0E1E38] to-[#122B4F] text-white pt-10 pb-14 sm:pt-14 sm:pb-20 border-b border-blue-900/40">
-          {/* Ambient Lighting Gradients */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/20 to-teal-400/10 blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 -left-24 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+        {/* HERO SECTION - SIÊU GỌN GÀNG, TIẾT KIỆM DIỆN TÍCH TỐI ĐA */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#081329] via-[#0E1E38] to-[#122B4F] text-white py-4 sm:py-5 border-b border-blue-900/40">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+              <div className="text-center md:text-left">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-200 text-[10px] font-black uppercase tracking-wider mb-1.5">
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>HỆ SINH THÁI GIÁO VIÊN AI THCS • BẢN CHÍNH THỨC 2026</span>
+                </div>
+                <h1 className="text-lg sm:text-2xl font-black tracking-tight text-white flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                  <span>Hệ Thống Phần Mềm Giáo Viên AI Toàn Năng</span>
+                </h1>
+                <p className="mt-0.5 text-xs text-slate-300 max-w-3xl font-normal leading-relaxed">
+                  Tích hợp NLS & AI (5512), Tạo đề 8 môn THCS (7991), Luyện nghe MP3, Chuẩn hóa văn bản NĐ 30 • Tác giả: Thầy Đinh Văn Thành (<strong className="text-emerald-400">Hotline/Zalo: 0915.213717</strong>)
+                </p>
+              </div>
 
-          {/* Grid pattern overlay */}
-          <div 
-            className="absolute inset-0 opacity-[0.04] pointer-events-none"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-              backgroundSize: '28px 28px'
-            }}
-          />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            {/* Version 3.0 Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-teal-500/20 border border-blue-400/40 text-blue-200 text-xs font-black uppercase tracking-wider shadow-lg shadow-blue-500/10 mb-5">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG • BẢN CHÍNH THỨC 2026</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight max-w-4xl mx-auto">
-              Đột Phá Giảng Dạy & Quản Lý Với{' '}
-              <span className="bg-gradient-to-r from-amber-300 via-rose-400 to-cyan-400 bg-clip-text text-transparent">
-                Giáo Viên AI Toàn Năng
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
-              Trọn bộ 17 siêu công cụ trí tuệ nhân tạo chuyên sâu dành cho giáo viên: Tạo đề 7 môn THCS chuẩn CV 7991, Chuẩn hóa văn bản hành chính NĐ 30, Soạn giáo án 5512, Luyện nghe tiếng Anh, Quay video bài giảng và tối ưu máy tính.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-              <a
-                href="#apps"
-                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-blue-600/30 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95"
-              >
-                <span>Khám Phá 17 Công Cụ Ngay</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-
-              <button
-                onClick={() => setShowAdminDashboard(true)}
-                className="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm sm:text-base border border-white/20 backdrop-blur-md flex items-center gap-2 transition-all hover:border-amber-400/50"
-              >
-                <Crown className="w-4 h-4 text-amber-400" />
-                <span>Quản Trị Bản Quyền Cloud</span>
-              </button>
-
-              <a
-                href={BRAND.zaloUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3.5 rounded-2xl bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border border-teal-500/40 font-bold text-sm sm:text-base flex items-center gap-2 transition-all"
-              >
-                <MessageCircle className="w-4 h-4 text-teal-400" />
-                <span>Zalo Hỗ Trợ: {BRAND.phone}</span>
-              </a>
+              {/* Nút hành động nhanh gọn gàng */}
+              <div className="flex items-center gap-2 shrink-0 flex-wrap justify-center">
+                <button
+                  onClick={() => setShowAdminDashboard(true)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-400/40 backdrop-blur-md flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                  title="Mở bảng Quản trị Bản quyền Cloud"
+                >
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Quản Trị Admin</span>
+                </button>
+                <a
+                  href={BRAND.zaloUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-xl bg-teal-600/30 hover:bg-teal-600/40 text-teal-200 border border-teal-500/40 font-bold text-xs flex items-center gap-1.5 transition shadow-sm"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-teal-400" />
+                  <span>Zalo: {BRAND.phone}</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>
-        {/* APPS SECTION (PRIMARY SHOWCASE) */}
-        <section id="apps" className="pt-6 pb-16 sm:pt-8 sm:pb-20 bg-[#F6F8FC]">
+
+        {/* APPS SECTION (PRIMARY SHOWCASE) - GỌN GÀNG, HIỆN NGAY CÁC APP */}
+        <section id="apps" className="pt-3 pb-12 sm:pt-4 sm:pb-16 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* SECTION HEADER & SEARCH / FILTER PANEL */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 mb-8 transition-all">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-slate-100">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 text-xs font-bold uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                    Hệ Thống Ứng Dụng AI Giáo Dục
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#123A63] tracking-tight">
-                    Kho Công Cụ AI Thực Chiến
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl font-normal leading-relaxed">
-                    Tuyển tập các công cụ AI thiết thực hỗ trợ giáo viên soạn bài, tạo đề thi ma trận, chuẩn hóa văn bản, bài nghe tiếng Anh và đổi mới phương pháp giảng dạy.
-                  </p>
-                </div>
-
-                {/* SEARCH BAR */}
-                <div className="w-full lg:w-80 shrink-0">
-                  <div className="relative">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder="Tìm kiếm công cụ (Đề thi, SKKN, Nghe...)..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-slate-50 border border-slate-200/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs sm:text-sm text-slate-800 placeholder-slate-400 transition-all shadow-inner"
-                    />
-                    {searchQuery && (
-                      <button
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/60"
-                        title="Xóa tìm kiếm"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* CATEGORY FILTER TABS & APP COUNTER */}
-              <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* THANH CÔNG CỤ TINH GỌN: CHUYÊN MỤC + TÌM KIẾM */}
+            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-2.5 sm:p-3 mb-4 transition-all">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                {/* CATEGORY FILTER TABS */}
                 {activeApps.length > 0 && categories.length > 1 && (
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     {categories.map((cat) => {
                       const count = categoryCounts[cat] || 0;
                       const isSelected = selectedCategory === cat;
@@ -612,7 +545,7 @@ export default function App() {
                         <button
                           key={cat}
                           onClick={() => setSelectedCategory(cat)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                             isSelected
                               ? 'bg-[#123A63] text-white shadow-sm ring-2 ring-[#123A63]/20'
                               : 'bg-slate-100 hover:bg-slate-200/70 text-slate-700 border border-slate-200/80 hover:text-[#123A63]'
@@ -634,33 +567,55 @@ export default function App() {
                   </div>
                 )}
 
-                <div className="text-xs text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-                  <span>Hiển thị <strong className="text-slate-800 font-bold">{filteredApps.length}</strong> / {activeApps.length} ứng dụng</span>
+                {/* Ô TÌM KIẾM NHỎ GỌN + BỘ ĐẾM SỐ LƯỢNG */}
+                <div className="flex items-center gap-2.5 shrink-0 justify-between md:justify-end">
+                  <div className="relative w-full sm:w-60">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Tìm kiếm công cụ..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 placeholder-slate-400 transition shadow-inner"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded-full"
+                        title="Xóa tìm kiếm"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                  <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-500 font-semibold shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span><strong>{filteredApps.length}</strong>/{activeApps.length} app</span>
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* EMPTY STATE */}
             {filteredApps.length === 0 ? (
-              <div className="max-w-md mx-auto py-16 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
-                <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
-                  <Search className="w-7 h-7" />
+              <div className="max-w-md mx-auto py-12 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+                  <Search className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-[#123A63] mb-1">
+                <h3 className="text-base font-bold text-[#123A63] mb-1">
                   Không tìm thấy ứng dụng phù hợp
                 </h3>
-                <p className="text-slate-600 text-xs sm:text-sm">
-                  Không có công cụ nào khớp với từ khóa "{searchQuery}". Thầy/Cô vui lòng thử từ khóa khác.
+                <p className="text-xs text-slate-500 mb-4">
+                  Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ {activeApps.length} ứng dụng.
                 </p>
                 <button
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory('Tất cả');
                   }}
-                  className="mt-4 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#2563EB] font-bold text-xs transition-all inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-[#123A63] text-white text-xs font-bold hover:bg-blue-900 transition-colors shadow-sm"
                 >
-                  Đặt lại bộ lọc
+                  Xem tất cả ứng dụng
                 </button>
               </div>
             ) : (
