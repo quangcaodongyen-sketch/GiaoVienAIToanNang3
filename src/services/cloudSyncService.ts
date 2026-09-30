@@ -152,9 +152,44 @@ ${JSON.stringify(payloadData, null, 2)}
           };
         }
 
-        if (issue.labels?.some((l: any) => l.name === 'status:approved')) {
+        const titleUpper = (issue.title || '').toUpperCase();
+        const labelsList = (issue.labels || []).map((l: any) => (l.name || '').toLowerCase());
+
+        let approvedPkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | null = null;
+        if (labelsList.includes('package:2year') || labelsList.includes('2year') || titleUpper.includes('GÓI 2 NĂM') || titleUpper.includes('2 NĂM') || titleUpper.includes('2YEAR')) {
+          approvedPkg = '2YEAR';
+        } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM') || titleUpper.includes('3YEAR')) {
+          approvedPkg = '3YEAR';
+        } else if (labelsList.includes('package:full_web') || labelsList.includes('package:lifetime') || titleUpper.includes('VĨNH VIỄN') || titleUpper.includes('FULL_WEB') || titleUpper.includes('TRỌN BỘ') || titleUpper.includes('TRỌN ĐỜI')) {
+          approvedPkg = 'FULL_WEB';
+        } else if (labelsList.includes('package:1year') || titleUpper.includes('GÓI 1 NĂM') || titleUpper.includes('1 NĂM')) {
+          approvedPkg = '1YEAR';
+        }
+
+        if (approvedPkg) {
+          regData.packageType = approvedPkg;
+        }
+
+        const isApproved = labelsList.includes('status:approved') || (issue.state === 'closed' && !labelsList.includes('status:rejected'));
+        if (isApproved) {
           regData.status = 'APPROVED';
-        } else if (issue.labels?.some((l: any) => l.name === 'status:rejected')) {
+          const approvedTime = new Date(issue.closed_at || issue.updated_at || issue.created_at).getTime();
+          let durationDays = 365;
+          if (regData.packageType === '2YEAR') durationDays = 730;
+          else if (regData.packageType === '3YEAR') durationDays = 1095;
+          else if (regData.packageType === 'FULL_WEB') durationDays = 36500;
+
+          if (regData.packageType === 'FULL_WEB') {
+            regData.isLifetime = true;
+            regData.daysRemaining = 99999;
+            regData.expiryDateStr = 'Vĩnh viễn (Trọn đời)';
+          } else {
+            const expTime = approvedTime + durationDays * 86400 * 1000;
+            const expDateObj = new Date(expTime);
+            regData.expiryDateStr = `${String(expDateObj.getDate()).padStart(2, '0')}/${String(expDateObj.getMonth() + 1).padStart(2, '0')}/${expDateObj.getFullYear()}`;
+            regData.daysRemaining = Math.max(0, Math.ceil((expTime - Date.now()) / (86400 * 1000)));
+          }
+        } else if (labelsList.includes('status:rejected')) {
           regData.status = 'REJECTED';
         }
 
@@ -216,7 +251,9 @@ ${JSON.stringify(payloadData, null, 2)}
     reviewerName: string,
     packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5',
     licenseKey?: string,
-    expDate?: string
+    expDate?: string,
+    machineId?: string,
+    fullName?: string
   ): Promise<boolean> {
     try {
       const now = new Date().toLocaleString('vi-VN');
@@ -248,13 +285,18 @@ ${JSON.stringify(payloadData, null, 2)}
         body: JSON.stringify({ body: commentBody })
       });
 
+      const patchBody: any = {
+        state: 'closed',
+        labels: ['registration', 'status:approved', `package:${packageType.toLowerCase()}`]
+      };
+      if (machineId) {
+        patchBody.title = `[ĐÃ DUYỆT - ${pkgLabel.toUpperCase()}] ${machineId} - ${fullName || 'Giáo viên'}`;
+      }
+
       await fetch(`${GITHUB_API_URL}/issues/${issueNumber}`, {
         method: 'PATCH',
         headers: getHeaders(),
-        body: JSON.stringify({
-          state: 'closed',
-          labels: ['registration', 'status:approved']
-        })
+        body: JSON.stringify(patchBody)
       });
 
       return true;

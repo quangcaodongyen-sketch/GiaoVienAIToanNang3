@@ -445,7 +445,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         console.warn('Lỗi sinh key Ed25519 khi duyệt Cloud:', errKey);
       }
 
-      await cloudSyncService.approveRegistrationOnCloud(issueNumber, reviewer, pkg || '1YEAR', licenseKey, expDateStr);
+      const targetReqForCloud = reqList.find(r => r.id === id || r.issueNumber === issueNumber);
+      await cloudSyncService.approveRegistrationOnCloud(
+        issueNumber,
+        reviewer,
+        pkg || '1YEAR',
+        licenseKey,
+        expDateStr,
+        targetReqForCloud?.machineId,
+        targetReqForCloud?.fullName
+      );
     }
 
     alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
@@ -1730,7 +1739,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         <th className="py-3 px-3">ID Máy Tính & Ứng Dụng</th>
                         <th className="py-3 px-3">Giáo Viên & Đơn Vị</th>
                         <th className="py-3 px-3">Số ĐT / Zalo</th>
-                        <th className="py-3 px-3">Gói & Thời Gian Gửi</th>
+                        <th className="py-3 px-3">Gói & Thời Hạn Còn Lại</th>
                         <th className="py-3 px-3">Trạng Thái</th>
                         <th className="py-3 px-3 text-right">Kích Hoạt & Quản Trị</th>
                       </tr>
@@ -1810,18 +1819,62 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                 </div>
                               </td>
 
-                              {/* 4. Gói & Thời Gian Gửi */}
+                              {/* 4. Gói & Thời Hạn Còn Lại */}
                               <td className="py-3 px-3">
-                                <div className="font-semibold text-slate-200">
-                                  {req.packageType === 'FULL_WEB' ? '🌟 Full Web Trọn Bộ' :
-                                   req.packageType === '3YEAR' ? '👑 Gói 3 Năm VIP' :
-                                   req.packageType === '2YEAR' ? '👑 Gói 2 Năm VIP' :
-                                   req.packageType === '1YEAR' ? '📦 Gói 1 Năm' : '🎁 Dùng thử'}
+                                <div className="font-bold flex items-center gap-1.5 flex-wrap">
+                                  <span className={`px-2 py-0.5 rounded-md text-[11px] font-black ${
+                                    req.packageType === 'FULL_WEB' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' :
+                                    req.packageType === '3YEAR' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' :
+                                    req.packageType === '2YEAR' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
+                                    'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                                  }`}>
+                                    {req.packageType === 'FULL_WEB' ? '🌟 Full Web Vĩnh Viễn' :
+                                     req.packageType === '3YEAR' ? '👑 Gói 3 Năm VIP' :
+                                     req.packageType === '2YEAR' ? '👑 Gói 2 Năm VIP' :
+                                     req.packageType === '1YEAR' ? '📦 Gói 1 Năm' : '🎁 Dùng thử'}
+                                  </span>
                                 </div>
-                                <div className="font-mono text-slate-400 text-[10px] mt-0.5 flex items-center gap-1">
-                                  <Clock className="w-3 h-3 text-slate-500" />
-                                  <span>{req.createdAt || 'Mới đây'}</span>
-                                </div>
+
+                                {req.status === 'APPROVED' ? (
+                                  <div className="mt-1 flex items-center gap-1 flex-wrap">
+                                    {req.isLifetime || req.packageType === 'FULL_WEB' ? (
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-200 border border-purple-500/30 text-[10px] font-bold">
+                                        👑 Vĩnh viễn (Trọn đời)
+                                      </span>
+                                    ) : req.daysRemaining !== undefined ? (
+                                      req.daysRemaining <= 0 ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-600/50 text-[10px] font-bold">
+                                          ❌ Hết hạn ({req.expiryDateStr})
+                                        </span>
+                                      ) : req.daysRemaining <= 7 ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[10px] shadow-sm shadow-rose-500/40 animate-bounce">
+                                          🔥 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                        </span>
+                                      ) : req.daysRemaining <= 30 ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black animate-pulse">
+                                          ⚠️ Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                        </span>
+                                      ) : req.daysRemaining <= 60 ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-bold">
+                                          🔵 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                                          🟢 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                        </span>
+                                      )
+                                    ) : (
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                                        🟢 Đang hoạt động (Hạn: {req.expiryDateStr || 'Chuẩn'})
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="font-mono text-slate-400 text-[10px] mt-1 flex items-center gap-1">
+                                    <Clock className="w-3 h-3 text-slate-500" />
+                                    <span>Gửi: {req.createdAt || 'Mới đây'}</span>
+                                  </div>
+                                )}
                               </td>
 
                               {/* 5. Trạng Thái */}
@@ -2061,7 +2114,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           const isBlocked = blockedMachines.some(b => b.machineId === item.machineId);
                           const apps = Object.values(item.appsVisited || {});
 
-                          // Tính số ngày còn lại của bản quyền
+                          // Tính số ngày còn lại của bản quyền (đồng bộ cả Local và Cloud)
+                          const approvedReq = registrationRequests.find(r => r.machineId === item.machineId && r.status === 'APPROVED');
                           let licenseInfoText = '⏳ Dùng thử (Chưa kích hoạt VIP)';
                           let daysLeft = 0;
                           if (activeLicense) {
@@ -2073,6 +2127,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               const expDateStr = new Date(activeLicense.expiry_timestamp * 1000).toLocaleDateString('vi-VN');
                               const pkgLabelDisplay = (activeLicense.package_type === '3YEAR' || daysLeft > 730) ? '3 Năm Pro' : (activeLicense.package_type === '2YEAR' || daysLeft > 365) ? '2 Năm VIP' : '1 Năm';
                               licenseInfoText = `👑 Bản quyền ${pkgLabelDisplay} - Còn ${daysLeft} ngày (Hạn: ${expDateStr})`;
+                            }
+                          } else if (approvedReq) {
+                            const pkgLabelDisplay = approvedReq.packageType === 'FULL_WEB' ? 'Full Web Trọn Đời' : approvedReq.packageType === '3YEAR' ? '3 Năm Pro' : approvedReq.packageType === '2YEAR' ? '2 Năm VIP' : '1 Năm';
+                            if (approvedReq.packageType === 'FULL_WEB' || approvedReq.isLifetime) {
+                              licenseInfoText = '👑 Bản quyền Trọn Đời (Vĩnh viễn)';
+                            } else {
+                              const dLeft = approvedReq.daysRemaining !== undefined ? approvedReq.daysRemaining : 365;
+                              licenseInfoText = `👑 Bản quyền ${pkgLabelDisplay} - Còn ${dLeft} ngày (Hạn: ${approvedReq.expiryDateStr || '2 năm'})`;
                             }
                           } else {
                             licenseInfoText = `⏳ Dùng thử: Đã dùng ${item.trialUsed}/${item.trialMax} lượt`;

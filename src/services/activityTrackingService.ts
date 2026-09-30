@@ -74,6 +74,9 @@ export interface RegistrationRequest {
   createdAt: string;
   reviewedBy?: string;
   reviewedAt?: string;
+  daysRemaining?: number;
+  expiryDateStr?: string;
+  isLifetime?: boolean;
 }
 
 export interface BlockedMachineItem {
