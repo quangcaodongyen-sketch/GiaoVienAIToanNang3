@@ -27,8 +27,8 @@ interface ExpiredTrialPricingModalProps {
 export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> = ({
   isOpen,
   onClose,
-  appName = "Phần mềm Giáo viên THCS",
-  appId = "all-apps",
+  appName = "Tích Hợp NLS & AI Vào Giáo Án THCS",
+  appId = "tich-hop-nls-ai",
   hardwareCode = ""
 }) => {
   const [machineId, setMachineId] = useState(hardwareCode);

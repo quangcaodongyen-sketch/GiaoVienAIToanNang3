@@ -68,7 +68,7 @@ export interface RegistrationRequest {
   phoneNumber: string;
   appId: string;
   appName: string;
-  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME';
+  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME';
   price?: string;
   issueNumber?: number;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
@@ -317,8 +317,8 @@ class ActivityTrackingService {
       fullName: profile.fullName,
       schoolUnit: profile.schoolUnit,
       phoneNumber: profile.phoneNumber,
-      appId: payload.appId || 'all-apps',
-      appName: payload.appName || 'Tất Cả Các Phần Mềm',
+      appId: payload.appId || 'tich-hop-nls-ai',
+      appName: payload.appName || 'Tích Hợp NLS & AI Vào Giáo Án THCS',
       packageType: 'TRIAL_5',
       price: 'Miễn phí (5 lượt)'
     });
@@ -464,7 +464,7 @@ class ActivityTrackingService {
     phoneNumber: string;
     appId: string;
     appName: string;
-    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB';
+    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME';
     price?: string;
   }): RegistrationRequest {
     const list = this.getAllRegistrations();
@@ -472,7 +472,7 @@ class ActivityTrackingService {
     let priceText = 'Miễn phí';
     if (req.packageType === '1YEAR') priceText = 'Liên hệ Zalo';
     if (req.packageType === '2YEAR') priceText = 'Liên hệ Zalo';
-    if (req.packageType === 'FULL_WEB') priceText = 'Liên hệ Zalo';
+    if (req.packageType === '3YEAR') priceText = 'Liên hệ Zalo';
 
     // Cặp định danh duy nhất: (machineId + appId)
     // Nếu cùng máy và cùng App: CẬP NHẬT đè thông tin mới (không tạo rác nhiều bản ghi)
@@ -541,7 +541,7 @@ class ActivityTrackingService {
   public approveRegistration(
     id: string,
     reviewerName: string,
-    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME',
+    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME',
     fallbackItem?: RegistrationRequest
   ): { success: boolean; message: string } {
     let list = this.getAllRegistrations();
@@ -562,9 +562,8 @@ class ActivityTrackingService {
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
 
     // Kích hoạt VIP hoặc dùng thử
-    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR' || effectivePkg === '3YEAR' || effectivePkg === 'FULL_WEB') {
-      const pkgType = effectivePkg === 'FULL_WEB' ? 'LIFETIME' : effectivePkg;
-      licenseService.extend(item.machineId, pkgType, reviewerName);
+    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR' || effectivePkg === '3YEAR' || effectivePkg === 'LIFETIME') {
+      licenseService.extend(item.machineId, effectivePkg, reviewerName);
     } else {
       // Cấp thêm 5 lượt dùng thử
       const all = this.getAllTrackedMachines();
@@ -578,10 +577,10 @@ class ActivityTrackingService {
     this.logActivity(
       item.appId,
       item.appName,
-      `${reviewerName} đã DUYỆT đơn và nâng cấp gói ${effectivePkg === 'FULL_WEB' ? 'Full Web (VIP)' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử'} cho [${item.fullName} - ${item.machineId}]`
+      `${reviewerName} đã DUYỆT đơn và nâng cấp gói ${effectivePkg === 'LIFETIME' ? 'Trọn Đời' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử'} cho [${item.fullName} - ${item.machineId}]`
     );
 
-    const pkgMsgLabel = effectivePkg === 'FULL_WEB' ? 'Full Web (VIP)' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử';
+    const pkgMsgLabel = effectivePkg === 'LIFETIME' ? 'Trọn Đời' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử';
     return {
       success: true,
       message: `Đã duyệt thành công Gói [${pkgMsgLabel}] cho Thầy/Cô ${item.fullName} (${item.machineId}) bởi ${reviewerName}!`

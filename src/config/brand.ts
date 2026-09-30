@@ -152,13 +152,12 @@ export const PRICING = {
     promoDeadlineShort: 'Ưu đãi 2026',
     saveAmount: 'Ưu đãi sư phạm'
   },
-  // Gói Full Web Hệ Sinh Thái (Mở khóa tất cả các app)
-  fullWeb: {
+  // Gói 3 Năm cho từng app
+  year3: {
     price: 0,
     priceFormatted: 'Báo giá qua Zalo',
-    title: 'GÓI FULL WEB TOÀN NĂNG (TẤT CẢ PHẦN MỀM)',
-    description: 'Mở khóa trọn bộ toàn bộ các app trên web: Tạo đề 7 môn, Tiếng Anh Global Success, Giáo án 5512 & NĐ 30, Sinh 3 đề biến thể, Dọn rác PC, PDF Suite Pro, Năng lực số AI...',
-    badge: '👑 ƯU ĐÃI SƯ PHẠM - DÙNG FULL APP'
+    duration: '3 năm học (36 tháng)',
+    note: 'Sử dụng trọn vẹn 3 năm học cho 1 ứng dụng chuyên môn'
   },
   // Số lượt dùng thử miễn phí
   trial: {

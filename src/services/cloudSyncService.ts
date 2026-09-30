@@ -36,7 +36,7 @@ class CloudSyncService {
     phoneNumber: string;
     appId: string;
     appName: string;
-    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME';
+    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME';
     price?: string;
     createdAt?: string;
   }): Promise<{ success: boolean; issueNumber?: number; message: string }> {
@@ -63,7 +63,7 @@ class CloudSyncService {
 - **Số điện thoại / Zalo:** ${req.phoneNumber}
 - **ID Máy tính:** \`${req.machineId}\`
 - **Ứng dụng đăng ký:** ${req.appName}
-- **Gói đăng ký:** **${req.packageType === '1YEAR' ? 'Gói 1 Năm' : req.packageType === '2YEAR' ? 'Gói 2 Năm VIP' : req.packageType === 'FULL_WEB' ? 'Gói Full Web' : 'Dùng thử 5 lần'}**
+- **Gói đăng ký:** **${req.packageType === '3YEAR' ? 'Gói 3 Năm Pro' : req.packageType === '2YEAR' ? 'Gói 2 Năm VIP' : req.packageType === '1YEAR' ? 'Gói 1 Năm' : 'Dùng thử 5 lần'}**
 - **Thời gian gửi:** ${now}
 
 \`\`\`gvai-reg
@@ -75,7 +75,7 @@ ${JSON.stringify(payloadData, null, 2)}
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({
-          title: `[ĐĂNG KÝ CLOUD] ${req.machineId} - ${req.fullName} - ${req.packageType === '1YEAR' ? 'Gói 1 Năm' : req.packageType === '2YEAR' ? 'Gói 2 Năm VIP' : req.packageType === 'FULL_WEB' ? 'Full Web' : 'Dùng thử'}`,
+          title: `[ĐĂNG KÝ CLOUD] ${req.machineId} - ${req.fullName} - ${req.appName} - ${req.packageType === '3YEAR' ? 'Gói 3 Năm' : req.packageType === '2YEAR' ? 'Gói 2 Năm' : req.packageType === '1YEAR' ? 'Gói 1 Năm' : 'Dùng thử'}`,
           body: bodyText,
           labels: ['registration', 'status:pending']
         })
@@ -143,8 +143,8 @@ ${JSON.stringify(payloadData, null, 2)}
             fullName: issue.user?.login || 'Giáo viên',
             schoolUnit: 'Trường THCS Đồng Yên',
             phoneNumber: '0915.213717',
-            appId: 'all-apps',
-            appName: 'Tất Cả Hệ Sinh Thái',
+            appId: 'tich-hop-nls-ai',
+            appName: 'Tích Hợp NLS & AI Vào Giáo Án THCS',
             packageType: issue.title.includes('2YEAR') || issue.title.includes('2 Năm') ? '2YEAR' : '1YEAR',
             price: 'Liên hệ Zalo',
             status: issue.labels?.some((l: any) => l.name === 'status:approved') ? 'APPROVED' : issue.state === 'closed' ? 'APPROVED' : 'PENDING',
@@ -155,13 +155,13 @@ ${JSON.stringify(payloadData, null, 2)}
         const titleUpper = (issue.title || '').toUpperCase();
         const labelsList = (issue.labels || []).map((l: any) => (l.name || '').toLowerCase());
 
-        let approvedPkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | null = null;
+        let approvedPkg: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | null = null;
         if (labelsList.includes('package:2year') || labelsList.includes('2year') || titleUpper.includes('GÓI 2 NĂM') || titleUpper.includes('2 NĂM') || titleUpper.includes('2YEAR')) {
           approvedPkg = '2YEAR';
         } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM') || titleUpper.includes('3YEAR')) {
           approvedPkg = '3YEAR';
-        } else if (labelsList.includes('package:full_web') || labelsList.includes('package:lifetime') || titleUpper.includes('VĨNH VIỄN') || titleUpper.includes('FULL_WEB') || titleUpper.includes('TRỌN BỘ') || titleUpper.includes('TRỌN ĐỜI')) {
-          approvedPkg = 'FULL_WEB';
+        } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM')) {
+          approvedPkg = '3YEAR';
         } else if (labelsList.includes('package:1year') || titleUpper.includes('GÓI 1 NĂM') || titleUpper.includes('1 NĂM')) {
           approvedPkg = '1YEAR';
         }
@@ -177,9 +177,9 @@ ${JSON.stringify(payloadData, null, 2)}
           let durationDays = 365;
           if (regData.packageType === '2YEAR') durationDays = 730;
           else if (regData.packageType === '3YEAR') durationDays = 1095;
-          else if (regData.packageType === 'FULL_WEB') durationDays = 36500;
+          else if (regData.packageType === 'LIFETIME') durationDays = 36500;
 
-          if (regData.packageType === 'FULL_WEB') {
+          if (regData.packageType === 'LIFETIME') {
             regData.isLifetime = true;
             regData.daysRemaining = 99999;
             regData.expiryDateStr = 'Vĩnh viễn (Trọn đời)';
@@ -249,7 +249,7 @@ ${JSON.stringify(payloadData, null, 2)}
   public async approveRegistrationOnCloud(
     issueNumber: number,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME',
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME',
     licenseKey?: string,
     expDate?: string,
     machineId?: string,
@@ -257,7 +257,7 @@ ${JSON.stringify(payloadData, null, 2)}
   ): Promise<boolean> {
     try {
       const now = new Date().toLocaleString('vi-VN');
-      const pkgLabel = packageType === 'FULL_WEB' ? 'Full Web' : packageType === '3YEAR' ? '3 Năm Pro' : packageType === '2YEAR' ? '2 Năm VIP' : packageType === '1YEAR' ? '1 Năm' : 'Dùng thử 5 lần';
+      const pkgLabel = packageType === '3YEAR' ? '3 Năm Pro' : packageType === '2YEAR' ? '2 Năm VIP' : packageType === '1YEAR' ? '1 Năm' : packageType === 'LIFETIME' ? 'Trọn Đời' : 'Dùng thử 5 lần';
 
       const keyLine = licenseKey ? `\n- **Mã kích hoạt Ed25519:** \`${licenseKey}\`\n- **Hạn dùng:** **${expDate || 'Vĩnh viễn'}**` : '';
       const keyJson = licenseKey ? `,\n  "key": "${licenseKey}",\n  "expDate": "${expDate || ''}"` : '';
@@ -310,7 +310,7 @@ ${JSON.stringify(payloadData, null, 2)}
   public async ensureAndApproveMachineOnCloud(
     machineId: string,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME',
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME',
     licenseKey?: string,
     expDate?: string,
     fullName?: string,
@@ -523,7 +523,7 @@ ${JSON.stringify(payloadData, null, 2)}
   // Kiểm tra máy tính hiện tại trên Cloud xem đã được duyệt hay bị khóa chưa
   public async checkCurrentMachineCloudStatus(machineId: string): Promise<{
     isApproved: boolean;
-    packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'FULL_WEB' | 'LIFETIME';
+    packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME';
     approvedBy?: string;
     approvedAt?: string;
     isBlocked: boolean;

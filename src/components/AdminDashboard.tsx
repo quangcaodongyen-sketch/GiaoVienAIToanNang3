@@ -425,7 +425,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // HÀM KÍCH HOẠT THEO NĂM CHÍNH THỨC CỦA ADMIN (1 NĂM, 2 NĂM, 3 NĂM, TRỌN ĐỜI)
   const handleActivateMachineByYear = async (
     machineId: string,
-    pkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME' = '1YEAR',
+    pkg: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME' = '1YEAR',
     options?: {
       issueNumber?: number;
       fullName?: string;
@@ -445,9 +445,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     const opKey = `${cleanMid}_${pkg}`;
     setApprovingId(opKey);
 
-    const years = pkg === '3YEAR' ? 3 : pkg === '2YEAR' ? 2 : pkg === 'FULL_WEB' ? 99 : 1;
+    const years = pkg === '3YEAR' ? 3 : pkg === '2YEAR' ? 2 : pkg === 'LIFETIME' ? 99 : 1;
     const durationDays = years === 99 ? 36500 : years * 365;
-    const pkgLabel = pkg === 'FULL_WEB' ? 'Full Web Trọn Đời' : pkg === '3YEAR' ? 'Gói 3 Năm Pro' : pkg === '2YEAR' ? 'Gói 2 Năm VIP' : pkg === 'TRIAL_5' ? 'Dùng thử 5 lần' : 'Gói 1 Năm';
+    const pkgLabel = pkg === 'LIFETIME' ? 'Bản quyền Trọn Đời' : pkg === '3YEAR' ? 'Gói 3 Năm Pro' : pkg === '2YEAR' ? 'Gói 2 Năm VIP' : pkg === 'TRIAL_5' ? 'Dùng thử 5 lần' : 'Gói 1 Năm';
 
     setActionNotice({
       type: 'loading',
@@ -490,7 +490,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         teacher_name: effectiveFullName,
         phone_zalo: effectivePhone,
         school_unit: effectiveSchool,
-        package_type: pkg === 'FULL_WEB' ? 'LIFETIME' : (pkg === 'TRIAL_5' ? '1YEAR' : pkg),
+        package_type: (pkg === 'TRIAL_5' ? '1YEAR' : pkg),
         status: 'ACTIVE',
         expiry_timestamp: expTs,
         notes: `Kích hoạt ${pkgLabel} bởi ${reviewer}`
@@ -608,7 +608,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5', issueNumber?: number) => {
     const targetReq = registrationRequests.find(r => r.id === id || (issueNumber && r.issueNumber === issueNumber));
     const mid = targetReq?.machineId || id;
     await handleActivateMachineByYear(mid, pkg || '1YEAR', {
@@ -1979,21 +1979,21 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               <td className="py-3 px-3">
                                 <div className="font-bold flex items-center gap-1.5 flex-wrap">
                                   <span className={`px-2 py-0.5 rounded-md text-[11px] font-black ${
-                                    req.packageType === 'FULL_WEB' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' :
                                     req.packageType === '3YEAR' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' :
                                     req.packageType === '2YEAR' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
+                                    req.packageType === 'LIFETIME' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' :
                                     'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                                   }`}>
-                                    {req.packageType === 'FULL_WEB' ? '🌟 Full Web Vĩnh Viễn' :
-                                     req.packageType === '3YEAR' ? '👑 Gói 3 Năm VIP' :
+                                    {req.packageType === '3YEAR' ? '👑 Gói 3 Năm VIP' :
                                      req.packageType === '2YEAR' ? '👑 Gói 2 Năm VIP' :
-                                     req.packageType === '1YEAR' ? '📦 Gói 1 Năm' : '🎁 Dùng thử'}
+                                     req.packageType === '1YEAR' ? '📦 Gói 1 Năm' :
+                                     req.packageType === 'LIFETIME' ? '🌟 Trọn Đời' : '🎁 Dùng thử'}
                                   </span>
                                 </div>
 
                                 {req.status === 'APPROVED' ? (
                                   <div className="mt-1 flex items-center gap-1 flex-wrap">
-                                    {req.isLifetime || req.packageType === 'FULL_WEB' ? (
+                                    {req.isLifetime || req.packageType === 'LIFETIME' ? (
                                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-200 border border-purple-500/30 text-[10px] font-bold">
                                         👑 Vĩnh viễn (Trọn đời)
                                       </span>
@@ -2336,8 +2336,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               licenseInfoText = `👑 Bản quyền ${pkgLabelDisplay} - Còn ${daysLeft} ngày (Hạn: ${expDateStr})`;
                             }
                           } else if (approvedReq) {
-                            const pkgLabelDisplay = approvedReq.packageType === 'FULL_WEB' ? 'Full Web Trọn Đời' : approvedReq.packageType === '3YEAR' ? '3 Năm Pro' : approvedReq.packageType === '2YEAR' ? '2 Năm VIP' : '1 Năm';
-                            if (approvedReq.packageType === 'FULL_WEB' || approvedReq.isLifetime) {
+                            const pkgLabelDisplay = approvedReq.packageType === '3YEAR' ? '3 Năm Pro' : approvedReq.packageType === '2YEAR' ? '2 Năm VIP' : approvedReq.packageType === 'LIFETIME' ? 'Trọn Đời' : '1 Năm';
+                            if (approvedReq.packageType === 'LIFETIME' || approvedReq.isLifetime) {
                               licenseInfoText = '👑 Bản quyền Trọn Đời (Vĩnh viễn)';
                             } else {
                               const dLeft = approvedReq.daysRemaining !== undefined ? approvedReq.daysRemaining : 365;
