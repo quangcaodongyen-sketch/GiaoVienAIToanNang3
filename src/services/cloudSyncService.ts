@@ -9,7 +9,7 @@ const DEFAULT_CLOUD_TOKEN = '6q9J51v5Ou3gYOM6b9dS7BfDi6X5QqagLEhG_ohg'.split('')
 const getCloudKey = (): string => {
   if (typeof window !== 'undefined') {
     const local = localStorage.getItem('gvai_cloud_sync_token');
-    if (local) return local.trim();
+    if (local && local.trim().length > 10) return local.trim();
   }
   const envToken = (import.meta as any).env?.VITE_CLOUD_TOKEN;
   return envToken || DEFAULT_CLOUD_TOKEN;
@@ -303,6 +303,77 @@ ${JSON.stringify(payloadData, null, 2)}
     } catch (e) {
       console.error('Lỗi duyệt trên Cloud:', e);
       return false;
+    }
+  }
+
+  // Đảm bảo và kích hoạt bản quyền cho máy tính trên Cloud (tự tìm issue hoặc tạo mới nếu chưa có)
+  public async ensureAndApproveMachineOnCloud(
+    machineId: string,
+    reviewerName: string,
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB',
+    licenseKey?: string,
+    expDate?: string,
+    fullName?: string,
+    phoneNumber?: string,
+    schoolUnit?: string,
+    appId?: string,
+    appName?: string
+  ): Promise<{ success: boolean; issueNumber?: number; message: string }> {
+    try {
+      const cleanMid = machineId.trim().toUpperCase();
+      // 1. Tìm issue hiện có trên GitHub
+      const cloudRegs = await this.fetchRegistrationsFromCloud();
+      const existing = cloudRegs.find(c => c.machineId === cleanMid);
+
+      if (existing && existing.issueNumber) {
+        const ok = await this.approveRegistrationOnCloud(
+          existing.issueNumber,
+          reviewerName,
+          packageType,
+          licenseKey,
+          expDate,
+          cleanMid,
+          fullName || existing.fullName
+        );
+        return {
+          success: ok,
+          issueNumber: existing.issueNumber,
+          message: ok ? Đã đồng bộ kích hoạt lên Cloud (Issue #) : 'Lỗi cập nhật Cloud'
+        };
+      }
+
+      // 2. Chưa có issue -> Tạo đơn đăng ký mới trên Cloud và duyệt ngay
+      const submitRes = await this.submitRegistrationToCloud({
+        machineId: cleanMid,
+        fullName: fullName || 'Thầy/Cô Giáo viên',
+        schoolUnit: schoolUnit || 'Trường THCS',
+        phoneNumber: phoneNumber || '0915213717',
+        appId: appId || 'nls_ai_thcs',
+        appName: appName || 'Tích Hợp NLS - AI THCS',
+        packageType: packageType
+      });
+
+      if (submitRes.success && submitRes.issueNumber) {
+        const ok = await this.approveRegistrationOnCloud(
+          submitRes.issueNumber,
+          reviewerName,
+          packageType,
+          licenseKey,
+          expDate,
+          cleanMid,
+          fullName
+        );
+        return {
+          success: ok,
+          issueNumber: submitRes.issueNumber,
+          message: ok ? Đã tạo mới và duyệt Cloud (Issue #) : 'Lỗi cập nhật Cloud'
+        };
+      }
+
+      return { success: false, message: submitRes.message || 'Không thể tạo đơn trên Cloud' };
+    } catch (e: any) {
+      console.error('Lỗi ensureAndApproveMachineOnCloud:', e);
+      return { success: false, message: e.message || String(e) };
     }
   }
 

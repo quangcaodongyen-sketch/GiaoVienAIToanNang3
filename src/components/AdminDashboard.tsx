@@ -81,6 +81,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [logSearch, setLogSearch] = useState('');
   const [reqFilter, setReqFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'error' | 'loading'; title: string; message: string } | null>(null);
+  const [activationSuccessData, setActivationSuccessData] = useState<{
+    machineId: string;
+    teacherName: string;
+    phone?: string;
+    packageLabel: string;
+    daysRemaining: number;
+    expDate: string;
+    licenseKey: string;
+    zaloMsg: string;
+    reviewer: string;
+  } | null>(null);
+  const [copiedSuccessKey, setCopiedSuccessKey] = useState(false);
+  const [copiedSuccessZalo, setCopiedSuccessZalo] = useState(false);
   const [regSearchTerm, setRegSearchTerm] = useState('');
   const [regAppFilter, setRegAppFilter] = useState('ALL');
   const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
@@ -255,6 +269,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setAdminTab('tracking');
       setPinError(false);
       loadTrackingData();
+      loadData();
     } else if (
       cleanPin === 'Tiemgiang123@' ||
       normalized === 'tiemgiang123@' ||
@@ -407,69 +422,204 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
-    const opKey = `${id || ''}_${issueNumber || ''}_${pkg || ''}`;
+  // HÀM KÍCH HOẠT THEO NĂM CHÍNH THỨC CỦA ADMIN (1 NĂM, 2 NĂM, 3 NĂM, TRỌN ĐỜI)
+  const handleActivateMachineByYear = async (
+    machineId: string,
+    pkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' = '1YEAR',
+    options?: {
+      issueNumber?: number;
+      fullName?: string;
+      schoolUnit?: string;
+      phoneNumber?: string;
+      appId?: string;
+      appName?: string;
+      reqId?: string;
+    }
+  ) => {
+    const cleanMid = (machineId || '').trim().toUpperCase();
+    if (!cleanMid) {
+      setActionNotice({ type: 'error', title: 'Thiếu thông tin', message: 'Vui lòng cung cấp Mã máy cần kích hoạt!' });
+      return;
+    }
+
+    const opKey = `${cleanMid}_${pkg}`;
+    setApprovingId(opKey);
+
+    const years = pkg === '3YEAR' ? 3 : pkg === '2YEAR' ? 2 : pkg === 'FULL_WEB' ? 99 : 1;
+    const durationDays = years === 99 ? 36500 : years * 365;
+    const pkgLabel = pkg === 'FULL_WEB' ? 'Full Web Trọn Đời' : pkg === '3YEAR' ? 'Gói 3 Năm Pro' : pkg === '2YEAR' ? 'Gói 2 Năm VIP' : pkg === 'TRIAL_5' ? 'Dùng thử 5 lần' : 'Gói 1 Năm';
+
+    setActionNotice({
+      type: 'loading',
+      title: 'Đang Xử Lý Kích Hoạt...',
+      message: `Đang cấp phép [${pkgLabel}] cho máy [${cleanMid}] và đồng bộ lên GitHub Cloud...`
+    });
+
     try {
-      setApprovingId(opKey);
-      const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
-      const targetReq = registrationRequests.find(r => r.id === id || (issueNumber && r.issueNumber === issueNumber));
-      const res = activityTrackingService.approveRegistration(id, reviewer, pkg, targetReq);
+      const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình - Phó Quản trị' : 'Thầy Đinh Văn Thành (Admin)');
+      const effectiveFullName = options?.fullName || 'Thầy/Cô Giáo viên';
+      const effectivePhone = options?.phoneNumber || '';
+      const effectiveSchool = options?.schoolUnit || '';
+      const effectiveAppId = options?.appId || 'nls_ai_thcs';
+      const effectiveAppName = options?.appName || 'Tích Hợp NLS - AI THCS';
 
-      // Đồng bộ duyệt lên Cloud kèm Key Ed25519 được ký số tự động tức thì
-      if (issueNumber) {
-        let licenseKey = '';
-        let expDateStr = '';
-        try {
-          if (targetReq && targetReq.machineId) {
-            const mid = targetReq.machineId.trim();
-            let years = 1;
-            if (pkg === '2YEAR') years = 2;
-            else if (pkg === '3YEAR') years = 3;
-            else if (pkg === 'FULL_WEB') years = 99;
-
-            let appTag = 'NLS';
-            let productId = 'NLS_AI_THCS';
-            const appIdLower = (targetReq.appId || '').toLowerCase();
-            if (appIdLower.includes('15p') || appIdLower.includes('taode-15p')) {
-              appTag = 'ENG15';
-              productId = 'ENG15';
-            } else if (appIdLower.includes('tienganh') || appIdLower.includes('taode-tienganh')) {
-              appTag = 'ENG';
-              productId = 'ENG';
-            } else if (appIdLower.includes('taode')) {
-              appTag = 'TAODE';
-              productId = 'TAODE';
-            }
-
-            const genRes = await generateEd25519Key(mid, years, appTag, productId);
-            licenseKey = genRes.key;
-            expDateStr = genRes.expDate;
-          }
-        } catch (errKey) {
-          console.warn('Lỗi sinh key Ed25519 khi duyệt Cloud:', errKey);
-        }
-
-        const targetReqForCloud = targetReq;
-        await cloudSyncService.approveRegistrationOnCloud(
-          issueNumber,
-          reviewer,
-          pkg || '1YEAR',
-          licenseKey,
-          expDateStr,
-          targetReqForCloud?.machineId,
-          targetReqForCloud?.fullName
-        );
+      // 1. Sinh Mã Key Ed25519 được ký số an toàn
+      let licenseKey = '';
+      let expDateStr = '';
+      let zaloMsg = '';
+      try {
+        const appTag = effectiveAppId.includes('15p') ? 'ENG15' : effectiveAppId.includes('tienganh') ? 'ENG' : effectiveAppId.includes('taode') ? 'TAODE' : 'NLS';
+        const prodId = appTag === 'ENG15' ? 'ENG15' : appTag === 'ENG' ? 'ENG' : appTag === 'TAODE' ? 'TAODE' : 'NLS_AI_THCS';
+        const genRes = await generateEd25519Key(cleanMid, years, appTag, prodId);
+        licenseKey = genRes.key;
+        expDateStr = genRes.expDate;
+        zaloMsg = genRes.zaloMessage;
+      } catch (errKey) {
+        console.warn('Lỗi sinh key Ed25519:', errKey);
+        const d = new Date();
+        d.setDate(d.getDate() + durationDays);
+        expDateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       }
 
-      alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
-      await loadTrackingData();
-      await loadData();
+      // 2. Lưu vào CSDL nội bộ (activityTrackingService + licenseService)
+      const nowTs = Math.floor(Date.now() / 1000);
+      const expTs = years === 99 ? 9999999999 : nowTs + durationDays * 86400;
+
+      await licenseService.createDirect({
+        machine_id: cleanMid,
+        teacher_name: effectiveFullName,
+        phone_zalo: effectivePhone,
+        school_unit: effectiveSchool,
+        package_type: pkg === 'FULL_WEB' ? 'LIFETIME' : (pkg === 'TRIAL_5' ? '1YEAR' : pkg),
+        status: 'ACTIVE',
+        expiry_timestamp: expTs,
+        notes: `Kích hoạt ${pkgLabel} bởi ${reviewer}`
+      }, reviewer);
+
+      const targetReq = registrationRequests.find(r => r.machineId === cleanMid || (options?.reqId && r.id === options.reqId));
+      activityTrackingService.approveRegistration(
+        options?.reqId || `REG-${cleanMid}`,
+        reviewer,
+        pkg,
+        targetReq || {
+          id: options?.reqId || `REG-${cleanMid}`,
+          machineId: cleanMid,
+          fullName: effectiveFullName,
+          schoolUnit: effectiveSchool,
+          phoneNumber: effectivePhone,
+          appId: effectiveAppId,
+          appName: effectiveAppName,
+          packageType: pkg,
+          status: 'APPROVED',
+          createdAt: new Date().toLocaleString('vi-VN')
+        }
+      );
+
+      // 3. Đồng bộ lên GitHub Cloud an toàn
+      try {
+        let issueNum = options?.issueNumber || targetReq?.issueNumber;
+        if (issueNum) {
+          await cloudSyncService.approveRegistrationOnCloud(
+            issueNum,
+            reviewer,
+            pkg,
+            licenseKey,
+            expDateStr,
+            cleanMid,
+            effectiveFullName
+          );
+        } else {
+          await cloudSyncService.ensureAndApproveMachineOnCloud(
+            cleanMid,
+            reviewer,
+            pkg === 'TRIAL_5' ? '1YEAR' : pkg,
+            licenseKey,
+            expDateStr,
+            effectiveFullName,
+            effectivePhone,
+            effectiveSchool,
+            effectiveAppId,
+            effectiveAppName
+          );
+        }
+      } catch (errCloud) {
+        console.error('Lỗi đồng bộ GitHub Cloud:', errCloud);
+      }
+
+      // 4. Cập nhật state UI tức thì trong 0.01 giây
+      setRegistrationRequests(prev => prev.map(r => {
+        if (r.machineId === cleanMid || (options?.reqId && r.id === options.reqId)) {
+          return {
+            ...r,
+            status: 'APPROVED',
+            packageType: pkg,
+            reviewedBy: reviewer,
+            reviewedAt: new Date().toLocaleString('vi-VN'),
+            daysRemaining: durationDays,
+            expiryDateStr: expDateStr
+          };
+        }
+        return r;
+      }));
+
+      setTrackedMachines(prev => prev.map(m => {
+        if (m.machineId === cleanMid) {
+          return {
+            ...m,
+            trialUsed: m.trialMax,
+            isRegisteredTrial: true
+          };
+        }
+        return m;
+      }));
+
+      // Tải lại nền
+      loadData();
+      loadTrackingData();
+
+      // 5. Hiển thị thông báo thành công và Modal Key
+      setActionNotice({
+        type: 'success',
+        title: 'Kích Hoạt Thành Công!',
+        message: `Đã kích hoạt ${pkgLabel} cho máy [${cleanMid}]. Hệ thống Cloud và máy giáo viên đã nhận bản quyền!`
+      });
+
+      setActivationSuccessData({
+        machineId: cleanMid,
+        teacherName: effectiveFullName,
+        phone: effectivePhone,
+        packageLabel: pkgLabel,
+        daysRemaining: durationDays,
+        expDate: expDateStr,
+        licenseKey: licenseKey,
+        zaloMsg: zaloMsg,
+        reviewer: reviewer
+      });
+
     } catch (err: any) {
       console.error('Lỗi khi kích hoạt đơn:', err);
-      alert('⚠️ Có lỗi xảy ra khi kích hoạt: ' + (err?.message || String(err)));
+      setActionNotice({
+        type: 'error',
+        title: 'Có Lỗi Xảy Ra',
+        message: 'Lỗi kích hoạt: ' + (err?.message || String(err))
+      });
     } finally {
       setApprovingId(null);
     }
+  };
+
+  const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
+    const targetReq = registrationRequests.find(r => r.id === id || (issueNumber && r.issueNumber === issueNumber));
+    const mid = targetReq?.machineId || id;
+    await handleActivateMachineByYear(mid, pkg || '1YEAR', {
+      issueNumber: issueNumber || targetReq?.issueNumber,
+      fullName: targetReq?.fullName,
+      schoolUnit: targetReq?.schoolUnit,
+      phoneNumber: targetReq?.phoneNumber,
+      appId: targetReq?.appId,
+      appName: targetReq?.appName,
+      reqId: id
+    });
   };
 
   const handleRejectReq = async (id: string, issueNumber?: number) => {
@@ -1193,27 +1343,23 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
   const handleCreateDirect = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMid.trim()) return;
-    const nowTs = Math.floor(Date.now() / 1000);
-    const expTs = newPkg === 'LIFETIME' ? 9999999999 : nowTs + 365 * 86400;
+    const mid = newMid.trim().toUpperCase();
+    const name = newName.trim() || 'Thầy/Cô';
+    const phone = newPhone.trim();
+    const school = newSchool.trim();
+    const pkg = newPkg;
 
-    await licenseService.createDirect({
-      machine_id: newMid.trim().toUpperCase(),
-      teacher_name: newName.trim() || 'Thầy/Cô',
-      phone_zalo: newPhone.trim(),
-      school_unit: newSchool.trim(),
-      package_type: newPkg,
-      status: 'ACTIVE',
-      expiry_timestamp: expTs,
-      notes: 'Admin tạo trực tiếp',
-      activated_by: currentAdminName || 'Thầy Đinh Văn Thành'
-    });
-
+    setShowCreateModal(false);
     setNewMid('');
     setNewName('');
     setNewPhone('');
     setNewSchool('');
-    setShowCreateModal(false);
-    await loadData();
+
+    await handleActivateMachineByYear(mid, pkg, {
+      fullName: name,
+      phoneNumber: phone,
+      schoolUnit: school
+    });
   };
 
   const handleSaveConfig = (e: React.FormEvent) => {
@@ -1915,34 +2061,82 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   <button
                                     type="button"
                                     disabled={approvingId !== null}
-                                    onClick={() => handleApproveReq(req.id, '1YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-emerald-600/30 transition cursor-pointer flex items-center gap-1"
-                                    title="Duyệt và kích hoạt bản quyền 1 Năm cho GV này"
+                                    onClick={() => handleActivateMachineByYear(
+                                      req.machineId,
+                                      '1YEAR',
+                                      {
+                                        issueNumber: req.issueNumber,
+                                        fullName: req.fullName,
+                                        phoneNumber: req.phoneNumber,
+                                        schoolUnit: req.schoolUnit,
+                                        appId: req.appId,
+                                        appName: req.appName,
+                                        reqId: req.id
+                                      }
+                                    )}
+                                    className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-emerald-600/30 transition cursor-pointer flex items-center gap-1"
+                                    title="Kích hoạt bản quyền 1 Năm (365 ngày)"
                                   >
-                                    <Check className="w-3 h-3" />
-                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_1YEAR` ? 'Đang duyệt...' : '1 Năm'}</span>
+                                    {approvingId === `${req.machineId}_1YEAR` ? (
+                                      <RefreshCw className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <Check className="w-3 h-3" />
+                                    )}
+                                    <span>{approvingId === `${req.machineId}_1YEAR` ? 'Đang kích hoạt...' : '1 Năm'}</span>
                                   </button>
 
                                   <button
                                     type="button"
                                     disabled={approvingId !== null}
-                                    onClick={() => handleApproveReq(req.id, '2YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-amber-600/30 transition cursor-pointer flex items-center gap-1"
-                                    title="Duyệt và kích hoạt bản quyền 2 Năm cho GV này"
+                                    onClick={() => handleActivateMachineByYear(
+                                      req.machineId,
+                                      '2YEAR',
+                                      {
+                                        issueNumber: req.issueNumber,
+                                        fullName: req.fullName,
+                                        phoneNumber: req.phoneNumber,
+                                        schoolUnit: req.schoolUnit,
+                                        appId: req.appId,
+                                        appName: req.appName,
+                                        reqId: req.id
+                                      }
+                                    )}
+                                    className="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-amber-600/30 transition cursor-pointer flex items-center gap-1"
+                                    title="Kích hoạt bản quyền 2 Năm (730 ngày)"
                                   >
-                                    <Crown className="w-3 h-3" />
-                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_2YEAR` ? 'Đang duyệt...' : '2 Năm'}</span>
+                                    {approvingId === `${req.machineId}_2YEAR` ? (
+                                      <RefreshCw className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <Crown className="w-3 h-3" />
+                                    )}
+                                    <span>{approvingId === `${req.machineId}_2YEAR` ? 'Đang kích hoạt...' : '2 Năm'}</span>
                                   </button>
 
                                   <button
                                     type="button"
                                     disabled={approvingId !== null}
-                                    onClick={() => handleApproveReq(req.id, '3YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-indigo-600/30 transition cursor-pointer flex items-center gap-1"
-                                    title="Duyệt và kích hoạt bản quyền 3 Năm cho GV này"
+                                    onClick={() => handleActivateMachineByYear(
+                                      req.machineId,
+                                      '3YEAR',
+                                      {
+                                        issueNumber: req.issueNumber,
+                                        fullName: req.fullName,
+                                        phoneNumber: req.phoneNumber,
+                                        schoolUnit: req.schoolUnit,
+                                        appId: req.appId,
+                                        appName: req.appName,
+                                        reqId: req.id
+                                      }
+                                    )}
+                                    className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-indigo-600/30 transition cursor-pointer flex items-center gap-1"
+                                    title="Kích hoạt bản quyền 3 Năm (1095 ngày)"
                                   >
-                                    <Sparkles className="w-3 h-3" />
-                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_3YEAR` ? 'Đang duyệt...' : '3 Năm'}</span>
+                                    {approvingId === `${req.machineId}_3YEAR` ? (
+                                      <RefreshCw className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <Sparkles className="w-3 h-3" />
+                                    )}
+                                    <span>{approvingId === `${req.machineId}_3YEAR` ? 'Đang kích hoạt...' : '3 Năm'}</span>
                                   </button>
 
                                   {/* Nút Tạm Khóa Máy */}
@@ -2265,78 +2459,66 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               <td className="py-2.5 px-3 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
                                   {/* CÁC NÚT KÍCH HOẠT 1, 2, 3 NĂM */}
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1.5">
                                     <button
                                       type="button"
-                                      onClick={async () => {
-                                        const nowTs = Math.floor(Date.now() / 1000);
-                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
-                                        await licenseService.createDirect({
-                                          machine_id: item.machineId,
-                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
-                                          phone_zalo: item.phoneNumber || '',
-                                          school_unit: item.schoolUnit || '',
-                                          package_type: '1YEAR',
-                                          status: 'ACTIVE',
-                                          expiry_timestamp: currentExp + 365 * 86400,
-                                          notes: `Kích hoạt 1 Năm bởi ${currentAdminName}`
-                                        }, currentAdminName);
-                                        await loadData();
-                                        loadTrackingData();
-                                        alert(`Đã kích hoạt Gói 1 Năm cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
-                                      }}
-                                      className="px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      disabled={approvingId !== null}
+                                      onClick={() => handleActivateMachineByYear(
+                                        item.machineId,
+                                        '1YEAR',
+                                        {
+                                          fullName: item.fullName || item.predictedName,
+                                          phoneNumber: item.phoneNumber,
+                                          schoolUnit: item.schoolUnit
+                                        }
+                                      )}
+                                      className="px-2.5 py-1 rounded bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-bold text-[10px] transition cursor-pointer flex items-center gap-1"
                                       title="Kích hoạt hoặc gia hạn thêm 1 Năm (365 ngày)"
                                     >
-                                      + 1 Năm
+                                      {approvingId === `${item.machineId}_1YEAR` ? (
+                                        <RefreshCw className="w-3 h-3 animate-spin" />
+                                      ) : null}
+                                      <span>{approvingId === `${item.machineId}_1YEAR` ? 'Đang duyệt...' : '+ 1 Năm'}</span>
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={async () => {
-                                        const nowTs = Math.floor(Date.now() / 1000);
-                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
-                                        await licenseService.createDirect({
-                                          machine_id: item.machineId,
-                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
-                                          phone_zalo: item.phoneNumber || '',
-                                          school_unit: item.schoolUnit || '',
-                                          package_type: '2YEAR',
-                                          status: 'ACTIVE',
-                                          expiry_timestamp: currentExp + 730 * 86400,
-                                          notes: `Kích hoạt 2 Năm bởi ${currentAdminName}`
-                                        }, currentAdminName);
-                                        await loadData();
-                                        loadTrackingData();
-                                        alert(`Đã kích hoạt Gói 2 Năm cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
-                                      }}
-                                      className="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      disabled={approvingId !== null}
+                                      onClick={() => handleActivateMachineByYear(
+                                        item.machineId,
+                                        '2YEAR',
+                                        {
+                                          fullName: item.fullName || item.predictedName,
+                                          phoneNumber: item.phoneNumber,
+                                          schoolUnit: item.schoolUnit
+                                        }
+                                      )}
+                                      className="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-[10px] transition cursor-pointer flex items-center gap-1"
                                       title="Kích hoạt hoặc gia hạn thêm 2 Năm (730 ngày)"
                                     >
-                                      + 2 Năm
+                                      {approvingId === `${item.machineId}_2YEAR` ? (
+                                        <RefreshCw className="w-3 h-3 animate-spin" />
+                                      ) : null}
+                                      <span>{approvingId === `${item.machineId}_2YEAR` ? 'Đang duyệt...' : '+ 2 Năm'}</span>
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={async () => {
-                                        const nowTs = Math.floor(Date.now() / 1000);
-                                        const currentExp = (activeLicense && activeLicense.expiry_timestamp > nowTs) ? activeLicense.expiry_timestamp : nowTs;
-                                        await licenseService.createDirect({
-                                          machine_id: item.machineId,
-                                          teacher_name: item.fullName || item.predictedName || 'Thầy/Cô',
-                                          phone_zalo: item.phoneNumber || '',
-                                          school_unit: item.schoolUnit || '',
-                                          package_type: '3YEAR',
-                                          status: 'ACTIVE',
-                                          expiry_timestamp: currentExp + 1095 * 86400,
-                                          notes: `Kích hoạt 3 Năm bởi ${currentAdminName}`
-                                        }, currentAdminName);
-                                        await loadData();
-                                        loadTrackingData();
-                                        alert(`Đã kích hoạt Gói 3 Năm Pro cho máy ${item.machineId}!\nNgười kích hoạt: ${currentAdminName}`);
-                                      }}
-                                      className="px-2 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] transition cursor-pointer"
+                                      disabled={approvingId !== null}
+                                      onClick={() => handleActivateMachineByYear(
+                                        item.machineId,
+                                        '3YEAR',
+                                        {
+                                          fullName: item.fullName || item.predictedName,
+                                          phoneNumber: item.phoneNumber,
+                                          schoolUnit: item.schoolUnit
+                                        }
+                                      )}
+                                      className="px-2.5 py-1 rounded bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold text-[10px] transition cursor-pointer flex items-center gap-1"
                                       title="Kích hoạt hoặc gia hạn thêm 3 Năm (1095 ngày)"
                                     >
-                                      + 3 Năm
+                                      {approvingId === `${item.machineId}_3YEAR` ? (
+                                        <RefreshCw className="w-3 h-3 animate-spin" />
+                                      ) : null}
+                                      <span>{approvingId === `${item.machineId}_3YEAR` ? 'Đang duyệt...' : '+ 3 Năm'}</span>
                                     </button>
                                   </div>
 
@@ -4121,6 +4303,149 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* FLOATING ACTION NOTICE TOAST */}
+        {actionNotice && (
+          <div className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-2xl shadow-2xl border backdrop-blur-md transition-all animate-in slide-in-from-top-4 ${
+            actionNotice.type === 'success' ? 'bg-emerald-950/95 border-emerald-500/60 text-emerald-200' :
+            actionNotice.type === 'error' ? 'bg-rose-950/95 border-rose-500/60 text-rose-200' :
+            'bg-sky-950/95 border-sky-500/60 text-sky-200'
+          }`}>
+            <div className="flex items-start gap-3">
+              {actionNotice.type === 'loading' ? (
+                <RefreshCw className="w-5 h-5 text-sky-400 animate-spin shrink-0 mt-0.5" />
+              ) : actionNotice.type === 'success' ? (
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              ) : (
+                <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+              )}
+              <div className="flex-1 text-xs">
+                <h4 className="font-bold text-sm mb-0.5 text-white">{actionNotice.title}</h4>
+                <p className="opacity-90">{actionNotice.message}</p>
+              </div>
+              <button onClick={() => setActionNotice(null)} className="text-slate-400 hover:text-white p-1">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL KÍCH HOẠT THÀNH CÔNG VÀ CHÉP KEY / ZALO */}
+        {activationSuccessData && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+            <div className="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl shadow-emerald-950/50 relative">
+              <button 
+                onClick={() => setActivationSuccessData(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                  <Crown className="w-7 h-7" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white flex items-center gap-2 flex-wrap">
+                    <span>KÍCH HOẠT THÀNH CÔNG!</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold">
+                      {activationSuccessData.packageLabel}
+                    </span>
+                  </h3>
+                  <p className="text-xs text-emerald-300/80">
+                    Bản quyền đã được cấp phép & đồng bộ tức thì lên Cloud
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2 text-xs">
+                <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
+                  <span className="text-slate-400">💻 Mã máy (Hardware Code):</span>
+                  <span className="font-mono font-bold text-cyan-300">{activationSuccessData.machineId}</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
+                  <span className="text-slate-400">👤 Giáo viên nhận:</span>
+                  <span className="font-bold text-white">{activationSuccessData.teacherName}</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
+                  <span className="text-slate-400">⏳ Thời hạn sử dụng:</span>
+                  <span className="font-bold text-amber-300">
+                    {activationSuccessData.packageLabel} - Còn {activationSuccessData.daysRemaining} ngày (Hạn: {activationSuccessData.expDate})
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-slate-400">✍️ Người kích hoạt:</span>
+                  <span className="font-bold text-emerald-400">{activationSuccessData.reviewer}</span>
+                </div>
+              </div>
+
+              {activationSuccessData.licenseKey && (
+                <div className="space-y-1.5">
+                  <label className="block text-slate-300 font-bold text-xs flex items-center justify-between">
+                    <span>🔑 Mã Key Ed25519 (Đã ký số an toàn):</span>
+                    <span className="text-[10px] text-emerald-400 font-normal">Hợp lệ trên máy khách</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={activationSuccessData.licenseKey}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-emerald-500/50 font-mono text-xs text-emerald-300 font-bold select-all focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(activationSuccessData.licenseKey);
+                        setCopiedSuccessKey(true);
+                        setTimeout(() => setCopiedSuccessKey(false), 2000);
+                      }}
+                      className="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 transition cursor-pointer"
+                      title="Sao chép Key"
+                    >
+                      {copiedSuccessKey ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedSuccessKey ? 'Đã chép' : 'Chép Key'}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 flex flex-col sm:flex-row gap-2">
+                {activationSuccessData.zaloMsg && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(activationSuccessData.zaloMsg);
+                      setCopiedSuccessZalo(true);
+                      setTimeout(() => setCopiedSuccessZalo(false), 2000);
+                    }}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md transition cursor-pointer"
+                  >
+                    {copiedSuccessZalo ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedSuccessZalo ? '✅ Đã Chép Tin Nhắn Zalo!' : '📋 Sao Chép Tin Zalo Gửi Khách'}</span>
+                  </button>
+                )}
+                {activationSuccessData.phone && (
+                  <a
+                    href={`https://zalo.me/${activationSuccessData.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Mở Zalo Gửi Ngay</span>
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setActivationSuccessData(null)}
+                  className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer"
+                >
+                  Đóng
+                </button>
+              </div>
             </div>
           </div>
         )}
