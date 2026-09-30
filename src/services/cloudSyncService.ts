@@ -321,25 +321,42 @@ ${JSON.stringify(payloadData, null, 2)}
   ): Promise<{ success: boolean; issueNumber?: number; message: string }> {
     try {
       const cleanMid = machineId.trim().toUpperCase();
-      // 1. Tìm issue hiện có trên GitHub
-      const cloudRegs = await this.fetchRegistrationsFromCloud();
-      const existing = cloudRegs.find(c => c.machineId === cleanMid);
+      // 1. Tìm TẤT CẢ các issue hiện có trên GitHub của máy tính này (bao gồm cả đơn đăng ký và các đơn xin gia hạn cũ)
+      try {
+        const allIssuesResp = await fetch(`${GITHUB_API_URL}/issues?state=all&per_page=100`, { headers: getHeaders() });
+        if (allIssuesResp.ok) {
+          const allIssues = await allIssuesResp.json();
+          const bareMid = cleanMid.replace('NLS-', '');
+          const matchingIssues = allIssues.filter((iss: any) => {
+            const t = iss.title || '';
+            const b = iss.body || '';
+            const isDel = iss.labels?.some((l: any) => l.name === 'status:deleted') || t.includes('[ĐÃ XÓA]');
+            return !isDel && (t.includes(cleanMid) || b.includes(cleanMid) || t.includes(bareMid) || b.includes(bareMid));
+          });
 
-      if (existing && existing.issueNumber) {
-        const ok = await this.approveRegistrationOnCloud(
-          existing.issueNumber,
-          reviewerName,
-          packageType,
-          licenseKey,
-          expDate,
-          cleanMid,
-          fullName || existing.fullName
-        );
-        return {
-          success: ok,
-          issueNumber: existing.issueNumber,
-          message: ok ? `Đã đồng bộ kích hoạt lên Cloud (Issue #${existing.issueNumber})` : 'Lỗi cập nhật Cloud'
-        };
+          if (matchingIssues.length > 0) {
+            let anyOk = false;
+            for (const mIss of matchingIssues) {
+              const ok = await this.approveRegistrationOnCloud(
+                mIss.number,
+                reviewerName,
+                packageType,
+                licenseKey,
+                expDate,
+                cleanMid,
+                fullName
+              );
+              if (ok) anyOk = true;
+            }
+            return {
+              success: anyOk,
+              issueNumber: matchingIssues[0].number,
+              message: anyOk ? `Đã đồng bộ duyệt gói ${packageType} cho toàn bộ ${matchingIssues.length} đơn của máy trên Cloud!` : 'Lỗi cập nhật Cloud'
+            };
+          }
+        }
+      } catch (err) {
+        console.warn('Lỗi quét matching issues:', err);
       }
 
       // 2. Chưa có issue -> Tạo đơn đăng ký mới trên Cloud và duyệt ngay
