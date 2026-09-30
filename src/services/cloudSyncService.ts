@@ -338,7 +338,7 @@ ${JSON.stringify(payloadData, null, 2)}
         return {
           success: ok,
           issueNumber: existing.issueNumber,
-          message: ok ? Đã đồng bộ kích hoạt lên Cloud (Issue #) : 'Lỗi cập nhật Cloud'
+          message: ok ? `Đã đồng bộ kích hoạt lên Cloud (Issue #${existing.issueNumber})` : 'Lỗi cập nhật Cloud'
         };
       }
 
@@ -366,7 +366,7 @@ ${JSON.stringify(payloadData, null, 2)}
         return {
           success: ok,
           issueNumber: submitRes.issueNumber,
-          message: ok ? Đã tạo mới và duyệt Cloud (Issue #) : 'Lỗi cập nhật Cloud'
+          message: ok ? `Đã tạo mới và duyệt Cloud (Issue #${submitRes.issueNumber})` : 'Lỗi cập nhật Cloud'
         };
       }
 
