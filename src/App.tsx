@@ -449,112 +449,104 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {/* HERO BANNER - ĐẲNG CẤP, HIỆN ĐẠI, KHÔNG TRÙNG LẶP */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#081325] via-[#0C1B35] to-[#0A1628] text-white pt-8 pb-9 sm:pt-11 sm:pb-12 border-b border-blue-900/30">
-          {/* Ambient Lighting & Glow Background */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[720px] h-[260px] bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-indigo-600/15 blur-[100px] rounded-full pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
+        {/* HERO BANNER KIỂU BILLBOARD TINH GỌN (ÍT CHỮ, KHÔNG QUẢNG CÁO RƯỜM RÀ) */}
+        <section className="pt-3 pb-3 sm:pt-5 sm:pb-5 bg-[#F6F8FC]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#0C1E38] via-[#102B52] to-[#164177] text-white shadow-lg shadow-blue-950/15 border border-blue-800/40">
+              
+              {/* Hiệu ứng ánh sáng nền mờ */}
+              <div className="absolute -right-16 -top-16 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute right-1/4 -bottom-16 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              {/* Category Pill Tag */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-indigo-500/10 border border-blue-400/30 text-blue-200 text-[11px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md mb-4 shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin-slow" />
-                <span>GIẢI PHÁP SỐ HÓA GIẢNG DẠY • CHUẨN QUY ĐỊNH BỘ GD&ĐT</span>
-              </div>
+              <div className="relative px-6 py-6 sm:px-10 sm:py-8 lg:px-12 lg:py-9 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+                
+                {/* CỘT TRÁI: TIÊU ĐỀ BẮT MẮT + 1 DÒNG MÔ TẢ + NÚT BẤM (RẤT ÍT CHỮ) */}
+                <div className="max-w-xl text-center md:text-left z-10">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] sm:text-xs font-bold tracking-wider uppercase mb-2 sm:mb-2.5">
+                    <Sparkles className="w-3 h-3 text-amber-300" />
+                    <span>TRỢ LÝ SỐ GIÁO VIÊN THCS 2026</span>
+                  </div>
 
-              {/* Main Headline */}
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.2]">
-                Đột Phá Năng Lực Giảng Dạy Cùng{' '}
-                <span className="block sm:inline bg-gradient-to-r from-sky-400 via-blue-300 to-indigo-300 bg-clip-text text-transparent">
-                  Hệ Thống Trợ Lý AI Chuyên Biệt
-                </span>
-              </h1>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
+                    Dạy Học Thảnh Thơi Hơn <br className="hidden sm:inline" />
+                    <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-200 bg-clip-text text-transparent">
+                      Cùng Hệ Thống Trợ Lý AI
+                    </span>
+                  </h1>
 
-              {/* Sub-headline / Value Proposition */}
-              <p className="mt-3.5 sm:mt-4 text-xs sm:text-sm lg:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-                Tự động hóa tích hợp <strong>Năng lực số (CV 5512)</strong>, tạo đề thi ma trận chuẩn đặc tả <strong>CV 7991</strong> cho 12 bộ môn, hỗ trợ luyện nghe phát âm và chuẩn hóa thể thức văn bản chỉ với 1 cú nhấp chuột.
-              </p>
+                  <p className="mt-2 sm:mt-2.5 text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
+                    Soạn giáo án Năng lực số (CV 5512) & Tạo đề kiểm tra 12 môn THCS (CV 7991) nhanh chóng, chuẩn mẫu Bộ GD&ĐT.
+                  </p>
 
-              {/* Bento Feature Highlight Badges (4 Thẻ Kính Tinh Xảo) */}
-              <div className="mt-6 sm:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 text-left">
-                <div className="p-3 sm:p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 backdrop-blur-md transition-all duration-300 group">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0 border border-blue-400/30 group-hover:scale-110 transition-transform">
-                      <FileCheck className="w-4 h-4 text-sky-300" />
+                  <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center md:justify-start gap-3">
+                    <a
+                      href="#apps"
+                      className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white hover:bg-blue-50 text-[#0C1E38] font-black text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 group"
+                    >
+                      <span>Khám phá ngay</span>
+                      <ArrowRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                    </a>
+
+                    <button
+                      onClick={() => setShowTrialModal(true)}
+                      className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-blue-950/60 hover:bg-blue-900/60 text-blue-100 hover:text-white border border-blue-400/30 font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Dùng thử 5 lần</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* CỘT PHẢI: MOCKUP THẺ SẢN PHẨM TRỰC QUAN NHƯ HÌNH MẪU */}
+                <div className="relative shrink-0 flex items-center justify-center w-full md:w-auto">
+                  <div className="w-full max-w-xs sm:w-80 p-4 sm:p-4.5 rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border border-white/20 backdrop-blur-xl shadow-xl shadow-blue-950/30">
+                    
+                    {/* Header giả lập thẻ sản phẩm */}
+                    <div className="flex items-center justify-between pb-2.5 border-b border-white/15">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center text-white shadow-sm">
+                          <GraduationCap className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white">Giáo Viên AI Pro</div>
+                          <div className="text-[10px] text-cyan-300">Word Add-in & Web Cloud</div>
+                        </div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                        ● Sẵn sàng
+                      </span>
                     </div>
-                    <div>
-                      <div className="text-xs sm:text-sm font-bold text-white tracking-tight">Chuẩn CV 5512 & 7991</div>
-                      <div className="text-[11px] text-slate-400">Đúng mẫu Bộ GD&ĐT</div>
+
+                    {/* 3 tính năng cốt lõi súc tích */}
+                    <div className="mt-3 space-y-2">
+                      <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                          <FileCheck className="w-3.5 h-3.5 text-cyan-300" />
+                        </div>
+                        <div className="text-xs text-white font-medium">Tích hợp NLS Giáo án (CV 5512)</div>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                          <Zap className="w-3.5 h-3.5 text-blue-300" />
+                        </div>
+                        <div className="text-xs text-white font-medium">Ra đề ma trận 12 môn (CV 7991)</div>
+                      </div>
+
+                      <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                        </div>
+                        <div className="text-xs text-white font-medium">Bảo mật Ed25519 • Dùng Offline</div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3 sm:p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 backdrop-blur-md transition-all duration-300 group">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 border border-emerald-400/30 group-hover:scale-110 transition-transform">
-                      <Zap className="w-4 h-4 text-emerald-300" />
-                    </div>
-                    <div>
-                      <div className="text-xs sm:text-sm font-bold text-white tracking-tight">17+ Trợ Lý Chuyên Sâu</div>
-                      <div className="text-[11px] text-slate-400">Đầy đủ 12 môn THCS</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3 sm:p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 backdrop-blur-md transition-all duration-300 group">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 border border-amber-400/30 group-hover:scale-110 transition-transform">
-                      <ShieldCheck className="w-4 h-4 text-amber-300" />
-                    </div>
-                    <div>
-                      <div className="text-xs sm:text-sm font-bold text-white tracking-tight">Bảo Mật Ed25519</div>
-                      <div className="text-[11px] text-slate-400">Dùng Offline an toàn</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3 sm:p-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 backdrop-blur-md transition-all duration-300 group">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0 border border-purple-400/30 group-hover:scale-110 transition-transform">
-                      <BookOpen className="w-4 h-4 text-purple-300" />
-                    </div>
-                    <div>
-                      <div className="text-xs sm:text-sm font-bold text-white tracking-tight">Add-in Word 1 Click</div>
-                      <div className="text-[11px] text-slate-400">Tích hợp thanh Ribbon</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Call-To-Action Row */}
-              <div className="mt-7 sm:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-                <a
-                  href="#apps"
-                  className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                  <span>Khám Phá 17 Ứng Dụng</span>
-                </a>
-
-                <button
-                  onClick={() => setShowTrialModal(true)}
-                  className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs sm:text-sm backdrop-blur-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Dùng Thử 5 Lượt Miễn Phí</span>
-                </button>
-              </div>
-
-              {/* Trust Footer line */}
-              <div className="mt-4 text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Chạy trực tiếp trên máy tính • Không đòi hỏi cấu hình mạng phức tạp</span>
               </div>
             </div>
           </div>
         </section>
-
         {/* APPS SECTION (PRIMARY SHOWCASE) */}
         <section id="apps" className="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
