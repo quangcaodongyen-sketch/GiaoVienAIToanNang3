@@ -38,7 +38,6 @@ import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
@@ -145,28 +144,15 @@ export default function App() {
     .filter((app) => app.active)
     .sort((a, b) => a.order - b.order);
 
-  // Categories based ONLY on activeApps
-  const categories = ['Tất cả', ...Array.from(new Set(activeApps.map((app) => app.category)))];
-
-  // Category counts
-  const categoryCounts = categories.reduce<Record<string, number>>((acc, cat) => {
-    if (cat === 'Tất cả') {
-      acc[cat] = activeApps.length;
-    } else {
-      acc[cat] = activeApps.filter((a) => a.category === cat).length;
-    }
-    return acc;
-  }, {});
-
-  // Filtered by Category and Search Query
+  // Lọc ứng dụng theo từ khóa tìm kiếm (hiển thị trực tiếp toàn bộ 17 app theo thứ tự ưu tiên)
   const filteredApps = activeApps.filter((app) => {
-    const matchesCategory = selectedCategory === 'Tất cả' || app.category === selectedCategory;
     const query = searchQuery.trim().toLowerCase();
-    const matchesSearch = query === '' ||
+    if (!query) return true;
+    return (
       app.title.toLowerCase().includes(query) ||
       app.description.toLowerCase().includes(query) ||
-      app.category.toLowerCase().includes(query);
-    return matchesCategory && matchesSearch;
+      app.category.toLowerCase().includes(query)
+    );
   });
 
   const handleAppClick = (app: AppCard, e: React.MouseEvent) => {
@@ -532,51 +518,30 @@ export default function App() {
         {/* APPS SECTION (PRIMARY SHOWCASE) - GỌN GÀNG, HIỆN NGAY CÁC APP */}
         <section id="apps" className="pt-3 pb-12 sm:pt-4 sm:pb-16 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* THANH CÔNG CỤ TINH GỌN: CHUYÊN MỤC + TÌM KIẾM */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-2.5 sm:p-3 mb-4 transition-all">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
-                {/* CATEGORY FILTER TABS */}
-                {activeApps.length > 0 && categories.length > 1 && (
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {categories.map((cat) => {
-                      const count = categoryCounts[cat] || 0;
-                      const isSelected = selectedCategory === cat;
-                      return (
-                        <button
-                          key={cat}
-                          onClick={() => setSelectedCategory(cat)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#123A63] text-white shadow-sm ring-2 ring-[#123A63]/20'
-                              : 'bg-slate-100 hover:bg-slate-200/70 text-slate-700 border border-slate-200/80 hover:text-[#123A63]'
-                          }`}
-                        >
-                          <span>{cat}</span>
-                          <span
-                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                              isSelected
-                                ? 'bg-white/20 text-white'
-                                : 'bg-white text-slate-500 border border-slate-200'
-                            }`}
-                          >
-                            {count}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+            {/* THANH TÌM KIẾM VÀ TRẠNG THÁI SIÊU GỌN - 1 DÒNG DUY NHẤT (TIẾT KIỆM TỐI ĐA DIỆN TÍCH) */}
+            <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs px-3.5 py-2 mb-3.5 transition-all">
+              <div className="flex items-center justify-between gap-3">
+                {/* TIÊU ĐỀ BỘ CÔNG CỤ */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100"></span>
+                  <span className="text-xs sm:text-sm font-bold text-slate-800 tracking-tight">
+                    Danh Sách 17 Ứng Dụng THCS
+                  </span>
+                  <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                    Toàn diện 12 môn
+                  </span>
+                </div>
 
-                {/* Ô TÌM KIẾM NHỎ GỌN + BỘ ĐẾM SỐ LƯỢNG */}
-                <div className="flex items-center gap-2.5 shrink-0 justify-between md:justify-end">
-                  <div className="relative w-full sm:w-60">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                {/* Ô TÌM KIẾM NHANH + BỘ ĐẾM SỐ LƯỢNG */}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <div className="relative w-44 sm:w-64">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
-                      placeholder="Tìm kiếm công cụ..."
+                      placeholder="Tìm nhanh ứng dụng..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 placeholder-slate-400 transition shadow-inner"
+                      className="w-full pl-8 pr-7 py-1.5 rounded-lg bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 placeholder-slate-400 transition"
                     />
                     {searchQuery && (
                       <button
@@ -588,9 +553,9 @@ export default function App() {
                       </button>
                     )}
                   </div>
-                  <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-500 font-semibold shrink-0">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-600 font-bold bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/80 shrink-0">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span><strong>{filteredApps.length}</strong>/{activeApps.length} app</span>
+                    <span>{filteredApps.length}/{activeApps.length} app</span>
                   </span>
                 </div>
               </div>
@@ -609,13 +574,10 @@ export default function App() {
                   Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ {activeApps.length} ứng dụng.
                 </p>
                 <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('Tất cả');
-                  }}
-                  className="px-4 py-2 rounded-xl bg-[#123A63] text-white text-xs font-bold hover:bg-blue-900 transition-colors shadow-sm"
+                  onClick={() => setSearchQuery('')}
+                  className="px-4 py-2 rounded-xl bg-[#123A63] text-white text-xs font-bold hover:bg-blue-900 transition-colors shadow-sm cursor-pointer"
                 >
-                  Xem tất cả ứng dụng
+                  Xem toàn bộ {activeApps.length} ứng dụng
                 </button>
               </div>
             ) : (
