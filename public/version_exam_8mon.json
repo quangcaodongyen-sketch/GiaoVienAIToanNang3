@@ -1,0 +1,10 @@
+{
+  "version": "3.2.0",
+  "app_name": "Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)",
+  "release_date": "2026-09-30",
+  "changelog": "Cập nhật ContinuousSyncWorker: Tự động đồng bộ bản quyền từ Web Admin tức thì.\nThêm nút Kiểm Tra Cập Nhật trên Ribbon Word.\nCải thiện hiệu năng tạo đề kiểm tra 8 môn.",
+  "download_url": "https://giaovienai-toannang3.vercel.app/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+  "download_url_exe": "https://giaovienai-toannang3.vercel.app/Cai_Dat_TaoDe_8Mon_THCS.exe",
+  "min_version": "3.0.0",
+  "force_update": false
+}

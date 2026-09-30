@@ -60,6 +60,16 @@ export const EXAM_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+// Cấu hình link tài nguyên của Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)
+export const EXAM_8MON_RESOURCES = {
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
+  fullZipUrl: "/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+  // Link tải bản Desktop .exe trực tiếp
+  exeUrl: "/Trung_Tam_Tao_De_THCS.exe",
+  // Link video hướng dẫn
+  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+};
 
 
 // CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG
