@@ -1,0 +1,11 @@
+{
+  "appId": "nls-ai",
+  "appName": "Công Cụ Tích Hợp NLS, AI & Nội Dung GD THCS (CV 5512)",
+  "currentVersion": "3.2.0",
+  "latestVersion": "3.2.0",
+  "releaseDate": "30/09/2026",
+  "changelog": "• Tự động kích hoạt bản quyền tức thì từ Web Cloud ngay khi Admin phê duyệt\n• Tự động kiểm tra và thông báo tính năng mới cho giáo viên\n• Macro AutoExec chạy ngầm mượt mà khi mở Microsoft Word\n• Chuẩn hóa 12 môn học THCS theo Công văn 5512, Thông tư 02/2025 và Quyết định 2422",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+}
