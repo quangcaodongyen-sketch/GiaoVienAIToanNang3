@@ -2060,7 +2060,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               const nowTs = Math.floor(Date.now() / 1000);
                               daysLeft = Math.max(0, Math.ceil((activeLicense.expiry_timestamp - nowTs) / 86400));
                               const expDateStr = new Date(activeLicense.expiry_timestamp * 1000).toLocaleDateString('vi-VN');
-                              licenseInfoText = `👑 Bản quyền 1 Năm - Còn ${daysLeft} ngày (Hạn: ${expDateStr})`;
+                              const pkgLabelDisplay = (activeLicense.package_type === '3YEAR' || daysLeft > 730) ? '3 Năm Pro' : (activeLicense.package_type === '2YEAR' || daysLeft > 365) ? '2 Năm VIP' : '1 Năm';
+                              licenseInfoText = `👑 Bản quyền ${pkgLabelDisplay} - Còn ${daysLeft} ngày (Hạn: ${expDateStr})`;
                             }
                           } else {
                             licenseInfoText = `⏳ Dùng thử: Đã dùng ${item.trialUsed}/${item.trialMax} lượt`;

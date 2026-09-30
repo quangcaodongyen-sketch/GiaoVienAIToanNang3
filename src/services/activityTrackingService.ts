@@ -570,9 +570,10 @@ class ActivityTrackingService {
       `${reviewerName} đã DUYỆT đơn và nâng cấp gói ${effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : effectivePkg === 'FULL_WEB' ? 'Full Web' : 'Dùng thử'} cho [${item.fullName} - ${item.machineId}]`
     );
 
+    const pkgMsgLabel = effectivePkg === 'FULL_WEB' ? 'Full Web (VIP)' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử';
     return {
       success: true,
-      message: `Đã duyệt thành công và nâng cấp thành viên cho Thầy/Cô ${item.fullName} (${item.machineId}) bởi ${reviewerName}!`
+      message: `Đã duyệt thành công Gói [${pkgMsgLabel}] cho Thầy/Cô ${item.fullName} (${item.machineId}) bởi ${reviewerName}!`
     };
   }
 
