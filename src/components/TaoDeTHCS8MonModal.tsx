@@ -17,7 +17,7 @@ import {
   User,
   Send
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, EXAM_8MON_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 
 interface TaoDeTHCS8MonModalProps {
@@ -261,7 +261,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     </p>
                   </div>
                   <a
-                    href="/Trung_Tam_Tao_De_THCS_Pass_123.zip"
+                    href={EXAM_8MON_RESOURCES.fullZipUrl || "/Trung_Tam_Tao_De_THCS_Pass_123.zip"}
                     className="w-full sm:w-auto py-3 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition whitespace-nowrap shadow-lg shadow-emerald-500/30 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
@@ -278,7 +278,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     </p>
                   </div>
                   <a
-                    href="/Trung_Tam_Tao_De_THCS.exe"
+                    href={EXAM_8MON_RESOURCES.exeUrl || "/Trung_Tam_Tao_De_THCS.exe"}
                     className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition whitespace-nowrap cursor-pointer"
                   >
                     <Download className="w-4 h-4" />

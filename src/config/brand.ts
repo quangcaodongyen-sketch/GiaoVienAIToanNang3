@@ -49,10 +49,10 @@ export const NLS_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
 export const EXAM_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
-  fullZipUrl: "/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc từ GitHub Releases
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   // Link tải bộ cài Word .exe trực tiếp
-  exeWordUrl: "/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
+  exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   // Link tải bản Desktop .exe trực tiếp
   exeDesktopUrl: "/Tao_De_Tieng_Anh_Desktop.exe",
   // Link video hướng dẫn
@@ -62,10 +62,10 @@ export const EXAM_RESOURCES = {
 
 // Cấu hình link tài nguyên của Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)
 export const EXAM_8MON_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc
-  fullZipUrl: "/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc từ GitHub Releases
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS_Pass_123.zip",
   // Link tải bản Desktop .exe trực tiếp
-  exeUrl: "/Trung_Tam_Tao_De_THCS.exe",
+  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS.exe",
   // Link video hướng dẫn
   videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
