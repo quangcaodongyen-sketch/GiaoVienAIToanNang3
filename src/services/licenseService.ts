@@ -263,8 +263,24 @@ class LicenseService {
       list[idx].notes = `Gia hạn gói ${pkgLabel} bởi ${activated_by}`;
       this.setLocalLicenses(list);
       return true;
+    } else {
+      const newRec: LicenseRecord = {
+        id: Date.now(),
+        machine_id: mid,
+        teacher_name: 'Giáo viên',
+        school_name: 'Trường THCS',
+        phone_number: '',
+        package_type: packageType,
+        status: 'ACTIVE',
+        activated_at: now,
+        activated_by: activated_by,
+        expiry_timestamp: expTs,
+        notes: `Kích hoạt gói ${pkgLabel} bởi ${activated_by}`
+      };
+      list.unshift(newRec);
+      this.setLocalLicenses(list);
+      return true;
     }
-    return false;
   }
 
   // Admin Khóa / Thu hồi bản quyền

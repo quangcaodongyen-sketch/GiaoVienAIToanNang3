@@ -540,10 +540,15 @@ class ActivityTrackingService {
   public approveRegistration(
     id: string,
     reviewerName: string,
-    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5'
+    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5',
+    fallbackItem?: RegistrationRequest
   ): { success: boolean; message: string } {
-    const list = this.getAllRegistrations();
-    const item = list.find(r => r.id === id);
+    let list = this.getAllRegistrations();
+    let item = list.find(r => r.id === id || (fallbackItem?.machineId && r.machineId === fallbackItem.machineId));
+    if (!item && fallbackItem) {
+      item = { ...fallbackItem };
+      list.push(item);
+    }
     if (!item) return { success: false, message: 'Không tìm thấy đơn đăng ký!' };
 
     const effectivePkg = pkgOverride || item.packageType;
@@ -552,11 +557,13 @@ class ActivityTrackingService {
     item.status = 'APPROVED';
     item.reviewedBy = reviewerName;
     item.reviewedAt = now;
+    item.packageType = effectivePkg;
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
 
     // Kích hoạt VIP hoặc dùng thử
-    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR' || effectivePkg === '3YEAR') {
-      licenseService.extend(item.machineId, effectivePkg, reviewerName);
+    if (effectivePkg === '1YEAR' || effectivePkg === '2YEAR' || effectivePkg === '3YEAR' || effectivePkg === 'FULL_WEB') {
+      const pkgType = effectivePkg === 'FULL_WEB' ? 'LIFETIME' : effectivePkg;
+      licenseService.extend(item.machineId, pkgType, reviewerName);
     } else {
       // Cấp thêm 5 lượt dùng thử
       const all = this.getAllTrackedMachines();
@@ -570,7 +577,7 @@ class ActivityTrackingService {
     this.logActivity(
       item.appId,
       item.appName,
-      `${reviewerName} đã DUYỆT đơn và nâng cấp gói ${effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : effectivePkg === 'FULL_WEB' ? 'Full Web' : 'Dùng thử'} cho [${item.fullName} - ${item.machineId}]`
+      `${reviewerName} đã DUYỆT đơn và nâng cấp gói ${effectivePkg === 'FULL_WEB' ? 'Full Web (VIP)' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử'} cho [${item.fullName} - ${item.machineId}]`
     );
 
     const pkgMsgLabel = effectivePkg === 'FULL_WEB' ? 'Full Web (VIP)' : effectivePkg === '3YEAR' ? '3 Năm Pro' : effectivePkg === '2YEAR' ? '2 Năm VIP' : effectivePkg === '1YEAR' ? '1 Năm' : 'Dùng thử';

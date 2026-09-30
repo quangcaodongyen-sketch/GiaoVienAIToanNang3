@@ -80,6 +80,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [blockedMachines, setBlockedMachines] = useState<BlockedMachineItem[]>([]);
   const [logSearch, setLogSearch] = useState('');
   const [reqFilter, setReqFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('ALL');
+  const [approvingId, setApprovingId] = useState<string | null>(null);
   const [regSearchTerm, setRegSearchTerm] = useState('');
   const [regAppFilter, setRegAppFilter] = useState('ALL');
   const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
@@ -407,59 +408,68 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   };
 
   const handleApproveReq = async (id: string, pkg?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5', issueNumber?: number) => {
-    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
-    const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
+    const opKey = `${id || ''}_${issueNumber || ''}_${pkg || ''}`;
+    try {
+      setApprovingId(opKey);
+      const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
+      const targetReq = registrationRequests.find(r => r.id === id || (issueNumber && r.issueNumber === issueNumber));
+      const res = activityTrackingService.approveRegistration(id, reviewer, pkg, targetReq);
 
-    // Đồng bộ duyệt lên Cloud kèm Key Ed25519 được ký số tự động tức thì
-    if (issueNumber) {
-      let licenseKey = '';
-      let expDateStr = '';
-      try {
-        const targetReq = reqList.find(r => r.id === id || r.issueNumber === issueNumber);
-        if (targetReq && targetReq.machineId) {
-          const mid = targetReq.machineId.trim();
-          let years = 1;
-          if (pkg === '2YEAR') years = 2;
-          else if (pkg === '3YEAR') years = 3;
-          else if (pkg === 'FULL_WEB') years = 99;
+      // Đồng bộ duyệt lên Cloud kèm Key Ed25519 được ký số tự động tức thì
+      if (issueNumber) {
+        let licenseKey = '';
+        let expDateStr = '';
+        try {
+          if (targetReq && targetReq.machineId) {
+            const mid = targetReq.machineId.trim();
+            let years = 1;
+            if (pkg === '2YEAR') years = 2;
+            else if (pkg === '3YEAR') years = 3;
+            else if (pkg === 'FULL_WEB') years = 99;
 
-          let appTag = 'NLS';
-          let productId = 'NLS_AI_THCS';
-          const appIdLower = (targetReq.appId || '').toLowerCase();
-          if (appIdLower.includes('15p') || appIdLower.includes('taode-15p')) {
-            appTag = 'ENG15';
-            productId = 'ENG15';
-          } else if (appIdLower.includes('tienganh') || appIdLower.includes('taode-tienganh')) {
-            appTag = 'ENG';
-            productId = 'ENG';
-          } else if (appIdLower.includes('taode')) {
-            appTag = 'TAODE';
-            productId = 'TAODE';
+            let appTag = 'NLS';
+            let productId = 'NLS_AI_THCS';
+            const appIdLower = (targetReq.appId || '').toLowerCase();
+            if (appIdLower.includes('15p') || appIdLower.includes('taode-15p')) {
+              appTag = 'ENG15';
+              productId = 'ENG15';
+            } else if (appIdLower.includes('tienganh') || appIdLower.includes('taode-tienganh')) {
+              appTag = 'ENG';
+              productId = 'ENG';
+            } else if (appIdLower.includes('taode')) {
+              appTag = 'TAODE';
+              productId = 'TAODE';
+            }
+
+            const genRes = await generateEd25519Key(mid, years, appTag, productId);
+            licenseKey = genRes.key;
+            expDateStr = genRes.expDate;
           }
-
-          const genRes = await generateEd25519Key(mid, years, appTag, productId);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expDate;
+        } catch (errKey) {
+          console.warn('Lỗi sinh key Ed25519 khi duyệt Cloud:', errKey);
         }
-      } catch (errKey) {
-        console.warn('Lỗi sinh key Ed25519 khi duyệt Cloud:', errKey);
+
+        const targetReqForCloud = targetReq;
+        await cloudSyncService.approveRegistrationOnCloud(
+          issueNumber,
+          reviewer,
+          pkg || '1YEAR',
+          licenseKey,
+          expDateStr,
+          targetReqForCloud?.machineId,
+          targetReqForCloud?.fullName
+        );
       }
 
-      const targetReqForCloud = reqList.find(r => r.id === id || r.issueNumber === issueNumber);
-      await cloudSyncService.approveRegistrationOnCloud(
-        issueNumber,
-        reviewer,
-        pkg || '1YEAR',
-        licenseKey,
-        expDateStr,
-        targetReqForCloud?.machineId,
-        targetReqForCloud?.fullName
-      );
+      alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
+      await loadTrackingData();
+      await loadData();
+    } catch (err: any) {
+      console.error('Lỗi khi kích hoạt đơn:', err);
+      alert('⚠️ Có lỗi xảy ra khi kích hoạt: ' + (err?.message || String(err)));
+    } finally {
+      setApprovingId(null);
     }
-
-    alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
-    await loadTrackingData();
-    await loadData();
   };
 
   const handleRejectReq = async (id: string, issueNumber?: number) => {
@@ -1904,32 +1914,35 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   {/* Nhóm Kích Hoạt Nhanh 1, 2, 3 Năm */}
                                   <button
                                     type="button"
+                                    disabled={approvingId !== null}
                                     onClick={() => handleApproveReq(req.id, '1YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm shadow-emerald-600/30 transition cursor-pointer flex items-center gap-1"
+                                    className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-emerald-600/30 transition cursor-pointer flex items-center gap-1"
                                     title="Duyệt và kích hoạt bản quyền 1 Năm cho GV này"
                                   >
                                     <Check className="w-3 h-3" />
-                                    <span>1 Năm</span>
+                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_1YEAR` ? 'Đang duyệt...' : '1 Năm'}</span>
                                   </button>
 
                                   <button
                                     type="button"
+                                    disabled={approvingId !== null}
                                     onClick={() => handleApproveReq(req.id, '2YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] shadow-sm shadow-amber-600/30 transition cursor-pointer flex items-center gap-1"
+                                    className="px-2 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-amber-600/30 transition cursor-pointer flex items-center gap-1"
                                     title="Duyệt và kích hoạt bản quyền 2 Năm cho GV này"
                                   >
                                     <Crown className="w-3 h-3" />
-                                    <span>2 Năm</span>
+                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_2YEAR` ? 'Đang duyệt...' : '2 Năm'}</span>
                                   </button>
 
                                   <button
                                     type="button"
+                                    disabled={approvingId !== null}
                                     onClick={() => handleApproveReq(req.id, '3YEAR', req.issueNumber)}
-                                    className="px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] shadow-sm shadow-indigo-600/30 transition cursor-pointer flex items-center gap-1"
+                                    className="px-2 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-[11px] shadow-sm shadow-indigo-600/30 transition cursor-pointer flex items-center gap-1"
                                     title="Duyệt và kích hoạt bản quyền 3 Năm cho GV này"
                                   >
                                     <Sparkles className="w-3 h-3" />
-                                    <span>3 Năm</span>
+                                    <span>{approvingId === `${req.id || ''}_${req.issueNumber || ''}_3YEAR` ? 'Đang duyệt...' : '3 Năm'}</span>
                                   </button>
 
                                   {/* Nút Tạm Khóa Máy */}
