@@ -143,7 +143,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS GLOBAL SUCCESS (CV 7991)
+                  TẠO ĐỀ TIẾNG ANH (CV 7991)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
                   v3.2.0
@@ -174,7 +174,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               }`}
             >
               <Download className="w-4 h-4" />
-              📥 TẢI VỀ & CÀI ĐẶT
+              TẢI BỘ CÀI ĐẶT
             </button>
             <button
               onClick={() => setActiveTab('register')}
@@ -185,7 +185,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               }`}
             >
               <Crown className="w-4 h-4" />
-              🔑 ĐĂNG KÝ BẢN QUYỀN
+              ĐĂNG KÝ BẢN QUYỀN
             </button>
           </div>
 

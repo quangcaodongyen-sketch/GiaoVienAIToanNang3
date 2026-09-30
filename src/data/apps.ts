@@ -16,8 +16,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 1: APP NĂNG LỰC SỐ (FLAGSHIP) ====================
   {
     "id": "tichhop-nls-ai-thcs",
-    "title": "TÍCH HỢP NLS - AI THCS (ADD-INS V3)",
-    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục học sinh khuyết tật hòa nhập (màu xanh #0070C0) vào giáo án 12 môn THCS chuẩn CV 5512. Tùy biến prompt văn bản và Add-in Ribbon Word V3.",
+    "title": "TÍCH HỢP NLS - AI (ADD-INS V3)",
+    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục hòa nhập vào giáo án 12 môn chuẩn CV 5512. Tích hợp trực tiếp thanh công cụ Word.",
     "image": "/giaoanNLS.png",
     "url": "#nls-ai",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
@@ -30,8 +30,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 2: APP RA ĐỀ TIẾNG ANH GLOBAL SUCCESS ====================
   {
     "id": "tao-de-tieng-anh-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991)",
-    "description": "Tạo đề thi tiếng Anh 4 kỹ năng chuẩn khung năng lực Bộ GD&ĐT. Tự động xuất đề thi, Đáp án, Audio Script và tích hợp tạo file nghe MP3.",
+    "title": "TẠO ĐỀ TIẾNG ANH (CV 7991)",
+    "description": "Tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT. Tự động xuất ma trận, bản đặc tả, đề thi, đáp án và audio script.",
     "image": "/taode_tienganh.png",
     "url": "#tao-de-tieng-anh",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -44,8 +44,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 3: APP TẠO BÀI NGHE MP3 ====================
   {
     "id": "smart-listening-pro",
-    "title": "SMART LISTENING PRO (LUYỆN NGHE & PHÁT ÂM)",
-    "description": "Chuyển bài đọc tiếng Anh thành file nghe MP3 giọng bản ngữ chuẩn quốc tế. Tự động ngắt nghỉ câu và chèn chuông hiệu lệnh làm bài thi.",
+    "title": "TẠO BÀI NGHE MP3 (SMART LISTENING)",
+    "description": "Chuyển văn bản tiếng Anh thành file nghe MP3 giọng bản ngữ chuẩn. Tự động ngắt nghỉ câu và chèn chuông hiệu lệnh.",
     "image": "/smart_listening_icon.png",
     "url": "#smart-listening",
     "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
@@ -58,8 +58,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 4: CÁC APP RA ĐỀ 7 MÔN ====================
   {
     "id": "tao-de-toan-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN TOÁN HỌC (CV 7991)",
-    "description": "Tự động sinh Ma trận, Bản đặc tả và Đề thi in ấn A4 kèm Đáp án chi tiết CV 7991/BGDĐT. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật phần mềm theo đúng ý muốn!).",
+    "title": "TẠO ĐỀ TOÁN (CV 7991)",
+    "description": "Tự động tạo ma trận, bản đặc tả, đề thi kèm công thức MathType chuẩn CV 7991 và thang điểm chi tiết.",
     "image": "/taode_toan.png",
     "url": "#tao-de-toan",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -70,8 +70,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "tao-de-van-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN NGỮ VĂN (CV 7991)",
-    "description": "Thiết kế đề Ngữ văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) và Viết (4.0đ) kèm Ma trận, Bản đặc tả. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "title": "TẠO ĐỀ NGỮ VĂN (CV 7991)",
+    "description": "Tự động tạo ma trận, bản đặc tả, đề Đọc hiểu ngoài SGK và Viết văn kèm hướng dẫn chấm chi tiết.",
     "image": "/taode_van.png",
     "url": "#tao-de-van",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -83,7 +83,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-khtn-thcs",
     "title": "TẠO ĐỀ KHOA HỌC TỰ NHIÊN (CV 7991)",
-    "description": "Tích hợp 3 phân môn Vật lí, Hóa học, Sinh học chuẩn chương trình 2018. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "description": "Tự động tạo ma trận, bản đặc tả và đề thi tích hợp Vật lí, Hóa học, Sinh học chuẩn CV 7991.",
     "image": "/taode_khtn.png",
     "url": "#tao-de-khtn",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -94,8 +94,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "tao-de-sudia-thcs",
-    "title": "TẠO ĐỀ LỊCH SỬ VÀ ĐỊA LÍ (CV 7991)",
-    "description": "Cân đối chuẩn 50% Lịch sử - 50% Địa lí với câu hỏi trắc nghiệm và tự luận tình huống. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "title": "TẠO ĐỀ LỊCH SỬ - ĐỊA LÍ (CV 7991)",
+    "description": "Tự động tạo ma trận, bản đặc tả và đề thi cân đối 50% Lịch sử - 50% Địa lí kèm đáp án chi tiết.",
     "image": "/taode_sudia.png",
     "url": "#tao-de-sudia",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -107,7 +107,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-gdcd-thcs",
     "title": "TẠO ĐỀ GIÁO DỤC CÔNG DÂN (CV 7991)",
-    "description": "Đề thi chuẩn: Nhận biết chuẩn mực đạo đức (4.0đ) và Tình huống pháp luật (6.0đ). (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "description": "Tự động tạo ma trận, bản đặc tả và đề thi trắc nghiệm cùng câu hỏi tình huống thực tế chuẩn CV 7991.",
     "image": "/taode_gdcd.png",
     "url": "#tao-de-gdcd",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -118,8 +118,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "tao-de-tin-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN TIN HỌC (CV 7991)",
-    "description": "Sinh đề thi Tin học kết hợp lý thuyết số học và bài tập thực hành Python, Excel. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "title": "TẠO ĐỀ TIN HỌC (CV 7991)",
+    "description": "Tự động tạo ma trận, bản đặc tả và đề thi Tin học kết hợp lý thuyết và bài tập thực hành.",
     "image": "/taode_tin.png",
     "url": "#tao-de-tin",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -130,8 +130,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "tao-de-cn-thcs",
-    "title": "TẠO ĐỀ KIỂM TRA MÔN CÔNG NGHỆ (CV 7991)",
-    "description": "Tự động ra đề: Nông nghiệp, cơ khí chế tạo và mạch điện bám sát CTGDPT 2018. (App đang tiếp tục cập nhật – Thầy/Cô có mẫu đề chuẩn hoặc mong muốn cấu trúc riêng xin gửi góp ý qua Zalo để Thầy Thành cập nhật theo đúng ý muốn!).",
+    "title": "TẠO ĐỀ CÔNG NGHỆ (CV 7991)",
+    "description": "Tự động tạo ma trận, bản đặc tả và đề thi Nông nghiệp, Cơ khí, Mạch điện bám sát chương trình.",
     "image": "/taode_cn.png",
     "url": "#tao-de-cn",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -144,8 +144,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 5: SINH ĐỀ BIẾN THỂ ====================
   {
     "id": "sinhdebienthe",
-    "title": "SINH 3 ĐỀ BIẾN THỂ VIP (AI PRO)",
-    "description": "Phân tích đề gốc để sinh ngay 3 đề biến thể tương đương chống quay cóp trong phòng thi. (App đang tiếp tục cập nhật – Thầy/Cô có thể góp ý cấu trúc hoán vị đề qua Zalo để Thầy Thành hoàn thiện theo ý muốn!).",
+    "title": "SINH ĐỀ BIẾN THỂ (AI PRO)",
+    "description": "Phân tích đề gốc để sinh ngay 3 đề biến thể tương đương chống quay cóp trong phòng thi.",
     "image": "/sinhdebientheVIP.png",
     "url": "#sinh-de-bien-the",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
@@ -158,8 +158,8 @@ export const apps: AppCard[] = [
   // ==================== NHÓM CUỐI: TIỆN ÍCH & VĂN BẢN ====================
   {
     "id": "chuanhoavanbanvip",
-    "title": "CHUẨN HÓA NĐ 30 & SOẠN GIÁO ÁN 5512 (AI WORD)",
-    "description": "Căn lề, chèn Quốc hiệu & khung ký tên chuẩn 100% Nghị định 30/2020 trong Word. Tích hợp soạn giáo án 5512 đủ 4 hoạt động bấm 1 phát ăn luôn!",
+    "title": "CHUẨN HÓA VĂN BẢN (NĐ 30)",
+    "description": "Căn lề, chèn Quốc hiệu, khung ký tên chuẩn 100% Nghị định 30/2020 và hỗ trợ soạn giáo án 5512 trong Word.",
     "image": "/chuanhoavanbanvip.jpg",
     "url": "#chuan-hoa-vb",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
@@ -170,8 +170,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "congthutoan",
-    "title": "CHUYỂN CÔNG THỨC AI SANG MATHTYPE WORD",
-    "description": "Chuyển mã LaTeX từ ChatGPT, Gemini sang MathType Word hiển thị chuẩn đẹp 100%, không lo lệch dòng hay vỡ công thức.",
+    "title": "CÔNG THỨC MATHTYPE",
+    "description": "Chuyển mã LaTeX từ AI sang MathType Word hiển thị chuẩn đẹp 100%, không lo lệch dòng hay vỡ công thức.",
     "image": "/congthucmathtype.jpg",
     "url": "https://web-to-mathtype-word.vercel.app/",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
@@ -182,8 +182,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "screen-record-v2",
-    "title": "SCREEN RECORD PRO V2 (QUAY MÀN HÌNH BTV)",
-    "description": "Quay màn hình bài giảng Full HD sắc nét, khử sạch tạp âm chuẩn phát thanh viên. Tích hợp hiệu ứng chuột Spotlight thu hút học sinh.",
+    "title": "QUAY MÀN HÌNH (SCREEN RECORD)",
+    "description": "Quay màn hình bài giảng Full HD sắc nét, khử tạp âm và tích hợp hiệu ứng chuột Spotlight giảng dạy.",
     "image": "/screenrecord_banner.png",
     "url": "#screen-record",
     "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
@@ -194,8 +194,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "TACH-GOP-PDF",
-    "title": "PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI)",
-    "description": "Tách trang, gộp nhiều giáo án PDF tốc độ cao và tự động lọc sạch các trang trắng rác khi scan tài liệu. Xuất file PDF thật về máy 1-click.",
+    "title": "TÁCH - GỘP PDF (PDF SUITE)",
+    "description": "Tách trang, gộp nhiều giáo án PDF tốc độ cao và tự động lọc sạch các trang trắng rác khi scan tài liệu.",
     "image": "/tachgoppdf.jpg",
     "url": "#tach-gop-pdf",
     "category": "TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM",
@@ -206,8 +206,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "dinhthanh-cleaner-pro",
-    "title": "ĐINH THÀNH CLEANER PRO v4.5 VIP",
-    "description": "Dọn sạch rác Zalo, CapCut, temp phình ổ C và giải phóng RAM, giúp máy tính giáo viên chạy êm mượt, không còn giật lag.",
+    "title": "DỌN RÁC MÁY TÍNH (CLEANER)",
+    "description": "Dọn sạch rác Zalo, temp phình ổ C và giải phóng RAM, giúp máy tính giáo viên chạy êm mượt.",
     "image": "/cleaner_pro_banner.png",
     "url": "#cleaner-pro",
     "category": "TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM",
@@ -218,8 +218,8 @@ export const apps: AppCard[] = [
   },
   {
     "id": "trolyGVCN",
-    "title": "TRỢ LÝ GIÁO VIÊN CHỦ NHIỆM (GVCN)",
-    "description": "Tự động sinh nhận xét học sinh định kỳ, soạn biên bản họp phụ huynh và quản lý nề nếp lớp học chuyên nghiệp, tiết kiệm 90% thời gian.",
+    "title": "TRỢ LÝ CHỦ NHIỆM (GVCN)",
+    "description": "Tự động sinh nhận xét học sinh định kỳ, biên bản họp phụ huynh và quản lý nề nếp lớp học chuyên nghiệp.",
     "image": "/trolygvnn.jpg",
     "url": "https://tro-ly-gvcn.vercel.app/",
     "category": "TIỆN ÍCH MÁY TÍNH & CHỦ NHIỆM",
@@ -228,4 +228,4 @@ export const apps: AppCard[] = [
     "featured": false,
     "order": 17
   }
-];
+];\n

@@ -296,10 +296,10 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base sm:text-lg font-black text-white tracking-tight uppercase">
-                  PHẦN MỀM TẠO ĐỀ KIỂM TRA {curSub.fullName.toUpperCase()} (CV 7991)
+                  TẠO ĐỀ {curSub.name.toUpperCase()} (CV 7991)
                 </h3>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${curSub.badgeBg}`}>
-                  App Độc Lập
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                  CHUẨN CV 7991
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -315,52 +315,6 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           </button>
         </div>
 
-        {/* THANH CHỌN BỘ MÔN (PILLS SELECTOR ĐỘC LẬP TỪNG MÔN) */}
-        <div className="px-6 py-2.5 bg-slate-950/90 border-b border-slate-800/80 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
-          <span className="text-[11px] font-bold text-slate-400 shrink-0 mr-1 flex items-center gap-1">
-            <BookOpen className="w-3.5 h-3.5 text-cyan-400" /> Chọn môn:
-          </span>
-          {SUBJECT_KEYS.map((k) => {
-            const item = SUBJECT_DETAILS[k];
-            const isSelected = currentSubjectKey === k;
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => {
-                  setCurrentSubjectKey(k);
-                  setVerifyMsg('');
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                  isSelected
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md shadow-blue-500/20 ring-1 ring-cyan-400'
-                    : 'bg-slate-800/70 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60'
-                }`}
-              >
-                <span>{item.icon}</span>
-                <span>{item.name}</span>
-              </button>
-            );
-          })}
-
-          {/* NÚT CHUYỂN SANG TIẾNG ANH NẾU CẦN */}
-          {onSwitchToEnglish && (
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onSwitchToEnglish();
-              }}
-              className="px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 text-purple-300 hover:text-white border border-purple-700/50 text-xs font-bold flex items-center gap-1.5 shrink-0 transition ml-auto cursor-pointer"
-              title="Mở ứng dụng Tạo Đề Tiếng Anh THCS riêng biệt"
-            >
-              <span>🇬🇧</span>
-              <span>Tiếng Anh</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-
         {/* NAVIGATION TABS (2 TABS GỌN GÀNG) */}
         <div className="px-6 pt-3 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
@@ -373,7 +327,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               }`}
             >
               <Download className="w-4 h-4" />
-              📥 TẢI VỀ & CÀI ĐẶT MÔN {curSub.name.toUpperCase()}
+              TẢI BỘ CÀI ĐẶT
             </button>
             <button
               onClick={() => setActiveTab('register')}
@@ -384,7 +338,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               }`}
             >
               <Key className="w-4 h-4" />
-              🔑 ĐĂNG KÝ BẢN QUYỀN MÔN {curSub.name.toUpperCase()}
+              ĐĂNG KÝ BẢN QUYỀN
             </button>
           </div>
 
@@ -449,21 +403,23 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
                   <a
                     href={curSub.zipUrl}
-                    download
-                    className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    <span>TẢI BỘ CÀI ĐẶT MÔN {curSub.name.toUpperCase()} (.ZIP - Pass: 123)</span>
+                    <span>TẢI BẢN ZIP (PASS: 123)</span>
                   </a>
 
                   <a
                     href={curSub.exeUrl}
-                    download
-                    className="w-full sm:w-auto py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto py-3 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
                     title="Tải trực tiếp tệp chạy .EXE của môn này"
                   >
-                    <FolderOpen className="w-4 h-4 text-cyan-400" />
-                    <span>Tải file .EXE</span>
+                    <Download className="w-4 h-4 text-cyan-400" />
+                    <span>Tải file .EXE trực tiếp</span>
                   </a>
                 </div>
               </div>
@@ -483,7 +439,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
                     <h6 className="font-bold text-white text-xs">Giải nén bằng Pass: 123</h6>
-                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP $ightarrow$ Chọn Extract Here $ightarrow$ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
+                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP ➔ Chọn Extract Here ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center">3</span>
@@ -491,6 +447,17 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <p className="text-[11px] text-slate-400">Nhấp đúp chuột vào file để mở phần mềm tạo đề {curSub.name} ngay tức thì.</p>
                   </div>
                 </div>
+              </div>
+
+              {/* HƯỚNG DẪN KHI CỐC CỐC / CHROME / WINDOWS BÁO TỆP LẠ */}
+              <div className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-left space-y-1.5 text-xs">
+                <div className="flex items-center gap-2 text-amber-400 font-bold">
+                  <ShieldCheck className="w-4 h-4 shrink-0" />
+                  <span>LƯU Ý KHI TRÌNH DUYỆT BÁO "TỆP NGUY HIỂM / LỖI TẢI XUỐNG":</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  💡 Do phần mềm giáo dục được lập trình Native đóng gói độc lập, chưa đăng ký chứng chỉ doanh nghiệp có trả phí của Microsoft nên Cốc Cốc / Chrome / Defender có thể cảnh báo nhận diện nhầm (False Positive). Phần mềm <strong>an toàn 100%</strong>. Khuyên dùng bấm <strong>Tải bản ZIP (Pass: 123)</strong> để tải mượt mà không bị chặn, hoặc chọn "Giữ lại / Keep anyway".
+                </p>
               </div>
 
               {/* VIDEO HƯỚNG DẪN */}

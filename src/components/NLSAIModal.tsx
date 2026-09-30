@@ -558,7 +558,7 @@ ${generatedDisabilityProcedures}
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
-                  TÍCH HỢP NLS - AI THCS (ADD-INS V3)
+                  TÍCH HỢP NLS - AI (ADD-INS V3)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   CV 5512 CHUẨN 2026 - BẢN NÂNG CẤP V3
@@ -638,7 +638,7 @@ ${generatedDisabilityProcedures}
 
                 <div className="space-y-1.5">
                   <h4 className="text-lg font-black text-white">
-                    Bộ Cài Đặt Word Add-in Tích Hợp NLS & AI THCS
+                    Bộ Cài Đặt Word Add-in Tích Hợp NLS & AI
                   </h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
                     Tự động tích hợp thanh công cụ vào Word 2013-2024 & Office 365. Cài 1-click là dùng được ngay.
@@ -910,7 +910,7 @@ Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Phần mềm Tích hợp NLS - AI THCS V3 (Chuẩn CV 5512) – Bản quyền: Thầy giáo Đinh Văn Thành</span>
+            <span>Phần mềm Tích hợp NLS - AI V3 (Chuẩn CV 5512) – Bản quyền: Thầy giáo Đinh Văn Thành</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -923,7 +923,7 @@ Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
         </div>
 
       </div>
-      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI THCS V3" />
+      <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI V3" />
     </div>
   );
 };
