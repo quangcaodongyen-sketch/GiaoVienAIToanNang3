@@ -214,17 +214,22 @@ ${JSON.stringify(payloadData, null, 2)}
   public async approveRegistrationOnCloud(
     issueNumber: number,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5'
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5',
+    licenseKey?: string,
+    expDate?: string
   ): Promise<boolean> {
     try {
       const now = new Date().toLocaleString('vi-VN');
       const pkgLabel = packageType === 'FULL_WEB' ? 'Full Web' : packageType === '3YEAR' ? '3 Năm Pro' : packageType === '2YEAR' ? '2 Năm VIP' : packageType === '1YEAR' ? '1 Năm' : 'Dùng thử 5 lần';
 
+      const keyLine = licenseKey ? `\n- **Mã kích hoạt Ed25519:** \`${licenseKey}\`\n- **Hạn dùng:** **${expDate || 'Vĩnh viễn'}**` : '';
+      const keyJson = licenseKey ? `,\n  "key": "${licenseKey}",\n  "expDate": "${expDate || ''}"` : '';
+
       const commentBody = `### ✅ XÁC NHẬN DUYỆT BẢN QUYỀN CLOUD
 
 - **Người kích hoạt duyệt:** **${reviewerName}**
 - **Thời gian kích hoạt:** **${now}**
-- **Gói bản quyền được cấp:** **${pkgLabel}**
+- **Gói bản quyền được cấp:** **${pkgLabel}**${keyLine}
 - **Trạng thái:** HOẠT ĐỘNG (ACTIVE)
 
 \`\`\`gvai-review
@@ -232,7 +237,7 @@ ${JSON.stringify(payloadData, null, 2)}
   "status": "APPROVED",
   "reviewedBy": "${reviewerName}",
   "reviewedAt": "${now}",
-  "packageType": "${packageType}"
+  "packageType": "${packageType}"${keyJson}
 }
 \`\`\`
 `;

@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": "REG-1790723093549",
+    "machineId": "NLS-DVT-0B1D-A6A7-5A14",
+    "fullName": "Đinh Văn Thành - PC",
+    "schoolUnit": "Trường THCS Đồng Yên",
+    "phoneNumber": "0915213717",
+    "appId": "nls-ai",
+    "appName": "Tích Hợp NLS - AI",
+    "packageType": "1YEAR",
+    "price": "Bản quyền theo năm",
+    "status": "APPROVED",
+    "createdAt": "30/09/2026 06:04:53",
+    "key": "KEY-NLS-20270930-LF3SQG-SEVYJQ-U2NQFQ-E4SUW3-UF7YRC-3PHBQX-SIMV2L-N3V6HA-J2B7UX-PI7D73-XTGIO3-WNFW2Z-GYO7VR-7HUH32-5XRAHS-A53JHW-QFGHID-Q",
+    "reviewedBy": "Thầy Đinh Văn Thành"
+  }
+]

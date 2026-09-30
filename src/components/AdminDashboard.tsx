@@ -399,9 +399,42 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
     const res = activityTrackingService.approveRegistration(id, reviewer, pkg);
 
-    // Đồng bộ duyệt lên Cloud
+    // Đồng bộ duyệt lên Cloud kèm Key Ed25519 được ký số tự động tức thì
     if (issueNumber) {
-      await cloudSyncService.approveRegistrationOnCloud(issueNumber, reviewer, pkg || '1YEAR');
+      let licenseKey = '';
+      let expDateStr = '';
+      try {
+        const targetReq = reqList.find(r => r.id === id || r.issueNumber === issueNumber);
+        if (targetReq && targetReq.machineId) {
+          const mid = targetReq.machineId.trim();
+          let years = 1;
+          if (pkg === '2YEAR') years = 2;
+          else if (pkg === '3YEAR') years = 3;
+          else if (pkg === 'FULL_WEB') years = 99;
+
+          let appTag = 'NLS';
+          let productId = 'NLS_AI_THCS';
+          const appIdLower = (targetReq.appId || '').toLowerCase();
+          if (appIdLower.includes('15p') || appIdLower.includes('taode-15p')) {
+            appTag = 'ENG15';
+            productId = 'ENG15';
+          } else if (appIdLower.includes('tienganh') || appIdLower.includes('taode-tienganh')) {
+            appTag = 'ENG';
+            productId = 'ENG';
+          } else if (appIdLower.includes('taode')) {
+            appTag = 'TAODE';
+            productId = 'TAODE';
+          }
+
+          const genRes = await generateEd25519Key(mid, years, appTag, productId);
+          licenseKey = genRes.key;
+          expDateStr = genRes.expDate;
+        }
+      } catch (errKey) {
+        console.warn('Lỗi sinh key Ed25519 khi duyệt Cloud:', errKey);
+      }
+
+      await cloudSyncService.approveRegistrationOnCloud(issueNumber, reviewer, pkg || '1YEAR', licenseKey, expDateStr);
     }
 
     alert(`✅ ${res.message}\n\nThông tin người kích hoạt: [${reviewer}] đã được lưu lên Cloud để Quản lý nắm bắt!`);
