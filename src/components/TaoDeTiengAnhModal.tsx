@@ -68,12 +68,12 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     setTimeout(() => setCopiedMid(false), 2500);
   };
 
-  const handleActivateKey = () => {
+  const handleActivateKey = async () => {
     if (!inputKey.trim()) {
       setVerifyResult({ isValid: false, message: 'Vui lòng dán Mã kích hoạt do Thầy Thành cấp!' });
       return;
     }
-    const res = verifyExamLicenseKey(inputKey, detectedMid);
+    const res = await verifyExamLicenseKey(inputKey, detectedMid);
     setVerifyResult(res);
     if (res.isValid) {
       setIsProActive(true);

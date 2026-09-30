@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
-import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem } from '../services/activityTrackingService';
+import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem, isAdminMachine } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
@@ -425,7 +425,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // HÀM KÍCH HOẠT THEO NĂM CHÍNH THỨC CỦA ADMIN (1 NĂM, 2 NĂM, 3 NĂM, TRỌN ĐỜI)
   const handleActivateMachineByYear = async (
     machineId: string,
-    pkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' = '1YEAR',
+    pkg: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME' = '1YEAR',
     options?: {
       issueNumber?: number;
       fullName?: string;

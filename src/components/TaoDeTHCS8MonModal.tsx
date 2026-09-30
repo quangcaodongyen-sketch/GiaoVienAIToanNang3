@@ -5,18 +5,11 @@ import {
   Key,
   ShieldCheck,
   CheckCircle2,
-  AlertCircle,
   Copy,
   ExternalLink,
   Laptop,
   Check,
-  Play,
-  FileCheck2,
-  HelpCircle,
-  Sparkles,
-  BookOpen,
-  ArrowRight,
-  FolderOpen
+  Play
 } from 'lucide-react';
 import { BRAND, EXAM_7MON_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';

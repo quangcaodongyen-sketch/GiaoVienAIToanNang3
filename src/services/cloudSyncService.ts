@@ -36,7 +36,7 @@ class CloudSyncService {
     phoneNumber: string;
     appId: string;
     appName: string;
-    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | 'FULL_WEB';
+    packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME';
     price?: string;
     createdAt?: string;
   }): Promise<{ success: boolean; issueNumber?: number; message: string }> {
@@ -249,7 +249,7 @@ ${JSON.stringify(payloadData, null, 2)}
   public async approveRegistrationOnCloud(
     issueNumber: number,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5',
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME',
     licenseKey?: string,
     expDate?: string,
     machineId?: string,
@@ -310,7 +310,7 @@ ${JSON.stringify(payloadData, null, 2)}
   public async ensureAndApproveMachineOnCloud(
     machineId: string,
     reviewerName: string,
-    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB',
+    packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME',
     licenseKey?: string,
     expDate?: string,
     fullName?: string,
@@ -523,7 +523,7 @@ ${JSON.stringify(payloadData, null, 2)}
   // Kiểm tra máy tính hiện tại trên Cloud xem đã được duyệt hay bị khóa chưa
   public async checkCurrentMachineCloudStatus(machineId: string): Promise<{
     isApproved: boolean;
-    packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'FULL_WEB';
+    packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'FULL_WEB' | 'LIFETIME';
     approvedBy?: string;
     approvedAt?: string;
     isBlocked: boolean;

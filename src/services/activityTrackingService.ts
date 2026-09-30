@@ -68,8 +68,9 @@ export interface RegistrationRequest {
   phoneNumber: string;
   appId: string;
   appName: string;
-  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB';
-  price: string;
+  packageType: 'TRIAL_5' | '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'LIFETIME';
+  price?: string;
+  issueNumber?: number;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
   reviewedBy?: string;
@@ -540,7 +541,7 @@ class ActivityTrackingService {
   public approveRegistration(
     id: string,
     reviewerName: string,
-    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5',
+    pkgOverride?: '1YEAR' | '2YEAR' | '3YEAR' | 'FULL_WEB' | 'TRIAL_5' | 'LIFETIME',
     fallbackItem?: RegistrationRequest
   ): { success: boolean; message: string } {
     let list = this.getAllRegistrations();

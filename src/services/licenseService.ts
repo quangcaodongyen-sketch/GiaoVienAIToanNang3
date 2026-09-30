@@ -6,6 +6,8 @@ export interface LicenseRecord {
   teacher_name: string;
   phone_zalo: string;
   school_unit: string;
+  school_name?: string;
+  phone_number?: string;
   package_type: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME' | 'TRIAL';
   status: 'ACTIVE' | 'PENDING' | 'EXPIRED' | 'REVOKED';
   expiry_timestamp: number;
@@ -269,7 +271,9 @@ class LicenseService {
         machine_id: mid,
         teacher_name: 'Giáo viên',
         school_name: 'Trường THCS',
+        school_unit: 'Trường THCS',
         phone_number: '',
+        phone_zalo: '',
         package_type: packageType,
         status: 'ACTIVE',
         activated_at: now,

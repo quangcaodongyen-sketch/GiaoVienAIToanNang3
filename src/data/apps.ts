@@ -228,4 +228,4 @@ export const apps: AppCard[] = [
     "featured": false,
     "order": 17
   }
-];\n
+];
