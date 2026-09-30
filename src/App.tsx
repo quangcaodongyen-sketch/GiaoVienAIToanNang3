@@ -5,7 +5,6 @@ import {
   X, 
   Sparkles, 
   ExternalLink, 
-  BookOpen, 
   Phone, 
   MessageCircle, 
   Share2, 
@@ -330,9 +329,6 @@ export default function App() {
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs">
                     BẢN CHÍNH THỨC
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm border border-emerald-400/40">
-                    👑 MÁY THẦY THÀNH (VIP PRO)
-                  </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
                   <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
@@ -346,15 +342,8 @@ export default function App() {
               </div>
             </a>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Tinh gọn, không trùng lặp */}
             <div className="hidden md:flex items-center gap-2 lg:gap-3 font-medium text-slate-700 text-sm">
-              <a
-                href="#apps"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
-              >
-                <BookOpen className="w-4 h-4 text-blue-600" />
-                <span>Kho ứng dụng</span>
-              </a>
               <a
                 href="#about"
                 className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
@@ -362,15 +351,8 @@ export default function App() {
                 <UserCheck className="w-4 h-4 text-slate-500" />
                 <span>Về tác giả</span>
               </a>
-              <a
-                href="#contact"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-[#2563EB] hover:bg-blue-50/70 transition-all font-semibold flex items-center gap-1.5"
-              >
-                <Phone className="w-4 h-4 text-teal-600" />
-                <span>Liên hệ</span>
-              </a>
 
-              {/* Nút Đăng Ký Dùng Thử 5 Lần */}
+              {/* Nút Đăng Ký Thành Viên */}
               <button
                 onClick={() => setShowTrialModal(true)}
                 className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-600/20 transition-all text-xs font-black flex items-center gap-1.5 active:scale-95 cursor-pointer"
@@ -380,33 +362,26 @@ export default function App() {
                 <span>ĐĂNG KÝ THÀNH VIÊN</span>
               </button>
 
-              {/* Quản trị Cloud Button */}
+              {/* Nút Quản Trị Admin */}
               <button
                 onClick={() => setShowAdminDashboard(true)}
-                className="ml-1 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-yellow-500/10 hover:from-amber-500/20 hover:to-yellow-500/20 text-amber-900 border border-amber-300/80 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:shadow-xs group"
+                className="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-400/15 to-yellow-500/10 hover:from-amber-500/20 hover:to-yellow-500/20 text-amber-900 border border-amber-300/80 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:shadow-xs group cursor-pointer"
                 title="Quản trị Bản quyền Cloud 24/7"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
-                <span>Quản trị Cloud</span>
+                <span>Quản Trị Admin</span>
               </button>
 
-              {/* Primary Hotline / Zalo Button */}
+              {/* Nút Zalo Hỗ Trợ Duy Nhất */}
               <a
                 href={BRAND.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200/80 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+                title={`Hotline / Zalo: ${BRAND.phone}`}
               >
                 <MessageCircle className="w-3.5 h-3.5 text-[#0D9488]" />
-                <span>Zalo Hỗ trợ</span>
-              </a>
-
-              {/* Primary Contact CTA */}
-              <a 
-                href="#contact" 
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#123A63] to-[#2563EB] hover:from-[#0f2d4f] hover:to-blue-600 text-white transition-all text-sm font-semibold shadow-md shadow-blue-900/15 hover:shadow-blue-600/30 hover:scale-[1.02]"
-              >
-                Hỗ trợ ngay
+                <span>Zalo: {BRAND.phone}</span>
               </a>
             </div>
 
@@ -422,31 +397,25 @@ export default function App() {
 
           {/* Mobile Navigation Drawer */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-slate-200/80 flex flex-col gap-2 font-medium text-slate-700 text-sm animate-fadeIn">
-              <a 
-                href="#apps" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
-              >
-                <BookOpen className="w-4 h-4 text-blue-600" />
-                Kho ứng dụng AI
-              </a>
+            <div className="md:hidden py-3 border-t border-slate-200/80 flex flex-col gap-2 font-medium text-slate-700 text-sm animate-fadeIn">
               <a 
                 href="#about" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
+                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
               >
                 <UserCheck className="w-4 h-4 text-slate-600" />
                 Về tác giả
               </a>
-              <a 
-                href="#contact" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setShowTrialModal(true);
+                }}
+                className="px-3.5 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-left flex items-center gap-2.5 shadow-2xs"
               >
-                <Phone className="w-4 h-4 text-teal-600" />
-                Liên hệ hỗ trợ
-              </a>
+                <Sparkles className="w-4 h-4 text-emerald-600" />
+                Đăng Ký Thành Viên (Dùng thử miễn phí)
+              </button>
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
@@ -455,7 +424,7 @@ export default function App() {
                 className="px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-bold text-left flex items-center gap-2.5 shadow-2xs"
               >
                 <Crown className="w-4 h-4 text-amber-600" />
-                Quản trị Bản quyền Cloud
+                Quản trị Admin Cloud
               </button>
               <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
                 <a
@@ -465,7 +434,7 @@ export default function App() {
                   className="w-full text-center px-4 py-2.5 rounded-xl bg-[#0D9488] hover:bg-teal-700 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Chat Zalo: {BRAND.phone}
+                  Zalo: {BRAND.phone}
                 </a>
               </div>
             </div>
@@ -474,42 +443,29 @@ export default function App() {
       </header>
 
             <main className="flex-1">
-        {/* HERO SECTION - SIÊU GỌN GÀNG, TIẾT KIỆM DIỆN TÍCH TỐI ĐA */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-[#081329] via-[#0E1E38] to-[#122B4F] text-white py-4 sm:py-5 border-b border-blue-900/40">
+        {/* HERO SECTION - SIÊU GỌN GÀNG, TIẾT KIỆM DIỆN TÍCH TỐI ĐA (ĐÃ BỎ CÁC NÚT TRÙNG LẶP VỚI NAVBAR) */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#081329] via-[#0E1E38] to-[#122B4F] text-white py-3 sm:py-3.5 border-b border-blue-900/40">
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
-              <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-200 text-[10px] font-black uppercase tracking-wider mb-1.5">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 text-center sm:text-left">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-200 text-[10px] font-black uppercase tracking-wider mb-1">
                   <Sparkles className="w-3 h-3 text-amber-300" />
                   <span>HỆ SINH THÁI GIÁO VIÊN AI THCS • BẢN CHÍNH THỨC 2026</span>
                 </div>
-                <h1 className="text-lg sm:text-2xl font-black tracking-tight text-white flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                  <span>Hệ Thống Phần Mềm Giáo Viên AI Toàn Năng</span>
+                <h1 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                  <span>Hệ Thống Phần Mềm Giáo Viên AI Toàn Năng (12 Môn THCS)</span>
                 </h1>
-                <p className="mt-0.5 text-xs text-slate-300 max-w-3xl font-normal leading-relaxed">
+                <p className="mt-0.5 text-xs text-slate-300 font-normal leading-relaxed">
                   Tích hợp NLS & AI (5512), Tạo đề 8 môn THCS (7991), Luyện nghe MP3, Chuẩn hóa văn bản NĐ 30 • Tác giả: Thầy Đinh Văn Thành (<strong className="text-emerald-400">Hotline/Zalo: 0915.213717</strong>)
                 </p>
               </div>
 
-              {/* Nút hành động nhanh gọn gàng */}
-              <div className="flex items-center gap-2 shrink-0 flex-wrap justify-center">
-                <button
-                  onClick={() => setShowAdminDashboard(true)}
-                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-400/40 backdrop-blur-md flex items-center gap-1.5 transition cursor-pointer shadow-sm"
-                  title="Mở bảng Quản trị Bản quyền Cloud"
-                >
-                  <Crown className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Quản Trị Admin</span>
-                </button>
-                <a
-                  href={BRAND.zaloUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-xl bg-teal-600/30 hover:bg-teal-600/40 text-teal-200 border border-teal-500/40 font-bold text-xs flex items-center gap-1.5 transition shadow-sm"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 text-teal-400" />
-                  <span>Zalo: {BRAND.phone}</span>
-                </a>
+              {/* Huy hiệu bảo chứng tinh gọn bên phải */}
+              <div className="hidden lg:flex items-center gap-2 shrink-0">
+                <span className="px-3 py-1.5 rounded-xl bg-blue-950/60 border border-blue-500/30 text-blue-200 text-xs font-semibold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Toàn diện 12 môn THCS
+                </span>
               </div>
             </div>
           </div>
