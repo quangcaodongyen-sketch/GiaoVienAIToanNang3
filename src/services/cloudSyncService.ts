@@ -116,7 +116,7 @@ ${JSON.stringify(payloadData, null, 2)}
         const isDeleted = issue.labels?.some((l: any) => l.name === 'status:deleted') || issue.title?.includes('[ĐÃ XÓA]');
         if (isDeleted) continue;
 
-        const isReg = issue.labels?.some((l: any) => l.name === 'registration') || issue.title?.includes('[ĐĂNG KÝ');
+        const isReg = issue.labels?.some((l: any) => l.name === 'registration' || l.name === 'renewal') || issue.title?.includes('[ĐĂNG KÝ') || issue.title?.includes('[XIN GIA HẠN]');
         if (!isReg) continue;
 
         // Nếu issue đã closed mà không phải status:approved -> Bỏ qua hoàn toàn
@@ -194,8 +194,8 @@ ${JSON.stringify(payloadData, null, 2)}
           uniqueMap.set(key, item);
         } else {
           const prev = uniqueMap.get(key)!;
-          // Ưu tiên bản ghi đã APPROVED
-          if (item.status === 'APPROVED' && prev.status !== 'APPROVED') {
+          // ƯU TIÊN TUYỆT ĐỐI ĐƠN PENDING (Chờ duyệt / Xin gia hạn) để Admin luôn nhận thông báo và duyệt được!
+          if (item.status === 'PENDING' && prev.status !== 'PENDING') {
             uniqueMap.set(key, item);
           } else if (item.status === prev.status) {
             // Cập nhật thông tin mới nhất

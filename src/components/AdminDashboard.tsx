@@ -313,16 +313,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       if (cloudRegs.length > 0) {
         const mergedMap = new Map<string, any>();
         // Key kết hợp (machineId + appId): Mỗi máy đăng ký app nào thì quản lý app đó
-        // Nếu cùng máy gửi lại cập nhật app đó thì đè lên (không tạo nhiều tên trùng lặp)
-        // Nếu cùng máy đăng ký thêm app khác thì vẫn hiển thị đầy đủ từng app!
+        // Ưu tiên tuyệt đối đơn PENDING (Chờ duyệt / Xin gia hạn) để Admin nhận thông báo
         for (const cr of cloudRegs) {
           const k = `${cr.machineId}__${cr.appId || cr.appName || 'all'}`;
-          mergedMap.set(k, cr);
+          if (!mergedMap.has(k)) {
+            mergedMap.set(k, cr);
+          } else {
+            const prev = mergedMap.get(k);
+            if (cr.status === 'PENDING' && prev.status !== 'PENDING') {
+              mergedMap.set(k, cr);
+            }
+          }
         }
         for (const lr of localRegs) {
           const k = `${lr.machineId}__${lr.appId || lr.appName || 'all'}`;
           if (!mergedMap.has(k)) {
             mergedMap.set(k, lr);
+          } else {
+            const prev = mergedMap.get(k);
+            if (lr.status === 'PENDING' && prev.status !== 'PENDING') {
+              mergedMap.set(k, lr);
+            }
           }
         }
         localRegs = Array.from(mergedMap.values());
