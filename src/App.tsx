@@ -362,6 +362,7 @@ export default function App() {
 
             {/* Desktop Navigation Items */}
             <div className="hidden md:flex items-center gap-2 lg:gap-3 font-medium text-slate-700 text-sm">
+              {/* Tạm ẩn Giới thiệu theo yêu cầu của Thầy Thành
               <a
                 href="#about"
                 className="px-3.5 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-slate-100 transition-all font-semibold flex items-center gap-1.5"
@@ -369,6 +370,7 @@ export default function App() {
                 <UserCheck className="w-4 h-4 text-slate-500" />
                 <span>Giới thiệu</span>
               </a>
+              */}
 
               {/* Nút Đăng Ký Dùng Thử */}
               <button
@@ -416,6 +418,7 @@ export default function App() {
           {/* Mobile Drawer */}
           {isMobileMenuOpen && (
             <div className="md:hidden py-3 border-t border-slate-200/80 flex flex-col gap-2 font-medium text-slate-700 text-sm animate-fadeIn">
+              {/* Tạm ẩn theo yêu cầu của Thầy Thành
               <a 
                 href="#about" 
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -424,6 +427,7 @@ export default function App() {
                 <UserCheck className="w-4 h-4 text-slate-600" />
                 Về tác giả & Dự án
               </a>
+              */}
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
@@ -702,7 +706,8 @@ export default function App() {
           </div>
         </section>
 
-        {/* ABOUT AUTHOR SECTION */}
+        {/* ABOUT AUTHOR SECTION - TẠM ẨN THEO YÊU CẦU CỦA THẦY THÀNH */}
+        {/*
         <section id="about" className="py-16 sm:py-24 bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-12">
@@ -715,19 +720,15 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              {/* Photo Column */}
               <div className="lg:col-span-5 flex justify-center">
                 <div className="relative w-full max-w-md">
-                  {/* Laptop / Computer style Frame */}
                   <div className="bg-slate-900 p-2.5 rounded-2xl shadow-2xl border border-slate-700">
-                    {/* Screen Header Dots */}
                     <div className="flex items-center gap-1.5 px-2 pb-2">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                       <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                       <span className="ml-2 text-[10px] text-slate-400 font-mono">dinhvanthanh.jpg</span>
                     </div>
-                    {/* Photo Container */}
                     <div className="relative aspect-[4/5] bg-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
                       {!imgError ? (
                         <img
@@ -749,7 +750,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bio Content Column */}
               <div className="lg:col-span-7 space-y-5">
                 <div className="space-y-3.5 text-slate-700 text-sm sm:text-base leading-relaxed">
                   <p className="text-lg sm:text-xl font-bold text-[#123A63]">
@@ -759,7 +759,6 @@ export default function App() {
                     {BRAND.about.paragraph1}
                   </p>
 
-                  {/* Khung tính năng cốt lõi bám sát ứng dụng */}
                   <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/90 text-xs sm:text-sm space-y-2">
                     <div className="font-bold text-[#123A63] flex items-center gap-1.5 mb-1.5">
                       <Sparkles className="w-4 h-4 text-blue-600" />
@@ -790,7 +789,6 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* Quote Card */}
                 <div className="p-4 rounded-xl bg-blue-50/60 border-l-4 border-[#2563EB] space-y-1.5">
                   <div className="flex gap-2.5 items-start">
                     <Quote className="w-5 h-5 text-[#2563EB] shrink-0 mt-0.5" />
@@ -800,7 +798,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Contact Detail Cards */}
                 <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-medium">
                   <div className="p-4 rounded-xl bg-[#F6F8FC] border border-slate-200 flex items-start gap-3">
                     <GraduationCap className="w-5 h-5 text-[#123A63] shrink-0 mt-0.5" />
@@ -821,7 +818,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="pt-4 flex flex-wrap items-center gap-3">
                   <a
                     href={BRAND.facebookUrl}
@@ -853,6 +849,7 @@ export default function App() {
             </div>
           </div>
         </section>
+        */}
 
         {/* CONTACT SECTION */}
         <section id="contact" className="py-16 sm:py-20 bg-[#F6F8FC]">
