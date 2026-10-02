@@ -662,6 +662,7 @@ ${generatedDisabilityProcedures}
                     </div>
                     <a
                       href={NLS_RESOURCES.fullZipUrl}
+                      download="Bo_Cai_Tich_Hop_NLS_AI_THCS_Full_Pass_123.zip"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap shadow-lg shadow-emerald-500/20 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
@@ -674,11 +675,12 @@ ${generatedDisabilityProcedures}
                     <div>
                       <span className="text-xs font-bold text-white">Bản Cài Đặt Tự Động (.exe trực tiếp)</span>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Dành cho máy tính không bị chặn tải exe. Nhấp đúp là tự cài vào Word.
+                        Dành cho máy tính không bị chặn tải exe. Tên file: <strong>Cai_Dat_Tich_Hop_NLS_AI_THCS_ChayTrenWord.exe</strong>
                       </p>
                     </div>
                     <a
                       href={NLS_RESOURCES.exeUrl}
+                      download="Cai_Dat_Tich_Hop_NLS_AI_THCS_ChayTrenWord.exe"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
@@ -691,12 +693,12 @@ ${generatedDisabilityProcedures}
                     <div>
                       <span className="text-xs font-bold text-white">File Ribbon Word Trực Tiếp (.dotm - 50 KB)</span>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Tải trong 1 giây, mở trực tiếp bằng Word là dùng ngay không cần cài đặt.
+                        Tải trong 1 giây, mở trực tiếp bằng Word. Tên file: <strong>TichHop_NLS_AI_THCS_Addin.dotm</strong>
                       </p>
                     </div>
                     <a
                       href="/TichHop_NLS_AI_THCS.dotm"
-                      download="TichHop_NLS_AI_THCS.dotm"
+                      download="TichHop_NLS_AI_THCS_Addin.dotm"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
                     >
                       <FileCode className="w-4 h-4 text-amber-400" />
@@ -746,6 +748,7 @@ ${generatedDisabilityProcedures}
                 </div>
                 <a
                   href="/HD_tich_hop_NLS_AI.mp4"
+                  download="Huong_Dan_Tich_Hop_NLS_AI_V3_CV5512.mp4"
                   target="_blank"
                   className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                 >
@@ -758,6 +761,51 @@ ${generatedDisabilityProcedures}
 
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto py-1">
+              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
+              <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
+                    <img
+                      src="/dinhvanthanh.jpg"
+                      alt="Thầy Đinh Văn Thành"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
+                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                    </h4>
+                    <p className="text-xs text-slate-200">
+                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      • Phần mềm: <strong>TÍCH HỢP NLS & AI (ADD-INS V3)</strong> (Chuẩn Khung NLS TT 02/2025, AI QĐ 2422 & CV 5512)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex sm:flex-col gap-2 shrink-0 w-full sm:w-auto">
+                  <a
+                    href="https://zalo.me/0915213717"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> Chat Zalo
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText("0915213717");
+                      alert("Đã sao chép SĐT Thầy Thành: 0915.213717");
+                    }}
+                    className="py-1 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1 transition"
+                  >
+                    <Copy className="w-3 h-3" /> Copy SĐT
+                  </button>
+                </div>
+              </div>
+
               {/* KHUNG 1: NHẬP MÃ KÍCH HOẠT NẾU ĐÃ CÓ KEY */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-emerald-950/60 border border-amber-500/40 space-y-3">
                 <div className="flex items-center justify-between">

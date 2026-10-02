@@ -49,10 +49,10 @@ export const NLS_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
 export const EXAM_RESOURCES = {
-  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp siêu tốc từ GitHub Releases
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
-  // Link tải bộ cài Word .exe trực tiếp
-  exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
+  // Link tải trọn bộ cài đặt .zip (Pass: 123) trực tiếp
+  fullZipUrl: "/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  // Link tải bộ cài Word .exe trực tiếp tên rõ ràng không gây nhầm lẫn
+  exeWordUrl: "/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   // Link tải bản Desktop .exe trực tiếp
   exeDesktopUrl: "/Tao_De_Tieng_Anh_Desktop.exe",
   // Link video hướng dẫn

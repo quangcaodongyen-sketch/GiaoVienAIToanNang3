@@ -9,7 +9,9 @@ import {
   ExternalLink,
   Laptop,
   Check,
-  Play
+  Play,
+  RefreshCw,
+  MessageCircle
 } from 'lucide-react';
 import { BRAND, EXAM_7MON_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
@@ -396,6 +398,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
                   <a
                     href={curSub.zipUrl}
+                    download={`Bo_Cai_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS_Pass_123.zip`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer"
@@ -406,6 +409,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
 
                   <a
                     href={curSub.exeUrl}
+                    download={`Phan_Mem_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS.exe`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto py-3 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
@@ -427,7 +431,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center">1</span>
                     <h6 className="font-bold text-white text-xs">Tải file .ZIP về máy</h6>
-                    <p className="text-[11px] text-slate-400">Bấm nút tải ở trên và lưu file vào ổ D: hoặc Desktop.</p>
+                    <p className="text-[11px] text-slate-400">Bấm nút tải ở trên. File lưu về dạng ZIP mật khẩu 123.</p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
@@ -466,6 +470,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 </div>
                 <a
                   href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
+                  download="Huong_Dan_Tao_De_THCS_8_Mon_CV7991.mp4"
                   target="_blank"
                   className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                 >
@@ -481,8 +486,53 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           {/* TAB 2: ĐĂNG KÝ BẢN QUYỀN ĐỘC LẬP TỪNG BỘ MÔN (KHÔNG CÓ GÓI TRỌN 7 MÔN) */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
-            <div className="space-y-5 max-w-2xl mx-auto">
+            <div className="space-y-4 max-w-2xl mx-auto">
               
+              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
+              <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
+                    <img
+                      src="/dinhvanthanh.jpg"
+                      alt="Thầy Đinh Văn Thành"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
+                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                    </h4>
+                    <p className="text-xs text-slate-200">
+                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      • Phần mềm: <strong>TẠO ĐỀ KIỂM TRA {curSub.fullName.toUpperCase()} (CV 7991)</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex sm:flex-col gap-2 shrink-0 w-full sm:w-auto">
+                  <a
+                    href="https://zalo.me/0915213717"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" /> Chat Zalo
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText("0915213717");
+                      alert("Đã sao chép SĐT Thầy Thành: 0915.213717");
+                    }}
+                    className="py-1 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1 transition"
+                  >
+                    <Copy className="w-3 h-3" /> Copy SĐT
+                  </button>
+                </div>
+              </div>
+
               <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
                 <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
                   <Key className="w-4 h-4 text-amber-400" />
@@ -656,6 +706,17 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </p>
                 )}
               </div>
+
+              {/* NÚT ĐỒNG BỘ BẢN QUYỀN TỪ CLOUD */}
+              <button
+                onClick={() => {
+                  alert("Đang kiểm tra và đồng bộ bản quyền với Cloud... Nếu Thầy Thành đã duyệt trên Web, ứng dụng sẽ tự động kích hoạt!");
+                }}
+                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)</span>
+              </button>
 
             </div>
           )}

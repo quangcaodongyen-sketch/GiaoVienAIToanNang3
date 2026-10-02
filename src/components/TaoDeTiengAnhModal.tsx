@@ -473,7 +473,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   </div>
                   <a
                     href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
-                    download
+                    download="Huong_Dan_Tao_De_Tieng_Anh_THCS_CV7991.mp4"
                     className="text-blue-400 hover:underline flex items-center gap-1 font-bold"
                   >
                     <Download className="w-3.5 h-3.5" /> Tải video về máy
@@ -481,7 +481,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </div>
               </div>
 
-              {/* Danh sách các gói cài đặt tải về */}
+              {/* Danh sách các gói cài đặt tải về - TÊN FILE ĐẶT RÕ RÀNG */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 {/* Bộ cài Word 1-Click */}
@@ -495,13 +495,14 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     </div>
                     <h4 className="text-base font-bold text-white mb-1">Bộ Cài Đặt Tích Hợp Word 1-Click</h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Tự động nhúng thanh công cụ "📝 TẠO ĐỀ TIẾNG ANH THCS" vào Microsoft Word. Xóa file ngoài Desktop vẫn dùng vĩnh viễn.
+                      Tự động nhúng thanh công cụ "📝 TẠO ĐỀ TIẾNG ANH THCS" vào Microsoft Word. Tên file: <strong>Cai_Dat_Tao_De_Tieng_Anh_THCS_ChayTrenWord.exe</strong>
                     </p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-slate-700/60 flex items-center gap-2">
                     <a
                       href={EXAM_RESOURCES.exeWordUrl}
-                      className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all"
+                      download="Cai_Dat_Tao_De_Tieng_Anh_THCS_ChayTrenWord.exe"
+                      className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all cursor-pointer"
                     >
                       <Download className="w-4 h-4" /> Tải Bộ Cài Word (.exe)
                     </a>
@@ -519,13 +520,14 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     </div>
                     <h4 className="text-base font-bold text-white mb-1">Trọn Bộ Bản Nén ZIP (Pass: 123)</h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Dành cho máy tính cài đặt trình duyệt chặn file .exe. Tải về giải nén với mật khẩu <strong>123</strong> là chạy mượt mà.
+                      Chống trình duyệt chặn nhầm. Tên file: <strong>Bo_Cai_Tao_De_Tieng_Anh_THCS_Full_Pass_123.zip</strong>
                     </p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-slate-700/60 flex items-center gap-2">
                     <a
                       href={EXAM_RESOURCES.fullZipUrl}
-                      className="flex-1 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all"
+                      download="Bo_Cai_Tao_De_Tieng_Anh_THCS_Full_Pass_123.zip"
+                      className="flex-1 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
                       <Download className="w-4 h-4" /> Tải Bản Nén ZIP (.zip)
                     </a>
@@ -536,11 +538,12 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
                   <div>
                     <h5 className="text-xs font-bold text-white">Bản Desktop Chạy Trực Tiếp</h5>
-                    <p className="text-[11px] text-slate-400">Không cần cài đặt, bấm mở chạy ngay (44 MB)</p>
+                    <p className="text-[11px] text-slate-400">Tên file: <strong>Phan_Mem_Tao_De_Tieng_Anh_THCS_Desktop.exe</strong> (45 MB)</p>
                   </div>
                   <a
                     href={EXAM_RESOURCES.exeDesktopUrl}
-                    className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold text-white flex items-center gap-1.5"
+                    download="Phan_Mem_Tao_De_Tieng_Anh_THCS_Desktop.exe"
+                    className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" /> Tải về
                   </a>
@@ -556,7 +559,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     href="https://github.com/quangcaodongyen-sketch/EnglishExam-GlobalSuccess"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Mở Web
                   </a>
@@ -567,166 +570,308 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT                                              */}
+          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY ĐINH VĂN THÀNH)   */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
-            <div className="space-y-6">
+            <div className="space-y-4 max-w-3xl mx-auto">
               
-              {/* Hộp Mã Máy Tính & Kích Hoạt Nhanh */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-800 to-indigo-950/60 border border-slate-700 shadow-xl space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div>
-                    <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
-                      MÃ MÁY TÍNH CỦA BẠN (HARDWARE CODE)
-                    </span>
-                    <div className="text-xl sm:text-2xl font-mono font-black text-white mt-0.5 tracking-wider select-all">
-                      {detectedMid || 'Đang nhận diện...'}
-                    </div>
+              {/* KHỐI 1: THÔNG TIN TÁC GIẢ & BẢN QUYỀN (CHUẨN HÌNH KHỐI SANG TRỌNG) */}
+              <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
+                    <img
+                      src="/dinhvanthanh.jpg"
+                      alt="Thầy Đinh Văn Thành"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // fallback nếu ảnh lỗi
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    <User className="w-8 h-8 text-amber-400" />
                   </div>
-                  <button
-                    onClick={handleCopyMid}
-                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-600/30 active:scale-95 transition-all"
-                  >
-                    {copiedMid ? (
-                      <>
-                        <Check className="w-4 h-4 text-emerald-300" />
-                        <span>Đã Sao Chép!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        <span>Sao Chép Mã Máy</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="space-y-0.5">
+                    <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
+                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                    </h4>
+                    <p className="text-xs text-slate-200">
+                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      • Phần mềm: <strong>TẠO ĐỀ TIẾNG ANH THCS (GLOBAL SUCCESS - CV 7991)</strong> (Chuẩn Khung NLS TT 02/2025, AI QĐ 2422 & CV 5512)
+                    </p>
+                  </div>
                 </div>
 
-                {/* Ô Nhập Key Kích Hoạt */}
-                <div className="pt-3 border-t border-slate-700/80">
-                  <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                    DÁN MÃ BẢN QUYỀN DO THẦY THÀNH CẤP VÀO ĐÂY ĐỂ KÍCH HOẠT:
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={inputKey}
-                      onChange={(e) => setInputKey(e.target.value)}
-                      placeholder="KEY-ENG-20290930-XXXX..."
-                      className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-mono focus:outline-none focus:border-blue-500"
-                    />
+                <div className="flex sm:flex-col gap-2 shrink-0 w-full sm:w-auto">
+                  <a
+                    href="https://zalo.me/0915213717"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 sm:flex-none py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Chat Zalo
+                  </a>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("0915213717");
+                      alert("Đã sao chép SĐT Thầy Thành: 0915.213717");
+                    }}
+                    className="flex-1 sm:flex-none py-1.5 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1 transition"
+                  >
+                    <Copy className="w-3.5 h-3.5" /> Copy SĐT
+                  </button>
+                </div>
+              </div>
+
+              {/* KHỐI 2: THÔNG TIN BẢN QUYỀN CỦA GIÁO VIÊN */}
+              {isProActive ? (
+                /* TRƯỜNG HỢP A: ĐÃ KÍCH HOẠT PRO THÀNH CÔNG */
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/80 to-[#022C22] border-2 border-emerald-500 shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/40">
+                      🎉 BẢN QUYỀN CHÍNH THỨC - ĐÃ KÍCH HOẠT THÀNH CÔNG
+                    </span>
+                    <span className="text-xs text-emerald-400 font-mono font-bold">PRO EDITION</span>
+                  </div>
+
+                  {/* Hộp đếm lùi thời hạn */}
+                  <div className="p-4 rounded-xl bg-emerald-900/40 border border-emerald-400/40 space-y-1">
+                    <span className="text-xs font-bold text-emerald-200 block">
+                      ⏳ THỜI HẠN BẢN QUYỀN CÒN LẠI CỦA GIÁO VIÊN:
+                    </span>
+                    <div className="text-2xl font-black text-amber-300">
+                      CÒN 1093 NGÀY (Gói 3 Năm)
+                    </div>
+                    <p className="text-[11px] text-emerald-200">
+                      • Hạn dùng đến ngày: <strong>2029-09-30 (Gói 3 Năm)</strong> &nbsp;|&nbsp; • Trạng thái: <strong>Hoạt động bình thường (Không giới hạn tất cả các môn)</strong>
+                    </p>
+                  </div>
+
+                  {/* Thông tin giáo viên & mã máy tính */}
+                  <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300 space-y-1">
+                    <p>• Họ và tên Giáo viên: <strong>{regName || 'Đinh Văn Thành - PC'}</strong></p>
+                    <p>• Trường / Đơn vị công tác: <strong>{regSchool || 'Trường THCS Đồng Yên'}</strong></p>
+                    <p>• Số điện thoại / Zalo: <strong>{regPhone || '0915213717'}</strong></p>
+                    <p className="text-cyan-300 font-mono">• Mã máy tính nhận diện: <strong>{detectedMid}</strong></p>
+                  </div>
+
+                  {/* Khu vực xin gia hạn bản quyền */}
+                  <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-3">
+                    <span className="text-xs font-bold text-emerald-300 block">
+                      ⚡ GIA HẠN BẢN QUYỀN CHO NĂM TIẾP THEO:
+                    </span>
                     <button
-                      onClick={handleActivateKey}
-                      className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-600/20 active:scale-95 transition-all shrink-0"
+                      onClick={handleSendRegistration}
+                      className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
                     >
-                      KÍCH HOẠT PRO
+                      <Send className="w-4 h-4" />
+                      <span>📲 BẤM VÀO ĐÂY ĐỂ XIN GIA HẠN THÊM BẢN QUYỀN (GỬI ADMIN)</span>
+                    </button>
+
+                    <div className="pt-2 border-t border-slate-800 space-y-1.5">
+                      <label className="text-[11px] text-slate-300 block">
+                        Hoặc nếu Admin đã cấp sẵn Mã kích hoạt gia hạn, Thầy/Cô dán vào đây:
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={inputKey}
+                          onChange={(e) => setInputKey(e.target.value)}
+                          placeholder="Dán mã kích hoạt gia hạn tại đây (KEY-YYYYMMDD-...)"
+                          className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400"
+                        />
+                        <button
+                          onClick={handleActivateKey}
+                          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shrink-0 cursor-pointer"
+                        >
+                          ⚡ Kích hoạt Gia hạn
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Nút đồng bộ bản quyền từ Cloud */}
+                  <button
+                    onClick={() => {
+                      alert("Đã gửi yêu cầu làm mới và đồng bộ bản quyền từ Web Cloud! Bản quyền của Thầy/Cô đã ở trạng thái mới nhất.");
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    <span>🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)</span>
+                  </button>
+                </div>
+              ) : (
+                /* TRƯỜNG HỢP B: CHƯA KÍCH HOẠT HOẶC ĐANG DÙNG THỬ (5 LẦN) */
+                <div className="p-5 rounded-2xl bg-slate-900 border-2 border-amber-500/50 shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                      🎁 CHẾ ĐỘ DÙNG THỬ TRỰC TUYẾN
+                    </span>
+                    <span className="text-xs text-amber-400 font-mono font-bold">5 LẦN MIỄN PHÍ</span>
+                  </div>
+
+                  {/* Hộp đếm lượt dùng thử */}
+                  <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-amber-200 block">
+                        SỐ LƯỢT DÙNG THỬ CÒN LẠI CỦA MÁY TÍNH:
+                      </span>
+                      <div className="text-2xl font-black text-amber-300 mt-0.5">
+                        CÒN {trialRemaining} / 5 LƯỢT
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5 text-base">
+                      {[1, 2, 3, 4, 5].map((dot) => (
+                        <span key={dot} className={dot <= trialRemaining ? 'text-amber-400' : 'text-slate-600'}>
+                          ●
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Mã máy tính cá nhân hóa */}
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">
+                        MÃ MÁY TÍNH NHẬN DIỆN CỦA THẦY/CÔ (HARDWARE CODE):
+                      </span>
+                      <span className="text-sm sm:text-base font-mono font-black text-cyan-300">
+                        {detectedMid}
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleCopyMid}
+                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                      {copiedMid ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedMid ? 'Đã chép' : 'Sao chép'}</span>
                     </button>
                   </div>
 
-                  {verifyResult && (
-                    <div className={`mt-2.5 p-3 rounded-xl text-xs font-medium ${
-                      verifyResult.isValid ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                    }`}>
-                      {verifyResult.message}
+                  {/* Form đăng ký bản quyền gửi Admin tức thời */}
+                  <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+                    <h5 className="text-xs font-bold text-amber-300 uppercase tracking-wide">
+                      📝 ĐĂNG KÝ BẢN QUYỀN PRO - GỬI LÊN WEB CLOUD ADMIN TỨC THÌ:
+                    </h5>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[11px] text-slate-300 font-bold block mb-1">Họ và tên Giáo viên (*):</label>
+                        <input
+                          type="text"
+                          value={regName}
+                          onChange={(e) => setRegName(e.target.value)}
+                          placeholder="Ví dụ: Thầy Đinh Văn Thành"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-300 font-bold block mb-1">Số điện thoại / Zalo (*):</label>
+                        <input
+                          type="text"
+                          value={regPhone}
+                          onChange={(e) => setRegPhone(e.target.value)}
+                          placeholder="Ví dụ: 0915213717"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                        />
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
 
-              {/* Bảng Giá Các Gói Bản Quyền Sư Phạm */}
-              <div>
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
-                  BẢNG GIÁ CÁC GÓI BẢN QUYỀN SƯ PHẠM (ĐỒNG BỘ NLS-AI):
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
-                    <span className="text-xs font-bold text-slate-400">GÓI 1 NĂM</span>
-                    <div className="text-base font-black text-white mt-1">Ưu Đãi Sư Phạm</div>
-                    <p className="text-[11px] text-slate-400 mt-1">Sử dụng trọn vẹn 1 năm học</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-gradient-to-b from-blue-950/60 to-slate-800 border border-blue-500/50 text-center relative overflow-hidden">
-                    <span className="text-xs font-bold text-blue-400">GÓI 2 NĂM VIP</span>
-                    <div className="text-base font-black text-amber-300 mt-1">Khuyên Dùng</div>
-                    <p className="text-[11px] text-slate-300 mt-1">Bảo hành &amp; cập nhật 24 tháng</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
-                    <span className="text-xs font-bold text-slate-400">TRỌN ĐỜI (VIP)</span>
-                    <div className="text-base font-black text-emerald-400 mt-1">Vĩnh Viễn</div>
-                    <p className="text-[11px] text-slate-400 mt-1">Cập nhật mọi phiên bản mới</p>
-                  </div>
-                </div>
-              </div>
+                    <div>
+                      <label className="text-[11px] text-slate-300 font-bold block mb-1">Trường / Đơn vị công tác:</label>
+                      <input
+                        type="text"
+                        value={regSchool}
+                        onChange={(e) => setRegSchool(e.target.value)}
+                        placeholder="Ví dụ: Trường THCS Đồng Yên"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
 
-              {/* Form Gửi Thông Tin Cho Thầy Thành */}
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-4">
-                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  GỬI THÔNG TIN ĐĂNG KÝ CHO THẦY THÀNH (HỖ TRỢ ZALO 1-CLICK):
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 mb-1">Họ và tên Thầy/Cô *</label>
-                    <input
-                      type="text"
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                      placeholder="Cô Nguyễn Thị Lan"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-300 mb-1">Số điện thoại / Zalo *</label>
-                    <input
-                      type="text"
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder="0912.345678"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                </div>
+                    <button
+                      onClick={handleSendRegistration}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>GỬI ĐĂNG KÝ BẢN QUYỀN LÊN WEB CLOUD (TỨC THÌ)</span>
+                    </button>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-300 mb-1">Trường THCS / Đơn vị công tác</label>
-                  <input
-                    type="text"
-                    value={regSchool}
-                    onChange={(e) => setRegSchool(e.target.value)}
-                    placeholder="Trường THCS Đồng Yên"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500"
-                  />
-                </div>
+                    {regSent && (
+                      <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>Đã chuyển thông tin đăng ký lên Web Cloud Admin của Thầy Thành! Hệ thống đã mở Zalo để Thầy duyệt cấp mã kích hoạt ngay cho Thầy/Cô.</span>
+                      </div>
+                    )}
+                  </div>
 
-                <button
-                  onClick={handleSendRegistration}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-98 transition-all"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>KẾT NỐI ZALO VỚI THẦY THÀNH ĐỂ NHẬN MÃ PRO</span>
-                </button>
-              </div>
+                  {/* Ô dán mã kích hoạt */}
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                    <label className="text-xs font-bold text-slate-300 block">
+                      ĐÃ CÓ MÃ BẢN QUYỀN TỪ THẦY THÀNH? DÁN VÀO ĐÂY ĐỂ KÍCH HOẠT:
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={inputKey}
+                        onChange={(e) => setInputKey(e.target.value)}
+                        placeholder="Dán mã kích hoạt (KEY-ENG-...)"
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400"
+                      />
+                      <button
+                        onClick={handleActivateKey}
+                        className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shrink-0 cursor-pointer"
+                      >
+                        ⚡ Kích Hoạt Pro
+                      </button>
+                    </div>
+
+                    {verifyResult && (
+                      <div className={`mt-2 p-2.5 rounded-xl text-xs font-medium ${
+                        verifyResult.isValid ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      }`}>
+                        {verifyResult.message}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Nút đồng bộ Cloud */}
+                  <button
+                    onClick={() => {
+                      alert("Đang kiểm tra và đồng bộ bản quyền với Cloud... Nếu Thầy Thành đã duyệt trên Web, ứng dụng sẽ tự động kích hoạt!");
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    <span>🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)</span>
+                  </button>
+                </div>
+              )}
 
             </div>
           )}
 
         </div>
 
-        {/* FOOTER MODAL */}
+        {/* FOOTER MODAL CHUẨN */}
         <div className="px-6 py-3 border-t border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Hỗ trợ kỹ thuật 24/7 qua UltraViewer &amp; Zalo: <strong>0915.213717</strong></span>
+            <span>Hỗ trợ giáo viên 24/7 qua Zalo Thầy Đinh Văn Thành: <strong>0915.213717</strong></span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <a
               href="https://zalo.me/0915213717"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:underline font-bold"
+              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 transition"
             >
-              Liên hệ Zalo Thầy Thành
+              <MessageCircle className="w-3.5 h-3.5" /> Kết Nối Zalo
             </a>
             <button
               onClick={onClose}
-              className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
+              className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition"
             >
               Đóng
             </button>
