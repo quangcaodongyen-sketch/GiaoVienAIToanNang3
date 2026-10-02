@@ -64,7 +64,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m'>('tracking');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio'>('tracking');
   
   // State Tab Marketing & Quảng cáo tự động Việt Nam
   const [marketingTopic, setMarketingTopic] = useState<'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF'>('ALL');
@@ -243,6 +243,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [thcs8mHistory, setThcs8mHistory] = useState<Array<{
     mid: string;
     scope: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
+  // State cho Tool Tạo Key Ed25519 - Đinh Thành MathStudio 2026+ Pro
+  const [mathMid, setMathMid] = useState('');
+  const [mathYears, setMathYears] = useState<number>(99);
+  const [mathKeyResult, setMathKeyResult] = useState('');
+  const [mathZaloMsg, setMathZaloMsg] = useState('');
+  const [mathGenError, setMathGenError] = useState('');
+  const [mathCopiedKey, setMathCopiedKey] = useState(false);
+  const [mathCopiedMsg, setMathCopiedMsg] = useState(false);
+  const [mathHistory, setMathHistory] = useState<Array<{
+    mid: string;
     key: string;
     expDate: string;
     plan: string;
@@ -728,6 +744,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         if (savedChvbHist) setChvbHistory(JSON.parse(savedChvbHist));
         const savedPdfHist = localStorage.getItem('gvai_admin_pdf_key_history');
         if (savedPdfHist) setPdfHistory(JSON.parse(savedPdfHist));
+        const savedMathHist = localStorage.getItem('gvai_admin_math_key_history');
+        if (savedMathHist) setMathHistory(JSON.parse(savedMathHist));
       } catch (e) {
         console.error(e);
       }
@@ -1178,6 +1196,51 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       navigator.clipboard.writeText(thcs8mZaloMsg);
       setThcs8mCopiedMsg(true);
       setTimeout(() => setThcs8mCopiedMsg(false), 2000);
+    }
+  };
+
+  // Handlers cho Đinh Thành MathStudio 2026+ Pro (Ed25519)
+  const handleGenerateMathKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMathGenError('');
+    try {
+      const cleanId = mathMid.trim().toUpperCase();
+      if (!cleanId) {
+        setMathGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng (VD: DVT-MATH-XXXX-XXXX)!');
+        return;
+      }
+      const res = await generateEd25519Key(cleanId, mathYears, 'MATH', 'MATH_STUDIO');
+      setMathKeyResult(res.key);
+      setMathZaloMsg(res.zaloMessage);
+
+      const newRecord = {
+        mid: cleanId,
+        key: res.key,
+        expDate: res.expDate,
+        plan: res.planName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...mathHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      setMathHistory(updated);
+      localStorage.setItem('gvai_admin_math_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setMathGenError(err.message || 'Lỗi khi tạo key MathStudio Ed25519');
+    }
+  };
+
+  const handleCopyMathKey = () => {
+    if (mathKeyResult) {
+      navigator.clipboard.writeText(mathKeyResult);
+      setMathCopiedKey(true);
+      setTimeout(() => setMathCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyMathZaloMsg = () => {
+    if (mathZaloMsg) {
+      navigator.clipboard.writeText(mathZaloMsg);
+      setMathCopiedMsg(true);
+      setTimeout(() => setMathCopiedMsg(false), 2000);
     }
   };
 
@@ -1706,6 +1769,17 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
           >
             <Crown className="w-4 h-4 text-amber-300" />
             9. Tạo Đề 8 Môn THCS (CV 7991)
+          </button>
+          <button
+            onClick={() => setAdminTab('mathstudio')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'mathstudio'
+                ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white shadow-md shadow-violet-600/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4 text-amber-300" />
+            10. MathStudio 2026+ (Ed25519)
           </button>
           </>
           )}
@@ -4131,6 +4205,174 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           <td className="py-2 px-2 text-amber-300 font-semibold">{item.scope}</td>
                           <td className="py-2 px-2 text-sky-300 font-semibold">{item.plan}</td>
                           <td className="py-2 px-2 font-mono text-amber-300 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 10: TOOL TẠO KEY ED25519 - ĐINH THÀNH MATHSTUDIO 2026+ PRO */}
+        {adminTab === 'mathstudio' && (
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+            {/* CARD TẠO KEY */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-violet-950/60 via-slate-900 to-indigo-950/60 border border-violet-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-violet-300 flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-amber-400" />
+                  CHỮ KÝ SỐ ED25519 & CẤP BẢN QUYỀN - ĐINH THÀNH MATHSTUDIO 2026+ PRO
+                </h4>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Mật mã Ed25519 bất đối xứng • Tác giả Thầy Đinh Văn Thành
+                </span>
+              </div>
+
+              <p className="text-slate-400 text-[11px]">
+                Hệ thống sinh mã kích hoạt Pro chuẩn Ed25519 chống bẻ khóa dành riêng cho Add-in Word MathStudio. Khách hàng mở Word, vào tab <strong>Bản quyền & Hệ thống</strong> bấm <strong>Thông tin Bản quyền</strong> để lấy Hardware Code (dạng <code>DVT-MATH-XXXX-XXXX</code>).
+              </p>
+
+              <form onSubmit={handleGenerateMathKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-300 font-bold mb-1">
+                      1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: DVT-MATH-8F22-A109"
+                      value={mathMid}
+                      onChange={(e) => setMathMid(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-violet-300 focus:outline-none focus:border-violet-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      2. Chọn Gói Bản Quyền:
+                    </label>
+                    <select
+                      value={mathYears}
+                      onChange={(e) => setMathYears(Number(e.target.value))}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value={99}>VIP Trọn Đời (Khuyên dùng - 2099)</option>
+                      <option value={1}>Gói 1 Năm</option>
+                      <option value={2}>Gói 2 Năm</option>
+                      <option value={3}>Gói 3 Năm</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02] cursor-pointer"
+                  >
+                    <Crown className="w-4 h-4 text-amber-300" />
+                    TẠO MÃ KÍCH HOẠT PRO MATHSTUDIO (ED25519)
+                  </button>
+
+                  {mathGenError && (
+                    <span className="text-rose-400 font-semibold">{mathGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY & TIN NHẮN ZALO */}
+              {mathKeyResult && (
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      Mã Key kích hoạt Pro (KEY-MATH-YYYYMMDD-sig):
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={mathKeyResult}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-violet-500/50 font-mono text-xs text-violet-300 font-bold select-all focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyMathKey}
+                        className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 border border-slate-700 cursor-pointer"
+                      >
+                        {mathCopiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {mathCopiedKey ? 'Đã copy Key!' : 'Copy Key'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-slate-300 font-bold">
+                        Tin nhắn Zalo gửi khách hàng (đã định dạng chuẩn):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleCopyMathZaloMsg}
+                        className="py-1.5 px-3 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-[11px] flex items-center gap-1.5 shadow cursor-pointer"
+                      >
+                        {mathCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                        {mathCopiedMsg ? 'Đã copy tin nhắn Zalo!' : 'Sao chép tin nhắn Zalo gửi Khách'}
+                      </button>
+                    </div>
+                    <textarea
+                      readOnly
+                      rows={8}
+                      value={mathZaloMsg}
+                      className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed text-slate-200 select-all focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LỊCH SỬ KEY MATHSTUDIO */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-3">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-violet-400" />
+                Lịch sử các Key MathStudio đã tạo gần đây ({mathHistory.length} bản ghi):
+              </div>
+              {mathHistory.length === 0 ? (
+                <div className="text-center py-6 text-xs text-slate-500">
+                  Chưa có mã bản quyền MathStudio nào được tạo trên trình duyệt này.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-700 text-slate-400">
+                        <th className="pb-2 px-2">Thời gian</th>
+                        <th className="pb-2 px-2">Mã máy (HWID)</th>
+                        <th className="pb-2 px-2">Gói cước</th>
+                        <th className="pb-2 px-2">Key Bản Quyền</th>
+                        <th className="pb-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {mathHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-violet-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-amber-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
                           <td className="py-2 px-2 text-right">
                             <button
                               type="button"

@@ -159,10 +159,16 @@ export async function generateEd25519Key(
   const dateCompact = expDate.replace(/-/g, '');
   const key = `KEY-${productTag}-${dateCompact}-${sigFormatted}`;
 
+  const prodTitle = isMaster
+    ? 'Hệ sinh thái Phần mềm Giáo viên THCS (Master All-in-One)'
+    : productTag === 'MATH'
+    ? 'Đinh Thành MathStudio 2026+ Pro (Toán học & Soạn thảo)'
+    : PRODUCT_NAME;
+
   const zaloMessage = `Kính gửi Thầy/Cô,
 Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chính thức:
 
-• Phần mềm: ${isMaster ? 'Hệ sinh thái Phần mềm Giáo viên THCS (Master All-in-One)' : PRODUCT_NAME}
+• Phần mềm: ${prodTitle}
 • Thời hạn bản quyền: ${planName}
 • Hạn sử dụng: Đến ngày ${expDate}
 • Mã máy kích hoạt: ${cleanCode}
@@ -170,7 +176,7 @@ Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chí
 ${key}
 
 Hướng dẫn kích hoạt:
-1. Mở phần mềm (hoặc mở Word), bấm vào nút 'Kích hoạt Bản quyền'.
+1. Mở phần mềm (hoặc mở Word), bấm vào nút 'Thông tin Bản quyền' (hoặc 'Kích hoạt').
 2. Dán mã kích hoạt ở trên vào ô và bấm 'Kích hoạt ngay'.
 
 Chúc Thầy/Cô công tác tốt và ứng dụng công nghệ hiệu quả trong giảng dạy!
@@ -208,10 +214,10 @@ export function verifyKeyFormat(key: string, machineCode: string): {
   let dateStr = parts[1]; // YYYYMMDD hoặc product prefix
   if (parts.length >= 4 && parts[1].length <= 6 && isNaN(Number(parts[1]))) {
     const prodTag = parts[1];
-    if (!['NLS', 'ALL', 'MASTER', 'PRO', 'GVAI'].includes(prodTag)) {
+    if (!['NLS', 'ALL', 'MASTER', 'PRO', 'GVAI', 'MATH'].includes(prodTag)) {
       return {
         isValid: false,
-        message: `Mã kích hoạt này thuộc về phần mềm khác (${prodTag}) của Thầy Thành, không áp dụng cho phần mềm Tích hợp NLS - AI THCS!`
+        message: `Mã kích hoạt này thuộc về phần mềm khác (${prodTag}) của Thầy Thành!`
       };
     }
     dateStr = parts[2];

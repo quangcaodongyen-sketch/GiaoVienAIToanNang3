@@ -169,15 +169,15 @@ export const apps: AppCard[] = [
     "order": 12
   },
   {
-    "id": "congthutoan",
-    "title": "CÔNG THỨC MATHTYPE",
-    "description": "Chuyển mã LaTeX từ AI sang MathType Word hiển thị chuẩn đẹp 100%, không lo lệch dòng hay vỡ công thức.",
+    "id": "mathstudio-pro",
+    "title": "ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX)",
+    "description": "Chuyển đổi Mathpix LaTeX sang Word Equation / MathType, tự động căn chỉnh công thức, chuẩn hóa font Toán, tạo ma trận đề thi và soạn thảo toán học tốc độ cao.",
     "image": "/congthucmathtype.jpg",
-    "url": "https://web-to-mathtype-word.vercel.app/",
+    "url": "#mathstudio",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
     "badge": "BẢN QUYỀN PRO",
     "active": true,
-    "featured": false,
+    "featured": true,
     "order": 13
   },
   {

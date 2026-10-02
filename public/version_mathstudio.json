@@ -1,0 +1,12 @@
+{
+  "appId": "mathstudio",
+  "appName": "Đinh Thành MathStudio 2026+ Pro (Word & Mathpix)",
+  "currentVersion": "4.2.0",
+  "latestVersion": "4.2.0",
+  "releaseDate": "02/10/2026",
+  "changelog": "• Tích hợp Trợ lý Word MathStudio với giao diện Ribbon 7 nhóm chức năng chuyên sâu\n• Tự động đồng bộ bản quyền Ed25519 và kích hoạt Pro trực tuyến 24/7 từ Web Cloud\n• Bộ chuyển đổi LaTeX Mathpix sang Equation Word và MathML mượt mà không lệch dòng\n• Hỗ trợ quản lý và tải về trực tiếp từ Hệ sinh thái Giáo viên AI Toàn Năng (https://giao-vien-ai-toan-nang3.vercel.app/)",
+  "downloadUrl": "https://giao-vien-ai-toan-nang3.vercel.app/Cai_Dat_MathStudio.exe",
+  "zipUrl": "https://giao-vien-ai-toan-nang3.vercel.app/MathStudio_Pro_Pass_123.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/#mathstudio",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+}

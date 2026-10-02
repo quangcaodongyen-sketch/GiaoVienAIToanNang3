@@ -357,11 +357,23 @@ export const isAppMatching = (
     ) && !rName.includes('tiếng anh') && !rName.includes('toán');
   }
 
+  // Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix)
+  if (target.includes('mathstudio') || target.includes('mathpix')) {
+    return (
+      rId.includes('mathstudio') ||
+      rId.includes('mathpix') ||
+      rName.includes('mathstudio') ||
+      rName.includes('mathpix') ||
+      rName.includes('soạn thảo toán')
+    );
+  }
+
   // Tạo Đề 8 Môn / Toán THCS
-  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || target.includes('math')) {
+  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || (target.includes('math') && !target.includes('mathstudio'))) {
     const isEng = rId.includes('eng') || rName.includes('tiếng anh');
     const isNls = rId.includes('nls') || rName.includes('năng lực số');
-    if (isEng || isNls) return false;
+    const isMathStudio = rId.includes('mathstudio') || rName.includes('mathstudio');
+    if (isEng || isNls || isMathStudio) return false;
     return (
       rId.includes('8mon') ||
       rId.includes('toan') ||

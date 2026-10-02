@@ -39,6 +39,7 @@ import { CleanerModal } from './components/CleanerModal';
 import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
 import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
+import { MathStudioModal } from './components/MathStudioModal';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,6 +54,7 @@ export default function App() {
   const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
+  const [showMathStudioModal, setShowMathStudioModal] = useState(false);
   const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [showTrialModal, setShowTrialModal] = useState(false);
@@ -68,6 +70,7 @@ export default function App() {
       localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
       localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
       localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
+      localStorage.setItem('gvai_mathstudio_active_key', 'DVT-MATH-LIFETIME-MASTER');
       localStorage.removeItem('gvai_blocked_machines');
       localStorage.removeItem('gvai_blocked_list');
       activityTrackingService.unblockMachine(mid);
@@ -89,6 +92,9 @@ export default function App() {
       if (localStorage.getItem('gvai_cleaner_active_key')?.includes('DVT-CLEANER-LIFETIME-MASTER')) {
         localStorage.removeItem('gvai_cleaner_active_key');
       }
+      if (localStorage.getItem('gvai_mathstudio_active_key')?.includes('DVT-MATH-LIFETIME-MASTER')) {
+        localStorage.removeItem('gvai_mathstudio_active_key');
+      }
       setIsCurrentBlocked(false);
     }
   }, []);
@@ -106,6 +112,7 @@ export default function App() {
     setShowChuanHoaVBModal(false);
     setShowTachGopPDFModal(false);
     setShowTaoDeTHCS8MonModal(false);
+    setShowMathStudioModal(false);
     setShowAdminDashboard(false);
     if (window.location.hash && window.location.hash !== '#') {
       window.history.pushState(null, '', window.location.pathname + window.location.search);
@@ -148,6 +155,7 @@ export default function App() {
       else if (hash === '#tao-de-thcs-8mon' || hash === '#tao-de-8mon' || hash === '#thcs-8mon') setShowTaoDeTHCS8MonModal(true);
       else if (hash === '#smart-listening') setShowListeningModal(true);
       else if (hash === '#nls-ai') setShowNLSAIModal(true);
+      else if (hash === '#mathstudio' || hash === '#congthucmathtype' || hash === '#mathpix') setShowMathStudioModal(true);
       else if (hash === '#admin') setShowAdminDashboard(true);
     };
     handleHash();
@@ -210,6 +218,11 @@ export default function App() {
     if (app.id === 'TACH-GOP-PDF' || app.url === '#tach-gop-pdf') {
       e.preventDefault();
       setShowTachGopPDFModal(true);
+      return;
+    }
+    if (app.id === 'mathstudio-pro' || app.id === 'congthutoan' || app.url === '#mathstudio') {
+      e.preventDefault();
+      setShowMathStudioModal(true);
       return;
     }
     if (app.id === 'tao-de-toan-thcs' || app.url === '#tao-de-toan') {
@@ -1058,6 +1071,13 @@ export default function App() {
         selectedSubject={thcs8MonSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
         onSwitchToEnglish={() => setShowTaoDeModal(true)}
+      />
+
+      {/* ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX) */}
+      <MathStudioModal
+        isOpen={showMathStudioModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* CLOUD ADMIN DASHBOARD 24/7 */}
