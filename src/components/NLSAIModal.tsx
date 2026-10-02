@@ -32,6 +32,7 @@ import {
 import { BRAND, NLS_RESOURCES } from '../config/brand';
 import { getOrCreateNLSHardwareCode, verifyKeyFormat } from '../services/nlsKeyService';
 import { cloudSyncService } from '../services/cloudSyncService';
+import { webSecurityGuard } from '../services/webSecurityGuard';
 
 interface NLSAIModalProps {
   isOpen: boolean;
@@ -538,6 +539,8 @@ ${generatedDisabilityProcedures}
     if (res.isValid) {
       setIsProActive(true);
       localStorage.setItem('gvai_nls_active_key', inputKey.trim());
+    } else {
+      webSecurityGuard.recordFailedKeyAttempt('tichhop-nls-ai-thcs', inputKey, detectedMid);
     }
   };
 

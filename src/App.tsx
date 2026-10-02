@@ -40,6 +40,7 @@ import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
 import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 import { MathStudioModal } from './components/MathStudioModal';
+import { webSecurityGuard } from './services/webSecurityGuard';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -114,6 +115,7 @@ export default function App() {
     setShowTaoDeTHCS8MonModal(false);
     setShowMathStudioModal(false);
     setShowAdminDashboard(false);
+    webSecurityGuard.setActiveApp('home', 'Cổng Thông Tin Giáo Viên AI Toàn Năng');
     if (window.location.hash && window.location.hash !== '#') {
       window.history.pushState(null, '', window.location.pathname + window.location.search);
     }
@@ -137,26 +139,88 @@ export default function App() {
       const hash = window.location.hash;
       if (hash === '#dung-thu' || hash === '#trial') {
         setShowTrialModal(true);
+        webSecurityGuard.setActiveApp('trial', 'Đăng Ký Trải Nghiệm Giáo Viên AI');
         return;
       }
-      if (hash === '#tao-de-tieng-anh') setShowTaoDeModal(true);
-      else if (hash === '#tao-de-toan') { setThcs8MonSelectedSubject('TOAN'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-van') { setThcs8MonSelectedSubject('VAN'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-khtn') { setThcs8MonSelectedSubject('KHTN'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-sudia') { setThcs8MonSelectedSubject('SUDIA'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-tin') { setThcs8MonSelectedSubject('TIN'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-gdcd') { setThcs8MonSelectedSubject('GDCD'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#tao-de-cn') { setThcs8MonSelectedSubject('CN'); setShowTaoDeTHCS8MonModal(true); }
-      else if (hash === '#sinh-de-bien-the') setShowSinhDeBienTheModal(true);
-      else if (hash === '#screen-record') setShowScreenRecordModal(true);
-      else if (hash === '#cleaner-pro' || hash === '#cleaner') setShowCleanerModal(true);
-      else if (hash === '#chuan-hoa-vb' || hash === '#chuanhoavanban') setShowChuanHoaVBModal(true);
-      else if (hash === '#tach-gop-pdf' || hash === '#pdf-suite') setShowTachGopPDFModal(true);
-      else if (hash === '#tao-de-thcs-8mon' || hash === '#tao-de-8mon' || hash === '#thcs-8mon') setShowTaoDeTHCS8MonModal(true);
-      else if (hash === '#smart-listening') setShowListeningModal(true);
-      else if (hash === '#nls-ai') setShowNLSAIModal(true);
-      else if (hash === '#mathstudio' || hash === '#congthucmathtype' || hash === '#mathpix') setShowMathStudioModal(true);
-      else if (hash === '#admin') setShowAdminDashboard(true);
+      if (hash === '#tao-de-tieng-anh') {
+        setShowTaoDeModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tieng-anh-thcs', 'Tạo Đề Tiếng Anh THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-toan') {
+        setThcs8MonSelectedSubject('TOAN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-toan-thcs', 'Tạo Đề Toán THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-van') {
+        setThcs8MonSelectedSubject('VAN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-van-thcs', 'Tạo Đề Ngữ Văn THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-khtn') {
+        setThcs8MonSelectedSubject('KHTN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-khtn-thcs', 'Tạo Đề KHTN THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-sudia') {
+        setThcs8MonSelectedSubject('SUDIA');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-sudia-thcs', 'Tạo Đề Lịch Sử - Địa Lí THCS');
+      }
+      else if (hash === '#tao-de-tin') {
+        setThcs8MonSelectedSubject('TIN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tin-thcs', 'Tạo Đề Tin Học THCS');
+      }
+      else if (hash === '#tao-de-gdcd') {
+        setThcs8MonSelectedSubject('GDCD');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-gdcd-thcs', 'Tạo Đề GDCD THCS');
+      }
+      else if (hash === '#tao-de-cn') {
+        setThcs8MonSelectedSubject('CN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-cn-thcs', 'Tạo Đề Công Nghệ THCS');
+      }
+      else if (hash === '#sinh-de-bien-the') {
+        setShowSinhDeBienTheModal(true);
+        webSecurityGuard.setActiveApp('sinhdebienthe', 'Sinh Đề Biến Thể AI Pro');
+      }
+      else if (hash === '#screen-record') {
+        setShowScreenRecordModal(true);
+        webSecurityGuard.setActiveApp('screen-record-v2', 'Quay Màn Hình (Screen Record)');
+      }
+      else if (hash === '#cleaner-pro' || hash === '#cleaner') {
+        setShowCleanerModal(true);
+        webSecurityGuard.setActiveApp('dinhthanh-cleaner-pro', 'Dọn Rác Máy Tính Cleaner Pro');
+      }
+      else if (hash === '#chuan-hoa-vb' || hash === '#chuanhoavanban') {
+        setShowChuanHoaVBModal(true);
+        webSecurityGuard.setActiveApp('chuanhoavanbanvip', 'Chuẩn Hóa Văn Bản (NĐ 30)');
+      }
+      else if (hash === '#tach-gop-pdf' || hash === '#pdf-suite') {
+        setShowTachGopPDFModal(true);
+        webSecurityGuard.setActiveApp('TACH-GOP-PDF', 'Tách - Gộp PDF Suite');
+      }
+      else if (hash === '#tao-de-thcs-8mon' || hash === '#tao-de-8mon' || hash === '#thcs-8mon') {
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-thcs-8mon', 'Tạo Đề THCS 8 Môn (CV 7991)');
+      }
+      else if (hash === '#smart-listening') {
+        setShowListeningModal(true);
+        webSecurityGuard.setActiveApp('smart-listening-pro', 'Tạo Bài Nghe MP3 (Smart Listening)');
+      }
+      else if (hash === '#nls-ai') {
+        setShowNLSAIModal(true);
+        webSecurityGuard.setActiveApp('tichhop-nls-ai-thcs', 'Tích Hợp NLS - AI (Add-ins V3)');
+      }
+      else if (hash === '#mathstudio' || hash === '#congthucmathtype' || hash === '#mathpix') {
+        setShowMathStudioModal(true);
+        webSecurityGuard.setActiveApp('mathstudio-pro', 'Đinh Thành MathStudio 2026+ Pro');
+      }
+      else if (hash === '#admin') {
+        setShowAdminDashboard(true);
+        webSecurityGuard.setActiveApp('admin', 'Bảng Điều Khiển Quản Trị Hệ Thống');
+      }
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
@@ -180,6 +244,7 @@ export default function App() {
   });
 
   const handleAppClick = (app: AppCard, e: React.MouseEvent) => {
+    webSecurityGuard.setActiveApp(app.id, app.title);
     if (app.id === 'smart-listening-pro') {
       e.preventDefault();
       setShowListeningModal(true);

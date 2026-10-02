@@ -39,6 +39,7 @@ import {
   consumeSecureBientheTrial,
   verifyBientheLicenseKey
 } from "../services/bientheKeyService";
+import { webSecurityGuard } from "../services/webSecurityGuard";
 
 interface SinhDeBienTheModalProps {
   isOpen: boolean;
@@ -260,6 +261,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
       setActivationSuccess(`Chúc mừng Thầy/Cô đã kích hoạt thành công ${res.packageName}!`);
     } else {
       setActivationError(res.message || "Mã kích hoạt không hợp lệ cho thiết bị này!");
+      webSecurityGuard.recordFailedKeyAttempt('sinhdebienthe', key, hardwareCode);
     }
   };
 

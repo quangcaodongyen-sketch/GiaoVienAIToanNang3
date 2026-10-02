@@ -35,6 +35,7 @@ import { BRAND } from '../config/brand';
 import { verifyKeyFormat } from '../services/nlsKeyService';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { ADMIN_WHITELIST_MACHINES } from '../services/activityTrackingService';
+import { webSecurityGuard } from '../services/webSecurityGuard';
 
 interface MathStudioModalProps {
   isOpen: boolean;
@@ -256,6 +257,8 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
     if (res.isValid) {
       setIsProActive(true);
       localStorage.setItem('gvai_mathstudio_active_key', inputKey.trim());
+    } else {
+      webSecurityGuard.recordFailedKeyAttempt('mathstudio-pro', inputKey, detectedMid);
     }
   };
 

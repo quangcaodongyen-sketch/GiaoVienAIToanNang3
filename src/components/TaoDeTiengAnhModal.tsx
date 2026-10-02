@@ -27,6 +27,7 @@ import {
   verifyExamLicenseKey,
   ExamVerifyResult
 } from '../services/taodeKeyService';
+import { webSecurityGuard } from '../services/webSecurityGuard';
 
 interface TaoDeTiengAnhModalProps {
   isOpen: boolean;
@@ -103,6 +104,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       setIsProActive(true);
       localStorage.setItem('gvai_taode_is_pro_active', 'true');
       localStorage.setItem('gvai_taode_pro_key', inputKey.trim());
+    } else {
+      webSecurityGuard.recordFailedKeyAttempt('tao-de-tieng-anh-thcs', inputKey, detectedMid);
     }
   };
 

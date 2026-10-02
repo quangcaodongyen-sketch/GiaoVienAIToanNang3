@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { BRAND, EXAM_7MON_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
+import { webSecurityGuard } from '../services/webSecurityGuard';
 
 interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
@@ -242,6 +243,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
       setVerifyMsg(`🎉 Kích hoạt Bản quyền Pro ${curSub.fullName} thành công!`);
     } else {
       setVerifyMsg('Mã kích hoạt không đúng định dạng. Vui lòng kiểm tra lại!');
+      webSecurityGuard.recordFailedKeyAttempt(`tao-de-${currentSubjectKey.toLowerCase()}-thcs`, inputKey, detectedMid);
     }
   };
 

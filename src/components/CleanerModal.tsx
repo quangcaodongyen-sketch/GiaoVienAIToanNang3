@@ -34,6 +34,7 @@ import {
   isCleanerVIPActivated,
   activateCleanerLicense
 } from '../services/cleanerKeyService';
+import { webSecurityGuard } from '../services/webSecurityGuard';
 
 interface CleanerModalProps {
   isOpen: boolean;
@@ -296,6 +297,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         });
       } else {
         setActivationMsg({ text: res.message, type: 'error' });
+        webSecurityGuard.recordFailedKeyAttempt('dinhthanh-cleaner-pro', licenseKeyInput, hwid);
       }
     } catch {
       setActivationMsg({ text: 'Đã xảy ra lỗi khi kiểm tra mã bản quyền!', type: 'error' });
