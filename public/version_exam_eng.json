@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.2.0",
-  "latestVersion": "3.2.0",
-  "releaseDate": "30/09/2026",
-  "changelog": "• Tự động kích hoạt bản quyền Pro tức thì từ Web Admin ngay khi được phê duyệt\n• Tự động đồng bộ ngầm và kiểm tra phiên bản mới định kỳ\n• Thêm nút Kiểm tra Cập nhật trực tiếp trên thanh Ribbon Microsoft Word và ứng dụng\n• Khởi chạy ngầm AutoExec siêu tốc khi mở Word mà không làm chậm Word\n• Ngân hàng câu hỏi Unit 1-12 bám sát chuẩn ma trận đặc tả Công văn 7991/BGDĐT\n• Tự động xuất kèm file Audio nghe chuẩn bản ngữ và đáp án chi tiết",
+  "currentVersion": "3.2.1",
+  "latestVersion": "3.2.1",
+  "releaseDate": "02/10/2026",
+  "changelog": "• Vá lỗi kiểm đếm dùng thử 5 lần/máy tính chuẩn xác tuyệt đối, khóa chặt khi hết 5 lượt\n• Phân tách độc lập hoàn toàn Registry và Vault bảo mật với app Tích hợp NLS-AI\n• Bổ sung tính lượt dùng thử cho cả chức năng Xuất Đề Mẫu Chuẩn\n• Tự động đồng bộ bản quyền Pro siêu tốc từ Web Cloud GitHub Issues\n• Hỗ trợ nhận diện tự động máy tính Quản trị viên và phê duyệt từ xa",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
