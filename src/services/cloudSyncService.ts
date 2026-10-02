@@ -27,6 +27,101 @@ const getHeaders = (): Record<string, string> => {
   return headers;
 };
 
+/**
+ * KIỂM TRA KHỚP ỨNG DỤNG ĐỘC LẬP
+ * Đảm bảo kích hoạt 1 App KHÔNG ĐƯỢC làm kích hoạt các App khác!
+ */
+export const isAppMatching = (
+  regAppId: string | undefined,
+  regAppName: string | undefined,
+  targetAppId: string
+): boolean => {
+  if (!targetAppId) return true;
+  const target = targetAppId.trim().toLowerCase();
+  const rId = (regAppId || '').trim().toLowerCase();
+  const rName = (regAppName || '').trim().toLowerCase();
+
+  // Master / All Bundle có hiệu lực với tất cả ứng dụng
+  if (rId === 'all' || rId === 'full_web' || rId === 'master' || rName.includes('toàn bộ') || rName.includes('tất cả')) {
+    return true;
+  }
+
+  // Tiếng Anh THCS
+  if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
+    return (
+      rId.includes('eng') ||
+      rId.includes('tienganh') ||
+      rId.includes('exam') ||
+      rName.includes('tiếng anh') ||
+      rName.includes('english')
+    ) && !rName.includes('toán') && !rName.includes('năng lực số');
+  }
+
+  // Tích Hợp NLS-AI THCS
+  if (target.includes('nls')) {
+    return (
+      rId.includes('nls') ||
+      rName.includes('nls') ||
+      rName.includes('năng lực số') ||
+      rName.includes('5512')
+    ) && !rName.includes('tiếng anh') && !rName.includes('toán');
+  }
+
+  // Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix)
+  if (target.includes('mathstudio') || target.includes('mathpix')) {
+    return (
+      rId.includes('mathstudio') ||
+      rId.includes('mathpix') ||
+      rName.includes('mathstudio') ||
+      rName.includes('mathpix') ||
+      rName.includes('soạn thảo toán')
+    );
+  }
+
+  // Tạo Đề 8 Môn / Toán THCS
+  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || (target.includes('math') && !target.includes('mathstudio'))) {
+    const isEng = rId.includes('eng') || rName.includes('tiếng anh');
+    const isNls = rId.includes('nls') || rName.includes('năng lực số');
+    const isMathStudio = rId.includes('mathstudio') || rName.includes('mathstudio');
+    if (isEng || isNls || isMathStudio) return false;
+    return (
+      rId.includes('8mon') ||
+      rId.includes('toan') ||
+      rId.includes('math') ||
+      rName.includes('8 môn') ||
+      rName.includes('toán') ||
+      rName.includes('tạo đề')
+    );
+  }
+
+  // Sinh Đề Biến Thể
+  if (target.includes('bienthe') || target.includes('var')) {
+    return rId.includes('bienthe') || rName.includes('biến thể');
+  }
+
+  // Chuẩn Hóa Văn Bản
+  if (target.includes('chuanhoa') || target.includes('cvb')) {
+    return rId.includes('chuanhoa') || rName.includes('chuẩn hóa');
+  }
+
+  // Dọn Rác & Tăng Tốc
+  if (target.includes('cleaner') || target.includes('cln')) {
+    return rId.includes('cleaner') || rName.includes('dọn rác');
+  }
+
+  // Bộ Tiện Ích PDF
+  if (target.includes('pdf')) {
+    return rId.includes('pdf') || rName.includes('pdf');
+  }
+
+  // Ghi Âm & Quay Màn Hình
+  if (target.includes('record') || target.includes('rec')) {
+    return rId.includes('record') || rName.includes('quay màn hình');
+  }
+
+  return rId === target;
+};
+
 class CloudSyncService {
   // Gửi đơn đăng ký của giáo viên lên Cloud
   public async submitRegistrationToCloud(req: {
@@ -317,101 +412,6 @@ ${JSON.stringify(payloadData, null, 2)}
     phoneNumber?: string,
     schoolUnit?: string,
     appId?: string,
-/**
- * KIỂM TRA KHỚP ỨNG DỤNG ĐỘC LẬP
- * Đảm bảo kích hoạt 1 App KHÔNG ĐƯỢC làm kích hoạt các App khác!
- */
-export const isAppMatching = (
-  regAppId: string | undefined,
-  regAppName: string | undefined,
-  targetAppId: string
-): boolean => {
-  if (!targetAppId) return true;
-  const target = targetAppId.trim().toLowerCase();
-  const rId = (regAppId || '').trim().toLowerCase();
-  const rName = (regAppName || '').trim().toLowerCase();
-
-  // Master / All Bundle có hiệu lực với tất cả ứng dụng
-  if (rId === 'all' || rId === 'full_web' || rId === 'master' || rName.includes('toàn bộ') || rName.includes('tất cả')) {
-    return true;
-  }
-
-  // Tiếng Anh THCS
-  if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
-    return (
-      rId.includes('eng') ||
-      rId.includes('tienganh') ||
-      rId.includes('exam') ||
-      rName.includes('tiếng anh') ||
-      rName.includes('english')
-    ) && !rName.includes('toán') && !rName.includes('năng lực số');
-  }
-
-  // Tích Hợp NLS-AI THCS
-  if (target.includes('nls')) {
-    return (
-      rId.includes('nls') ||
-      rName.includes('nls') ||
-      rName.includes('năng lực số') ||
-      rName.includes('5512')
-    ) && !rName.includes('tiếng anh') && !rName.includes('toán');
-  }
-
-  // Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix)
-  if (target.includes('mathstudio') || target.includes('mathpix')) {
-    return (
-      rId.includes('mathstudio') ||
-      rId.includes('mathpix') ||
-      rName.includes('mathstudio') ||
-      rName.includes('mathpix') ||
-      rName.includes('soạn thảo toán')
-    );
-  }
-
-  // Tạo Đề 8 Môn / Toán THCS
-  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || (target.includes('math') && !target.includes('mathstudio'))) {
-    const isEng = rId.includes('eng') || rName.includes('tiếng anh');
-    const isNls = rId.includes('nls') || rName.includes('năng lực số');
-    const isMathStudio = rId.includes('mathstudio') || rName.includes('mathstudio');
-    if (isEng || isNls || isMathStudio) return false;
-    return (
-      rId.includes('8mon') ||
-      rId.includes('toan') ||
-      rId.includes('math') ||
-      rName.includes('8 môn') ||
-      rName.includes('toán') ||
-      rName.includes('tạo đề')
-    );
-  }
-
-  // Sinh Đề Biến Thể
-  if (target.includes('bienthe') || target.includes('var')) {
-    return rId.includes('bienthe') || rName.includes('biến thể');
-  }
-
-  // Chuẩn Hóa Văn Bản
-  if (target.includes('chuanhoa') || target.includes('cvb')) {
-    return rId.includes('chuanhoa') || rName.includes('chuẩn hóa');
-  }
-
-  // Dọn Rác & Tăng Tốc
-  if (target.includes('cleaner') || target.includes('cln')) {
-    return rId.includes('cleaner') || rName.includes('dọn rác');
-  }
-
-  // Bộ Tiện Ích PDF
-  if (target.includes('pdf')) {
-    return rId.includes('pdf') || rName.includes('pdf');
-  }
-
-  // Ghi Âm & Quay Màn Hình
-  if (target.includes('record') || target.includes('rec')) {
-    return rId.includes('record') || rName.includes('quay màn hình');
-  }
-
-  return rId === target;
-};
-
     appName?: string
   ): Promise<{ success: boolean; issueNumber?: number; message: string }> {
     try {
@@ -753,8 +753,8 @@ export const isAppMatching = (
             alert.teacherGuess = `${matchedReg.fullName} (${matchedReg.phoneNumber})`;
             alert.schoolGuess = matchedReg.schoolUnit;
             alert.phoneGuess = matchedReg.phoneNumber;
-            if (!alert.detectedEmail && matchedReg.note?.includes('@')) {
-              const emailMatch = matchedReg.note.match(/[\w.-]+@[\w.-]+\.\w+/);
+            if (!alert.detectedEmail && (matchedReg as any).note?.includes('@')) {
+              const emailMatch = (matchedReg as any).note.match(/[\w.-]+@[\w.-]+\.\w+/);
               if (emailMatch) alert.detectedEmail = emailMatch[0];
             }
           } else {

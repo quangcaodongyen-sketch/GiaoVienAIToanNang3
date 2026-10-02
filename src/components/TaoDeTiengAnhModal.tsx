@@ -18,7 +18,8 @@ import {
   User,
   Send,
   Sliders,
-  CheckSquare
+  CheckSquare,
+  RefreshCw
 } from 'lucide-react';
 import { BRAND, EXAM_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';

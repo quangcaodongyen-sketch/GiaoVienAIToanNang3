@@ -4664,6 +4664,13 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     type="button"
                     onClick={() => setShowConfigModal(false)}
                     className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         )}
 
         {/* ========================================================================= */}
