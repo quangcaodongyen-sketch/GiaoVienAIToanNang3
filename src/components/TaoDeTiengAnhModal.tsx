@@ -280,8 +280,35 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LƯỢT DÙNG THỬ BẮT BUỘC CỐ ĐỊNH)           */}
           {/* ========================================================================= */}
           {activeTab === 'trial' && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               
+              {/* Banner EnglishExam Pro Web Trực Tuyến */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-900/50 via-indigo-900/50 to-purple-900/50 border border-indigo-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-xl shrink-0">
+                    🇬🇧
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                      <span>EnglishExam Pro – Nền Tảng Tiếng Anh THCS Global Success</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-500/30 text-indigo-300 border border-indigo-400/40">ONLINE HUB</span>
+                    </h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5">
+                      Trọn bộ 48 Units (Lớp 6-9), Flashcard 3D, Audio Lab bản ngữ, Đề 15 phút 2 mã đề & Phòng luyện thi thông minh.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="/web-tieng-anh/index.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs flex items-center gap-2 shrink-0 shadow-md shadow-indigo-600/30 transition cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>MỞ WEB TIẾNG ANH NGAY</span>
+                </a>
+              </div>
+
               {/* Card Tiến trình Dùng thử 5 Chấm */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-800/80 to-indigo-950/40 border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
@@ -578,12 +605,12 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <p className="text-[11px] text-indigo-300">EnglishExam Global Success (Kho đề online)</p>
                   </div>
                   <a
-                    href="https://github.com/quangcaodongyen-sketch/EnglishExam-GlobalSuccess"
+                    href="/web-tieng-anh/index.html"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/30"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Mở Web
+                    <ExternalLink className="w-3.5 h-3.5" /> Mở Web Trực Tuyến
                   </a>
                 </div>
 
