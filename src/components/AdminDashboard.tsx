@@ -1,4 +1,4 @@
-import { cloudSyncService, isAppMatching } from '../services/cloudSyncService';
+import { cloudSyncService, isAppMatching, SecurityAlertItem } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -61,10 +61,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinError, setPinError] = useState(false);
   const [showPin, setShowPin] = useState(false);
 
-  // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS
+  // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Security Alerts
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio'>('tracking');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'security'>('tracking');
   
   // State Tab Marketing & Quảng cáo tự động Việt Nam
   const [marketingTopic, setMarketingTopic] = useState<'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF'>('ALL');
@@ -98,6 +98,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [regSearchTerm, setRegSearchTerm] = useState('');
   const [regAppFilter, setRegAppFilter] = useState('ALL');
   const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
+
+  // State Tab Cảnh Báo Xâm Nhập & Chống Bẻ Khóa
+  const [securityAlerts, setSecurityAlerts] = useState<SecurityAlertItem[]>([]);
+  const [isLoadingAlerts, setIsLoadingAlerts] = useState<boolean>(false);
+  const [securitySearch, setSecuritySearch] = useState<string>('');
+  const [securityFilter, setSecurityFilter] = useState<'ALL' | 'UNRESOLVED' | 'BLOCKED' | 'CRITICAL'>('ALL');
+  const [selectedAlertForEvidence, setSelectedAlertForEvidence] = useState<SecurityAlertItem | null>(null);
+  const [copiedEvidence, setCopiedEvidence] = useState<boolean>(false);
+
 
 
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
@@ -393,6 +402,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setBlockedMachines(allBlocked);
     } catch {
       setBlockedMachines(activityTrackingService.getBlockedMachines());
+    }
+
+    // 4. Đồng bộ Cảnh báo Xâm nhập & Phá khóa từ Cloud
+    try {
+      setIsLoadingAlerts(true);
+      const alerts = await cloudSyncService.fetchSecurityAlertsFromCloud();
+      setSecurityAlerts(alerts);
+    } catch (e) {
+      console.warn('Lỗi tải cảnh báo an ninh:', e);
+    } finally {
+      setIsLoadingAlerts(false);
     }
   };
 
@@ -1780,6 +1800,25 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
           >
             <Crown className="w-4 h-4 text-amber-300" />
             10. MathStudio 2026+ (Ed25519)
+          </button>
+          <button
+            onClick={() => {
+              setAdminTab('security');
+              loadTrackingData();
+            }}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'security'
+                ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white shadow-md shadow-rose-600/30'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <ShieldAlert className="w-4 h-4 text-rose-400" />
+            <span>11. Cảnh Báo Xâm Nhập & Chống Bẻ Khóa</span>
+            {securityAlerts.filter(a => a.status === 'UNRESOLVED').length > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
+                {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
+              </span>
+            )}
           </button>
           </>
           )}
@@ -4544,11 +4583,430 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     type="button"
                     onClick={() => setShowConfigModal(false)}
                     className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
-                  >
-                    Đóng
-                  </button>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 11: CẢNH BÁO XÂM NHẬP, PHÁ KHÓA & NHẬN DIỆN THIẾT BỊ KHẢ NGHI */}
+        {/* ========================================================================= */}
+        {adminTab === 'security' && (
+          <div className="space-y-4 animate-in fade-in duration-200">
+            {/* Header tab */}
+            <div className="bg-gradient-to-r from-red-950/80 via-slate-900 to-slate-900 border border-red-500/40 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl shadow-red-950/20">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-400 shrink-0 shadow-inner">
+                  <ShieldAlert className="w-7 h-7 animate-pulse" />
                 </div>
-              </form>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                    <span>HỆ THỐNG GIÁM SÁT AN NINH & BÁO ĐỘNG PHÁ KHÓA</span>
+                    <span className="px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-[10px] font-black text-red-300">
+                      TELEMETRY 24/7
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    Tự động nhận diện thiết bị khả nghi (Decompile / Debugger / Fake Key / Lùi giờ), suy luận danh tính giáo viên & trường học
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => loadTrackingData()}
+                  disabled={isLoadingAlerts}
+                  className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 border border-slate-700 transition active:scale-95 cursor-pointer"
+                >
+                  <RefreshCw className={`w-4 h-4 text-rose-400 ${isLoadingAlerts ? 'animate-spin' : ''}`} />
+                  <span>{isLoadingAlerts ? 'Đang quét Cloud...' : 'Quét & Đồng Bộ Ngay'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 4 Thẻ chỉ số tổng quan */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 shrink-0">
+                  <ShieldAlert className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-medium text-slate-400">Tổng vụ phát hiện</div>
+                  <div className="text-lg font-black text-white">{securityAlerts.length}</div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-red-500/30 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300 shrink-0">
+                  <AlertTriangle className="w-5 h-5 text-rose-400 animate-bounce" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-medium text-rose-300">Nguy cấp chưa xử lý</div>
+                  <div className="text-lg font-black text-rose-400">
+                    {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-medium text-slate-400">Đã khóa máy vĩnh viễn</div>
+                  <div className="text-lg font-black text-amber-300">
+                    {securityAlerts.filter(a => a.status === 'BLOCKED').length}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+                  <UserCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-medium text-slate-400">Đã nhận diện danh tính</div>
+                  <div className="text-lg font-black text-cyan-300">
+                    {securityAlerts.filter(a => a.teacherGuess && !a.teacherGuess.includes('Chưa')).length}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Thanh tìm kiếm & Bộ lọc */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-slate-900 border border-slate-800">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
+                <input
+                  type="text"
+                  value={securitySearch}
+                  onChange={(e) => setSecuritySearch(e.target.value)}
+                  placeholder="Tìm theo Tên máy, Username, Mã máy, Họ tên GV, Trường, IP..."
+                  className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto text-xs">
+                {(['ALL', 'UNRESOLVED', 'BLOCKED', 'CRITICAL'] as const).map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setSecurityFilter(f)}
+                    className={`py-1.5 px-3 rounded-lg font-bold transition ${
+                      securityFilter === f
+                        ? 'bg-red-600 text-white shadow'
+                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {f === 'ALL' && 'Tất cả'}
+                    {f === 'UNRESOLVED' && '🚨 Chưa xử lý'}
+                    {f === 'BLOCKED' && '🔒 Đã khóa'}
+                    {f === 'CRITICAL' && '🔴 Mức Nguy Cấp'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* BẢNG DANH SÁCH CẢNH BÁO CHI TIẾT */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-950 border-b border-slate-800 text-slate-400 font-bold">
+                      <th className="p-3 w-10 text-center">STT</th>
+                      <th className="p-3">Thời Điểm & Mức Độ</th>
+                      <th className="p-3">Dự Đoán Danh Tính & Trường</th>
+                      <th className="p-3">Máy Tính & User Windows</th>
+                      <th className="p-3">Địa Chỉ IP & Vị Trí Mạng</th>
+                      <th className="p-3">Hành Vi Bị Phát Hiện</th>
+                      <th className="p-3 text-center">Xử Lý An Ninh</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {securityAlerts
+                      .filter(a => {
+                        if (securityFilter === 'UNRESOLVED' && a.status !== 'UNRESOLVED') return false;
+                        if (securityFilter === 'BLOCKED' && a.status !== 'BLOCKED') return false;
+                        if (securityFilter === 'CRITICAL' && a.severity !== 'CRITICAL') return false;
+                        if (!securitySearch.trim()) return true;
+                        const s = securitySearch.toLowerCase();
+                        return (
+                          a.computerName?.toLowerCase().includes(s) ||
+                          a.userName?.toLowerCase().includes(s) ||
+                          a.machineId?.toLowerCase().includes(s) ||
+                          a.teacherGuess?.toLowerCase().includes(s) ||
+                          a.schoolGuess?.toLowerCase().includes(s) ||
+                          a.ipAddress?.toLowerCase().includes(s) ||
+                          a.location?.toLowerCase().includes(s) ||
+                          a.tamperDetails?.toLowerCase().includes(s)
+                        );
+                      })
+                      .map((alert, idx) => (
+                        <tr key={alert.id} className="hover:bg-slate-800/40 transition-colors">
+                          <td className="p-3 text-center font-mono text-slate-500 font-bold">
+                            {idx + 1}
+                          </td>
+
+                          {/* Thời điểm & Mức độ */}
+                          <td className="p-3">
+                            <div className="font-mono text-[11px] text-slate-300 font-semibold">{alert.detectedAt}</div>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-black tracking-wider ${
+                                alert.severity === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/40' :
+                                alert.severity === 'HIGH' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' :
+                                'bg-sky-500/20 text-sky-400 border border-sky-500/40'
+                              }`}>
+                                {alert.severity}
+                              </span>
+                              <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                                alert.status === 'BLOCKED' ? 'bg-red-900/60 text-red-200 border border-red-700' :
+                                alert.status === 'IGNORED' ? 'bg-slate-800 text-slate-400' :
+                                'bg-rose-950 text-rose-300 border border-rose-500/50 animate-pulse'
+                              }`}>
+                                {alert.status === 'BLOCKED' ? 'ĐÃ KHÓA MÁY' : alert.status === 'IGNORED' ? 'ĐÃ BỎ QUA' : 'CHƯA XỬ LÝ'}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Dự đoán danh tính & Trường học */}
+                          <td className="p-3 max-w-[200px]">
+                            {alert.teacherGuess ? (
+                              <div>
+                                <div className="font-bold text-white flex items-center gap-1">
+                                  <UserCheck className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                                  <span className="truncate">{alert.teacherGuess}</span>
+                                </div>
+                                <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                  <Building2 className="w-3 h-3 text-slate-500 shrink-0" />
+                                  <span className="truncate">{alert.schoolGuess || 'Chưa rõ trường'}</span>
+                                </div>
+                                {alert.phoneGuess && (
+                                  <div className="text-[10px] text-emerald-400 font-mono mt-0.5 flex items-center gap-1">
+                                    <Phone className="w-2.5 h-2.5" />
+                                    <span>{alert.phoneGuess}</span>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="text-slate-500 italic text-[11px]">
+                                Chưa đối chiếu được danh tính (Khách chưa từng gửi đơn)
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Máy tính & User Windows */}
+                          <td className="p-3">
+                            <div className="font-bold text-slate-200 flex items-center gap-1 font-mono">
+                              <Laptop className="w-3.5 h-3.5 text-indigo-400" />
+                              <span>{alert.computerName}</span>
+                            </div>
+                            <div className="text-[11px] text-slate-400 font-mono mt-0.5">
+                              User: <span className="text-amber-300 font-semibold">{alert.userName}</span>
+                              {alert.userDomain && <span className="text-slate-500"> ({alert.userDomain})</span>}
+                            </div>
+                            <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                              ID: <span className="text-cyan-400 font-bold">{alert.machineId}</span>
+                            </div>
+                            {alert.detectedEmail && (
+                              <div className="text-[10px] text-sky-400 font-mono mt-0.5 truncate">
+                                ✉️ {alert.detectedEmail}
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Địa chỉ IP & Vị trí mạng */}
+                          <td className="p-3">
+                            <div className="font-mono text-cyan-300 font-bold flex items-center gap-1">
+                              <Globe className="w-3 h-3 text-cyan-400" />
+                              <span>{alert.ipAddress}</span>
+                            </div>
+                            <div className="text-[11px] text-slate-300 mt-0.5">
+                              {alert.location || 'Việt Nam'}
+                            </div>
+                            <div className="text-[10px] text-slate-500 mt-0.5">
+                              {alert.osVersion}
+                            </div>
+                          </td>
+
+                          {/* Hành vi bị phát hiện */}
+                          <td className="p-3 max-w-[240px]">
+                            <div className="flex items-center gap-1 text-red-400 font-bold text-[11px]">
+                              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+                              <span>
+                                {alert.tamperType === 'DECOMPILE' && 'Dịch ngược mã nguồn Python (Decompile)'}
+                                {alert.tamperType === 'DEBUGGER' && 'Gắn tiến trình gỡ lỗi (Debugger)'}
+                                {alert.tamperType === 'BINARY_TAMPER' && 'Can thiệp sửa đổi file nhị phân'}
+                                {alert.tamperType === 'TIME_TAMPER' && 'Lùi đồng hồ hệ thống (Time Tamper)'}
+                                {alert.tamperType === 'FAKE_KEY' && 'Nhập mã Key giả mạo Ed25519'}
+                                {alert.tamperType === 'UNPACK_ATTEMPT' && 'Cố tình bung gói EXE nhị phân'}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-slate-300 mt-1 line-clamp-2" title={alert.tamperDetails}>
+                              {alert.tamperDetails}
+                            </p>
+                          </td>
+
+                          {/* Xử lý an ninh */}
+                          <td className="p-3 text-center space-y-1.5">
+                            <div className="flex flex-col gap-1.5">
+                              {alert.status !== 'BLOCKED' ? (
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    if (window.confirm(`XÁC NHẬN KHÓA MÁY VĨNH VIỄN!\n\n• Thiết bị: [${alert.computerName}] (User: ${alert.userName})\n• Mã máy: ${alert.machineId}\n• Lý do: ${alert.tamperDetails}\n\nSau khi khóa, toàn bộ các ứng dụng của Thầy Thành trên máy tính này sẽ tự động KHÓA CỨNG VĨNH VIỄN.`)) {
+                                      setActionNotice({ type: 'loading', title: 'Đang khóa máy trên Cloud...', message: `Đang gửi lệnh khóa máy ${alert.machineId}` });
+                                      const ok = await cloudSyncService.resolveSecurityAlertWithBlock(
+                                        alert.id,
+                                        alert.machineId,
+                                        currentAdminName || 'Thầy Đinh Văn Thành',
+                                        alert.tamperDetails,
+                                        alert.issueNumber
+                                      );
+                                      if (ok) {
+                                        setSecurityAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, status: 'BLOCKED' } : a));
+                                        setActionNotice({ type: 'success', title: 'Đã khóa máy vĩnh viễn!', message: `Mã máy [${alert.machineId}] đã bị đưa vào danh sách cấm.` });
+                                      } else {
+                                        setActionNotice({ type: 'error', title: 'Lỗi', message: 'Không thể khóa máy trên Cloud.' });
+                                      }
+                                    }
+                                  }}
+                                  className="py-1 px-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-[11px] flex items-center justify-center gap-1 shadow transition active:scale-95 cursor-pointer"
+                                >
+                                  <Lock className="w-3 h-3" />
+                                  <span>Khóa Máy Vĩnh Viễn</span>
+                                </button>
+                              ) : (
+                                <span className="py-1 px-2 rounded-lg bg-red-950 border border-red-700 text-red-300 font-bold text-[10px] inline-flex items-center justify-center gap-1">
+                                  <Lock className="w-3 h-3" />
+                                  Đã Bị Khóa
+                                </span>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() => setSelectedAlertForEvidence(alert)}
+                                className="py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold text-[11px] flex items-center justify-center gap-1 border border-slate-700 transition"
+                              >
+                                <Copy className="w-3 h-3" />
+                                <span>Lập Bằng Chứng</span>
+                              </button>
+
+                              {alert.phoneGuess && (
+                                <a
+                                  href={`https://zalo.me/${alert.phoneGuess.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                                    `Kính gửi Thầy/Cô ${alert.teacherGuess || ''},\nHệ thống an ninh của Thầy giáo Đinh Văn Thành phát hiện máy tính [${alert.computerName}] (Mã máy: ${alert.machineId}) vừa có hành vi can thiệp phần mềm: ${alert.tamperDetails}.\nKính đề nghị Thầy/Cô liên hệ Thầy Thành (0915.213717) để làm rõ.`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="py-1 px-2 rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-[10px] flex items-center justify-center gap-1 transition"
+                                >
+                                  <Send className="w-2.5 h-2.5" />
+                                  <span>Zalo Đối Chất</span>
+                                </a>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+
+                    {securityAlerts.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="p-8 text-center text-slate-500">
+                          <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-500 opacity-60" />
+                          <p className="font-bold text-sm text-slate-300">Hệ thống an ninh an toàn tuyệt đối</p>
+                          <p className="text-xs text-slate-500 mt-1">Chưa phát hiện hành vi xâm nhập hoặc cố tình decompile nào trên các máy khách hàng.</p>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL XUẤT BIÊN BẢN BẰNG CHỨNG XÂM NHẬP PHÁ KHÓA */}
+        {selectedAlertForEvidence && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+            <div className="bg-slate-900 border border-red-500/50 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl shadow-red-950/50 relative">
+              <button
+                onClick={() => setSelectedAlertForEvidence(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400">
+                  <ShieldAlert className="w-7 h-7" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white flex items-center gap-2">
+                    <span>BIÊN BẢN BẰNG CHỨNG XÂM NHẬP</span>
+                    <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] font-bold">
+                      ĐỐI CHỨNG PHÁP LÝ
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Trích xuất đầy đủ thông tin máy tính, địa chỉ mạng và hành vi vi phạm bản quyền
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-300 space-y-1.5 leading-relaxed max-h-80 overflow-y-auto select-all">
+                <div className="text-amber-400 font-bold border-b border-slate-800 pb-1.5 mb-2">
+                  === BẰNG CHỨNG GIÁM SÁT AN NINH PHẦN MỀM GIÁO VIÊN AI ===
+                </div>
+                <div>• Thời điểm phát hiện: <span className="text-white font-bold">{selectedAlertForEvidence.detectedAt}</span></div>
+                <div>• Mã máy tính (Hardware ID): <span className="text-cyan-300 font-bold">{selectedAlertForEvidence.machineId}</span></div>
+                <div>• Tên máy tính (ComputerName): <span className="text-white font-bold">{selectedAlertForEvidence.computerName}</span></div>
+                <div>• Tài khoản Windows: <span className="text-amber-300 font-bold">{selectedAlertForEvidence.userName}</span> ({selectedAlertForEvidence.userDomain})</div>
+                <div>• Hệ điều hành: <span className="text-slate-300">{selectedAlertForEvidence.osVersion}</span></div>
+                <div>• Địa chỉ IP Public: <span className="text-cyan-300 font-bold">{selectedAlertForEvidence.ipAddress}</span></div>
+                <div>• Vị trí mạng & Nhà mạng: <span className="text-white">{selectedAlertForEvidence.location}</span></div>
+                <div>• Email phát hiện: <span className="text-sky-300">{selectedAlertForEvidence.detectedEmail || 'Không có'}</span></div>
+                <div>• Dự đoán giáo viên: <span className="text-emerald-400 font-bold">{selectedAlertForEvidence.teacherGuess || 'Chưa đối chiếu'}</span></div>
+                <div>• Trường / Đơn vị: <span className="text-slate-300">{selectedAlertForEvidence.schoolGuess || 'Chưa rõ'}</span></div>
+                <div>• SĐT / Zalo: <span className="text-slate-300">{selectedAlertForEvidence.phoneGuess || 'Chưa rõ'}</span></div>
+                <div>• Loại vi phạm: <span className="text-red-400 font-bold">{selectedAlertForEvidence.tamperType}</span></div>
+                <div>• Chi tiết hành vi: <span className="text-red-300">{selectedAlertForEvidence.tamperDetails}</span></div>
+                <div className="pt-2 text-slate-500 text-[11px] border-t border-slate-800 mt-2">
+                  Tác quyền phần mềm: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717 - Trường THCS Đồng Yên.
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const text = `=== BẰNG CHỨNG GIÁM SÁT AN NINH PHẦN MỀM GIÁO VIÊN AI ===
+• Thời điểm phát hiện: ${selectedAlertForEvidence.detectedAt}
+• Mã máy tính (Hardware ID): ${selectedAlertForEvidence.machineId}
+• Tên máy tính (ComputerName): ${selectedAlertForEvidence.computerName}
+• Tài khoản Windows: ${selectedAlertForEvidence.userName} (${selectedAlertForEvidence.userDomain})
+• Hệ điều hành: ${selectedAlertForEvidence.osVersion}
+• Địa chỉ IP Public: ${selectedAlertForEvidence.ipAddress}
+• Vị trí mạng: ${selectedAlertForEvidence.location}
+• Email phát hiện: ${selectedAlertForEvidence.detectedEmail || 'Không có'}
+• Dự đoán giáo viên: ${selectedAlertForEvidence.teacherGuess || 'Chưa đối chiếu'}
+• Trường / Đơn vị: ${selectedAlertForEvidence.schoolGuess || 'Chưa rõ'}
+• SĐT: ${selectedAlertForEvidence.phoneGuess || 'Chưa rõ'}
+• Loại vi phạm: ${selectedAlertForEvidence.tamperType}
+• Chi tiết hành vi: ${selectedAlertForEvidence.tamperDetails}
+Tác quyền: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717.`;
+                    navigator.clipboard.writeText(text);
+                    setCopiedEvidence(true);
+                    setTimeout(() => setCopiedEvidence(false), 2000);
+                  }}
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition cursor-pointer"
+                >
+                  {copiedEvidence ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedEvidence ? '✅ Đã Sao Chép Biên Bản!' : '📋 Sao Chép Bằng Chứng Đối Chứng'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedAlertForEvidence(null)}
+                  className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs"
+                >
+                  Đóng
+                </button>
+              </div>
             </div>
           </div>
         )}

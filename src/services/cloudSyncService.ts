@@ -663,6 +663,246 @@ export const isAppMatching = (
       return { isApproved: false, isBlocked: false };
     }
   }
+
+  // =========================================================================
+  // HỆ THỐNG GIÁM SÁT AN NINH & CẢNH BÁO XÂM NHẬP (ANTI-TAMPER TELEMETRY)
+  // =========================================================================
+
+  // Đọc danh sách cảnh báo xâm nhập từ GitHub Issues & /security_alerts.json
+  public async fetchSecurityAlertsFromCloud(): Promise<SecurityAlertItem[]> {
+    const alerts: SecurityAlertItem[] = [];
+
+    // 1. Tải từ static /security_alerts.json
+    try {
+      const resp = await fetch('/security_alerts.json?t=' + Date.now());
+      if (resp.ok) {
+        const data = await resp.json();
+        if (Array.isArray(data)) {
+          alerts.push(...data);
+        }
+      }
+    } catch (e) {
+      console.warn('Lỗi đọc security_alerts.json:', e);
+    }
+
+    // 2. Tải từ GitHub Issues có nhãn security:alert hoặc tiêu đề [CẢNH BÁO XÂM NHẬP]
+    try {
+      const ghResp = await fetch(`${GITHUB_API_URL}/issues?state=all&per_page=50`, {
+        headers: getHeaders()
+      });
+      if (ghResp.ok) {
+        const issues = await ghResp.json();
+        if (Array.isArray(issues)) {
+          for (const iss of issues) {
+            const labels = (iss.labels || []).map((l: any) => (l.name || '').toLowerCase());
+            const title = iss.title || '';
+            if (labels.includes('security:alert') || labels.includes('tamper') || title.includes('[CẢNH BÁO XÂM NHẬP]') || title.includes('CẢNH BÁO')) {
+              // Parse payload nếu có
+              let parsed: Partial<SecurityAlertItem> = {};
+              const match = iss.body?.match(/```(?:gvai-security|json)?\s*([\s\S]*?)\s*```/);
+              if (match) {
+                try {
+                  parsed = JSON.parse(match[1]);
+                } catch { }
+              }
+
+              const alertItem: SecurityAlertItem = {
+                id: parsed.id || `ALERT-GH-${iss.number}`,
+                machineId: parsed.machineId || title.match(/[A-Z0-9]+-[A-Z0-9-]+/)?.[0] || 'Chưa rõ ID',
+                computerName: parsed.computerName || 'Windows PC',
+                userName: parsed.userName || 'Unknown User',
+                userDomain: parsed.userDomain || 'WORKGROUP',
+                osVersion: parsed.osVersion || 'Windows OS',
+                ipAddress: parsed.ipAddress || 'Ẩn danh',
+                location: parsed.location || 'Việt Nam',
+                detectedEmail: parsed.detectedEmail || '',
+                teacherGuess: parsed.teacherGuess || '',
+                schoolGuess: parsed.schoolGuess || '',
+                phoneGuess: parsed.phoneGuess || '',
+                tamperType: parsed.tamperType || (title.includes('DECOMPILE') ? 'DECOMPILE' : title.includes('DEBUGGER') ? 'DEBUGGER' : 'BINARY_TAMPER'),
+                tamperDetails: parsed.tamperDetails || iss.body?.slice(0, 300) || 'Phát hiện hành vi can thiệp trái phép',
+                detectedAt: parsed.detectedAt || new Date(iss.created_at).toLocaleString('vi-VN'),
+                status: iss.state === 'closed' ? (labels.includes('status:blocked') ? 'BLOCKED' : 'IGNORED') : 'UNRESOLVED',
+                severity: labels.includes('severity:critical') ? 'CRITICAL' : labels.includes('severity:high') ? 'HIGH' : 'MEDIUM',
+                issueNumber: iss.number
+              };
+
+              // Tránh trùng lặp
+              const existIdx = alerts.findIndex(a => a.id === alertItem.id || (alertItem.issueNumber && a.issueNumber === alertItem.issueNumber));
+              if (existIdx === -1) {
+                alerts.unshift(alertItem);
+              } else {
+                alerts[existIdx] = { ...alerts[existIdx], ...alertItem };
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Lỗi đọc security alerts từ GitHub:', e);
+    }
+
+    // 3. ĐỐI CHIẾU THÔNG MINH (DỰ ĐOÁN DANH TÍNH TỰ ĐỘNG DỰA TRÊN MÃ MÁY / USER / EMAIL / SĐT)
+    try {
+      const regs = await this.fetchRegistrationsFromCloud();
+      for (const alert of alerts) {
+        if (!alert.teacherGuess || alert.teacherGuess.includes('Chưa rõ')) {
+          // Khớp mã máy
+          const matchedReg = regs.find(r => r.machineId.toUpperCase() === alert.machineId.toUpperCase());
+          if (matchedReg) {
+            alert.teacherGuess = `${matchedReg.fullName} (${matchedReg.phoneNumber})`;
+            alert.schoolGuess = matchedReg.schoolUnit;
+            alert.phoneGuess = matchedReg.phoneNumber;
+            if (!alert.detectedEmail && matchedReg.note?.includes('@')) {
+              const emailMatch = matchedReg.note.match(/[\w.-]+@[\w.-]+\.\w+/);
+              if (emailMatch) alert.detectedEmail = emailMatch[0];
+            }
+          } else {
+            // Thử khớp theo tên người dùng Windows nếu trùng họ tên giáo viên
+            const nameMatch = regs.find(r => 
+              r.fullName.toLowerCase().includes(alert.userName.toLowerCase()) || 
+              alert.userName.toLowerCase().includes(r.fullName.toLowerCase().replace(/\s+/g, ''))
+            );
+            if (nameMatch) {
+              alert.teacherGuess = `${nameMatch.fullName} (Khớp username: ${alert.userName})`;
+              alert.schoolGuess = nameMatch.schoolUnit;
+              alert.phoneGuess = nameMatch.phoneNumber;
+            }
+          }
+        }
+      }
+    } catch { }
+
+    return alerts;
+  }
+
+  // Đóng hoặc bỏ qua cảnh báo
+  public async dismissSecurityAlert(alertId: string, issueNumber?: number): Promise<boolean> {
+    try {
+      if (issueNumber) {
+        await fetch(`${GITHUB_API_URL}/issues/${issueNumber}`, {
+          method: 'PATCH',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            state: 'closed',
+            labels: ['security:alert', 'status:resolved']
+          })
+        });
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Khóa máy vĩnh viễn và cập nhật cảnh báo là ĐÃ KHÓA
+  public async resolveSecurityAlertWithBlock(
+    alertId: string, 
+    machineId: string, 
+    adminName: string, 
+    reason: string, 
+    issueNumber?: number
+  ): Promise<boolean> {
+    try {
+      // 1. Đưa vào danh sách đen máy tính
+      await this.blockMachineOnCloud(machineId, adminName, `[CẢNH BÁO BẢO MẬT] ${reason}`);
+
+      // 2. Cập nhật Issue nếu có
+      if (issueNumber) {
+        await fetch(`${GITHUB_API_URL}/issues/${issueNumber}`, {
+          method: 'PATCH',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            state: 'closed',
+            labels: ['security:alert', 'status:blocked']
+          })
+        });
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Gửi cảnh báo mới từ client lên Cloud
+  public async submitSecurityAlertToCloud(alert: Partial<SecurityAlertItem>): Promise<boolean> {
+    try {
+      const now = new Date().toLocaleString('vi-VN');
+      const payload: SecurityAlertItem = {
+        id: alert.id || `ALERT-${Date.now()}`,
+        machineId: alert.machineId || 'UNKNOWN_MACHINE',
+        computerName: alert.computerName || 'Windows PC',
+        userName: alert.userName || 'Unknown',
+        userDomain: alert.userDomain || 'WORKGROUP',
+        osVersion: alert.osVersion || 'Windows',
+        ipAddress: alert.ipAddress || '',
+        location: alert.location || '',
+        detectedEmail: alert.detectedEmail || '',
+        teacherGuess: alert.teacherGuess || '',
+        schoolGuess: alert.schoolGuess || '',
+        phoneGuess: alert.phoneGuess || '',
+        tamperType: alert.tamperType || 'BINARY_TAMPER',
+        tamperDetails: alert.tamperDetails || 'Hành vi can thiệp trái phép',
+        detectedAt: now,
+        status: 'UNRESOLVED',
+        severity: alert.severity || 'CRITICAL'
+      };
+
+      const bodyText = `### 🚨 CẢNH BÁO XÂM NHẬP & PHÁ KHÓA PHẦN MỀM
+
+- **Mã máy tính (Hardware ID):** \`${payload.machineId}\`
+- **Tên máy tính (ComputerName):** **${payload.computerName}**
+- **Tài khoản Windows (Username):** **${payload.userName}** (${payload.userDomain})
+- **Hệ điều hành:** ${payload.osVersion}
+- **Địa chỉ IP / Vị trí:** ${payload.ipAddress} - ${payload.location}
+- **Email phát hiện:** ${payload.detectedEmail || 'Không có'}
+- **Dự đoán danh tính:** ${payload.teacherGuess || 'Chưa xác định'} (${payload.schoolGuess || ''})
+- **Loại vi phạm:** **${payload.tamperType}**
+- **Chi tiết:** ${payload.tamperDetails}
+- **Thời điểm:** ${now}
+
+\`\`\`gvai-security
+${JSON.stringify(payload, null, 2)}
+\`\`\`
+`;
+
+      const resp = await fetch(`${GITHUB_API_URL}/issues`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          title: `[CẢNH BÁO XÂM NHẬP] ${payload.computerName} (${payload.userName}) - ${payload.tamperType}`,
+          body: bodyText,
+          labels: ['security:alert', 'status:unresolved', `severity:${payload.severity.toLowerCase()}`]
+        })
+      });
+
+      return resp.ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+export interface SecurityAlertItem {
+  id: string;
+  machineId: string;
+  computerName: string;
+  userName: string;
+  userDomain?: string;
+  osVersion?: string;
+  ipAddress?: string;
+  location?: string;
+  detectedEmail?: string;
+  teacherGuess?: string;
+  schoolGuess?: string;
+  phoneGuess?: string;
+  tamperType: 'DEBUGGER' | 'DECOMPILE' | 'BINARY_TAMPER' | 'TIME_TAMPER' | 'FAKE_KEY' | 'UNPACK_ATTEMPT';
+  tamperDetails: string;
+  detectedAt: string;
+  status: 'UNRESOLVED' | 'BLOCKED' | 'IGNORED';
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM';
+  issueNumber?: number;
 }
 
 export const cloudSyncService = new CloudSyncService();
+
