@@ -282,6 +282,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     const cleanPin = pinInput.trim();
     const normalized = cleanPin.toLowerCase();
     if (
+      cleanPin === 'Thaythanh2026@' ||
+      normalized === 'thaythanh2026@' ||
+      normalized === 'thaythanh2026' ||
       cleanPin === 'Kichhoat123@' ||
       normalized === 'kichhoat123@' ||
       normalized === 'kichhoat123' ||
@@ -1650,6 +1653,24 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
 
           <div className="flex items-center gap-2">
             <button
+              onClick={() => {
+                setAdminTab('security');
+                loadTrackingData();
+              }}
+              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black shadow-lg cursor-pointer ${
+                adminTab === 'security'
+                  ? 'bg-red-600 text-white ring-2 ring-red-400'
+                  : 'bg-red-950/80 hover:bg-red-900/80 text-red-200 border-2 border-red-500/80 hover:border-red-400 animate-pulse'
+              }`}
+              title="Xem ngay các máy tính đang can thiệp bẻ khóa"
+            >
+              <ShieldAlert className="w-4 h-4 text-red-400" />
+              <span>🚨 CẢNH BÁO XÂM NHẬP</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black">
+                {securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'}
+              </span>
+            </button>
+            <button
               onClick={() => setShowConfigModal(true)}
               className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
               title="Cấu hình Cloud Database"
@@ -1686,6 +1707,24 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                 {registrationRequests.filter(r => r.status === 'PENDING').length}
               </span>
             )}
+          </button>
+
+          <button
+            onClick={() => {
+              setAdminTab('security');
+              loadTrackingData();
+            }}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+              adminTab === 'security'
+                ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white shadow-lg shadow-rose-600/40 ring-2 ring-red-400 font-extrabold'
+                : 'bg-red-950/80 border-2 border-red-500/80 text-red-200 hover:bg-red-900/90 hover:text-white'
+            }`}
+          >
+            <ShieldAlert className="w-4 h-4 text-red-400 animate-pulse" />
+            <span className="font-extrabold text-white">🚨 1. CẢNH BÁO XÂM NHẬP & BẺ KHÓA</span>
+            <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-bounce">
+              {securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'}
+            </span>
           </button>
 
 
@@ -1887,6 +1926,18 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         </span>
                       )}
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAdminTab('security');
+                        loadTrackingData();
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer bg-red-600/30 text-red-300 border border-red-500/60 hover:bg-red-600 hover:text-white animate-pulse"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+                      <span>4. 🛡️ Cảnh Báo Xâm Nhập ({securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'})</span>
+                    </button>
                   </>
                 )}
               </div>
@@ -1907,6 +1958,36 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
                   Làm mới
                 </button>
+              </div>
+            </div>
+
+            {/* BANNER CẢNH BÁO AN NINH XÂM NHẬP & PHÁ KHÓA KHẨN CẤP */}
+            <div 
+              onClick={() => {
+                setAdminTab('security');
+                loadTrackingData();
+              }}
+              className="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-2 border-red-500/80 hover:border-red-400 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer transition-all hover:scale-[1.005] shadow-lg shadow-red-950/40 group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-red-600/30 border border-red-500/60 flex items-center justify-center text-red-400 shrink-0 group-hover:scale-110 transition-transform">
+                  <ShieldAlert className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[11px] animate-pulse">GIÁM SÁT AN NINH 24/7</span>
+                    <h4 className="text-sm font-black text-white group-hover:text-red-300 transition-colors">TRUNG TÂM PHÁT HIỆN XÂM NHẬP & BẺ KHÓA PHẦN MỀM</h4>
+                  </div>
+                  <p className="text-xs text-red-200/80 mt-0.5">
+                    Hệ thống tự động theo dõi, thu thập IP, cấu hình máy tính và đối chiếu danh tính giáo viên đang có hành vi mở F12/DevTools hoặc can thiệp bẻ khóa.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-red-600/40">
+                  <ShieldAlert className="w-4 h-4" />
+                  <span>Vào Bảng Báo Cáo Xâm Nhập ({securityAlerts.length}) &rarr;</span>
+                </span>
               </div>
             </div>
 
