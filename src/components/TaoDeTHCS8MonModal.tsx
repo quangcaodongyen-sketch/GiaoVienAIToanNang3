@@ -224,17 +224,43 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     setTimeout(() => setCopiedMid(false), 2500);
   };
 
+  const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
+
   const handleActivateKey = () => {
     if (!inputKey.trim()) {
       setVerifyMsg('Vui lòng dán Mã kích hoạt do Thầy Thành cấp!');
       return;
     }
-    if (inputKey.trim().startsWith('KEY-') || inputKey.trim().length > 15) {
+    const cleanKey = inputKey.trim().toUpperCase();
+    if (cleanKey.startsWith('KEY-NLS') || cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('ENG-')) {
+      setVerifyMsg('⚠️ Mã kích hoạt này thuộc về phần mềm khác (Tiếng Anh hoặc NLS-AI), không áp dụng cho Tạo Đề 8 Môn THCS!');
+      return;
+    }
+    if (cleanKey.startsWith('KEY-') || cleanKey.startsWith('TH8M-') || cleanKey.startsWith('MATH-')) {
       setIsProActive(true);
       localStorage.setItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`, 'true');
       setVerifyMsg(`🎉 Kích hoạt Bản quyền Pro ${curSub.fullName} thành công!`);
     } else {
       setVerifyMsg('Mã kích hoạt không đúng định dạng. Vui lòng kiểm tra lại!');
+    }
+  };
+
+  const handleCloudSync = async () => {
+    setIsSyncingCloud(true);
+    try {
+      // ĐỘC LẬP BẢN QUYỀN: Bắt buộc truyền appId taode-8mon hoặc taode-[subject]
+      const res = await cloudSyncService.checkCurrentMachineCloudStatus(detectedMid, `taode-${currentSubjectKey.toLowerCase()}`);
+      if (res.isApproved) {
+        setIsProActive(true);
+        localStorage.setItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`, 'true');
+        alert(`🎉 Chúc mừng Thầy/Cô!\n\nMáy tính [${detectedMid}] đã được duyệt bản quyền ${res.packageType || 'Pro'} cho ứng dụng Tạo Đề ${curSub.name} trên Web Cloud bởi ${res.approvedBy || 'Thầy Thành'}!`);
+      } else {
+        alert(`ℹ️ Chưa tìm thấy phê duyệt cho ứng dụng Tạo Đề ${curSub.name} trên Cloud của máy tính [${detectedMid}].\n\nNếu Thầy/Cô đã gửi đơn, xin vui lòng chờ Thầy Thành duyệt hoặc nhắn tin Zalo 0915.213717 để được hỗ trợ tức thì!`);
+      }
+    } catch (e) {
+      alert("⚠️ Không thể kết nối Cloud. Vui lòng kiểm tra lại mạng Internet.");
+    } finally {
+      setIsSyncingCloud(false);
     }
   };
 
@@ -709,13 +735,12 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
 
               {/* NÚT ĐỒNG BỘ BẢN QUYỀN TỪ CLOUD */}
               <button
-                onClick={() => {
-                  alert("Đang kiểm tra và đồng bộ bản quyền với Cloud... Nếu Thầy Thành đã duyệt trên Web, ứng dụng sẽ tự động kích hoạt!");
-                }}
-                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                onClick={handleCloudSync}
+                disabled={isSyncingCloud}
+                className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
               >
-                <RefreshCw className="w-4 h-4" />
-                <span>🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)</span>
+                <RefreshCw className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                <span>{isSyncingCloud ? 'ĐANG KẾT NỐI VÀ ĐỒNG BỘ TỪ WEB CLOUD...' : '🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)'}</span>
               </button>
 
             </div>

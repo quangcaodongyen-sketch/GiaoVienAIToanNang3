@@ -171,11 +171,74 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
   const cleanKey = key.trim().toUpperCase();
   const cleanId = machineId.trim().toUpperCase();
 
+  // BẢO VỆ PHÂN TÁCH ỨNG DỤNG: Phát hiện và chặn nếu dùng mã của App khác
+  if (cleanKey.startsWith('KEY-NLS') || cleanKey.startsWith('NLS-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tích Hợp NLS - AI THCS", không áp dụng cho "Tạo Đề Tiếng Anh THCS"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-TOAN') || cleanKey.startsWith('KEY-TAODE') || cleanKey.startsWith('TH8M-') || cleanKey.startsWith('MATH-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Tạo Đề môn khác (Toán/8 Môn), không áp dụng cho Tạo Đề Tiếng Anh THCS!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-VAR') || cleanKey.startsWith('VAR-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Sinh Đề Biến Thể, không áp dụng cho Tạo Đề Tiếng Anh THCS!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-CLN') || cleanKey.startsWith('PRO-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Dọn Rác Máy Tính, không áp dụng cho Tạo Đề Tiếng Anh THCS!'
+    };
+  }
+
+  // TRƯỜNG HỢP 1: Mã Ed25519 dạng KEY-ENG-YYYYMMDD-... hoặc KEY-ENG15-YYYYMMDD-... hoặc KEY-ALL-...
+  if (cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('KEY-ALL') || cleanKey.startsWith('KEY-MASTER')) {
+    const parts = cleanKey.split('-');
+    if (parts.length < 3) {
+      return { isValid: false, message: 'Cấu trúc mã Key Ed25519 không hợp lệ!' };
+    }
+    const dateStr = parts[2]; // YYYYMMDD
+    if (!dateStr || dateStr.length !== 8 || isNaN(Number(dateStr))) {
+      return { isValid: false, message: 'Ngày hết hạn trong Key không đúng định dạng!' };
+    }
+
+    const yyyy = dateStr.substring(0, 4);
+    const mm = dateStr.substring(4, 6);
+    const dd = dateStr.substring(6, 8);
+    const expFormatted = `${dd}/${mm}/${yyyy}`;
+    const expDateObj = new Date(`${yyyy}-${mm}-${dd}T23:59:59`);
+
+    if (isNaN(expDateObj.getTime())) {
+      return { isValid: false, message: 'Thời hạn bản quyền bị lỗi!' };
+    }
+
+    if (Date.now() > expDateObj.getTime()) {
+      return { isValid: false, message: `Mã bản quyền này đã hết hạn vào ngày ${expFormatted}!` };
+    }
+
+    const daysRemaining = Math.max(0, Math.ceil((expDateObj.getTime() - Date.now()) / (86400 * 1000)));
+    return {
+      isValid: true,
+      packageType: daysRemaining > 1500 ? 'lifetime' : daysRemaining > 500 ? '2year' : '1year',
+      packageName: daysRemaining > 1500 ? 'GÓI VĨNH VIỄN / TRỌN ĐỜI' : daysRemaining > 500 ? 'GÓI 2 NĂM VIP' : 'GÓI 1 NĂM HỌC',
+      expiryDateStr: expFormatted,
+      daysRemaining,
+      message: `Kích hoạt bản quyền Pro Tiếng Anh thành công! Hạn dùng đến: ${expFormatted}`
+    };
+  }
+
+  // TRƯỜNG HỢP 2: Mã dạng ENG-[prefix]-[expHex]-[sig]
   const parts = cleanKey.split('-');
   if (parts.length !== 4 || parts[0] !== 'ENG') {
     return {
       isValid: false,
-      message: 'Mã kích hoạt không đúng định dạng (Ví dụ: ENG-LT-...)!'
+      message: 'Mã kích hoạt không đúng định dạng (Ví dụ: KEY-ENG-... hoặc ENG-LT-...)!'
     };
   }
 

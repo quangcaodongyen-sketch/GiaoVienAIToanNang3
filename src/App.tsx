@@ -58,25 +58,37 @@ export default function App() {
   const [showTrialModal, setShowTrialModal] = useState(false);
   const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
   useEffect(() => {
-    // 👑 TỰ ĐỘNG KÍCH HOẠT ĐẶC QUYỀN MÁY THẦY THÀNH (DÙNG THỬ THOẢI MÁI KHÔNG GIỚI HẠN)
-    localStorage.setItem('gvai_unlimited_machine', 'true');
-    localStorage.setItem('gvai_taode_active_key', 'DVT-ENG-LIFETIME-MASTER-PRO-KEY');
-    localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
-    localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
-    localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
-    localStorage.removeItem('gvai_blocked_machines');
-    localStorage.removeItem('gvai_blocked_list');
+    const mid = activityTrackingService.getOrCreateMachineId();
+    const isAdmin = ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT');
 
-        const mid = activityTrackingService.getOrCreateMachineId();
-    
-    // TỰ ĐỘNG MỞ KHÓA VÀ MIỄN TRỪ VĨNH VIỄN CHO MÁY ADMIN / THẦY THÀNH
-    if (ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT')) {
+    if (isAdmin) {
+      // 👑 TỰ ĐỘNG KÍCH HOẠT ĐẶC QUYỀN RIÊNG CHO MÁY THẦY THÀNH / ADMIN
+      localStorage.setItem('gvai_unlimited_machine', 'true');
+      localStorage.setItem('gvai_taode_active_key', 'DVT-ENG-LIFETIME-MASTER-PRO-KEY');
+      localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
+      localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
+      localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
+      localStorage.removeItem('gvai_blocked_machines');
+      localStorage.removeItem('gvai_blocked_list');
       activityTrackingService.unblockMachine(mid);
       setIsCurrentBlocked(false);
     } else {
-      setIsCurrentBlocked(false);
-      // Kiểm tra trạng thái máy tính từ Cloud
-      // Khong khoa giao dien website
+      // 🛡️ BẢO VỆ BẢN QUYỀN MÁY GIÁO VIÊN / KHÁCH HÀNG:
+      // Mỗi App kích hoạt độc lập, TUYỆT ĐỐI KHÔNG mở khóa chéo hay mở khóa toàn bộ!
+      localStorage.removeItem('gvai_unlimited_machine');
+      // Dọn dẹp các master key rò rỉ nếu từng vô tình lưu
+      if (localStorage.getItem('gvai_taode_active_key')?.includes('DVT-ENG-LIFETIME-MASTER')) {
+        localStorage.removeItem('gvai_taode_active_key');
+      }
+      if (localStorage.getItem('gvai_nls_active_key')?.includes('DVT-NLS-LIFETIME-MASTER')) {
+        localStorage.removeItem('gvai_nls_active_key');
+      }
+      if (localStorage.getItem('gvai_bienthe_active_key')?.includes('DVT-BIENTHE-LIFETIME-MASTER')) {
+        localStorage.removeItem('gvai_bienthe_active_key');
+      }
+      if (localStorage.getItem('gvai_cleaner_active_key')?.includes('DVT-CLEANER-LIFETIME-MASTER')) {
+        localStorage.removeItem('gvai_cleaner_active_key');
+      }
       setIsCurrentBlocked(false);
     }
   }, []);

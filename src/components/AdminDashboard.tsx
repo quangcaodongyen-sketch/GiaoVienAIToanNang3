@@ -1,4 +1,4 @@
-import { cloudSyncService } from '../services/cloudSyncService';
+import { cloudSyncService, isAppMatching } from '../services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -496,13 +496,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         notes: `Kích hoạt ${pkgLabel} bởi ${reviewer}`
       }, reviewer);
 
-      const targetReq = registrationRequests.find(r => r.machineId === cleanMid || (options?.reqId && r.id === options.reqId));
+      const targetReq = registrationRequests.find(r => 
+        (options?.reqId && r.id === options.reqId) || 
+        (r.machineId === cleanMid && isAppMatching(r.appId, r.appName, effectiveAppId))
+      );
       activityTrackingService.approveRegistration(
-        options?.reqId || `REG-${cleanMid}`,
+        options?.reqId || (targetReq ? targetReq.id : `REG-${cleanMid}-${effectiveAppId}`),
         reviewer,
         pkg,
         targetReq || {
-          id: options?.reqId || `REG-${cleanMid}`,
+          id: options?.reqId || `REG-${cleanMid}-${effectiveAppId}`,
           machineId: cleanMid,
           fullName: effectiveFullName,
           schoolUnit: effectiveSchool,
@@ -546,9 +549,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         console.error('Lỗi đồng bộ GitHub Cloud:', errCloud);
       }
 
-      // 4. Cập nhật state UI tức thì trong 0.01 giây
+      // 4. Cập nhật state UI tức thì trong 0.01 giây (CHỈ CẬP NHẬT ĐÚNG ĐƠN VÀ ĐÚNG APP ĐƯỢC DUYỆT)
       setRegistrationRequests(prev => prev.map(r => {
-        if (r.machineId === cleanMid || (options?.reqId && r.id === options.reqId)) {
+        const isTarget = options?.reqId ? r.id === options.reqId : (r.machineId === cleanMid && isAppMatching(r.appId, r.appName, effectiveAppId));
+        if (isTarget) {
           return {
             ...r,
             status: 'APPROVED',

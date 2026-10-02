@@ -317,21 +317,110 @@ ${JSON.stringify(payloadData, null, 2)}
     phoneNumber?: string,
     schoolUnit?: string,
     appId?: string,
+/**
+ * KIỂM TRA KHỚP ỨNG DỤNG ĐỘC LẬP
+ * Đảm bảo kích hoạt 1 App KHÔNG ĐƯỢC làm kích hoạt các App khác!
+ */
+export const isAppMatching = (
+  regAppId: string | undefined,
+  regAppName: string | undefined,
+  targetAppId: string
+): boolean => {
+  if (!targetAppId) return true;
+  const target = targetAppId.trim().toLowerCase();
+  const rId = (regAppId || '').trim().toLowerCase();
+  const rName = (regAppName || '').trim().toLowerCase();
+
+  // Master / All Bundle có hiệu lực với tất cả ứng dụng
+  if (rId === 'all' || rId === 'full_web' || rId === 'master' || rName.includes('toàn bộ') || rName.includes('tất cả')) {
+    return true;
+  }
+
+  // Tiếng Anh THCS
+  if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
+    return (
+      rId.includes('eng') ||
+      rId.includes('tienganh') ||
+      rId.includes('exam') ||
+      rName.includes('tiếng anh') ||
+      rName.includes('english')
+    ) && !rName.includes('toán') && !rName.includes('năng lực số');
+  }
+
+  // Tích Hợp NLS-AI THCS
+  if (target.includes('nls')) {
+    return (
+      rId.includes('nls') ||
+      rName.includes('nls') ||
+      rName.includes('năng lực số') ||
+      rName.includes('5512')
+    ) && !rName.includes('tiếng anh') && !rName.includes('toán');
+  }
+
+  // Tạo Đề 8 Môn / Toán THCS
+  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || target.includes('math')) {
+    const isEng = rId.includes('eng') || rName.includes('tiếng anh');
+    const isNls = rId.includes('nls') || rName.includes('năng lực số');
+    if (isEng || isNls) return false;
+    return (
+      rId.includes('8mon') ||
+      rId.includes('toan') ||
+      rId.includes('math') ||
+      rName.includes('8 môn') ||
+      rName.includes('toán') ||
+      rName.includes('tạo đề')
+    );
+  }
+
+  // Sinh Đề Biến Thể
+  if (target.includes('bienthe') || target.includes('var')) {
+    return rId.includes('bienthe') || rName.includes('biến thể');
+  }
+
+  // Chuẩn Hóa Văn Bản
+  if (target.includes('chuanhoa') || target.includes('cvb')) {
+    return rId.includes('chuanhoa') || rName.includes('chuẩn hóa');
+  }
+
+  // Dọn Rác & Tăng Tốc
+  if (target.includes('cleaner') || target.includes('cln')) {
+    return rId.includes('cleaner') || rName.includes('dọn rác');
+  }
+
+  // Bộ Tiện Ích PDF
+  if (target.includes('pdf')) {
+    return rId.includes('pdf') || rName.includes('pdf');
+  }
+
+  // Ghi Âm & Quay Màn Hình
+  if (target.includes('record') || target.includes('rec')) {
+    return rId.includes('record') || rName.includes('quay màn hình');
+  }
+
+  return rId === target;
+};
+
     appName?: string
   ): Promise<{ success: boolean; issueNumber?: number; message: string }> {
     try {
       const cleanMid = machineId.trim().toUpperCase();
-      // 1. Tìm TẤT CẢ các issue hiện có trên GitHub của máy tính này (bao gồm cả đơn đăng ký và các đơn xin gia hạn cũ)
+      // 1. Tìm các issue hiện có trên GitHub của máy tính này KHỚP VỚI ĐÚNG APP NÀY
       try {
         const allIssuesResp = await fetch(`${GITHUB_API_URL}/issues?state=all&per_page=100`, { headers: getHeaders() });
         if (allIssuesResp.ok) {
           const allIssues = await allIssuesResp.json();
-          const bareMid = cleanMid.replace('NLS-', '');
+          const bareMid = cleanMid.replace('NLS-', '').replace('ENG-', '').replace('TAODE-', '');
           const matchingIssues = allIssues.filter((iss: any) => {
             const t = iss.title || '';
             const b = iss.body || '';
             const isDel = iss.labels?.some((l: any) => l.name === 'status:deleted') || t.includes('[ĐÃ XÓA]');
-            return !isDel && (t.includes(cleanMid) || b.includes(cleanMid) || t.includes(bareMid) || b.includes(bareMid));
+            const midMatch = (t.includes(cleanMid) || b.includes(cleanMid) || t.includes(bareMid) || b.includes(bareMid));
+            if (!midMatch || isDel) return false;
+            // ĐỘC LẬP BẢN QUYỀN: Bắt buộc khớp đúng AppId
+            if (appId) {
+              return isAppMatching(iss.appId || '', `${t} ${b}`, appId);
+            }
+            return true;
           });
 
           if (matchingIssues.length > 0) {
@@ -351,7 +440,7 @@ ${JSON.stringify(payloadData, null, 2)}
             return {
               success: anyOk,
               issueNumber: matchingIssues[0].number,
-              message: anyOk ? `Đã đồng bộ duyệt gói ${packageType} cho toàn bộ ${matchingIssues.length} đơn của máy trên Cloud!` : 'Lỗi cập nhật Cloud'
+              message: anyOk ? `Đã đồng bộ duyệt gói ${packageType} cho ${matchingIssues.length} đơn của ứng dụng này trên Cloud!` : 'Lỗi cập nhật Cloud'
             };
           }
         }
@@ -520,17 +609,23 @@ ${JSON.stringify(payloadData, null, 2)}
     }
   }
 
-  // Kiểm tra máy tính hiện tại trên Cloud xem đã được duyệt hay bị khóa chưa
-  public async checkCurrentMachineCloudStatus(machineId: string): Promise<{
+  // Kiểm tra máy tính hiện tại trên Cloud xem đã được duyệt hay bị khóa chưa (ĐỘC LẬP TỪNG ỨNG DỤNG)
+  public async checkCurrentMachineCloudStatus(machineId: string, targetAppId?: string): Promise<{
     isApproved: boolean;
     packageType?: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME';
     approvedBy?: string;
     approvedAt?: string;
     isBlocked: boolean;
+    appId?: string;
+    appName?: string;
   }> {
     try {
       const issues = await this.fetchRegistrationsFromCloud();
-      const myReg = issues.find(r => r.machineId === machineId);
+      // BẮT BUỘC KHỚP CẢ MÃ MÁY VÀ ĐÚNG APP (Không dùng chung giữa các App khác nhau)
+      const myReg = issues.find(r => 
+        r.machineId === machineId && 
+        (!targetAppId || isAppMatching(r.appId, r.appName, targetAppId))
+      );
 
       const blockedList = await this.fetchBlockedMachinesFromCloud();
       const isBlocked = blockedList.some(b => b.machineId === machineId);
@@ -545,7 +640,9 @@ ${JSON.stringify(payloadData, null, 2)}
           packageType: myReg.packageType,
           approvedBy: myReg.reviewedBy || 'Admin Thầy Thành / Cô Mai Tình',
           approvedAt: myReg.reviewedAt,
-          isBlocked: false
+          isBlocked: false,
+          appId: myReg.appId,
+          appName: myReg.appName
         };
       }
 
