@@ -1,11 +1,12 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.2.1",
-  "latestVersion": "3.2.1",
+  "currentVersion": "3.2.2",
+  "latestVersion": "3.2.2",
   "releaseDate": "02/10/2026",
-  "changelog": "• Vá lỗi kiểm đếm dùng thử 5 lần/máy tính chuẩn xác tuyệt đối, khóa chặt khi hết 5 lượt\n• Phân tách độc lập hoàn toàn Registry và Vault bảo mật với app Tích hợp NLS-AI\n• Bổ sung tính lượt dùng thử cho cả chức năng Xuất Đề Mẫu Chuẩn\n• Tự động đồng bộ bản quyền Pro siêu tốc từ Web Cloud GitHub Issues\n• Hỗ trợ nhận diện tự động máy tính Quản trị viên và phê duyệt từ xa",
+  "changelog": "• [VÁ LỖI KHẨN CẤP] Khắc phục triệt để lỗi khi bấm 'Tạo đề Tiếng Anh' trên thanh Ribbon Microsoft Word\n• Tự động thông báo cập nhật bản vá lỗi cho toàn bộ máy tính Giáo viên trên toàn quốc\n• Bấm 1 chạm tải trực tiếp bộ cài đặt mới nhất (.exe), không phải mở web để tìm kiếm\n• Nâng cấp giao diện thông báo cập nhật và trạng thái bản quyền siêu đẹp, sang trọng\n• Tích hợp liên kết tinh tế khám phá Hệ sinh thái Giáo viên AI Toàn Năng",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
 }
