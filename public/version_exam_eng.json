@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.2.5",
-  "latestVersion": "3.2.5",
+  "currentVersion": "3.2.6",
+  "latestVersion": "3.2.6",
   "releaseDate": "03/10/2026",
-  "changelog": "• Khắc phục triệt để lỗi 'No module named core.single_instance' khi mở Word\n• Nâng cấp bảo vệ đa lớp: Đóng gói đầy đủ module core và cơ chế chống crash an toàn\n• Tự động đồng bộ bản quyền Pro siêu tốc và kiểm tra cập nhật mượt mà\n• Tương thích 100% mọi phiên bản Microsoft Word 2010 - 2024 / Office 365",
+  "changelog": "• Chuẩn hóa 2 mã đề: Các câu trắc nghiệm từ 11 đến 36 khác nhau về câu hỏi và đảo vị trí đáp án chuẩn sư phạm\n• Đầy đủ Bảng Đáp Án cho cả 2 mã đề (36 câu mỗi mã đề), đối chiếu song song chính xác 100%\n• Loại bỏ thông tin trường học cục bộ, chuẩn hóa danh xưng dùng chung cho mọi trường THCS toàn quốc\n• Tương thích 100% mọi phiên bản Microsoft Word 2010 - 2024 / Office 365",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",

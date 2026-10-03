@@ -93,6 +93,12 @@ export interface ExamSuiteData {
     col2Num: string;
     col2Ans: string;
   }[];
+  answerRowsCode2?: {
+    col1Num: string;
+    col1Ans: string;
+    col2Num: string;
+    col2Ans: string;
+  }[];
   writingRubric: string[];
   sampleWriting: string;
   scoreSummary: string;
@@ -383,8 +389,8 @@ export interface GenerateExamOptions {
  */
 export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const { grade, term, schoolYear, timeMinutes } = options;
-  const parentAgency = options.parentAgency.trim().toUpperCase() || 'UBND XÃ ĐỒNG YÊN';
-  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ĐỒNG YÊN';
+  const parentAgency = options.parentAgency.trim().toUpperCase() || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO';
+  const schoolName = options.schoolName.trim().toUpperCase() || 'TRƯỜNG THCS ........................';
 
   const termNames: Record<string, string> = {
     GK1: 'GIỮA HỌC KÌ I',
@@ -536,11 +542,11 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   ];
 
   const part4Questions2: ExamQuestionMcq[] = [
-    { num: "23.", stem: "", options: ["skills", "candies", "games"], correctAnswer: "skills" },
-    { num: "24.", stem: "", options: ["so that", "although", "because of"], correctAnswer: "so that" },
-    { num: "25.", stem: "", options: ["a", "the", "an"], correctAnswer: "a" },
-    { num: "26.", stem: "", options: ["study", "studying", "studied"], correctAnswer: "study" },
-    { num: "27.", stem: "", options: ["positively", "positivity", "positive"], correctAnswer: "positively" }
+    { num: "23.", stem: "", options: ["games", "skills", "candies"], correctAnswer: "skills" },          // B
+    { num: "24.", stem: "", options: ["although", "because of", "so that"], correctAnswer: "so that" },   // C
+    { num: "25.", stem: "", options: ["an", "a", "the"], correctAnswer: "a" },                            // B
+    { num: "26.", stem: "", options: ["studied", "studying", "study"], correctAnswer: "study" },          // C
+    { num: "27.", stem: "", options: ["positive", "positively", "positivity"], correctAnswer: "positively" } // B
   ];
 
   // PART 5 (Reading comprehension) - 5 câu
@@ -555,11 +561,11 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   ];
 
   const part5Questions2: ExamQuestionMcq[] = [
-    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Shopping centres", "Racing tracks"], correctAnswer: "Friendly atmosphere and high academic standards" },
-    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a swimming pool", "Only a cafeteria"], correctAnswer: "Bright classrooms and computer laboratories" },
-    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only watching TV", "Only video games"], correctAnswer: "Volunteer clubs and English speaking contests" },
-    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Ignore students", "Give no homework"], correctAnswer: "Provide guidance and encouragement" },
-    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To build cars", "To make money"], correctAnswer: "To develop responsible citizens" }
+    { num: "28.", stem: "What facilities does the school have?", options: ["Only a cafeteria", "Bright classrooms and computer laboratories", "Only a swimming pool"], correctAnswer: "Bright classrooms and computer laboratories" }, // B
+    { num: "29.", stem: "What is our secondary school famous for?", options: ["Racing tracks", "Shopping centres", "Friendly atmosphere and high academic standards"], correctAnswer: "Friendly atmosphere and high academic standards" }, // C
+    { num: "30.", stem: "How do teachers help students?", options: ["Ignore students", "Provide guidance and encouragement", "Give no homework"], correctAnswer: "Provide guidance and encouragement" }, // B
+    { num: "31.", stem: "Which activities do students participate in?", options: ["Only watching TV", "Only video games", "Volunteer clubs and English speaking contests"], correctAnswer: "Volunteer clubs and English speaking contests" }, // C
+    { num: "32.", stem: "What is the school's overall goal?", options: ["To make money", "To develop responsible citizens", "To build cars"], correctAnswer: "To develop responsible citizens" } // B
   ];
 
   // PART 6 (Transformation) - 2 câu
@@ -589,23 +595,23 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const part6Questions2: ExamQuestionMcq[] = [
     {
       num: "33.",
-      stem: "Because it rained heavily, we stayed at home.",
+      stem: "Because the weather was cold, we wore warm jackets.",
       options: [
-        "It rained heavily, so we stayed at home.",
-        "We stayed at home because so it rained.",
-        "Although it rained heavily, we went out."
+        "Although the weather was cold, we wore T-shirts.",
+        "We wore warm jackets because so it was cold.",
+        "The weather was cold, so we wore warm jackets."
       ],
-      correctAnswer: "It rained heavily, so we stayed at home."
+      correctAnswer: "The weather was cold, so we wore warm jackets." // C
     },
     {
       num: "34.",
-      stem: "My brother likes playing badminton very much.",
+      stem: "My sister enjoys collecting stamps in her spare time.",
       options: [
-        "My brother is interested in playing badminton.",
-        "My brother enjoys to play badminton.",
-        "My brother hates playing badminton."
+        "My sister dislikes collecting stamps in her spare time.",
+        "My sister is fond of collecting stamps in her spare time.",
+        "My sister hates stamps in her spare time."
       ],
-      correctAnswer: "My brother is interested in playing badminton."
+      correctAnswer: "My sister is fond of collecting stamps in her spare time." // B
     }
   ];
 
@@ -636,23 +642,23 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const part7Questions2: ExamQuestionMcq[] = [
     {
       num: "35.",
-      stem: "eating / healthy / good / for / is / food / health.",
+      stem: "doing / exercise / helps / stay / us / shape / in.",
       options: [
-        "Eating healthy food is good for health.",
-        "Good for health is eating healthy food.",
-        "Health is good for eating healthy food."
+        "Shape in us stay helps doing exercise.",
+        "Doing exercise helps us stay in shape.",
+        "Us stay in shape helps doing exercise."
       ],
-      correctAnswer: "Eating healthy food is good for health."
+      correctAnswer: "Doing exercise helps us stay in shape." // B
     },
     {
       num: "36.",
-      stem: "learning / helps / knowledge / English / us / broaden / our.",
+      stem: "protecting / is / the / environment / duty / of / everyone.",
       options: [
-        "Learning English helps us broaden our knowledge.",
-        "Broaden our knowledge helps learning English us.",
-        "Our knowledge helps us broaden learning English."
+        "Everyone of duty is the environment protecting.",
+        "The duty is protecting environment of everyone.",
+        "Protecting the environment is the duty of everyone."
       ],
-      correctAnswer: "Learning English helps us broaden our knowledge."
+      correctAnswer: "Protecting the environment is the duty of everyone." // C
     }
   ];
 
@@ -686,19 +692,28 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   ];
 
   const allAnsCode2: string[] = [
-    "A", "A", "A", "A", "A",
+    "B", "C", "B", "C", "B",
     "A (True)", "A (True)", "B (False)", "A (True)", "A (True)",
     ...part3Answers2,
-    "A (skills)", "A (so that)", "A (a)", "A (study)", "A (positively)",
-    "A (Friendly atmosphere)", "A (Bright classrooms)", "A (Volunteer clubs)", "A (Provide guidance)", "A (To develop responsible)",
-    "A", "A",
-    "A", "A"
+    "B (skills)", "C (so that)", "B (a)", "C (study)", "B (positively)",
+    "B (Bright classrooms)", "C (Friendly atmosphere)", "B (Provide guidance)", "C (Volunteer clubs)", "B (To develop responsible)",
+    "C (The weather was cold...)", "B (My sister is fond of...)",
+    "B (Doing exercise helps...)", "C (Protecting the environment...)"
   ];
+
+  const answerRowsCode2: ExamSuiteData['answerRows'] = [];
 
   for (let i = 0; i < 18; i++) {
     answerRows.push({
       col1Num: `${i + 1}`,
       col1Ans: `${i + 1}. ${allAnsCode1[i]}`,
+      col2Num: `${i + 19}`,
+      col2Ans: `${i + 19}. ${allAnsCode1[i + 18]}`
+    });
+
+    answerRowsCode2.push({
+      col1Num: `${i + 1}`,
+      col1Ans: `${i + 1}. ${allAnsCode2[i]}`,
       col2Num: `${i + 19}`,
       col2Ans: `${i + 19}. ${allAnsCode2[i + 18]}`
     });
@@ -771,6 +786,7 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
     audioMonologue,
     mcqTotalPts,
     answerRows,
+    answerRowsCode2,
     writingRubric,
     sampleWriting,
     scoreSummary
@@ -787,7 +803,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
     matrixSubtitle, matrixHeaders, matrixRows,
     specSubtitle, specHeaders, specRows,
     examCode1, examCode2, speakingTest,
-    audioDialogue, audioMonologue, mcqTotalPts, answerRows,
+    audioDialogue, audioMonologue, mcqTotalPts, answerRows, answerRowsCode2,
     writingRubric, sampleWriting, hasSpeaking, scoreSummary
   } = suite;
 
@@ -1115,14 +1131,37 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
         I. PHẦN TRẮC NGHIỆM KHÁCH QUAN (36 CÂU = ${mcqTotalPts} ĐIỂM TRÊN ĐỀ VIẾT)
       </div>
 
-      <table class="tbl-border" style="font-size: 11pt; text-align: center; margin-bottom: 10pt; page-break-inside: avoid;">
+      <div style="font-weight: bold; font-size: 11pt; color: #1E3A8A; margin-top: 4pt; margin-bottom: 2pt;">
+        1. BẢNG ĐÁP ÁN MÃ ĐỀ ${code1} (36 CÂU)
+      </div>
+      <table class="tbl-border" style="font-size: 11pt; text-align: center; margin-bottom: 8pt; page-break-inside: avoid;">
         <tr class="bg-head">
           <th style="width: 12%; padding: 4pt;"><b>Câu</b></th>
           <th style="width: 38%; padding: 4pt;"><b>Đáp án MÃ ĐỀ ${code1}</b></th>
           <th style="width: 12%; padding: 4pt;"><b>Câu</b></th>
-          <th style="width: 38%; padding: 4pt;"><b>Đáp án MÃ ĐỀ ${code2}</b></th>
+          <th style="width: 38%; padding: 4pt;"><b>Đáp án MÃ ĐỀ ${code1}</b></th>
         </tr>
         ${answerRows.map(row => `
+          <tr>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold;">${row.col1Num}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold; color: #FF0000;">${row.col1Ans}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold;">${row.col2Num}</td>
+            <td style="padding: 2.5pt; text-align: center; font-weight: bold; color: #FF0000;">${row.col2Ans}</td>
+          </tr>
+        `).join('')}
+      </table>
+
+      <div style="font-weight: bold; font-size: 11pt; color: #1E3A8A; margin-top: 4pt; margin-bottom: 2pt;">
+        2. BẢNG ĐÁP ÁN MÃ ĐỀ ${code2} (36 CÂU)
+      </div>
+      <table class="tbl-border" style="font-size: 11pt; text-align: center; margin-bottom: 10pt; page-break-inside: avoid;">
+        <tr class="bg-head">
+          <th style="width: 12%; padding: 4pt;"><b>Câu</b></th>
+          <th style="width: 38%; padding: 4pt;"><b>Đáp án MÃ ĐỀ ${code2}</b></th>
+          <th style="width: 12%; padding: 4pt;"><b>Câu</b></th>
+          <th style="width: 38%; padding: 4pt;"><b>Đáp án MÃ ĐỀ ${code2}</b></th>
+        </tr>
+        ${(answerRowsCode2 || answerRows).map(row => `
           <tr>
             <td style="padding: 2.5pt; text-align: center; font-weight: bold;">${row.col1Num}</td>
             <td style="padding: 2.5pt; text-align: center; font-weight: bold; color: #FF0000;">${row.col1Ans}</td>

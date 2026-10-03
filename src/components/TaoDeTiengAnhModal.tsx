@@ -48,7 +48,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [selectedGrade, setSelectedGrade] = useState<string>('9');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [schoolAgency, setSchoolAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
+  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
@@ -843,8 +843,8 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
 
                   {/* Thông tin giáo viên & mã máy tính */}
                   <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300 space-y-1">
-                    <p>• Họ và tên Giáo viên: <strong>{regName || 'Đinh Văn Thành - PC'}</strong></p>
-                    <p>• Trường / Đơn vị công tác: <strong>{regSchool || 'Trường THCS Đồng Yên'}</strong></p>
+                    <p>• Họ và tên Giáo viên: <strong>{regName || 'Giáo viên Tiếng Anh'}</strong></p>
+                    <p>• Trường / Đơn vị công tác: <strong>{regSchool || 'Chưa cập nhật'}</strong></p>
                     <p>• Số điện thoại / Zalo: <strong>{regPhone || '0915213717'}</strong></p>
                     <p className="text-cyan-300 font-mono">• Mã máy tính nhận diện: <strong>{detectedMid}</strong></p>
                   </div>
@@ -977,7 +977,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                         type="text"
                         value={regSchool}
                         onChange={(e) => setRegSchool(e.target.value)}
-                        placeholder="Ví dụ: Trường THCS Đồng Yên"
+                        placeholder="Ví dụ: Trường THCS Chu Văn An"
                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
                       />
                     </div>
