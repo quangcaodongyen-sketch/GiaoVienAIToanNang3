@@ -1,0 +1,12 @@
+{
+  "appId": "smart-listening",
+  "appName": "Smart Listening Pro - Trợ lý tạo bài nghe SGK Global Success Cấp 1-2-3",
+  "currentVersion": "2.0.26",
+  "latestVersion": "2.0.26",
+  "releaseDate": "03/10/2026",
+  "changelog": "• Bổ sung tính năng Kiểm tra Cập nhật Trực tuyến (Check for Updates) chuẩn quốc tế\n• Tối ưu hóa bộ giọng đọc SGK Global Success Cấp 1-2-3 và chuẩn quốc tế IELTS/TOEIC\n• Nâng cấp hệ thống bản quyền Hybrid Cloud tự động đồng bộ siêu tốc\n• Cải thiện âm thanh chèn chuông thông báo (Chimes/Bells) và căn chỉnh thời lượng tự động",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart%20Listening%20Pro.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/#smart-listening",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+}
