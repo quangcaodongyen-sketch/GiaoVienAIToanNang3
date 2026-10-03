@@ -1,10 +1,10 @@
 {
   "appId": "nls-ai",
   "appName": "Công Cụ Tích Hợp NLS, AI & Nội Dung GD THCS (CV 5512)",
-  "currentVersion": "3.2.3",
-  "latestVersion": "3.2.3",
+  "currentVersion": "3.2.4",
+  "latestVersion": "3.2.4",
   "releaseDate": "03/10/2026",
-  "changelog": "• Sửa triệt để lỗi biên dịch Compile error in hidden module Mod_TichHop_NLS_AI trên Word\n• Khắc phục hoàn toàn lỗi nhắc lưu file giáo án lần đầu, tự động hỗ trợ giáo viên tích hợp ngay\n• Tự động đồng bộ bản quyền Pro siêu tốc từ Web Cloud\n• Tải về trực tiếp bộ cài đặt vá lỗi chỉ với 1 click, không cần tìm kiếm\n• Tích hợp liên kết tinh tế khám phá Hệ sinh thái Giáo viên AI Toàn Năng (https://giao-vien-ai-toan-nang3.vercel.app/)",
+  "changelog": "• Sửa triệt để phản hồi nút 'Kiểm tra cập nhật' trên thanh Ribbon Word\n• Khắc phục hoàn toàn lỗi cửa sổ bị ẩn/treo ngầm (Withdrawn/Hidden)\n• Tự động đồng bộ bản quyền Pro siêu tốc từ Web Cloud\n• Tải về trực tiếp bộ cài đặt vá lỗi chỉ với 1 click, không cần tìm kiếm\n• Tích hợp liên kết tinh tế khám phá Hệ sinh thái Giáo viên AI Toàn Năng (https://giao-vien-ai-toan-nang3.vercel.app/)",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
