@@ -809,40 +809,8 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT VIP */}
-          {/* ========================================================================= */}
-          {activeTab === 'license' && (
-            <div className="space-y-6">
-              {/* HARDWARE ID CARD */}
-              <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                    <Key className="w-4 h-4 text-amber-400" />
-                    Mã Máy Tính Cá Nhân Hóa (Hardware Code):
-                  </div>
-                  <span className="text-[11px] text-slate-500 font-mono">Định danh phần cứng riêng biệt</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-base font-bold text-sky-400 tracking-wider select-all">
-                    {hwid}
-                  </div>
-                  <button
-                    onClick={() => copyToClipboard(hwid, 'Mã máy')}
-                    className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5 border border-slate-700 transition"
-                  >
-                    <Copy className="w-4 h-4" /> Sao Chép
-                  </button>
-                </div>
-                <p className="text-xs text-slate-400">
-                  Gửi mã máy này qua Zalo <strong>{BRAND.phone}</strong> (Thầy Đinh Văn Thành) để nhận mã kích hoạt bản quyền VIP trọn đời.
-                </p>
-              </div>
-
-              {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
           {/* TAB 3: TIỆN ÍCH MIỄN PHÍ & QUẢNG CÁO HỆ SINH THÁI PRO CỦA THẦY THÀNH */}
+          {/* ========================================================================= */}
           {activeTab === 'license' && (
             <div className="space-y-5 max-w-4xl mx-auto py-2">
               {/* KHỐI XÁC NHẬN MIỄN PHÍ TRỌN ĐỜI */}
