@@ -1063,7 +1063,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                 <div className="flex items-center gap-3 shrink-0">
                   <a
                     href="/tao-bai-nghe-listening.mp4"
-                    download="HuongDan_Smart_Listening_Pro_TaoFileNgheTiengAnh.mp4"
+                    download="Huong_Dan_Smart_Listening_Pro.mp4"
                     className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -1094,15 +1094,28 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   </p>
                 </div>
 
-                {/* NÚT TẢI TRỰC TIẾP FILE ZIP BẢN CÀI ĐẶT */}
-                <a
-                  href="/Smart_Listening_Pro_Pass_123.zip"
-                  download="Smart_Listening_Pro_TaoFileNgheTiengAnh_Pass123.zip"
-                  className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0"
-                >
-                  <Download className="w-4 h-4" />
-                  Tải Bản Cài Đặt (Pass: 123)
-                </a>
+                {/* CÁC NÚT TẢI: .EXE CHẠY NGAY HOẶC .ZIP PASS 123 */}
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                  <a
+                    href="/Smart%20Listening%20Pro.exe"
+                    download="Smart Listening Pro.exe"
+                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 transition-all hover:scale-105"
+                    title="Tải trực tiếp file .exe - Mở là dùng ngay, không cần giải nén"
+                  >
+                    <Download className="w-4 h-4" />
+                    Tải File Cài (.exe Chạy Ngay)
+                  </a>
+
+                  <a
+                    href="/Smart_Listening_Pro_Pass_123.zip"
+                    download="Smart_Listening_Pro_Pass_123.zip"
+                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
+                    title="Bản nén zip có mật khẩu 123 - Tránh chặn tải trên mọi trình duyệt"
+                  >
+                    <Download className="w-4 h-4" />
+                    Tải Bản Nén (.zip Pass: 123)
+                  </a>
+                </div>
               </div>
 
               {/* Hướng Dẫn Nhanh 3 Bước */}
