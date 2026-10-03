@@ -79,9 +79,7 @@ class LicenseService {
         // Tự động dọn dẹp các tài khoản ảo do hệ thống từng tự sinh demo
         const cleaned = list.filter(item => 
           item.teacher_name !== 'Cô Nguyễn Thị Mai' &&
-          item.teacher_name !== 'Thầy Trần Văn Tuấn' &&
-          item.machine_id !== 'MB-E10D-BE85' &&
-          item.machine_id !== 'MB-8F22-A109'
+          item.teacher_name !== 'Thầy Trần Văn Tuấn'
         );
         if (cleaned.length !== list.length) {
           localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(cleaned));
@@ -99,9 +97,7 @@ class LicenseService {
     try {
       const cleaned = licenses.filter(item => 
         item.teacher_name !== 'Cô Nguyễn Thị Mai' &&
-        item.teacher_name !== 'Thầy Trần Văn Tuấn' &&
-        item.machine_id !== 'MB-E10D-BE85' &&
-        item.machine_id !== 'MB-8F22-A109'
+        item.teacher_name !== 'Thầy Trần Văn Tuấn'
       );
       localStorage.setItem(STORAGE_KEY_LICENSES, JSON.stringify(cleaned));
     } catch (e) {
@@ -118,21 +114,9 @@ class LicenseService {
           .select('*')
           .order('id', { ascending: false });
         if (!error && data) {
-          // Xóa các bản ghi demo nếu còn tồn tại trên Cloud Supabase
-          const hasDemo = data.some(x => 
-            x.teacher_name === 'Cô Nguyễn Thị Mai' || 
-            x.teacher_name === 'Thầy Trần Văn Tuấn' ||
-            x.machine_id === 'MB-E10D-BE85' || 
-            x.machine_id === 'MB-8F22-A109'
-          );
-          if (hasDemo) {
-            this.supabase.from('licenses').delete().in('machine_id', ['MB-E10D-BE85', 'MB-8F22-A109']).then();
-          }
           const cleaned = data.filter(x => 
             x.teacher_name !== 'Cô Nguyễn Thị Mai' &&
-            x.teacher_name !== 'Thầy Trần Văn Tuấn' &&
-            x.machine_id !== 'MB-E10D-BE85' && 
-            x.machine_id !== 'MB-8F22-A109'
+            x.teacher_name !== 'Thầy Trần Văn Tuấn'
           );
           this.setLocalLicenses(cleaned);
           return cleaned;

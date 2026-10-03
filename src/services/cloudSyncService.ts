@@ -119,6 +119,11 @@ export const isAppMatching = (
     return rId.includes('record') || rName.includes('quay màn hình');
   }
 
+  // Smart Listening Pro / Tạo File Nghe SGK
+  if (target.includes('listening') || target.includes('tts') || target.includes('nghe')) {
+    return rId.includes('listening') || rId.includes('tts') || rName.includes('listening') || rName.includes('bài nghe') || rName.includes('file nghe');
+  }
+
   return rId === target;
 };
 

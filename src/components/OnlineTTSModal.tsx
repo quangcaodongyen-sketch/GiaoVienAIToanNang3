@@ -77,10 +77,6 @@ Earth is the only planet known to support life, thanks to its perfect distance f
 // Hàm sinh hoặc đọc mã máy tính duy nhất cho từng trình duyệt/máy tính
 const getOrCreateMachineId = (): string => {
   let mid = localStorage.getItem('gvai_detected_machine_id');
-  if (mid === 'MB-E10D-BE85' || mid === 'MB-8F22-A109') {
-    localStorage.removeItem('gvai_detected_machine_id');
-    mid = null;
-  }
   if (!mid || !mid.startsWith('MB-')) {
     // Tạo mã định danh duy nhất dựa trên màn hình + trình duyệt + ngẫu nhiên
     try {

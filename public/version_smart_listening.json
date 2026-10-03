@@ -1,10 +1,10 @@
 {
   "appId": "smart-listening",
   "appName": "Smart Listening Pro - Trợ lý tạo bài nghe SGK Global Success Cấp 1-2-3",
-  "currentVersion": "2.0.26",
-  "latestVersion": "2.0.26",
+  "currentVersion": "2.0.28",
+  "latestVersion": "2.0.28",
   "releaseDate": "03/10/2026",
-  "changelog": "• Bổ sung tính năng Kiểm tra Cập nhật Trực tuyến (Check for Updates) chuẩn quốc tế\n• Tối ưu hóa bộ giọng đọc SGK Global Success Cấp 1-2-3 và chuẩn quốc tế IELTS/TOEIC\n• Nâng cấp hệ thống bản quyền Hybrid Cloud tự động đồng bộ siêu tốc\n• Cải thiện âm thanh chèn chuông thông báo (Chimes/Bells) và căn chỉnh thời lượng tự động",
+  "changelog": "• BẢN NÂNG CẤP MỚI v2.0.28 (KHUYẾN NGHỊ CẬP NHẬT):\n• TỰ ĐỘNG TẠO BIỂU TƯỢNG (ICON) ĐẸP MẮT TRÊN MÀN HÌNH DESKTOP: Mở nhanh phần mềm chỉ với 1 cú click chuột\n• ĐỒNG BỘ ĐƠN ĐĂNG KÝ BẢN QUYỀN TRỰC TIẾP LÊN HỆ THỐNG WEB ADMIN: Thầy Thành duyệt kích hoạt tức thì trên điện thoại / máy tính toàn quốc\n• BỔ SUNG TÍNH NĂNG KIỂM TRA UPDATE TRỰC TUYẾN: Nhận thông báo nâng cấp tự động khi có bản vá lỗi mới\n• TỐI ƯU HÓA XUẤT FILE ÂM THANH VÀ GIỌNG ĐỌC SGK GLOBAL SUCCESS CHUẨN QUỐC TẾ",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart%20Listening%20Pro.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/#smart-listening",

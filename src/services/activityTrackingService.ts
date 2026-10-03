@@ -531,7 +531,7 @@ class ActivityTrackingService {
         list = [];
       }
     }
-    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-8F22-A109', 'GV-3E11-9B5C', 'GV-4C91-D3F0', 'MB-E10D-BE85', 'MB-8F22-A109'];
+    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-3E11-9B5C', 'GV-4C91-D3F0'];
     list = list.filter(r => !DEMO_IDS.includes(r.machineId) && r.fullName !== 'Cô Hoàng Thu Thảo' && r.fullName !== 'Thầy Trần Văn Tuấn');
     localStorage.setItem(STORAGE_REGISTRATIONS, JSON.stringify(list));
     return list;
@@ -658,7 +658,7 @@ class ActivityTrackingService {
       list = [...DEFAULT_TRACKED_USERS];
     }
 
-    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-8F22-A109', 'GV-3E11-9B5C', 'GV-4C91-D3F0', 'MB-E10D-BE85', 'MB-8F22-A109'];
+    const DEMO_IDS = ['GV-A7B8-90F1', 'GV-3E11-9B5C', 'GV-4C91-D3F0'];
     list = list.filter(m => !isAdminMachine(m.machineId) && !DEMO_IDS.includes(m.machineId) && m.fullName !== 'Cô Hoàng Thu Thảo' && m.fullName !== 'Thầy Trần Văn Tuấn');
 
     const currentMid = this.getOrCreateMachineId();

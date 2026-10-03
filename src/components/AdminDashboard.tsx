@@ -343,7 +343,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
 
   const loadTrackingData = async () => {
     // Tự động dọn sạch triệt để mọi mã test demo rác cũ (GV-TEST-9999, Thầy Nguyễn Văn An...)
-    const DEMO_TEST_IDS = ['GV-TEST-9999', 'GV-TEST', 'GV-A7B8-90F1', 'GV-8F22-A109', 'MB-E10D-BE85'];
+    const DEMO_TEST_IDS = ['GV-TEST-9999', 'GV-TEST', 'GV-A7B8-90F1', 'GV-8F22-A109'];
     activityTrackingService.unblockMachine('GV-33B3-4A70');
     try {
       const rawR = localStorage.getItem('gvai_registration_requests');
