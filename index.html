@@ -10,6 +10,22 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <script>
+      // Tự động xóa bộ nhớ đệm cache phiên bản cũ
+      (function() {
+        var CURRENT_VER = "20261003_v3_clean_pedagogy";
+        try {
+          if (localStorage.getItem("app_build_version") !== CURRENT_VER) {
+            localStorage.setItem("app_build_version", CURRENT_VER);
+            if (window.caches) {
+              caches.keys().then(function(keys) {
+                keys.forEach(function(k) { caches.delete(k); });
+              });
+            }
+          }
+        } catch(e) {}
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23123A63'/><text x='50' y='65' font-size='50' font-weight='bold' text-anchor='middle' fill='%23FFFFFF' font-family='sans-serif'>GV</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#123A63" />
@@ -280,6 +296,6 @@
   </head>
   <body class="bg-[#F6F8FC] text-[#172033] antialiased">
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx?v=20261003_v3_clean"></script>
   </body>
 </html>
