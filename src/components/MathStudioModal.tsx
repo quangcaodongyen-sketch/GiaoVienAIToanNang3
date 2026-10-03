@@ -36,6 +36,7 @@ import { verifyKeyFormat } from '../services/nlsKeyService';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { ADMIN_WHITELIST_MACHINES } from '../services/activityTrackingService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { CrossPromoBanner } from './CrossPromoBanner';
 
 interface MathStudioModalProps {
   isOpen: boolean;
@@ -415,6 +416,11 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
             <Crown className="w-4 h-4 text-amber-400" />
             <span>3. Bản Quyền & Kích Hoạt</span>
           </button>
+        </div>
+
+        {/* CROSS PROMOTION BANNER QUẢNG CÁO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH */}
+        <div className="px-4 sm:px-6 pt-3">
+          <CrossPromoBanner currentAppId="math" onNavigateApp={(h) => { onClose(); window.location.hash = h; }} />
         </div>
 
         {/* BODY MODAL CONTENT */}

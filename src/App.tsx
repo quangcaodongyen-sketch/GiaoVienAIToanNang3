@@ -50,6 +50,7 @@ import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 import { MathStudioModal } from './components/MathStudioModal';
 import { TaoDe15PhutModal } from './components/TaoDe15PhutModal';
+import { CrossPromoBanner } from './components/CrossPromoBanner';
 import { webSecurityGuard } from './services/webSecurityGuard';
 
 export default function App() {
@@ -1018,6 +1019,15 @@ export default function App() {
                 })}
               </div>
             </div>
+            {/* BANNER QUẢNG CÁO CHÉO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH (NHẤP NHÁY NHẸ, 1-CLICK TẢI / TRẢI NGHIỆM) */}
+            <div className="mb-6">
+              <CrossPromoBanner
+                onNavigateApp={(hash) => {
+                  window.location.hash = hash;
+                }}
+              />
+            </div>
+
             {/* EMPTY STATE */}
             {filteredApps.length === 0 ? (
               <div className="max-w-md mx-auto py-12 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
@@ -1122,43 +1132,43 @@ export default function App() {
               <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
                 Bảng Giá Bản Quyền Sư Phạm 2026
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
-                Chi phí đầu tư siêu tiết kiệm, chỉ tương đương một vài buổi ăn sáng nhưng giúp Thầy/Cô giải phóng hàng trăm giờ lao động mỗi năm học.
+              <p className="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
+                Mỗi ứng dụng tính tiền đều có cơ chế bản quyền độc lập riêng biệt. Kích hoạt ứng dụng nào dùng ứng dụng đó, tuyệt đối không có chính sách cho tặng app Pro nào. Các tiện ích miễn phí được cài đặt & sử dụng trọn đời tự do.
               </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
               
-              {/* GÓI 1: TRẢI NGHIỆM */}
+              {/* GÓI 1: CÁC TIỆN ÍCH MIỄN PHÍ & DÙNG THỬ */}
               <div className="p-6 sm:p-7 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all">
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gói Làm Quen</span>
-                    <h3 className="text-xl font-black text-slate-900">Trải Nghiệm Dùng Thử</h3>
-                    <p className="text-xs text-slate-500">Dành cho Thầy/Cô mới tiếp cận công cụ để kiểm chứng chất lượng sư phạm.</p>
+                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Cài Đặt Tự Do</span>
+                    <h3 className="text-xl font-black text-slate-900">Tiện Ích Miễn Phí & Dùng Thử</h3>
+                    <p className="text-xs text-slate-500">Cài đặt 100% miễn phí các tiện ích giáo viên và dùng thử 5 lần cho các app Pro.</p>
                   </div>
 
                   <div className="py-3 border-y border-slate-200">
-                    <div className="text-3xl font-black text-slate-900">0 VNĐ</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Miễn phí 5 lượt / mỗi thiết bị</div>
+                    <div className="text-3xl font-black text-emerald-600">0 VNĐ</div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">Miễn phí trọn đời cho các tiện ích • 5 lượt dùng thử / app Pro</div>
                   </div>
 
                   <ul className="space-y-2.5 text-xs text-slate-600">
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Dùng thử 5 lần tạo giáo án NLS hoặc đề thi</span>
+                      <span><strong>Miễn phí 100% vĩnh viễn:</strong> Cleaner Pro, Tách/Gộp PDF, Quay màn hình, Chuẩn hóa VB NĐ 30, Trợ lý GVCN</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Trải nghiệm đầy đủ giao diện và tính năng</span>
+                      <span><strong>Dùng thử đúng 5 lần độc lập</strong> cho từng ứng dụng tính tiền Pro trước khi đăng ký</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>Trải nghiệm trực tiếp trên web hoặc tải bản cài đặt máy tính</span>
                     </li>
                     <li className="flex items-start gap-2 text-slate-400">
-                      <span className="text-red-500 font-bold">⚠️</span>
-                      <span>Có gắn kèm quảng cáo bản quyền Thầy Thành</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-slate-400">
-                      <span className="text-red-500 font-bold">⚠️</span>
-                      <span>Giới hạn tối đa 2 trang đầu của giáo án</span>
+                      <span className="text-amber-500 font-bold">ℹ️</span>
+                      <span>Bản dùng thử có gắn thông tin tác giả và giới hạn số trang</span>
                     </li>
                   </ul>
                 </div>
@@ -1166,68 +1176,72 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setShowTrialModal(true)}
-                  className="w-full py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Bắt đầu dùng thử miễn phí</span>
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Trải nghiệm dùng thử 5 lần</span>
                 </button>
               </div>
 
-              {/* GÓI 2: PRO VĨNH VIỄN (NỔI BẬT NHẤT) */}
+              {/* GÓI 2: PRO ĐỘC LẬP TỪNG APP (NỔI BẬT NHẤT) */}
               <div className="relative p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0B1E36] via-[#102B52] to-[#164177] text-white border-2 border-amber-400/80 shadow-2xl shadow-blue-950/40 flex flex-col justify-between space-y-6 lg:-translate-y-2">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] sm:text-xs tracking-wider uppercase shadow-md shadow-amber-500/30 flex items-center gap-1.5">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] sm:text-xs tracking-wider uppercase shadow-md shadow-amber-500/30 flex items-center gap-1.5 whitespace-nowrap">
                   <Crown className="w-3.5 h-3.5" />
-                  <span>GÓI VIP ĐƯỢC CHỌN NHIỀU NHẤT</span>
+                  <span>BẢN QUYỀN PRO ĐỘC LẬP TỪNG APP</span>
                 </div>
 
                 <div className="space-y-4 pt-1">
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Bản Quyền Độc Quyền</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">VIP Trọn Đời (1 Máy Tính)</h3>
-                    <p className="text-xs text-blue-200/90">Giải pháp toàn diện nhất cho giáo viên THCS đứng lớp lâu năm.</p>
+                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Kích Hoạt Độc Lập (1 Máy Tính)</span>
+                    <h3 className="text-xl sm:text-2xl font-black text-white">Bản Quyền Pro Theo App</h3>
+                    <p className="text-xs text-blue-200/90">Kích hoạt ứng dụng nào dùng ứng dụng đó theo đúng nhu cầu chuyên môn của Thầy/Cô.</p>
                   </div>
 
                   <div className="py-3 border-y border-white/15">
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-black text-amber-300">Báo Giá Ưu Đãi</span>
                     </div>
-                    <div className="text-[11px] text-cyan-200 mt-0.5">Liên hệ trực tiếp Thầy Thành để nhận giá ưu đãi giáo viên</div>
+                    <div className="text-[11px] text-cyan-200 mt-0.5">Liên hệ trực tiếp Thầy Thành để nhận mã kích hoạt theo app</div>
                   </div>
 
                   <ul className="space-y-2.5 text-xs text-blue-100">
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Không giới hạn số lượt</strong> tạo đề & soạn bài</span>
+                      <span><strong>Kích hoạt độc lập từng app:</strong> NLS Giáo án 5512, Tạo đề 12 môn 7991, MathStudio Pro, Sinh đề biến thể VIP...</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Gỡ bỏ 100% quảng cáo</strong>, xuất file sạch chuẩn nộp BGH</span>
+                      <span><strong>Chính sách chuẩn mực:</strong> Đăng ký app nào cấp mã dùng app đó, không có chính sách cho tặng app Pro nào</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Mở khóa toàn bộ 12 môn THCS</strong> + MathStudio Pro</span>
+                      <span><strong>Không giới hạn số lượt sử dụng</strong> cho ứng dụng đã kích hoạt</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>Cập nhật tính năng mới <strong>miễn phí trọn đời</strong></span>
+                      <span><strong>Gỡ bỏ 100% quảng cáo</strong>, xuất file sạch nộp Ban Giám Hiệu</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>Hỗ trợ kỹ thuật 1:1 qua <strong>UltraViewer & Zalo</strong></span>
+                      <span><strong>Cấp key Ed25519 / Cloud bảo mật</strong> theo mã máy tính (Hardware ID)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>Cập nhật tính năng & hỗ trợ kỹ thuật UltraViewer qua Zalo</span>
                     </li>
                   </ul>
                 </div>
 
                 <a
                   href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Chào Thầy Thành, tôi muốn đăng ký mua Bản quyền VIP Trọn Đời Giáo Viên AI Toàn Năng (3.0 Pro). Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt với nhé!`
+                    `Chào Thầy Thành, tôi muốn đăng ký mua Bản quyền Pro cho ứng dụng [Tên Ứng Dụng] trên hệ thống Giáo Viên AI Toàn Năng. Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt với nhé!`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-white text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
                 >
                   <MessageCircle className="w-4 h-4 text-slate-950" />
-                  <span>NHẬN BÁO GIÁ QUA ZALO NGAY</span>
+                  <span>NHẬN BÁO GIÁ APP QUA ZALO NGAY</span>
                 </a>
               </div>
 
@@ -1237,18 +1251,22 @@ export default function App() {
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Gói Tập Thể</span>
                     <h3 className="text-xl font-black text-slate-900">Tổ Chuyên Môn & Nhà Trường</h3>
-                    <p className="text-xs text-slate-500">Dành cho tập thể tổ Khoa học Tự nhiên, Xã hội hoặc toàn thể cán bộ GV nhà trường.</p>
+                    <p className="text-xs text-slate-500">Dành cho tập thể tổ bộ môn (Toán, KHTN, KHXH, Ngoại ngữ) hoặc toàn trường.</p>
                   </div>
 
                   <div className="py-3 border-y border-slate-200">
                     <div className="text-3xl font-black text-slate-900">Chiết Khấu Cao</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Từ 5 - 50 máy tính / trường</div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">Theo danh sách app chuyên môn & số lượng máy tính</div>
                   </div>
 
                   <ul className="space-y-2.5 text-xs text-slate-600">
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Cấp mã kích hoạt đồng loạt cho toàn bộ tổ/trường</span>
+                      <span>Cấp danh mục key độc lập cho từng giáo viên theo đúng môn dạy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>Kích hoạt độc lập, minh bạch và chính xác cho từng máy tính</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -1267,7 +1285,7 @@ export default function App() {
 
                 <a
                   href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Kính gửi Thầy Thành, tôi đại diện Ban giám hiệu / Tổ chuyên môn trường THCS muốn tìm hiểu gói Bản quyền tập thể cho trường. Xin Thầy liên hệ tư vấn giúp!`
+                    `Kính gửi Thầy Thành, tôi đại diện Ban giám hiệu / Tổ chuyên môn trường THCS muốn tìm hiểu gói Bản quyền tập thể cho trường theo danh sách giáo viên. Xin Thầy liên hệ tư vấn giúp!`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -35,6 +35,7 @@ import {
   activateCleanerLicense
 } from '../services/cleanerKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { CrossPromoBanner } from './CrossPromoBanner';
 
 interface CleanerModalProps {
   isOpen: boolean;
@@ -401,9 +402,14 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
             }`}
           >
-            <Key className="w-4 h-4 text-amber-400" />
-            <span>3. Bản Quyền & Kích Hoạt</span>
+            <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
+            <span>3. Tiện Ích Miễn Phí & App Pro</span>
           </button>
+        </div>
+
+        {/* CROSS PROMOTION BANNER QUẢNG CÁO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH */}
+        <div className="px-4 sm:px-6 pt-3">
+          <CrossPromoBanner currentAppId="cleaner" onNavigateApp={() => onClose()} />
         </div>
 
         {/* MODAL CONTENT BODY */}
@@ -836,115 +842,119 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
               {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
               <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          {/* TAB 3: TIỆN ÍCH MIỄN PHÍ & QUẢNG CÁO HỆ SINH THÁI PRO CỦA THẦY THÀNH */}
+          {activeTab === 'license' && (
+            <div className="space-y-5 max-w-4xl mx-auto py-2">
+              {/* KHỐI XÁC NHẬN MIỄN PHÍ TRỌN ĐỜI */}
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/80 border-2 border-emerald-500/50 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shrink-0">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                        👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/30 text-emerald-300 border border-emerald-400/40">
+                        100% MIỄN PHÍ VĨNH VIỄN
                       </span>
-                      <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                      <span className="text-xs text-slate-300 font-medium">Không Cần Kích Hoạt Key</span>
                     </div>
-                    <h4 className="text-base sm:text-lg font-black text-white mt-1">
-                      Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                    <h4 className="text-base font-black text-white mt-1">
+                      Ứng Dụng Dọn Rác Máy Tính Cleaner Pro - Tặng Quý Thầy/Cô
                     </h4>
-                  </div>
-                  <div className="text-left sm:text-right shrink-0">
-                    <div className="text-sm sm:text-base font-black text-cyan-400">
-                      Liên Hệ Admin Thầy Thành
-                    </div>
-                    <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      Thầy giáo <strong>{BRAND.author}</strong> (THCS Đồng Yên) phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
+                    </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Tối ưu hóa máy tính toàn diện:</strong> Dọn dẹp bộ nhớ đệm Windows, Office, trình duyệt, tăng tốc độ máy tính tức thì.</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các thuật toán quét dọn rác mới nhất.</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
-                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                  <a
-                    href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm DinhThanh Cleaner Pro. Mã máy của tôi: ${hwid}.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
-                  >
-                    <MessageCircle className="w-5 h-5 text-amber-300" />
-                    Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
-                  </a>
-                </div>
+                <a
+                  href="/Cai_Dat_DinhThanh_Cleaner_Pro.exe"
+                  download="Cai_Dat_DinhThanh_Cleaner_Pro.exe"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-2 shrink-0"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải Bản Máy Tính (.exe)</span>
+                </a>
               </div>
 
-              {/* LICENSE ACTIVATION FORM */}
-              <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-amber-300 uppercase tracking-wide">
-                    Nhập Mã Kích Hoạt Bản Quyền VIP (Dạng: PRO-XXXX-XXXX-XXXX-XXXX):
-                  </label>
-                  <input
-                    type="text"
-                    value={licenseKeyInput}
-                    onChange={(e) => setLicenseKeyInput(e.target.value)}
-                    placeholder="Dán mã bản quyền Pro nhận được từ Thầy Thành..."
-                    className="w-full p-3 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono text-sm tracking-wider focus:outline-none focus:border-amber-400"
-                  />
+              {/* QUẢNG CÁO CÁC ỨNG DỤNG TÍNH TIỀN PRO CỦA THẦY THÀNH (NHẤP NHÁY NHẸ, 1-CLICK DÙNG THỬ) */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+                    </span>
+                    <h4 className="text-sm font-black text-amber-300 uppercase tracking-wider">
+                      CÁC ỨNG DỤNG BẢN QUYỀN PRO CHUYÊN MÔN CỦA THẦY THÀNH
+                    </h4>
+                  </div>
+                  <span className="text-[11px] text-slate-400">Mỗi app đăng ký độc lập • Dùng thử 5 lần</span>
                 </div>
 
-                {activationMsg.text && (
-                  <div
-                    className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
-                      activationMsg.type === 'success'
-                        ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-rose-950/60 text-rose-300 border border-rose-500/40'
-                    }`}
-                  >
-                    {activationMsg.type === 'success' ? (
-                      <CheckCircle2 className="w-4 h-4 shrink-0" />
-                    ) : (
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                    )}
-                    {activationMsg.text}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* APP 1: NLS 5512 */}
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-rose-500/30 hover:border-rose-400 transition-all flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                        BẢN QUYỀN PRO
+                      </span>
+                      <h5 className="text-sm font-bold text-white">Tích Hợp NLS - AI (CV 5512)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Tự động chèn Năng lực số, STEM, AI vào giáo án 12 môn THCS với chữ màu đỏ chuẩn mực.
+                      </p>
+                    </div>
+                    <a
+                      href="#nls-ai"
+                      onClick={() => onClose()}
+                      className="w-full py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Dùng Thử 5 Lần</span>
+                    </a>
                   </div>
-                )}
 
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <button
-                    onClick={handleActivateLicense}
-                    disabled={isActivating || !licenseKeyInput.trim()}
-                    className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-50 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-amber-950/30"
-                  >
-                    <Key className="w-4 h-4" />
-                    {isActivating ? 'Đang Xác Thực...' : '🚀 Kích Hoạt Bản Quyền VIP Ngay'}
-                  </button>
+                  {/* APP 2: TẠO ĐỀ 12 MÔN 7991 */}
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 hover:border-amber-400 transition-all flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        BẢN QUYỀN PRO
+                      </span>
+                      <h5 className="text-sm font-bold text-white">Tạo Đề Kiểm Tra 12 Môn (CV 7991)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Sinh ma trận, bản đặc tả và đề kiểm tra định kỳ có đáp án chữ đỏ tiện tra cứu chấm thi.
+                      </p>
+                    </div>
+                    <a
+                      href="#tao-de-tieng-anh"
+                      onClick={() => onClose()}
+                      className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
+                    >
+                      <FileCheck className="w-3.5 h-3.5 text-white" />
+                      <span>Dùng Thử Trực Tuyến</span>
+                    </a>
+                  </div>
 
-                  <a
-                    href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto py-3 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    Nhắn Zalo: {BRAND.phone}
-                  </a>
+                  {/* APP 3: MATHSTUDIO PRO */}
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-violet-500/30 hover:border-violet-400 transition-all flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-violet-500/20 text-violet-300 border border-violet-500/40">
+                        BẢN QUYỀN PRO
+                      </span>
+                      <h5 className="text-sm font-bold text-white">MathStudio Pro (Mathpix Word)</h5>
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        Chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office trong 3s.
+                      </p>
+                    </div>
+                    <a
+                      href="/MathStudio_Pro_Pass_123.zip"
+                      download="MathStudio_Pro_Pass_123.zip"
+                      className="w-full py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
+                    >
+                      <Download className="w-3.5 h-3.5 text-cyan-300" />
+                      <span>Tải Về Dùng Thử (Pass 123)</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

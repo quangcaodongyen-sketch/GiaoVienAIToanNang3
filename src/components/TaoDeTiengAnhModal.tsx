@@ -29,6 +29,7 @@ import {
   ExamVerifyResult
 } from '../services/taodeKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { CrossPromoBanner } from './CrossPromoBanner';
 
 interface TaoDeTiengAnhModalProps {
   isOpen: boolean;
@@ -275,6 +276,11 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
             <Crown className="w-4 h-4 text-amber-400" />
             <span>Bản Quyền & Kích Hoạt</span>
           </button>
+        </div>
+
+        {/* CROSS PROMOTION BANNER QUẢNG CÁO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH */}
+        <div className="px-6 pt-3">
+          <CrossPromoBanner currentAppId="taode" onNavigateApp={(h) => { onClose(); window.location.hash = h; }} />
         </div>
 
         {/* MODAL BODY */}
