@@ -51,6 +51,7 @@ import { generateCHVBLicenseKey, buildCHVBZaloMessage } from '../services/chuanh
 import { generatePDFLicenseKey, buildPDFZaloMessage } from '../services/pdfSuiteKeyService';
 import { generateTHCS8MLicenseKey, SUBJECT_MAP } from '../services/taoDeTHCS8MonKeyService';
 import { generateExam15PLicenseKey } from '../services/taode15pKeyService';
+import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -62,6 +63,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
   const [showPin, setShowPin] = useState(false);
+
+  // State Khóa Web (Tạm dừng nâng cấp)
+  const [isMaintenanceLocked, setIsMaintenanceLocked] = useState<boolean>(() => systemMaintenanceService.isMaintenanceLocked());
+  const [isTogglingMaintenance, setIsTogglingMaintenance] = useState<boolean>(false);
 
   // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Tạo Đề 15P Tiếng Anh, Security Alerts
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
@@ -1375,6 +1380,39 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
     }
   };
 
+  // Lắng nghe sự kiện đồng bộ trạng thái Khóa Web
+  useEffect(() => {
+    const handleMaintenanceChange = (e: any) => {
+      if (e?.detail?.locked !== undefined) {
+        setIsMaintenanceLocked(e.detail.locked);
+      } else {
+        setIsMaintenanceLocked(systemMaintenanceService.isMaintenanceLocked());
+      }
+    };
+    window.addEventListener('gvai_maintenance_status_changed', handleMaintenanceChange);
+    return () => window.removeEventListener('gvai_maintenance_status_changed', handleMaintenanceChange);
+  }, []);
+
+  const handleToggleMaintenanceLock = async () => {
+    if (isMaintenanceLocked) {
+      if (window.confirm('Thầy có chắc chắn muốn MỞ KHÓA WEBSITE cho tất cả giáo viên toàn quốc truy cập bình thường không?')) {
+        setIsTogglingMaintenance(true);
+        await systemMaintenanceService.setMaintenanceLock(false, 'Mở lại web bởi Thầy Thành');
+        setIsMaintenanceLocked(false);
+        setIsTogglingMaintenance(false);
+        alert('🎉 ĐÃ MỞ KHÓA WEBSITE THÀNH CÔNG!\n\nTất cả giáo viên trên toàn quốc hiện đã có thể truy cập và sử dụng bình thường.');
+      }
+    } else {
+      if (window.confirm('⚠️ XÁC NHẬN KHÓA WEBSITE ĐỂ NÂNG CẤP:\n\nKhi khóa, tất cả giáo viên khi truy cập website sẽ chỉ xem được thông báo:\n"Web đang nâng cấp, vui lòng ghé thăm sau!"\n\nRiêng Admin có mật khẩu vẫn vào xem và quản lý bình thường.\n\nThầy có chắc chắn muốn KHÓA WEB ngay bây giờ không?')) {
+        setIsTogglingMaintenance(true);
+        await systemMaintenanceService.setMaintenanceLock(true, 'Nâng cấp và bảo trì hệ thống');
+        setIsMaintenanceLocked(true);
+        setIsTogglingMaintenance(false);
+        alert('🔒 ĐÃ KHÓA WEBSITE THÀNH CÔNG!\n\nWebsite hiện đang ở chế độ nâng cấp. Giáo viên truy cập sẽ nhận được thông báo "Web đang nâng cấp, vui lòng ghé thăm sau!".');
+      }
+    }
+  };
+
   // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
   useEffect(() => {
     if (!isOpen) return;
@@ -1760,6 +1798,34 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
           </div>
 
           <div className="flex items-center gap-2">
+            {/* NÚT KHÓA / MỞ KHÓA WEB (NÂNG CẤP BẢO TRÌ) */}
+            <button
+              onClick={handleToggleMaintenanceLock}
+              disabled={isTogglingMaintenance}
+              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black shadow-lg cursor-pointer ${
+                isMaintenanceLocked
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 text-white border-2 border-emerald-300 hover:from-emerald-500 hover:to-teal-400 shadow-emerald-600/40 animate-pulse'
+                  : 'bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border-2 border-amber-500/80 hover:border-amber-400'
+              }`}
+              title={
+                isMaintenanceLocked 
+                  ? 'Website đang KHÓA NÂNG CẤP (Khách chỉ thấy thông báo). Bấm để MỞ LẠI cho toàn quốc.' 
+                  : 'Bấm để TẠM DỪNG NÂNG CẤP website (Khách chỉ xem thông báo nâng cấp).'
+              }
+            >
+              {isMaintenanceLocked ? (
+                <>
+                  <Unlock className="w-4 h-4 text-emerald-200 animate-spin" />
+                  <span>🔓 MỞ KHÓA WEB (ĐANG KHÓA)</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <span>🔒 KHÓA WEB (NÂNG CẤP)</span>
+                </>
+              )}
+            </button>
+
             <button
               onClick={() => {
                 setAdminTab('security');

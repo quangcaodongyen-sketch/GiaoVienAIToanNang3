@@ -59,11 +59,11 @@ export const apps: AppCard[] = [
   {
     "id": "mathstudio-pro",
     "title": "MATHSTUDIO PRO (CHUYỂN MATHPIX SANG WORD)",
-    "description": "Add-in Word 1-Click tự động chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office. Chuyển hàng loạt đề thi chỉ trong 3 giây.",
+    "description": "Công cụ thử nghiệm nội bộ dành riêng cho Admin (Thầy Đinh Văn Thành). Chuyển đổi công thức Mathpix sang Word / MathType, tạm khóa tải về công khai.",
     "image": "/mathstudio_preview.png",
     "url": "#mathstudio",
     "category": "TOÁN HỌC & KHOA HỌC (MATHPIX)",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "NỘI BỘ ADMIN",
     "active": true,
     "featured": true,
     "order": 4
@@ -185,11 +185,11 @@ export const apps: AppCard[] = [
   {
     "id": "mathstudio-pro",
     "title": "ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX)",
-    "description": "Chuyển đổi Mathpix LaTeX sang Word Equation / MathType, tự động căn chỉnh công thức, chuẩn hóa font Toán, tạo ma trận đề thi và soạn thảo toán học tốc độ cao.",
+    "description": "Công cụ thử nghiệm nội bộ dành riêng cho Admin (Thầy Đinh Văn Thành). Chuyển đổi Mathpix LaTeX sang Word Equation / MathType, tạm thời khóa tải về công khai.",
     "image": "/congthucmathtype.jpg",
     "url": "#mathstudio",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "NỘI BỘ ADMIN",
     "active": true,
     "featured": true,
     "order": 13

@@ -29,7 +29,8 @@ import {
   RefreshCw,
   Calculator,
   Sigma,
-  Code2
+  Code2,
+  Lock
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { verifyKeyFormat } from '../services/nlsKeyService';
@@ -126,6 +127,32 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
   const [isSubmittingReg, setIsSubmittingReg] = useState(false);
   const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
 
+  // Quyền truy cập nội bộ Admin (Tool đang thử nghiệm chuyên sâu)
+  const [isAdminAuthorized, setIsAdminAuthorized] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+      localStorage.getItem('gvai_unlimited_machine') === 'true'
+    );
+  });
+  const [adminPinInput, setAdminPinInput] = useState<string>('');
+  const [adminPinError, setAdminPinError] = useState<string>('');
+
+  const handleVerifyAdminPin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const pin = adminPinInput.trim();
+    if (pin === 'Thaythanh2026@' || pin === 'Thaythanh@' || pin === 'Kichhoat123@') {
+      setIsAdminAuthorized(true);
+      setIsProActive(true);
+      localStorage.setItem('gvai_admin_session', 'authenticated');
+      localStorage.setItem('gvai_mathstudio_active_key', 'DVT-MATH-LIFETIME-MASTER');
+      setAdminPinError('');
+    } else {
+      setAdminPinError('Mật khẩu Quản trị viên không chính xác. Vui lòng kiểm tra lại!');
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       const code = getOrCreateMathStudioHardwareCode();
@@ -141,22 +168,29 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
         setTrialRemaining(5);
       }
 
-      // Kiểm tra bản quyền độc lập
-      const savedKey = localStorage.getItem('gvai_mathstudio_active_key');
-      const isAdmin = ADMIN_WHITELIST_MACHINES.includes(code) || code.includes('DVT') || code === 'GV-0DAD-F76C';
-      
-      if (isAdmin) {
+      // Kiểm tra bản quyền độc lập & Quyền Admin
+      const isMachineAdmin = ADMIN_WHITELIST_MACHINES.includes(code) || 
+                             code.includes('DVT') || 
+                             code === 'GV-0DAD-F76C' ||
+                             localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+                             localStorage.getItem('gvai_unlimited_machine') === 'true';
+
+      if (isMachineAdmin) {
+        setIsAdminAuthorized(true);
         setIsProActive(true);
         setVerifyResult({
           isValid: true,
           message: '👑 Đặc quyền Quản trị viên (Admin Thầy Đinh Văn Thành) – Mở khóa vĩnh viễn'
         });
-      } else if (savedKey) {
-        setInputKey(savedKey);
-        const res = verifyKeyFormat(savedKey, code);
-        if (res.isValid || savedKey.includes('APPROVED')) {
-          setIsProActive(true);
-          setVerifyResult(res.isValid ? res : { isValid: true, message: 'Đã kích hoạt bản quyền Pro từ Cloud' });
+      } else {
+        const savedKey = localStorage.getItem('gvai_mathstudio_active_key');
+        if (savedKey) {
+          setInputKey(savedKey);
+          const res = verifyKeyFormat(savedKey, code);
+          if (res.isValid || savedKey.includes('APPROVED')) {
+            setIsProActive(true);
+            setVerifyResult(res.isValid ? res : { isValid: true, message: 'Đã kích hoạt bản quyền Pro từ Cloud' });
+          }
         }
       }
     }
@@ -339,8 +373,8 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
                   ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX)
                 </h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                  CHUẨN ED25519 - BẢN NÂNG CẤP PRO
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  {isAdminAuthorized ? '👑 BẢN QUYỀN ADMIN PRO' : '🔒 NỘI BỘ ADMIN (ĐANG HIỆU CHỈNH)'}
                 </span>
                 {isProActive && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
@@ -374,8 +408,83 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           </div>
         </div>
 
-        {/* 3 TABS NAVIGATION CHUẨN QUY TẮC GEMINI */}
-        <div className="bg-slate-950/90 px-4 sm:px-6 pt-3 border-b border-slate-800/90 flex gap-2 sm:gap-4 shrink-0 overflow-x-auto text-xs">
+        {/* KIỂM TRA QUYỀN TRUY CẬP: NẾU KHÔNG PHẢI ADMIN THÌ HIỂN THỊ MÀN HÌNH BẢO VỆ NỘI BỘ */}
+        {!isAdminAuthorized ? (
+          <div className="p-6 sm:p-10 overflow-y-auto flex-1 flex flex-col items-center justify-center text-center">
+            <div className="max-w-lg mx-auto space-y-6 animate-in fade-in zoom-in-95 duration-200">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-rose-500/10 border-2 border-rose-500/30 text-rose-400 mx-auto flex items-center justify-center shadow-xl shadow-rose-500/20">
+                <Lock className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
+              </div>
+
+              <div className="space-y-2">
+                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase tracking-wider">
+                  ⚠️ CÔNG CỤ NỘI BỘ - ĐANG TRONG GIAI ĐOẠN SỬA LỖI
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black text-white">
+                  Chỉ Dành Riêng Cho Quản Trị Viên (Admin)
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Thầy giáo Đinh Văn Thành kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
+                </p>
+                <p className="text-xs text-rose-300 font-semibold">
+                  Để đảm bảo chất lượng sư phạm cao nhất, phần mềm tạm thời <strong>KHÓA TẢI VỀ CÔNG KHAI</strong> và không mở cho người dùng đại trà.
+                </p>
+              </div>
+
+              {/* HỘP GỢI Ý CÔNG CỤ CHÍNH THỨC */}
+              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-left text-xs space-y-2">
+                <p className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  Kính mời Quý Thầy/Cô trải nghiệm các công cụ chính thức đã phát hành:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-slate-300">
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                    <div className="font-bold text-cyan-300">Tích Hợp NLS-AI</div>
+                    <div className="text-[11px] text-slate-400">Chuẩn hóa giáo án 5512 & NLS</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                    <div className="font-bold text-emerald-300">Tạo Đề Tiếng Anh THCS</div>
+                    <div className="text-[11px] text-slate-400">Ma trận 4 cấp độ SGK mới</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* FORM NHẬP MẬT KHẨU ADMIN */}
+              <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-rose-500/40 space-y-3 shadow-2xl">
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
+                  <ShieldCheck className="w-4 h-4 text-rose-400" />
+                  <span>Xác thực Quản trị viên (Thầy Đinh Văn Thành):</span>
+                </div>
+                <form onSubmit={handleVerifyAdminPin} className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      placeholder="Nhập mật khẩu Admin..."
+                      value={adminPinInput}
+                      onChange={(e) => {
+                        setAdminPinInput(e.target.value);
+                        setAdminPinError('');
+                      }}
+                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-rose-500"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs transition shadow-lg shadow-rose-600/30 cursor-pointer whitespace-nowrap"
+                    >
+                      Mở Quyền Admin
+                    </button>
+                  </div>
+                  {adminPinError && (
+                    <p className="text-xs text-rose-400 font-semibold text-center">{adminPinError}</p>
+                  )}
+                </form>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* 3 TABS NAVIGATION CHUẨN QUY TẮC GEMINI */}
+            <div className="bg-slate-950/90 px-4 sm:px-6 pt-3 border-b border-slate-800/90 flex gap-2 sm:gap-4 shrink-0 overflow-x-auto text-xs">
           <button
             onClick={() => setActiveTab('online')}
             className={`pb-3 px-4 font-bold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap text-sm cursor-pointer ${
@@ -972,7 +1081,9 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
             </div>
           )}
 
-        </div>
+          </div>
+          </>
+        )}
 
         {/* FOOTER MODAL */}
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">

@@ -957,22 +957,21 @@ startxref
                 {/* APP 3: MATHSTUDIO PRO */}
                 <div className="p-4 rounded-2xl bg-slate-900 border border-violet-500/30 hover:border-violet-400 transition-all flex flex-col justify-between space-y-3">
                   <div className="space-y-2">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-violet-500/20 text-violet-300 border border-violet-500/40">
-                      BẢN QUYỀN PRO
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                      NỘI BỘ ADMIN
                     </span>
                     <h5 className="text-sm font-bold text-white">MathStudio Pro (Mathpix Word)</h5>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      Chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office trong 3s.
+                      Công cụ đang thử nghiệm chuyên sâu nội bộ và sửa lỗi, tạm thời chỉ dành riêng cho Admin Thầy Thành.
                     </p>
                   </div>
-                  <a
-                    href="/MathStudio_Pro_Pass_123.zip"
-                    download="MathStudio_Pro_Pass_123.zip"
-                    className="w-full py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
+                  <button
+                    onClick={() => alert("Công cụ MathStudio hiện đang trong giai đoạn thử nghiệm nội bộ và sửa lỗi, chỉ dành riêng cho Admin (Thầy Đinh Văn Thành).")}
+                    className="w-full py-2 rounded-xl bg-slate-800 text-slate-400 font-bold text-xs text-center flex items-center justify-center gap-1.5 cursor-pointer border border-slate-700 hover:bg-slate-700 hover:text-slate-300 transition"
                   >
-                    <Download className="w-3.5 h-3.5 text-cyan-300" />
-                    <span>Tải Về Dùng Thử (Pass 123)</span>
-                  </a>
+                    <Lock className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Nội Bộ Admin (Tạm Khóa Tải)</span>
+                  </button>
                 </div>
               </div>
             </div>

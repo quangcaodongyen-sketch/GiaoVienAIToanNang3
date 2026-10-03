@@ -35,6 +35,8 @@ import { MathStudioModal } from './components/MathStudioModal';
 import { TaoDe15PhutModal } from './components/TaoDe15PhutModal';
 import { CrossPromoBanner } from './components/CrossPromoBanner';
 import { webSecurityGuard } from './services/webSecurityGuard';
+import { MaintenanceScreen } from './components/MaintenanceScreen';
+import { systemMaintenanceService } from './services/systemMaintenanceService';
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -55,6 +57,10 @@ export default function App() {
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [showTrialModal, setShowTrialModal] = useState(false);
   const [isCurrentBlocked, setIsCurrentBlocked] = useState(false);
+
+  // Quản lý trạng thái Khóa Web (Nâng cấp hệ thống)
+  const [isMaintenanceLocked, setIsMaintenanceLocked] = useState<boolean>(() => systemMaintenanceService.isMaintenanceLocked());
+  const [isAdminSession, setIsAdminSession] = useState<boolean>(() => systemMaintenanceService.isAdminSession());
   useEffect(() => {
     const mid = activityTrackingService.getOrCreateMachineId();
     const isAdmin = ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT');
@@ -94,6 +100,39 @@ export default function App() {
       setIsCurrentBlocked(false);
     }
   }, []);
+
+  // Lắng nghe sự kiện Khóa Web và thay đổi quyền Admin
+  useEffect(() => {
+    const handleMaintenanceChange = (e: any) => {
+      if (e?.detail?.locked !== undefined) {
+        setIsMaintenanceLocked(e.detail.locked);
+      } else {
+        setIsMaintenanceLocked(systemMaintenanceService.isMaintenanceLocked());
+      }
+    };
+
+    const handleAdminAuthChange = (e: any) => {
+      if (e?.detail?.isAuthenticated !== undefined) {
+        setIsAdminSession(e.detail.isAuthenticated);
+      } else {
+        setIsAdminSession(systemMaintenanceService.isAdminSession());
+      }
+    };
+
+    window.addEventListener('gvai_maintenance_status_changed', handleMaintenanceChange);
+    window.addEventListener('gvai_admin_auth_changed', handleAdminAuthChange);
+
+    // Đồng bộ kiểm tra trạng thái bảo trì Cloud
+    systemMaintenanceService.checkCloudMaintenanceStatus().then(locked => {
+      setIsMaintenanceLocked(locked);
+    }).catch(() => {});
+
+    return () => {
+      window.removeEventListener('gvai_maintenance_status_changed', handleMaintenanceChange);
+      window.removeEventListener('gvai_admin_auth_changed', handleAdminAuthChange);
+    };
+  }, []);
+
   const [imgError, setImgError] = useState(false);
   const [appImgErrors, setAppImgErrors] = useState<Record<string, boolean>>({});
 
@@ -376,8 +415,57 @@ export default function App() {
     setAppImgErrors((prev) => ({ ...prev, [appId]: true }));
   };
 
+  // KHI WEB ĐANG KHÓA NÂNG CẤP VÀ NGƯỜI DÙNG KHÔNG PHẢI ADMIN:
+  // Hiển thị toàn màn hình thông báo "Web đang nâng cấp, vui lòng ghé thăm sau!"
+  if (isMaintenanceLocked && !isAdminSession) {
+    return (
+      <>
+        <MaintenanceScreen 
+          onAdminLoginSuccess={() => {
+            setIsAdminSession(true);
+          }} 
+        />
+        <AdminDashboard
+          isOpen={showAdminDashboard}
+          onClose={closeAllModals}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F6F8FC] text-[#172033] flex flex-col font-sans">
+      {/* BANNER NỔI BẬT DÀNH CHO ADMIN KHI WEB ĐANG KHÓA NÂNG CẤP */}
+      {isMaintenanceLocked && (
+        <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white px-3 sm:px-6 py-2.5 text-xs sm:text-sm font-bold flex flex-wrap items-center justify-between gap-2 shadow-xl z-50 sticky top-0 border-b border-red-400/40">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+            <span>⚠️ CHẾ ĐỘ BẢO TRÌ NÂNG CẤP ĐANG BẬT: Giáo viên chỉ xem được thông báo "Web đang nâng cấp, vui lòng ghé thăm sau!". Admin đang xem nội bộ.</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={async () => {
+                if (window.confirm('Thầy có chắc chắn muốn MỞ KHÓA WEBSITE cho tất cả giáo viên toàn quốc ngay bây giờ?')) {
+                  await systemMaintenanceService.setMaintenanceLock(false, 'Mở lại web bởi Thầy Thành từ banner');
+                  setIsMaintenanceLocked(false);
+                  alert('🎉 ĐÃ MỞ KHÓA WEBSITE THÀNH CÔNG!\n\nTất cả giáo viên trên toàn quốc hiện đã có thể truy cập và sử dụng bình thường.');
+                }
+              }}
+              className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black shadow-md transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>🔓 MỞ KHÓA WEB NGAY</span>
+            </button>
+            <button
+              onClick={() => setShowAdminDashboard(true)}
+              className="px-3 py-1.5 rounded-xl bg-black/40 hover:bg-black/60 text-white font-semibold transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <Crown className="w-3.5 h-3.5 text-amber-300" />
+              <span>Bảng Admin</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* TOP ANNOUNCEMENT & UTILITIES BAR - TINH TẾ, KHÔNG TRÙNG LẶP */}
       <div className="bg-[#071322] text-white text-[11px] sm:text-xs py-2 px-4 border-b border-blue-900/40">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
