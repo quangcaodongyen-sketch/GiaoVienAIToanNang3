@@ -9,9 +9,6 @@ import {
   MessageCircle, 
   Share2, 
   GraduationCap, 
-  Building2, 
-  MapPin, 
-  Quote, 
   UserCheck, 
   FileText, 
   Layers,
@@ -24,15 +21,7 @@ import {
   ShieldCheck,
   FileCheck,
   BookOpen,
-  Star,
-  Users,
-  Award,
-  Check,
-  HelpCircle,
-  Clock,
-  School,
-  HeartHandshake,
-  DownloadCloud
+  Check
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
@@ -487,31 +476,14 @@ export default function App() {
             <div className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-slate-700 text-xs xl:text-sm font-bold">
               <a
                 href="#apps"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
+                className="px-3.5 py-2 rounded-xl text-blue-700 bg-blue-50/80 hover:bg-blue-100 transition-colors flex items-center gap-1.5"
               >
-                Kho Ứng Dụng
+                <Layers className="w-4 h-4 text-blue-600" />
+                <span>Kho Ứng Dụng ({activeApps.length})</span>
               </a>
               <a
-                href="#tinh-nang"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
-              >
-                Tính Năng Đột Phá
-              </a>
-              <a
-                href="#bang-gia"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
-              >
-                Bảng Giá Bản Quyền
-              </a>
-              <a
-                href="#danh-gia"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
-              >
-                Đánh Giá GV
-              </a>
-              <a
-                href="#tac-gia"
-                className="px-3 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
+                href="#footer-info"
+                className="px-3.5 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
               >
                 Tác Giả & Hỗ Trợ
               </a>
@@ -569,42 +541,18 @@ export default function App() {
               <a 
                 href="#apps" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
+                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-blue-700 font-bold flex items-center gap-2.5 transition-colors"
               >
                 <Layers className="w-4 h-4 text-blue-600" />
-                Kho Ứng Dụng Chuyên Môn
+                Kho Ứng Dụng ({activeApps.length})
               </a>
               <a 
-                href="#tinh-nang" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
-              >
-                <Zap className="w-4 h-4 text-amber-500" />
-                Tính Năng Đột Phá
-              </a>
-              <a 
-                href="#bang-gia" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
-              >
-                <Award className="w-4 h-4 text-emerald-600" />
-                Bảng Giá Bản Quyền
-              </a>
-              <a 
-                href="#danh-gia" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
-              >
-                <Star className="w-4 h-4 text-yellow-500" />
-                Đánh Giá Của Giáo Viên
-              </a>
-              <a 
-                href="#tac-gia" 
+                href="#footer-info" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
               >
                 <UserCheck className="w-4 h-4 text-indigo-600" />
-                Tác Giả & Hỗ Trợ Kỹ Thuật
+                Thông Tin Tác Giả & Hỗ Trợ
               </a>
 
               <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
@@ -806,136 +754,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* STATS COUNTER SECTION - 4 CỘT THỐNG KÊ ẤN TƯỢNG PHONG CÁCH MARKETING AGENCY */}
-        <section className="py-4 sm:py-6 bg-[#F6F8FC]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-              
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-md hover:border-blue-300 transition-all flex items-center gap-3.5 group">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Users className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">15.000+</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Giáo viên & BGH tin dùng</div>
-                </div>
-              </div>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all flex items-center gap-3.5 group">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">63 / 63</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Tỉnh thành toàn quốc</div>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-300 transition-all flex items-center gap-3.5 group">
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Award className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">100%</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Chuẩn CV 5512 & CV 7991</div>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-md hover:border-cyan-300 transition-all flex items-center gap-3.5 group">
-                <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Star className="w-6 h-6 fill-amber-400 text-amber-400" />
-                </div>
-                <div>
-                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">99.8%</div>
-                  <div className="text-[11px] sm:text-xs text-slate-500 font-medium">Hài lòng & khen ngợi</div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* TÍNH NĂNG ĐỘT PHÁ SECTION (#tinh-nang) */}
-        <section id="tinh-nang" className="py-8 sm:py-12 bg-white border-y border-slate-200/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-200/60">
-                <Zap className="w-3.5 h-3.5 text-blue-600" />
-                Giải Pháp Sư Phạm Chuyên Sâu
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                4 Trụ Cột Đột Phá Nâng Tầm Giáo Viên Thời Đại Số
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
-                Được thiết kế tỉ mỉ bởi giáo viên trực tiếp đứng lớp, bám sát các thông tư và chỉ đạo chuyên môn mới nhất của Bộ Giáo dục & Đào tạo.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-              
-              {/* Feature 1 */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200/90 hover:border-blue-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/30">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-black text-slate-900">1. Tích Hợp NLS Giáo Án</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Tự động chèn Năng lực số, STEM, AI và Giáo dục hòa nhập vào giáo án 12 môn THCS theo CV 5512. Nội dung tích hợp được định dạng chữ màu đỏ chuẩn mực.
-                </p>
-                <div className="pt-1 text-[11px] font-bold text-blue-600 flex items-center gap-1">
-                  <span>Add-in Word 1-Click</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-
-              {/* Feature 2 */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200/90 hover:border-amber-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/30">
-                  <FileCheck className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-black text-slate-900">2. Tạo Đề 12 Môn (CV 7991)</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Sinh ma trận, bản đặc tả và đề kiểm tra định kỳ cho toàn bộ 12 môn THCS. Đáp án đúng được tự động tô đỏ giúp giáo viên tra cứu chấm điểm nhanh chóng.
-                </p>
-                <div className="pt-1 text-[11px] font-bold text-amber-600 flex items-center gap-1">
-                  <span>Sinh đề biến thể chống chép</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-
-              {/* Feature 3 */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200/90 hover:border-emerald-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-black text-slate-900">3. MathStudio Pro Word</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office trong nháy mắt. Không cần gõ lại công thức phức tạp, tiết kiệm hàng giờ đồng hồ.
-                </p>
-                <div className="pt-1 text-[11px] font-bold text-emerald-600 flex items-center gap-1">
-                  <span>Bộ cài 838KB gọn nhẹ</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-
-              {/* Feature 4 */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200/90 hover:border-cyan-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-cyan-600 text-white flex items-center justify-center shadow-md shadow-cyan-600/30">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-black text-slate-900">4. Bảo Mật & Tiện Ích Số</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Tạo bài nghe MP3 chuẩn bản xứ, chuẩn hóa văn bản theo Nghị định 30, tách gộp PDF giáo án, ghi hình bài giảng và dọn rác máy tính chuyên nghiệp.
-                </p>
-                <div className="pt-1 text-[11px] font-bold text-cyan-600 flex items-center gap-1">
-                  <span>Bản quyền Ed25519 Offline</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
         {/* APPS SECTION (PRIMARY SHOWCASE) */}
         <section id="apps" className="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1121,391 +940,122 @@ export default function App() {
           </div>
         </section>
 
-        {/* BẢNG GIÁ BẢN QUYỀN SƯ PHẠM (#bang-gia) - PHONG CÁCH SAAS MARKETING AGENCY */}
-        <section id="bang-gia" className="py-12 sm:py-16 bg-white border-t border-slate-200/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-2.5">
-              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-200/60">
-                <Crown className="w-3.5 h-3.5 text-emerald-600" />
-                Chính Sách Bản Quyền Minh Bạch
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Bảng Giá Bản Quyền Sư Phạm 2026
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
-                Mỗi ứng dụng tính tiền đều có cơ chế bản quyền độc lập riêng biệt. Kích hoạt ứng dụng nào dùng ứng dụng đó, tuyệt đối không có chính sách cho tặng app Pro nào. Các tiện ích miễn phí được cài đặt & sử dụng trọn đời tự do.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-              
-              {/* GÓI 1: CÁC TIỆN ÍCH MIỄN PHÍ & DÙNG THỬ */}
-              <div className="p-6 sm:p-7 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all">
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Cài Đặt Tự Do</span>
-                    <h3 className="text-xl font-black text-slate-900">Tiện Ích Miễn Phí & Dùng Thử</h3>
-                    <p className="text-xs text-slate-500">Cài đặt 100% miễn phí các tiện ích giáo viên và dùng thử 5 lần cho các app Pro.</p>
-                  </div>
-
-                  <div className="py-3 border-y border-slate-200">
-                    <div className="text-3xl font-black text-emerald-600">0 VNĐ</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Miễn phí trọn đời cho các tiện ích • 5 lượt dùng thử / app Pro</div>
-                  </div>
-
-                  <ul className="space-y-2.5 text-xs text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong>Miễn phí 100% vĩnh viễn:</strong> Cleaner Pro, Tách/Gộp PDF, Quay màn hình, Chuẩn hóa VB NĐ 30, Trợ lý GVCN</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span><strong>Dùng thử đúng 5 lần độc lập</strong> cho từng ứng dụng tính tiền Pro trước khi đăng ký</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Trải nghiệm trực tiếp trên web hoặc tải bản cài đặt máy tính</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-slate-400">
-                      <span className="text-amber-500 font-bold">ℹ️</span>
-                      <span>Bản dùng thử có gắn thông tin tác giả và giới hạn số trang</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setShowTrialModal(true)}
-                  className="w-full py-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Trải nghiệm dùng thử 5 lần</span>
-                </button>
-              </div>
-
-              {/* GÓI 2: PRO ĐỘC LẬP TỪNG APP (NỔI BẬT NHẤT) */}
-              <div className="relative p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0B1E36] via-[#102B52] to-[#164177] text-white border-2 border-amber-400/80 shadow-2xl shadow-blue-950/40 flex flex-col justify-between space-y-6 lg:-translate-y-2">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] sm:text-xs tracking-wider uppercase shadow-md shadow-amber-500/30 flex items-center gap-1.5 whitespace-nowrap">
-                  <Crown className="w-3.5 h-3.5" />
-                  <span>BẢN QUYỀN PRO ĐỘC LẬP TỪNG APP</span>
-                </div>
-
-                <div className="space-y-4 pt-1">
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Kích Hoạt Độc Lập (1 Máy Tính)</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-white">Bản Quyền Pro Theo App</h3>
-                    <p className="text-xs text-blue-200/90">Kích hoạt ứng dụng nào dùng ứng dụng đó theo đúng nhu cầu chuyên môn của Thầy/Cô.</p>
-                  </div>
-
-                  <div className="py-3 border-y border-white/15">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl sm:text-4xl font-black text-amber-300">Báo Giá Ưu Đãi</span>
-                    </div>
-                    <div className="text-[11px] text-cyan-200 mt-0.5">Liên hệ trực tiếp Thầy Thành để nhận mã kích hoạt theo app</div>
-                  </div>
-
-                  <ul className="space-y-2.5 text-xs text-blue-100">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Kích hoạt độc lập từng app:</strong> NLS Giáo án 5512, Tạo đề 12 môn 7991, MathStudio Pro, Sinh đề biến thể VIP...</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Chính sách chuẩn mực:</strong> Đăng ký app nào cấp mã dùng app đó, không có chính sách cho tặng app Pro nào</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Không giới hạn số lượt sử dụng</strong> cho ứng dụng đã kích hoạt</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Gỡ bỏ 100% quảng cáo</strong>, xuất file sạch nộp Ban Giám Hiệu</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span><strong>Cấp key Ed25519 / Cloud bảo mật</strong> theo mã máy tính (Hardware ID)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>Cập nhật tính năng & hỗ trợ kỹ thuật UltraViewer qua Zalo</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Chào Thầy Thành, tôi muốn đăng ký mua Bản quyền Pro cho ứng dụng [Tên Ứng Dụng] trên hệ thống Giáo Viên AI Toàn Năng. Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt với nhé!`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-white text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
-                >
-                  <MessageCircle className="w-4 h-4 text-slate-950" />
-                  <span>NHẬN BÁO GIÁ APP QUA ZALO NGAY</span>
-                </a>
-              </div>
-
-              {/* GÓI 3: TRƯỜNG HỌC / TỔ CHUYÊN MÔN */}
-              <div className="p-6 sm:p-7 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all">
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Gói Tập Thể</span>
-                    <h3 className="text-xl font-black text-slate-900">Tổ Chuyên Môn & Nhà Trường</h3>
-                    <p className="text-xs text-slate-500">Dành cho tập thể tổ bộ môn (Toán, KHTN, KHXH, Ngoại ngữ) hoặc toàn trường.</p>
-                  </div>
-
-                  <div className="py-3 border-y border-slate-200">
-                    <div className="text-3xl font-black text-slate-900">Chiết Khấu Cao</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Theo danh sách app chuyên môn & số lượng máy tính</div>
-                  </div>
-
-                  <ul className="space-y-2.5 text-xs text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Cấp danh mục key độc lập cho từng giáo viên theo đúng môn dạy</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Kích hoạt độc lập, minh bạch và chính xác cho từng máy tính</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Hỗ trợ tập huấn trực tuyến (Zoom / Google Meet)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Xuất hóa đơn, hợp đồng và chứng từ hợp lệ</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>Kênh hỗ trợ VIP riêng biệt cho trường</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Kính gửi Thầy Thành, tôi đại diện Ban giám hiệu / Tổ chuyên môn trường THCS muốn tìm hiểu gói Bản quyền tập thể cho trường theo danh sách giáo viên. Xin Thầy liên hệ tư vấn giúp!`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
-                >
-                  <School className="w-3.5 h-3.5" />
-                  <span>Liên hệ tư vấn Trường học</span>
-                </a>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* ĐÁNH GIÁ THỰC TẾ TỪ CÁC THẦY CÔ (#danh-gia) */}
-        <section id="danh-gia" className="py-12 sm:py-16 bg-[#F6F8FC] border-t border-slate-200/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-yellow-50 text-yellow-800 text-xs font-bold uppercase tracking-wider border border-yellow-200">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                Cộng Đồng Giáo Viên Tin Tưởng
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                Thầy Cô Nói Gì Về Giáo Viên AI Toàn Năng?
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
-                Những phản hồi thực tế từ các thầy cô giáo đang trực tiếp giảng dạy tại các trường THCS trên cả nước.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              
-              {/* Testimonial 1 */}
-              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-1 text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                    "Phần mềm tích hợp Năng lực số vào Word rất tuyệt vời! Trước đây mỗi đợt kiểm tra giáo án tôi mất cả tuần để rà soát mục tiêu, giờ chỉ cần bấm 1 click là xong toàn bộ học kỳ, chữ đỏ chuẩn quy định, Ban giám hiệu khen nức nở."
-                  </p>
-                </div>
-                <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-800 font-bold flex items-center justify-center text-xs">
-                    Cô H.
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">Cô Nguyễn Thị Hạnh</div>
-                    <div className="text-[11px] text-slate-500">GV Tiếng Anh – THCS Cầu Giấy (Hà Nội)</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial 2 */}
-              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-1 text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                    "Công cụ MathStudio Pro giải phóng tôi khỏi cơn ác mộng gõ lại công thức Toán. Chỉ cần chụp ảnh công thức đưa qua Mathpix rồi bấm chuyển sang Word là ra ngay MathType mượt mà. Đề kiểm tra Toán 7991 có đáp án đỏ rất tiện chấm thi."
-                  </p>
-                </div>
-                <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-xs">
-                    Thầy Q.
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">Thầy Trần Văn Quang</div>
-                    <div className="text-[11px] text-slate-500">Tổ trưởng Toán - KHTN – THCS Tuyên Quang</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial 3 */}
-              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-1 text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed">
-                    "Thầy Thành hỗ trợ kỹ thuật cực kỳ nhiệt tình, tôi lớn tuổi không rành cài đặt nhưng được thầy UltraViewer cài đặt giúp trong 5 phút là dùng được ngay. Phần mềm chạy offline trên máy tính không lo mạng chập chờn."
-                  </p>
-                </div>
-                <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs">
-                    Cô M.
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">Cô Lê Thị Mai</div>
-                    <div className="text-[11px] text-slate-500">GV Ngữ Văn – THCS Lê Quý Đôn (TP.HCM)</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* TÁC GIẢ & HỖ TRỢ KỸ THUẬT (#tac-gia) */}
-        <section id="tac-gia" className="py-12 sm:py-16 bg-white border-t border-slate-200/80">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white shadow-xl border border-blue-800/40">
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                
-                <div className="md:col-span-4 flex justify-center">
-                  <div className="relative w-40 sm:w-48 aspect-square rounded-3xl overflow-hidden border-2 border-cyan-400/40 shadow-2xl bg-slate-800 flex items-center justify-center">
-                    {!imgError ? (
-                      <img
-                        src="/dinhvanthanh.jpg"
-                        alt={BRAND.about.photoAlt}
-                        onError={() => setImgError(true)}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center text-white">
-                        <GraduationCap className="w-12 h-12 text-cyan-300 mb-2" />
-                        <span className="text-sm font-bold">{BRAND.author}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="md:col-span-8 space-y-4 text-center md:text-left">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold uppercase">
-                    <UserCheck className="w-3.5 h-3.5" />
-                    <span>Tác Giả & Nhà Phát Triển</span>
-                  </div>
-
-                  <h2 className="text-2xl sm:text-3xl font-black text-white">
-                    {BRAND.author}
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
-                    Giáo viên trực tiếp giảng dạy tại <strong>{BRAND.organization}</strong> ({BRAND.address}). Với tâm huyết đồng hành cùng đội ngũ giáo viên THCS toàn quốc trong công cuộc chuyển đổi số, Thầy Thành đã nghiên cứu và phát triển trọn bộ hệ sinh thái phần mềm giáo viên AI chuyên sâu, bám sát từng thông tư của Bộ GD&ĐT.
-                  </p>
-
-                  <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                    <a
-                      href={BRAND.zaloUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Zalo Thầy Thành: {BRAND.phone}</span>
-                    </a>
-
-                    <a
-                      href={`tel:${BRAND.phoneRaw}`}
-                      className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all flex items-center gap-2"
-                    >
-                      <Phone className="w-4 h-4 text-teal-300" />
-                      <span>Gọi Điện Trực Tiếp</span>
-                    </a>
-
-                    <a
-                      href={BRAND.facebookUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2.5 rounded-xl bg-blue-600/60 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm border border-blue-400/30 transition-all flex items-center gap-1.5"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>Facebook</span>
-                    </a>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-[#123A63] text-white py-12 border-t border-blue-900">
+      {/* FOOTER & THÔNG TIN TÁC GIẢ TƯƠNG PHẢN CAO (#footer-info) */}
+      <footer id="footer-info" className="bg-[#0A192F] text-white border-t-2 border-[#1E293B] py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-blue-800/60">
-            <div className="space-y-2 max-w-md">
-              <h2 className="text-xl font-extrabold tracking-tight text-white">
-                {BRAND.websiteTitle}
-              </h2>
-              <p className="text-blue-200 text-sm leading-relaxed">
-                Hệ sinh thái công cụ AI thiết thực dành cho giáo viên Việt Nam.
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+            
+            {/* Cột 1: Thông tin thương hiệu & hệ thống */}
+            <div className="md:col-span-6 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+                  <GraduationCap className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                    {BRAND.websiteTitle}
+                  </h2>
+                  <p className="text-xs text-cyan-400 font-semibold">
+                    Hệ Sinh Thái Ứng Dụng Chuyên Môn Giáo Viên THCS
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+                Bộ công cụ chuyên biệt hỗ trợ soạn giáo án tích hợp Năng lực số (CV 5512), sinh ma trận & đề kiểm tra 12 môn (CV 7991), chuyển đổi công thức Toán học Mathpix sang Word và các tiện ích sư phạm thiết thực.
               </p>
+
+              <div className="pt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-emerald-400 border border-slate-700 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Kích hoạt độc lập từng app
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Tiện ích miễn phí trọn đời
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-slate-700 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Bảo mật Ed25519 Offline
+                </span>
+              </div>
             </div>
 
-            <div className="space-y-1.5 text-sm text-blue-100">
-              <p className="font-bold text-white text-base">{BRAND.author}</p>
-              <p>{BRAND.job} – {BRAND.organization}</p>
-              <p>Tel/Zalo: <a href={BRAND.zaloUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">{BRAND.phone}</a></p>
-              <p>
-                <a 
-                  href={BRAND.facebookUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-blue-300 hover:text-white underline font-medium"
-                >
-                  Kết nối Facebook
-                </a>
-              </p>
+            {/* Cột 2: Thông tin tác giả & liên hệ */}
+            <div className="md:col-span-6 space-y-3 md:pl-6">
+              <div className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                Tác Giả & Hỗ Trợ Kỹ Thuật
+              </div>
+
+              <div className="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
+                    <GraduationCap className="w-6 h-6 text-cyan-300" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-white">{BRAND.author}</div>
+                    <div className="text-xs text-slate-300">{BRAND.job} – {BRAND.organization}</div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-2">
+                  <a
+                    href={BRAND.zaloUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Zalo: {BRAND.phone}</span>
+                  </a>
+
+                  <a
+                    href={`tel:${BRAND.phoneRaw}`}
+                    className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-colors flex items-center gap-1.5"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-teal-300" />
+                    <span>{BRAND.phone}</span>
+                  </a>
+
+                  <a
+                    href={BRAND.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 rounded-xl bg-blue-600/70 hover:bg-blue-600 text-white font-bold text-xs border border-blue-500/40 transition-colors flex items-center gap-1.5"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Facebook</span>
+                  </a>
+                </div>
+              </div>
             </div>
+
           </div>
 
-          <div className="pt-6 text-center text-xs text-blue-300 font-medium">
-            <p>{BRAND.copyright}</p>
-            <div className="mt-2">
+          {/* Dòng bản quyền & Cổng Admin */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+            <div>
+              {BRAND.copyright}
+            </div>
+
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => setShowAdminDashboard(true)}
-                className="text-[11px] text-blue-300 hover:text-white underline inline-flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity"
+                type="button"
+                onClick={() => setShowTrialModal(true)}
+                className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors cursor-pointer"
               >
-                <Crown className="w-3 h-3 text-amber-400" />
-                Cổng Quản trị Bản quyền Online (Admin Thầy Thành)
+                Dùng thử 5 lần
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={() => setShowAdminDashboard(true)}
+                className="text-amber-400 hover:text-amber-300 font-bold inline-flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <Crown className="w-3.5 h-3.5" />
+                Cổng Quản trị Admin Dashboard
               </button>
             </div>
           </div>
