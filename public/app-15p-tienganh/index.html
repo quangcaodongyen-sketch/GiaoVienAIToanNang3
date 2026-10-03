@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo Đề Kiểm Tra 15 Phút Tiếng Anh THCS (Global Success) - Thầy Đinh Văn Thành</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Times+New+Roman&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Local 48-Unit Data Set -->
+  <script src="quiz_15m_data.js"></script>
+  <!-- Load Answer Sheet Base64 (Đã xóa chữ 8C) -->
+  <script src="answer_sheet_b64.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            royal: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .exam-paper { font-family: 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.25; }
+    @media print {
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      .exam-container { box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+      .page-break { page-break-before: always; }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+  <!-- Top Header -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-black text-2xl">
+          📝
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-base sm:text-lg text-white">CÔNG CỤ TẠO ĐỀ KIỂM TRA 15 PHÚT TIẾNG ANH THCS</h1>
+            <span class="text-[11px] bg-blue-500/20 text-blue-400 font-bold px-2 py-0.5 rounded-full border border-blue-500/30">GLOBAL SUCCESS</span>
+          </div>
+          <p class="text-xs text-slate-400">Tác giả: Thầy giáo Đinh Văn Thành • THCS Đồng Yên • Hotline/Zalo: 0915.213717</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="window.print()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition flex items-center gap-1.5 shadow">
+          🖨️ In đề A4
+        </button>
+        <button onclick="exportCurrentWord(1)" class="px-4 py-2 text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl shadow-lg shadow-blue-600/25 transition flex items-center gap-1.5">
+          📥 Xuất Word 3 Mặt
+        </button>
+        <button onclick="exportFullTwoCodesWord()" class="px-4 py-2 text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl shadow-lg shadow-emerald-600/25 transition flex items-center gap-1.5">
+          📦 Trọn Bộ 2 Mã Đề (5 Mặt)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Grade Tab Navigation -->
+  <div class="bg-slate-950 border-b border-slate-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+      <div class="flex space-x-2 py-2 overflow-x-auto">
+        <button onclick="selectGrade('6')" id="tabGrade6" class="px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md shadow-blue-600/30">
+          <span>🇬🇧</span> TIẾNG ANH 6 (12 UNITS)
+        </button>
+        <button onclick="selectGrade('7')" id="tabGrade7" class="px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+          <span>🇬🇧</span> TIẾNG ANH 7 (12 UNITS)
+        </button>
+        <button onclick="selectGrade('8')" id="tabGrade8" class="px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+          <span>🇬🇧</span> TIẾNG ANH 8 (12 UNITS)
+        </button>
+        <button onclick="selectGrade('9')" id="tabGrade9" class="px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+          <span>🇬🇧</span> TIẾNG ANH 9 (12 UNITS)
+        </button>
+      </div>
+      <div class="hidden lg:flex items-center text-xs text-slate-400">
+        <span>Tổng kho: <b>48 Units • 960 câu hỏi có đáp án chi tiết</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 w-full">
+    
+    <!-- Left Configuration Panel (5 cols) -->
+    <div class="lg:col-span-5 space-y-4 no-print">
+      <div class="bg-slate-800/60 rounded-2xl border border-slate-700/60 p-5 shadow-xl backdrop-blur">
+        
+        <!-- Header Controls -->
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>⚙️</span> Chọn Unit tạo đề kiểm tra 15 phút
+          </h2>
+          <span id="selectedCountBadge" class="text-xs bg-blue-500/20 text-blue-400 font-bold px-2 py-0.5 rounded-full border border-blue-500/30">Đã chọn: 1 Unit</span>
+        </div>
+
+        <!-- Quick Select Buttons -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mb-3 text-xs font-semibold">
+          <button onclick="selectAllUnits(true)" class="py-1.5 px-2 bg-slate-700/80 hover:bg-blue-600 text-slate-200 hover:text-white rounded-lg border border-slate-600 transition text-center">
+            ✅ Chọn 12 Unit
+          </button>
+          <button onclick="selectSemester(1)" class="py-1.5 px-2 bg-slate-700/80 hover:bg-blue-600 text-slate-200 hover:text-white rounded-lg border border-slate-600 transition text-center">
+            📘 Học kì 1 (U1-6)
+          </button>
+          <button onclick="selectSemester(2)" class="py-1.5 px-2 bg-slate-700/80 hover:bg-blue-600 text-slate-200 hover:text-white rounded-lg border border-slate-600 transition text-center">
+            📙 Học kì 2 (U7-12)
+          </button>
+          <button onclick="selectAllUnits(false)" class="py-1.5 px-2 bg-slate-700/80 hover:bg-red-600 text-slate-200 hover:text-white rounded-lg border border-slate-600 transition text-center">
+            ❌ Bỏ chọn hết
+          </button>
+        </div>
+
+        <!-- 12 Units Checkbox Grid -->
+        <div class="space-y-1.5 max-h-56 overflow-y-auto pr-1 border border-slate-700/60 rounded-xl p-2 bg-slate-900/60 mb-3" id="unitCheckboxList">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Cấu hình trường & năm học -->
+        <div class="space-y-3 pt-3 border-t border-slate-700/60 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Tên trường</label>
+              <input type="text" id="cfgSchool" value="TRƯỜNG THCS ĐỒNG YÊN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1 font-medium">Năm học</label>
+              <input type="text" id="cfgYear" value="2025 - 2026" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
+            </div>
+          </div>
+
+          <!-- Quản lý 2 Mã đề ngẫu nhiên -->
+          <!-- Quản lý 2 Mã đề ngẫu nhiên theo khối lớp -->
+          <div class="p-3 bg-slate-900/80 rounded-xl border border-blue-500/30 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-blue-400 flex items-center gap-1.5">
+                <span>🎲</span> CẶP 02 MÃ ĐỀ HIỆN TẠI:
+              </span>
+              <div class="flex items-center gap-1 font-mono font-bold text-xs">
+                <span class="px-2 py-0.5 bg-blue-600 text-white rounded" id="badgeCode1">Mã 601</span>
+                <span class="text-slate-400">&</span>
+                <span class="px-2 py-0.5 bg-indigo-600 text-white rounded" id="badgeCode2">Mã 602</span>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400">Hai mã đề hoán vị ngẫu nhiên cả câu hỏi và phương án A, B, C theo chuẩn từng khối lớp (Lớp 6: 601 & 602, Lớp 7: 701 & 702, Lớp 8: 801 & 802, Lớp 9: 901 & 902).</p>
+            <button onclick="randomizeTwoCodes()" class="w-full py-2 px-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs rounded-lg shadow transition flex items-center justify-center gap-1.5">
+              <span>🎲</span> XÁO TRỘN ĐỀ MỚI (LẦN 2, 3 KHÔNG TRÙNG LẶP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Big Export Action Buttons -->
+        <div class="mt-4 space-y-2">
+          <button onclick="exportCurrentWord(1)" class="w-full py-2.5 px-4 bg-royal-700 hover:bg-royal-600 text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+            <span>📥</span> XUẤT FILE WORD MÃ ĐỀ HIỆN TẠI (3 TRANG CHUẨN)
+          </button>
+          <button onclick="exportFullTwoCodesWord()" class="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition">
+            <span>📦</span> XUẤT TRỌN BỘ 2 MÃ ĐỀ (5 TRANG A4 CHUẨN WORD)
+          </button>
+          <button onclick="exportSelectedBulk()" id="btnBulkExport" class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 text-slate-200 hover:text-white font-semibold text-xs rounded-xl border border-slate-600 flex items-center justify-center gap-2 transition">
+            <span>📚</span> <span id="btnBulkText">Xuất file Word gộp cho các Unit đã chọn</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Quick Guidance Box -->
+      <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-4 text-xs text-slate-400 space-y-2">
+        <div class="font-semibold text-slate-300 flex items-center gap-1.5">
+          <span>📑</span> Quy cách cấu trúc chuẩn 5 Trang A4:
+        </div>
+        <div class="space-y-1">
+          <p>• <b>Trang 1</b>: Đề thi Mã số 1 (trọn vẹn đúng <b>20 câu trắc nghiệm trên 1 trang A4</b>, phông Times New Roman 10.5pt, dãn dòng chuẩn).</p>
+          <p>• <b>Trang 2</b>: Phiếu chấm trắc nghiệm 20 câu chuẩn sạch (file <i>phieu-trac-nghiem-20 cau.pdf</i> <b>đã xóa bỏ chữ 8C</b>).</p>
+          <p>• <b>Trang 3</b>: Đề thi Mã số 2 (trọn vẹn đúng <b>20 câu trắc nghiệm trên 1 trang A4</b>, hoán vị câu hỏi và phương án A, B, C).</p>
+          <p>• <b>Trang 4</b>: Phiếu chấm trắc nghiệm 20 câu chuẩn sạch (dành cho Mã 2).</p>
+          <p>• <b>Trang 5</b>: Bảng đáp án ngắn gọn đối chiếu cả 2 mã đề (chấm nhanh trong vài giây, không cần giải thích).</p>
+          <p>• <b>Quy chuẩn mã đề</b>: Lớp 6 (Mã 601, 602) • Lớp 7 (Mã 701, 702) • Lớp 8 (Mã 801, 802) • Lớp 9 (Mã 901, 902).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Realistic Exam Preview (7 cols) -->
+    <div class="lg:col-span-7 space-y-3">
+      <!-- Toolbar above preview -->
+      <div class="flex flex-wrap items-center justify-between gap-2 no-print bg-slate-800/70 p-3 rounded-2xl border border-slate-700/60 backdrop-blur">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-300">Unit:</span>
+          <select id="previewUnitSelect" onchange="changePreviewUnit(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- 3 Tabs Navigation for Pages -->
+        <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs">
+          <button id="btnTabFace1" onclick="switchPreviewFace(1)" class="px-3 py-1 rounded-lg font-bold transition bg-blue-600 text-white shadow">
+            📄 Trang 1/3 (Đề 20 câu)
+          </button>
+          <button id="btnTabFace2" onclick="switchPreviewFace(2)" class="px-3 py-1 rounded-lg font-bold transition text-slate-400 hover:text-white">
+            📝 Trang 2/4 (Phiếu TN)
+          </button>
+          <button id="btnTabFace3" onclick="switchPreviewFace(3)" class="px-3 py-1 rounded-lg font-bold transition text-slate-400 hover:text-white">
+            🔑 Trang 5 (Bảng đáp án)
+          </button>
+        </div>
+
+        <!-- Chọn xem Mã đề 1 hay Mã đề 2 -->
+        <div class="flex items-center gap-1 text-xs">
+          <span class="text-slate-400 font-medium">Mã:</span>
+          <button id="btnSelectCode1" onclick="switchCurrentPreviewCode(1)" class="px-2.5 py-1 rounded-md font-bold bg-blue-600/30 text-blue-300 border border-blue-500/40">
+            601
+          </button>
+          <button id="btnSelectCode2" onclick="switchCurrentPreviewCode(2)" class="px-2.5 py-1 rounded-md font-bold bg-slate-800 text-slate-400 hover:text-white">
+            602
+          </button>
+        </div>
+      </div>
+
+      <!-- The Real Exam Paper Document (A4 White Canvas) -->
+      <div class="exam-container bg-white text-black p-6 sm:p-8 rounded-2xl shadow-2xl border border-slate-300 min-h-[960px] exam-paper leading-tight">
+        
+        <!-- =================== VIEW 1: MẶT 1 (ĐỀ 20 CÂU TRỌN 1 MẶT A4) =================== -->
+        <div id="previewFace1" class="space-y-2">
+          <!-- Header Table 2 Cột -->
+          <div class="flex justify-between items-start border-b border-black pb-1.5 mb-2 text-[10.5pt]">
+            <div class="w-1/2 pr-2">
+              <div class="font-bold text-[11pt]" id="paperSchoolName">TRƯỜNG THCS ĐỒNG YÊN</div>
+              <div>Họ và tên: ....................................................</div>
+              <div>Lớp: <span id="paperClassLabel">6A.....</span></div>
+            </div>
+            <div class="w-1/2 text-center pl-2">
+              <div class="font-bold text-[11.5pt] uppercase">BÀI KIỂM TRA 15 PHÚT</div>
+              <div class="italic font-semibold text-[10.5pt]" id="paperSubjectTitle">Môn: Tiếng Anh 6 - Unit 1</div>
+              <div class="font-bold text-[11pt] text-red-600 mt-0.5">Mã đề: <span id="paperCurrentCodeLabel">601</span></div>
+            </div>
+          </div>
+
+          <!-- Part I: Vocabulary & Communication -->
+          <div class="mb-2">
+            <div class="font-bold text-[11pt]">Part I: Vocabulary & Communication. <span class="font-normal italic text-[10pt]">Choose the best answer A, B, or C to complete the sentences.</span></div>
+            <div id="paperVocabQuestions" class="space-y-1 mt-1">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Part II: Grammar & Reading -->
+          <div class="mb-1">
+            <div class="font-bold text-[11pt]">Part II: Grammar & Reading. <span class="font-normal italic text-[10pt]">Choose the best answer A, B, or C to complete the sentences or questions.</span></div>
+            <div id="paperGrammarQuestions" class="space-y-1 mt-1">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Footer của đề -->
+          <div class="text-center font-bold italic text-[10pt] text-slate-700 pt-2 border-t border-slate-300">
+            --- HẾT ---
+          </div>
+        </div>
+
+        <!-- =================== VIEW 2: MẶT 2 (PHIẾU TRẮC NGHIỆM ĐÃ XÓA 8C) =================== -->
+        <div id="previewFace2" class="hidden text-center">
+          <div class="p-2 mb-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800 font-semibold no-print">
+            ✔ Phiếu trả lời trắc nghiệm chuẩn 20 câu (File mẫu đã xóa triệt để chữ 8C thành dấu chấm `LỚP: ..............`)
+          </div>
+          <div class="flex justify-center items-center">
+            <img id="previewAnswerSheetImg" alt="Phiếu trả lời trắc nghiệm 20 câu" class="max-h-[880px] w-auto border border-slate-300 shadow-md rounded">
+          </div>
+        </div>
+
+        <!-- =================== VIEW 3: MẶT 3 (BẢNG ĐÁP ÁN RÚT GỌN 2 MÃ ĐỀ) =================== -->
+        <div id="previewFace3" class="hidden">
+          <div class="text-center mb-4">
+            <div class="font-bold text-[14pt] text-red-700 uppercase">BẢNG ĐÁP ÁN ĐỀ KIỂM TRA 15 PHÚT (RÚT GỌN)</div>
+            <div class="italic text-[11pt] text-slate-700 mt-1" id="ansKeySubTitle">
+              Môn: Tiếng Anh 6 • Unit 1 • Năm học 2025 - 2026
+            </div>
+            <div class="italic text-[10pt] text-slate-600">
+              (Mỗi câu đúng 0.5 điểm • Thang điểm 10.0 • Dành cho Giáo viên chấm điểm)
+            </div>
+          </div>
+
+          <!-- Bảng 6 Cột Đáp Án Đối Chiếu Cả 2 Mã Đề -->
+          <table class="w-full border-collapse border border-black text-[11pt] mt-3">
+            <thead>
+              <tr class="bg-slate-100 text-center font-bold">
+                <th class="border border-black p-1.5 w-14">Câu</th>
+                <th class="border border-black p-1.5 text-red-700" id="thCode1">Mã 101</th>
+                <th class="border border-black p-1.5 text-blue-700" id="thCode2">Mã 102</th>
+                <th class="border border-black p-1.5 w-14">Câu</th>
+                <th class="border border-black p-1.5 text-red-700" id="thCode1B">Mã 101</th>
+                <th class="border border-black p-1.5 text-blue-700" id="thCode2B">Mã 102</th>
+              </tr>
+            </thead>
+            <tbody id="shortAnswerTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+
+          <div class="mt-8 text-right pr-6 italic text-[11pt]">
+            <div class="font-bold">GIÁO VIÊN BỘ MÔN</div>
+            <div class="text-slate-500 text-xs mt-1">(Ký và ghi rõ họ tên)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-400 no-print">
+    <p>Hệ thống Tạo đề kiểm tra 15 phút Tiếng Anh THCS (Global Success) • Phát triển bởi <b>Thầy giáo Đinh Văn Thành</b> (0915.213717) • Trường THCS Đồng Yên</p>
+  </footer>
+
+  <script>
+    // State
+    let currentGrade = '6';
+    let currentUnitNum = 1;
+    let selectedUnits = new Set([1]);
+    let currentPreviewFace = 1;
+    let currentPreviewCodeIndex = 1; // 1 hoặc 2
+
+    // Quản lý cặp mã đề theo từng khối lớp
+    // Lớp 6: 601 & 602 | Lớp 7: 701 & 702 | Lớp 8: 801 & 802 | Lớp 9: 901 & 902
+    let examCode1 = "601";
+    let examCode2 = "602";
+    let seed1 = 12345;
+    let seed2 = 67890;
+
+    function updateCodeUI() {
+      const bCode1 = document.getElementById('badgeCode1');
+      const bCode2 = document.getElementById('badgeCode2');
+      const sCode1 = document.getElementById('btnSelectCode1');
+      const sCode2 = document.getElementById('btnSelectCode2');
+      const tCode1 = document.getElementById('thCode1');
+      const tCode2 = document.getElementById('thCode2');
+      const tCode1B = document.getElementById('thCode1B');
+      const tCode2B = document.getElementById('thCode2B');
+
+      if (bCode1) bCode1.innerText = `Mã ${examCode1}`;
+      if (bCode2) bCode2.innerText = `Mã ${examCode2}`;
+      if (sCode1) sCode1.innerText = examCode1;
+      if (sCode2) sCode2.innerText = examCode2;
+      if (tCode1) tCode1.innerText = `Mã ${examCode1}`;
+      if (tCode2) tCode2.innerText = `Mã ${examCode2}`;
+      if (tCode1B) tCode1B.innerText = `Mã ${examCode1}`;
+      if (tCode2B) tCode2B.innerText = `Mã ${examCode2}`;
+    }
+
+    // Khởi tạo
+    window.addEventListener('DOMContentLoaded', () => {
+      examCode1 = `${currentGrade}01`;
+      examCode2 = `${currentGrade}02`;
+      updateCodeUI();
+      renderUnitCheckboxes();
+      renderPreviewSelectOptions();
+      
+      // Load ảnh phiếu trắc nghiệm sạch
+      const imgElem = document.getElementById('previewAnswerSheetImg');
+      if (window.ANSWER_SHEET_PNG_BASE64) {
+        imgElem.src = window.ANSWER_SHEET_PNG_BASE64;
+      } else {
+        imgElem.src = 'phieu_trac_nghiem_20_cau.png';
+      }
+
+      renderAll();
+    });
+
+    function selectGrade(g) {
+      currentGrade = g;
+      ['6', '7', '8', '9'].forEach(gr => {
+        const btn = document.getElementById(`tabGrade${gr}`);
+        if (btn) {
+          if (gr === g) {
+            btn.className = 'px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md shadow-blue-600/30';
+          } else {
+            btn.className = 'px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800';
+          }
+        }
+      });
+      // Tự động gán mã đề theo khối lớp chuẩn
+      examCode1 = `${g}01`;
+      examCode2 = `${g}02`;
+      updateCodeUI();
+
+      currentUnitNum = 1;
+      selectedUnits = new Set([1]);
+      renderUnitCheckboxes();
+      renderPreviewSelectOptions();
+      renderAll();
+    }
+
+    function renderUnitCheckboxes() {
+      const container = document.getElementById('unitCheckboxList');
+      const gData = (window.QUIZ_15M_DATA && window.QUIZ_15M_DATA[currentGrade]) || {};
+      let html = '';
+      for (let u = 1; u <= 12; u++) {
+        const uInfo = gData[u] || { title: `Unit ${u}`, sub: '' };
+        const isChecked = selectedUnits.has(u);
+        html += `
+          <label class="flex items-start gap-2.5 p-2 rounded-lg cursor-pointer transition ${isChecked ? 'bg-blue-950/60 border border-blue-500/40 text-blue-200' : 'bg-slate-800/40 border border-slate-700/40 text-slate-300 hover:bg-slate-800'}">
+            <input type="checkbox" value="${u}" ${isChecked ? 'checked' : ''} onchange="toggleUnit(${u})" class="mt-0.5 rounded text-blue-600 focus:ring-0">
+            <div class="text-xs">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>Unit ${u}:</span>
+                <span class="${isChecked ? 'text-blue-300' : 'text-slate-200'}">${uInfo.title.replace(/^Unit \d+:\s*/, '')}</span>
+              </div>
+              <div class="text-[11px] text-slate-400 line-clamp-1">${uInfo.sub || ''}</div>
+            </div>
+          </label>
+        `;
+      }
+      container.innerHTML = html;
+      updateSelectedBadge();
+    }
+
+    function renderPreviewSelectOptions() {
+      const sel = document.getElementById('previewUnitSelect');
+      const gData = (window.QUIZ_15M_DATA && window.QUIZ_15M_DATA[currentGrade]) || {};
+      let html = '';
+      for (let u = 1; u <= 12; u++) {
+        const uInfo = gData[u] || { title: `Unit ${u}` };
+        html += `<option value="${u}" ${u === currentUnitNum ? 'selected' : ''}>${uInfo.title}</option>`;
+      }
+      sel.innerHTML = html;
+    }
+
+    function toggleUnit(u) {
+      if (selectedUnits.has(u)) {
+        selectedUnits.delete(u);
+      } else {
+        selectedUnits.add(u);
+        currentUnitNum = u;
+        document.getElementById('previewUnitSelect').value = u;
+      }
+      renderUnitCheckboxes();
+      renderAll();
+    }
+
+    function selectAllUnits(all) {
+      if (all) {
+        selectedUnits = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+      } else {
+        selectedUnits.clear();
+        selectedUnits.add(1);
+      }
+      renderUnitCheckboxes();
+      renderAll();
+    }
+
+    function selectSemester(sem) {
+      selectedUnits.clear();
+      const start = sem === 1 ? 1 : 7;
+      const end = sem === 1 ? 6 : 12;
+      for (let i = start; i <= end; i++) {
+        selectedUnits.add(i);
+      }
+      currentUnitNum = start;
+      document.getElementById('previewUnitSelect').value = start;
+      renderUnitCheckboxes();
+      renderAll();
+    }
+
+    function updateSelectedBadge() {
+      const count = selectedUnits.size;
+      document.getElementById('selectedCountBadge').innerText = `Đã chọn: ${count} Unit`;
+      document.getElementById('btnBulkText').innerText = `Xuất file Word gộp cho ${count} Unit đã chọn`;
+    }
+
+    function changePreviewUnit(u) {
+      currentUnitNum = parseInt(u);
+      renderAll();
+    }
+
+    // Đổi cặp mã đề ngẫu nhiên (hoán vị câu hỏi & phương án, giữ chuẩn mã theo khối lớp)
+    function randomizeTwoCodes(triggerRender = true) {
+      examCode1 = `${currentGrade}01`;
+      examCode2 = `${currentGrade}02`;
+      seed1 = Math.floor(Math.random() * 100000) + 1;
+      seed2 = Math.floor(Math.random() * 100000) + 54321;
+
+      updateCodeUI();
+
+      if (triggerRender) {
+        renderAll();
+      }
+    }
+
+    function switchPreviewFace(faceNum) {
+      currentPreviewFace = faceNum;
+      [1, 2, 3].forEach(f => {
+        const btn = document.getElementById(`btnTabFace${f}`);
+        const view = document.getElementById(`previewFace${f}`);
+        if (f === faceNum) {
+          btn.className = 'px-3 py-1 rounded-lg font-bold transition bg-blue-600 text-white shadow';
+          view.classList.remove('hidden');
+        } else {
+          btn.className = 'px-3 py-1 rounded-lg font-bold transition text-slate-400 hover:text-white';
+          view.classList.add('hidden');
+        }
+      });
+    }
+
+    function switchCurrentPreviewCode(idx) {
+      currentPreviewCodeIndex = idx;
+      const b1 = document.getElementById('btnSelectCode1');
+      const b2 = document.getElementById('btnSelectCode2');
+      if (idx === 1) {
+        b1.className = 'px-2.5 py-1 rounded-md font-bold bg-blue-600/30 text-blue-300 border border-blue-500/40';
+        b2.className = 'px-2.5 py-1 rounded-md font-bold bg-slate-800 text-slate-400 hover:text-white';
+      } else {
+        b2.className = 'px-2.5 py-1 rounded-md font-bold bg-indigo-600/30 text-indigo-300 border border-indigo-500/40';
+        b1.className = 'px-2.5 py-1 rounded-md font-bold bg-slate-800 text-slate-400 hover:text-white';
+      }
+      renderFace1();
+    }
+
+    // Xây dựng mô hình 1 mã đề có shuffle
+    function buildQuizModel(grade, uNum, code, seed) {
+      const gData = (window.QUIZ_15M_DATA && window.QUIZ_15M_DATA[grade]) || {};
+      const uInfo = gData[uNum] || gData[1] || { vocab: [], grammar: [], title: `Unit ${uNum}` };
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      
+      // Shuffle câu hỏi
+      function pseudoShuffle(arr, s) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.abs(Math.sin(s + i * 37)) * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      const shuffledVocab = pseudoShuffle(uInfo.vocab || [], seed).slice(0, 10);
+      const shuffledGrammar = pseudoShuffle(uInfo.grammar || [], seed + 101).slice(0, 10);
+
+      const vocabItems = shuffledVocab.map((item, idx) => {
+        let opts = [...item.opts];
+        // Shuffle options
+        opts.sort((a, b) => Math.sin(seed + idx * 13 + a[0].length) - 0.5);
+        let correctLetter = 'A';
+        const formattedOpts = opts.map((opt, oIdx) => {
+          const l = letters[oIdx];
+          if (opt[1] === true) correctLetter = l;
+          return { letter: l, text: opt[0] };
+        });
+        const vItem = {
+          num: idx + 1,
+          q: item.q,
+          opts: formattedOpts,
+          ans: correctLetter
+        };
+        if (item.passage_title) vItem.passage_title = item.passage_title;
+        if (item.passage_text) vItem.passage_text = item.passage_text;
+        return vItem;
+      });
+
+      const grammarItems = shuffledGrammar.map((item, idx) => {
+        let opts = [...item.opts];
+        opts.sort((a, b) => Math.cos(seed + idx * 17 + a[0].length) - 0.5);
+        let correctLetter = 'A';
+        const formattedOpts = opts.map((opt, oIdx) => {
+          const l = letters[oIdx];
+          if (opt[1] === true) correctLetter = l;
+          return { letter: l, text: opt[0] };
+        });
+        const gItem = {
+          num: idx + 11,
+          q: item.q,
+          opts: formattedOpts,
+          ans: correctLetter
+        };
+        if (item.passage_title) gItem.passage_title = item.passage_title;
+        if (item.passage_text) gItem.passage_text = item.passage_text;
+        return gItem;
+      });
+
+      return {
+        grade: grade,
+        unitNum: uNum,
+        title: uInfo.title,
+        code: code,
+        vocabItems: vocabItems,
+        grammarItems: grammarItems
+      };
+    }
+
+    function renderAll() {
+      renderFace1();
+      renderFace3();
+    }
+
+    function renderFace1() {
+      const curCode = currentPreviewCodeIndex === 1 ? examCode1 : examCode2;
+      const curSeed = currentPreviewCodeIndex === 1 ? seed1 : seed2;
+      const model = buildQuizModel(currentGrade, currentUnitNum, curCode, curSeed);
+
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      document.getElementById('paperSchoolName').innerText = school.toUpperCase();
+      document.getElementById('paperSubjectTitle').innerText = `Môn: Tiếng Anh ${currentGrade} • ${model.title}`;
+      document.getElementById('paperCurrentCodeLabel').innerText = model.code;
+      document.getElementById('paperClassLabel').innerText = `${currentGrade}A.....`;
+
+      // Render Vocab 10 câu
+      const vBox = document.getElementById('paperVocabQuestions');
+      let vHtml = '';
+      model.vocabItems.forEach(item => {
+        const optHtml = item.opts.map(o => `<span class="inline-block mr-6 font-normal"><b>${o.letter}.</b> ${o.text}</span>`).join('');
+        let passHtml = '';
+        if (item.passage_title) passHtml += `<div class="font-bold italic text-[10pt] text-slate-800 mt-1">${item.passage_title}</div>`;
+        if (item.passage_text) passHtml += `<div class="italic text-[9.5pt] text-slate-700 mb-1 leading-snug bg-slate-50 p-1.5 rounded border border-slate-200">${item.passage_text}</div>`;
+        vHtml += `
+          ${passHtml}
+          <div class="text-[10.5pt] leading-tight">
+            <span class="font-bold">${item.num}.</span> ${item.q}<br>
+            <div class="pl-4 pt-0.5 text-[10.5pt] flex flex-wrap gap-x-5">
+              ${optHtml}
+            </div>
+          </div>
+        `;
+      });
+      vBox.innerHTML = vHtml;
+
+      // Render Grammar 10 câu
+      const gBox = document.getElementById('paperGrammarQuestions');
+      let gHtml = '';
+      model.grammarItems.forEach(item => {
+        const optHtml = item.opts.map(o => `<span class="inline-block mr-6 font-normal"><b>${o.letter}.</b> ${o.text}</span>`).join('');
+        let passHtml = '';
+        if (item.passage_title) passHtml += `<div class="font-bold italic text-[10pt] text-slate-800 mt-1">${item.passage_title}</div>`;
+        if (item.passage_text) passHtml += `<div class="italic text-[9.5pt] text-slate-700 mb-1 leading-snug bg-slate-50 p-1.5 rounded border border-slate-200">${item.passage_text}</div>`;
+        gHtml += `
+          ${passHtml}
+          <div class="text-[10.5pt] leading-tight">
+            <span class="font-bold">${item.num}.</span> ${item.q}<br>
+            <div class="pl-4 pt-0.5 text-[10.5pt] flex flex-wrap gap-x-5">
+              ${optHtml}
+            </div>
+          </div>
+        `;
+      });
+      gBox.innerHTML = gHtml;
+    }
+
+    function renderFace3() {
+      const m1 = buildQuizModel(currentGrade, currentUnitNum, examCode1, seed1);
+      const m2 = buildQuizModel(currentGrade, currentUnitNum, examCode2, seed2);
+
+      const year = document.getElementById('cfgYear').value || "2025 - 2026";
+      document.getElementById('ansKeySubTitle').innerText = `Môn: Tiếng Anh ${currentGrade} • ${m1.title} • Năm học ${year}`;
+
+      const tBody = document.getElementById('shortAnswerTableBody');
+      let html = '';
+
+      const allAns1 = [...m1.vocabItems.map(x => x.ans), ...m1.grammarItems.map(x => x.ans)];
+      const allAns2 = [...m2.vocabItems.map(x => x.ans), ...m2.grammarItems.map(x => x.ans)];
+
+      for (let r = 0; r < 10; r++) {
+        const q1 = r + 1;
+        const q2 = r + 11;
+        html += `
+          <tr>
+            <td class="border border-black p-1 text-center font-bold">${q1}</td>
+            <td class="border border-black p-1 text-center font-bold text-red-600">${allAns1[r] || ''}</td>
+            <td class="border border-black p-1 text-center font-bold text-blue-600">${allAns2[r] || ''}</td>
+            <td class="border border-black p-1 text-center font-bold">${q2}</td>
+            <td class="border border-black p-1 text-center font-bold text-red-600">${allAns1[r + 10] || ''}</td>
+            <td class="border border-black p-1 text-center font-bold text-blue-600">${allAns2[r + 10] || ''}</td>
+          </tr>
+        `;
+      }
+      tBody.innerHTML = html;
+    }
+
+    // ==========================================
+    // XUẤT TỆP WORD (.DOC)
+    // ==========================================
+    function getAnswerSheetImgTag() {
+      const b64 = window.ANSWER_SHEET_PNG_BASE64 || '';
+      if (b64) {
+        return `<img src="${b64}" style="width: 100%; max-width: 700px; height: auto;" />`;
+      }
+      return `<p style="text-align: center; font-weight: bold; margin-top: 100px;">[PHIẾU TRẢ LỜI TRẮC NGHIỆM 20 CÂU]</p>`;
+    }
+
+    function buildExamPageWordHtml(model, school, year) {
+      let vHtml = '';
+      model.vocabItems.forEach(item => {
+        const opts = item.opts.map(o => `<b>${o.letter}.</b> ${o.text}`).join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+        let passHtml = '';
+        if (item.passage_title) passHtml += `<p style="margin: 1pt 0 0 0; line-height: 11pt; font-size: 10pt; font-family: 'Times New Roman'; font-weight: bold; font-style: italic;">${item.passage_title}</p>`;
+        if (item.passage_text) passHtml += `<p style="margin: 0 0 1pt 0; line-height: 11pt; font-size: 9.5pt; font-family: 'Times New Roman'; font-style: italic;">${item.passage_text}</p>`;
+        vHtml += `
+          ${passHtml}
+          <p style="margin: 0; padding: 0; line-height: 12pt; font-size: 10.5pt; font-family: 'Times New Roman';"><b>${item.num}.</b> ${item.q}</p>
+          <p style="margin: 0 0 1.5pt 14pt; padding: 0; line-height: 11pt; font-size: 10pt; font-family: 'Times New Roman';">${opts}</p>
+        `;
+      });
+
+      let gHtml = '';
+      model.grammarItems.forEach(item => {
+        const opts = item.opts.map(o => `<b>${o.letter}.</b> ${o.text}`).join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+        let passHtml = '';
+        if (item.passage_title) passHtml += `<p style="margin: 1pt 0 0 0; line-height: 11pt; font-size: 10pt; font-family: 'Times New Roman'; font-weight: bold; font-style: italic;">${item.passage_title}</p>`;
+        if (item.passage_text) passHtml += `<p style="margin: 0 0 1pt 0; line-height: 11pt; font-size: 9.5pt; font-family: 'Times New Roman'; font-style: italic;">${item.passage_text}</p>`;
+        gHtml += `
+          ${passHtml}
+          <p style="margin: 0; padding: 0; line-height: 12pt; font-size: 10.5pt; font-family: 'Times New Roman';"><b>${item.num}.</b> ${item.q}</p>
+          <p style="margin: 0 0 1.5pt 14pt; padding: 0; line-height: 11pt; font-size: 10pt; font-family: 'Times New Roman';">${opts}</p>
+        `;
+      });
+
+      return `
+        <!-- TRANG ĐỀ 20 CÂU -->
+        <table style="width: 100%; border: none; margin-bottom: 2pt; font-family: 'Times New Roman'; font-size: 10.5pt;">
+          <tr>
+            <td style="width: 50%; vertical-align: top; border: none;">
+              <b>${school.toUpperCase()}</b><br>
+              Họ và tên: ....................................................<br>
+              Lớp: ${model.grade}A.....
+            </td>
+            <td style="width: 50%; vertical-align: top; text-align: center; border: none;">
+              <b style="font-size: 11pt;">BÀI KIỂM TRA 15 PHÚT</b><br>
+              <i>Môn: Tiếng Anh ${model.grade} • ${model.title}</i><br>
+              <b style="color: #b91c1c; font-size: 11pt;">Mã đề: ${model.code}</b>
+            </td>
+          </tr>
+        </table>
+        <hr style="border: none; border-top: 0.75pt solid #000; margin: 1pt 0 3pt 0;">
+
+        <p style="margin: 1pt 0 1pt 0; font-size: 10.5pt; font-family: 'Times New Roman'; font-weight: bold;">Part I: Vocabulary & Communication. <span style="font-weight: normal; font-style: italic; font-size: 10pt;">Choose the best answer A, B, or C to complete the sentences.</span></p>
+        ${vHtml}
+
+        <p style="margin: 1.5pt 0 1pt 0; font-size: 10.5pt; font-family: 'Times New Roman'; font-weight: bold;">Part II: Grammar & Reading. <span style="font-weight: normal; font-style: italic; font-size: 10pt;">Choose the best answer A, B, or C to complete the sentences.</span></p>
+        ${gHtml}
+
+        <p style="text-align: center; font-weight: bold; font-style: italic; margin-top: 2pt; font-size: 9.5pt; font-family: 'Times New Roman'; color: #475569;">--- HẾT ---</p>
+      `;
+    }
+
+    function buildShortAnswerKeyWordHtml(m1, m2, school, year) {
+      const allAns1 = [...m1.vocabItems.map(x => x.ans), ...m1.grammarItems.map(x => x.ans)];
+      const allAns2 = m2 ? [...m2.vocabItems.map(x => x.ans), ...m2.grammarItems.map(x => x.ans)] : [];
+
+      let rowsHtml = '';
+      for (let r = 0; r < 10; r++) {
+        const q1 = r + 1;
+        const q2 = r + 11;
+        rowsHtml += `
+          <tr>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; padding: 2px;">${q1}</td>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; color: red; padding: 2px;">${allAns1[r] || ''}</td>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; color: blue; padding: 2px;">${allAns2[r] || ''}</td>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; padding: 2px;">${q2}</td>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; color: red; padding: 2px;">${allAns1[r + 10] || ''}</td>
+            <td style="border: 1px solid #000; text-align: center; font-weight: bold; color: blue; padding: 2px;">${allAns2[r + 10] || ''}</td>
+          </tr>
+        `;
+      }
+
+      return `
+        <!-- TRANG 5: ĐÁP ÁN RÚT GỌN ĐỐI CHIẾU 2 MÃ ĐỀ -->
+        <p style="text-align: center; font-weight: bold; font-size: 13pt; color: #b91c1c; margin: 4pt 0 1pt 0; font-family: 'Times New Roman';">BẢNG ĐÁP ÁN ĐỀ KIỂM TRA 15 PHÚT (RÚT GỌN)</p>
+        <p style="text-align: center; font-style: italic; font-size: 10.5pt; margin: 0 0 6pt 0; font-family: 'Times New Roman';">
+          Môn: Tiếng Anh ${m1.grade} • ${m1.title} • Năm học ${year}<br>
+          (Mỗi câu đúng 0.5 điểm • Thang điểm 10.0 • Dành cho Giáo viên chấm điểm)
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 4pt; font-size: 10.5pt; font-family: 'Times New Roman';">
+          <tr style="background-color: #f1f5f9; text-align: center; font-weight: bold;">
+            <th style="border: 1px solid #000; padding: 3px; width: 14%;">Câu</th>
+            <th style="border: 1px solid #000; padding: 3px; color: red;">Mã ${m1.code}</th>
+            <th style="border: 1px solid #000; padding: 3px; color: blue;">Mã ${m2 ? m2.code : ''}</th>
+            <th style="border: 1px solid #000; padding: 3px; width: 14%;">Câu</th>
+            <th style="border: 1px solid #000; padding: 3px; color: red;">Mã ${m1.code}</th>
+            <th style="border: 1px solid #000; padding: 3px; color: blue;">Mã ${m2 ? m2.code : ''}</th>
+          </tr>
+          ${rowsHtml}
+        </table>
+
+        <div style="margin-top: 25pt; text-align: right; padding-right: 20pt; font-size: 10.5pt; font-family: 'Times New Roman';">
+          <b>GIÁO VIÊN BỘ MÔN</b><br>
+          <span style="font-size: 9pt; color: #64748b;">(Ký và ghi rõ họ tên)</span>
+        </div>
+      `;
+    }
+
+    // Xuất file Word 3 trang cho mã đề hiện tại (Trang 1: Đề, Trang 2: Phiếu, Trang 3: Đáp án)
+    function exportCurrentWord(codeIndex = 1) {
+      const code = codeIndex === 1 ? examCode1 : examCode2;
+      const seed = codeIndex === 1 ? seed1 : seed2;
+      const model = buildQuizModel(currentGrade, currentUnitNum, code, seed);
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const year = document.getElementById('cfgYear').value || "2025 - 2026";
+
+      const htmlContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>Đề 15P Tiếng Anh ${currentGrade} - Mã ${code}</title>
+        <style>
+          @page { size: 21.0cm 29.7cm; margin: 0.6cm 1.2cm 0.6cm 1.2cm; mso-page-orientation: portrait; }
+          body { font-family: 'Times New Roman', serif; font-size: 10.5pt; line-height: 1.15; color: #000; margin: 0; padding: 0; }
+          p { margin: 0; padding: 0; line-height: 1.15; }
+          .page-break { page-break-before: always; mso-break-type: page-break; }
+        </style>
+        </head>
+        <body>
+          <!-- TRANG 1: ĐỀ THI 20 CÂU -->
+          ${buildExamPageWordHtml(model, school, year)}
+          
+          <!-- TRANG 2: PHIẾU CHẤM TRẮC NGHIỆM -->
+          <div class="page-break"></div>
+          <div style="text-align: center;">
+            ${getAnswerSheetImgTag()}
+          </div>
+
+          <!-- TRANG 3: ĐÁP ÁN RÚT GỌN -->
+          <div class="page-break"></div>
+          ${buildShortAnswerKeyWordHtml(model, null, school, year)}
+        </body></html>
+      `;
+
+      downloadBlob(htmlContent, `De_15P_Anh_${currentGrade}_Unit_${currentUnitNum}_Ma_${code}.doc`);
+    }
+
+    // Xuất trọn bộ 2 mã đề chuẩn 5 trang đúng thứ tự quy chuẩn:
+    // Trang 1: Đề Mã 1 | Trang 2: Phiếu | Trang 3: Đề Mã 2 | Trang 4: Phiếu | Trang 5: Đáp án
+    function exportFullTwoCodesWord() {
+      const m1 = buildQuizModel(currentGrade, currentUnitNum, examCode1, seed1);
+      const m2 = buildQuizModel(currentGrade, currentUnitNum, examCode2, seed2);
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const year = document.getElementById('cfgYear').value || "2025 - 2026";
+
+      const htmlContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>Trọn Bộ 2 Mã Đề 15P Tiếng Anh ${currentGrade} - Unit ${currentUnitNum}</title>
+        <style>
+          @page { size: 21.0cm 29.7cm; margin: 0.6cm 1.2cm 0.6cm 1.2cm; mso-page-orientation: portrait; }
+          body { font-family: 'Times New Roman', serif; font-size: 10.5pt; line-height: 1.15; color: #000; margin: 0; padding: 0; }
+          p { margin: 0; padding: 0; line-height: 1.15; }
+          .page-break { page-break-before: always; mso-break-type: page-break; }
+        </style>
+        </head>
+        <body>
+          <!-- TRANG 1: ĐỀ MÃ 1 -->
+          ${buildExamPageWordHtml(m1, school, year)}
+          
+          <!-- TRANG 2: PHIẾU TRẮC NGHIỆM CHO MÃ 1 -->
+          <div class="page-break"></div>
+          <div style="text-align: center;">
+            ${getAnswerSheetImgTag()}
+          </div>
+
+          <!-- TRANG 3: ĐỀ MÃ 2 -->
+          <div class="page-break"></div>
+          ${buildExamPageWordHtml(m2, school, year)}
+
+          <!-- TRANG 4: PHIẾU TRẮC NGHIỆM CHO MÃ 2 -->
+          <div class="page-break"></div>
+          <div style="text-align: center;">
+            ${getAnswerSheetImgTag()}
+          </div>
+
+          <!-- TRANG 5: ĐÁP ÁN RÚT GỌN ĐỐI CHIẾU 2 MÃ ĐỀ -->
+          <div class="page-break"></div>
+          ${buildShortAnswerKeyWordHtml(m1, m2, school, year)}
+        </body></html>
+      `;
+
+      downloadBlob(htmlContent, `De_15P_Anh_${currentGrade}_Unit_${currentUnitNum}_Tron_Bo_2_Ma_De_${examCode1}_${examCode2}.doc`);
+    }
+
+    // Xuất gộp cho các Unit đã chọn chuẩn 5 trang mỗi Unit
+    function exportSelectedBulk() {
+      if (selectedUnits.size === 0) {
+        alert("Vui lòng chọn ít nhất 1 Unit để xuất đề!");
+        return;
+      }
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const year = document.getElementById('cfgYear').value || "2025 - 2026";
+
+      let bodyHtml = '';
+      let isFirst = true;
+      const sortedUnits = Array.from(selectedUnits).sort((a, b) => a - b);
+
+      sortedUnits.forEach((uNum, idx) => {
+        const uSeed1 = seed1 + idx * 791;
+        const uSeed2 = seed2 + idx * 791;
+        const m1 = buildQuizModel(currentGrade, uNum, examCode1, uSeed1);
+        const m2 = buildQuizModel(currentGrade, uNum, examCode2, uSeed2);
+
+        if (!isFirst) bodyHtml += `<div class="page-break"></div>`;
+        isFirst = false;
+
+        bodyHtml += `
+          <!-- TRANG 1: ĐỀ MÃ 1 -->
+          ${buildExamPageWordHtml(m1, school, year)}
+          
+          <!-- TRANG 2: PHIẾU TRẮC NGHIỆM CHO MÃ 1 -->
+          <div class="page-break"></div>
+          <div style="text-align: center;">${getAnswerSheetImgTag()}</div>
+
+          <!-- TRANG 3: ĐỀ MÃ 2 -->
+          <div class="page-break"></div>
+          ${buildExamPageWordHtml(m2, school, year)}
+
+          <!-- TRANG 4: PHIẾU TRẮC NGHIỆM CHO MÃ 2 -->
+          <div class="page-break"></div>
+          <div style="text-align: center;">${getAnswerSheetImgTag()}</div>
+
+          <!-- TRANG 5: ĐÁP ÁN RÚT GỌN -->
+          <div class="page-break"></div>
+          ${buildShortAnswerKeyWordHtml(m1, m2, school, year)}
+        `;
+      });
+
+      const fullHtml = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>Bộ Đề 15P Tiếng Anh ${currentGrade}</title>
+        <style>
+          @page { size: 21.0cm 29.7cm; margin: 0.6cm 1.2cm 0.6cm 1.2cm; mso-page-orientation: portrait; }
+          body { font-family: 'Times New Roman', serif; font-size: 10.5pt; line-height: 1.15; color: #000; margin: 0; padding: 0; }
+          p { margin: 0; padding: 0; line-height: 1.15; }
+          .page-break { page-break-before: always; mso-break-type: page-break; }
+        </style>
+        </head>
+        <body>
+          ${bodyHtml}
+        </body></html>
+      `;
+
+      downloadBlob(fullHtml, `Tron_Bo_De_15P_Anh_${currentGrade}_(${selectedUnits.size}_Units).doc`);
+    }
+
+    function downloadBlob(content, filename) {
+      const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

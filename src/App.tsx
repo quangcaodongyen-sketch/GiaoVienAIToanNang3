@@ -40,6 +40,7 @@ import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
 import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 import { MathStudioModal } from './components/MathStudioModal';
+import { TaoDe15PhutModal } from './components/TaoDe15PhutModal';
 import { webSecurityGuard } from './services/webSecurityGuard';
 
 export default function App() {
@@ -56,6 +57,7 @@ export default function App() {
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
   const [showMathStudioModal, setShowMathStudioModal] = useState(false);
+  const [showTaoDe15PhutModal, setShowTaoDe15PhutModal] = useState(false);
   const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [showTrialModal, setShowTrialModal] = useState(false);
@@ -114,6 +116,7 @@ export default function App() {
     setShowTachGopPDFModal(false);
     setShowTaoDeTHCS8MonModal(false);
     setShowMathStudioModal(false);
+    setShowTaoDe15PhutModal(false);
     setShowAdminDashboard(false);
     webSecurityGuard.setActiveApp('home', 'Cổng Thông Tin Giáo Viên AI Toàn Năng');
     if (window.location.hash && window.location.hash !== '#') {
@@ -217,6 +220,10 @@ export default function App() {
         setShowMathStudioModal(true);
         webSecurityGuard.setActiveApp('mathstudio-pro', 'Đinh Thành MathStudio 2026+ Pro');
       }
+      else if (hash === '#tao-de-15p-tienganh' || hash === '#15p-tienganh' || hash === '#de-15p') {
+        setShowTaoDe15PhutModal(true);
+        webSecurityGuard.setActiveApp('tao-de-15p-tienganh', 'Tạo Đề 15 Phút Tiếng Anh (Global Success)');
+      }
       else if (hash === '#admin') {
         setShowAdminDashboard(true);
         webSecurityGuard.setActiveApp('admin', 'Bảng Điều Khiển Quản Trị Hệ Thống');
@@ -288,6 +295,11 @@ export default function App() {
     if (app.id === 'mathstudio-pro' || app.id === 'congthutoan' || app.url === '#mathstudio') {
       e.preventDefault();
       setShowMathStudioModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-15p-tienganh' || app.url === '#tao-de-15p-tienganh') {
+      e.preventDefault();
+      setShowTaoDe15PhutModal(true);
       return;
     }
     if (app.id === 'tao-de-toan-thcs' || app.url === '#tao-de-toan') {
@@ -1141,6 +1153,13 @@ export default function App() {
       {/* ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX) */}
       <MathStudioModal
         isOpen={showMathStudioModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS) */}
+      <TaoDe15PhutModal
+        isOpen={showTaoDe15PhutModal}
         onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />

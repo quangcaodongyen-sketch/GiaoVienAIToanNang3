@@ -227,5 +227,18 @@ export const apps: AppCard[] = [
     "active": true,
     "featured": false,
     "order": 17
+  },
+  {
+    "id": "tao-de-15p-tienganh",
+    "title": "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)",
+    "description": "Tự động tạo trọn bộ 2 mã đề 15 phút, phiếu chấm trắc nghiệm 20 câu sạch và bảng đáp án rút gọn cho 48 Units (Lớp 6, 7, 8, 9).",
+    "image": "/taode_15p_tienganh.png",
+    "url": "#tao-de-15p-tienganh",
+    "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 18
   }
 ];
+

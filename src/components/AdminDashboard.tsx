@@ -49,6 +49,7 @@ import { generateCleanerLicenseKey } from '../services/cleanerKeyService';
 import { generateCHVBLicenseKey, buildCHVBZaloMessage } from '../services/chuanhoaVBKeyService';
 import { generatePDFLicenseKey, buildPDFZaloMessage } from '../services/pdfSuiteKeyService';
 import { generateTHCS8MLicenseKey, SUBJECT_MAP } from '../services/taoDeTHCS8MonKeyService';
+import { generateExam15PLicenseKey } from '../services/taode15pKeyService';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -61,10 +62,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pinError, setPinError] = useState(false);
   const [showPin, setShowPin] = useState(false);
 
-  // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Security Alerts
+  // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Tạo Đề 15P Tiếng Anh, Security Alerts
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'security'>('tracking');
+  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'de15p' | 'security'>('tracking');
   
   // State Tab Marketing & Quảng cáo tự động Việt Nam
   const [marketingTopic, setMarketingTopic] = useState<'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF'>('ALL');
@@ -267,6 +268,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [mathCopiedKey, setMathCopiedKey] = useState(false);
   const [mathCopiedMsg, setMathCopiedMsg] = useState(false);
   const [mathHistory, setMathHistory] = useState<Array<{
+    mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
+  // State cho Tool Tạo Key Bản Quyền - Tạo Đề 15 Phút Tiếng Anh (Global Success - 48 Units)
+  const [de15pMid, setDe15pMid] = useState('');
+  const [de15pPackage, setDe15pPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
+  const [de15pKeyResult, setDe15pKeyResult] = useState('');
+  const [de15pZaloMsg, setDe15pZaloMsg] = useState('');
+  const [de15pGenError, setDe15pGenError] = useState('');
+  const [de15pCopiedKey, setDe15pCopiedKey] = useState(false);
+  const [de15pCopiedMsg, setDe15pCopiedMsg] = useState(false);
+  const [de15pHistory, setDe15pHistory] = useState<Array<{
     mid: string;
     key: string;
     expDate: string;
@@ -1267,6 +1284,52 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
     }
   };
 
+  // Handlers cho Tạo Đề 15 Phút Tiếng Anh (Global Success)
+  const handleGenerateDe15pKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDe15pGenError('');
+    try {
+      const cleanId = de15pMid.trim().toUpperCase();
+      if (!cleanId) {
+        setDe15pGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng (VD: DVT-15M-XXXX-XXXX)!');
+        return;
+      }
+      const key = await generateExam15PLicenseKey(cleanId, de15pPackage);
+      setDe15pKeyResult(key);
+
+      const pkgName = de15pPackage === '1year' ? '1 Năm' : de15pPackage === '2year' ? '2 Năm' : 'Trọn Đời (Vĩnh Viễn)';
+      const msg = `Kính gửi Quý Thầy/Cô,\nThầy Đinh Văn Thành gửi mã kích hoạt Bản Quyền Pro phần mềm "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS)":\n- Mã máy: ${cleanId}\n- Gói bản quyền: ${pkgName}\n- Khóa kích hoạt: ${key}\n\nThầy/Cô mở phần mềm hoặc truy cập web, vào tab Bản quyền & Kích hoạt, dán mã key trên để sử dụng trọn vẹn toàn bộ 48 Units ạ. Chúc Thầy/Cô dạy tốt!\nHotline/Zalo: 0915.213717.`;
+      setDe15pZaloMsg(msg);
+
+      const newRecord = {
+        mid: cleanId,
+        key,
+        expDate: de15pPackage === '1year' ? '1 Năm' : de15pPackage === '2year' ? '2 Năm' : 'Vĩnh viễn',
+        plan: pkgName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      setDe15pHistory(prev => [newRecord, ...prev.filter(x => x.key !== key).slice(0, 19)]);
+    } catch (err: any) {
+      setDe15pGenError(err.message || 'Lỗi khi tạo key Tạo Đề 15P');
+    }
+  };
+
+  const handleCopyDe15pKey = () => {
+    if (de15pKeyResult) {
+      navigator.clipboard.writeText(de15pKeyResult);
+      setDe15pCopiedKey(true);
+      setTimeout(() => setDe15pCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyDe15pZaloMsg = () => {
+    if (de15pZaloMsg) {
+      navigator.clipboard.writeText(de15pZaloMsg);
+      setDe15pCopiedMsg(true);
+      setTimeout(() => setDe15pCopiedMsg(false), 2000);
+    }
+  };
+
   // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
   useEffect(() => {
     if (!isOpen) return;
@@ -1841,6 +1904,17 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             10. MathStudio 2026+ (Ed25519)
           </button>
           <button
+            onClick={() => setAdminTab('de15p')}
+            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
+              adminTab === 'de15p'
+                ? 'bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 text-white shadow-md shadow-cyan-600/20'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4 text-amber-300" />
+            11. Tạo Đề 15P Tiếng Anh (48 Units)
+          </button>
+          <button
             onClick={() => {
               setAdminTab('security');
               loadTrackingData();
@@ -1852,7 +1926,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             }`}
           >
             <ShieldAlert className="w-4 h-4 text-rose-400" />
-            <span>11. Cảnh Báo Xâm Nhập & Chống Bẻ Khóa</span>
+            <span>12. Cảnh Báo Xâm Nhập & Chống Bẻ Khóa</span>
             {securityAlerts.filter(a => a.status === 'UNRESOLVED').length > 0 && (
               <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
                 {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
@@ -4514,6 +4588,171 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             </div>
           </div>
         )}
+
+        {/* TAB 11: TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS) */}
+        {adminTab === 'de15p' && (
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+            {/* CARD TẠO KEY */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/60 via-slate-900 to-blue-950/60 border border-cyan-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-cyan-300 flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-amber-400" />
+                  CẤP BẢN QUYỀN PRO - TẠO ĐỀ 15 PHÚT TIẾNG ANH THCS (48 UNITS GLOBAL SUCCESS)
+                </h4>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Mã hóa SHA-256 HMAC • Tác giả Thầy Đinh Văn Thành
+                </span>
+              </div>
+
+              <p className="text-slate-400 text-[11px]">
+                Hệ thống sinh mã kích hoạt Pro cho phần mềm và web Tạo Đề 15 Phút Tiếng Anh (Lớp 6, 7, 8, 9 - 48 Units). Mã máy tính của khách hàng có tiền tố <code>DVT-15M-XXXX-XXXX</code>.
+              </p>
+
+              <form onSubmit={handleGenerateDe15pKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-300 font-bold mb-1">
+                      1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: DVT-15M-8F22-A109"
+                      value={de15pMid}
+                      onChange={(e) => setDe15pMid(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-cyan-300 focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      2. Chọn Gói Bản Quyền:
+                    </label>
+                    <select
+                      value={de15pPackage}
+                      onChange={(e: any) => setDe15pPackage(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="lifetime">VIP Trọn Đời (Khuyên dùng - Vĩnh viễn)</option>
+                      <option value="1year">Gói 1 Năm Học</option>
+                      <option value="2year">Gói 2 Năm Học</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-cyan-600/30 transition-all hover:scale-[1.02] cursor-pointer"
+                  >
+                    <Crown className="w-4 h-4 text-amber-300" />
+                    TẠO MÃ KÍCH HOẠT PRO TẠO ĐỀ 15P
+                  </button>
+
+                  {de15pGenError && (
+                    <span className="text-red-400 font-medium">{de15pGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY */}
+              {de15pKeyResult && (
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div className="p-3 rounded-xl bg-slate-950 border border-cyan-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="text-[11px] text-cyan-400 font-bold uppercase tracking-wider">
+                        Mã Kích Hoạt Bản Quyền Pro (Gửi cho khách):
+                      </div>
+                      <div className="font-mono text-base font-black text-amber-400 select-all tracking-wide break-all">
+                        {de15pKeyResult}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={handleCopyDe15pKey}
+                        className="py-2 px-3.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow"
+                      >
+                        {de15pCopiedKey ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        {de15pCopiedKey ? 'Đã sao chép' : 'Sao chép Key'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCopyDe15pZaloMsg}
+                        className="py-2 px-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow"
+                      >
+                        {de15pCopiedMsg ? <Check className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />}
+                        {de15pCopiedMsg ? 'Đã sao chép' : 'Copy Tin Nhắn Zalo'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 font-medium mb-1">
+                      Mẫu tin nhắn Zalo gửi kèm hướng dẫn cho khách hàng:
+                    </label>
+                    <textarea
+                      readOnly
+                      rows={4}
+                      value={de15pZaloMsg}
+                      className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed text-slate-200 select-all focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LỊCH SỬ KEY TẠO ĐỀ 15P */}
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 space-y-3">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <Clock className="w-4 h-4 text-cyan-400" />
+                Lịch sử các Key Tạo Đề 15P đã tạo gần đây ({de15pHistory.length} bản ghi):
+              </div>
+              {de15pHistory.length === 0 ? (
+                <div className="text-center py-6 text-xs text-slate-500">
+                  Chưa có mã bản quyền Tạo Đề 15P nào được tạo trên trình duyệt này.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-700 text-slate-400">
+                        <th className="pb-2 px-2">Thời gian</th>
+                        <th className="pb-2 px-2">Mã máy (HWID)</th>
+                        <th className="pb-2 px-2">Gói cước</th>
+                        <th className="pb-2 px-2">Key Bản Quyền</th>
+                        <th className="pb-2 px-2 text-right">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-900">
+                      {de15pHistory.map((item, i) => (
+                        <tr key={i} className="hover:bg-slate-900/60">
+                          <td className="py-2 px-2 text-slate-400 whitespace-nowrap">{item.createdAt}</td>
+                          <td className="py-2 px-2 font-mono text-cyan-300 font-bold">{item.mid}</td>
+                          <td className="py-2 px-2 text-amber-300 font-semibold">{item.plan}</td>
+                          <td className="py-2 px-2 font-mono text-emerald-400 truncate max-w-xs">{item.key}</td>
+                          <td className="py-2 px-2 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.key);
+                                alert(`Đã sao chép Key của máy ${item.mid}!`);
+                              }}
+                              className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[10px] cursor-pointer"
+                            >
+                              Copy Key
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
 
         {/* MODAL TẠO KEY TRỰC TIẾP */}
         {showCreateModal && (
