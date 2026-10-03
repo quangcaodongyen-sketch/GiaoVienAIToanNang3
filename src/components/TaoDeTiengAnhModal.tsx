@@ -449,8 +449,23 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
 
               {/* Preview Khung Đề Thi Sư Phạm (Times New Roman 13pt) */}
               {examGenerated && (
-                <div className="p-6 rounded-2xl bg-white text-black shadow-xl border border-slate-300 font-['Times_New_Roman',serif] text-[13pt] leading-relaxed animate-fade-in">
-                  <div className="flex justify-between items-start border-b pb-4 mb-4">
+                <div className="p-6 rounded-2xl bg-white text-black shadow-xl border border-slate-300 font-['Times_New_Roman',serif] text-[13pt] leading-relaxed animate-fade-in space-y-4">
+                  
+                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
+                  {!isProActive && (
+                    <div className="p-3.5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
+                      <div className="flex items-center gap-2 text-amber-900 font-bold text-[13px] mb-1">
+                        <Sparkles className="w-4 h-4 text-amber-600" />
+                        <span>HỆ THỐNG TẠO ĐỀ KIỂM TRA THCS CHUẨN CV 7991 (BẢN DÙNG THỬ SƯ PHẠM)</span>
+                      </div>
+                      <p className="text-slate-700 leading-normal">
+                        • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Đăng ký Bản quyền Pro để tạo không giới hạn 48 Units (Lớp 6, 7, 8, 9), xuất file âm thanh Audio Script MP3 và <strong>tự động gỡ bỏ thông báo dùng thử này</strong>!
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-start border-b pb-4">
                     <div className="text-center font-bold">
                       <p className="text-[11pt] uppercase">{schoolAgency}</p>
                       <p className="text-[12pt] uppercase font-black">{schoolName}</p>
@@ -463,37 +478,156 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     </div>
                   </div>
 
-                  <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded text-[#FF0000] text-[11pt] font-sans mb-4">
-                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Bao gồm đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, 02 Mã đề trắc nghiệm khách quan + tự luận, Bảng đáp án, Audio scripts và Hướng dẫn chấm điểm.
+                  <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded text-[#FF0000] text-[11pt] font-sans">
+                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, 02 Mã đề trắc nghiệm khách quan + tự luận. <strong>(ĐÁP ÁN ĐÚNG ĐƯỢC ĐÁNH DẤU CHỮ MÀU ĐỎ ĐỂ GIÁO VIÊN TIỆN THEO DÕI VÀ CHẤM BÀI)</strong>.
                   </div>
 
+                  {/* NỘI DUNG ĐỀ THI KÈM ĐÁP ÁN CHỮ ĐỎ */}
                   <div className="space-y-4">
                     <p className="font-bold uppercase text-[12pt]">PART A. LISTENING (2.0 points)</p>
                     <p className="italic text-[11pt]">Listen to the conversation and choose the correct answer A, B, C or D.</p>
                     <p><strong>Question 1.</strong> What does Mai often do in her leisure time?</p>
-                    <p className="pl-6">A. Surfing the internet &nbsp;&nbsp;&nbsp;&nbsp; B. Playing sports &nbsp;&nbsp;&nbsp;&nbsp; C. Reading books &nbsp;&nbsp;&nbsp;&nbsp; D. Cooking</p>
+                    <p className="pl-6">
+                      A. Surfing the internet &nbsp;&nbsp;&nbsp;&nbsp; 
+                      <strong className="text-[#FF0000] font-black underline bg-red-50 px-1.5 py-0.5 rounded">✔ B. Playing sports</strong> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      C. Reading books &nbsp;&nbsp;&nbsp;&nbsp; 
+                      D. Cooking
+                    </p>
 
                     <p className="font-bold uppercase text-[12pt] pt-2">PART B. LANGUAGE &amp; GRAMMAR (2.5 points)</p>
                     <p><strong>Question 2.</strong> Life in the countryside is much ________ than life in the big city.</p>
-                    <p className="pl-6">A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; B. more peaceful &nbsp;&nbsp;&nbsp;&nbsp; C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; D. most peaceful</p>
+                    <p className="pl-6">
+                      A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
+                      <strong className="text-[#FF0000] font-black underline bg-red-50 px-1.5 py-0.5 rounded">✔ B. more peaceful</strong> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
+                      D. most peaceful
+                    </p>
+
+                    <p><strong>Question 3.</strong> Nam didn't go to school yesterday ________ he had a severe fever.</p>
+                    <p className="pl-6">
+                      <strong className="text-[#FF0000] font-black underline bg-red-50 px-1.5 py-0.5 rounded">✔ A. because</strong> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      B. although &nbsp;&nbsp;&nbsp;&nbsp; 
+                      C. but &nbsp;&nbsp;&nbsp;&nbsp; 
+                      D. so
+                    </p>
+
+                    {/* BẢNG ĐÁP ÁN CHỮ ĐỎ DÀNH RIÊNG CHO GIÁO VIÊN */}
+                    <div className="mt-6 p-4 rounded-xl border border-red-300 bg-red-50/50">
+                      <p className="font-bold text-[#FF0000] text-[12pt] mb-2 uppercase flex items-center gap-2">
+                        <span>★ BẢNG ĐÁP ÁN VÀ THANG ĐIỂM CHI TIẾT (CHỮ MÀU ĐỎ CHO GIÁO VIÊN):</span>
+                      </p>
+                      <table className="w-full border-collapse border border-red-300 text-center text-[11pt]">
+                        <thead>
+                          <tr className="bg-red-100/70 text-[#FF0000] font-bold">
+                            <th className="border border-red-300 p-1.5">Câu</th>
+                            <th className="border border-red-300 p-1.5">Đáp án đúng</th>
+                            <th className="border border-red-300 p-1.5">Điểm</th>
+                            <th className="border border-red-300 p-1.5 text-left pl-3">Nội dung kiến thức / Giải thích</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td className="border border-red-300 p-1 font-bold">1</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">B</td>
+                            <td className="border border-red-300 p-1">0.25 đ</td>
+                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">Nghe thông tin chi tiết: "Mai often plays sports after school".</td>
+                          </tr>
+                          <tr>
+                            <td className="border border-red-300 p-1 font-bold">2</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">B</td>
+                            <td className="border border-red-300 p-1">0.25 đ</td>
+                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">So sánh hơn tính từ dài: much + more peaceful + than.</td>
+                          </tr>
+                          <tr>
+                            <td className="border border-red-300 p-1 font-bold">3</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">A</td>
+                            <td className="border border-red-300 p-1">0.25 đ</td>
+                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">Liên từ chỉ nguyên nhân: because + clause (chỉ lý do sốt).</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
 
                   <div className="mt-6 pt-4 border-t flex flex-wrap items-center justify-between gap-3 font-sans text-xs">
                     <span className="text-slate-500">Đã áp dụng thông tin: {schoolName} ({schoolYear})</span>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => alert('Đã sao chép nội dung đề thi vào clipboard!')}
-                        className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg flex items-center gap-1.5"
+                        onClick={() => alert('Đã sao chép toàn bộ đề thi kèm đáp án chữ màu đỏ vào bộ nhớ tạm!')}
+                        className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Copy className="w-3.5 h-3.5" /> Sao chép văn bản
                       </button>
-                      <a
-                        href="/De_Kiem_Tra_Tieng_Anh_6_Global_Success_CV7991.doc"
-                        download
-                        className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg flex items-center gap-1.5"
+                      <button
+                        onClick={() => {
+                          const docHtml = `
+                            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                            <head><meta charset='utf-8'><title>De_Kiem_Tra_Tieng_Anh_${selectedGrade}</title>
+                            <style>
+                              body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.3; }
+                              .text-red { color: #FF0000; font-weight: bold; }
+                              .answer-key { color: #FF0000; font-weight: bold; font-size: 13pt; }
+                              table { border-collapse: collapse; width: 100%; margin-top: 10pt; }
+                              th, td { border: 1px solid #FF0000; padding: 5pt; text-align: center; }
+                            </style>
+                            </head>
+                            <body>
+                              ${!isProActive ? `
+                              <table border="1" cellpadding="8" style="border: 2px dashed #D97706; background-color: #FEF3C7; margin-bottom: 12pt;">
+                                <tr>
+                                  <td style="border: none; text-align: left;">
+                                    <p style="color: #B45309; font-weight: bold; font-size: 11pt; margin: 0 0 4pt 0;">📢 BẢN DÙNG THỬ - PHẦN MỀM TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS (CV 7991)</p>
+                                    <p style="color: #78350F; font-size: 10.5pt; margin: 0 0 4pt 0;">• Tác giả: <b>Thầy giáo Đinh Văn Thành</b> – THCS Đồng Yên – Hotline / Zalo: <b>0915.213717</b></p>
+                                    <p style="color: #78350F; font-size: 10pt; margin: 0;">• Đăng ký bản quyền Pro để mở khóa đầy đủ 12 Unit và <b>gỡ bỏ hoàn toàn quảng cáo này</b>.</p>
+                                  </td>
+                                </tr>
+                              </table>
+                              ` : ''}
+                              <h2 style="text-align: center; color: #1e3a8a;">ĐỀ KIỂM TRA MÔN TIẾNG ANH ${selectedGrade} CHUẨN CV 7991</h2>
+                              <p style="text-align: center;"><b>Đơn vị:</b> ${schoolName} • <b>Năm học:</b> ${schoolYear}</p>
+                              <hr/>
+                              <h3>PART A. LISTENING (2.0 points)</h3>
+                              <p><b>Question 1.</b> What does Mai often do in her leisure time?</p>
+                              <p>A. Surfing the internet &nbsp;&nbsp;&nbsp;&nbsp; <span class="answer-key">✔ B. Playing sports</span> &nbsp;&nbsp;&nbsp;&nbsp; C. Reading books &nbsp;&nbsp;&nbsp;&nbsp; D. Cooking</p>
+                              
+                              <h3>PART B. LANGUAGE & GRAMMAR (2.5 points)</h3>
+                              <p><b>Question 2.</b> Life in the countryside is much ________ than life in the big city.</p>
+                              <p>A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; <span class="answer-key">✔ B. more peaceful</span> &nbsp;&nbsp;&nbsp;&nbsp; C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; D. most peaceful</p>
+                              <p><b>Question 3.</b> Nam didn't go to school yesterday ________ he had a severe fever.</p>
+                              <p><span class="answer-key">✔ A. because</span> &nbsp;&nbsp;&nbsp;&nbsp; B. although &nbsp;&nbsp;&nbsp;&nbsp; C. but &nbsp;&nbsp;&nbsp;&nbsp; D. so</p>
+                              
+                              <h3 style="color: #FF0000; margin-top: 18pt;">★ BẢNG ĐÁP ÁN CHỮ MÀU ĐỎ DÀNH CHO GIÁO VIÊN:</h3>
+                              <table>
+                                <tr style="background-color: #fee2e2; color: #b91c1c;">
+                                  <th>Câu</th><th>Đáp án đúng</th><th>Điểm</th><th>Giải thích</th>
+                                </tr>
+                                <tr>
+                                  <td>1</td><td class="answer-key">B</td><td>0.25</td><td style="color: #FF0000; text-align: left;">Playing sports</td>
+                                </tr>
+                                <tr>
+                                  <td>2</td><td class="answer-key">B</td><td>0.25</td><td style="color: #FF0000; text-align: left;">more peaceful (so sánh hơn)</td>
+                                </tr>
+                                <tr>
+                                  <td>3</td><td class="answer-key">A</td><td>0.25</td><td style="color: #FF0000; text-align: left;">because (liên từ chỉ lý do)</td>
+                                </tr>
+                              </table>
+                            </body>
+                            </html>
+                          `;
+                          const blob = new Blob(['\ufeff' + docHtml], { type: 'application/msword' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `De_Kiem_Tra_Tieng_Anh_${selectedGrade}_Dap_An_Do.doc`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                        }}
+                        className="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl flex items-center gap-1.5 shadow-md shadow-blue-500/20 transition cursor-pointer"
                       >
-                        <Download className="w-3.5 h-3.5" /> Tải file Word (.doc)
-                      </a>
+                        <Download className="w-3.5 h-3.5" /> Tải file Word đáp án chữ đỏ (.doc)
+                      </button>
                     </div>
                   </div>
                 </div>

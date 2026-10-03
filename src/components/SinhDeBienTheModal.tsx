@@ -727,7 +727,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                       type="button"
                       onClick={() => {
                         const targetVar = subTab === "var1" ? suiteData.variant1 : subTab === "var2" ? suiteData.variant2 : suiteData.variant3;
-                        exportBientheToWordHtml(targetVar.title, [targetVar], suiteData.analysis, false);
+                        exportBientheToWordHtml(targetVar.title, [targetVar], suiteData.analysis, false, !isProActive);
                       }}
                       className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                     >
@@ -742,7 +742,8 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                           "TRON_BO_3_DE_BIEN_THE",
                           [suiteData.variant1, suiteData.variant2, suiteData.variant3],
                           suiteData.analysis,
-                          true
+                          true,
+                          !isProActive
                         );
                       }}
                       className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
@@ -790,13 +791,28 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                     </div>
                   </div>
 
+                  {/* BANNER QUẢNG CÁO DÙNG THỬ */}
+                  {!isProActive && (
+                    <div className="mb-4 p-3 rounded-xl bg-red-50 border-2 border-dashed border-red-500 text-center font-sans">
+                      <div className="text-xs font-black text-red-600 uppercase tracking-wide">
+                        ⚠️ ĐỀ THI ĐANG XEM Ở CHẾ ĐỘ DÙNG THỬ (CÒN {trialRemaining}/5 LƯỢT)
+                      </div>
+                      <div className="text-[11px] text-red-800 mt-0.5">
+                        Tác giả & Hỗ trợ kỹ thuật: <strong>Thầy giáo Đinh Văn Thành - THCS Đồng Yên</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
+                      </div>
+                      <div className="text-[10.5px] text-red-700 italic mt-0.5">
+                        Đáp án đúng được tự động tô chữ màu đỏ chuẩn sư phạm để Thầy/Cô dễ tra cứu và chấm bài.
+                      </div>
+                    </div>
+                  )}
+
                   {/* ACTIVE VARIANT DISPLAY */}
                   {(() => {
                     const currentVar = subTab === "var1" ? suiteData.variant1 : subTab === "var2" ? suiteData.variant2 : suiteData.variant3;
                     const content = variantViewMode === "exam" ? currentVar.examContent : currentVar.answers;
 
                     return (
-                      <div className="space-y-3 leading-relaxed text-[12.5pt] text-slate-900">
+                      <div className="space-y-3 leading-relaxed text-[12.5pt] text-slate-900 font-serif">
                         {content.split("\n").map((line, idx) => {
                           const tr = line.trim();
                           if (!tr) return <div key={idx} className="h-2" />;
@@ -823,9 +839,13 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                             );
                           }
 
-                          if (tr.includes(":") && (tr.startsWith("1.") || tr.startsWith("2.") || tr.startsWith("3.") || tr.startsWith("BẢNG ĐÁP ÁN") || tr.startsWith("ĐOẠN VĂN MẪU"))) {
+                          // ĐÁP ÁN ĐÚNG: TÔ MÀU ĐỎ #FF0000 RÕ RÀNG
+                          if (
+                            variantViewMode === "answers" ||
+                            (tr.includes(":") && (tr.startsWith("1.") || tr.startsWith("2.") || tr.startsWith("3.") || tr.startsWith("BẢNG ĐÁP ÁN") || tr.startsWith("ĐOẠN VĂN MẪU")))
+                          ) {
                             return (
-                              <div key={idx} className="font-bold text-rose-800 mt-2">
+                              <div key={idx} className="font-bold text-[#FF0000] mt-1.5 leading-snug">
                                 {tr}
                               </div>
                             );

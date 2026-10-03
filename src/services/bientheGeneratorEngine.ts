@@ -633,7 +633,8 @@ export function exportBientheToWordHtml(
   title: string,
   variants: ExamVariant[],
   analysis?: ExamAnalysis,
-  includeAllCombined: boolean = false
+  includeAllCombined: boolean = false,
+  isTrial: boolean = false
 ): void {
   const fileName = includeAllCombined 
     ? `TRON_BO_3_DE_BIEN_THE_${new Date().toISOString().slice(0, 10)}.doc`
@@ -642,7 +643,28 @@ export function exportBientheToWordHtml(
   const wordPageBreak = `<br clear="all" style="page-break-before: always; mso-break-type: section-break;" />`;
 
   const renderSingleVariantHtml = (v: ExamVariant, index: number) => {
+    const trialWatermark = isTrial ? `
+      <!-- BANNER DÙNG THỬ & QUẢNG CÁO TÁC GIẢ -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 8pt; background-color: #FEF2F2; border: 1.5pt dashed #DC2626; page-break-inside: avoid;">
+        <tr>
+          <td style="padding: 6pt 10pt; text-align: center;">
+            <div style="font-size: 11pt; font-weight: bold; color: #DC2626; text-transform: uppercase;">
+              ⚠️ BẢN DÙNG THỬ HỆ THỐNG GIÁO VIÊN AI TOÀN NĂNG 3.0
+            </div>
+            <div style="font-size: 10pt; color: #7F1D1D; margin-top: 2pt;">
+              Bản quyền phát triển: <strong>Thầy giáo Đinh Văn Thành - Trường THCS Đồng Yên</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
+            </div>
+            <div style="font-size: 9.5pt; color: #991B1B; font-style: italic; margin-top: 2pt;">
+              Kích hoạt bản quyền Pro để gỡ bỏ dòng này và mở khóa tính năng sinh ma trận đặc tả tự động không giới hạn!
+            </div>
+          </td>
+        </tr>
+      </table>
+    ` : "";
+
     return `
+      ${trialWatermark}
+
       <!-- HEADER KHUNG 2 CỘT CHUẨN BGD&ĐT -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 6pt; page-break-inside: avoid;">
         <tr>
@@ -704,25 +726,25 @@ export function exportBientheToWordHtml(
       <!-- NGẮT SANG PHẦN ĐÁP ÁN -->
       ${wordPageBreak}
 
-      <!-- TIÊU ĐỀ PHẦN ĐÁP ÁN -->
+      <!-- TIÊU ĐỀ PHẦN ĐÁP ÁN (CHỮ ĐỎ ĐẬM) -->
       <div style="text-align: center; margin-bottom: 8pt;">
-        <h2 style="font-size: 14pt; font-weight: bold; text-transform: uppercase; margin: 0; color: #B91C1C;">
+        <h2 style="font-size: 14pt; font-weight: bold; text-transform: uppercase; margin: 0; color: #FF0000;">
           HƯỚNG DẪN CHẤM & ĐÁP ÁN CHI TIẾT - ${v.title.toUpperCase()}
         </h2>
-        <div style="font-size: 11pt; font-style: italic; margin-top: 2pt;">(Bao gồm thang điểm, Audio Script bài nghe, bài viết và bài nói mẫu)</div>
+        <div style="font-size: 11pt; font-style: italic; margin-top: 2pt; color: #FF0000;">(ĐÁP ÁN ĐÚNG ĐƯỢC ĐÁNH DẤU CHỮ MÀU ĐỎ ĐỂ GIÁO VIÊN TIỆN TRA CỨU CHẤM BÀI)</div>
       </div>
 
-      <!-- NỘI DUNG ĐÁP ÁN -->
-      <div style="font-size: 12pt; text-align: justify; line-height: 1.25; background-color: #F8FAFC; padding: 8pt; border: 1pt solid #CBD5E1;">
+      <!-- NỘI DUNG ĐÁP ÁN: TOÀN BỘ ĐÁP ÁN ĐÚNG VÀ BẢNG ĐÁP ÁN CHỮ MÀU ĐỎ #FF0000 -->
+      <div style="font-size: 12pt; text-align: justify; line-height: 1.25; background-color: #FFF5F5; padding: 10pt; border: 1.5pt solid #FF0000;">
         ${v.answers
           .split("\n")
           .map(line => {
             const tr = line.trim();
             if (!tr) return `<p style="margin: 2pt 0;">&nbsp;</p>`;
             if (tr.includes(":") && (tr.startsWith("1.") || tr.startsWith("2.") || tr.startsWith("3.") || tr.startsWith("BẢNG") || tr.startsWith("ĐOẠN VĂN"))) {
-              return `<p style="font-weight: bold; margin: 4pt 0 2pt 0; color: #1E3A8A;">${tr}</p>`;
+              return `<p style="font-weight: bold; margin: 4pt 0 2pt 0; color: #FF0000; font-size: 12.5pt;">${tr}</p>`;
             }
-            return `<p style="margin: 2pt 0;">${tr}</p>`;
+            return `<p style="margin: 2pt 0; color: #B91C1C;">${tr}</p>`;
           })
           .join("")}
       </div>

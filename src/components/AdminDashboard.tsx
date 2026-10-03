@@ -21,6 +21,7 @@ import {
   AlertCircle,
   Copy,
   Send,
+  MessageCircle,
   FileCode,
   Sparkles,
   Eye,
@@ -1250,21 +1251,65 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
         return;
       }
       const res = await generateEd25519Key(cleanId, mathYears, 'MATH', 'MATH_STUDIO');
-      setMathKeyResult(res.key);
-      setMathZaloMsg(res.zaloMessage);
+      
+      // Tính toán mã DVT format chuẩn cho Word Add-in MathStudio
+      let cleanAlnum = '';
+      for (let i = 0; i < cleanId.length; i++) {
+        const ch = cleanId[i].toUpperCase();
+        if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z')) {
+          cleanAlnum += ch;
+        }
+      }
+      const salt = "DINH-VAN-THANH-0915213717-TOOLMATHPIX";
+      const licType = mathYears >= 10 ? 'VIP' : `${mathYears}Y`;
+      const payloadDvt = `${cleanAlnum}-${licType}-${salt}`;
+      let h1 = 17;
+      let h2 = 23;
+      for (let i = 0; i < payloadDvt.length; i++) {
+        const c = payloadDvt.charCodeAt(i);
+        h1 = (h1 * 31 + c) % 2147483647;
+        h2 = (h2 * 37 + c) % 2147483629;
+      }
+      const hex1 = ('00000000' + h1.toString(16).toUpperCase()).slice(-8);
+      const hex2 = ('00000000' + h2.toString(16).toUpperCase()).slice(-8);
+      const hStr = hex1 + hex2;
+      const dvtWordKey = `DVT-${licType}-${hStr.substr(0, 4)}-${hStr.substr(4, 4)}-${hStr.substr(8, 4)}-${hStr.substr(12, 4)}`;
+
+      const customZaloMsg = `KÍNH GỬI QUÝ THẦY/CÔ!
+Thầy Đinh Văn Thành xin gửi Thầy/Cô thông tin kích hoạt bản quyền Đinh Thành MathStudio 2026+ Pro:
+----------------------------------------
+👉 Ứng dụng: Đinh Thành MathStudio 2026+ Pro (Word & Mathpix)
+👉 Mã máy tính: ${cleanId}
+👉 Thời hạn bản quyền: ${res.planName} (Hạn dùng: Đến ${res.expDate})
+
+🔑 1. MÃ KÍCH HOẠT NHẬP VÀO WORD ADD-IN:
+${dvtWordKey}
+
+🔑 2. MÃ KÍCH HOẠT TRỰC TUYẾN / WEB:
+${res.key}
+----------------------------------------
+HƯỚNG DẪN KÍCH HOẠT:
+• Trên Word: Mở Microsoft Word -> Vào tab ToolMathpix2 -> Bấm nút "Nhập Key" -> Dán mã số (1) ở trên vào -> Bản quyền VIP kích hoạt thành công 100%!
+• Trên Web: Vào tab "Bản Quyền & Kích Hoạt" -> Dán mã vào ô kích hoạt.
+
+Chúc Quý Thầy/Cô biên soạn đề thi Toán tốc độ cao và giảng dạy hiệu quả!
+Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915.213717.`;
+
+      setMathKeyResult(dvtWordKey);
+      setMathZaloMsg(customZaloMsg);
 
       const newRecord = {
         mid: cleanId,
-        key: res.key,
+        key: `${dvtWordKey} | ${res.key}`,
         expDate: res.expDate,
         plan: res.planName,
         createdAt: new Date().toLocaleString('vi-VN')
       };
-      const updated = [newRecord, ...mathHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      const updated = [newRecord, ...mathHistory.filter(x => !x.key.includes(cleanId)).slice(0, 19)];
       setMathHistory(updated);
       localStorage.setItem('gvai_admin_math_key_history', JSON.stringify(updated));
     } catch (err: any) {
-      setMathGenError(err.message || 'Lỗi khi tạo key MathStudio Ed25519');
+      setMathGenError(err.message || 'Lỗi khi tạo key MathStudio');
     }
   };
 

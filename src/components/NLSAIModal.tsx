@@ -478,6 +478,23 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
 
   // Tải file Word giả lập (.doc với HTML format định dạng OpenXML chuẩn: Chữ đỏ #FF0000 và Chữ xanh #0070C0)
   const handleDownloadDoc = () => {
+    // Xử lý nội dung tiến trình khi dùng thử (giới hạn 2 trang đầu)
+    let exportProcedures = generatedPrimaryProcedures;
+    let exportDisabilityProc = generatedDisabilityProcedures;
+
+    if (!isProActive) {
+      // Hạn chế số trang tích hợp NLS: Chỉ lấy tối đa 2 hoạt động đầu (Khởi động & Khám phá kiến thức)
+      const pParts = generatedPrimaryProcedures.split('\n3. PRACTICE');
+      if (pParts.length > 1) {
+        exportProcedures = pParts[0];
+      } else {
+        const pPartsVn = generatedPrimaryProcedures.split('\n3. LUYỆN TẬP');
+        if (pPartsVn.length > 1) {
+          exportProcedures = pPartsVn[0];
+        }
+      }
+    }
+
     const fullHtml = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head><meta charset='utf-8'><title>${lessonName}</title>
@@ -489,10 +506,23 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
       </style>
       </head>
       <body>
+        ${!isProActive ? `
+        <!-- BANNER QUẢNG CÁO TÁC GIẢ THẦY ĐINH VĂN THÀNH (BẢN DÙNG THỬ) -->
+        <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; border: 2px dashed #D97706; background-color: #FEF3C7; margin-bottom: 14pt;">
+          <tr>
+            <td>
+              <p style="color: #B45309; font-weight: bold; font-size: 11pt; margin: 0 0 4pt 0;">📢 BẢN DÙNG THỬ - PHẦN MỀM TÍCH HỢP NLS & AI VÀO GIÁO ÁN 12 MÔN (CV 5512)</p>
+              <p style="color: #78350F; font-size: 10.5pt; margin: 0 0 4pt 0;">• Tác giả & Quản trị: <b>Thầy giáo Đinh Văn Thành</b> – Trường THCS Đồng Yên – Hotline / Zalo: <b>0915.213717</b></p>
+              <p style="color: #78350F; font-size: 10pt; margin: 0;">• Để tích hợp trọn vẹn 100% toàn bộ giáo án dài và <b>gỡ bỏ hoàn toàn quảng cáo này</b>, Quý Thầy/Cô vui lòng liên hệ Zalo <b>0915.213717</b> để đăng ký bản quyền Pro chính hãng.</p>
+            </td>
+          </tr>
+        </table>
+        ` : ''}
+
         <h2>GIÁO ÁN TÍCH HỢP NLS & AI - CHUẨN CÔNG VĂN 5512 (PHIÊN BẢN V3)</h2>
         <p><b>Môn học:</b> ${selectedSubject} - <b>Lớp:</b> ${selectedGrade}</p>
         <p><b>Bài dạy:</b> ${lessonName}</p>
-        <p><b>Tác giả phần mềm:</b> Thầy giáo Đinh Văn Thành – ĐT/Zalo: 0915.213717 – Trường THCS Đồng Yên</p>
+        <p><b>Tác quyền:</b> Thầy giáo Đinh Văn Thành – ĐT/Zalo: 0915.213717 – Trường THCS Đồng Yên</p>
         <hr/>
         
         ${generatedPrimaryObjectives ? `
@@ -505,15 +535,28 @@ ${generatedPrimaryObjectives}
 ${generatedDisabilityObjectives}
         </div>` : ''}
 
-        ${generatedPrimaryProcedures ? `
+        ${exportProcedures ? `
         <div class="text-red" style="white-space: pre-wrap; margin-bottom: 12pt;">
-${generatedPrimaryProcedures}
+${exportProcedures}
         </div>` : ''}
 
-        ${generatedDisabilityProcedures ? `
+        ${exportDisabilityProc ? `
         <div class="text-blue" style="white-space: pre-wrap; margin-bottom: 16pt;">
-${generatedDisabilityProcedures}
+${exportDisabilityProc}
         </div>` : ''}
+
+        ${!isProActive ? `
+        <!-- KHÓA HẠN MỨC DÙNG THỬ SỐ TRANG GIÁO ÁN -->
+        <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse; border: 1px solid #CBD5E1; background-color: #F8FAFC; margin-top: 18pt; text-align: center;">
+          <tr>
+            <td>
+              <p style="color: #DC2626; font-weight: bold; font-size: 12pt; margin: 0 0 6pt 0;">🔒 [ĐÃ HẾT HẠN MỨC DÙNG THỬ 2 TRANG ĐẦU CỦA GIÁO ÁN]</p>
+              <p style="color: #475569; font-size: 10.5pt; margin: 0 0 6pt 0;">Các hoạt động tiếp theo (3. Luyện tập, 4. Vận dụng) và phụ lục học liệu số được khóa trong bản dùng thử.</p>
+              <p style="color: #1E3A8A; font-weight: bold; font-size: 11pt; margin: 0;">Quý Thầy/Cô vui lòng liên hệ Zalo Thầy Đinh Văn Thành (<b>0915.213717</b>) để kích hoạt bản quyền Pro mở khóa 100% giáo án dài không giới hạn số trang!</p>
+            </td>
+          </tr>
+        </table>
+        ` : ''}
       </body>
       </html>
     `;

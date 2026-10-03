@@ -19,7 +19,13 @@ import {
   Sliders,
   CheckSquare,
   RefreshCw,
-  Printer
+  Printer,
+  Lock,
+  Unlock,
+  Eye,
+  EyeOff,
+  ShieldAlert,
+  ArrowRight
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
@@ -36,9 +42,21 @@ interface TaoDe15PhutModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenAdmin?: () => void;
+  onSwitchToStandardExam?: () => void;
 }
 
-export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
+export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onOpenAdmin,
+  onSwitchToStandardExam 
+}) => {
+  // Trạng thái Bảo Mật: Chỉ Admin mới sử dụng được (Dùng cá nhân Thầy Thành)
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState<string>('');
+  const [showAdminPass, setShowAdminPass] = useState<boolean>(false);
+  const [adminPassError, setAdminPassError] = useState<string>('');
+
   const [activeTab, setActiveTab] = useState<'trial' | 'download' | 'register'>('trial');
 
   // State Dùng thử 5 lần cố định trên máy tính
@@ -72,14 +90,47 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
     const mid = getOrCreateExam15PHardwareCode();
     setDetectedMid(mid);
 
-    const savedPro = localStorage.getItem('gvai_taode15p_is_pro_active');
-    const isAdmin = mid.includes('DVT') || mid === 'GV-0DAD-F76C';
-    if (savedPro === 'true' || (isAdmin && localStorage.getItem('gvai_unlimited_machine') === 'true')) {
+    const unlockedSession = sessionStorage.getItem('gvai_admin_15p_unlocked') === 'true';
+    const isAdminMachine = mid.includes('DVT') || mid === 'GV-0DAD-F76C' || localStorage.getItem('gvai_unlimited_machine') === 'true';
+    
+    if (unlockedSession || isAdminMachine) {
+      setIsAdminUnlocked(true);
       setIsProActive(true);
+    } else {
+      setIsAdminUnlocked(false);
     }
 
     setTrialRemaining(getExam15PTrialRemaining());
   }, [isOpen]);
+
+  // Hàm xác thực Mật khẩu Quản trị Admin
+  const handleVerifyAdminPassword = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setAdminPassError('');
+    const clean = adminPasswordInput.trim();
+    if (
+      clean === 'Thaythanh2026@' ||
+      clean === 'thaythanh2026@' ||
+      clean === 'Thaythanh2026' ||
+      clean === 'Thaythanh@2026' ||
+      clean === 'thaythanh2026'
+    ) {
+      setIsAdminUnlocked(true);
+      sessionStorage.setItem('gvai_admin_15p_unlocked', 'true');
+      setIsProActive(true);
+      setAdminPasswordInput('');
+      setAdminPassError('');
+    } else {
+      setAdminPassError('⚠️ Mật khẩu Admin không chính xác. Ứng dụng này chỉ dành riêng cho Admin (Thầy Thành) sử dụng cá nhân!');
+    }
+  };
+
+  const handleLockAdmin = () => {
+    sessionStorage.removeItem('gvai_admin_15p_unlocked');
+    setIsAdminUnlocked(false);
+    setAdminPasswordInput('');
+    setAdminPassError('');
+  };
 
   if (!isOpen) return null;
 
@@ -105,13 +156,13 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
       // Đồng bộ đăng ký thành công lên Cloud
       try {
         await cloudSyncService.submitRegistrationToCloud({
-          toolId: 'tao-de-15p-tienganh',
+          machineId: detectedMid,
           fullName: regName || 'Giáo viên Tiếng Anh THCS',
-          phone: regPhone || 'Chưa cung cấp',
-          school: regSchool || 'Trường THCS',
-          machineCode: detectedMid,
-          plan: res.packageName || 'Bản quyền Pro',
-          note: `Kích hoạt thành công Key: ${inputKey.trim()}`
+          schoolUnit: regSchool || 'Trường THCS',
+          phoneNumber: regPhone || 'Chưa cung cấp',
+          appId: 'tao-de-15p-tienganh',
+          appName: 'Tạo Đề 15 Phút Tiếng Anh (48 Units)',
+          packageType: 'LIFETIME'
         });
       } catch (err) {
         console.warn('Lỗi đồng bộ:', err);
@@ -148,13 +199,13 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
     setIsSyncingCloud(true);
     try {
       await cloudSyncService.submitRegistrationToCloud({
-        toolId: 'tao-de-15p-tienganh',
+        machineId: detectedMid,
         fullName: regName.trim(),
-        phone: regPhone.trim(),
-        school: regSchool.trim() || 'Trường THCS',
-        machineCode: detectedMid,
-        plan: 'Đăng ký Bản quyền Tạo Đề 15 Phút Tiếng Anh (48 Units)',
-        note: regNote.trim() || 'Đăng ký nhận mã kích hoạt Pro qua Zalo'
+        schoolUnit: regSchool.trim() || 'Trường THCS',
+        phoneNumber: regPhone.trim(),
+        appId: 'tao-de-15p-tienganh',
+        appName: 'Tạo Đề 15 Phút Tiếng Anh (48 Units)',
+        packageType: '1YEAR'
       });
       setRegSent(true);
     } catch {
@@ -168,6 +219,118 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
   const code2 = `${selectedGrade}02`;
   const activeCodeDisplay = currentCode === 1 ? code1 : code2;
 
+  // =========================================================================
+  // MÀN HÌNH KHÓA QUẢN TRỊ ADMIN (NẾU CHƯA NHẬP MẬT KHẨU ADMIN)
+  // =========================================================================
+  if (!isAdminUnlocked) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
+        <div className="relative w-full max-w-lg bg-slate-900 border-2 border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 sm:p-8 text-center space-y-5 animate-scaleUp">
+          
+          {/* Nút đóng */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition"
+            title="Đóng cửa sổ"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {/* Icon Ổ khóa Admin */}
+          <div className="mx-auto w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-xl shadow-amber-500/10 ring-8 ring-amber-500/5">
+            <Lock className="w-10 h-10 animate-bounce" />
+          </div>
+
+          {/* Badge & Tiêu đề */}
+          <div className="space-y-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-xs font-black uppercase tracking-wider">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              KHU VỰC QUẢN TRỊ NỘI BỘ (ADMIN)
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Ứng Dụng Dành Riêng Cho Admin
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
+              Phần mềm <strong>Tạo đề 15 phút (48 Units Global Success)</strong> là công cụ nội bộ chỉ dành riêng cho Thầy giáo Đinh Văn Thành sử dụng cá nhân. Vui lòng nhập mật khẩu Admin để mở khóa.
+            </p>
+          </div>
+
+          {/* Form Nhập Mật Khẩu Admin */}
+          <form onSubmit={handleVerifyAdminPassword} className="space-y-3.5 pt-2 text-left">
+            <div>
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Mật khẩu Quản trị Admin:
+              </label>
+              <div className="relative">
+                <input
+                  type={showAdminPass ? 'text' : 'password'}
+                  value={adminPasswordInput}
+                  onChange={(e) => setAdminPasswordInput(e.target.value)}
+                  placeholder="Nhập mật khẩu quản trị viên..."
+                  autoFocus
+                  className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-mono transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPass(!showAdminPass)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
+                  title={showAdminPass ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                >
+                  {showAdminPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {adminPassError && (
+              <div className="p-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-medium flex items-start gap-2">
+                <span className="shrink-0 font-bold">⚠️</span>
+                <span>{adminPassError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-white text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+            >
+              <Unlock className="w-4 h-4 text-slate-950" />
+              <span>XÁC NHẬN MỞ KHÓA ADMIN</span>
+            </button>
+          </form>
+
+          {/* Hướng dẫn chuyển app cho giáo viên */}
+          <div className="pt-3 border-t border-slate-800 space-y-2">
+            <p className="text-[11.5px] text-slate-400">
+              Quý Thầy/Cô cần tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT xin vui lòng sử dụng:
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+              {onSwitchToStandardExam && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onSwitchToStandardExam();
+                  }}
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+                >
+                  <span>Tạo Đề Tiếng Anh (CV 7991)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition"
+              >
+                Trở Về Trang Chủ
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-5xl bg-slate-900 border border-blue-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
@@ -179,12 +342,12 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
               📝
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">
                   TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)
                 </h3>
-                <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 rounded-full flex items-center gap-1">
-                  <Crown className="w-3 h-3" /> BẢN QUYỀN PRO
+                <span className="px-2.5 py-0.5 text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full flex items-center gap-1">
+                  <Crown className="w-3 h-3 text-amber-400" /> ADMIN THẦY THÀNH (DÙNG CÁ NHÂN)
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -192,12 +355,25 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleLockAdmin}
+              className="px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition flex items-center gap-1.5 text-xs font-bold"
+              title="Khóa lại giao diện Admin"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Khóa Admin</span>
+            </button>
+
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+              title="Đóng cửa sổ"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* 3 Tabs Navigation Bar */}
@@ -433,6 +609,16 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ isOpen, onCl
 
               {/* Khung tài liệu A4 mô phỏng (Font Times New Roman chuẩn) */}
               <div className="bg-white text-black p-6 rounded-xl shadow-xl border border-slate-300 min-h-[480px] font-['Times_New_Roman'] text-[13px] leading-relaxed">
+                {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
+                {!isProActive && (
+                  <div className="p-3 mb-3 rounded-lg border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
+                    <p className="font-bold text-amber-900 text-[12px] mb-0.5">📢 BẢN DÙNG THỬ - PHẦN MỀM TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)</p>
+                    <p className="text-slate-700 leading-normal text-[11px]">
+                      • Tác giả & Quản trị: <b>Thầy giáo Đinh Văn Thành</b> – THCS Đồng Yên – Hotline / Zalo: <b className="text-emerald-700">0915.213717</b>.<br/>
+                      • Đăng ký bản quyền Pro để tạo trọn bộ 48 Units và <b>gỡ bỏ hoàn toàn thông báo dùng thử này</b>.
+                    </p>
+                  </div>
+                )}
                 {previewFace === 1 && (
                   <div className="space-y-3">
                     <div className="flex justify-between items-start border-b border-black pb-2 text-[12px]">

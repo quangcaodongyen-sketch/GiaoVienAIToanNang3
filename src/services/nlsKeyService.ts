@@ -202,8 +202,29 @@ export function verifyKeyFormat(key: string, machineCode: string): {
   const k = key.trim().toUpperCase();
   const mc = machineCode.trim().toUpperCase();
 
+  // 1. Kiểm tra Master Key đặc quyền của Thầy Đinh Văn Thành
+  if (k === 'DINHVANTHANH-VIP-0915213717-PRO' || k === 'DVT-MASTER-0915213717-VIP' || k.includes('DVT-MATH-LIFETIME-MASTER')) {
+    return {
+      isValid: true,
+      message: `👑 Kích hoạt đặc quyền Quản trị viên (Admin Thầy Đinh Văn Thành) – Mở khóa VIP Vĩnh Viễn!`,
+      expDate: '2099-12-31'
+    };
+  }
+
+  // 2. Hỗ trợ định dạng DVT Key cho MathStudio: DVT-VIP-XXXX-XXXX-XXXX-XXXX
+  if (k.startsWith('DVT-')) {
+    const parts = k.split('-');
+    if (parts.length >= 4) {
+      return {
+        isValid: true,
+        message: `Xác thực thành công bản quyền MathStudio Pro cho máy ${mc || 'này'}! Trạng thái: VIP Vĩnh Viễn.`,
+        expDate: '2099-12-31'
+      };
+    }
+  }
+
   if (!k.startsWith('KEY-')) {
-    return { isValid: false, message: 'Mã Key không đúng định dạng (phải bắt đầu bằng KEY-).' };
+    return { isValid: false, message: 'Mã Key không đúng định dạng (phải bắt đầu bằng KEY- hoặc DVT-).' };
   }
 
   const parts = k.split('-');

@@ -55,6 +55,20 @@ export const apps: AppCard[] = [
     "order": 3
   },
 
+  // ==================== MATHSTUDIO PRO: SOẠN TOÁN - MATHPIX WORD ====================
+  {
+    "id": "mathstudio-pro",
+    "title": "MATHSTUDIO PRO (CHUYỂN MATHPIX SANG WORD)",
+    "description": "Add-in Word 1-Click tự động chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office. Chuyển hàng loạt đề thi chỉ trong 3 giây.",
+    "image": "/mathstudio_preview.png",
+    "url": "#mathstudio",
+    "category": "TOÁN HỌC & KHOA HỌC (MATHPIX)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 4
+  },
+
   // ==================== ƯU TIÊN 4: CÁC APP RA ĐỀ 7 MÔN ====================
   {
     "id": "tao-de-toan-thcs",
@@ -231,11 +245,11 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-15p-tienganh",
     "title": "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)",
-    "description": "Tự động tạo trọn bộ 2 mã đề 15 phút, phiếu chấm trắc nghiệm 20 câu sạch và bảng đáp án rút gọn cho 48 Units (Lớp 6, 7, 8, 9).",
+    "description": "Tự động tạo trọn bộ 2 mã đề 15 phút, phiếu chấm trắc nghiệm 20 câu sạch và bảng đáp án rút gọn cho 48 Units (Lớp 6, 7, 8, 9). [Ứng dụng nội bộ chỉ dành riêng cho Admin Thầy Thành dùng cá nhân, yêu cầu mật khẩu Admin].",
     "image": "/taode_15p_tienganh.png",
     "url": "#tao-de-15p-tienganh",
     "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
-    "badge": "BẢN QUYỀN PRO",
+    "badge": "NỘI BỘ ADMIN",
     "active": true,
     "featured": true,
     "order": 18
