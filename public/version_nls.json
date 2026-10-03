@@ -1,10 +1,10 @@
 {
   "appId": "nls-ai",
   "appName": "Công Cụ Tích Hợp NLS, AI & Nội Dung GD THCS (CV 5512)",
-  "currentVersion": "3.2.4",
-  "latestVersion": "3.2.4",
+  "currentVersion": "3.3.0",
+  "latestVersion": "3.3.0",
   "releaseDate": "03/10/2026",
-  "changelog": "• Sửa triệt để phản hồi nút 'Kiểm tra cập nhật' trên thanh Ribbon Word\n• Khắc phục hoàn toàn lỗi cửa sổ bị ẩn/treo ngầm (Withdrawn/Hidden)\n• Tự động đồng bộ bản quyền Pro siêu tốc từ Web Cloud\n• Tải về trực tiếp bộ cài đặt vá lỗi chỉ với 1 click, không cần tìm kiếm\n• Tích hợp liên kết tinh tế khám phá Hệ sinh thái Giáo viên AI Toàn Năng (https://giao-vien-ai-toan-nang3.vercel.app/)",
+  "changelog": "• Vá lỗi triệt để: Chỉ tích hợp HS khuyết tật khi Thầy/Cô chủ động chọn, không tự động chèn chữ màu xanh vào môn Tiếng Anh.\n• Sửa triệt để lỗi lưu file: Tự động lưu và tự động mở ngay file giáo án hoàn thiện {tên gốc}-NLS.docx ngay trước mắt Thầy/Cô.\n• Tự động chọn (highlight) sẵn file kết quả trong Windows Explorer để dễ dàng kiểm tra và sử dụng.\n• Bổ sung công cụ an toàn 1-click chống báo vi rút nhầm cho Windows Defender.\n• Nâng cao độ tương thích chuẩn mực với Office 2013-2024 và Microsoft 365.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
