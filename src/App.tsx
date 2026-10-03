@@ -12,15 +12,9 @@ import {
   UserCheck, 
   FileText, 
   Layers,
-  ArrowRight,
   Crown,
   Search,
-  ShieldAlert,
   CheckCircle2,
-  Zap,
-  ShieldCheck,
-  FileCheck,
-  BookOpen,
   Check
 } from 'lucide-react';
 import { BRAND } from './config/brand';
@@ -592,163 +586,40 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {/* HERO SECTION 2 CỘT HIỆN ĐẠI CHUẨN MARKETING AGENCY / SAAS */}
-        <section className="pt-4 pb-6 sm:pt-7 sm:pb-9 bg-gradient-to-b from-[#F0F4FA] via-[#F6F8FC] to-[#F6F8FC]">
+        {/* HERO SECTION NGẮN GỌN, TINH TẾ - TẬP TRUNG VÀO KHO ỨNG DỤNG */}
+        <section className="pt-3 pb-2 sm:pt-5 sm:pb-3 bg-[#F6F8FC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#071527] via-[#0E2748] to-[#173F6E] text-white shadow-2xl shadow-blue-950/25 border border-blue-700/30">
-              
-              {/* Hiệu ứng ánh sáng nền đa tầng */}
-              <div className="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute right-1/3 top-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
-
-              <div className="relative px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                
-                {/* CỘT TRÁI: HEADLINE MẠNH MẼ + CAM KẾT SƯ PHẠM + CTA (COL-SPAN-7) */}
-                <div className="lg:col-span-7 text-center lg:text-left z-10 space-y-4 sm:space-y-5">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-400/15 border border-cyan-400/30 text-cyan-300 text-[11px] sm:text-xs font-black tracking-wider uppercase">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                    <span>CHUYỂN ĐỔI SỐ GIÁO DỤC THCS 2026 • PRO 3.0</span>
-                  </div>
-
-                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-                    Đột Phá Năng Suất Giảng Dạy <br className="hidden sm:inline" />
-                    <span className="bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-200 bg-clip-text text-transparent">
-                      Cùng Hệ Thống Giáo Viên AI
-                    </span>
-                  </h1>
-
-                  <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
-                    Giải pháp sư phạm chuyên biệt do <strong>Thầy giáo Đinh Văn Thành</strong> (THCS Đồng Yên) phát triển: Tự động tích hợp Năng lực số (CV 5512), tạo ma trận & đề thi 12 môn (CV 7991), chuyển công thức Mathpix sang Word chỉ 3 giây.
-                  </p>
-
-                  {/* CÁC NÚT KÊU GỌI HÀNH ĐỘNG (CTA) */}
-                  <div className="pt-1 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                    <a
-                      href="#apps"
-                      className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-200 hover:from-cyan-300 hover:to-white text-[#071527] font-black text-xs sm:text-sm shadow-xl shadow-cyan-900/30 hover:scale-[1.03] transition-all flex items-center gap-2 group cursor-pointer"
-                    >
-                      <span>Khám phá kho công cụ</span>
-                      <ArrowRight className="w-4 h-4 text-[#071527] group-hover:translate-x-1 transition-transform" />
-                    </a>
-
-                    <button
-                      onClick={() => setShowTrialModal(true)}
-                      className="px-5 py-3 rounded-2xl bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm border border-emerald-400/40 shadow-lg shadow-emerald-950/40 hover:scale-[1.03] transition-all flex items-center gap-2 cursor-pointer"
-                    >
-                      <Sparkles className="w-4 h-4 text-amber-300" />
-                      <span>Dùng thử 5 lần miễn phí</span>
-                    </button>
-
-                    <a
-                      href={BRAND.zaloUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-blue-100 hover:text-white border border-white/20 font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5"
-                    >
-                      <MessageCircle className="w-4 h-4 text-teal-300" />
-                      <span>Tư vấn Zalo 24/7</span>
-                    </a>
-                  </div>
-
-                  {/* CAM KẾT SƯ PHẠM UY TÍN (TRUST BADGES) */}
-                  <div className="pt-2 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-blue-200/90 font-medium text-left">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-300 shrink-0" />
-                      <span>100% Chuẩn CV 5512 & 7991</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
-                      <span>Cài đặt 1-Click • Dùng Offline</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-                      <span>Được bảo chứng bởi Thầy Thành</span>
-                    </div>
-                  </div>
+            <div className="rounded-2xl bg-gradient-to-r from-[#0F2744] via-[#163B66] to-[#1E4E85] text-white p-4 sm:p-6 shadow-md border border-blue-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1.5 max-w-2xl">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[11px] font-bold uppercase tracking-wider border border-cyan-400/30">
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>Hệ Sinh Thái Sư Phạm THCS 2026</span>
                 </div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
+                  Bộ Công Cụ Hỗ Trợ Giáo Viên AI Toàn Năng
+                </h1>
+                <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
+                  Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (THCS Đồng Yên) • Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề 12 môn (CV 7991) & tiện ích Toán học Mathpix.
+                </p>
+              </div>
 
-                {/* CỘT PHẢI: INTERACTIVE LIVE PREVIEW MOCKUP (COL-SPAN-5) */}
-                <div className="lg:col-span-5 relative flex items-center justify-center">
-                  <div className="w-full max-w-md p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-white/15 via-white/10 to-white/5 border border-white/25 backdrop-blur-xl shadow-2xl shadow-blue-950/40 space-y-3.5 font-sans">
-                    
-                    {/* Header Thẻ Preview */}
-                    <div className="flex items-center justify-between pb-3 border-b border-white/20">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
-                          <GraduationCap className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-black text-white flex items-center gap-1.5">
-                            <span>Giáo Viên AI v3.0 Pro</span>
-                            <span className="px-1.5 py-0.2 rounded-full bg-amber-400 text-slate-950 text-[9px] font-black">VIP</span>
-                          </div>
-                          <div className="text-[10px] text-cyan-300">Bản quyền Sư phạm: Thầy Đinh Văn Thành</div>
-                        </div>
-                      </div>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-400/40 animate-pulse">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                        Đang hoạt động
-                      </span>
-                    </div>
-
-                    {/* Khối mô phỏng 3 tính năng trực quan */}
-                    <div className="space-y-2.5 text-xs">
-                      {/* Mục 1: Giáo án NLS 5512 */}
-                      <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/15 transition-colors">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-extrabold text-cyan-300 flex items-center gap-1.5">
-                            <BookOpen className="w-3.5 h-3.5 text-cyan-300" />
-                            Giáo án NLS (CV 5512)
-                          </span>
-                          <span className="text-[10px] text-slate-300">Word Add-in</span>
-                        </div>
-                        <div className="text-[11px] text-slate-200">
-                          Tự động chèn Năng lực số, STEM, AI với <span className="font-bold text-red-300 bg-red-950/60 px-1 py-0.5 rounded border border-red-500/40">chữ màu đỏ</span> chuẩn quy cách sư phạm.
-                        </div>
-                      </div>
-
-                      {/* Mục 2: Đề kiểm tra 12 môn 7991 */}
-                      <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/15 transition-colors">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-extrabold text-amber-300 flex items-center gap-1.5">
-                            <FileCheck className="w-3.5 h-3.5 text-amber-300" />
-                            Đề Kiểm Tra 12 Môn (CV 7991)
-                          </span>
-                          <span className="text-[10px] text-slate-300">Ma trận & Đặc tả</span>
-                        </div>
-                        <div className="text-[11px] text-slate-200">
-                          Xuất file Word đầy đủ bảng ma trận, đặc tả và đáp án đúng được <span className="font-bold text-red-300 bg-red-950/60 px-1 py-0.5 rounded border border-red-500/40">tô đỏ (#FF0000)</span> tiện tra cứu chấm bài.
-                        </div>
-                      </div>
-
-                      {/* Mục 3: MathStudio Pro */}
-                      <div className="p-2.5 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/15 transition-colors">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-extrabold text-emerald-300 flex items-center gap-1.5">
-                            <Zap className="w-3.5 h-3.5 text-emerald-300" />
-                            MathStudio Pro (Mathpix Word)
-                          </span>
-                          <span className="text-[10px] text-emerald-300 font-bold">1-Click</span>
-                        </div>
-                        <div className="text-[11px] text-slate-200">
-                          Chuyển đổi công thức Toán học Mathpix sang MathType và Equation chuẩn Office tốc độ cao.
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Dòng bảo chứng bản quyền */}
-                    <div className="pt-1 flex items-center justify-between text-[10.5px] text-slate-300">
-                      <span className="flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                        Mã bảo mật: <strong>Ed25519 Cloud Anti-Crack</strong>
-                      </span>
-                      <a href="#apps" className="text-cyan-300 font-bold hover:underline">Xem tất cả 17 app →</a>
-                    </div>
-
-                  </div>
-                </div>
-
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                <button
+                  onClick={() => setShowTrialModal(true)}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Dùng thử 5 lần</span>
+                </button>
+                <a
+                  href={BRAND.zaloUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold text-xs transition-all flex items-center gap-1.5"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-teal-300" />
+                  <span>Zalo Thầy Thành</span>
+                </a>
               </div>
             </div>
           </div>
