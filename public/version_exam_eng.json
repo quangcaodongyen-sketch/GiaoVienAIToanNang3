@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.2.4",
-  "latestVersion": "3.2.4",
+  "currentVersion": "3.2.5",
+  "latestVersion": "3.2.5",
   "releaseDate": "03/10/2026",
-  "changelog": "• Bổ sung và đồng bộ hóa nút 'Kiểm tra cập nhật' trên toàn bộ Add-in Word & Bộ 15 Phút\n• Khắc phục triệt để lỗi không phản hồi khi bấm Kiểm tra cập nhật trên thanh Ribbon Word\n• Tự động hiển thị hộp thoại thông báo cập nhật siêu đẹp, sang trọng\n• Tải về trực tiếp bộ cài đặt vá lỗi chỉ với 1 click, không cần tìm kiếm\n• Tự động đồng bộ bản quyền Pro từ Web Cloud",
+  "changelog": "• Khắc phục triệt để lỗi 'No module named core.single_instance' khi mở Word\n• Nâng cấp bảo vệ đa lớp: Đóng gói đầy đủ module core và cơ chế chống crash an toàn\n• Tự động đồng bộ bản quyền Pro siêu tốc và kiểm tra cập nhật mượt mà\n• Tương thích 100% mọi phiên bản Microsoft Word 2010 - 2024 / Office 365",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
