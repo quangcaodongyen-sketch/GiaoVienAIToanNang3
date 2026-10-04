@@ -75,8 +75,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
     setDetectedMid(thptMid);
 
     const savedPro = localStorage.getItem('gvai_taode_thpt_is_pro_active');
-    const isAdmin = thptMid.includes('DVT') || baseMid === 'GV-0DAD-F76C';
-    if (savedPro === 'true' || (isAdmin && localStorage.getItem('gvai_unlimited_machine') === 'true')) {
+    if (savedPro === 'true') {
       setIsProActive(true);
     }
 
@@ -368,16 +367,12 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     </div>
                     <div className="flex items-end">
                       <button
-                        onClick={handleGenerateExamOnline}
-                        disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                        className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                          !isProActive && trialRemaining <= 0
-                            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-900/30'
-                        }`}
+                        type="button"
+                        onClick={() => setActiveTab('download')}
+                        className="w-full py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg cursor-pointer"
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>{isGenerating ? 'Đang tạo đề...' : 'TẠO ĐỀ MỚI NGẪU NHIÊN'}</span>
+                        <Download className="w-3.5 h-3.5" />
+                        <span>TẢI PHẦN MỀM ĐỂ TẠO ĐỀ TRÊN MÁY TÍNH</span>
                       </button>
                     </div>
                   </div>
@@ -408,13 +403,14 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                       {copiedContent ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedContent ? 'Đã sao chép!' : 'Sao chép văn bản'}</span>
                     </button>
-                    <a
-                      href={downloadZipUrl}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center gap-1.5 transition-colors shadow"
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('download')}
+                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center gap-1.5 transition-colors shadow cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5" />
-                      <span>Tải file Word trọn gói</span>
-                    </a>
+                      <span>Tải bộ cài máy tính để xuất Word</span>
+                    </button>
                   </div>
                 </div>
 

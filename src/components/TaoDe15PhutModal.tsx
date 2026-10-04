@@ -77,9 +77,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
     setDetectedMid(mid);
 
     const savedPro = localStorage.getItem('gvai_taode15p_is_pro_active') === 'true';
-    const isAdminMachine = mid.includes('DVT') || mid === 'GV-0DAD-F76C' || localStorage.getItem('gvai_unlimited_machine') === 'true';
-    
-    if (savedPro || isAdminMachine) {
+    if (savedPro) {
       setIsProActive(true);
     }
 
@@ -654,15 +652,14 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <a
-                    href="/app-15p-tienganh/index.html"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-1.5 text-xs font-bold bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 rounded-lg flex items-center gap-1.5 transition"
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('download')}
+                    className="px-3 py-1.5 text-xs font-bold bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 rounded-lg flex items-center gap-1.5 transition cursor-pointer"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Mở Studio Toàn Màn Hình</span>
-                  </a>
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Tải bản Desktop</span>
+                  </button>
                 </div>
               </div>
 
@@ -704,33 +701,15 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                   </select>
                 </div>
 
-                {/* Nút Tạo Đề */}
+                {/* Nút Điều Hướng Tải Máy Tính */}
                 <div className="flex flex-col justify-end">
                   <button
-                    onClick={handleCreateTest}
-                    disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                    className={`w-full py-2.5 px-4 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition ${
-                      !isProActive && trialRemaining <= 0
-                        ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                        : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white shadow-blue-500/20'
-                    }`}
+                    type="button"
+                    onClick={() => setActiveTab('download')}
+                    className="w-full py-2.5 px-3 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white transition cursor-pointer"
                   >
-                    {isGenerating ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Đang sinh 2 mã đề & hoán vị...</span>
-                      </>
-                    ) : !isProActive && trialRemaining <= 0 ? (
-                      <>
-                        <Crown className="w-4 h-4 text-amber-400" />
-                        <span>Hết 5 lượt • Đăng ký Pro</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4" />
-                        <span>TẠO ĐỀ 15 PHÚT NGAY ({isProActive ? 'PRO' : `${trialRemaining} lượt`})</span>
-                      </>
-                    )}
+                    <Download className="w-4 h-4" />
+                    <span>TẢI PHẦN MỀM ĐỂ TẠO ĐỀ TRÊN MÁY</span>
                   </button>
                 </div>
               </div>
@@ -790,14 +769,13 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     </button>
                   </div>
 
-                  <a
-                    href="/app-15p-tienganh/index.html"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-1 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center gap-1 shadow"
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('download')}
+                    className="px-3 py-1 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center gap-1 shadow cursor-pointer"
                   >
-                    <Printer className="w-3.5 h-3.5" /> In / Xuất Word
-                  </a>
+                    <Download className="w-3.5 h-3.5" /> Tải bản Desktop để In/Xuất Word
+                  </button>
                 </div>
               </div>
 

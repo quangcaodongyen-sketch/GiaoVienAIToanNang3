@@ -237,18 +237,15 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     }
     setDetectedMid(mid);
 
-    // Kiểm tra bản quyền Pro
-    const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) || 
-                     localStorage.getItem('gvai_8mon_is_pro') ||
-                     localStorage.getItem('gvai_unlimited_machine');
-    const isPro = savedPro === 'true';
-    setIsProActive(isPro);
+    // Kiểm tra bản quyền Pro riêng biệt cho từng môn
+    const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) === 'true';
+    setIsProActive(savedPro);
 
     // Kiểm tra số lượt dùng thử 5 lần
     const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_count`;
     const savedCount = localStorage.getItem(trialKey);
     let remaining = 5;
-    if (isPro) {
+    if (savedPro) {
       remaining = 999;
     } else if (savedCount !== null) {
       const used = parseInt(savedCount, 10) || 0;
@@ -270,43 +267,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.GDCD;
 
   // Xử lý tạo đề mới (Trải nghiệm trực tuyến)
-  const handleGenerateExam = () => {
-    if (!isProActive && trialRemaining <= 0) {
-      alert(`⚠️ Thầy/Cô đã dùng hết 5 lượt trải nghiệm miễn phí môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Đăng Ký Bản Quyền" hoặc liên hệ Zalo Thầy Thành: 0915.213717 để kích hoạt bản quyền Pro không giới hạn.`);
-      setActiveTab('register');
-      return;
-    }
 
-    setIsGenerating(true);
-    setTimeout(() => {
-      try {
-        const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
-        setExamData(suite);
-
-        // Trừ lượt dùng thử nếu chưa Pro
-        if (!isProActive) {
-          const trialKey = `gvai_taode_${currentSubjectKey.toLowerCase()}_trial_count`;
-          const used = 5 - trialRemaining + 1;
-          localStorage.setItem(trialKey, used.toString());
-          const newRemaining = Math.max(0, 5 - used);
-          setTrialRemaining(newRemaining);
-        }
-      } catch (err) {
-        console.error('Lỗi sinh đề:', err);
-      } finally {
-        setIsGenerating(false);
-      }
-    }, 400);
-  };
-
-  // Tải file Word (.doc) in ấn trực tiếp
-  const handleExportWord = () => {
-    try {
-      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
-    } catch (e) {
-      alert('Không thể tạo file Word. Vui lòng thử lại!');
-    }
-  };
 
   const handleCopyMid = () => {
     if (detectedMid) {
@@ -550,7 +511,16 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Khối lớp:</label>
                     <select
                       value={selectedGrade}
-                      onChange={(e) => setSelectedGrade(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedGrade(val);
+                        try {
+                          const suite = getTHCS8MonExamSuite(currentSubjectKey, val, selectedTerm, selectedExamCode);
+                          setExamData(suite);
+                        } catch (err) {
+                          console.warn(err);
+                        }
+                      }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
                       <option value="6">Lớp 6 (KNTT)</option>
@@ -565,7 +535,16 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Kỳ kiểm tra:</label>
                     <select
                       value={selectedTerm}
-                      onChange={(e) => setSelectedTerm(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedTerm(val);
+                        try {
+                          const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, val, selectedExamCode);
+                          setExamData(suite);
+                        } catch (err) {
+                          console.warn(err);
+                        }
+                      }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
                       <option value="15P">Đề 15 phút</option>
@@ -581,7 +560,16 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Mã đề thi:</label>
                     <select
                       value={selectedExamCode}
-                      onChange={(e) => setSelectedExamCode(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedExamCode(val);
+                        try {
+                          const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, val);
+                          setExamData(suite);
+                        } catch (err) {
+                          console.warn(err);
+                        }
+                      }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
                       <option value="701">Mã đề 701</option>
@@ -592,28 +580,24 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                 </div>
 
-                {/* 2 NÚT THAO TÁC CHÍNH */}
+                {/* THANH ĐIỀU HƯỚNG TẢI PHẦN MỀM & ĐĂNG KÝ BẢN QUYỀN TRÊN MÁY TÍNH */}
                 <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
                   <button
-                    onClick={handleGenerateExam}
-                    disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                    type="button"
+                    onClick={() => setActiveTab('download')}
+                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
                   >
-                    <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                    <span>
-                      {isGenerating
-                        ? 'ĐANG TẠO MA TRẬN & ĐỀ THI...'
-                        : `⚡ TẠO ĐỀ ${curSub.name.toUpperCase()} ${isProActive ? '(PRO KHÔNG GIỚI HẠN)' : `(CÒN ${trialRemaining}/5 LƯỢT DÙNG THỬ)`}`}
-                    </span>
+                    <Download className="w-4 h-4" />
+                    <span>📥 TẢI PHẦN MỀM ĐỂ TẠO ĐỀ & XUẤT WORD TRÊN MÁY TÍNH</span>
                   </button>
 
                   <button
-                    onClick={handleExportWord}
-                    className="w-full sm:w-auto py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition cursor-pointer"
-                    title="Tải đề thi kèm ma trận đặc tả ra file Microsoft Word .doc chuẩn 100%"
+                    type="button"
+                    onClick={() => setActiveTab('register')}
+                    className="w-full sm:w-auto py-2.5 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition cursor-pointer"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>📥 XUẤT FILE WORD (.DOCX) IN ẤN</span>
+                    <Crown className="w-4 h-4" />
+                    <span>🔑 ĐĂNG KÝ BẢN QUYỀN PRO SƯ PHẠM</span>
                   </button>
                 </div>
               </div>

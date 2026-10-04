@@ -749,31 +749,11 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => {
-                        const targetVar = subTab === "var1" ? suiteData.variant1 : subTab === "var2" ? suiteData.variant2 : suiteData.variant3;
-                        exportBientheToWordHtml(targetVar.title, [targetVar], suiteData.analysis, false, !isProActive);
-                      }}
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                      onClick={() => setActiveTab("download")}
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
                     >
-                      <Download className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Tải Đề Này (.doc)</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        exportBientheToWordHtml(
-                          "TRON_BO_3_DE_BIEN_THE",
-                          [suiteData.variant1, suiteData.variant2, suiteData.variant3],
-                          suiteData.analysis,
-                          true,
-                          !isProActive
-                        );
-                      }}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span>TẢI TRỌN BỘ 3 ĐỀ (.DOC)</span>
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Tải Bản Máy Tính Để Xuất Word Trọn Bộ</span>
                     </button>
                   </div>
                 </div>

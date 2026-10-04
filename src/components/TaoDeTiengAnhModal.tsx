@@ -72,8 +72,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
     setDetectedMid(mid);
 
     const savedPro = localStorage.getItem('gvai_taode_is_pro_active');
-    const isAdmin = mid.includes('DVT') || mid === 'GV-0DAD-F76C';
-    if (savedPro === 'true' || (isAdmin && localStorage.getItem('gvai_unlimited_machine') === 'true')) {
+    if (savedPro === 'true') {
       setIsProActive(true);
     }
 
@@ -432,34 +431,26 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </div>
               </div>
 
-              {/* Nút Tạo Đề Trực Tuyến */}
-              <button
-                onClick={handleOnlineGenerate}
-                disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-lg transition-all ${
-                  !isProActive && trialRemaining <= 0
-                    ? 'bg-slate-700 text-slate-400 cursor-not-allowed border border-slate-600'
-                    : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-500/25 active:scale-[0.99]'
-                }`}
-              >
-                {isGenerating ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Đang bốc câu hỏi từ ngân hàng Unit 1-12 & lập ma trận 7991...</span>
-                  </>
-                ) : !isProActive && trialRemaining <= 0 ? (
-                  <>
-                    <span>⚠️ ĐÃ HẾT 5 LƯỢT DÙNG THỬ • BẤM ĐỂ KÍCH HOẠT PRO</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    <span>
-                      TẠO ĐỀ KIỂM TRA TRỰC TUYẾN {isProActive ? '(PRO KHÔNG GIỚI HẠN)' : `(CÒN ${trialRemaining}/5 LƯỢT DÙNG THỬ)`}
-                    </span>
-                  </>
-                )}
-              </button>
+              {/* THANH ĐIỀU HƯỚNG TẢI PHẦN MỀM & ĐĂNG KÝ BẢN QUYỀN TRÊN MÁY TÍNH */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('download')}
+                  className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>📥 TẢI PHẦN MỀM ĐỂ TẠO ĐỀ & XUẤT WORD TRÊN MÁY TÍNH</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('register')}
+                  className="w-full sm:w-auto py-3.5 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition cursor-pointer"
+                >
+                  <Crown className="w-4 h-4" />
+                  <span>🔑 ĐĂNG KÝ BẢN QUYỀN PRO SƯ PHẠM</span>
+                </button>
+              </div>
 
               {/* Preview Khung Đề Thi Sư Phạm (Times New Roman 13pt) */}
               {examGenerated && (
@@ -573,74 +564,11 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                         <Copy className="w-3.5 h-3.5" /> Sao chép văn bản
                       </button>
                       <button
-                        onClick={() => {
-                          const docHtml = `
-                            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                            <head><meta charset='utf-8'><title>De_Kiem_Tra_Tieng_Anh_${selectedGrade}</title>
-                            <style>
-                              body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.3; }
-                              .text-red { color: #FF0000; font-weight: bold; }
-                              .answer-key { color: #FF0000; font-weight: bold; font-size: 13pt; }
-                              table { border-collapse: collapse; width: 100%; margin-top: 10pt; }
-                              th, td { border: 1px solid #FF0000; padding: 5pt; text-align: center; }
-                            </style>
-                            </head>
-                            <body>
-                              ${!isProActive ? `
-                              <table border="1" cellpadding="8" style="border: 2px dashed #D97706; background-color: #FEF3C7; margin-bottom: 12pt;">
-                                <tr>
-                                  <td style="border: none; text-align: left;">
-                                    <p style="color: #B45309; font-weight: bold; font-size: 11pt; margin: 0 0 4pt 0;">📢 BẢN DÙNG THỬ - PHẦN MỀM TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS (CV 7991)</p>
-                                    <p style="color: #78350F; font-size: 10.5pt; margin: 0 0 4pt 0;">• Tác giả: <b>Thầy giáo Đinh Văn Thành</b> – THCS Đồng Yên – Hotline / Zalo: <b>0915.213717</b></p>
-                                    <p style="color: #78350F; font-size: 10pt; margin: 0;">• Đăng ký bản quyền Pro để mở khóa đầy đủ 12 Unit và <b>gỡ bỏ hoàn toàn quảng cáo này</b>.</p>
-                                  </td>
-                                </tr>
-                              </table>
-                              ` : ''}
-                              <h2 style="text-align: center; color: #1e3a8a;">ĐỀ KIỂM TRA MÔN TIẾNG ANH ${selectedGrade} CHUẨN CV 7991</h2>
-                              <p style="text-align: center;"><b>Đơn vị:</b> ${schoolName} • <b>Năm học:</b> ${schoolYear}</p>
-                              <hr/>
-                              <h3>PART A. LISTENING (2.0 points)</h3>
-                              <p><b>Question 1.</b> What does Mai often do in her leisure time?</p>
-                              <p>A. Surfing the internet &nbsp;&nbsp;&nbsp;&nbsp; <span class="answer-key">✔ B. Playing sports</span> &nbsp;&nbsp;&nbsp;&nbsp; C. Reading books &nbsp;&nbsp;&nbsp;&nbsp; D. Cooking</p>
-                              
-                              <h3>PART B. LANGUAGE & GRAMMAR (2.5 points)</h3>
-                              <p><b>Question 2.</b> Life in the countryside is much ________ than life in the big city.</p>
-                              <p>A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; <span class="answer-key">✔ B. more peaceful</span> &nbsp;&nbsp;&nbsp;&nbsp; C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; D. most peaceful</p>
-                              <p><b>Question 3.</b> Nam didn't go to school yesterday ________ he had a severe fever.</p>
-                              <p><span class="answer-key">✔ A. because</span> &nbsp;&nbsp;&nbsp;&nbsp; B. although &nbsp;&nbsp;&nbsp;&nbsp; C. but &nbsp;&nbsp;&nbsp;&nbsp; D. so</p>
-                              
-                              <h3 style="color: #FF0000; margin-top: 18pt;">★ BẢNG ĐÁP ÁN CHỮ MÀU ĐỎ DÀNH CHO GIÁO VIÊN:</h3>
-                              <table>
-                                <tr style="background-color: #fee2e2; color: #b91c1c;">
-                                  <th>Câu</th><th>Đáp án đúng</th><th>Điểm</th><th>Giải thích</th>
-                                </tr>
-                                <tr>
-                                  <td>1</td><td class="answer-key">B</td><td>0.25</td><td style="color: #FF0000; text-align: left;">Playing sports</td>
-                                </tr>
-                                <tr>
-                                  <td>2</td><td class="answer-key">B</td><td>0.25</td><td style="color: #FF0000; text-align: left;">more peaceful (so sánh hơn)</td>
-                                </tr>
-                                <tr>
-                                  <td>3</td><td class="answer-key">A</td><td>0.25</td><td style="color: #FF0000; text-align: left;">because (liên từ chỉ lý do)</td>
-                                </tr>
-                              </table>
-                            </body>
-                            </html>
-                          `;
-                          const blob = new Blob(['\ufeff' + docHtml], { type: 'application/msword' });
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement('a');
-                          a.href = url;
-                          a.download = `De_Kiem_Tra_Tieng_Anh_${selectedGrade}_Dap_An_Do.doc`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
-                          URL.revokeObjectURL(url);
-                        }}
+                        type="button"
+                        onClick={() => setActiveTab('download')}
                         className="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl flex items-center gap-1.5 shadow-md shadow-blue-500/20 transition cursor-pointer"
                       >
-                        <Download className="w-3.5 h-3.5" /> Tải file Word đáp án chữ đỏ (.doc)
+                        <Download className="w-3.5 h-3.5" /> Tải Bộ Cài Máy Tính Để Xuất File Word Trọn Gói
                       </button>
                     </div>
                   </div>
