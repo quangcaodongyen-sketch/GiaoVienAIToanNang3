@@ -849,9 +849,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         setExamGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng!');
         return;
       }
-      const isTHPT = examLevel === 'THPT' || cleanId.includes('THPT');
-      const res = await generateExamLicenseKey(cleanId, examPackage);
-      const finalKey = isTHPT ? res.key.replace(/^ENG-/, 'THPT-') : res.key;
+      const isTHPT = examLevel === 'THPT' || cleanId.includes('THPT') || cleanId.includes('ENGPT');
+      const years = examPackage === 'lifetime' ? 99 : examPackage === '2year' ? 2 : 1;
+      let finalKey = '';
+      let expDateStr = '';
+      const pkgName = examPackage === 'lifetime' ? 'BẢN QUYỀN VIP TRỌN ĐỜI' : examPackage === '2year' ? 'GÓI 2 NĂM VIP' : 'GÓI 1 NĂM';
+
+      if (isTHPT) {
+        const edRes = await generateEd25519Key(cleanId, years, 'ENGPT', 'ENGPT');
+        finalKey = edRes.key;
+        expDateStr = edRes.expDate;
+      } else {
+        const edRes = await generateEd25519Key(cleanId, years, 'ENGCS', 'ENGCS');
+        finalKey = edRes.key;
+        expDateStr = edRes.expDate;
+      }
       setExamKeyResult(finalKey);
 
       const appTitle = isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
@@ -863,9 +875,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
 📌 Tác giả: ${authorTitle}
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
-🎁 Gói bản quyền: ${res.packageName}
-⏳ Hạn sử dụng: ${res.expiryDateStr}
-🔑 MÃ KÍCH HOẠT PRO (SHA-256):
+🎁 Gói bản quyền: ${pkgName}
+⏳ Hạn sử dụng: ${expDateStr}
+🔑 MÃ KÍCH HOẠT PRO (ED25519):
 ${finalKey}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
@@ -877,9 +889,9 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
 
       const newRecord = {
         mid: cleanId,
-        key: res.key,
-        expDate: res.expiryDateStr,
-        plan: res.packageName,
+        key: finalKey,
+        expDate: expDateStr,
+        plan: pkgName,
         createdAt: new Date().toLocaleString('vi-VN')
       };
       const updated = [newRecord, ...examHistory.filter(x => x.key !== res.key).slice(0, 19)];
