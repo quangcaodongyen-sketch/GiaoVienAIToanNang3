@@ -45,7 +45,7 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-tieng-anh-thpt",
     "title": "TẠO ĐỀ TIẾNG ANH THPT (LỚP 10, 11, 12)",
-    "description": "Tạo đề kiểm tra & đề cương ôn tập bám sát Tài liệu tập huấn BGDĐT & Hà Giang. Ma trận 16 cột, 35+ trắc nghiệm, Writing 1.0đ, Speaking 2.0đ, 2 mã đề hoán vị và đáp án đỏ.",
+    "description": "Tạo đề kiểm tra & đề cương ôn tập bám sát Tài liệu tập huấn BGDĐT & Tuyên Quang. Ma trận 16 cột, 35+ trắc nghiệm, Writing 1.0đ, Speaking 2.0đ, 2 mã đề hoán vị và đáp án đỏ.",
     "image": "/taode_tienganh.png",
     "url": "#tao-de-tieng-anh-thpt",
     "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",

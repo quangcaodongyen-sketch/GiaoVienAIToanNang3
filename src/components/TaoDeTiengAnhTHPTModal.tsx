@@ -48,7 +48,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
   const [examGenerated, setExamGenerated] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<string>('10');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
-  const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO HÀ GIANG');
+  const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO TUYÊN QUANG');
   const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THPT ĐỒNG YÊN');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
 
@@ -181,7 +181,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Chuẩn Tài liệu tập huấn ra đề của Bộ GD&amp;ĐT và Sở GD&amp;ĐT Hà Giang • Tác giả: Thầy giáo Đinh Văn Thành
+                Chuẩn Tài liệu tập huấn ra đề của Bộ GD&amp;ĐT và Sở GD&amp;ĐT Tuyên Quang • Tác giả: Thầy giáo Đinh Văn Thành
               </p>
             </div>
           </div>
@@ -432,7 +432,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   </div>
 
                   <p className="text-center font-bold text-sm tracking-wide text-red-600 pt-2">
-                    A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN TẬP HUẤN HÀ GIANG)
+                    A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN TẬP HUẤN TUYÊN QUANG)
                   </p>
                   <p className="text-xs italic text-slate-700 text-center">
                     Cấu trúc 4 phần bài thi: 1. Listening (True/False + MCQ); 2. Language &amp; Grammar; 3. Reading (Cloze, Reading comp, Sentence ordering); 4. Writing (Sentence rewrite &amp; Paragraph 120-180 words); 5. Speaking test (nếu Cuối kỳ).
