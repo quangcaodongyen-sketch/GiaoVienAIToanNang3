@@ -25,6 +25,7 @@ import { activityTrackingService, ADMIN_WHITELIST_MACHINES } from './services/ac
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
+import { TaoDeTiengAnhTHPTModal } from './components/TaoDeTiengAnhTHPTModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
 import { ScreenRecordModal } from './components/ScreenRecordModal';
 import { CleanerModal } from './components/CleanerModal';
@@ -45,6 +46,7 @@ export default function App() {
   const [showListeningModal, setShowListeningModal] = useState(false);
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
+  const [showTaoDeTHPTModal, setShowTaoDeTHPTModal] = useState(false);
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
   const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
   const [showCleanerModal, setShowCleanerModal] = useState(false);
@@ -141,6 +143,7 @@ export default function App() {
     setShowListeningModal(false);
     setShowNLSAIModal(false);
     setShowTaoDeModal(false);
+    setShowTaoDeTHPTModal(false);
     setShowSinhDeBienTheModal(false);
     setShowScreenRecordModal(false);
     setShowCleanerModal(false);
@@ -180,6 +183,10 @@ export default function App() {
       if (hash === '#tao-de-tieng-anh') {
         setShowTaoDeModal(true);
         webSecurityGuard.setActiveApp('tao-de-tieng-anh-thcs', 'Tạo Đề Tiếng Anh THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-tieng-anh-thpt') {
+        setShowTaoDeTHPTModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tieng-anh-thpt', 'Tạo Đề Tiếng Anh THPT (Lớp 10, 11, 12)');
       }
       else if (hash === '#tao-de-toan') {
         setThcs8MonSelectedSubject('TOAN');
@@ -320,6 +327,11 @@ export default function App() {
     if (app.id === 'tao-de-tieng-anh-thcs' || app.url === '#tao-de-tieng-anh') {
       e.preventDefault();
       setShowTaoDeModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tieng-anh-thpt' || app.url === '#tao-de-tieng-anh-thpt') {
+      e.preventDefault();
+      setShowTaoDeTHPTModal(true);
       return;
     }
     if (app.id === 'sinhdebienthe' || app.url === '#sinh-de-bien-the') {
@@ -1079,6 +1091,13 @@ export default function App() {
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}
       <TaoDeTiengAnhModal
         isOpen={showTaoDeModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH THPT (LỚP 10 - 11 - 12) MODAL (3 TABS) */}
+      <TaoDeTiengAnhTHPTModal
+        isOpen={showTaoDeTHPTModal}
         onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />

@@ -197,14 +197,21 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
     };
   }
 
-  // TRƯỜNG HỢP 1: Mã Ed25519 dạng KEY-ENG-YYYYMMDD-... hoặc KEY-ENG15-YYYYMMDD-... hoặc KEY-ALL-...
-  if (cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('KEY-ALL') || cleanKey.startsWith('KEY-MASTER')) {
+  // TRƯỜNG HỢP 1: Mã Ed25519 dạng KEY-ENG-YYYYMMDD-... hoặc KEY-THPT-YYYYMMDD-... hoặc KEY-YYYYMMDD-... hoặc KEY-ALL-...
+  if (cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('KEY-THPT') || cleanKey.startsWith('KEY-ALL') || cleanKey.startsWith('KEY-MASTER') || cleanKey.startsWith('KEY-20')) {
     const parts = cleanKey.split('-');
-    if (parts.length < 3) {
+    if (parts.length < 2) {
       return { isValid: false, message: 'Cấu trúc mã Key Ed25519 không hợp lệ!' };
     }
-    const dateStr = parts[2]; // YYYYMMDD
-    if (!dateStr || dateStr.length !== 8 || isNaN(Number(dateStr))) {
+    // Lấy chuỗi ngày 8 chữ số (ở phần tử thứ 1 hoặc thứ 2)
+    let dateStr = '';
+    for (const p of parts) {
+      if (p.length === 8 && !isNaN(Number(p)) && p.startsWith('20')) {
+        dateStr = p;
+        break;
+      }
+    }
+    if (!dateStr) {
       return { isValid: false, message: 'Ngày hết hạn trong Key không đúng định dạng!' };
     }
 
@@ -233,12 +240,12 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
     };
   }
 
-  // TRƯỜNG HỢP 2: Mã dạng ENG-[prefix]-[expHex]-[sig]
+  // TRƯỜNG HỢP 2: Mã dạng ENG-[prefix]-[expHex]-[sig] hoặc THPT-[prefix]-[expHex]-[sig]
   const parts = cleanKey.split('-');
-  if (parts.length !== 4 || parts[0] !== 'ENG') {
+  if (parts.length !== 4 || (!['ENG', 'THPT'].includes(parts[0]))) {
     return {
       isValid: false,
-      message: 'Mã kích hoạt không đúng định dạng (Ví dụ: KEY-ENG-... hoặc ENG-LT-...)!'
+      message: 'Mã kích hoạt không đúng định dạng (Ví dụ: KEY-20... hoặc ENG-LT-... hoặc THPT-LT-...)!'
     };
   }
 

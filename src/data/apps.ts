@@ -30,7 +30,7 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 2: APP RA ĐỀ TIẾNG ANH GLOBAL SUCCESS ====================
   {
     "id": "tao-de-tieng-anh-thcs",
-    "title": "TẠO ĐỀ TIẾNG ANH (CV 7991)",
+    "title": "TẠO ĐỀ TIẾNG ANH THCS (CV 7991)",
     "description": "Tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT. Tự động xuất ma trận, bản đặc tả, đề thi, đáp án và audio script.",
     "image": "/taode_tienganh.png",
     "url": "#tao-de-tieng-anh",
@@ -39,6 +39,20 @@ export const apps: AppCard[] = [
     "active": true,
     "featured": true,
     "order": 2
+  },
+
+  // ==================== APP RA ĐỀ TIẾNG ANH THPT (LỚP 10 - 11 - 12) ====================
+  {
+    "id": "tao-de-tieng-anh-thpt",
+    "title": "TẠO ĐỀ TIẾNG ANH THPT (LỚP 10, 11, 12)",
+    "description": "Tạo đề kiểm tra & đề cương ôn tập bám sát Tài liệu tập huấn BGDĐT & Hà Giang. Ma trận 16 cột, 35+ trắc nghiệm, Writing 1.0đ, Speaking 2.0đ, 2 mã đề hoán vị và đáp án đỏ.",
+    "image": "/taode_tienganh.png",
+    "url": "#tao-de-tieng-anh-thpt",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 2.5
   },
 
   // ==================== ƯU TIÊN 3: APP TẠO BÀI NGHE MP3 ====================

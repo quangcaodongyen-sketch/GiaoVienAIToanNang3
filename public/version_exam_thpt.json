@@ -1,0 +1,12 @@
+{
+  "appId": "taode-tienganh-thpt",
+  "appName": "Tạo Đề Kiểm Tra & Đề Cương Ôn Tập Tiếng Anh THPT Global Success",
+  "currentVersion": "3.5.0",
+  "latestVersion": "3.5.0",
+  "releaseDate": "04/10/2026",
+  "changelog": "• Ra mắt phiên bản chính thức Tạo Đề Kiểm Tra & Đề Cương Ôn Tập Tiếng Anh THPT (Lớp 10, 11, 12) Global Success\n• Bám sát 100% Ma trận 16 cột và Bản đặc tả kỹ thuật theo Tài liệu tập huấn Bộ GD&ĐT và Sở GD&ĐT Hà Giang\n• Đầy đủ 2 Mã đề hoán vị ngẫu nhiên, Bảng đáp án in đỏ (#FF0000), thang điểm chi tiết\n• Tích hợp Audio Scripts đa thoại (Nam - Nữ) và Phần thi Nói (Speaking Test 4 topics)\n• Add-in Microsoft Word độc lập (TaoDe_TiengAnh_THPT.dotm) không ảnh hưởng các add-in khác\n• Nhớ thông tin trường mặc định: TRƯỜNG THPT ĐỒNG YÊN (Sở GD&ĐT Hà Giang)",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THPT Đồng Yên"
+}

@@ -151,8 +151,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     createdAt: string;
   }>>([]);
 
-  // State cho Tool Tạo Key Bản Quyền - Tạo Đề Tiếng Anh (CV 7991)
+  // State cho Tool Tạo Key Bản Quyền - Tạo Đề Tiếng Anh (CV 7991 & THPT)
   const [examMid, setExamMid] = useState('');
+  const [examLevel, setExamLevel] = useState<'THCS' | 'THPT'>('THPT');
   const [examPackage, setExamPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
   const [examKeyResult, setExamKeyResult] = useState('');
   const [examZaloMsg, setExamZaloMsg] = useState('');
@@ -848,21 +849,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         setExamGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng!');
         return;
       }
+      const isTHPT = examLevel === 'THPT' || cleanId.includes('THPT');
       const res = await generateExamLicenseKey(cleanId, examPackage);
-      setExamKeyResult(res.key);
+      const finalKey = isTHPT ? res.key.replace(/^ENG-/, 'THPT-') : res.key;
+      setExamKeyResult(finalKey);
 
-      const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM TẠO ĐỀ TIẾNG ANH THCS (CV 7991):
+      const appTitle = isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
+      const authorTitle = isTHPT ? 'Thầy giáo Đinh Văn Thành – THPT Đồng Yên' : 'Thầy giáo Đinh Văn Thành – THCS Đồng Yên';
+      const appNameGuide = isTHPT ? 'Tạo đề kiểm tra Tiếng Anh Global Success THPT' : 'Tạo đề kiểm tra Tiếng Anh Global Success THCS';
+
+      const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ${appTitle}:
 ----------------------------------------------------------------------
-📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📌 Tác giả: ${authorTitle}
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${res.packageName}
 ⏳ Hạn sử dụng: ${res.expiryDateStr}
 🔑 MÃ KÍCH HOẠT PRO (SHA-256):
-${res.key}
+${finalKey}
 ----------------------------------------------------------------------
 👉 HƯỚNG DẪN KÍCH HOẠT:
-1. Mở phần mềm "Tạo đề kiểm tra Tiếng Anh Global Success THCS" (hoặc trên Web).
+1. Mở phần mềm "${appNameGuide}" (hoặc trên Web).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT PRO NGAY".
 Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết kiệm tối đa thời gian!`;
@@ -3372,7 +3379,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
               </div>
 
               <form onSubmit={handleGenerateExamKey} className="space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div className="md:col-span-2">
                     <label className="block text-slate-300 font-bold mb-1">
                       1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
@@ -3380,7 +3387,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     <input
                       type="text"
                       required
-                      placeholder="Ví dụ: DVT-ENG-1A2B-3C4D"
+                      placeholder="Ví dụ: DVT-ENG-... hoặc THPT-DVT-..."
                       value={examMid}
                       onChange={(e) => setExamMid(e.target.value)}
                       className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-sky-300 focus:outline-none focus:border-sky-500"
@@ -3389,7 +3396,21 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
 
                   <div>
                     <label className="block text-slate-300 font-bold mb-1">
-                      2. Chọn Gói Bản Quyền:
+                      2. Cấp Học:
+                    </label>
+                    <select
+                      value={examLevel}
+                      onChange={(e) => setExamLevel(e.target.value as any)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-sky-500"
+                    >
+                      <option value="THPT">THPT (Lớp 10, 11, 12)</option>
+                      <option value="THCS">THCS (Lớp 6, 7, 8, 9)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">
+                      3. Chọn Gói Bản Quyền:
                     </label>
                     <select
                       value={examPackage}
