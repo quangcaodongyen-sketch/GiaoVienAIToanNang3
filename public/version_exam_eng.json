@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.3.0",
-  "latestVersion": "3.3.0",
+  "currentVersion": "3.4.0",
+  "latestVersion": "3.4.0",
   "releaseDate": "04/10/2026",
-  "changelog": "• Bổ sung tùy chọn Số lượng mã đề linh hoạt: Mặc định 2 mã đề (601-602, 701-702...), có thể tăng lên 3 hoặc 4 mã đề tùy ý\n• Bổ sung 2 Kiểu sinh đề sư phạm: 'Đảo câu & đáp án' (giữ nguyên câu hỏi) và 'Đề mới tương đương' (bốc câu hỏi độc lập theo từng Unit SGK Global Success)\n• Cố định 100% Bài nghe (Listening Part 1 + Part 2): Tất cả mã đề đều chung câu hỏi và chung bảng đáp án chuẩn xác để phát chung audio trong phòng thi\n• Lưu cấu hình lâu dài: Tự động ghi nhớ Tên trường, Năm học, Số lượng đề, Kiểu đề ngay trên giao diện chính\n• Bảng đối chiếu đáp án song song tự động co giãn 3, 4, 5 cột khoa học và chuyên nghiệp",
+  "changelog": "• ĐÁP ÁN CHỮ MÀU ĐỎ TRỰC TIẾP: Tự động tô màu đỏ (#FF0000) và in đậm phương án đúng ở từng câu hỏi trên đề kiểm tra và trong Bảng đối chiếu đáp án, giúp Giáo viên kiểm tra duyệt đề trực tiếp tức thì mà không cần lật xuống trang cuối.\n• MA TRẬN & ĐẶC TẢ 100% TIẾNG ANH: Toàn bộ bảng Ma trận và Bản đặc tả kỹ thuật được chuẩn hóa 100% bằng tiếng Anh học thuật sư phạm quốc tế bám sát chuẩn CV 7991 của Bộ GD&ĐT.\n• LOẠI BỎ HOÀN TOÀN 'GLOBAL SUCCESS': Đề kiểm tra in ra tinh gọn, chuẩn mực, hoàn toàn loại bỏ cụm từ 'Global Success' ở tiêu đề, đặc tả và ma trận.\n• Tùy chọn 2, 3, 4 mã đề linh hoạt & 2 kiểu sinh đề (Đảo đề hoặc Đề mới tương đương).\n• Cố định bài nghe 100% chung đáp án chuẩn phòng thi.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
