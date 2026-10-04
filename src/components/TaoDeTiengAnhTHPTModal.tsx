@@ -39,8 +39,8 @@ interface TaoDeTiengAnhTHPTModalProps {
 }
 
 export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
-  // 3 Tabs chuẩn mực: 'trial' (Trực tuyến) | 'download' (Tải về) | 'register' (Bản quyền)
-  const [activeTab, setActiveTab] = useState<'trial' | 'download' | 'register'>('trial');
+  // Chuẩn hóa theo phong cách NLS-AI: 'download' (Tải về) | 'register' (Bản quyền) | 'preview' (Xem mẫu)
+  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -194,61 +194,66 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
           </button>
         </div>
 
-        {/* 3 TABS NAVIGATION */}
+        {/* TABS NAVIGATION CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ BẢN QUYỀN */}
         <div className="flex border-b border-slate-800 bg-slate-950/50 px-5 pt-3 gap-2 sm:gap-4 overflow-x-auto">
           <button
-            onClick={() => setActiveTab('trial')}
-            className={`flex items-center gap-2 px-4 py-2.5 font-semibold text-sm rounded-t-xl transition-all border-b-2 ${
-              activeTab === 'trial'
-                ? 'border-violet-500 text-violet-400 bg-violet-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-violet-400" />
-            <span>Trải nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className="ml-1 text-[11px] px-2 py-0.5 rounded-full bg-violet-600/30 text-violet-300 font-bold border border-violet-500/30">
-                {trialRemaining}/5 lượt
-              </span>
-            )}
-            {isProActive && (
-              <span className="ml-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40">
-                PRO VĨNH VIỄN
-              </span>
-            )}
-          </button>
-
-          <button
             onClick={() => setActiveTab('download')}
-            className={`flex items-center gap-2 px-4 py-2.5 font-semibold text-sm rounded-t-xl transition-all border-b-2 ${
+            className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'download'
-                ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10'
+                ? 'border-cyan-400 text-cyan-400 bg-cyan-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
             }`}
           >
-            <Download className="w-4 h-4 text-emerald-400" />
-            <span>Tải Về &amp; Hướng Dẫn</span>
-            <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+            <Download className="w-4 h-4 text-cyan-300" />
+            <span>1. Tải Bản Máy Tính (.exe / .zip)</span>
+            <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">
               Pass: 123
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex items-center gap-2 px-4 py-2.5 font-semibold text-sm rounded-t-xl transition-all border-b-2 ${
+            className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'register'
-                ? 'border-amber-500 text-amber-400 bg-amber-500/10'
+                ? 'border-amber-400 text-amber-400 bg-amber-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>Bản Quyền &amp; Kích Hoạt</span>
+            <span>2. Bản Quyền &amp; Kích Hoạt</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('preview')}
+            className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'preview'
+                ? 'border-violet-400 text-violet-400 bg-violet-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>3. Xem Mẫu Đề Thi THPT (CV 7991)</span>
           </button>
         </div>
 
-        {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
-        {activeTab === 'trial' && (
+        {/* TAB 3: XEM MẪU ĐỀ THI SƯ PHẠM THPT */}
+        {activeTab === 'preview' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+                <div>
+                  <span className="font-bold block text-white text-[13px]">Bản Xem Thử Mẫu Đề Kiểm Tra Tiếng Anh THPT (CV 7991)</span>
+                  <span className="text-[11px] text-amber-200/80">Để tạo đề tự động cho các khối lớp THPT (10, 11, 12), xuất file Word in ấn kèm audio MP3, Quý Thầy/Cô vui lòng tải phần mềm về máy tính.</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveTab('download')}
+                className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shrink-0 flex items-center gap-1 transition cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5" /> Tải Bộ Cài Ngay
+              </button>
+            </div>
             {/* THANH DÙNG THỬ 5 CHẤM */}
             <div className="p-4 rounded-xl bg-slate-950 border border-violet-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
               <div className="flex items-center gap-3">

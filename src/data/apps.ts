@@ -259,11 +259,11 @@ export const apps: AppCard[] = [
   {
     "id": "tao-de-15p-tienganh",
     "title": "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)",
-    "description": "Tự động tạo trọn bộ 2 mã đề 15 phút, phiếu chấm trắc nghiệm 20 câu sạch và bảng đáp án rút gọn cho 48 Units (Lớp 6, 7, 8, 9). [Ứng dụng nội bộ chỉ dành riêng cho Admin Thầy Thành dùng cá nhân, yêu cầu mật khẩu Admin].",
+    "description": "Tự động tạo trọn bộ 2 mã đề 15 phút, phiếu chấm trắc nghiệm 20 câu sạch và bảng đáp án rút gọn cho 48 Units (Lớp 6, 7, 8, 9). Tải bộ cài Desktop, đăng ký và kích hoạt bản quyền Pro.",
     "image": "/taode_15p_tienganh.png",
     "url": "#tao-de-15p-tienganh",
-    "category": "BÀI GIẢNG SỐ & NGOẠI NGỮ",
-    "badge": "NỘI BỘ ADMIN",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991)",
+    "badge": "BẢN QUYỀN PRO",
     "active": true,
     "featured": true,
     "order": 18

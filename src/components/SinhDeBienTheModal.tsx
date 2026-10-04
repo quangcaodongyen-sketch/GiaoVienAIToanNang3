@@ -52,7 +52,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
+  const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("download");
   const [subTab, setSubTab] = useState<"var1" | "var2" | "var3" | "analysis">("var1");
   const [variantViewMode, setVariantViewMode] = useState<"exam" | "answers">("exam");
 
@@ -327,20 +327,9 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
         </div>
 
         {/* NAVIGATION 3 TABS TIÊU CHUẨN */}
+        {/* NAVIGATION 3 TABS TIÊU CHUẨN CHUẨN NLS-AI */}
         <div className="flex items-center justify-between border-b border-slate-800 my-3 pb-2 gap-2 overflow-x-auto text-xs font-bold">
           <div className="flex gap-2">
-            <button
-              onClick={() => setActiveTab("demo")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-                activeTab === "demo"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/20"
-                  : "bg-slate-800 text-slate-400 hover:text-white"
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              1. Dùng Thử Trực Tuyến
-            </button>
-
             <button
               onClick={() => setActiveTab("download")}
               className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
@@ -350,7 +339,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               }`}
             >
               <Download className="w-4 h-4 text-cyan-300" />
-              2. Tải Bản Máy Tính (.exe)
+              1. Tải Bản Máy Tính (.exe / .zip Pass: 123)
             </button>
 
             <button
@@ -362,7 +351,19 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               }`}
             >
               <Crown className="w-4 h-4 text-amber-400" />
-              3. Bản Quyền & Kích Hoạt
+              2. Bản Quyền & Kích Hoạt
+            </button>
+
+            <button
+              onClick={() => setActiveTab("demo")}
+              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+                activeTab === "demo"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/20"
+                  : "bg-slate-800 text-slate-400 hover:text-white"
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              3. Xem Mẫu Đề Biến Thể & Trải Nghiệm
             </button>
           </div>
 
@@ -394,9 +395,32 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
           </div>
         </div>
 
-        {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
+        {/* TAB TRẢI NGHIỆM / XEM MẪU ĐỀ BIẾN THỂ */}
         {activeTab === "demo" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+            
+            {/* BANNER NHẮC NHỞ TẢI PHẦN MỀM CHUẨN NLS-AI */}
+            <div className="p-4 bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/50 border border-amber-500/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs mb-3 shadow-lg">
+              <div className="flex items-start gap-2.5">
+                <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold text-amber-300 text-sm">
+                    BẢN XEM TRƯỚC & DÙNG THỬ CÔNG NGHỆ SINH ĐỀ BIẾN THỂ AI
+                  </div>
+                  <p className="text-slate-300 mt-1 leading-relaxed">
+                    Chức năng trên web dùng thử giới hạn 5 lượt. Để phân tích toàn diện ma trận đề thi không giới hạn, sinh 3 đề biến thể tương đương và xuất tệp Word .docx chuẩn in ấn cho máy tính của Thầy/Cô, vui lòng tải phần mềm Desktop và kích hoạt bản quyền Pro.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('download')}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition shrink-0 shadow-lg flex items-center gap-1.5"
+              >
+                <Download className="w-4 h-4" />
+                <span>Tải Bộ Cài Máy Tính</span>
+              </button>
+            </div>
             
             {/* THÔNG BÁO CẬP NHẬT & NHẬN GÓP Ý MẪU ĐỀ TỪ GIÁO VIÊN */}
             <div className="bg-gradient-to-r from-amber-500/15 via-blue-500/10 to-indigo-500/15 border-l-4 border-amber-500 p-3.5 rounded-r-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">

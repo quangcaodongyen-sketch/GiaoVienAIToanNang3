@@ -6,26 +6,17 @@ import {
   Copy,
   Check,
   Crown,
-  Play,
   CheckCircle2,
-  FileCheck2,
   MessageCircle,
-  FileText,
-  Laptop,
   ShieldCheck,
-  ExternalLink,
   User,
   Send,
-  Sliders,
-  CheckSquare,
   RefreshCw,
   Printer,
-  Lock,
-  Unlock,
   Eye,
-  EyeOff,
-  ShieldAlert,
-  ArrowRight
+  AlertCircle,
+  ExternalLink,
+  Laptop
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
@@ -51,13 +42,8 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   onOpenAdmin,
   onSwitchToStandardExam 
 }) => {
-  // Trạng thái Bảo Mật: Chỉ Admin mới sử dụng được (Dùng cá nhân Thầy Thành)
-  const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(false);
-  const [adminPasswordInput, setAdminPasswordInput] = useState<string>('');
-  const [showAdminPass, setShowAdminPass] = useState<boolean>(false);
-  const [adminPassError, setAdminPassError] = useState<string>('');
-
-  const [activeTab, setActiveTab] = useState<'trial' | 'download' | 'register'>('trial');
+  // Chuẩn hóa theo mô hình NLS-AI: Mặc định Tab Tải về máy tính
+  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -68,8 +54,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const [previewFace, setPreviewFace] = useState<1 | 2 | 3>(1);
   const [currentCode, setCurrentCode] = useState<1 | 2>(1);
 
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
-  const [schoolYear, setSchoolYear] = useState<string>('2025 - 2026');
+  const [schoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [isProActive, setIsProActive] = useState<boolean>(false);
@@ -81,6 +66,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const [regName, setRegName] = useState<string>('');
   const [regPhone, setRegPhone] = useState<string>('');
   const [regSchool, setRegSchool] = useState<string>('');
+  const [regProvince, setRegProvince] = useState<string>('');
   const [regNote, setRegNote] = useState<string>('');
   const [regSent, setRegSent] = useState<boolean>(false);
   const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
@@ -90,47 +76,15 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
     const mid = getOrCreateExam15PHardwareCode();
     setDetectedMid(mid);
 
-    const unlockedSession = sessionStorage.getItem('gvai_admin_15p_unlocked') === 'true';
+    const savedPro = localStorage.getItem('gvai_taode15p_is_pro_active') === 'true';
     const isAdminMachine = mid.includes('DVT') || mid === 'GV-0DAD-F76C' || localStorage.getItem('gvai_unlimited_machine') === 'true';
     
-    if (unlockedSession || isAdminMachine) {
-      setIsAdminUnlocked(true);
+    if (savedPro || isAdminMachine) {
       setIsProActive(true);
-    } else {
-      setIsAdminUnlocked(false);
     }
 
     setTrialRemaining(getExam15PTrialRemaining());
   }, [isOpen]);
-
-  // Hàm xác thực Mật khẩu Quản trị Admin
-  const handleVerifyAdminPassword = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setAdminPassError('');
-    const clean = adminPasswordInput.trim();
-    if (
-      clean === 'Thaythanh2026@' ||
-      clean === 'thaythanh2026@' ||
-      clean === 'Thaythanh2026' ||
-      clean === 'Thaythanh@2026' ||
-      clean === 'thaythanh2026'
-    ) {
-      setIsAdminUnlocked(true);
-      sessionStorage.setItem('gvai_admin_15p_unlocked', 'true');
-      setIsProActive(true);
-      setAdminPasswordInput('');
-      setAdminPassError('');
-    } else {
-      setAdminPassError('⚠️ Mật khẩu Admin không chính xác. Ứng dụng này chỉ dành riêng cho Admin (Thầy Thành) sử dụng cá nhân!');
-    }
-  };
-
-  const handleLockAdmin = () => {
-    sessionStorage.removeItem('gvai_admin_15p_unlocked');
-    setIsAdminUnlocked(false);
-    setAdminPasswordInput('');
-    setAdminPassError('');
-  };
 
   if (!isOpen) return null;
 
@@ -172,6 +126,34 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
     }
   };
 
+  const handleSyncCloud = async () => {
+    setIsSyncingCloud(true);
+    try {
+      const res = await cloudSyncService.checkCurrentMachineCloudStatus(detectedMid, 'tao-de-15p-tienganh');
+      if (res && res.isApproved) {
+        setIsProActive(true);
+        localStorage.setItem('gvai_taode15p_is_pro_active', 'true');
+        setVerifyResult({
+          isValid: true,
+          packageName: res.packageType || 'Pro Cloud',
+          message: 'Đồng bộ bản quyền từ máy chủ thành công!'
+        });
+      } else {
+        setVerifyResult({
+          isValid: false,
+          message: 'Chưa tìm thấy bản quyền trên hệ thống đám mây. Vui lòng liên hệ Thầy Thành để kích hoạt.'
+        });
+      }
+    } catch {
+      setVerifyResult({
+        isValid: false,
+        message: 'Không thể kết nối máy chủ Cloud, vui lòng thử lại sau.'
+      });
+    } finally {
+      setIsSyncingCloud(false);
+    }
+  };
+
   const handleCreateTest = () => {
     if (!isProActive && trialRemaining <= 0) {
       setActiveTab('register');
@@ -201,7 +183,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
       await cloudSyncService.submitRegistrationToCloud({
         machineId: detectedMid,
         fullName: regName.trim(),
-        schoolUnit: regSchool.trim() || 'Trường THCS',
+        schoolUnit: (regSchool.trim() ? `${regSchool.trim()} - ` : '') + (regProvince.trim() || 'Toàn quốc'),
         phoneNumber: regPhone.trim(),
         appId: 'tao-de-15p-tienganh',
         appName: 'Tạo Đề 15 Phút Tiếng Anh (48 Units)',
@@ -219,118 +201,6 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const code2 = `${selectedGrade}02`;
   const activeCodeDisplay = currentCode === 1 ? code1 : code2;
 
-  // =========================================================================
-  // MÀN HÌNH KHÓA QUẢN TRỊ ADMIN (NẾU CHƯA NHẬP MẬT KHẨU ADMIN)
-  // =========================================================================
-  if (!isAdminUnlocked) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
-        <div className="relative w-full max-w-lg bg-slate-900 border-2 border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 sm:p-8 text-center space-y-5 animate-scaleUp">
-          
-          {/* Nút đóng */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition"
-            title="Đóng cửa sổ"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
-          {/* Icon Ổ khóa Admin */}
-          <div className="mx-auto w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-xl shadow-amber-500/10 ring-8 ring-amber-500/5">
-            <Lock className="w-10 h-10 animate-bounce" />
-          </div>
-
-          {/* Badge & Tiêu đề */}
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-xs font-black uppercase tracking-wider">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              KHU VỰC QUẢN TRỊ NỘI BỘ (ADMIN)
-            </span>
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Ứng Dụng Dành Riêng Cho Admin
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
-              Phần mềm <strong>Tạo đề 15 phút (48 Units Global Success)</strong> là công cụ nội bộ chỉ dành riêng cho Thầy giáo Đinh Văn Thành sử dụng cá nhân. Vui lòng nhập mật khẩu Admin để mở khóa.
-            </p>
-          </div>
-
-          {/* Form Nhập Mật Khẩu Admin */}
-          <form onSubmit={handleVerifyAdminPassword} className="space-y-3.5 pt-2 text-left">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                Mật khẩu Quản trị Admin:
-              </label>
-              <div className="relative">
-                <input
-                  type={showAdminPass ? 'text' : 'password'}
-                  value={adminPasswordInput}
-                  onChange={(e) => setAdminPasswordInput(e.target.value)}
-                  placeholder="Nhập mật khẩu quản trị viên..."
-                  autoFocus
-                  className="w-full px-4 py-3 rounded-2xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-mono transition"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowAdminPass(!showAdminPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1"
-                  title={showAdminPass ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                >
-                  {showAdminPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {adminPassError && (
-              <div className="p-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-medium flex items-start gap-2">
-                <span className="shrink-0 font-bold">⚠️</span>
-                <span>{adminPassError}</span>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-white text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-            >
-              <Unlock className="w-4 h-4 text-slate-950" />
-              <span>XÁC NHẬN MỞ KHÓA ADMIN</span>
-            </button>
-          </form>
-
-          {/* Hướng dẫn chuyển app cho giáo viên */}
-          <div className="pt-3 border-t border-slate-800 space-y-2">
-            <p className="text-[11.5px] text-slate-400">
-              Quý Thầy/Cô cần tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT xin vui lòng sử dụng:
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-              {onSwitchToStandardExam && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    onSwitchToStandardExam();
-                  }}
-                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
-                >
-                  <span>Tạo Đề Tiếng Anh (CV 7991)</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition"
-              >
-                Trở Về Trang Chủ
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-5xl bg-slate-900 border border-blue-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
@@ -346,25 +216,27 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">
                   TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)
                 </h3>
-                <span className="px-2.5 py-0.5 text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full flex items-center gap-1">
-                  <Crown className="w-3 h-3 text-amber-400" /> ADMIN THẦY THÀNH (DÙNG CÁ NHÂN)
+                <span className="px-2.5 py-0.5 text-[10px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/40 rounded-full flex items-center gap-1">
+                  <Crown className="w-3 h-3 text-amber-400" /> BẢN QUYỀN PRO THẦY THÀNH
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Thầy giáo Đinh Văn Thành • THCS Đồng Yên • Hotline/Zalo: 0915.213717
+                Tác giả: Thầy giáo Đinh Văn Thành • THCS Đồng Yên • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleLockAdmin}
-              className="px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition flex items-center gap-1.5 text-xs font-bold"
-              title="Khóa lại giao diện Admin"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Khóa Admin</span>
-            </button>
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition text-xs font-bold"
+                title="Cổng quản trị cấp mã bản quyền"
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>Admin Key</span>
+              </button>
+            )}
 
             <button
               onClick={onClose}
@@ -376,50 +248,50 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           </div>
         </div>
 
-        {/* 3 Tabs Navigation Bar */}
-        <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2">
-          <button
-            onClick={() => setActiveTab('trial')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 ${
-              activeTab === 'trial'
-                ? 'border-blue-500 text-blue-400 bg-blue-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Trải Nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">
-                {trialRemaining}/5 lượt
-              </span>
-            )}
-          </button>
-
+        {/* 3 Tabs Navigation Bar - Chuẩn mô hình NLS-AI */}
+        <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('download')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 ${
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'download'
                 ? 'border-blue-500 text-blue-400 bg-blue-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Download className="w-4 h-4" />
-            <span>Tải Về Máy & Hướng Dẫn</span>
+            <Download className="w-4 h-4 text-cyan-400" />
+            <span>1. Tải Bản Máy Tính (.exe / .zip Pass: 123)</span>
           </button>
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 ${
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'register'
                 ? 'border-amber-500 text-amber-400 bg-amber-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Crown className="w-4 h-4" />
-            <span>Đăng Ký & Kích Hoạt Bản Quyền</span>
+            <Crown className="w-4 h-4 text-amber-400" />
+            <span>2. Bản Quyền & Kích Hoạt</span>
             {isProActive && (
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-500/30">
                 ĐÃ KÍCH HOẠT
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab('preview')}
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
+              activeTab === 'preview'
+                ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Eye className="w-4 h-4 text-emerald-400" />
+            <span>3. Xem Mẫu Đề Thi 15 Phút</span>
+            {!isProActive && (
+              <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">
+                {trialRemaining}/5 lượt thử
               </span>
             )}
           </button>
@@ -429,11 +301,333 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
           
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LẦN DÙNG THỬ CỐ ĐỊNH) */}
+          {/* TAB 1: TẢI BỘ CÀI MÁY TÍNH (.EXE / .ZIP PASS: 123) */}
           {/* ========================================================================= */}
-          {activeTab === 'trial' && (
+          {activeTab === 'download' && (
+            <div className="space-y-6">
+              
+              {/* Thẻ tải bộ cài */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-5 bg-gradient-to-br from-blue-950/40 via-slate-900 to-slate-950 rounded-2xl border border-blue-500/40 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold text-xl border border-blue-500/30">
+                      💻
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-sm">BỘ CÀI DESKTOP (.EXE)</h4>
+                      <p className="text-xs text-slate-400">Phiên bản offline không cần mạng</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Tạo đề siêu tốc chỉ 1 giây, tự động xuất Word trọn bộ 48 Units (Lớp 6, 7, 8, 9).
+                  </p>
+                  <a
+                    href="/TaoDe_15Phut_TiengAnh_THCS.exe"
+                    download
+                    className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition"
+                  >
+                    <Download className="w-4 h-4" /> Tải Bộ Cài .EXE (44.7 MB)
+                  </a>
+                </div>
+
+                <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
+                      📦
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-sm">BẢN NÉN ZIP (MẬT KHẨU: 123)</h4>
+                      <p className="text-xs text-slate-400">Tránh trình duyệt hoặc Antivirus chặn</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Dành cho các máy tính bật tường lửa cao hoặc Windows Defender cảnh báo file tải về.
+                  </p>
+                  <a
+                    href="/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
+                    download
+                    className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition"
+                  >
+                    <Download className="w-4 h-4" /> Tải Bản Nén ZIP (Pass: 123)
+                  </a>
+                </div>
+              </div>
+
+              {/* Hướng dẫn 3 bước */}
+              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
+                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <span>📖</span> Quy trình 3 bước sử dụng chuẩn mực:
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                    <div className="font-bold text-blue-400 mb-1">Bước 1: Chọn Khối & Unit</div>
+                    <p className="text-slate-400">Chọn khối lớp 6, 7, 8, 9 và bài học cần kiểm tra 15 phút.</p>
+                  </div>
+                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                    <div className="font-bold text-indigo-400 mb-1">Bước 2: Sinh 2 Mã Đề</div>
+                    <p className="text-slate-400">Hệ thống tự động hoán vị câu hỏi, sinh cặp mã đối xứng (601-602, 701-702...).</p>
+                  </div>
+                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                    <div className="font-bold text-emerald-400 mb-1">Bước 3: In & Chấm Nhanh</div>
+                    <p className="text-slate-400">Xuất file Word hoặc in ấn 5 mặt: 2 mặt đề, 2 phiếu trắc nghiệm, 1 bảng đáp án.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Gợi ý chuyển app */}
+              <div className="p-4 bg-blue-950/30 border border-blue-500/20 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <div>
+                  <div className="font-bold text-white">Thầy/Cô cần tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT?</div>
+                  <p className="text-slate-400 mt-0.5">Sử dụng phần mềm Tạo Đề Tiếng Anh THCS (Công văn 7991).</p>
+                </div>
+                {onSwitchToStandardExam && (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onSwitchToStandardExam();
+                    }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition shrink-0"
+                  >
+                    Mở App Tạo Đề CV 7991
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 2: BẢN QUYỀN & KÍCH HOẠT */}
+          {/* ========================================================================= */}
+          {activeTab === 'register' && (
+            <div className="space-y-6">
+              
+              {/* Thẻ hiển thị Mã máy tính */}
+              <div className="p-5 bg-slate-950/80 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-400">MÃ MÁY TÍNH CỦA BẠN (HARDWARE CODE):</span>
+                    <span className="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold">DVT-15M</span>
+                  </div>
+                  <div className="font-mono text-xl sm:text-2xl font-black text-amber-400 tracking-wider mt-1">
+                    {detectedMid || 'DVT-15M-8899-AABB'}
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Gửi mã này cho Thầy Đinh Văn Thành để nhận Khóa kích hoạt bản quyền.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={handleCopyMid}
+                    className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-2 transition"
+                  >
+                    {copiedMid ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedMid ? 'Đã sao chép!' : 'Sao chép mã máy'}</span>
+                  </button>
+                  <button
+                    onClick={handleSyncCloud}
+                    disabled={isSyncingCloud}
+                    className="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition shadow-lg shadow-cyan-600/30"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                    <span>Đồng Bộ Cloud 24/7</span>
+                  </button>
+                  <a
+                    href={`https://zalo.me/0915213717?text=${encodeURIComponent(
+                      `Chào Thầy Thành, tôi muốn đăng ký Bản quyền Tạo Đề 15 Phút Tiếng Anh (48 Units). Mã máy tính của tôi là: ${detectedMid}`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition shadow-lg shadow-blue-600/30"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Nhắn Zalo Thầy Thành</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Form Đăng ký thông tin Giáo viên */}
+              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-4">
+                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <User className="w-4 h-4 text-cyan-400" /> Form Đăng Ký Cấp Key Bản Quyền Sư Phạm:
+                </h4>
+
+                {regSent ? (
+                  <div className="p-4 bg-emerald-950/50 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div>
+                      <div className="font-bold">Đã gửi thông tin đăng ký thành công!</div>
+                      <div className="text-slate-400 mt-0.5">
+                        Thầy Thành sẽ liên hệ qua Zalo/Điện thoại để gửi mã bản quyền Pro cho Thầy/Cô sớm nhất.
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleRegisterSubmit} className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Họ và tên Giáo viên *</label>
+                        <input
+                          type="text"
+                          required
+                          value={regName}
+                          onChange={(e) => setRegName(e.target.value)}
+                          placeholder="Ví dụ: Thầy Nguyễn Văn A"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Số điện thoại / Zalo *</label>
+                        <input
+                          type="text"
+                          required
+                          value={regPhone}
+                          onChange={(e) => setRegPhone(e.target.value)}
+                          placeholder="Ví dụ: 0988xxxxxx"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Trường THCS công tác</label>
+                        <input
+                          type="text"
+                          value={regSchool}
+                          onChange={(e) => setRegSchool(e.target.value)}
+                          placeholder="Ví dụ: THCS Đồng Yên"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Tỉnh / Thành phố</label>
+                        <input
+                          type="text"
+                          value={regProvince}
+                          onChange={(e) => setRegProvince(e.target.value)}
+                          placeholder="Ví dụ: Hà Giang, Hà Nội..."
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-400 mb-1">Ghi chú hoặc yêu cầu thêm</label>
+                      <input
+                        type="text"
+                        value={regNote}
+                        onChange={(e) => setRegNote(e.target.value)}
+                        placeholder="Nội dung cần tư vấn..."
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSyncingCloud}
+                      className="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>{isSyncingCloud ? 'Đang gửi đăng ký...' : 'Gửi Thông Tin Đăng Ký'}</span>
+                    </button>
+                  </form>
+                )}
+              </div>
+
+              {/* Ô kích hoạt Key */}
+              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-4">
+                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-amber-400" /> Kích hoạt Bản Quyền Pro:
+                </h4>
+                <form onSubmit={handleActivateKey} className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    value={inputKey}
+                    onChange={(e) => setInputKey(e.target.value)}
+                    placeholder="Dán mã Key kích hoạt (Ví dụ: 15M-LIFE-99991231-XXXXX)..."
+                    className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-mono focus:outline-none focus:border-amber-500"
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                  >
+                    <ShieldCheck className="w-4 h-4" /> Kích Hoạt Ngay
+                  </button>
+                </form>
+
+                {verifyResult && (
+                  <div
+                    className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
+                      verifyResult.isValid
+                        ? 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300'
+                        : 'bg-red-950/50 border-red-500/40 text-red-300'
+                    }`}
+                  >
+                    {verifyResult.isValid ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                    )}
+                    <span>{verifyResult.message}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Bảng các gói bản quyền SƯ PHẠM (Tuân thủ Quy tắc 4: Tuyệt đối không hiển thị giá tiền số cố định) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 text-center space-y-2">
+                  <div className="text-xs font-bold text-slate-400">GÓI BẢN QUYỀN 1 NĂM</div>
+                  <div className="text-sm font-black text-slate-200">Ưu Đãi Sư Phạm</div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    Sử dụng đầy đủ 48 Units (Lớp 6, 7, 8, 9) trong 1 năm học. Hỗ trợ kỹ thuật chu đáo.
+                  </p>
+                </div>
+                <div className="p-4 bg-slate-900/60 rounded-xl border border-blue-500/40 text-center space-y-2 relative">
+                  <div className="text-xs font-bold text-blue-400">GÓI BẢN QUYỀN 2 NĂM</div>
+                  <div className="text-sm font-black text-blue-300">Tiết Kiệm Tối Đa</div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    Giải pháp tối ưu cho chu kỳ đào tạo 2 năm, cập nhật liên tục đề mới.
+                  </p>
+                </div>
+                <div className="p-4 bg-gradient-to-b from-amber-950/30 to-slate-900 rounded-xl border border-amber-500/50 text-center space-y-2">
+                  <div className="text-xs font-bold text-amber-400">GÓI VIP TRỌN ĐỜI (KHUYÊN DÙNG)</div>
+                  <div className="text-sm font-black text-amber-300">Hỗ Trợ Vĩnh Viễn</div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    Kích hoạt một lần dùng mãi mãi, chuyển bản quyền khi đổi máy, cập nhật trọn đời.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center text-xs text-amber-300">
+                ⭐ <b>Chính sách sư phạm:</b> Liên hệ Admin Thầy Thành để kích hoạt bản quyền Pro & nhận báo giá ưu đãi sư phạm qua Zalo: <b>0915.213717</b>.
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 3: XEM MẪU ĐỀ THI 15 PHÚT (GLOBAL SUCCESS) */}
+          {/* ========================================================================= */}
+          {activeTab === 'preview' && (
             <div className="space-y-5">
               
+              {/* Banner nhắc nhở tải bản máy tính chuẩn mực NLS-AI */}
+              <div className="p-4 bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/50 border border-amber-500/40 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <div className="flex items-start gap-2.5">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-amber-300 text-sm">
+                      BẢN XEM TRƯỚC MẪU CẤU TRÚC ĐỀ 15 PHÚT (GLOBAL SUCCESS)
+                    </div>
+                    <p className="text-slate-300 mt-1 leading-relaxed">
+                      Chức năng trên web chỉ phục vụ xem trước cấu trúc mẫu. Để tạo và xuất file Word .docx tự động cho toàn bộ 48 Units (Lớp 6, 7, 8, 9), tự động hoán vị câu hỏi và sinh cặp mã đối xứng, Thầy/Cô vui lòng tải phần mềm về máy tính và kích hoạt bản quyền Pro.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveTab('download')}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold rounded-xl transition shrink-0 shadow-lg flex items-center gap-1.5"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải Bộ Cài Máy Tính</span>
+                </button>
+              </div>
+
               {/* Thanh tiến trình Dùng thử 5 lần */}
               <div className="p-3.5 bg-slate-950/80 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
@@ -609,16 +803,6 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
               {/* Khung tài liệu A4 mô phỏng (Font Times New Roman chuẩn) */}
               <div className="bg-white text-black p-6 rounded-xl shadow-xl border border-slate-300 min-h-[480px] font-['Times_New_Roman'] text-[13px] leading-relaxed">
-                {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
-                {!isProActive && (
-                  <div className="p-3 mb-3 rounded-lg border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
-                    <p className="font-bold text-amber-900 text-[12px] mb-0.5">📢 BẢN DÙNG THỬ - PHẦN MỀM TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)</p>
-                    <p className="text-slate-700 leading-normal text-[11px]">
-                      • Tác giả & Quản trị: <b>Thầy giáo Đinh Văn Thành</b> – THCS Đồng Yên – Hotline / Zalo: <b className="text-emerald-700">0915.213717</b>.<br/>
-                      • Đăng ký bản quyền Pro để tạo trọn bộ 48 Units và <b>gỡ bỏ hoàn toàn thông báo dùng thử này</b>.
-                    </p>
-                  </div>
-                )}
                 {previewFace === 1 && (
                   <div className="space-y-3">
                     <div className="flex justify-between items-start border-b border-black pb-2 text-[12px]">
@@ -791,185 +975,6 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     </table>
                   </div>
                 )}
-              </div>
-            </div>
-          )}
-
-          {/* ========================================================================= */}
-          {/* TAB 2: TẢI VỀ & HƯỚNG DẪN CÀI ĐẶT */}
-          {/* ========================================================================= */}
-          {activeTab === 'download' && (
-            <div className="space-y-6">
-              
-              {/* Thẻ tải bộ cài */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 bg-gradient-to-br from-blue-950/40 via-slate-900 to-slate-950 rounded-2xl border border-blue-500/40 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold text-xl border border-blue-500/30">
-                      💻
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">BỘ CÀI DESKTOP (.EXE)</h4>
-                      <p className="text-xs text-slate-400">Phiên bản offline không cần mạng</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Tạo đề siêu tốc chỉ 1 giây, tự động xuất Word trọn bộ 48 Units (Lớp 6, 7, 8, 9).
-                  </p>
-                  <a
-                    href="/TaoDe_15Phut_TiengAnh_THCS.exe"
-                    download
-                    className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition"
-                  >
-                    <Download className="w-4 h-4" /> Tải Bộ Cài .EXE (44.7 MB)
-                  </a>
-                </div>
-
-                <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
-                      📦
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">BẢN NÉN ZIP (MẬT KHẨU: 123)</h4>
-                      <p className="text-xs text-slate-400">Tránh trình duyệt chặn tải về</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Dành cho các máy tính bật tường lửa cao hoặc Windows Defender cảnh báo file tải về.
-                  </p>
-                  <a
-                    href="/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
-                    download
-                    className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition"
-                  >
-                    <Download className="w-4 h-4" /> Tải Bản Nén ZIP (Pass: 123)
-                  </a>
-                </div>
-              </div>
-
-              {/* Hướng dẫn 3 bước */}
-              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
-                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                  <span>📖</span> Quy trình 3 bước sử dụng chuẩn mực:
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-blue-400 mb-1">Bước 1: Chọn Khối & Unit</div>
-                    <p className="text-slate-400">Chọn khối lớp 6, 7, 8, 9 và bài học cần kiểm tra 15 phút.</p>
-                  </div>
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-indigo-400 mb-1">Bước 2: Sinh 2 Mã Đề</div>
-                    <p className="text-slate-400">Hệ thống tự động hoán vị câu hỏi, sinh cặp mã đối xứng (601-602, 701-702...).</p>
-                  </div>
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-emerald-400 mb-1">Bước 3: In & Chấm Nhanh</div>
-                    <p className="text-slate-400">Xuất file Word hoặc in ấn 5 mặt: 2 mặt đề, 2 phiếu trắc nghiệm, 1 bảng đáp án.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT PRO */}
-          {/* ========================================================================= */}
-          {activeTab === 'register' && (
-            <div className="space-y-6">
-              
-              {/* Thẻ hiển thị Mã máy tính */}
-              <div className="p-5 bg-slate-950/80 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-slate-400">MÃ MÁY TÍNH CỦA BẠN (HARDWARE CODE):</span>
-                    <span className="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold">DVT-15M</span>
-                  </div>
-                  <div className="font-mono text-xl sm:text-2xl font-black text-amber-400 tracking-wider mt-1">
-                    {detectedMid || 'DVT-15M-8899-AABB'}
-                  </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Gửi mã này cho Thầy Đinh Văn Thành để nhận Khóa kích hoạt bản quyền.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleCopyMid}
-                    className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-2 transition"
-                  >
-                    {copiedMid ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedMid ? 'Đã sao chép!' : 'Sao chép mã máy'}</span>
-                  </button>
-                  <a
-                    href={`https://zalo.me/0915213717?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn đăng ký Bản quyền Tạo Đề 15 Phút Tiếng Anh (48 Units). Mã máy tính của tôi là: ${detectedMid}`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition shadow-lg shadow-blue-600/30"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Nhắn Zalo Thầy Thành</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Ô kích hoạt Key */}
-              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-4">
-                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                  <Crown className="w-4 h-4 text-amber-400" /> Kích hoạt Bản Quyền Pro:
-                </h4>
-                <form onSubmit={handleActivateKey} className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="text"
-                    value={inputKey}
-                    onChange={(e) => setInputKey(e.target.value)}
-                    placeholder="Dán mã Key kích hoạt (Ví dụ: 15M-LIFE-99991231-XXXXX)..."
-                    className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white font-mono focus:outline-none focus:border-amber-500"
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2"
-                  >
-                    <ShieldCheck className="w-4 h-4" /> Kích Hoạt Ngay
-                  </button>
-                </form>
-
-                {verifyResult && (
-                  <div
-                    className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
-                      verifyResult.isValid
-                        ? 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300'
-                        : 'bg-red-950/50 border-red-500/40 text-red-300'
-                    }`}
-                  >
-                    {verifyResult.isValid ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    ) : (
-                      <X className="w-4 h-4 text-red-400 shrink-0" />
-                    )}
-                    <span>{verifyResult.message}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Bảng giá các gói */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 text-center space-y-2">
-                  <div className="text-xs font-bold text-slate-400">GÓI 1 NĂM HỌC</div>
-                  <div className="text-xl font-black text-white">199.000 đ</div>
-                  <p className="text-[11px] text-slate-400">Sử dụng đầy đủ 48 Units trong 1 năm</p>
-                </div>
-                <div className="p-4 bg-slate-900/60 rounded-xl border border-blue-500/40 text-center space-y-2 relative">
-                  <div className="text-xs font-bold text-blue-400">GÓI 2 NĂM HỌC</div>
-                  <div className="text-xl font-black text-white">299.000 đ</div>
-                  <p className="text-[11px] text-slate-400">Tiết kiệm 30% chi phí bản quyền</p>
-                </div>
-                <div className="p-4 bg-gradient-to-b from-amber-950/30 to-slate-900 rounded-xl border border-amber-500/50 text-center space-y-2">
-                  <div className="text-xs font-bold text-amber-400">GÓI TRỌN ĐỜI (VIP)</div>
-                  <div className="text-xl font-black text-amber-400">499.000 đ</div>
-                  <p className="text-[11px] text-slate-400">Cập nhật trọn đời, hỗ trợ 24/7</p>
-                </div>
               </div>
             </div>
           )}

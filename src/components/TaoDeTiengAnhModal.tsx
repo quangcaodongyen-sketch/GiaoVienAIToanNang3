@@ -38,8 +38,8 @@ interface TaoDeTiengAnhModalProps {
 }
 
 export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
-  // 3 Tabs chuẩn mực: 'trial' (Trực tuyến) | 'download' (Tải về) | 'register' (Bản quyền)
-  const [activeTab, setActiveTab] = useState<'trial' | 'download' | 'register'>('trial');
+  // Chuẩn hóa theo phong cách NLS-AI: 'download' (Tải về) | 'register' (Bản quyền) | 'preview' (Xem mẫu)
+  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -232,49 +232,42 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           </button>
         </div>
 
-        {/* 3 TAB NAVIGATION CHUẨN MỰC */}
-        <div className="flex border-b border-slate-800 bg-slate-900/60 px-6 shrink-0">
-          <button
-            onClick={() => setActiveTab('trial')}
-            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all ${
-              activeTab === 'trial'
-                ? 'border-blue-500 text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Trải nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
-                trialRemaining > 0 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'
-              }`}>
-                {trialRemaining}/5 lượt
-              </span>
-            )}
-          </button>
-
+        {/* TABS NAVIGATION CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ BẢN QUYỀN */}
+        <div className="flex border-b border-slate-800 bg-slate-900/60 px-6 shrink-0 overflow-x-auto">
           <button
             onClick={() => setActiveTab('download')}
-            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all ${
+            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'download'
-                ? 'border-blue-500 text-blue-400 bg-blue-500/5'
+                ? 'border-cyan-400 text-cyan-400 bg-cyan-500/5'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Download className="w-4 h-4" />
-            <span>Tải Về & Hướng Dẫn</span>
+            <Download className="w-4 h-4 text-cyan-300" />
+            <span>1. Tải Bản Máy Tính (.exe / .zip)</span>
           </button>
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all ${
+            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'register'
-                ? 'border-blue-500 text-blue-400 bg-blue-500/5'
+                ? 'border-amber-400 text-amber-400 bg-amber-500/5'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>Bản Quyền & Kích Hoạt</span>
+            <span>2. Bản Quyền & Kích Hoạt</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('preview')}
+            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'preview'
+                ? 'border-blue-400 text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>3. Xem Mẫu Đề Thi (CV 7991)</span>
           </button>
         </div>
 
@@ -287,10 +280,25 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LƯỢT DÙNG THỬ BẮT BUỘC CỐ ĐỊNH)           */}
+          {/* TAB 3: XEM MẪU ĐỀ THI SƯ PHẠM (CV 7991)                                    */}
           {/* ========================================================================= */}
-          {activeTab === 'trial' && (
+          {activeTab === 'preview' && (
             <div className="space-y-4">
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+                  <div>
+                    <span className="font-bold block text-white text-[13px]">Bản Xem Thử Mẫu Đề Kiểm Tra Tiếng Anh THCS (CV 7991)</span>
+                    <span className="text-[11px] text-amber-200/80">Để tạo đề tự động cho 48 Units (Lớp 6, 7, 8, 9), xuất file Word in ấn kèm audio MP3, Quý Thầy/Cô vui lòng tải phần mềm về máy tính.</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveTab('download')}
+                  className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shrink-0 flex items-center gap-1 transition cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" /> Tải Bộ Cài Ngay
+                </button>
+              </div>
               
               {/* Banner EnglishExam Pro Web Trực Tuyến */}
               <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-900/50 via-indigo-900/50 to-purple-900/50 border border-indigo-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
