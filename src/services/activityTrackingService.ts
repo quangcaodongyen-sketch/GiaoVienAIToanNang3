@@ -88,6 +88,41 @@ export interface BlockedMachineItem {
   schoolUnit?: string;
 }
 
+export interface AppInstalledMachineDetail {
+  machineId: string;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  fullName?: string;
+  schoolUnit?: string;
+  phoneNumber?: string;
+  status: 'ACTIVE_PRO' | 'TRIAL' | 'INSTALLED';
+  installCount: number; // Số lần thực hiện cài/tải (máy tính chỉ tính là 1 máy duy nhất)
+  updateCount: number;  // Số lần giáo viên bấm cập nhật phiên bản mới
+  lastVersion?: string;
+}
+
+export interface AppQuotaStatItem {
+  appId: string;
+  appName: string;
+  shortName: string;
+  category: 'tienganh' | 'toan' | 'tienich' | 'chung';
+  badge: string;
+  installedMachinesCount: number; // Số máy tính duy nhất đã cài đặt (mỗi máy tính tính 1 lần duy nhất)
+  trialMachinesCount: number;     // Số máy tính duy nhất đã dùng thử
+  activatedMachinesCount: number; // Số máy tính duy nhất đã kích hoạt Pro
+  updateCount: number;            // Tổng số lượt giáo viên update app này
+  activationRate: number;         // Tỷ lệ % kích hoạt Pro / tổng máy cài đặt
+  machines: AppInstalledMachineDetail[];
+}
+
+export interface EcosystemQuotaSummary {
+  totalUniqueInstalledMachines: number; // Tổng số máy tính duy nhất đã cài đặt trên toàn hệ sinh thái (mỗi máy chỉ tính 1 lần)
+  totalUniqueTrialMachines: number;     // Tổng số máy tính duy nhất đã dùng thử
+  totalUniqueActivatedMachines: number; // Tổng số máy tính duy nhất đã có bản quyền Pro
+  totalUpdateCount: number;            // Tổng số lượt giáo viên update trên mọi app
+  appsStats: AppQuotaStatItem[];
+}
+
 const STORAGE_MACHINE_ID = 'gvai_hardware_machine_id';
 const STORAGE_CURRENT_PROFILE = 'gvai_current_machine_profile';
 const STORAGE_ALL_MACHINES = 'gvai_all_tracked_machines';
@@ -95,6 +130,95 @@ const STORAGE_ACTIVITY_LOGS = 'gvai_detailed_activity_logs';
 const STORAGE_REGISTRATIONS = 'gvai_registration_requests';
 const STORAGE_BLOCKED_MACHINES = 'gvai_blocked_machines_list';
 const STORAGE_WEB_PAGEVIEWS = 'gvai_web_pageviews_count';
+const STORAGE_APP_INSTALLS_MAP = 'gvai_ecosystem_app_installs_map_v2';
+const STORAGE_APP_UPDATES_LOG = 'gvai_ecosystem_app_updates_log_v2';
+
+export const ECOSYSTEM_APPS_CATALOG = [
+  {
+    appId: 'tich-hop-nls-ai',
+    appName: 'Tích Hợp NLS & AI Vào Giáo Án (CV 5512 - THCS & THPT)',
+    shortName: 'Tích Hợp NLS & AI',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'tao-de-tieng-anh-thcs',
+    appName: 'Tạo Đề Tiếng Anh THCS (Global Success 6, 7, 8, 9 - CV 7991)',
+    shortName: 'Tạo Đề TA THCS',
+    category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'tao-de-tieng-anh-thpt',
+    appName: 'Tạo Đề Tiếng Anh THPT (Global Success 10, 11, 12 - BGD&ĐT)',
+    shortName: 'Tạo Đề TA THPT',
+    category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'tao-de-15p-tieng-anh',
+    appName: 'Tạo Đề 15 Phút Tiếng Anh THCS (Global Success 48 Units)',
+    shortName: 'Tạo Đề 15 Phút TA',
+    category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'mathstudio',
+    appName: 'Đinh Thành MathStudio 2026+ Pro (Chuyển Mathpix sang Word)',
+    shortName: 'MathStudio Pro',
+    category: 'toan' as const,
+    badge: 'NỘI BỘ ADMIN'
+  },
+  {
+    appId: 'tao-de-thcs-8mon',
+    appName: 'Trung Tâm Tạo Đề 8 Môn THCS (CV 7991 Chuẩn Ma Trận Đặc Tả)',
+    shortName: 'Tạo Đề 8 Môn THCS',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'sinh-de-bienthe',
+    appName: 'Sinh 3 Đề Biến Thể Tương Đương (Word Add-in VIP)',
+    shortName: 'Sinh Đề Biến Thể',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'screen-record',
+    appName: 'Screen Record Pro V2 (Ghi Màn Hình & Giảng Bài HD)',
+    shortName: 'Screen Record Pro',
+    category: 'tienich' as const,
+    badge: 'MIỄN PHÍ'
+  },
+  {
+    appId: 'cleaner-pro',
+    appName: 'Đinh Thành Cleaner Pro v4.5 (Dọn Rác Máy Tính Giáo Viên)',
+    shortName: 'Cleaner Pro v4.5',
+    category: 'tienich' as const,
+    badge: 'MIỄN PHÍ'
+  },
+  {
+    appId: 'chuan-hoa-van-ban',
+    appName: 'Chuẩn Hóa Văn Bản Word & Giáo Án (NĐ 30/2020 & CV 5512)',
+    shortName: 'Chuẩn Hóa Văn Bản',
+    category: 'chung' as const,
+    badge: 'MIỄN PHÍ'
+  },
+  {
+    appId: 'pdf-suite',
+    appName: 'PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI)',
+    shortName: 'PDF Suite Pro',
+    category: 'tienich' as const,
+    badge: 'MIỄN PHÍ'
+  },
+  {
+    appId: 'smart-listening-pro',
+    appName: 'Tạo Bài Nghe MP3 Tiếng Anh (Smart Listening Pro)',
+    shortName: 'Smart Listening MP3',
+    category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  }
+];
 
 // Dữ liệu mẫu ban đầu để Bảng Thống Kê Admin hiển thị ngay dữ liệu sống động, chân thực
 const DEFAULT_TRACKED_USERS: MachineProfile[] = [];
@@ -691,6 +815,296 @@ class ActivityTrackingService {
     });
   }
 
+  // ==========================================
+  // HỆ THỐNG QUẢN LÝ HẠN NGẠCH CÀI ĐẶT & UPDATE TẤT CẢ CÁC APP
+  // ==========================================
+
+  // Ghi nhận máy tính đã cài đặt app (mỗi máy tính chỉ tính là 1 lần cài đặt duy nhất)
+  public recordInstallation(
+    appId: string,
+    appName: string,
+    machineId?: string,
+    teacherInfo?: { fullName?: string; schoolUnit?: string; phoneNumber?: string }
+  ): { isNewMachine: boolean; installedCount: number } {
+    const mid = (machineId || this.getOrCreateMachineId()).trim().toUpperCase();
+    if (isAdminMachine(mid)) return { isNewMachine: false, installedCount: 0 };
+
+    try {
+      const raw = localStorage.getItem(STORAGE_APP_INSTALLS_MAP);
+      const installsMap: Record<string, Record<string, AppInstalledMachineDetail>> = raw ? JSON.parse(raw) : {};
+      if (!installsMap[appId]) installsMap[appId] = {};
+
+      const now = this.formatNow();
+      let isNewMachine = false;
+
+      if (!installsMap[appId][mid]) {
+        isNewMachine = true;
+        installsMap[appId][mid] = {
+          machineId: mid,
+          firstSeenAt: now,
+          lastSeenAt: now,
+          fullName: teacherInfo?.fullName || this.getCurrentProfile().fullName || undefined,
+          schoolUnit: teacherInfo?.schoolUnit || this.getCurrentProfile().schoolUnit || undefined,
+          phoneNumber: teacherInfo?.phoneNumber || this.getCurrentProfile().phoneNumber || undefined,
+          status: 'INSTALLED',
+          installCount: 1,
+          updateCount: 0
+        };
+      } else {
+        installsMap[appId][mid].lastSeenAt = now;
+        installsMap[appId][mid].installCount += 1;
+        if (teacherInfo?.fullName) installsMap[appId][mid].fullName = teacherInfo.fullName;
+        if (teacherInfo?.schoolUnit) installsMap[appId][mid].schoolUnit = teacherInfo.schoolUnit;
+        if (teacherInfo?.phoneNumber) installsMap[appId][mid].phoneNumber = teacherInfo.phoneNumber;
+      }
+
+      localStorage.setItem(STORAGE_APP_INSTALLS_MAP, JSON.stringify(installsMap));
+
+      // Ghi log hoạt động
+      this.logActivity(
+        appId,
+        appName,
+        `${isNewMachine ? 'Cài đặt lần đầu' : 'Cài lại / Xác nhận'} thành công trên máy [${mid}]`
+      );
+
+      const installedCount = Object.keys(installsMap[appId]).length;
+      return { isNewMachine, installedCount };
+    } catch (e) {
+      console.error('Lỗi khi ghi nhận cài đặt:', e);
+      return { isNewMachine: false, installedCount: 0 };
+    }
+  }
+
+  // Ghi nhận một lần giáo viên bấm kiểm tra/cập nhật phiên bản mới
+  public recordAppUpdate(
+    appId: string,
+    appName: string,
+    version: string,
+    machineId?: string
+  ): { totalAppUpdates: number } {
+    const mid = (machineId || this.getOrCreateMachineId()).trim().toUpperCase();
+    try {
+      // 1. Cập nhật vào danh sách máy đã cài đặt
+      const raw = localStorage.getItem(STORAGE_APP_INSTALLS_MAP);
+      const installsMap: Record<string, Record<string, AppInstalledMachineDetail>> = raw ? JSON.parse(raw) : {};
+      if (!installsMap[appId]) installsMap[appId] = {};
+
+      const now = this.formatNow();
+      if (!installsMap[appId][mid]) {
+        installsMap[appId][mid] = {
+          machineId: mid,
+          firstSeenAt: now,
+          lastSeenAt: now,
+          fullName: this.getCurrentProfile().fullName || undefined,
+          schoolUnit: this.getCurrentProfile().schoolUnit || undefined,
+          phoneNumber: this.getCurrentProfile().phoneNumber || undefined,
+          status: 'INSTALLED',
+          installCount: 1,
+          updateCount: 1,
+          lastVersion: version
+        };
+      } else {
+        installsMap[appId][mid].updateCount = (installsMap[appId][mid].updateCount || 0) + 1;
+        installsMap[appId][mid].lastSeenAt = now;
+        installsMap[appId][mid].lastVersion = version;
+      }
+      localStorage.setItem(STORAGE_APP_INSTALLS_MAP, JSON.stringify(installsMap));
+
+      // 2. Ghi vào nhật ký các lần update toàn hệ thống
+      const rawUpdates = localStorage.getItem(STORAGE_APP_UPDATES_LOG);
+      const updatesLog: Array<{ id: string; appId: string; appName: string; version: string; machineId: string; timestamp: string }> = rawUpdates ? JSON.parse(rawUpdates) : [];
+      updatesLog.unshift({
+        id: `UPD-${Date.now()}`,
+        appId,
+        appName,
+        version,
+        machineId: mid,
+        timestamp: now
+      });
+      if (updatesLog.length > 500) updatesLog.pop();
+      localStorage.setItem(STORAGE_APP_UPDATES_LOG, JSON.stringify(updatesLog));
+
+      // Ghi log hoạt động
+      this.logActivity(
+        appId,
+        appName,
+        `Giáo viên cập nhật phiên bản mới (v${version}) trên máy [${mid}]`
+      );
+
+      const totalAppUpdates = updatesLog.filter(u => u.appId === appId).length;
+      return { totalAppUpdates };
+    } catch (e) {
+      console.error('Lỗi khi ghi nhận update:', e);
+      return { totalAppUpdates: 0 };
+    }
+  }
+
+  // TÍNH TOÁN VÀ TRẢ VỀ TOÀN BỘ BẢNG THỐNG KÊ HẠN NGẠCH CÀI ĐẶT & UPDATE TẤT CẢ CÁC APP
+  public getEcosystemQuotaStats(): EcosystemQuotaSummary {
+    const rawInstalls = localStorage.getItem(STORAGE_APP_INSTALLS_MAP);
+    const installsMap: Record<string, Record<string, AppInstalledMachineDetail>> = rawInstalls ? JSON.parse(rawInstalls) : {};
+
+    const rawUpdates = localStorage.getItem(STORAGE_APP_UPDATES_LOG);
+    const updatesLog: Array<{ appId: string; machineId: string; timestamp: string }> = rawUpdates ? JSON.parse(rawUpdates) : [];
+
+    const allMachines = this.getAllTrackedMachines();
+    const allRegistrations = this.getAllRegistrations();
+    let localLicenses: any[] = [];
+    try {
+      const licRaw = localStorage.getItem('gvai_cloud_licenses_v2');
+      if (licRaw) localLicenses = JSON.parse(licRaw);
+    } catch {
+      localLicenses = [];
+    }
+
+    const globalUniqueInstalledSet = new Set<string>();
+    const globalUniqueTrialSet = new Set<string>();
+    const globalUniqueActivatedSet = new Set<string>();
+
+    const appsStats: AppQuotaStatItem[] = ECOSYSTEM_APPS_CATALOG.map(catItem => {
+      const appId = catItem.appId;
+      const appMachinesMap = new Map<string, AppInstalledMachineDetail>();
+
+      // 1. Nạp từ lưu trữ chuyên biệt
+      if (installsMap[appId]) {
+        Object.entries(installsMap[appId]).forEach(([mid, item]) => {
+          if (!isAdminMachine(mid)) {
+            appMachinesMap.set(mid.toUpperCase(), { ...item });
+          }
+        });
+      }
+
+      // 2. Nạp thêm từ danh sách các máy truy cập / dùng thử
+      allMachines.forEach(m => {
+        if (!isAdminMachine(m.machineId)) {
+          const mid = m.machineId.toUpperCase();
+          const visited = m.appsVisited && (m.appsVisited[appId] || Object.keys(m.appsVisited).some(k => k.includes(appId) || appId.includes(k)));
+          if (visited || m.trialUsed > 0) {
+            if (!appMachinesMap.has(mid)) {
+              appMachinesMap.set(mid, {
+                machineId: mid,
+                firstSeenAt: m.firstSeenAt || m.lastSeenAt,
+                lastSeenAt: m.lastSeenAt,
+                fullName: m.fullName || m.predictedName,
+                schoolUnit: m.schoolUnit,
+                phoneNumber: m.phoneNumber,
+                status: 'INSTALLED',
+                installCount: 1,
+                updateCount: 0
+              });
+            }
+          }
+        }
+      });
+
+      // 3. Nạp từ đơn đăng ký
+      allRegistrations.forEach(r => {
+        if (!isAdminMachine(r.machineId)) {
+          const mid = r.machineId.toUpperCase();
+          const matchesApp = r.appId === appId || (!r.appId && appId === 'tich-hop-nls-ai');
+          if (matchesApp) {
+            const existing = appMachinesMap.get(mid);
+            if (existing) {
+              if (r.fullName) existing.fullName = r.fullName;
+              if (r.schoolUnit) existing.schoolUnit = r.schoolUnit;
+              if (r.phoneNumber) existing.phoneNumber = r.phoneNumber;
+              if (r.status === 'APPROVED') {
+                existing.status = 'ACTIVE_PRO';
+              } else if (existing.status !== 'ACTIVE_PRO') {
+                existing.status = 'TRIAL';
+              }
+            } else {
+              appMachinesMap.set(mid, {
+                machineId: mid,
+                firstSeenAt: r.createdAt,
+                lastSeenAt: r.createdAt,
+                fullName: r.fullName,
+                schoolUnit: r.schoolUnit,
+                phoneNumber: r.phoneNumber,
+                status: r.status === 'APPROVED' ? 'ACTIVE_PRO' : 'TRIAL',
+                installCount: 1,
+                updateCount: 0
+              });
+            }
+          }
+        }
+      });
+
+      // 4. Đối chiếu bản quyền kích hoạt Pro (licenseService)
+      localLicenses.forEach(lic => {
+        if (!isAdminMachine(lic.machine_id) && lic.status === 'ACTIVE') {
+          const mid = lic.machine_id.toUpperCase();
+          const existing = appMachinesMap.get(mid);
+          if (existing) {
+            existing.status = 'ACTIVE_PRO';
+            if (lic.teacher_name) existing.fullName = lic.teacher_name;
+            if (lic.school_unit) existing.schoolUnit = lic.school_unit;
+            if (lic.phone_zalo) existing.phoneNumber = lic.phone_zalo;
+          }
+        }
+      });
+
+      // Gom danh sách máy tính duy nhất cho app này
+      const machineList = Array.from(appMachinesMap.values());
+      const installedCount = machineList.length;
+
+      // Đếm số máy dùng thử và kích hoạt
+      let trialCount = 0;
+      let activatedCount = 0;
+
+      machineList.forEach(m => {
+        globalUniqueInstalledSet.add(m.machineId);
+
+        if (m.status === 'ACTIVE_PRO') {
+          activatedCount++;
+          globalUniqueActivatedSet.add(m.machineId);
+        } else if (m.status === 'TRIAL') {
+          trialCount++;
+          globalUniqueTrialSet.add(m.machineId);
+        } else {
+          // Kiểm tra xem máy có dùng thử không
+          const tm = allMachines.find(x => x.machineId.toUpperCase() === m.machineId);
+          if (tm && (tm.trialUsed > 0 || tm.isRegisteredTrial)) {
+            m.status = 'TRIAL';
+            trialCount++;
+            globalUniqueTrialSet.add(m.machineId);
+          }
+        }
+      });
+
+      // Đếm số lượt update cho app này
+      const specificUpdates = updatesLog.filter(u => u.appId === appId).length;
+      const machineUpdatesSum = machineList.reduce((acc, m) => acc + (m.updateCount || 0), 0);
+      const totalAppUpdates = Math.max(specificUpdates, machineUpdatesSum);
+
+      const activationRate = installedCount > 0 ? Math.round((activatedCount / installedCount) * 100) : 0;
+
+      return {
+        appId: catItem.appId,
+        appName: catItem.appName,
+        shortName: catItem.shortName,
+        category: catItem.category,
+        badge: catItem.badge,
+        installedMachinesCount: installedCount,
+        trialMachinesCount: trialCount,
+        activatedMachinesCount: activatedCount,
+        updateCount: totalAppUpdates,
+        activationRate,
+        machines: machineList
+      };
+    });
+
+    const totalUpdateCount = updatesLog.length + appsStats.reduce((acc, a) => acc + a.updateCount, 0);
+
+    return {
+      totalUniqueInstalledMachines: globalUniqueInstalledSet.size,
+      totalUniqueTrialMachines: globalUniqueTrialSet.size,
+      totalUniqueActivatedMachines: globalUniqueActivatedSet.size,
+      totalUpdateCount: Math.max(updatesLog.length, totalUpdateCount),
+      appsStats
+    };
+  }
+
   // Định dạng ngày giờ chuẩn Việt Nam: DD/MM/YYYY HH:mm:ss
   private formatNow(): string {
     const d = new Date();
@@ -706,3 +1120,4 @@ class ActivityTrackingService {
 }
 
 export const activityTrackingService = new ActivityTrackingService();
+

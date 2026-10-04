@@ -37,11 +37,13 @@ import {
   Megaphone,
   Share2,
   ExternalLink,
-  Zap
+  Zap,
+  Download,
+  ShieldCheck
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
-import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem, isAdminMachine } from '../services/activityTrackingService';
+import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem, isAdminMachine, AppQuotaStatItem, EcosystemQuotaSummary, AppInstalledMachineDetail } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
 import { generateBientheLicenseKey } from '../services/bientheKeyService';
@@ -79,8 +81,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [isPingingIndexNow, setIsPingingIndexNow] = useState(false);
   const [pingStatusMsg, setPingStatusMsg] = useState('');
   const [trackedMachines, setTrackedMachines] = useState<MachineProfile[]>([]);
-  const [trackingSearch, setTrackingSearch] = useState('');
-  const [trackingSubTab, setTrackingSubTab] = useState<'requests' | 'stats' | 'machines'>('requests');
+  const [trackingSubTab, setTrackingSubTab] = useState<'requests' | 'quota' | 'stats' | 'machines'>('requests');
+  const [ecosystemQuota, setEcosystemQuota] = useState<EcosystemQuotaSummary | null>(null);
+  const [quotaSearch, setQuotaSearch] = useState('');
+  const [quotaCatFilter, setQuotaCatFilter] = useState<'ALL' | 'tienganh' | 'toan' | 'tienich' | 'chung'>('ALL');
+  const [selectedQuotaApp, setSelectedQuotaApp] = useState<AppQuotaStatItem | null>(null);
+  const [showQuotaDetailModal, setShowQuotaDetailModal] = useState(false);
+  const [machineDetailSearch, setMachineDetailSearch] = useState('');
   const [activityLogs, setActivityLogs] = useState<ActivityLogItem[]>([]);
   const [registrationRequests, setRegistrationRequests] = useState<RegistrationRequest[]>([]);
   const [webStats, setWebStats] = useState<any>(null);
@@ -415,6 +422,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
 
     setRegistrationRequests(localRegs);
     setWebStats(activityTrackingService.getWebStats());
+    setEcosystemQuota(activityTrackingService.getEcosystemQuotaStats());
 
     // 3. Đồng bộ danh sách máy bị khóa từ Cloud
     try {
@@ -2102,6 +2110,19 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   <>
                     <button
                       type="button"
+                      onClick={() => setTrackingSubTab('quota')}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                        trackingSubTab === 'quota'
+                          ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <BarChart3 className="w-3.5 h-3.5" />
+                      <span>2. 📊 Hạn Ngạch Cài Đặt & Update ({ecosystemQuota?.appsStats?.length || 12} App)</span>
+                    </button>
+
+                    <button
+                      type="button"
                       onClick={() => setTrackingSubTab('stats')}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
                         trackingSubTab === 'stats'
@@ -2110,7 +2131,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                       }`}
                     >
                       <History className="w-3.5 h-3.5" />
-                      <span>2. Thống Kê Web & Lịch Sử Theo Ngày Giờ</span>
+                      <span>3. Thống Kê Web & Lịch Sử Theo Ngày Giờ</span>
                     </button>
 
                     <button
@@ -2123,7 +2144,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                       }`}
                     >
                       <Laptop className="w-3.5 h-3.5" />
-                      <span>3. Quản Lý Máy & Khóa Vĩnh Viễn</span>
+                      <span>4. Quản Lý Máy & Khóa Vĩnh Viễn</span>
                       {blockedMachines.length > 0 && (
                         <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black">
                           {blockedMachines.length}
@@ -2583,7 +2604,289 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             )}
 
             {/* ========================================================= */}
-            {/* SUBTAB 2: THỐNG KÊ WEB & LỊCH SỬ THEO NGÀY GIỜ            */}
+            {/* SUBTAB: THỐNG KÊ HẠN NGẠCH CÀI ĐẶT & UPDATE TẤT CẢ CÁC APP */}
+            {/* ========================================================= */}
+            {trackingSubTab === 'quota' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-3.5">
+                {/* 1. 4 THẺ KPI TỔNG HỢP TOÀN HỆ SINH THÁI */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {/* Card 1: Tổng máy đã cài đặt */}
+                  <div className="bg-slate-900/90 border border-cyan-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-cyan-950/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all"></div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">MÁY ĐÃ CÀI ĐẶT</span>
+                      <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+                        <Laptop className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-2xl font-black text-cyan-400 tracking-tight">
+                        {ecosystemQuota?.totalUniqueInstalledMachines || 0} <span className="text-xs font-semibold text-slate-400">Máy tính</span>
+                      </div>
+                      <p className="text-[10px] text-cyan-300/80 mt-0.5 font-medium">
+                        🛡️ Mỗi máy tính tính 1 lần duy nhất (Unique PC)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Số máy đã dùng thử */}
+                  <div className="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-amber-950/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">MÁY ĐÃ DÙNG THỬ</span>
+                      <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                        <Sparkles className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-2xl font-black text-amber-400 tracking-tight">
+                        {ecosystemQuota?.totalUniqueTrialMachines || 0} <span className="text-xs font-semibold text-slate-400">Máy tính</span>
+                      </div>
+                      <p className="text-[10px] text-amber-300/80 mt-0.5 font-medium">
+                        🧪 Đang trải nghiệm 5 lượt thử đầy đủ tính năng
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Số máy đã kích hoạt Pro */}
+                  <div className="bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-emerald-950/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">ĐÃ KÍCH HOẠT PRO</span>
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                        <CheckCircle2 className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-2xl font-black text-emerald-400 tracking-tight">
+                        {ecosystemQuota?.totalUniqueActivatedMachines || 0} <span className="text-xs font-semibold text-slate-400">Máy tính</span>
+                      </div>
+                      <p className="text-[10px] text-emerald-300/80 mt-0.5 font-medium">
+                        👑 Đã cấp key bản quyền Pro / 1-3 Năm / VIP
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Tổng số lượt giáo viên update */}
+                  <div className="bg-slate-900/90 border border-purple-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-purple-950/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">LƯỢT GV CẬP NHẬT</span>
+                      <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                        <RefreshCw className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-2xl font-black text-purple-400 tracking-tight">
+                        {ecosystemQuota?.totalUpdateCount || 0} <span className="text-xs font-semibold text-slate-400">Lượt Update</span>
+                      </div>
+                      <p className="text-[10px] text-purple-300/80 mt-0.5 font-medium">
+                        🔄 Tổng số lần GV tải & kiểm tra cập nhật mới
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. THANH ĐIỀU KHIỂN & BỘ LỌC TÌM KIẾM */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2.5">
+                    {/* Bộ lọc danh mục */}
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                      <span className="text-slate-400 font-semibold">Phân loại:</span>
+                      {[
+                        { id: 'ALL', label: 'Tất Cả' },
+                        { id: 'tienganh', label: 'Tiếng Anh (THCS/THPT)' },
+                        { id: 'toan', label: 'Toán Học (MathStudio)' },
+                        { id: 'tienich', label: 'Tiện Ích Giáo Viên' },
+                        { id: 'chung', label: 'Giáo Án & Đề Thi' }
+                      ].map(cat => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => setQuotaCatFilter(cat.id as any)}
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition cursor-pointer ${
+                            quotaCatFilter === cat.id
+                              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                              : 'bg-slate-800 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Nút hành động */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const data = activityTrackingService.getEcosystemQuotaStats();
+                          setEcosystemQuota(data);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1.5 text-xs cursor-pointer transition font-semibold"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Làm mới số liệu</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const data = activityTrackingService.getEcosystemQuotaStats();
+                          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `Bao_Cao_Han_Ngach_Cai_Dat_Ecosystem_${Date.now()}.json`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 border border-cyan-500/40 flex items-center gap-1.5 text-xs cursor-pointer transition font-semibold"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Xuất Báo Cáo JSON</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Thanh tìm kiếm */}
+                  <div className="relative w-full">
+                    <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Tìm kiếm phần mềm theo tên, mã app (nls, tieng anh, mathstudio, cleaner...)"
+                      value={quotaSearch}
+                      onChange={(e) => setQuotaSearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. BẢNG THỐNG KÊ CHI TIẾT TẤT CẢ CÁC APP */}
+                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60 shadow-inner">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="sticky top-0 bg-slate-900/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-800 z-10">
+                      <tr>
+                        <th className="py-2.5 px-3 text-center w-12">STT</th>
+                        <th className="py-2.5 px-3">Tên Ứng Dụng / Phần Mềm</th>
+                        <th className="py-2.5 px-3">Phân Loại</th>
+                        <th className="py-2.5 px-3 text-center">
+                          <div className="font-bold text-cyan-400">Đã Cài Đặt (Unique)</div>
+                          <div className="text-[9px] text-slate-400 lowercase font-normal">1 máy / 1 ID phần cứng</div>
+                        </th>
+                        <th className="py-2.5 px-3 text-center">
+                          <div className="font-bold text-amber-400">Đã Dùng Thử</div>
+                          <div className="text-[9px] text-slate-400 lowercase font-normal">đang trải nghiệm</div>
+                        </th>
+                        <th className="py-2.5 px-3 text-center">
+                          <div className="font-bold text-emerald-400">Đã Kích Hoạt Pro</div>
+                          <div className="text-[9px] text-slate-400 lowercase font-normal">bản quyền chính thức</div>
+                        </th>
+                        <th className="py-2.5 px-3 text-center">
+                          <div className="font-bold text-purple-400">Lượt GV Update</div>
+                          <div className="text-[9px] text-slate-400 lowercase font-normal">số lần cập nhật</div>
+                        </th>
+                        <th className="py-2.5 px-3 text-center">Tỷ Lệ Kích Hoạt</th>
+                        <th className="py-2.5 px-3 text-right">Chi Tiết Máy</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {ecosystemQuota?.appsStats
+                        ?.filter(app => {
+                          if (quotaCatFilter !== 'ALL' && app.category !== quotaCatFilter) return false;
+                          if (!quotaSearch.trim()) return true;
+                          const q = quotaSearch.toLowerCase();
+                          return (
+                            app.appName.toLowerCase().includes(q) ||
+                            app.shortName.toLowerCase().includes(q) ||
+                            app.appId.toLowerCase().includes(q)
+                          );
+                        })
+                        .map((app, idx) => (
+                          <tr key={app.appId} className="hover:bg-slate-900/80 transition-colors">
+                            <td className="py-3 px-3 text-center font-bold text-slate-500">
+                              {idx + 1}
+                            </td>
+                            <td className="py-3 px-3">
+                              <div className="font-bold text-white flex items-center gap-2">
+                                <span>{app.appName}</span>
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                                  app.badge.includes('PRO')
+                                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                    : app.badge.includes('ADMIN')
+                                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                }`}>
+                                  {app.badge}
+                                </span>
+                              </div>
+                              <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                                Mã: <code className="text-cyan-300 font-bold">{app.appId}</code>
+                              </div>
+                            </td>
+                            <td className="py-3 px-3">
+                              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] border border-slate-700 capitalize">
+                                {app.category === 'tienganh' ? 'Tiếng Anh THCS & THPT' : app.category === 'toan' ? 'Toán Học & Mathpix' : app.category === 'tienich' ? 'Tiện Ích Giáo Viên' : 'Chung'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/80 text-cyan-300 font-black text-sm">
+                                <Laptop className="w-3.5 h-3.5" />
+                                {app.installedMachinesCount} máy
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-950/60 border border-amber-800/80 text-amber-300 font-black text-sm">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                {app.trialMachinesCount} máy
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/80 text-emerald-300 font-black text-sm">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                {app.activatedMachinesCount} máy
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-950/60 border border-purple-800/80 text-purple-300 font-black text-sm">
+                                <RefreshCw className="w-3.5 h-3.5" />
+                                {app.updateCount} lượt
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <div className="flex flex-col items-center gap-1">
+                                <span className="font-extrabold text-emerald-400">{app.activationRate}%</span>
+                                <div className="w-20 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                  <div
+                                    className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full rounded-full transition-all"
+                                    style={{ width: `${Math.min(100, app.activationRate)}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-3 px-3 text-right">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedQuotaApp(app);
+                                  setShowQuotaDetailModal(true);
+                                }}
+                                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-cyan-600 hover:text-white text-cyan-300 border border-slate-700 hover:border-cyan-500 font-bold text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Xem Máy ({app.machines.length})</span>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================= */}
+            {/* SUBTAB 3: THỐNG KÊ WEB & LỊCH SỬ THEO NGÀY GIỜ            */}
             {/* ========================================================= */}
             {trackingSubTab === 'stats' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3">
@@ -5619,6 +5922,224 @@ Tác quyền: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717.`;
                   className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer"
                 >
                   Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        {/* MODAL CHI TIẾT DANH SÁCH MÁY TÍNH ĐÃ CÀI ĐẶT & UPDATE TỪNG APP */}
+        {showQuotaDetailModal && selectedQuotaApp && (
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 animate-in fade-in duration-200">
+            <div className="bg-slate-900 border border-cyan-500/40 rounded-3xl max-w-4xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-2xl shadow-cyan-950/40">
+              {/* Header */}
+              <div className="p-4 sm:p-5 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between gap-3 shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+                    <Laptop className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base font-black text-white">{selectedQuotaApp.appName}</h3>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        {selectedQuotaApp.badge}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Đã cài đặt: <strong className="text-cyan-400">{selectedQuotaApp.installedMachinesCount} máy tính (Unique)</strong> • Dùng thử: <strong className="text-amber-400">{selectedQuotaApp.trialMachinesCount}</strong> • Kích hoạt Pro: <strong className="text-emerald-400">{selectedQuotaApp.activatedMachinesCount}</strong> • Lượt GV Update: <strong className="text-purple-400">{selectedQuotaApp.updateCount}</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowQuotaDetailModal(false)}
+                  className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer shrink-0"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Search & Tool Bar */}
+              <div className="p-3 border-b border-slate-800 bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
+                <div className="relative w-full sm:w-80">
+                  <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Tìm theo ID máy, tên GV, trường, SĐT..."
+                    value={machineDetailSearch}
+                    onChange={(e) => setMachineDetailSearch(e.target.value)}
+                    className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+                <div className="text-xs text-slate-400">
+                  Hiển thị: <strong className="text-cyan-400">
+                    {selectedQuotaApp.machines.filter(m => {
+                      if (!machineDetailSearch.trim()) return true;
+                      const q = machineDetailSearch.toLowerCase();
+                      return (
+                        m.machineId.toLowerCase().includes(q) ||
+                        (m.fullName && m.fullName.toLowerCase().includes(q)) ||
+                        (m.schoolUnit && m.schoolUnit.toLowerCase().includes(q)) ||
+                        (m.phoneNumber && m.phoneNumber.includes(q))
+                      );
+                    }).length} / {selectedQuotaApp.machines.length}
+                  </strong> máy tính duy nhất
+                </div>
+              </div>
+
+              {/* Table List */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="sticky top-0 bg-slate-900/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-800 z-10">
+                    <tr>
+                      <th className="py-2 px-2.5 text-center w-10">STT</th>
+                      <th className="py-2 px-2.5">Mã Máy Tính (Hardware ID)</th>
+                      <th className="py-2 px-2.5">Giáo Viên / Đơn Vị</th>
+                      <th className="py-2 px-2.5">SĐT Zalo</th>
+                      <th className="py-2 px-2.5 text-center">Cài Đầu Tiên</th>
+                      <th className="py-2 px-2.5 text-center">Lần Cuối</th>
+                      <th className="py-2 px-2.5 text-center">Lượt Update</th>
+                      <th className="py-2 px-2.5 text-center">Trạng Thái</th>
+                      <th className="py-2 px-2.5 text-right">Thao Tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {selectedQuotaApp.machines
+                      .filter(m => {
+                        if (!machineDetailSearch.trim()) return true;
+                        const q = machineDetailSearch.toLowerCase();
+                        return (
+                          m.machineId.toLowerCase().includes(q) ||
+                          (m.fullName && m.fullName.toLowerCase().includes(q)) ||
+                          (m.schoolUnit && m.schoolUnit.toLowerCase().includes(q)) ||
+                          (m.phoneNumber && m.phoneNumber.includes(q))
+                        );
+                      })
+                      .map((m, idx) => (
+                        <tr key={m.machineId} className="hover:bg-slate-950/60 transition-colors">
+                          <td className="py-2.5 px-2.5 text-center font-bold text-slate-500">
+                            {idx + 1}
+                          </td>
+                          <td className="py-2.5 px-2.5 font-mono text-cyan-300 font-bold">
+                            <div className="flex items-center gap-1.5">
+                              <span>{m.machineId}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(m.machineId);
+                                  alert(`Đã sao chép mã máy: ${m.machineId}`);
+                                }}
+                                className="text-slate-500 hover:text-cyan-400 transition"
+                                title="Sao chép ID máy"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-2.5">
+                            <div className="font-semibold text-white">{m.fullName || 'Giáo viên'}</div>
+                            {m.schoolUnit && <div className="text-[10px] text-slate-400">{m.schoolUnit}</div>}
+                          </td>
+                          <td className="py-2.5 px-2.5 font-mono text-emerald-400">
+                            {m.phoneNumber || '-'}
+                          </td>
+                          <td className="py-2.5 px-2.5 text-center text-slate-400 text-[11px] whitespace-nowrap">
+                            {m.firstSeenAt}
+                          </td>
+                          <td className="py-2.5 px-2.5 text-center text-slate-400 text-[11px] whitespace-nowrap">
+                            {m.lastSeenAt}
+                          </td>
+                          <td className="py-2.5 px-2.5 text-center">
+                            <span className="px-2 py-0.5 rounded-full bg-purple-950/60 text-purple-300 border border-purple-800/80 font-bold text-xs">
+                              {m.updateCount || 0} lượt
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-2.5 text-center">
+                            {m.status === 'ACTIVE_PRO' ? (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-[10px] inline-flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> ĐÃ KÍCH HOẠT PRO
+                              </span>
+                            ) : m.status === 'TRIAL' ? (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-[10px] inline-flex items-center gap-1">
+                                <Sparkles className="w-3 h-3" /> DÙNG THỬ
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 font-bold text-[10px] inline-flex items-center gap-1">
+                                <Laptop className="w-3 h-3" /> ĐÃ CÀI ĐẶT
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-2.5 px-2.5 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowQuotaDetailModal(false);
+                                // Điều hướng sang tab cấp key tương ứng
+                                if (selectedQuotaApp.appId === 'tich-hop-nls-ai') {
+                                  setAdminTab('nls');
+                                  setNlsMid(m.machineId);
+                                } else if (selectedQuotaApp.appId.includes('tao-de-tieng-anh')) {
+                                  setAdminTab('taode');
+                                  setExamMid(m.machineId);
+                                  setExamLevel(selectedQuotaApp.appId.includes('thpt') ? 'THPT' : 'THCS');
+                                } else if (selectedQuotaApp.appId === 'tao-de-15p-tieng-anh') {
+                                  setAdminTab('de15p');
+                                  setDe15pMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'mathstudio') {
+                                  setAdminTab('mathstudio');
+                                  setMathMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'tao-de-thcs-8mon') {
+                                  setAdminTab('thcs8m');
+                                  setThcs8mMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'sinh-de-bienthe') {
+                                  setAdminTab('bienthe');
+                                  setBientheMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'cleaner-pro') {
+                                  setAdminTab('cleaner');
+                                  setCleanerMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'chuan-hoa-van-ban') {
+                                  setAdminTab('chuanhoavb');
+                                  setChvbMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'pdf-suite') {
+                                  setAdminTab('pdfsuite');
+                                  setPdfMid(m.machineId);
+                                } else if (selectedQuotaApp.appId === 'screen-record') {
+                                  setAdminTab('record');
+                                  setRecordMid(m.machineId);
+                                } else {
+                                  setAdminTab('tts');
+                                }
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] inline-flex items-center gap-1 transition cursor-pointer shadow-sm"
+                            >
+                              <Key className="w-3 h-3" />
+                              <span>Cấp Key Pro</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    {selectedQuotaApp.machines.length === 0 && (
+                      <tr>
+                        <td colSpan={9} className="py-8 text-center text-slate-500">
+                          Chưa có máy tính nào cài đặt ứng dụng này.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer */}
+              <div className="p-3.5 border-t border-slate-800 bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
+                <p className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Quy tắc: Mỗi máy tính sở hữu mã phần cứng độc nhất (Hardware Fingerprint) và chỉ tính 1 lần cài đặt duy nhất.</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowQuotaDetailModal(false)}
+                  className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition cursor-pointer"
+                >
+                  Đóng Cửa Sổ
                 </button>
               </div>
             </div>
