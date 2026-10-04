@@ -61,6 +61,37 @@ export function getOrCreateExamHardwareCode(): string {
 }
 
 /**
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho THPT
+ * Định dạng chuẩn Rule 5: DVT-ENGPT-XXXX-XXXX
+ */
+export function getOrCreateExamTHPTHardwareCode(): string {
+  if (typeof window === 'undefined') return 'DVT-ENGPT-DEFAULT';
+
+  const STORAGE_KEY = 'gvai_taode_thpt_hardware_code';
+  let code = localStorage.getItem(STORAGE_KEY);
+  if (code && code.startsWith('DVT-ENGPT-')) {
+    return code;
+  }
+
+  // Thu thập dấu vân tay phần cứng trình duyệt nhiều tầng lớp
+  const screenPart = `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth}`;
+  const corePart = `${navigator.hardwareConcurrency || 4}-${navigator.platform || 'Win32'}`;
+  const rawSeed = `THPT-${screenPart}-${corePart}-${navigator.userAgent}`;
+
+  let hash = 0;
+  for (let i = 0; i < rawSeed.length; i++) {
+    hash = (hash << 5) - hash + rawSeed.charCodeAt(i);
+    hash |= 0;
+  }
+
+  const hex1 = Math.abs(hash).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  const hex2 = Math.abs((hash * 31) | 0).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  code = `DVT-ENGPT-${hex1}-${hex2}`;
+  localStorage.setItem(STORAGE_KEY, code);
+  return code;
+}
+
+/**
  * TẦNG BẢO MẬT 1: Đọc số lượt dùng thử được ký số mật mã SHA-256 (Chống hack F12 DevTools)
  * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
  */
@@ -240,9 +271,9 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
     };
   }
 
-  // TRƯỜNG HỢP 2: Mã dạng ENG-[prefix]-[expHex]-[sig] hoặc THPT-[prefix]-[expHex]-[sig]
+  // TRƯỜNG HỢP 2: Mã dạng ENG-[prefix]-[expHex]-[sig] hoặc THPT-[prefix]-[expHex]-[sig] hoặc ENGPT-[prefix]-[expHex]-[sig]
   const parts = cleanKey.split('-');
-  if (parts.length !== 4 || (!['ENG', 'THPT'].includes(parts[0]))) {
+  if (parts.length !== 4 || (!['ENG', 'THPT', 'ENGPT'].includes(parts[0]))) {
     return {
       isValid: false,
       message: 'Mã kích hoạt không đúng định dạng (Ví dụ: KEY-20... hoặc ENG-LT-... hoặc THPT-LT-...)!'

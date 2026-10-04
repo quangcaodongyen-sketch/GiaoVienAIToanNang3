@@ -20,12 +20,15 @@ import {
   Sliders,
   CheckSquare,
   RefreshCw,
-  BookOpen
+  BookOpen,
+  Lock,
+  Layers,
+  Shuffle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import {
-  getOrCreateExamHardwareCode,
+  getOrCreateExamTHPTHardwareCode,
   verifyExamLicenseKey,
   ExamVerifyResult
 } from '../services/taodeKeyService';
@@ -39,15 +42,17 @@ interface TaoDeTiengAnhTHPTModalProps {
 }
 
 export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
-  // Chuẩn hóa theo phong cách NLS-AI: 'download' (Tải về) | 'register' (Bản quyền) | 'preview' (Xem mẫu)
-  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
+  // Modal 3 Tabs chuẩn quy định Rule 2
+  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [examGenerated, setExamGenerated] = useState<boolean>(false);
+  const [examGenerated, setExamGenerated] = useState<boolean>(true);
   const [selectedGrade, setSelectedGrade] = useState<string>('10');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
+  const [numVariants, setNumVariants] = useState<number>(4);
+  const [generationMode, setGenerationMode] = useState<string>('shuffle'); // 'shuffle' | 'distinct'
   const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO TUYÊN QUANG');
   const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THPT ĐỒNG YÊN');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
@@ -69,9 +74,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
 
   useEffect(() => {
     if (!isOpen) return;
-    const baseMid = getOrCreateExamHardwareCode();
-    // Prefix THPT cho chuẩn nhận diện hệ sinh thái
-    const thptMid = baseMid.startsWith('THPT-') ? baseMid : `THPT-${baseMid}`;
+    const thptMid = getOrCreateExamTHPTHardwareCode();
     setDetectedMid(thptMid);
 
     const savedPro = localStorage.getItem('gvai_taode_thpt_is_pro_active');
@@ -102,8 +105,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
       setVerifyResult({ isValid: false, message: 'Vui lòng dán Mã kích hoạt do Thầy Thành cấp!' });
       return;
     }
-    const cleanMid = detectedMid.replace(/^THPT-/, '');
-    const res = await verifyExamLicenseKey(cleanMid, inputKey.trim());
+    const res = await verifyExamLicenseKey(detectedMid, inputKey.trim());
     if (res.isValid) {
       setIsProActive(true);
       localStorage.setItem('gvai_taode_thpt_is_pro_active', 'true');
@@ -129,7 +131,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         setTrialRemaining(nextCount);
         localStorage.setItem('gvai_taode_thpt_trial_remaining', nextCount.toString());
       }
-    }, 1200);
+    }, 1000);
   };
 
   const handleSendRegForm = async (e: React.FormEvent) => {
@@ -162,26 +164,36 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
   const downloadZipUrl = "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip";
   const downloadDotmUrl = "/TaoDe_TiengAnh_THPT.dotm";
 
+  // Danh sách mã đề theo lớp
+  const getExamCodePrefix = () => {
+    if (selectedGrade === '10') return '10';
+    if (selectedGrade === '11') return '11';
+    return '12';
+  };
+  const codePrefix = getExamCodePrefix();
+  const variantCodes = Array.from({ length: numVariants }, (_, i) => `${codePrefix}${i + 1}`);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-5xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-5xl h-[92vh] max-h-[850px] bg-slate-900 border border-violet-500/40 rounded-3xl shadow-2xl flex flex-col overflow-hidden text-slate-100">
+        
         {/* HEADER MODAL */}
-        <div className="px-5 py-4 bg-gradient-to-r from-violet-950 via-slate-900 to-indigo-950 border-b border-violet-800/40 flex items-center justify-between">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/80 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-violet-600/30 border border-violet-400/40 rounded-xl text-violet-300 shadow-inner">
-              <BookOpen className="w-6 h-6 text-violet-400" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-600/30 text-white font-bold text-lg">
+              📝
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
                   TẠO ĐỀ &amp; ĐỀ CƯƠNG TIẾNG ANH THPT
                 </h3>
-                <span className="px-2.5 py-0.5 text-xs font-extrabold bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 rounded-full shadow">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-violet-500 to-indigo-500 text-white shadow-sm uppercase tracking-wide">
                   GLOBAL SUCCESS 10 - 11 - 12
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Chuẩn Tài liệu tập huấn ra đề của Bộ GD&amp;ĐT và Sở GD&amp;ĐT Tuyên Quang • Tác giả: Thầy giáo Đinh Văn Thành
+                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả: Thầy giáo Đinh Văn Thành (0915.213717)
               </p>
             </div>
           </div>
@@ -193,8 +205,23 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
           </button>
         </div>
 
-        {/* TABS NAVIGATION CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ BẢN QUYỀN */}
-        <div className="flex border-b border-slate-800 bg-slate-950/50 px-5 pt-3 gap-2 sm:gap-4 overflow-x-auto">
+        {/* TABS NAVIGATION CHUẨN 3 TAB THEO RULE 2 */}
+        <div className="flex border-b border-slate-800 bg-slate-950/50 px-5 pt-3 gap-2 sm:gap-4 overflow-x-auto shrink-0">
+          <button
+            onClick={() => setActiveTab('online')}
+            className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'online'
+                ? 'border-violet-400 text-violet-400 bg-violet-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-violet-300" />
+            <span>1. Trải Nghiệm Trực Tuyến</span>
+            <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-bold">
+              {isProActive ? 'PRO' : `${trialRemaining}/5`}
+            </span>
+          </button>
+
           <button
             onClick={() => setActiveTab('download')}
             className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
@@ -204,7 +231,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
             }`}
           >
             <Download className="w-4 h-4 text-cyan-300" />
-            <span>1. Tải Bản Máy Tính (.exe / .zip)</span>
+            <span>2. Tải Về &amp; Hướng Dẫn</span>
             <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">
               Pass: 123
             </span>
@@ -219,45 +246,21 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>2. Bản Quyền &amp; Kích Hoạt</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('preview')}
-            className={`flex items-center gap-2 px-4 py-2.5 font-bold text-sm rounded-t-xl transition-all border-b-2 cursor-pointer whitespace-nowrap ${
-              activeTab === 'preview'
-                ? 'border-violet-400 text-violet-400 bg-violet-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>3. Xem Mẫu Đề Thi THPT (CV 7991)</span>
+            <span>3. Bản Quyền &amp; Kích Hoạt</span>
           </button>
         </div>
 
-        {/* TAB 3: XEM MẪU ĐỀ THI SƯ PHẠM THPT */}
-        {activeTab === 'preview' && (
+        {/* ========================================================================= */}
+        {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LẦN DÙNG THỬ)                           */}
+        {/* ========================================================================= */}
+        {activeTab === 'online' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2.5">
-                <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
-                <div>
-                  <span className="font-bold block text-white text-[13px]">Bản Xem Thử Mẫu Đề Kiểm Tra Tiếng Anh THPT (CV 7991)</span>
-                  <span className="text-[11px] text-amber-200/80">Để tạo đề tự động cho các khối lớp THPT (10, 11, 12), xuất file Word in ấn kèm audio MP3, Quý Thầy/Cô vui lòng tải phần mềm về máy tính.</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setActiveTab('download')}
-                className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shrink-0 flex items-center gap-1 transition cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5" /> Tải Bộ Cài Ngay
-              </button>
-            </div>
+            
             {/* THANH DÙNG THỬ 5 CHẤM */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-violet-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-950 border border-violet-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-bold">
-                  {trialRemaining}
+                <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-bold text-lg">
+                  {isProActive ? '👑' : trialRemaining}
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -268,33 +271,39 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                       </span>
                     )}
                   </h4>
-                  <p className="text-xs text-slate-400">
-                    Mỗi lượt bấm sinh ra 01 Ma trận 16 cột + Bản đặc tả chi tiết + 02 Mã đề tương đương + Bảng đáp án đỏ &amp; Audio Scripts.
+                  <p className="text-xs text-slate-300">
+                    Mỗi lượt bấm sinh ra 01 Ma trận 16 cột + Bản đặc tả + Bộ {numVariants} mã đề hoán vị + Bảng đối chiếu đáp án song song N cột in đỏ.
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+              
+              {/* 5 chấm tiến trình */}
+              <div className="flex items-center gap-1.5 bg-slate-900/90 px-3.5 py-2 rounded-xl border border-slate-800">
                 {[1, 2, 3, 4, 5].map((idx) => {
-                  const isFilled = idx <= (5 - trialRemaining);
+                  const isUsed = idx > trialRemaining;
                   return (
-                    <span
+                    <div
                       key={idx}
-                      className={`text-lg transition-colors ${
-                        isFilled ? 'text-violet-400' : 'text-slate-600'
+                      title={isUsed ? `Lượt ${idx}: Đã dùng` : `Lượt ${idx}: Còn lại`}
+                      className={`w-3.5 h-3.5 rounded-full transition-all ${
+                        isProActive
+                          ? 'bg-emerald-400 shadow-sm shadow-emerald-500/50'
+                          : isUsed
+                          ? 'bg-slate-700 opacity-40'
+                          : 'bg-violet-400 shadow-sm shadow-violet-500/50'
                       }`}
-                    >
-                      ●
-                    </span>
+                    />
                   );
                 })}
                 <span className="ml-2 text-xs font-semibold text-slate-300">
-                  {5 - trialRemaining}/5 đã dùng
+                  {isProActive ? 'Vô hạn Pro' : `${5 - trialRemaining}/5 đã dùng`}
                 </span>
               </div>
             </div>
 
-            {/* BẢNG CHỌN KHỐI LỚP, KỲ THI & CẤU HÌNH TRƯỜNG */}
+            {/* BẢNG CHỌN KHỐI LỚP, KỲ THI, SỐ MÃ ĐỀ & THÔNG TIN TRƯỜNG */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Cột trái: Cấu hình đề */}
               <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                 <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block">
                   1. Chọn Khối Lớp THPT (Global Success)
@@ -304,7 +313,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     <button
                       key={g}
                       onClick={() => setSelectedGrade(g)}
-                      className={`py-2 px-3 rounded-lg text-sm font-bold transition-all border ${
+                      className={`py-2 px-3 rounded-lg text-sm font-bold transition-all border cursor-pointer ${
                         selectedGrade === g
                           ? 'bg-violet-600 border-violet-400 text-white shadow-lg shadow-violet-900/40 scale-102'
                           : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white'
@@ -315,28 +324,70 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   ))}
                 </div>
 
-                <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block pt-2">
-                  2. Chọn Kỳ Kiểm Tra Định Kỳ
-                </label>
-                <select
-                  value={selectedTerm}
-                  onChange={(e) => setSelectedTerm(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"
-                >
-                  <option value="GK1">GK1 - Giữa Học Kì 1 (60 phút - Đề viết 10.0đ)</option>
-                  <option value="CK1">CK1 - Cuối Học Kì 1 (60 phút - Viết 8.0đ + Speaking 2.0đ)</option>
-                  <option value="GK2">GK2 - Giữa Học Kì 2 (60 phút - Đề viết 10.0đ)</option>
-                  <option value="CK2">CK2 - Cuối Học Kì 2 (60 phút - Viết 8.0đ + Speaking 2.0đ)</option>
-                  <option value="KSCL">KSCL - Khảo Sát Chất Lượng Đầu Năm (60 phút)</option>
-                  <option value="DECUONG">DECUONG - Đề Cương Ôn Tập Toàn Diện Khối THPT</option>
-                </select>
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block mb-1">
+                      2. Kỳ Kiểm Tra
+                    </label>
+                    <select
+                      value={selectedTerm}
+                      onChange={(e) => setSelectedTerm(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value="GK1">GK1 - Giữa Kì 1 (60 phút)</option>
+                      <option value="CK1">CK1 - Cuối Kì 1 (Viết + Nói)</option>
+                      <option value="GK2">GK2 - Giữa Kì 2 (60 phút)</option>
+                      <option value="CK2">CK2 - Cuối Kì 2 (Viết + Nói)</option>
+                      <option value="KSCL">KSCL - Khảo sát đầu năm</option>
+                      <option value="DECUONG">DECUONG - Đề cương ôn tập</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block mb-1">
+                      3. Số Lượng Mã Đề
+                    </label>
+                    <select
+                      value={numVariants}
+                      onChange={(e) => setNumVariants(parseInt(e.target.value, 10))}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value={1}>1 mã đề ({codePrefix}1)</option>
+                      <option value={2}>2 mã đề ({codePrefix}1, {codePrefix}2)</option>
+                      <option value={4}>4 mã đề ({codePrefix}1 - {codePrefix}4)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block mb-1">
+                    4. Phương Thức Sinh Đề
+                  </label>
+                  <select
+                    value={generationMode}
+                    onChange={(e) => setGenerationMode(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-violet-500"
+                  >
+                    <option value="shuffle">Đảo câu &amp; hoán vị đáp án (Cùng nội dung đề gốc)</option>
+                    <option value="distinct">Đề mới tương đương (Khác câu hỏi, cùng chuẩn KTKN)</option>
+                  </select>
+                </div>
+
+                {/* BẢO CHỨNG BÀI NGHE PHÒNG THI */}
+                <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-[11px] text-emerald-300 flex items-center gap-2">
+                  <Headphones className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <span>
+                    🔒 <strong>Bài nghe (Q1 - Q8)</strong> cố định 100% chung đáp án giữa các mã đề để học sinh nghe chung 1 file audio trong phòng thi.
+                  </span>
+                </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-                <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block">
-                  3. Thông Tin Đơn Vị (Tự Động In Lên Đề)
-                </label>
+              {/* Cột phải: Thông tin đơn vị & Nút bấm sinh đề */}
+              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
+                  <label className="text-xs font-bold text-violet-400 tracking-wider uppercase block">
+                    5. Thông Tin Đơn Vị (Tự Động In Lên Đề)
+                  </label>
                   <div>
                     <span className="text-[11px] text-slate-400">Cơ quan chủ quản:</span>
                     <input
@@ -355,39 +406,54 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                       className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-200 mt-0.5 font-bold focus:border-violet-500 focus:outline-none"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <span className="text-[11px] text-slate-400">Năm học áp dụng:</span>
-                      <input
-                        type="text"
-                        value={schoolYear}
-                        onChange={(e) => setSchoolYear(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-200 mt-0.5 focus:border-violet-500 focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('download')}
-                        className="w-full py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-lg cursor-pointer"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>TẢI PHẦN MỀM ĐỂ TẠO ĐỀ TRÊN MÁY TÍNH</span>
-                      </button>
-                    </div>
+                  <div>
+                    <span className="text-[11px] text-slate-400">Năm học áp dụng:</span>
+                    <input
+                      type="text"
+                      value={schoolYear}
+                      onChange={(e) => setSchoolYear(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-slate-200 mt-0.5 focus:border-violet-500 focus:outline-none"
+                    />
                   </div>
                 </div>
+
+                {/* NÚT BẤM SINH ĐỀ TRỰC TUYẾN */}
+                <button
+                  type="button"
+                  onClick={handleGenerateExamOnline}
+                  disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
+                  className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer ${
+                    !isProActive && trialRemaining <= 0
+                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                      : 'bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white shadow-violet-900/40 hover:scale-[1.01]'
+                  }`}
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                      <span>Đang sinh bộ đề THPT &amp; bảng đối chiếu...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-amber-300" />
+                      <span>
+                        TẠO BỘ ĐỀ THPT {numVariants} MÃ ĐỀ{' '}
+                        {isProActive ? '(PRO KHÔNG GIỚI HẠN)' : `[CÒN ${trialRemaining}/5 LƯỢT]`}
+                      </span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* LIVE PREVIEW ĐỀ THI ĐÃ SINH */}
+            {/* LIVE PREVIEW ĐỀ THI SƯ PHẠM CHUẨN */}
             {examGenerated && (
-              <div className="p-5 rounded-xl bg-slate-950 border border-emerald-500/40 space-y-4 animate-fadeIn">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="p-5 rounded-2xl bg-slate-950 border border-violet-500/40 space-y-4 animate-fadeIn shadow-2xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                     <h4 className="text-sm font-bold text-white">
-                      ĐÃ SINH THÀNH CÔNG ĐỀ KIỂM TRA TIẾNG ANH {selectedGrade} ({selectedTerm})
+                      BỘ ĐỀ KIỂM TRA TIẾNG ANH {selectedGrade} ({selectedTerm}) • {numVariants} MÃ ĐỀ ({variantCodes.join(', ')})
                     </h4>
                   </div>
                   <div className="flex items-center gap-2">
@@ -398,7 +464,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                         setCopiedContent(true);
                         setTimeout(() => setCopiedContent(false), 2000);
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 flex items-center gap-1.5 transition-colors"
+                      className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       {copiedContent ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedContent ? 'Đã sao chép!' : 'Sao chép văn bản'}</span>
@@ -406,7 +472,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     <button
                       type="button"
                       onClick={() => setActiveTab('download')}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white flex items-center gap-1.5 transition-colors shadow cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-xs font-bold text-white flex items-center gap-1.5 transition-colors shadow cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Tải bộ cài máy tính để xuất Word</span>
@@ -414,89 +480,270 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   </div>
                 </div>
 
-                {/* VĂN BẢN ĐỀ THI CHUẨN SƯ PHẠM */}
+                {/* VĂN BẢN ĐỀ THI CHUẨN SƯ PHẠM (TIMES NEW ROMAN 13PT, ĐÁP ÁN ĐÚNG IN ĐỎ BOLD=FALSE) */}
                 <div
                   id="thpt-exam-paper"
-                  className="bg-white text-black p-6 rounded-lg font-serif text-sm leading-relaxed space-y-4 shadow max-h-[420px] overflow-y-auto select-text border border-slate-300"
+                  className="bg-white text-black p-6 rounded-xl font-serif text-[13pt] leading-relaxed space-y-4 shadow-lg max-h-[460px] overflow-y-auto select-text border border-slate-300"
                   style={{ fontFamily: '"Times New Roman", Times, serif' }}
                 >
-                  <div className="grid grid-cols-2 text-center text-xs font-bold uppercase pb-3 border-b border-black">
+                  {/* TIÊU ĐỀ ĐỀ THI 2 CỘT */}
+                  <div className="grid grid-cols-2 text-center text-xs font-bold uppercase pb-3 border-b-2 border-black">
                     <div>
                       <p>{schoolAgency}</p>
                       <p className="font-extrabold text-blue-900">{schoolName}</p>
-                      <p className="font-normal italic normal-case text-slate-700">Mã đề thi: 107</p>
+                      <p className="font-normal italic normal-case text-slate-700 mt-0.5">
+                        Mã đề thi: <strong className="text-black">{variantCodes[0]}</strong> (Kèm bộ {numVariants} mã đề: {variantCodes.join(', ')})
+                      </p>
                     </div>
                     <div>
                       <p>ĐỀ KIỂM TRA {selectedTerm} - NĂM HỌC {schoolYear}</p>
                       <p className="font-extrabold text-red-600">MÔN: TIẾNG ANH {selectedGrade} (THPT)</p>
-                      <p className="font-normal italic normal-case text-slate-700">Thời gian làm bài: 60 phút (Không kể giao đề)</p>
+                      <p className="font-normal italic normal-case text-slate-700 mt-0.5">
+                        Thời gian làm bài: 60 phút (Không kể thời gian giao đề)
+                      </p>
                     </div>
                   </div>
 
-                  <p className="text-center font-bold text-sm tracking-wide text-red-600 pt-2">
-                    A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN TẬP HUẤN TUYÊN QUANG)
-                  </p>
-                  <p className="text-xs italic text-slate-700 text-center">
-                    Cấu trúc 4 phần bài thi: 1. Listening (True/False + MCQ); 2. Language &amp; Grammar; 3. Reading (Cloze, Reading comp, Sentence ordering); 4. Writing (Sentence rewrite &amp; Paragraph 120-180 words); 5. Speaking test (nếu Cuối kỳ).
-                  </p>
-
-                  <div className="pt-2 border-t border-slate-300">
-                    <p className="font-bold text-xs uppercase text-blue-900">
-                      PART I. LISTENING (2.0 points)
+                  {/* THÔNG TIN MA TRẬN */}
+                  <div className="p-2.5 rounded bg-slate-50 border border-slate-200 text-xs text-slate-700">
+                    <p className="font-bold text-center text-red-600 uppercase text-xs">
+                      A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN BGD&amp;ĐT VÀ SỞ GD&amp;ĐT TUYÊN QUANG)
                     </p>
-                    <p className="text-xs italic">Section 1: Listen to the conversation and decide whether statements are True (T) or False (F).</p>
-                    <p className="text-xs">Question 1. The community garden project was started two years ago by local volunteers.</p>
-                    <p className="text-xs">Question 2. Students can participate in tree planting activities every weekend morning.</p>
-                    <p className="text-xs italic pt-1">Section 2: Listen to an announcement and choose the best answer A, B, C or D.</p>
-                    <p className="text-xs">Question 3. What is the primary purpose of the green school campaign?</p>
-                    <p className="text-xs pl-4">A. To plant 500 flowers &nbsp;&nbsp;&nbsp; B. To reduce plastic waste &nbsp;&nbsp;&nbsp; C. To raise school funds &nbsp;&nbsp;&nbsp; D. To clean the classrooms</p>
+                    <p className="italic text-center mt-0.5">
+                      Đề thi gồm 4 phần: Listening (2.0đ) • Language (2.5đ) • Reading (2.5đ) • Writing (1.0đ - 2.0đ) • Speaking test ({selectedTerm.startsWith('CK') ? '2.0đ' : '0.0đ'}).
+                    </p>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-300">
-                    <p className="font-bold text-xs uppercase text-blue-900">
+                  {/* PHẦN I: LISTENING (CỐ ĐỊNH 100% GIỮA CÁC MÃ ĐỀ) */}
+                  <div className="pt-2 border-t border-slate-300 space-y-2 text-[12pt]">
+                    <p className="font-bold text-blue-900 uppercase">
+                      PART I. LISTENING (2.0 points) - 🔒 CỐ ĐỊNH CHUNG ĐÁP ÁN CHO CẢ {numVariants} MÃ ĐỀ
+                    </p>
+                    <p className="italic text-[11pt] text-slate-600">
+                      Section 1: Listen to a talk about community development and decide whether each statement is True (T) or False (F).
+                    </p>
+                    <div className="space-y-1 pl-2">
+                      <p>Question 1. The green community project was officially launched three years ago. &nbsp;&nbsp;&nbsp;&nbsp; <span className="text-[#FF0000] font-normal underline">✔ A. True</span> &nbsp;&nbsp;&nbsp;&nbsp; B. False</p>
+                      <p>Question 2. Volunteers only participate in the cleanup on Sunday afternoons. &nbsp;&nbsp;&nbsp;&nbsp; A. True &nbsp;&nbsp;&nbsp;&nbsp; <span className="text-[#FF0000] font-normal underline">✔ B. False</span></p>
+                      <p>Question 3. Local schools have planted more than 500 shade trees along streets. &nbsp;&nbsp;&nbsp;&nbsp; <span className="text-[#FF0000] font-normal underline">✔ A. True</span> &nbsp;&nbsp;&nbsp;&nbsp; B. False</p>
+                      <p>Question 4. Plastic waste can be exchanged for organic vegetables at the market. &nbsp;&nbsp;&nbsp;&nbsp; A. True &nbsp;&nbsp;&nbsp;&nbsp; <span className="text-[#FF0000] font-normal underline">✔ B. False</span></p>
+                    </div>
+
+                    <p className="italic text-[11pt] text-slate-600 pt-1">
+                      Section 2: Listen to an announcement about energy conservation and choose the best answer A, B, C or D.
+                    </p>
+                    <div className="space-y-2 pl-2">
+                      <div>
+                        <p>Question 5. What is the primary purpose of the green school campaign?</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. To plant flowers</span>
+                          <span className="text-[#FF0000] font-normal underline">✔ B. To reduce plastic waste</span>
+                          <span>C. To raise funds</span>
+                          <span>D. To clean rooms</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p>Question 6. How often do students collect recyclable items?</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. Once a month</span>
+                          <span>B. Twice a week</span>
+                          <span className="text-[#FF0000] font-normal underline">✔ C. Every Friday morning</span>
+                          <span>D. Every afternoon</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p>Question 7. Who can participate in the environmental workshop?</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span className="text-[#FF0000] font-normal underline">✔ A. All high school students</span>
+                          <span>B. Only club leaders</span>
+                          <span>C. Teachers only</span>
+                          <span>D. Invited experts</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p>Question 8. Where will the award ceremony be held next week?</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. In the school library</span>
+                          <span>B. At the community hall</span>
+                          <span>C. On the playground</span>
+                          <span className="text-[#FF0000] font-normal underline">✔ D. In the main auditorium</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PHẦN II: LANGUAGE & GRAMMAR */}
+                  <div className="pt-3 border-t border-slate-300 space-y-2 text-[12pt]">
+                    <p className="font-bold text-blue-900 uppercase">
                       PART II. LANGUAGE &amp; GRAMMAR (2.5 points)
                     </p>
-                    <p className="text-xs italic">Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three.</p>
-                    <p className="text-xs">Question 5. A. cook<u>ed</u> &nbsp;&nbsp;&nbsp; B. clean<u>ed</u> &nbsp;&nbsp;&nbsp; C. help<u>ed</u> &nbsp;&nbsp;&nbsp; D. pass<u>ed</u></p>
-                    <p className="text-xs">Question 6. A. sust<u>ai</u>n &nbsp;&nbsp;&nbsp; B. m<u>ai</u>ntain &nbsp;&nbsp;&nbsp; C. cert<u>ai</u>n &nbsp;&nbsp;&nbsp; D. entert<u>ai</u>n</p>
-                    <p className="text-xs italic pt-1">Mark the letter A, B, C or D to indicate the best answer to complete each sentence.</p>
-                    <p className="text-xs">Question 7. If teenagers _______ more independent skills, they would adapt easily to university life.</p>
-                    <p className="text-xs pl-4">A. develop &nbsp;&nbsp;&nbsp; B. developed &nbsp;&nbsp;&nbsp; C. will develop &nbsp;&nbsp;&nbsp; D. have developed</p>
+                    <p className="italic text-[11pt] text-slate-600">
+                      Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three.
+                    </p>
+                    <div className="space-y-1 pl-2">
+                      <div>
+                        <p>Question 9.</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. cook<u>ed</u></span>
+                          <span className="text-[#FF0000] font-normal underline">✔ B. clean<u>ed</u></span>
+                          <span>C. help<u>ed</u></span>
+                          <span>D. pass<u>ed</u></span>
+                        </div>
+                      </div>
+                      <div>
+                        <p>Question 10.</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. sust<u>ai</u>n</span>
+                          <span>B. m<u>ai</u>ntain</span>
+                          <span className="text-[#FF0000] font-normal underline">✔ C. cert<u>ai</u>n</span>
+                          <span>D. entert<u>ai</u>n</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="italic text-[11pt] text-slate-600 pt-1">
+                      Mark the letter A, B, C, or D to indicate the correct answer to complete each sentence.
+                    </p>
+                    <div className="space-y-2 pl-2">
+                      <div>
+                        <p>Question 11. If teenagers _______ independent life skills, they would adapt easily to university environments.</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span>A. develop</span>
+                          <span className="text-[#FF0000] font-normal underline">✔ B. developed</span>
+                          <span>C. will develop</span>
+                          <span>D. have developed</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p>Question 12. Digital technologies have revolutionized the way high school students _______ knowledge.</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4">
+                          <span className="text-[#FF0000] font-normal underline">✔ A. acquire</span>
+                          <span>B. achieve</span>
+                          <span>C. deliver</span>
+                          <span>D. conduct</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-300">
-                    <p className="font-bold text-xs uppercase text-blue-900">
+                  {/* PHẦN III: READING & SENTENCE ORDERING */}
+                  <div className="pt-3 border-t border-slate-300 space-y-2 text-[12pt]">
+                    <p className="font-bold text-blue-900 uppercase">
                       PART III. READING &amp; SENTENCE ORDERING (2.5 points)
                     </p>
-                    <p className="text-xs italic">Mark the letter A, B, C, or D to indicate the correct arrangement of the sentences to make a meaningful exchange/letter.</p>
-                    <p className="text-xs">Question 15. a. Moreover, we have learned how to classify household waste effectively.<br />
-                    b. Dear Minh, I am writing to share our recent environmental project at school.<br />
-                    c. Firstly, we cleaned up the school playground and planted several trees.</p>
-                    <p className="text-xs pl-4">A. b - c - a &nbsp;&nbsp;&nbsp; B. a - b - c &nbsp;&nbsp;&nbsp; C. c - a - b &nbsp;&nbsp;&nbsp; D. b - a - c</p>
+                    <p className="italic text-[11pt] text-slate-600">
+                      Mark the letter A, B, C, or D to indicate the correct arrangement of the sentences to make a meaningful letter.
+                    </p>
+                    <div className="pl-2 space-y-1">
+                      <p>Question 15.</p>
+                      <p className="italic pl-4 text-[11pt] text-slate-700">
+                        a. Moreover, we have learned how to classify household waste effectively.<br />
+                        b. Dear Minh, I am writing to share our recent environmental project at school.<br />
+                        c. Firstly, we cleaned up the school playground and planted several trees.
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11.5pt] pl-4 pt-1">
+                        <span className="text-[#FF0000] font-normal underline">✔ A. b - c - a</span>
+                        <span>B. a - b - c</span>
+                        <span>C. c - a - b</span>
+                        <span>D. b - a - c</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-300">
-                    <p className="font-bold text-xs uppercase text-blue-900">
-                      PART IV. WRITING (2.0 points)
-                    </p>
-                    <p className="text-xs italic">Write a paragraph (120 - 150 words) about how high school students can protect the local environment.</p>
-                    <p className="text-xs text-slate-600">Sample outline: Introduction (Topic sentence) - Supporting idea 1 (Green transport) - Supporting idea 2 (Reducing single-use plastics) - Supporting idea 3 (Community cleanup) - Conclusion.</p>
-                  </div>
+                  {/* BẢNG ĐỐI CHIẾU ĐÁP ÁN SONG SONG N CỘT CHUẨN QUY ĐỊNH */}
+                  <div className="pt-4 border-t-2 border-red-500 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="font-bold text-xs uppercase text-red-600 flex items-center gap-2">
+                        <span>★ BẢNG ĐỐI CHIẾU ĐÁP ÁN SONG SONG {numVariants} MÃ ĐỀ (IN THƯỜNG, MÀU ĐỎ #FF0000):</span>
+                      </p>
+                      <span className="text-[11px] text-slate-600 italic">
+                        Bài nghe (Q1-Q8) cố định 100% chung đáp án cho mọi mã đề
+                      </span>
+                    </div>
 
-                  <div className="pt-3 border-t-2 border-red-500">
-                    <p className="font-bold text-xs uppercase text-red-600">
-                      BẢNG ĐÁP ÁN CHUẨN IN ĐỎ (#FF0000) &amp; AUDIO SCRIPTS
-                    </p>
-                    <p className="text-xs font-bold text-red-600">
-                      1. T | 2. F | 3. B | 4. C | 5. B | 6. C | 7. B | 8. A | 9. C | 10. D | 15. A
-                    </p>
-                    <p className="text-xs italic text-slate-700">Audio Script Dialog: M: Good morning Lan. How is your youth club project going? / W: It's wonderful! We have mobilized over 40 students...</p>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse border border-slate-300 text-center text-xs">
+                        <thead>
+                          <tr className="bg-slate-100 text-slate-800 font-bold">
+                            <th className="border border-slate-300 p-1.5 w-14">Câu</th>
+                            {variantCodes.map((code) => (
+                              <th key={code} className="border border-slate-300 p-1.5 text-blue-900 font-bold">
+                                Mã {code}
+                              </th>
+                            ))}
+                            <th className="border border-slate-300 p-1.5 text-left pl-3">Đơn vị kiến thức / Kỹ năng</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {/* Listening T/F Q1 - Q4: Giống nhau 100% */}
+                          {[
+                            { q: 1, key: 'A', skill: 'Nghe thông tin dự án môi trường (True)' },
+                            { q: 2, key: 'B', skill: 'Nghe thông tin lịch hoạt động (False)' },
+                            { q: 3, key: 'A', skill: 'Nghe số lượng cây xanh đã trồng (True)' },
+                            { q: 4, key: 'B', skill: 'Nghe quy định đổi rác thải (False)' },
+                          ].map((item) => (
+                            <tr key={item.q} className="hover:bg-slate-50">
+                              <td className="border border-slate-300 p-1 font-bold">{item.q}</td>
+                              {variantCodes.map((c) => (
+                                <td key={c} className="border border-slate-300 p-1 text-[#FF0000] font-normal text-sm">
+                                  {item.key}
+                                </td>
+                              ))}
+                              <td className="border border-slate-300 p-1 text-left pl-3 text-slate-600 text-[11px]">
+                                {item.skill}
+                              </td>
+                            </tr>
+                          ))}
+
+                          {/* Listening MCQs Q5 - Q8: Giống nhau 100% */}
+                          {[
+                            { q: 5, key: 'B', skill: 'Nghe mục đích chính chiến dịch (To reduce plastic)' },
+                            { q: 6, key: 'C', skill: 'Nghe tần suất thu gom rác (Every Friday)' },
+                            { q: 7, key: 'A', skill: 'Nghe đối tượng tham gia workshop (All students)' },
+                            { q: 8, key: 'D', skill: 'Nghe địa điểm lễ trao giải (Main auditorium)' },
+                          ].map((item) => (
+                            <tr key={item.q} className="hover:bg-slate-50">
+                              <td className="border border-slate-300 p-1 font-bold">{item.q}</td>
+                              {variantCodes.map((c) => (
+                                <td key={c} className="border border-slate-300 p-1 text-[#FF0000] font-normal text-sm">
+                                  {item.key}
+                                </td>
+                              ))}
+                              <td className="border border-slate-300 p-1 text-left pl-3 text-slate-600 text-[11px]">
+                                {item.skill}
+                              </td>
+                            </tr>
+                          ))}
+
+                          {/* Các câu trắc nghiệm khác: Hoán vị đảo đáp án */}
+                          {[
+                            { q: 9, keys: ['B', 'C', 'A', 'D'], skill: 'Phát âm đuôi -ed: /t/ vs /d/' },
+                            { q: 10, keys: ['C', 'A', 'D', 'B'], skill: 'Phát âm nguyên âm kép: /eɪ/ vs /ɪ/' },
+                            { q: 11, keys: ['B', 'D', 'B', 'A'], skill: 'Câu điều kiện loại 2 (Conditional Type 2)' },
+                            { q: 12, keys: ['A', 'B', 'C', 'D'], skill: 'Từ vựng chủ đề Chuyển đổi số (acquire knowledge)' },
+                            { q: 15, keys: ['A', 'D', 'B', 'C'], skill: 'Sắp xếp câu tạo bức thư hoàn chỉnh' },
+                          ].map((item) => (
+                            <tr key={item.q} className="hover:bg-slate-50">
+                              <td className="border border-slate-300 p-1 font-bold">{item.q}</td>
+                              {variantCodes.map((c, idx) => (
+                                <td key={c} className="border border-slate-300 p-1 text-[#FF0000] font-normal text-sm">
+                                  {item.keys[idx % item.keys.length]}
+                                </td>
+                              ))}
+                              <td className="border border-slate-300 p-1 text-left pl-3 text-slate-600 text-[11px]">
+                                {item.skill}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* HẾT LƯỢT DÙNG THỬ BÁO CÁO */}
+            {/* BÁO HẾT LƯỢT DÙNG THỬ */}
             {!isProActive && trialRemaining <= 0 && (
               <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                 <div>
@@ -509,7 +756,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </div>
                 <button
                   onClick={() => setActiveTab('register')}
-                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow"
+                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow cursor-pointer"
                 >
                   Kích hoạt Pro ngay
                 </button>
@@ -518,7 +765,9 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
           </div>
         )}
 
-        {/* TAB 2: TẢI VỀ & HƯỚNG DẪN */}
+        {/* ========================================================================= */}
+        {/* TAB 2: TẢI VỀ & HƯỚNG DẪN                                                */}
+        {/* ========================================================================= */}
         {activeTab === 'download' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -535,14 +784,14 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </div>
                 <a
                   href={downloadAllInOneUrl}
-                  className="w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/40"
+                  className="w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/40 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Tải Cai_Dat_TaoDe_TiengAnh_THPT.exe</span>
                 </a>
               </div>
 
-              {/* Nút 2: File ZIP mật khẩu 123 */}
+              {/* Nút 2: Bản nén ZIP Pass 123 */}
               <div className="p-5 rounded-xl bg-slate-950 border border-blue-500/40 flex flex-col justify-between space-y-4 hover:border-blue-400 transition-all">
                 <div className="space-y-2">
                   <div className="p-2.5 rounded-lg bg-blue-500/20 text-blue-400 w-fit">
@@ -555,7 +804,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </div>
                 <a
                   href={downloadZipUrl}
-                  className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40"
+                  className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Tải Tao_De_Tieng_Anh_THPT_Pass_123.zip</span>
@@ -576,7 +825,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 <a
                   href={downloadDotmUrl}
                   download="TaoDe_TiengAnh_THPT.dotm"
-                  className="w-full py-2.5 px-4 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-900/40"
+                  className="w-full py-2.5 px-4 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-900/40 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Tải TaoDe_TiengAnh_THPT.dotm</span>
@@ -607,7 +856,9 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
           </div>
         )}
 
-        {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT */}
+        {/* ========================================================================= */}
+        {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT                                              */}
+        {/* ========================================================================= */}
         {activeTab === 'register' && (
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -619,7 +870,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </h4>
 
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">Mã nhận diện máy tính của Thầy/Cô:</label>
+                  <label className="text-xs text-slate-400 block mb-1">Mã nhận diện máy tính của Thầy/Cô (Rule 5: DVT-ENGPT-...):</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
@@ -629,7 +880,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     />
                     <button
                       onClick={handleCopyMid}
-                      className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-700"
+                      className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-700 cursor-pointer"
                     >
                       {copiedMid ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                       <span>{copiedMid ? 'Đã chép' : 'Sao chép'}</span>
@@ -643,12 +894,12 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     type="text"
                     value={inputKey}
                     onChange={(e) => setInputKey(e.target.value)}
-                    placeholder="KEY-20261004-XXXXXX-XXXXXX..."
+                    placeholder="KEY-ENGPT-20261004-XXXXXX-XXXXXX..."
                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-emerald-400 font-mono focus:border-amber-500 focus:outline-none"
                   />
                   <button
                     onClick={handleActivateKey}
-                    className="w-full mt-3 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-900/30 transition-all flex items-center justify-center gap-2"
+                    className="w-full mt-3 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-900/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Crown className="w-4 h-4" />
                     <span>KÍCH HOẠT PRO TỨC THÌ</span>
@@ -667,8 +918,27 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-slate-800 text-xs text-slate-400 space-y-1.5">
-                  <p>• Bản quyền được cấp theo ID máy tính duy nhất, hoạt động trọn đời không cần internet.</p>
+                {/* TUÂN THỦ RULE 4: TUYỆT ĐỐI KHÔNG HIỂN THỊ GIÁ TIỀN CỐ ĐỊNH BẰNG SỐ */}
+                <div className="pt-3 border-t border-slate-800 space-y-2">
+                  <span className="text-xs font-bold text-slate-300 block">Các Gói Bản Quyền Sư Phạm (Không hiển thị giá số):</span>
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div className="p-2 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300">
+                      <span className="font-bold block text-[11px]">VIP TRỌN ĐỜI</span>
+                      <span className="text-[10px] text-slate-400">Khuyên Dùng</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300">
+                      <span className="font-bold block text-[11px]">GÓI 2 NĂM</span>
+                      <span className="text-[10px] text-slate-400">2 Năm học</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300">
+                      <span className="font-bold block text-[11px]">GÓI 1 NĂM</span>
+                      <span className="text-[10px] text-slate-400">1 Năm học</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-2 text-xs text-slate-400 space-y-1">
+                  <p>• Bản quyền độc lập cấp theo mã máy DVT-ENGPT-... hoạt động vĩnh viễn không cần mạng.</p>
                   <p>• Hỗ trợ chuyển bản quyền miễn phí khi Thầy/Cô đổi hoặc nâng cấp máy tính mới.</p>
                 </div>
               </div>
@@ -691,7 +961,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                       href={BRAND.zaloUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow cursor-pointer"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Nhắn tin Zalo với Thầy Thành: 0915.213717</span>
@@ -745,53 +1015,55 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     <button
                       type="submit"
                       disabled={isSyncingCloud}
-                      className="w-full py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow"
+                      className="w-full py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
-                      <span>{isSyncingCloud ? 'Đang gửi...' : 'GỬI ĐĂNG KÝ LÊN HỆ THỐNG'}</span>
+                      <span>{isSyncingCloud ? 'Đang gửi...' : 'GỬI ĐĂNG KÝ BẢN QUYỀN'}</span>
                     </button>
+
+                    <div className="pt-2 text-center">
+                      <a
+                        href={BRAND.zaloUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 text-emerald-400 hover:text-emerald-300 text-xs font-bold transition-colors"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>Chat Zalo trực tiếp Thầy Thành (0915.213717)</span>
+                      </a>
+                    </div>
                   </form>
                 )}
-
-                {/* HỘP ĐIỀU HƯỚNG LIÊN HỆ THẦY THÀNH (TUYỆT ĐỐI KHÔNG HIỂN THỊ GIÁ TIỀN CỐ ĐỊNH THEO RULE 4) */}
-                <div className="p-3.5 rounded-xl bg-gradient-to-r from-teal-950/60 to-emerald-950/60 border border-teal-500/40 space-y-2">
-                  <p className="text-xs text-teal-200 font-semibold leading-relaxed">
-                    💬 Liên hệ Admin Thầy Thành để kích hoạt bản quyền Pro &amp; nhận báo giá ưu đãi sư phạm qua Zalo: <strong>0915.213717</strong>
-                  </p>
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-teal-900/40">
-                    <span>Các gói hỗ trợ:</span>
-                    <span className="text-amber-400 font-bold">1 Năm • 2 Năm • Gói VIP Trọn Đời</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* FOOTER MODAL */}
-        <div className="px-5 py-3 bg-slate-950 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Hệ sinh thái Phần mềm Giáo viên AI Toàn Năng • Tác giả Thầy Đinh Văn Thành</span>
+        {/* FOOTER */}
+        <div className="px-6 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 shrink-0">
+          <div className="flex items-center gap-3">
+            <span>© 2026 Thầy giáo Đinh Văn Thành – THPT Đồng Yên</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-amber-400 font-medium">Hotline / Zalo: 0915.213717</span>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href={BRAND.zaloUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Zalo: 0915.213717</span>
-            </a>
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="text-slate-500 hover:text-slate-300 text-[11px] underline cursor-pointer"
+              >
+                Quản trị viên
+              </button>
+            )}
             <button
               onClick={onClose}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+              className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-colors cursor-pointer"
             >
               Đóng
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );
