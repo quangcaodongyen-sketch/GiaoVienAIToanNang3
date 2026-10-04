@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.5.1",
-  "latestVersion": "3.5.1",
+  "currentVersion": "3.5.2",
+  "latestVersion": "3.5.2",
   "releaseDate": "04/10/2026",
-  "changelog": "• CHUẨN TÊN BỘ CÀI ĐẶT: Đổi tên bộ cài đặt thành Cai_Dat_TaoDe_TiengAnh_THCS.exe chuẩn nhận diện công cụ Tạo đề THCS.\n• ĐÁP ÁN CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM: Trên toàn bộ câu hỏi và bảng đối chiếu đáp án, đáp án đúng hiển thị chữ màu đỏ (#FF0000) và KHÔNG IN ĐẬM theo đúng yêu cầu sư phạm.\n• GIAO DIỆN XANH CHỮ TRẮNG HIỆN ĐẠI: Tone Xanh Hoàng Gia sang trọng (#061629) kết hợp chữ Trắng tinh khôi (#FFFFFF) độ tương phản cao.\n• MA TRẬN & ĐẶC TẢ 100% TIẾNG ANH: Chuẩn hóa 100% bằng tiếng Anh học thuật quốc tế bám sát CV 7991.\n• LOẠI BỎ 'GLOBAL SUCCESS': Đề kiểm tra in ra trang nhã, chuẩn mực.",
+  "changelog": "• SỬA DÃN DÒNG RỘNG: Loại bỏ hoàn toàn Borderless Table gây phình dãn dòng, thay bằng Paragraph Tab Stops gọn gàng.\n• TRUE/FALSE CÙNG DÒNG: Câu hỏi True/False Part 2 đặt ngay cùng dòng câu trả lời A. True / B. False tiết kiệm giấy tối đa.\n• Part 4 Cloze và Part 1, 3, 5 MC: Tối ưu khoảng cách giữa câu hỏi và đáp án sát khít, thẳng hàng chuẩn Tab Stops.\n• ĐÁP ÁN MÀU ĐỎ KHÔNG IN ĐẬM: Giữ nguyên quy tắc chữ đỏ #FF0000, bold=False trên toàn bộ đề.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
