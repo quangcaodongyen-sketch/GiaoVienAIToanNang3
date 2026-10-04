@@ -1,12 +1,12 @@
 {
   "appId": "nls-ai",
-  "appName": "Công Cụ Tích Hợp NLS, AI & Nội Dung GD THCS (CV 5512)",
-  "currentVersion": "3.3.0",
-  "latestVersion": "3.3.0",
-  "releaseDate": "03/10/2026",
-  "changelog": "• Vá lỗi triệt để: Chỉ tích hợp HS khuyết tật khi Thầy/Cô chủ động chọn, không tự động chèn chữ màu xanh vào môn Tiếng Anh.\n• Sửa triệt để lỗi lưu file: Tự động lưu và tự động mở ngay file giáo án hoàn thiện {tên gốc}-NLS.docx ngay trước mắt Thầy/Cô.\n• Tự động chọn (highlight) sẵn file kết quả trong Windows Explorer để dễ dàng kiểm tra và sử dụng.\n• Bổ sung công cụ an toàn 1-click chống báo vi rút nhầm cho Windows Defender.\n• Nâng cao độ tương thích chuẩn mực với Office 2013-2024 và Microsoft 365.",
-  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe",
-  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip",
+  "appName": "Công Cụ Tích Hợp NLS & AI Vào Giáo Án (CV 5512 - Dùng Chung THCS & THPT)",
+  "currentVersion": "3.5.0",
+  "latestVersion": "3.5.0",
+  "releaseDate": "04/10/2026",
+  "changelog": "• Chuẩn hóa tên bộ cài đặt: Cai_Dat_Tich_Hop_NLS_AI.exe và tệp nén Tich_Hop_NLS_AI_Pass_123.zip ngắn gọn, riêng biệt không trùng lặp.\n• Bỏ hoàn toàn chữ THCS trên toàn bộ giao diện phần mềm, Word add-in và website để dùng chung chuẩn mực cho cả cấp THCS và THPT theo Công văn 5512.\n• Đồng bộ Add-in TichHop_NLS_AI.dotm vào thanh công cụ Word.\n• Nâng cấp hệ thống bản quyền Pro và đồng bộ Cloud thời gian thực.",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
 }

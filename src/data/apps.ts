@@ -16,8 +16,8 @@ export const apps: AppCard[] = [
   // ==================== ƯU TIÊN 1: APP NĂNG LỰC SỐ (FLAGSHIP) ====================
   {
     "id": "tichhop-nls-ai-thcs",
-    "title": "TÍCH HỢP NLS - AI (ADD-INS V3)",
-    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục hòa nhập vào giáo án 12 môn chuẩn CV 5512. Tích hợp trực tiếp thanh công cụ Word.",
+    "title": "TÍCH HỢP NĂNG LỰC SỐ & AI (CV 5512)",
+    "description": "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục hòa nhập vào giáo án chuẩn CV 5512. Dùng chung cho cả cấp THCS và THPT, tích hợp thanh công cụ Word.",
     "image": "/giaoanNLS.png",
     "url": "#nls-ai",
     "category": "GIÁO ÁN & VĂN BẢN (5512 & NĐ 30)",

@@ -629,10 +629,10 @@ ${exportDisabilityProc}
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
-                  TÍCH HỢP NLS - AI (ADD-INS V3)
+                  TÍCH HỢP NĂNG LỰC SỐ & AI (CV 5512)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  CV 5512 CHUẨN 2026 - BẢN NÂNG CẤP V3
+                  CV 5512 - DÙNG CHUNG CẤP THCS & THPT
                 </span>
                 {isProActive && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
@@ -738,7 +738,7 @@ ${exportDisabilityProc}
                     </div>
                     <a
                       href={NLS_RESOURCES.fullZipUrl}
-                      download="Bo_Cai_Tich_Hop_NLS_AI_THCS_Full_Pass_123.zip"
+                      download="Tich_Hop_NLS_AI_Pass_123.zip"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap shadow-lg shadow-emerald-500/20 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
@@ -751,12 +751,12 @@ ${exportDisabilityProc}
                     <div>
                       <span className="text-xs font-bold text-white">Bản Cài Đặt Tự Động (.exe trực tiếp)</span>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Dành cho máy tính không bị chặn tải exe. Tên file: <strong>Cai_Dat_Tich_Hop_NLS_AI_THCS_ChayTrenWord.exe</strong>
+                        Dành cho máy tính không bị chặn tải exe. Tên file: <strong>Cai_Dat_Tich_Hop_NLS_AI.exe</strong>
                       </p>
                     </div>
                     <a
                       href={NLS_RESOURCES.exeUrl}
-                      download="Cai_Dat_Tich_Hop_NLS_AI_THCS_ChayTrenWord.exe"
+                      download="Cai_Dat_Tich_Hop_NLS_AI.exe"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
@@ -769,12 +769,12 @@ ${exportDisabilityProc}
                     <div>
                       <span className="text-xs font-bold text-white">File Ribbon Word Trực Tiếp (.dotm - 50 KB)</span>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Tải trong 1 giây, mở trực tiếp bằng Word. Tên file: <strong>TichHop_NLS_AI_THCS_Addin.dotm</strong>
+                        Tải trong 1 giây, mở trực tiếp bằng Word. Tên file: <strong>TichHop_NLS_AI.dotm</strong>
                       </p>
                     </div>
                     <a
-                      href="/TichHop_NLS_AI_THCS.dotm"
-                      download="TichHop_NLS_AI_THCS_Addin.dotm"
+                      href="/TichHop_NLS_AI.dotm"
+                      download="TichHop_NLS_AI.dotm"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
                     >
                       <FileCode className="w-4 h-4 text-amber-400" />
