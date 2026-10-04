@@ -36,7 +36,8 @@ import {
   Check,
   Laptop,
   Rewind,
-  FastForward
+  FastForward,
+  RefreshCw
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService } from '../services/licenseService';

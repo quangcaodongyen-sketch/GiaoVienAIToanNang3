@@ -186,7 +186,12 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   initialSubject,
   onSwitchToEnglish
 }) => {
-  const [currentSubjectKey, setCurrentSubjectKey] = useState<string>('GDCD');
+  const resolveSubKey = () => {
+    const s = selectedSubject || initialSubject || 'GDCD';
+    return SUBJECT_DETAILS[s] ? s : 'GDCD';
+  };
+
+  const [currentSubjectKey, setCurrentSubjectKey] = useState<string>(resolveSubKey);
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
   // Cấu hình tạo đề trực tuyến
@@ -194,7 +199,9 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [selectedExamCode, setSelectedExamCode] = useState<string>('701');
   const [activeView, setActiveView] = useState<'exam' | 'matrix' | 'spec' | 'answers'>('exam');
-  const [examData, setExamData] = useState<THCS8MonExamData | null>(null);
+  const [examData, setExamData] = useState<THCS8MonExamData>(() => {
+    return getTHCS8MonExamSuite(resolveSubKey(), '7', 'GK1', '701');
+  });
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   // Bản quyền & Dùng thử 5 lượt
@@ -217,8 +224,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const sub = selectedSubject || initialSubject || 'GDCD';
-    const finalSub = SUBJECT_DETAILS[sub] ? sub : 'GDCD';
+    const finalSub = resolveSubKey();
     setCurrentSubjectKey(finalSub);
 
     let mid = localStorage.getItem('gvai_taode_hw_code');
@@ -249,9 +255,9 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     }
     setTrialRemaining(remaining);
 
-    // Tải đề mẫu ban đầu an toàn
+    // Tải đề mẫu an toàn theo đúng môn hiện tại
     try {
-      const suite = getTHCS8MonExamSuite(finalSub, '7', 'GK1', '701');
+      const suite = getTHCS8MonExamSuite(finalSub, selectedGrade, selectedTerm, selectedExamCode);
       setExamData(suite);
     } catch (e) {
       console.warn('[TaoDeTHCS] Lỗi khởi tạo đề ban đầu:', e);

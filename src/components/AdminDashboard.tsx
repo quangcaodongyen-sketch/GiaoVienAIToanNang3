@@ -39,7 +39,8 @@ import {
   ExternalLink,
   Zap,
   Download,
-  ShieldCheck
+  ShieldCheck,
+  Users
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
@@ -321,6 +322,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     plan: string;
     createdAt: string;
   }>>([]);
+
+  const [trackingSearch, setTrackingSearch] = useState('');
 
     // Hỗ trợ 2 cấp tài khoản quản trị bảo mật cao (Ẩn tuyệt đối khỏi giao diện người dùng):
   // 1. Kichhoat123@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
@@ -973,7 +976,7 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
         plan: pkgName,
         createdAt: new Date().toLocaleString('vi-VN')
       };
-      const updated = [newRecord, ...examHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      const updated = [newRecord, ...examHistory.filter(x => x.key !== finalKey).slice(0, 19)];
       setExamHistory(updated);
       localStorage.setItem('gvai_admin_taode_key_history', JSON.stringify(updated));
     } catch (err: any) {
@@ -3487,10 +3490,10 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleActivateMachineByYear(req.machineId, 1, currentAdminName, {
+                                    onClick={() => handleActivateMachineByYear(req.machineId, '1YEAR', {
                                       fullName: req.fullName,
                                       schoolUnit: req.schoolUnit,
-                                      phone: req.phoneNumber,
+                                      phoneNumber: req.phoneNumber,
                                       appId: 'smart-listening',
                                       appName: 'Smart Listening Pro (Tạo Bài Nghe SGK)',
                                       issueNumber: req.issueNumber,
@@ -3502,10 +3505,10 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleActivateMachineByYear(req.machineId, 99, currentAdminName, {
+                                    onClick={() => handleActivateMachineByYear(req.machineId, 'LIFETIME', {
                                       fullName: req.fullName,
                                       schoolUnit: req.schoolUnit,
-                                      phone: req.phoneNumber,
+                                      phoneNumber: req.phoneNumber,
                                       appId: 'smart-listening',
                                       appName: 'Smart Listening Pro (Tạo Bài Nghe SGK)',
                                       issueNumber: req.issueNumber,
@@ -6226,6 +6229,8 @@ Tác quyền: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717.`;
               </div>
             </div>
           </div>
+        )}
+
         {/* MODAL CHI TIẾT DANH SÁCH MÁY TÍNH ĐÃ CÀI ĐẶT & UPDATE TỪNG APP */}
         {showQuotaDetailModal && selectedQuotaApp && (
           <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 animate-in fade-in duration-200">

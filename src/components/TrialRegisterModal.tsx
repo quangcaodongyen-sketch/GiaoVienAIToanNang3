@@ -85,7 +85,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
   const defaultApp = resolveInitialApp();
   const [selectedAppId, setSelectedAppId] = useState(defaultApp.id);
   const [selectedAppName, setSelectedAppName] = useState(defaultApp.name);
-  const [selectedPackage, setSelectedPackage] = useState<'1YEAR' | '2YEAR' | '3YEAR'>(initialPackage);
+  const [selectedPackage, setSelectedPackage] = useState<'1YEAR' | '2YEAR' | '3YEAR'>((initialPackage as '1YEAR' | '2YEAR' | '3YEAR') || '1YEAR');
 
   const [machineId, setMachineId] = useState('');
   const [fullName, setFullName] = useState('');
@@ -108,7 +108,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
       const initApp = resolveInitialApp();
       setSelectedAppId(initApp.id);
       setSelectedAppName(initApp.name);
-      setSelectedPackage(initialPackage || '1YEAR');
+      setSelectedPackage((initialPackage as '1YEAR' | '2YEAR' | '3YEAR') || '1YEAR');
       
       setSubmittedData(null);
       setErrorMessage('');

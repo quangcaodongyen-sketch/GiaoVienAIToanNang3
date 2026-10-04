@@ -893,16 +893,26 @@ export default function App() {
                         </p>
                       </div>
 
-                      <a
-                        href={app.url}
-                        onClick={(e) => handleAppClick(app, e)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]"
-                      >
-                        Mở công cụ ngay
-                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      </a>
+                      {app.url && app.url.startsWith('http') ? (
+                        <a
+                          href={app.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]"
+                        >
+                          Mở công cụ ngay
+                          <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => handleAppClick(app, e)}
+                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer"
+                        >
+                          Mở công cụ ngay
+                          <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12 text-amber-300" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

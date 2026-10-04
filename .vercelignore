@@ -1,0 +1,17 @@
+# Vercel Ignore File
+# Loại trừ các tệp binary cài đặt nặng khỏi static deployment của Vercel
+# (Các tệp cài đặt thực tế đã được phân phối qua GitHub Releases 100%)
+*.exe
+*.zip
+*.mp4
+*.dotm
+*.docx
+*.pdf
+*.iso
+*.tar.gz
+public/*.exe
+public/*.zip
+public/*.mp4
+public/*.dotm
+public/*.docx
+public/*.pdf

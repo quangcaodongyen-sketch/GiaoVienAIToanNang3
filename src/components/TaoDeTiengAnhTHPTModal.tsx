@@ -142,13 +142,14 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
 
     setIsSyncingCloud(true);
     try {
-      await cloudSyncService.submitRegistration({
+      await cloudSyncService.submitRegistrationToCloud({
+        machineId: detectedMid,
         fullName: regName,
-        phone: regPhone,
-        school: regSchool || 'Trường THPT Đồng Yên',
-        hardwareCode: detectedMid,
+        phoneNumber: regPhone,
+        schoolUnit: regSchool || 'Trường THPT Đồng Yên',
+        appId: 'tao-de-tieng-anh-thpt',
         appName: 'Tạo Đề Tiếng Anh THPT Global Success',
-        note: regNote || 'Đăng ký bản quyền phần mềm Tạo Đề Tiếng Anh THPT'
+        packageType: '1YEAR'
       });
       setRegSent(true);
     } catch {

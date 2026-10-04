@@ -26,7 +26,8 @@ import {
   FileBox,
   CheckCircle2,
   Plus,
-  MessageCircle
+  MessageCircle,
+  Lock
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import {
