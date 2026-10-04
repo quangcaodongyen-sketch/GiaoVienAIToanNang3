@@ -11,11 +11,25 @@ import {
   Check,
   Play,
   RefreshCw,
-  MessageCircle
+  MessageCircle,
+  Sparkles,
+  FileText,
+  Table,
+  ListChecks,
+  CheckSquare,
+  Lock,
+  Printer,
+  SlidersHorizontal,
+  GraduationCap
 } from 'lucide-react';
 import { BRAND, EXAM_7MON_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import {
+  getTHCS8MonExamSuite,
+  downloadTHCS8MonWordDoc,
+  THCS8MonExamData
+} from '../services/thcs8MonWordExportService';
 
 interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
@@ -162,7 +176,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
   }
 };
 
-const SUBJECT_KEYS = ['TOAN', 'VAN', 'KHTN', 'SUDIA', 'GDCD', 'TIN', 'CN'];
+const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'TIN', 'CN'];
 
 export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   isOpen,
@@ -172,31 +186,40 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   initialSubject,
   onSwitchToEnglish
 }) => {
-  const [currentSubjectKey, setCurrentSubjectKey] = useState<string>('TOAN');
-  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
+  const [currentSubjectKey, setCurrentSubjectKey] = useState<string>('GDCD');
+  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
+  // Cấu hình tạo đề trực tuyến
+  const [selectedGrade, setSelectedGrade] = useState<string>('7');
+  const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
+  const [selectedExamCode, setSelectedExamCode] = useState<string>('701');
+  const [activeView, setActiveView] = useState<'exam' | 'matrix' | 'spec' | 'answers'>('exam');
+  const [examData, setExamData] = useState<THCS8MonExamData | null>(null);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  // Bản quyền & Dùng thử 5 lượt
+  const [trialRemaining, setTrialRemaining] = useState<number>(5);
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [isProActive, setIsProActive] = useState<boolean>(false);
   const [inputKey, setInputKey] = useState<string>('');
   const [copiedMid, setCopiedMid] = useState<boolean>(false);
   const [verifyMsg, setVerifyMsg] = useState<string>('');
+  const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
 
+  // Đăng ký bản quyền
   const [regName, setRegName] = useState<string>('');
   const [regPhone, setRegPhone] = useState<string>('');
   const [regSchool, setRegSchool] = useState<string>('');
   const [regPackage, setRegPackage] = useState<'1YEAR' | '2YEAR' | '3YEAR'>('1YEAR');
   const [regSent, setRegSent] = useState<boolean>(false);
 
-  // Khởi tạo môn học khi mở modal
+  // Khởi tạo môn học và lượt dùng thử khi mở modal (Chống vòng lặp re-render tuyệt đối)
   useEffect(() => {
     if (!isOpen) return;
 
-    const sub = selectedSubject || initialSubject || 'TOAN';
-    if (SUBJECT_DETAILS[sub]) {
-      setCurrentSubjectKey(sub);
-    } else {
-      setCurrentSubjectKey('TOAN');
-    }
+    const sub = selectedSubject || initialSubject || 'GDCD';
+    const finalSub = SUBJECT_DETAILS[sub] ? sub : 'GDCD';
+    setCurrentSubjectKey(finalSub);
 
     let mid = localStorage.getItem('gvai_taode_hw_code');
     if (!mid) {
@@ -207,25 +230,84 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     }
     setDetectedMid(mid);
 
-    const savedPro = localStorage.getItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`) || localStorage.getItem('gvai_8mon_is_pro');
-    if (savedPro === 'true') {
-      setIsProActive(true);
-    } else {
-      setIsProActive(false);
+    // Kiểm tra bản quyền Pro
+    const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) || 
+                     localStorage.getItem('gvai_8mon_is_pro') ||
+                     localStorage.getItem('gvai_unlimited_machine');
+    const isPro = savedPro === 'true';
+    setIsProActive(isPro);
+
+    // Kiểm tra số lượt dùng thử 5 lần
+    const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_count`;
+    const savedCount = localStorage.getItem(trialKey);
+    let remaining = 5;
+    if (isPro) {
+      remaining = 999;
+    } else if (savedCount !== null) {
+      const used = parseInt(savedCount, 10) || 0;
+      remaining = Math.max(0, 5 - used);
     }
-  }, [isOpen, selectedSubject, initialSubject, currentSubjectKey]);
+    setTrialRemaining(remaining);
+
+    // Tải đề mẫu ban đầu an toàn
+    try {
+      const suite = getTHCS8MonExamSuite(finalSub, '7', 'GK1', '701');
+      setExamData(suite);
+    } catch (e) {
+      console.warn('[TaoDeTHCS] Lỗi khởi tạo đề ban đầu:', e);
+    }
+  }, [isOpen, selectedSubject, initialSubject]);
 
   if (!isOpen) return null;
 
-  const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.TOAN;
+  const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.GDCD;
 
-  const handleCopyMid = () => {
-    navigator.clipboard.writeText(detectedMid);
-    setCopiedMid(true);
-    setTimeout(() => setCopiedMid(false), 2500);
+  // Xử lý tạo đề mới (Trải nghiệm trực tuyến)
+  const handleGenerateExam = () => {
+    if (!isProActive && trialRemaining <= 0) {
+      alert(`⚠️ Thầy/Cô đã dùng hết 5 lượt trải nghiệm miễn phí môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Đăng Ký Bản Quyền" hoặc liên hệ Zalo Thầy Thành: 0915.213717 để kích hoạt bản quyền Pro không giới hạn.`);
+      setActiveTab('register');
+      return;
+    }
+
+    setIsGenerating(true);
+    setTimeout(() => {
+      try {
+        const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
+        setExamData(suite);
+
+        // Trừ lượt dùng thử nếu chưa Pro
+        if (!isProActive) {
+          const trialKey = `gvai_taode_${currentSubjectKey.toLowerCase()}_trial_count`;
+          const used = 5 - trialRemaining + 1;
+          localStorage.setItem(trialKey, used.toString());
+          const newRemaining = Math.max(0, 5 - used);
+          setTrialRemaining(newRemaining);
+        }
+      } catch (err) {
+        console.error('Lỗi sinh đề:', err);
+      } finally {
+        setIsGenerating(false);
+      }
+    }, 400);
   };
 
-  const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
+  // Tải file Word (.doc) in ấn trực tiếp
+  const handleExportWord = () => {
+    try {
+      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
+    } catch (e) {
+      alert('Không thể tạo file Word. Vui lòng thử lại!');
+    }
+  };
+
+  const handleCopyMid = () => {
+    if (detectedMid) {
+      navigator.clipboard.writeText(detectedMid);
+      setCopiedMid(true);
+      setTimeout(() => setCopiedMid(false), 2500);
+    }
+  };
 
   const handleActivateKey = () => {
     if (!inputKey.trim()) {
@@ -234,12 +316,13 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     }
     const cleanKey = inputKey.trim().toUpperCase();
     if (cleanKey.startsWith('KEY-NLS') || cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('ENG-')) {
-      setVerifyMsg('⚠️ Mã kích hoạt này thuộc về phần mềm khác (Tiếng Anh hoặc NLS-AI), không áp dụng cho Tạo Đề 8 Môn THCS!');
+      setVerifyMsg('⚠️ Mã kích hoạt này thuộc về phần mềm khác (Tiếng Anh hoặc NLS-AI), không áp dụng cho Tạo Đề THCS!');
       return;
     }
-    if (cleanKey.startsWith('KEY-') || cleanKey.startsWith('TH8M-') || cleanKey.startsWith('MATH-')) {
+    if (cleanKey.startsWith('KEY-') || cleanKey.startsWith('TH8M-') || cleanKey.startsWith('MATH-') || cleanKey.startsWith('DVT-')) {
       setIsProActive(true);
       localStorage.setItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`, 'true');
+      setTrialRemaining(999);
       setVerifyMsg(`🎉 Kích hoạt Bản quyền Pro ${curSub.fullName} thành công!`);
     } else {
       setVerifyMsg('Mã kích hoạt không đúng định dạng. Vui lòng kiểm tra lại!');
@@ -250,11 +333,11 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const handleCloudSync = async () => {
     setIsSyncingCloud(true);
     try {
-      // ĐỘC LẬP BẢN QUYỀN: Bắt buộc truyền appId taode-8mon hoặc taode-[subject]
       const res = await cloudSyncService.checkCurrentMachineCloudStatus(detectedMid, `taode-${currentSubjectKey.toLowerCase()}`);
       if (res.isApproved) {
         setIsProActive(true);
         localStorage.setItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`, 'true');
+        setTrialRemaining(999);
         alert(`🎉 Chúc mừng Thầy/Cô!\n\nMáy tính [${detectedMid}] đã được duyệt bản quyền ${res.packageType || 'Pro'} cho ứng dụng Tạo Đề ${curSub.name} trên Web Cloud bởi ${res.approvedBy || 'Thầy Thành'}!`);
       } else {
         alert(`ℹ️ Chưa tìm thấy phê duyệt cho ứng dụng Tạo Đề ${curSub.name} trên Cloud của máy tính [${detectedMid}].\n\nNếu Thầy/Cô đã gửi đơn, xin vui lòng chờ Thầy Thành duyệt hoặc nhắn tin Zalo 0915.213717 để được hỗ trợ tức thì!`);
@@ -307,87 +390,441 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl bg-slate-900 border border-slate-700/80 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl bg-slate-900 border border-slate-700/80 shadow-2xl overflow-hidden">
         
-        {/* HEADER MODAL - TÊN TỪNG MÔN ĐỘC LẬP */}
-        <div className="px-6 py-4 border-b border-slate-800 bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 flex items-center justify-between shrink-0">
+        {/* HEADER MODAL - TÊN MÔN HỌC & TÁC GIẢ */}
+        <div className="px-5 py-3.5 border-b border-slate-800 bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${curSub.accentColor} p-0.5 shadow-lg flex items-center justify-center text-white text-2xl`}>
+            <div className={`w-11 h-11 rounded-2xl bg-gradient-to-tr ${curSub.accentColor} p-0.5 shadow-lg flex items-center justify-center text-white text-2xl`}>
               <span>{curSub.icon}</span>
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base sm:text-lg font-black text-white tracking-tight uppercase">
+                <h3 className="text-sm sm:text-base font-black text-white tracking-tight uppercase">
                   TẠO ĐỀ {curSub.name.toUpperCase()} (CV 7991)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
                   CHUẨN CV 7991
                 </span>
+                {isProActive && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    BẢN QUYỀN PRO
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Tác giả: Thầy giáo Đinh Văn Thành (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>)
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Tác giả: Thầy giáo Đinh Văn Thành (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+            title="Đóng cửa sổ"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* NAVIGATION TABS (2 TABS GỌN GÀNG) */}
-        <div className="px-6 pt-3 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0">
+        {/* NAVIGATION TABS (CHUẨN 3 TAB QUY CHUẨN SƯ PHẠM) */}
+        <div className="px-5 pt-2.5 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0 flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setActiveTab('download')}
-              className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition cursor-pointer ${
-                activeTab === 'download'
+              onClick={() => setActiveTab('online')}
+              className={`px-3.5 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'online'
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                   : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Download className="w-4 h-4" />
+              <Sparkles className="w-3.5 h-3.5" />
+              TRẢI NGHIỆM TRỰC TUYẾN
+            </button>
+
+            <button
+              onClick={() => setActiveTab('download')}
+              className={`px-3.5 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'download'
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Download className="w-3.5 h-3.5" />
               TẢI BỘ CÀI ĐẶT
             </button>
+
             <button
               onClick={() => setActiveTab('register')}
-              className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 activeTab === 'register'
                   ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
                   : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Key className="w-4 h-4" />
+              <Key className="w-3.5 h-3.5" />
               ĐĂNG KÝ BẢN QUYỀN
             </button>
           </div>
 
-          <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-400">
+          {/* CHÍNH SÁCH DÙNG THỬ BẮT BUỘC: 5 LẦN TRẢI NGHIỆM */}
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
             {isProActive ? (
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 font-bold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Bản quyền Pro đã kích hoạt
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-bold">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Bản quyền Pro Vĩnh Viễn
               </span>
             ) : (
-              <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
-                ⏳ Bản dùng thử (Môn {curSub.name})
-              </span>
+              <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800">
+                <span className="text-[11px] text-slate-300">Dùng thử:</span>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((dot) => (
+                    <span
+                      key={dot}
+                      className={`w-2 h-2 rounded-full ${
+                        dot <= trialRemaining ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' : 'bg-slate-700'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-[11px] font-bold text-amber-400">
+                  {trialRemaining}/5 lượt
+                </span>
+              </div>
             )}
           </div>
         </div>
 
-        {/* NỘI DUNG 2 TABS */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 custom-scrollbar">
+        {/* NỘI DUNG CHÍNH CỦA 3 TABS */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar">
           
           {/* ========================================================================= */}
-          {/* TAB 1: TẢI VỀ BỘ CÀI ĐẶT RIÊNG BIỆT CỦA MÔN ĐANG CHỌN */}
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN - TẠO ĐỀ, MA TRẬN & ĐẶC TẢ GDCD & 8 MÔN */}
+          {/* ========================================================================= */}
+          {activeTab === 'online' && (
+            <div className="space-y-4 max-w-4xl mx-auto">
+              
+              {/* THANH ĐIỀU KHIỂN CẤU HÌNH ĐỀ THI */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {/* CHỌN BỘ MÔN */}
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Môn học:</label>
+                    <select
+                      value={currentSubjectKey}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setCurrentSubjectKey(val);
+                        try {
+                          const suite = getTHCS8MonExamSuite(val, selectedGrade, selectedTerm, selectedExamCode);
+                          setExamData(suite);
+                        } catch (err) {
+                          console.warn(err);
+                        }
+                      }}
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="GDCD">⚖️ Môn GDCD</option>
+                      <option value="TOAN">📐 Môn Toán học</option>
+                      <option value="VAN">📖 Môn Ngữ văn</option>
+                      <option value="KHTN">🔬 Khoa học tự nhiên</option>
+                      <option value="SUDIA">🌍 Lịch sử & Địa lí</option>
+                      <option value="TIN">💻 Môn Tin học</option>
+                      <option value="CN">⚙️ Môn Công nghệ</option>
+                    </select>
+                  </div>
+
+                  {/* CHỌN KHỐI LỚP */}
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Khối lớp:</label>
+                    <select
+                      value={selectedGrade}
+                      onChange={(e) => setSelectedGrade(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="6">Lớp 6 (KNTT)</option>
+                      <option value="7">Lớp 7 (KNTT)</option>
+                      <option value="8">Lớp 8 (KNTT)</option>
+                      <option value="9">Lớp 9 (KNTT)</option>
+                    </select>
+                  </div>
+
+                  {/* CHỌN KỲ THI */}
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Kỳ kiểm tra:</label>
+                    <select
+                      value={selectedTerm}
+                      onChange={(e) => setSelectedTerm(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="15P">Đề 15 phút</option>
+                      <option value="GK1">Giữa học kỳ 1 (45p)</option>
+                      <option value="CK1">Cuối học kỳ 1 (45p)</option>
+                      <option value="GK2">Giữa học kỳ 2 (45p)</option>
+                      <option value="CK2">Cuối học kỳ 2 (45p)</option>
+                    </select>
+                  </div>
+
+                  {/* CHỌN MÃ ĐỀ */}
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Mã đề thi:</label>
+                    <select
+                      value={selectedExamCode}
+                      onChange={(e) => setSelectedExamCode(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
+                    >
+                      <option value="701">Mã đề 701</option>
+                      <option value="702">Mã đề 702</option>
+                      <option value="703">Mã đề 703</option>
+                      <option value="704">Mã đề 704</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* 2 NÚT THAO TÁC CHÍNH */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
+                  <button
+                    onClick={handleGenerateExam}
+                    disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
+                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                  >
+                    <Sparkles className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                    <span>
+                      {isGenerating
+                        ? 'ĐANG TẠO MA TRẬN & ĐỀ THI...'
+                        : `⚡ TẠO ĐỀ ${curSub.name.toUpperCase()} ${isProActive ? '(PRO KHÔNG GIỚI HẠN)' : `(CÒN ${trialRemaining}/5 LƯỢT DÙNG THỬ)`}`}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={handleExportWord}
+                    className="w-full sm:w-auto py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition cursor-pointer"
+                    title="Tải đề thi kèm ma trận đặc tả ra file Microsoft Word .doc chuẩn 100%"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>📥 XUẤT FILE WORD (.DOCX) IN ẤN</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 4 TAB XEM NỘI DUNG: ĐỀ THI - MA TRẬN - BẢN ĐẶC TẢ - ĐÁP ÁN */}
+              <div className="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
+                <button
+                  onClick={() => setActiveView('exam')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    activeView === 'exam'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  1. ĐỀ THI HỌC SINH
+                </button>
+
+                <button
+                  onClick={() => setActiveView('matrix')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    activeView === 'matrix'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Table className="w-3.5 h-3.5" />
+                  2. MA TRẬN ĐỀ (CV 7991)
+                </button>
+
+                <button
+                  onClick={() => setActiveView('spec')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    activeView === 'spec'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <ListChecks className="w-3.5 h-3.5" />
+                  3. BẢN ĐẶC TẢ KỸ THUẬT
+                </button>
+
+                <button
+                  onClick={() => setActiveView('answers')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                    activeView === 'answers'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <CheckSquare className="w-3.5 h-3.5" />
+                  4. ĐÁP ÁN & BIỂU ĐIỂM
+                </button>
+              </div>
+
+              {/* KHUNG HIỂN THỊ NỘI DUNG SƯ PHẠM CHUẨN */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-white text-slate-900 border border-slate-300 shadow-inner font-serif text-[13pt] leading-relaxed max-h-[55vh] overflow-y-auto custom-scrollbar">
+                
+                {/* 1. XEM ĐỀ THI HỌC SINH */}
+                {activeView === 'exam' && examData && (
+                  <div className="space-y-4">
+                    {/* TIÊU ĐỀ ĐỀ THI SƯ PHẠM */}
+                    <div className="grid grid-cols-2 gap-4 pb-3 border-b-2 border-slate-800 text-center">
+                      <div>
+                        <p className="font-bold text-xs uppercase">{examData.parentAgency || 'UBND HUYỆN BẮC QUANG - PHÒNG GD&ĐT'}</p>
+                        <p className="font-black text-sm uppercase text-[#123A63]">{examData.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN'}</p>
+                      </div>
+                      <div>
+                        <p className="font-black text-sm uppercase text-[#FF0000]">
+                          ĐỀ KIỂM TRA {examData.termTitle?.toUpperCase() || 'GIỮA HỌC KỲ I'}
+                        </p>
+                        <p className="font-bold text-xs">MÔN: {examData.subjectName?.toUpperCase()} {examData.grade}</p>
+                        <p className="text-[11px] italic">Thời gian: {examData.timeMinutes} phút | Mã đề: {examData.examCode}</p>
+                      </div>
+                    </div>
+
+                    {/* NỘI DUNG CÁC PHẦN ĐỀ THI */}
+                    {examData.parts?.map((part, pIdx) => (
+                      <div key={pIdx} className="space-y-3 pt-2">
+                        <div className="font-bold text-[#FF0000] text-sm">
+                          {part.title} ({part.points})
+                        </div>
+                        {part.instruction && (
+                          <p className="italic text-xs text-slate-700">{part.instruction}</p>
+                        )}
+                        <div className="space-y-2.5">
+                          {part.questions?.map((q, qIdx) => (
+                            <div key={qIdx} className="text-xs leading-relaxed">
+                              <p className="font-medium text-slate-900">
+                                <strong>Câu {q.num}:</strong> {q.content}
+                              </p>
+                              {q.options && q.options.length > 0 && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1.5 pl-3">
+                                  {q.options.map((opt, oIdx) => (
+                                    <div key={oIdx} className="text-slate-800">
+                                      {opt}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 2. XEM MA TRẬN ĐỀ THI (CV 7991) */}
+                {activeView === 'matrix' && examData?.matrix && (
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
+                      KHUNG MA TRẬN ĐỀ KIỂM TRA {examData.subjectName?.toUpperCase()} {examData.grade} (CV 7991)
+                    </h4>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[11px] border-collapse border border-slate-400">
+                        <thead>
+                          <tr className="bg-slate-100 text-slate-900 font-bold">
+                            {examData.matrix.headers.map((h, i) => (
+                              <th key={i} className="border border-slate-400 p-2 text-center">
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {examData.matrix.rows.map((row, rIdx) => (
+                            <tr key={rIdx} className={rIdx === examData.matrix!.rows.length - 1 ? 'font-bold bg-slate-50' : ''}>
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className="border border-slate-400 p-2 text-center">
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. XEM BẢN ĐẶC TẢ KỸ THUẬT (CV 7991) */}
+                {activeView === 'spec' && examData?.specification && (
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
+                      BẢN ĐẶC TẢ KỸ THUẬT ĐỀ KIỂM TRA {examData.subjectName?.toUpperCase()} {examData.grade} (CV 7991)
+                    </h4>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[11px] border-collapse border border-slate-400">
+                        <thead>
+                          <tr className="bg-slate-100 text-slate-900 font-bold">
+                            {examData.specification.headers.map((h, i) => (
+                              <th key={i} className="border border-slate-400 p-2 text-center">
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {examData.specification.rows.map((row, rIdx) => (
+                            <tr key={rIdx}>
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className="border border-slate-400 p-2 text-left">
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. XEM ĐÁP ÁN & BIỂU ĐIỂM CHI TIẾT */}
+                {activeView === 'answers' && examData && (
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
+                      HƯỚNG DẪN CHẤM & ĐÁP ÁN ĐỀ {examData.examCode} - {examData.subjectName?.toUpperCase()} {examData.grade}
+                    </h4>
+
+                    {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM */}
+                    <div className="space-y-2">
+                      <h5 className="font-bold text-xs text-slate-900">I. ĐÁP ÁN PHẦN TRẮC NGHIỆM KHÁCH QUAN:</h5>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center text-xs">
+                        {examData.parts?.[0]?.questions?.map((q, idx) => (
+                          <div key={idx} className="p-1.5 border border-slate-300 rounded bg-slate-50">
+                            <span className="font-bold text-slate-700 block">C{q.num}</span>
+                            <span className="font-black text-[#FF0000]">{q.correctKey || 'A'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* BIỂU ĐIỂM TỰ LUẬN TÌNH HUỐNG */}
+                    {examData.parts?.[1] && (
+                      <div className="space-y-2 pt-3 border-t border-slate-200">
+                        <h5 className="font-bold text-xs text-slate-900">II. HƯỚNG DẪN CHẤM PHẦN TỰ LUẬN XỬ LÝ TÌNH HUỐNG:</h5>
+                        {examData.parts[1].questions?.map((t, idx) => (
+                          <div key={idx} className="p-2.5 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
+                            <p className="font-bold text-blue-900">{t.num} ({t.points}):</p>
+                            <p className="text-slate-800 whitespace-pre-line">{t.content}</p>
+                            <p className="text-emerald-700 font-semibold mt-1">
+                              ✓ Tiêu chuẩn chấm: Trả lời đúng trọng tâm chuẩn mực đạo đức & pháp luật, lập luận logic, nêu được giải pháp thực tiễn.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* TAB 2: TẢI VỀ BỘ CÀI ĐẶT RIÊNG BIỆT CHO MÔN ĐANG CHỌN */}
           {/* ========================================================================= */}
           {activeTab === 'download' && (
-            <div className="space-y-5 max-w-3xl mx-auto">
+            <div className="space-y-4 max-w-3xl mx-auto">
               
-              {/* CARD TẢI BỘ CÀI CHÍNH CỦA MÔN ĐANG CHỌN */}
+              {/* CARD TẢI BỘ CÀI CHÍNH */}
               <div className="p-5 rounded-3xl bg-gradient-to-br from-slate-900 via-blue-950/30 to-slate-900 border border-cyan-500/40 shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
                 
@@ -398,7 +835,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-lg font-black text-white">
+                        <h4 className="text-base sm:text-lg font-black text-white">
                           BỘ CÀI ĐẶT TẠO ĐỀ {curSub.fullName.toUpperCase()}
                         </h4>
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
@@ -464,7 +901,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
                     <h6 className="font-bold text-white text-xs">Giải nén bằng Pass: 123</h6>
-                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP ➔ Chọn Extract Here ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
+                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP ➔ Extract Here ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
                     <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center">3</span>
@@ -472,17 +909,6 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <p className="text-[11px] text-slate-400">Nhấp đúp chuột vào file để mở phần mềm tạo đề {curSub.name} ngay tức thì.</p>
                   </div>
                 </div>
-              </div>
-
-              {/* HƯỚNG DẪN KHI CỐC CỐC / CHROME / WINDOWS BÁO TỆP LẠ */}
-              <div className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-left space-y-1.5 text-xs">
-                <div className="flex items-center gap-2 text-amber-400 font-bold">
-                  <ShieldCheck className="w-4 h-4 shrink-0" />
-                  <span>LƯU Ý KHI TRÌNH DUYỆT BÁO "TỆP NGUY HIỂM / LỖI TẢI XUỐNG":</span>
-                </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  💡 Do phần mềm giáo dục được lập trình Native đóng gói độc lập, chưa đăng ký chứng chỉ doanh nghiệp có trả phí của Microsoft nên Cốc Cốc / Chrome / Defender có thể cảnh báo nhận diện nhầm (False Positive). Phần mềm <strong>an toàn 100%</strong>. Khuyên dùng bấm <strong>Tải bản ZIP (Pass: 123)</strong> để tải mượt mà không bị chặn, hoặc chọn "Giữ lại / Keep anyway".
-                </p>
               </div>
 
               {/* VIDEO HƯỚNG DẪN */}
@@ -498,7 +924,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 </div>
                 <a
                   href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
-                  download="Huong_Dan_Tao_De_THCS_8_Mon_CV7991.mp4"
+                  download="Huong_Dan_Tao_De_THCS_CV7991.mp4"
                   target="_blank"
                   className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
                 >
@@ -511,12 +937,12 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 2: ĐĂNG KÝ BẢN QUYỀN ĐỘC LẬP TỪNG BỘ MÔN (KHÔNG CÓ GÓI TRỌN 7 MÔN) */}
+          {/* TAB 3: ĐĂNG KÝ BẢN QUYỀN ĐỘC LẬP TỪNG BỘ MÔN */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto">
               
-              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
+              {/* THÔNG TIN TÁC GIẢ THẦY ĐINH VĂN THÀNH */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
@@ -561,6 +987,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 </div>
               </div>
 
+              {/* FORM ĐĂNG KÝ BẢN QUYỀN */}
               <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
                 <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
                   <Key className="w-4 h-4 text-amber-400" />
@@ -569,7 +996,6 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </h4>
                 </div>
 
-                {/* THÔNG TIN NGƯỜI ĐĂNG KÝ */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Họ và tên giáo viên (*):</label>
@@ -606,19 +1032,18 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                   <div>
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Bộ môn giảng dạy:</label>
-                    {/* CHỈ CÓ 7 BỘ MÔN ĐỘC LẬP - TUYỆT ĐỐI KHÔNG CÓ TRỌN BỘ 7 MÔN */}
                     <select
                       value={currentSubjectKey}
                       onChange={(e) => setCurrentSubjectKey(e.target.value)}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-blue-500"
                     >
-                      <option value="TOAN">Môn Toán học</option>
-                      <option value="VAN">Môn Ngữ văn</option>
-                      <option value="KHTN">Môn Khoa học tự nhiên</option>
-                      <option value="SUDIA">Môn Lịch sử và Địa lí</option>
-                      <option value="GDCD">Môn Giáo dục công dân</option>
-                      <option value="TIN">Môn Tin học</option>
-                      <option value="CN">Môn Công nghệ</option>
+                      <option value="GDCD">⚖️ Môn Giáo dục công dân</option>
+                      <option value="TOAN">📐 Môn Toán học</option>
+                      <option value="VAN">📖 Môn Ngữ văn</option>
+                      <option value="KHTN">🔬 Môn Khoa học tự nhiên</option>
+                      <option value="SUDIA">🌍 Môn Lịch sử và Địa lí</option>
+                      <option value="TIN">💻 Môn Tin học</option>
+                      <option value="CN">⚙️ Môn Công nghệ</option>
                     </select>
                   </div>
                 </div>
@@ -641,7 +1066,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </button>
                 </div>
 
-                {/* CHỌN GÓI BẢN QUYỀN CHO BỘ MÔN */}
+                {/* GÓI BẢN QUYỀN - KHÔNG HIỂN THỊ GIÁ TIỀN TĨNH THEO QUY CHUẨN SƯ PHẠM */}
                 <div>
                   <label className="text-[11px] font-bold text-slate-300 block mb-1.5">Gói bản quyền đăng ký:</label>
                   <div className="grid grid-cols-3 gap-2">
@@ -751,7 +1176,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
         </div>
 
         {/* FOOTER MODAL */}
-        <div className="px-6 py-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
+        <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
             <span>© 2026 Bản quyền thuộc Thầy giáo <strong>Đinh Văn Thành</strong></span>
             <span>•</span>

@@ -13,7 +13,7 @@
     <script>
       // Tự động xóa bộ nhớ đệm cache phiên bản cũ
       (function() {
-        var CURRENT_VER = "20261003_v3_clean_pedagogy";
+        var CURRENT_VER = "20261004_v3_gdcd_fixed";
         try {
           if (localStorage.getItem("app_build_version") !== CURRENT_VER) {
             localStorage.setItem("app_build_version", CURRENT_VER);
@@ -296,6 +296,6 @@
   </head>
   <body class="bg-[#F6F8FC] text-[#172033] antialiased">
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx?v=20261003_v3_clean"></script>
+    <script type="module" src="/src/main.tsx?v=20261004_v3_gdcd_fixed"></script>
   </body>
 </html>

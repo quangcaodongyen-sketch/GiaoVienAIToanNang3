@@ -182,7 +182,15 @@ class WebSecurityGuard {
     let location = 'Việt Nam';
 
     try {
-      const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+      let fetchOpts: RequestInit = {};
+      try {
+        if (typeof AbortSignal !== 'undefined' && typeof (AbortSignal as any).timeout === 'function') {
+          fetchOpts.signal = (AbortSignal as any).timeout(3000);
+        }
+      } catch {
+        fetchOpts = {};
+      }
+      const res = await fetch('https://ipapi.co/json/', fetchOpts);
       if (res.ok) {
         const data = await res.json();
         ipAddress = data.ip || '';
@@ -193,7 +201,15 @@ class WebSecurityGuard {
       }
     } catch {
       try {
-        const res2 = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) });
+        let fetchOpts2: RequestInit = {};
+        try {
+          if (typeof AbortSignal !== 'undefined' && typeof (AbortSignal as any).timeout === 'function') {
+            fetchOpts2.signal = (AbortSignal as any).timeout(2000);
+          }
+        } catch {
+          fetchOpts2 = {};
+        }
+        const res2 = await fetch('https://api.ipify.org?format=json', fetchOpts2);
         if (res2.ok) {
           const d2 = await res2.json();
           ipAddress = d2.ip || '';
@@ -222,61 +238,73 @@ class WebSecurityGuard {
 
   // Giám sát can thiệp LocalStorage để phá khóa lượt dùng thử
   private watchStorageTampering() {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !window.localStorage) return;
 
-    const originalSetItem = localStorage.setItem.bind(localStorage);
-    const originalRemoveItem = localStorage.removeItem.bind(localStorage);
+    try {
+      const originalSetItem = localStorage.setItem.bind(localStorage);
+      const originalRemoveItem = localStorage.removeItem.bind(localStorage);
 
-    localStorage.setItem = (key: string, value: string) => {
-      if (!this.isDevOrAdmin()) {
-        // Nếu can thiệp vào các biến số lượt dùng thử hoặc bản quyền
-        const sensitiveKeys = [
-          'gvai_mathstudio_trial_remaining',
-          'gvai_nls_trial_count',
-          'gvai_taode_trial_count',
-          'gvai_thcs8m_trial_count',
-          'gvai_unlimited_machine',
-          'gvai_blocked_machines'
-        ];
+      localStorage.setItem = (key: string, value: string) => {
+        try {
+          if (!this.isDevOrAdmin()) {
+            // Nếu can thiệp vào các biến số lượt dùng thử hoặc bản quyền
+            const sensitiveKeys = [
+              'gvai_mathstudio_trial_remaining',
+              'gvai_nls_trial_count',
+              'gvai_taode_trial_count',
+              'gvai_thcs8m_trial_count',
+              'gvai_unlimited_machine',
+              'gvai_blocked_machines'
+            ];
 
-        if (sensitiveKeys.includes(key)) {
-          // Kiểm tra nếu người dùng tự ý set lượt dùng thử cao hơn quy định (> 5)
-          const valNum = parseInt(value, 10);
-          if (!isNaN(valNum) && valNum > 5) {
-            this.triggerAlert(
-              'BINARY_TAMPER',
-              `Cố tình can thiệp LocalStorage key [${key}] thành [${value}] để gian lận lượt dùng thử trên app: ${this.activeAppName}`,
-              'CRITICAL'
-            );
-            return; // Chặn ghi đè
+            if (sensitiveKeys.includes(key)) {
+              // Kiểm tra nếu người dùng tự ý set lượt dùng thử cao hơn quy định (> 5)
+              const valNum = parseInt(value, 10);
+              if (!isNaN(valNum) && valNum > 5) {
+                this.triggerAlert(
+                  'BINARY_TAMPER',
+                  `Cố tình can thiệp LocalStorage key [${key}] thành [${value}] để gian lận lượt dùng thử trên app: ${this.activeAppName}`,
+                  'CRITICAL'
+                );
+                return; // Chặn ghi đè
+              }
+
+              if (key === 'gvai_unlimited_machine' && value === 'true') {
+                this.triggerAlert(
+                  'BINARY_TAMPER',
+                  `Cố tình tự phong quyền Master Admin (gvai_unlimited_machine=true) trên app: ${this.activeAppName}`,
+                  'CRITICAL'
+                );
+                return;
+              }
+            }
           }
+        } catch {
+          // Bỏ qua lỗi giám sát
+        }
+        return originalSetItem(key, value);
+      };
 
-          if (key === 'gvai_unlimited_machine' && value === 'true') {
-            this.triggerAlert(
-              'BINARY_TAMPER',
-              `Cố tình tự phong quyền Master Admin (gvai_unlimited_machine=true) trên app: ${this.activeAppName}`,
-              'CRITICAL'
-            );
-            return;
+      localStorage.removeItem = (key: string) => {
+        try {
+          if (!this.isDevOrAdmin()) {
+            if (key === 'gvai_blocked_machines' || key === 'gvai_blocked_list') {
+              this.triggerAlert(
+                'BINARY_TAMPER',
+                `Cố tình xóa danh sách khóa máy tính [${key}] từ Console DevTools`,
+                'CRITICAL'
+              );
+              return;
+            }
           }
+        } catch {
+          // Bỏ qua lỗi giám sát
         }
-      }
-      return originalSetItem(key, value);
-    };
-
-    localStorage.removeItem = (key: string) => {
-      if (!this.isDevOrAdmin()) {
-        if (key === 'gvai_blocked_machines' || key === 'gvai_blocked_list') {
-          this.triggerAlert(
-            'BINARY_TAMPER',
-            `Cố tình xóa danh sách khóa máy tính [${key}] từ Console DevTools`,
-            'CRITICAL'
-          );
-          return;
-        }
-      }
-      return originalRemoveItem(key);
-    };
+        return originalRemoveItem(key);
+      };
+    } catch (e) {
+      console.warn('[webSecurityGuard] Storage tampering monitor bypassed safely:', e);
+    }
   }
 
   // Ghi nhận khi người dùng nhập sai Key nhiều lần liên tiếp (Brute-force crack key)
