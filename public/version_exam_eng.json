@@ -1,11 +1,11 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.5.0",
-  "latestVersion": "3.5.0",
+  "currentVersion": "3.5.1",
+  "latestVersion": "3.5.1",
   "releaseDate": "04/10/2026",
-  "changelog": "• NÂNG CẤP GIAO DIỆN XANH CHỮ TRẮNG SANG TRỌNG: Toàn bộ cửa sổ làm việc được thiết kế lại theo phong cách Xanh Đậm Hoàng Gia (Deep Royal Blue / Navy) kết hợp chữ Trắng tinh khôi sắc nét (#FFFFFF), độ tương phản cao, dịu mắt và cực kỳ chuyên nghiệp.\n• ĐÁP ÁN CHỮ MÀU ĐỎ TRỰC TIẾP: Tự động tô màu đỏ (#FF0000) và in đậm phương án đúng trên từng câu hỏi của đề kiểm tra và bảng đối chiếu đáp án, giúp Giáo viên duyệt đề tức thì.\n• MA TRẬN & ĐẶC TẢ 100% TIẾNG ANH: Chuẩn hóa 100% bằng tiếng Anh học thuật sư phạm quốc tế bám sát CV 7991.\n• LOẠI BỎ 'GLOBAL SUCCESS': Đề kiểm tra in ra tinh gọn, chuẩn mực.\n• Tùy chọn 2, 3, 4 mã đề linh hoạt & cố định bài nghe chung đáp án.",
-  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
+  "changelog": "• CHUẨN TÊN BỘ CÀI ĐẶT: Đổi tên bộ cài đặt thành Cai_Dat_TaoDe_TiengAnh_THCS.exe chuẩn nhận diện công cụ Tạo đề THCS.\n• ĐÁP ÁN CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM: Trên toàn bộ câu hỏi và bảng đối chiếu đáp án, đáp án đúng hiển thị chữ màu đỏ (#FF0000) và KHÔNG IN ĐẬM theo đúng yêu cầu sư phạm.\n• GIAO DIỆN XANH CHỮ TRẮNG HIỆN ĐẠI: Tone Xanh Hoàng Gia sang trọng (#061629) kết hợp chữ Trắng tinh khôi (#FFFFFF) độ tương phản cao.\n• MA TRẬN & ĐẶC TẢ 100% TIẾNG ANH: Chuẩn hóa 100% bằng tiếng Anh học thuật quốc tế bám sát CV 7991.\n• LOẠI BỎ 'GLOBAL SUCCESS': Đề kiểm tra in ra trang nhã, chuẩn mực.",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"

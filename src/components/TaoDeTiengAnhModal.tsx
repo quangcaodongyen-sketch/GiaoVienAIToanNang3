@@ -503,23 +503,23 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <p><strong>Question 2.</strong> Life in the countryside is much ________ than life in the big city.</p>
                     <p className="pl-6">
                       A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
-                      <strong className="text-[#FF0000] font-black underline bg-red-50 px-1.5 py-0.5 rounded">✔ B. more peaceful</strong> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ B. more peaceful</span> &nbsp;&nbsp;&nbsp;&nbsp; 
                       C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
                       D. most peaceful
                     </p>
 
                     <p><strong>Question 3.</strong> Nam didn't go to school yesterday ________ he had a severe fever.</p>
                     <p className="pl-6">
-                      <strong className="text-[#FF0000] font-black underline bg-red-50 px-1.5 py-0.5 rounded">✔ A. because</strong> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ A. because</span> &nbsp;&nbsp;&nbsp;&nbsp; 
                       B. although &nbsp;&nbsp;&nbsp;&nbsp; 
                       C. but &nbsp;&nbsp;&nbsp;&nbsp; 
                       D. so
                     </p>
 
-                    {/* BẢNG ĐÁP ÁN CHỮ ĐỎ DÀNH RIÊNG CHO GIÁO VIÊN */}
+                    {/* BẢNG ĐÁP ÁN CHỮ ĐỎ DÀNH RIÊNG CHO GIÁO VIÊN (KHÔNG IN ĐẬM) */}
                     <div className="mt-6 p-4 rounded-xl border border-red-300 bg-red-50/50">
                       <p className="font-bold text-[#FF0000] text-[12pt] mb-2 uppercase flex items-center gap-2">
-                        <span>★ BẢNG ĐÁP ÁN VÀ THANG ĐIỂM CHI TIẾT (CHỮ MÀU ĐỎ CHO GIÁO VIÊN):</span>
+                        <span>★ BẢNG ĐÁP ÁN VÀ THANG ĐIỂM CHI TIẾT (CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM):</span>
                       </p>
                       <table className="w-full border-collapse border border-red-300 text-center text-[11pt]">
                         <thead>
@@ -533,19 +533,19 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                         <tbody>
                           <tr>
                             <td className="border border-red-300 p-1 font-bold">1</td>
-                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">B</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">B</td>
                             <td className="border border-red-300 p-1">0.25 đ</td>
                             <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">Nghe thông tin chi tiết: "Mai often plays sports after school".</td>
                           </tr>
                           <tr>
                             <td className="border border-red-300 p-1 font-bold">2</td>
-                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">B</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">B</td>
                             <td className="border border-red-300 p-1">0.25 đ</td>
                             <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">So sánh hơn tính từ dài: much + more peaceful + than.</td>
                           </tr>
                           <tr>
                             <td className="border border-red-300 p-1 font-bold">3</td>
-                            <td className="border border-red-300 p-1 text-[#FF0000] font-black text-[13pt]">A</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">A</td>
                             <td className="border border-red-300 p-1">0.25 đ</td>
                             <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">Liên từ chỉ nguyên nhân: because + clause (chỉ lý do sốt).</td>
                           </tr>
