@@ -1194,26 +1194,36 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                   </p>
                 </div>
 
-                {/* CÁC NÚT TẢI: .EXE CHẠY NGAY HOẶC .ZIP PASS 123 */}
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                {/* CÁC NÚT TẢI: BỘ CÀI ĐẶT TỰ ĐỘNG, .EXE CHẠY NGAY HOẶC .ZIP PASS 123 */}
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <a
+                    href="/Cai_Dat_Smart_Listening_Pro.exe"
+                    download="Cai_Dat_Smart_Listening_Pro.exe"
+                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/30 transition-all hover:scale-105"
+                    title="Bộ cài đặt 1-Click: Tự động cài đặt & tạo biểu tượng Icon ra ngoài Màn hình Desktop"
+                  >
+                    <Sparkles className="w-4 h-4 text-slate-950" />
+                    🚀 Tải Bộ Cài Đặt Tự Động (.exe Tạo Desktop)
+                  </a>
+
                   <a
                     href="/Smart%20Listening%20Pro.exe"
                     download="Smart Listening Pro.exe"
-                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 transition-all hover:scale-105"
-                    title="Tải trực tiếp file .exe - Mở là dùng ngay, không cần giải nén"
+                    className="py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 transition-all hover:scale-105"
+                    title="Tải trực tiếp file .exe - Tự động tạo biểu tượng Desktop khi mở"
                   >
                     <Download className="w-4 h-4" />
-                    Tải File Cài (.exe Chạy Ngay)
+                    Bản .exe (Chạy Ngay)
                   </a>
 
                   <a
                     href="/Smart_Listening_Pro_Pass_123.zip"
                     download="Smart_Listening_Pro_Pass_123.zip"
-                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
+                    className="py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
                     title="Bản nén zip có mật khẩu 123 - Tránh chặn tải trên mọi trình duyệt"
                   >
                     <Download className="w-4 h-4" />
-                    Tải Bản Nén (.zip Pass: 123)
+                    Bản Nén (.zip Pass: 123)
                   </a>
                 </div>
               </div>
@@ -1221,16 +1231,16 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               {/* Hướng Dẫn Nhanh 3 Bước */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-emerald-500/20 text-[11px]">
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 1: Tải về</span>
-                  <span className="text-slate-300">Bấm nút xanh ở trên để tải file về máy. (Nếu Chrome hiện cảnh báo, bấm dấu <strong>&gt;</strong> chọn <em>"Vẫn tải xuống"</em>).</span>
+                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 1: Tải về máy</span>
+                  <span className="text-slate-300">Nên chọn <strong>"🚀 Tải Bộ Cài Đặt Tự Động"</strong> để app tự động xuất hiện trên Màn hình Desktop ngay sau 1 click.</span>
                 </div>
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Giải nén</span>
-                  <span className="text-slate-300">Nhấp chuột phải vào file &rarr; chọn "Extract Here" &rarr; Nhập mật khẩu: <strong className="text-amber-300">123</strong></span>
+                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Mở cài đặt</span>
+                  <span className="text-slate-300">Nhấp đúp mở file vừa tải. Nếu Windows hiện thông báo xanh lam, bấm <em>"More info" &rarr; "Run anyway"</em>.</span>
                 </div>
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Chạy ứng dụng</span>
-                  <span className="text-slate-300">Nhấp đúp vào <code>Smart Listening Pro.exe</code> (Chọn <em>More info &rarr; Run anyway</em> nếu có).</span>
+                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Sử dụng từ Desktop</span>
+                  <span className="text-slate-300">Biểu tượng <code>Smart Listening Pro</code> sẽ tự động xuất hiện trên Desktop. Nhấp đúp biểu tượng để mở tạo bài nghe!</span>
                 </div>
               </div>
             </div>
