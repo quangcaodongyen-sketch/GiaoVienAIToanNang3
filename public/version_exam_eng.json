@@ -1,10 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.5.2",
-  "latestVersion": "3.5.2",
+  "currentVersion": "3.5.3",
+  "latestVersion": "3.5.3",
   "releaseDate": "04/10/2026",
-  "changelog": "• SỬA DÃN DÒNG RỘNG: Loại bỏ hoàn toàn Borderless Table gây phình dãn dòng, thay bằng Paragraph Tab Stops gọn gàng.\n• TRUE/FALSE CÙNG DÒNG: Câu hỏi True/False Part 2 đặt ngay cùng dòng câu trả lời A. True / B. False tiết kiệm giấy tối đa.\n• Part 4 Cloze và Part 1, 3, 5 MC: Tối ưu khoảng cách giữa câu hỏi và đáp án sát khít, thẳng hàng chuẩn Tab Stops.\n• ĐÁP ÁN MÀU ĐỎ KHÔNG IN ĐẬM: Giữ nguyên quy tắc chữ đỏ #FF0000, bold=False trên toàn bộ đề.",
+  "changelog": "• CHUẨN HÓA KHUNG MA TRẬN 16 CỘT: Cập nhật cấu trúc bảng Ma trận chuẩn mẫu Bộ GD&ĐT / CV 7991 với Header 3 tầng tiếng Việt, đầy đủ mức độ Biết - Hiểu - Vận dụng và 3 dòng Tổng số câu, Tổng số điểm, Tỉ lệ %.\n• BỔ SUNG DÒNG TỔNG TRONG BẢN ĐẶC TẢ: Hoàn thiện bảng Bản đặc tả kỹ thuật 7 cột bám sát mẫu tập huấn của Thầy, bổ sung hàng TỔNG ở cuối bản đặc tả theo đúng quy chuẩn sư phạm.\n• SỬA DÃN DÒNG RỘNG & TRUE/FALSE CÙNG DÒNG: Loại bỏ Table rỗng, câu hỏi và đáp án True/False cùng dòng tiết kiệm giấy tối đa.\n• ĐÁP ÁN MÀU ĐỎ KHÔNG IN ĐẬM: Giữ nguyên quy tắc chữ đỏ #FF0000, bold=False.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
