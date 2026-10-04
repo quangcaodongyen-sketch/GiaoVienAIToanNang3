@@ -40,6 +40,13 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService } from '../services/licenseService';
+import { cloudSyncService } from '../services/cloudSyncService';
+import {
+  verifySmartListeningLicenseKey,
+  saveSmartListeningVIPActivation,
+  isSmartListeningVIPActivated,
+  SmartListeningVerifyResult
+} from '../services/smartListeningKeyService';
 
 interface OnlineTTSModalProps {
   isOpen: boolean;
@@ -196,6 +203,11 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [proMessage, setProMessage] = useState('');
   const [checkLoading, setCheckLoading] = useState(false);
 
+  // Trạng thái kích hoạt bằng mã Key Ed25519 & Đồng bộ Cloud
+  const [inputKey, setInputKey] = useState('');
+  const [verifyResult, setVerifyResult] = useState<SmartListeningVerifyResult | null>(null);
+  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
+
   // Ref điều khiển playback
   const isPlayingRef = useRef(false);
   const timerIntervalRef = useRef<any>(null);
@@ -217,23 +229,28 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       setTrialRemaining(5);
     }
 
-    // Tự động kiểm tra xem mã máy này đã được kích hoạt Pro trên Cloud chưa
+    // 1. Kiểm tra trạng thái VIP đã kích hoạt trước đó
+    if (isSmartListeningVIPActivated()) {
+      setIsProActivated(true);
+      setProTeacherName('Quý Thầy/Cô');
+    }
+
+    // 2. Tự động kiểm tra trạng thái phê duyệt trên Cloud GitHub
+    cloudSyncService.checkCurrentMachineCloudStatus(mid, 'smart-listening').then(res => {
+      if (res.isApproved) {
+        setIsProActivated(true);
+        setProTeacherName(res.approvedBy || 'Admin Thầy Thành');
+        localStorage.setItem('gvai_web_pro_mid', mid);
+      }
+    });
+
+    // 3. Fallback licenseService cũ
     licenseService.checkOnlineLicense(mid).then(res => {
       if (res.isValid && res.record) {
         setIsProActivated(true);
         setProTeacherName(res.record.teacher_name || 'Thầy/Cô');
       }
     });
-
-    const savedProMid = localStorage.getItem('gvai_web_pro_mid');
-    if (savedProMid && savedProMid !== mid) {
-      licenseService.checkOnlineLicense(savedProMid).then(res => {
-        if (res.isValid && res.record) {
-          setIsProActivated(true);
-          setProTeacherName(res.record.teacher_name || 'Thầy/Cô');
-        }
-      });
-    }
   }, []);
 
   // Tính toán số từ và ước tính thời lượng
@@ -416,6 +433,48 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     }
   };
 
+  // Kích hoạt bản quyền trực tiếp bằng mã Key Ed25519 (TTS-Y1-... hoặc TTS-LT-...)
+  const handleActivateKey = async () => {
+    if (!inputKey.trim()) {
+      alert('Vui lòng nhập hoặc dán mã kích hoạt bản quyền do Thầy Thành cấp!');
+      return;
+    }
+    const res = await verifySmartListeningLicenseKey(inputKey.trim(), detectedMid);
+    setVerifyResult(res);
+    if (res.isValid) {
+      saveSmartListeningVIPActivation(inputKey.trim(), detectedMid, res);
+      setIsProActivated(true);
+      setProTeacherName('Quý Thầy/Cô');
+      alert(`🎉 CHÚC MỪNG QUÝ THẦY/CÔ!\n\nĐã kích hoạt thành công: ${res.packageName}!\nThời hạn: ${res.expiryDateStr}.\nThầy/Cô có thể tạo bài nghe không giới hạn số từ trên hệ thống.`);
+    } else {
+      alert(`❌ KÍCH HOẠT KHÔNG THÀNH CÔNG:\n\n${res.message}`);
+    }
+  };
+
+  // Đồng bộ bản quyền trực tiếp từ GitHub Cloud
+  const handleCloudSync = async () => {
+    setIsSyncingCloud(true);
+    try {
+      const res = await cloudSyncService.checkCurrentMachineCloudStatus(detectedMid, 'smart-listening');
+      if (res.isApproved) {
+        setIsProActivated(true);
+        setProTeacherName(res.approvedBy || 'Admin Thầy Thành');
+        localStorage.setItem('gvai_web_pro_mid', detectedMid);
+        const pkgText = res.packageType === 'LIFETIME' ? 'VIP Trọn Đời' : 'Bản quyền';
+        alert(`🎉 ĐÃ ĐỒNG BỘ THÀNH CÔNG TỪ CLOUD!\n\nMã máy [${detectedMid}] đã được Admin duyệt kích hoạt gói ${pkgText}!\nThầy/Cô có thể sử dụng đầy đủ các tính năng không giới hạn.`);
+      } else if (res.isBlocked) {
+        setIsProActivated(false);
+        alert('⚠️ Thiết bị này đang ở trạng thái tạm khóa trên Cloud.');
+      } else {
+        alert(`ℹ️ THÔNG BÁO TỪ CLOUD:\n\nĐơn đăng ký của máy [${detectedMid}] chưa được Admin phê duyệt hoặc đang chờ xử lý.\n\nQuý Thầy/Cô vui lòng nhắn tin Zalo Thầy Thành (0915.213717) để được duyệt kích hoạt nhanh trong 1 phút!`);
+      }
+    } catch (e) {
+      alert('Lỗi kết nối kiểm tra Cloud. Vui lòng kiểm tra lại mạng internet.');
+    } finally {
+      setIsSyncingCloud(false);
+    }
+  };
+
   const handleSubmitRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!regMid.trim() || !regPhone.trim()) {
@@ -425,13 +484,54 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
 
     setRegLoading(true);
     try {
-      await licenseService.register({
-        machine_id: regMid.trim().toUpperCase(),
-        teacher_name: regName.trim(),
-        phone_zalo: regPhone.trim(),
-        school_unit: regSchool.trim(),
-        package_type: regPackage
+      const cleanMid = regMid.trim().toUpperCase();
+      const teacherName = regName.trim() || 'Thầy/Cô Giáo viên';
+      const phoneZalo = regPhone.trim();
+      const schoolUnit = regSchool.trim() || 'Trường THCS';
+
+      // 1. Gửi trực tiếp lên GitHub Cloud Issues
+      await cloudSyncService.submitRegistrationToCloud({
+        machineId: cleanMid,
+        fullName: teacherName,
+        phoneNumber: phoneZalo,
+        schoolUnit: schoolUnit,
+        appId: 'smart-listening',
+        appName: 'Smart Listening Pro (Tạo Bài Nghe Tiếng Anh)',
+        packageType: regPackage === 'LIFETIME' ? 'LIFETIME' : regPackage === '2YEAR' ? '2YEAR' : '1YEAR'
       });
+
+      // 2. Đồng thời lưu local/supabase
+      try {
+        await licenseService.register({
+          machine_id: cleanMid,
+          teacher_name: teacherName,
+          phone_zalo: phoneZalo,
+          school_unit: schoolUnit,
+          package_type: regPackage
+        });
+      } catch {}
+
+      setRegSuccess(true);
+
+      // 3. Mở Zalo Thầy Thành gửi thông tin
+      const zaloMsg = `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN SMART LISTENING PRO (TẠO BÀI NGHE)
+----------------------------------------
+• Họ và tên: ${teacherName}
+• Điện thoại / Zalo: ${phoneZalo}
+• Đơn vị: ${schoolUnit}
+• Mã máy tính: ${cleanMid}
+• Gói đăng ký: ${regPackage === 'LIFETIME' ? 'VIP Trọn Đời' : regPackage === '2YEAR' ? 'Gói 2 Năm' : 'Gói 1 Năm'}
+----------------------------------------
+Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin trân trọng cảm ơn!`;
+
+      try {
+        navigator.clipboard.writeText(zaloMsg);
+      } catch {}
+
+      const zaloUrl = `https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(zaloMsg)}`;
+      window.open(zaloUrl, '_blank');
+    } catch (err) {
+      console.error('Lỗi gửi đăng ký:', err);
       setRegSuccess(true);
     } finally {
       setRegLoading(false);
@@ -1158,231 +1258,381 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: ĐĂNG KÝ BẢN QUYỀN PRO (TỰ ĐIỀN SẴN ID MÁY TÍNH) */}
+        {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY ĐINH VĂN THÀNH)   */}
         {/* ========================================================================= */}
         {activeTab === 'register' && (
-          <div className="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
-            {/* THẺ NHẬP KEY HOẶC MÃ MÁY ĐỂ MỞ KHÓA NGAY */}
-            <div className="p-3 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-blue-950/60 border border-amber-500/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-              <div className="text-[11px] font-semibold text-amber-200 flex items-center gap-1.5">
-                <Crown className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Đã mua bản quyền? Nhập mã máy để mở Web Pro vĩnh viễn:</span>
+          <div className="space-y-4 max-w-3xl mx-auto flex-1 overflow-y-auto pr-1 text-xs">
+            {/* KHỐI 1: THÔNG TIN TÁC GIẢ & BẢN QUYỀN */}
+            <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
+                  <img
+                    src="/dinhvanthanh.jpg"
+                    alt="Thầy Đinh Văn Thành"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  <Crown className="w-7 h-7 text-amber-400" />
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
+                    TÁC GIẢ & BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH
+                  </h4>
+                  <p className="text-xs text-slate-200">
+                    • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    • Phần mềm: <strong>SMART LISTENING PRO (TẠO BÀI NGHE SGK TIẾNG ANH)</strong>
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5 flex-1 max-w-sm">
-                <input
-                  type="text"
-                  placeholder="MB-XXXX-XXXX"
-                  value={activeMidInput}
-                  onChange={(e) => setActiveMidInput(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-xl bg-slate-950 border border-amber-400/40 text-xs font-mono uppercase text-amber-300 focus:outline-none focus:border-amber-400"
-                />
-                <button
-                  onClick={handleActivatePro}
-                  disabled={checkLoading}
-                  className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs whitespace-nowrap transition-colors"
+
+              <div className="flex sm:flex-col gap-2 shrink-0 w-full sm:w-auto">
+                <a
+                  href={`https://zalo.me/${BRAND.phoneRaw}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none py-2 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition"
                 >
-                  {checkLoading ? '...' : 'Mở Khóa'}
+                  <MessageCircle className="w-4 h-4" /> Chat Zalo Thầy Thành
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText("0915213717");
+                    alert("Đã sao chép SĐT Thầy Thành: 0915.213717");
+                  }}
+                  className="flex-1 sm:flex-none py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1 transition"
+                >
+                  <Copy className="w-3.5 h-3.5" /> Copy SĐT: 0915.213717
                 </button>
               </div>
             </div>
-            {proMessage && (
-              <p className={`text-xs px-2 ${isProActivated ? 'text-emerald-400 font-bold' : 'text-amber-300 font-medium'}`}>
-                {proMessage}
-              </p>
-            )}
 
-            {/* THẺ BÁO GIÁ & ĐĂNG KÝ BẢN QUYỀN - 1 LOẠI DUY NHẤT */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-2 border-cyan-500/50 shadow-xl space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                      👑 CHÍNH SÁCH BẢN QUYỀN CHÍNH THỨC
-                    </span>
-                    <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
-                  </div>
-                  <h4 className="text-base sm:text-lg font-black text-white mt-1">
-                    Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
-                  </h4>
+            {/* KHỐI 2: THÔNG TIN BẢN QUYỀN CỦA MÁY TÍNH */}
+            {isProActivated ? (
+              /* TRƯỜNG HỢP A: ĐÃ KÍCH HOẠT PRO THÀNH CÔNG */
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/80 to-[#022C22] border-2 border-emerald-500 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    BẢN QUYỀN CHÍNH THỨC - ĐÃ KÍCH HOẠT PRO THÀNH CÔNG
+                  </span>
+                  <span className="text-xs text-amber-300 font-mono font-bold">PRO EDITION</span>
                 </div>
-                <div className="text-left sm:text-right shrink-0">
-                  <div className="text-sm sm:text-base font-black text-cyan-400">
-                    Liên Hệ Admin Thầy Thành
-                  </div>
-                  <p className="text-[11px] text-slate-400">Tùy chọn: 1 Năm • 2 Năm • Trọn Đời Vĩnh Viễn</p>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">✓</span>
-                    <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên cực kỳ tiết kiệm, Thầy Thành sẽ báo giá chi tiết trực tiếp qua Zalo.</span>
+                <div className="p-4 rounded-xl bg-emerald-900/40 border border-emerald-400/40 space-y-1">
+                  <span className="text-xs font-bold text-emerald-200 block">
+                    ✨ TRẠNG THÁI SỬ DỤNG:
+                  </span>
+                  <div className="text-xl font-black text-amber-300">
+                    BẢN QUYỀN HOẠT ĐỘNG KHÔNG GIỚI HẠN
                   </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">✓</span>
-                    <span><strong>Tạo bài nghe SGK tiếng Anh:</strong> Giọng đọc Anh - Mỹ tự nhiên chuẩn bản xứ, xuất file MP3 không giới hạn số từ.</span>
-                  </div>
+                  <p className="text-[11px] text-emerald-200">
+                    • Người dùng: <strong>{proTeacherName || 'Quý Thầy/Cô'}</strong> &nbsp;|&nbsp; • Mã máy: <strong className="font-mono text-cyan-300">{detectedMid}</strong>
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">✓</span>
-                    <span><strong>Cài đặt từ xa miễn phí:</strong> Hỗ trợ UltraViewer / TeamViewer cài trọn gói lên máy tính, bảo hành hỗ trợ 24/7.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">✓</span>
-                    <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật các giọng đọc và thuật toán AI tổng hợp giọng nói mới nhất.</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* NÚT BẤM LIÊN HỆ ZALO BÁO GIÁ DUY NHẤT */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                <a
-                  href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                    `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá chi tiết phần mềm Smart Listening Pro. Mã máy của tôi: ${detectedMid}.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
+                {/* Hộp dán key gia hạn */}
+                <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
+                  <label className="text-[11px] text-slate-300 block font-bold">
+                    🔑 Gia hạn bản quyền hoặc nhập mã kích hoạt mới:
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inputKey}
+                      onChange={(e) => setInputKey(e.target.value)}
+                      placeholder="Dán mã kích hoạt tại đây (TTS-Y1-... hoặc TTS-LT-...)"
+                      className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400 uppercase"
+                    />
+                    <button
+                      onClick={handleActivateKey}
+                      className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 cursor-pointer"
+                    >
+                      ⚡ Cập nhật Key
+                    </button>
+                  </div>
+                </div>
+
+                {/* Nút đồng bộ Cloud */}
+                <button
+                  onClick={handleCloudSync}
+                  disabled={isSyncingCloud}
+                  className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
                 >
-                  <MessageCircle className="w-5 h-5 text-amber-300" />
-                  Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
-                </a>
+                  <RefreshCw className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                  <span>{isSyncingCloud ? 'ĐANG KẾT NỐI VÀ ĐỒNG BỘ TỪ WEB CLOUD...' : '🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)'}</span>
+                </button>
               </div>
-            </div>
-
-            {/* FORM ĐĂNG KÝ MỚI LÊN CLOUD */}
-            {regSuccess ? (
-              <div className="p-6 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
-                  <CheckCircle2 className="w-7 h-7" />
+            ) : (
+              /* TRƯỜNG HỢP B: CHƯA KÍCH HOẠT HOẶC ĐANG DÙNG THỬ (5 LẦN) */
+              <div className="p-5 rounded-2xl bg-slate-900 border-2 border-amber-500/50 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                    🎁 CHẾ ĐỘ DÙNG THỬ TRỰC TUYẾN
+                  </span>
+                  <span className="text-xs text-amber-400 font-mono font-bold">5 LẦN MIỄN PHÍ / MÁY TÍNH</span>
                 </div>
-                <h4 className="text-base font-bold text-emerald-300">
-                  ĐÃ GỬI THÔNG TIN ĐĂNG KÝ LÊN CLOUD THẦY THÀNH!
-                </h4>
-                <p className="text-xs text-slate-300 max-w-md mx-auto">
-                  Hệ thống đã nhận diện mã máy <b className="text-cyan-300 font-mono">{regMid}</b> của Thầy/Cô. Thầy Thành sẽ kiểm tra và kích hoạt bản quyền trong ít phút.
-                </p>
 
-                <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+                {/* Hộp đếm lượt dùng thử 5 chấm */}
+                <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-amber-200 block">
+                      SỐ LƯỢT TẠO BÀI NGHE MIỄN PHÍ CÒN LẠI:
+                    </span>
+                    <div className="text-2xl font-black text-amber-300 mt-0.5">
+                      CÒN {trialRemaining} / 5 LƯỢT
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5 text-lg">
+                    {[1, 2, 3, 4, 5].map((dot) => (
+                      <span key={dot} className={dot <= trialRemaining ? 'text-amber-400' : 'text-slate-600'}>
+                        ●
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mã máy tính nhận diện */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold block">
+                      MÃ MÁY TÍNH NHẬN DIỆN (HARDWARE CODE):
+                    </span>
+                    <span className="text-sm sm:text-base font-mono font-black text-cyan-300">
+                      {detectedMid}
+                    </span>
+                  </div>
+                  <button
+                    onClick={copyMachineIdToClipboard}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white flex items-center gap-1.5 transition cursor-pointer"
+                  >
+                    {copiedMid ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedMid ? 'Đã chép' : 'Sao chép mã'}</span>
+                  </button>
+                </div>
+
+                {/* Ô DÁN MÃ KÍCH HOẠT PRO TRỰC TIẾP */}
+                <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                  <label className="text-xs font-bold text-slate-300 block flex items-center gap-1.5">
+                    <Crown className="w-4 h-4 text-amber-400" />
+                    ĐÃ CÓ MÃ BẢN QUYỀN TỪ THẦY THÀNH? DÁN VÀO ĐÂY ĐỂ MỞ KHÓA PRO:
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inputKey}
+                      onChange={(e) => setInputKey(e.target.value)}
+                      placeholder="Dán mã kích hoạt (Ví dụ: TTS-Y1-... hoặc TTS-LT-...)"
+                      className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-400 uppercase"
+                    />
+                    <button
+                      onClick={handleActivateKey}
+                      className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-md transition-all hover:scale-[1.02]"
+                    >
+                      ⚡ Kích Hoạt Pro
+                    </button>
+                  </div>
+
+                  {verifyResult && (
+                    <div className={`mt-2 p-2.5 rounded-xl text-xs font-medium ${
+                      verifyResult.isValid ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                    }`}>
+                      {verifyResult.message}
+                    </div>
+                  )}
+                </div>
+
+                {/* NÚT ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD */}
+                <button
+                  onClick={handleCloudSync}
+                  disabled={isSyncingCloud}
+                  className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                  <span>{isSyncingCloud ? 'ĐANG KẾT NỐI VÀ ĐỒNG BỘ TỪ WEB CLOUD...' : '🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)'}</span>
+                </button>
+
+                {/* CHÍNH SÁCH BẢN QUYỀN ƯU ĐÃI SƯ PHẠM (TUYỆT ĐỐI KHÔNG HIỂN THỊ GIÁ TIỀN CỐ ĐỊNH) */}
+                <div className="p-4 rounded-xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/40 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                          👑 CHÍNH SÁCH BẢN QUYỀN
+                        </span>
+                        <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
+                      </div>
+                      <h4 className="text-sm font-black text-white mt-1">
+                        Báo Giá Ưu Đãi & Hỗ Trợ Kỹ Thuật Trọn Gói
+                      </h4>
+                    </div>
+                    <div className="text-left sm:text-right shrink-0">
+                      <div className="text-xs font-bold text-cyan-400">
+                        Liên Hệ Zalo Thầy Thành: {BRAND.phone}
+                      </div>
+                      <p className="text-[10px] text-slate-400">Tùy chọn: Gói 1 Năm • Gói 2 Năm • VIP Trọn Đời</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-300">
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên tối ưu, báo giá ưu đãi trực tiếp qua Zalo.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Tạo bài nghe SGK tiếng Anh:</strong> Giọng đọc Anh - Mỹ tự nhiên chuẩn bản xứ, xuất file MP3 không giới hạn số từ.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Cài đặt UltraViewer miễn phí:</strong> Hỗ trợ cài trọn gói từ xa, bảo hành hỗ trợ 24/7.</span>
+                    </div>
+                    <div className="flex items-start gap-1.5">
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span><strong>Cập nhật dài lâu:</strong> Miễn phí cập nhật giọng đọc và thuật toán AI tổng hợp âm thanh mới nhất.</span>
+                    </div>
+                  </div>
+
+                  {/* Nút bấm liên hệ Zalo báo giá */}
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi vừa đăng ký bản quyền Smart Listening Pro trên Web cho máy ${regMid}. Tôi gửi ảnh bill chuyển khoản nhờ Thầy duyệt kích hoạt giúp nhé!`
+                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá ưu đãi sư phạm phần mềm Smart Listening Pro. Mã máy của tôi: ${detectedMid}.`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2.5 px-5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md"
+                    className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    Mở Zalo Gửi Ảnh Bill ({BRAND.phone})
+                    <MessageCircle className="w-4 h-4 text-amber-300" />
+                    Nhắn Tin Zalo Nhận Báo Giá Chi Tiết ({BRAND.phone})
                   </a>
-                  <button
-                    onClick={() => setRegSuccess(false)}
-                    className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs"
-                  >
-                    Đăng ký máy khác
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmitRegister} className="space-y-3 bg-slate-900/70 p-4 rounded-2xl border border-slate-800">
-                <div className="p-2.5 rounded-xl bg-blue-950/50 border border-blue-500/30 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Laptop className="w-4 h-4 text-cyan-400" />
-                    <span className="text-slate-300">
-                      Mã máy đã được tự động nhận diện: <b className="text-cyan-300 font-mono">{detectedMid}</b>
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md">
-                    Tự Điền Sẵn
-                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-300 font-bold mb-1">
-                      Mã Máy Tính (Machine ID) *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={regMid}
-                      onChange={(e) => setRegMid(e.target.value)}
-                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-xs text-cyan-300 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
+                {/* FORM ĐĂNG KÝ BẢN QUYỀN GỬI CLOUD */}
+                {regSuccess ? (
+                  <div className="p-5 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 text-center space-y-2.5">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-sm font-bold text-emerald-300 uppercase">
+                      ĐÃ GỬI THÔNG TIN ĐĂNG KÝ LÊN WEB CLOUD THẦY THÀNH!
+                    </h4>
+                    <p className="text-xs text-slate-300 max-w-md mx-auto">
+                      Hệ thống đã ghi nhận mã máy <b className="text-cyan-300 font-mono">{regMid}</b> của Thầy/Cô. Thầy Thành sẽ kiểm tra và cấp mã kích hoạt trong ít phút.
+                    </p>
 
-                  <div>
-                    <label className="block text-slate-300 font-bold mb-1">
-                      Họ và Tên Thầy/Cô *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ví dụ: Thầy Nguyễn Văn A hoặc Cô Lê Thị B"
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
-                    />
+                    <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+                      <a
+                        href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
+                          `Chào Thầy Thành, tôi vừa đăng ký bản quyền Smart Listening Pro trên Web cho máy ${regMid}. Tôi gửi ảnh bill chuyển khoản nhờ Thầy duyệt kích hoạt giúp nhé!`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        Mở Zalo Nhận Key ({BRAND.phone})
+                      </a>
+                      <button
+                        onClick={() => setRegSuccess(false)}
+                        className="py-2 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs"
+                      >
+                        Đăng ký máy khác
+                      </button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <form onSubmit={handleSubmitRegister} className="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                    <h5 className="text-xs font-bold text-amber-300 uppercase tracking-wide">
+                      📝 ĐĂNG KÝ BẢN QUYỀN PRO - GỬI LÊN WEB CLOUD ADMIN TỨC THÌ:
+                    </h5>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-300 font-bold mb-1">
-                      Số Điện Thoại Zalo *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Ví dụ: 0988..."
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-slate-300 font-bold mb-1">
+                          Mã Máy Tính (Machine ID) *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={regMid}
+                          onChange={(e) => setRegMid(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-cyan-300 focus:outline-none focus:border-blue-500 uppercase"
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-slate-300 font-bold mb-1">
-                      Gói Đăng Ký
-                    </label>
-                    <select
-                      value={regPackage}
-                      onChange={(e) => setRegPackage(e.target.value as any)}
-                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-amber-300 focus:outline-none focus:border-blue-500"
+                      <div>
+                        <label className="block text-slate-300 font-bold mb-1">
+                          Họ và Tên Thầy/Cô *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ví dụ: Thầy Nguyễn Văn A"
+                          value={regName}
+                          onChange={(e) => setRegName(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-slate-300 font-bold mb-1">
+                          Số Điện Thoại Zalo *
+                        </label>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="Ví dụ: 0915..."
+                          value={regPhone}
+                          onChange={(e) => setRegPhone(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-slate-300 font-bold mb-1">
+                          Gói Đăng Ký
+                        </label>
+                        <select
+                          value={regPackage}
+                          onChange={(e) => setRegPackage(e.target.value as any)}
+                          className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-amber-300 focus:outline-none focus:border-blue-500"
+                        >
+                          <option value="LIFETIME">👑 Gói Bản Quyền VIP Trọn Đời (Khuyên Dùng)</option>
+                          <option value="1YEAR">Gói Bản Quyền 1 Năm (365 ngày)</option>
+                          <option value="2YEAR">Gói Bản Quyền 2 Năm</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-300 font-bold mb-1">
+                        Trường / Đơn Vị Công Tác
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Trường THCS Đồng Yên"
+                        value={regSchool}
+                        onChange={(e) => setRegSchool(e.target.value)}
+                        className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={regLoading}
+                      className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] cursor-pointer"
                     >
-                      <option value="LIFETIME">👑 Gói Bản Quyền VIP Trọn Đời (Khuyên Dùng)</option>
-                      <option value="1YEAR">Gói Bản Quyền 1 Năm (365 ngày)</option>
-                      <option value="2YEAR">Gói Bản Quyền 2 Năm</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-slate-300 font-bold mb-1">
-                    Trường / Đơn Vị Công Tác
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ví dụ: Trường THCS Đồng Yên"
-                    value={regSchool}
-                    onChange={(e) => setRegSchool(e.target.value)}
-                    className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={regLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-                  >
-                    <Send className="w-4 h-4" />
-                    {regLoading ? 'Đang gửi thông tin...' : 'Gửi Đăng Ký Lên Cloud Thầy Thành'}
-                  </button>
-                </div>
-              </form>
+                      <Send className="w-4 h-4" />
+                      {regLoading ? 'Đang gửi thông tin lên Cloud...' : 'GỬI ĐĂNG KÝ BẢN QUYỀN LÊN WEB CLOUD (TỨC THÌ)'}
+                    </button>
+                  </form>
+                )}
+              </div>
             )}
           </div>
         )}

@@ -53,6 +53,7 @@ import { generateCHVBLicenseKey, buildCHVBZaloMessage } from '../services/chuanh
 import { generatePDFLicenseKey, buildPDFZaloMessage } from '../services/pdfSuiteKeyService';
 import { generateTHCS8MLicenseKey, SUBJECT_MAP } from '../services/taoDeTHCS8MonKeyService';
 import { generateExam15PLicenseKey } from '../services/taode15pKeyService';
+import { generateSmartListeningLicenseKey } from '../services/smartListeningKeyService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
 interface AdminDashboardProps {
@@ -248,6 +249,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [pdfCopiedKey, setPdfCopiedKey] = useState(false);
   const [pdfCopiedMsg, setPdfCopiedMsg] = useState(false);
   const [pdfHistory, setPdfHistory] = useState<Array<{
+    mid: string;
+    key: string;
+    expDate: string;
+    plan: string;
+    createdAt: string;
+  }>>([]);
+
+  // State cho Tool Tạo Key Bản Quyền - Smart Listening Pro (Tạo Bài Nghe SGK)
+  const [ttsMid, setTtsMid] = useState('');
+  const [ttsPackage, setTtsPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
+  const [ttsKeyResult, setTtsKeyResult] = useState('');
+  const [ttsZaloMsg, setTtsZaloMsg] = useState('');
+  const [ttsGenError, setTtsGenError] = useState('');
+  const [ttsCopiedKey, setTtsCopiedKey] = useState(false);
+  const [ttsCopiedMsg, setTtsCopiedMsg] = useState(false);
+  const [ttsHistory, setTtsHistory] = useState<Array<{
     mid: string;
     key: string;
     expDate: string;
@@ -539,12 +556,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       let expDateStr = '';
       let zaloMsg = '';
       try {
-        const appTag = effectiveAppId.includes('15p') ? 'ENG15' : effectiveAppId.includes('tienganh') ? 'ENG' : effectiveAppId.includes('taode') ? 'TAODE' : 'NLS';
-        const prodId = appTag === 'ENG15' ? 'ENG15' : appTag === 'ENG' ? 'ENG' : appTag === 'TAODE' ? 'TAODE' : 'NLS_AI_THCS';
-        const genRes = await generateEd25519Key(cleanMid, years, appTag, prodId);
-        licenseKey = genRes.key;
-        expDateStr = genRes.expDate;
-        zaloMsg = genRes.zaloMessage;
+        const cleanMidUpper = cleanMid.toUpperCase();
+        const isListening = effectiveAppId.includes('listening') || effectiveAppId.includes('tts') || effectiveAppId.includes('nghe') || effectiveAppName.toLowerCase().includes('listening') || effectiveAppName.toLowerCase().includes('nghe') || cleanMidUpper.startsWith('MB-');
+        if (isListening) {
+          const ttsPkg = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
+          const genRes = await generateSmartListeningLicenseKey(cleanMid, ttsPkg);
+          licenseKey = genRes.key;
+          expDateStr = genRes.expiryDateStr;
+          zaloMsg = genRes.zaloMessage;
+        } else {
+          const appTag = effectiveAppId.includes('15p') ? 'ENG15' : effectiveAppId.includes('tienganh') ? 'ENG' : effectiveAppId.includes('taode') ? 'TAODE' : 'NLS';
+          const prodId = appTag === 'ENG15' ? 'ENG15' : appTag === 'ENG' ? 'ENG' : appTag === 'TAODE' ? 'TAODE' : 'NLS_AI_THCS';
+          const genRes = await generateEd25519Key(cleanMid, years, appTag, prodId);
+          licenseKey = genRes.key;
+          expDateStr = genRes.expDate;
+          zaloMsg = genRes.zaloMessage;
+        }
       } catch (errKey) {
         console.warn('Lỗi sinh key Ed25519:', errKey);
         const d = new Date();
@@ -845,6 +872,50 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       navigator.clipboard.writeText(nlsZaloMsg);
       setNlsCopiedMsg(true);
       setTimeout(() => setNlsCopiedMsg(false), 2000);
+    }
+  };
+
+  const handleGenerateTTSKey = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTtsGenError('');
+    const cleanId = ttsMid.trim().toUpperCase();
+    if (!cleanId) {
+      setTtsGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng!');
+      return;
+    }
+    try {
+      const res = await generateSmartListeningLicenseKey(cleanId, ttsPackage);
+      setTtsKeyResult(res.key);
+      setTtsZaloMsg(res.zaloMessage);
+
+      const newRecord = {
+        mid: cleanId,
+        key: res.key,
+        expDate: res.expiryDateStr,
+        plan: res.packageName,
+        createdAt: new Date().toLocaleString('vi-VN')
+      };
+      const updated = [newRecord, ...ttsHistory.filter(x => x.key !== res.key).slice(0, 19)];
+      setTtsHistory(updated);
+      localStorage.setItem('gvai_admin_tts_key_history', JSON.stringify(updated));
+    } catch (err: any) {
+      setTtsGenError(err.message || 'Lỗi khi tạo key Smart Listening Pro');
+    }
+  };
+
+  const handleCopyTTSKey = () => {
+    if (ttsKeyResult) {
+      navigator.clipboard.writeText(ttsKeyResult);
+      setTtsCopiedKey(true);
+      setTimeout(() => setTtsCopiedKey(false), 2000);
+    }
+  };
+
+  const handleCopyTTSZaloMsg = () => {
+    if (ttsZaloMsg) {
+      navigator.clipboard.writeText(ttsZaloMsg);
+      setTtsCopiedMsg(true);
+      setTimeout(() => setTtsCopiedMsg(false), 2000);
     }
   };
 
@@ -2279,7 +2350,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         <option value="nls">⚡ Tích Hợp NLS - AI</option>
                         <option value="taode">📝 Trung Tâm Tạo Đề THCS (8 Môn)</option>
                         <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
-                        <option value="tts">🎙️ Text To Speech</option>
+                        <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
                         <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
                         <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
                         <option value="pdfsuite">📄 PDF Suite Pro</option>
@@ -2329,7 +2400,11 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           if (reqFilter !== 'ALL' && r.status !== reqFilter) return false;
                           if (regAppFilter !== 'ALL') {
                             const appK = (r.appId || r.appName || '').toLowerCase();
-                            if (!appK.includes(regAppFilter.toLowerCase())) return false;
+                            if (regAppFilter === 'tts') {
+                              if (!appK.includes('tts') && !appK.includes('speech') && !appK.includes('listening') && !appK.includes('bài nghe') && !appK.includes('smart-listening') && !r.machineId.toUpperCase().startsWith('MB-')) return false;
+                            } else {
+                              if (!appK.includes(regAppFilter.toLowerCase())) return false;
+                            }
                           }
                           if (regSearchTerm.trim()) {
                             const q = regSearchTerm.toLowerCase();
@@ -3334,6 +3409,231 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                 <span className="text-xs text-rose-400 font-medium block">Bị khóa / Thu hồi</span>
                 <span className="text-2xl font-black text-rose-400 mt-1 block">{revokedCount}</span>
               </div>
+            </div>
+
+            {/* DANH SÁCH ĐƠN ĐĂNG KÝ SMART LISTENING PRO TỪ CLOUD */}
+            {(() => {
+              const ttsCloudRequests = registrationRequests.filter(r => {
+                const k = `${r.appId || ''} ${r.appName || ''}`.toLowerCase();
+                return k.includes('listening') || k.includes('tts') || k.includes('speech') || k.includes('nghe') || r.machineId.toUpperCase().startsWith('MB-');
+              });
+              const ttsPendingCount = ttsCloudRequests.filter(r => r.status === 'PENDING').length;
+              return (
+                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-700/80 space-y-3 my-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-amber-400 font-bold text-xs uppercase flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        Đơn Đăng Ký Smart Listening Pro Từ Cloud ({ttsCloudRequests.length})
+                      </span>
+                      {ttsPendingCount > 0 && (
+                        <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
+                          {ttsPendingCount} Chờ Duyệt
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-slate-400">
+                      Bấm "⚡ 1 Năm" hoặc "👑 Trọn Đời" để duyệt trực tiếp lên Cloud
+                    </span>
+                  </div>
+
+                  {ttsCloudRequests.length === 0 ? (
+                    <div className="text-center py-4 text-xs text-slate-500">
+                      Chưa có đơn đăng ký Smart Listening Pro nào gửi về từ Cloud.
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-slate-800 text-slate-400">
+                            <th className="pb-2 px-2">Thời gian</th>
+                            <th className="pb-2 px-2">Mã máy (HWID)</th>
+                            <th className="pb-2 px-2">Giáo viên / SĐT</th>
+                            <th className="pb-2 px-2">Trường / Đơn vị</th>
+                            <th className="pb-2 px-2">Trạng thái</th>
+                            <th className="pb-2 px-2 text-right">Thao tác duyệt</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800">
+                          {ttsCloudRequests.map((req, idx) => (
+                            <tr key={req.id || idx} className="hover:bg-slate-800/40">
+                              <td className="py-2.5 px-2 text-slate-400 whitespace-nowrap">{req.createdAt}</td>
+                              <td className="py-2.5 px-2 font-mono text-cyan-300 font-bold">{req.machineId}</td>
+                              <td className="py-2.5 px-2">
+                                <div className="text-white font-semibold">{req.fullName || 'Giáo viên'}</div>
+                                <div className="text-slate-400 text-[11px]">{req.phoneNumber || '---'}</div>
+                              </td>
+                              <td className="py-2.5 px-2 text-slate-300">{req.schoolUnit || '---'}</td>
+                              <td className="py-2.5 px-2">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                  req.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-400' :
+                                  req.status === 'PENDING' ? 'bg-amber-500/20 text-amber-400 animate-pulse' :
+                                  'bg-rose-500/20 text-rose-400'
+                                }`}>
+                                  {req.status === 'APPROVED' ? 'Đã duyệt' : req.status === 'PENDING' ? 'Chờ duyệt' : 'Từ chối'}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-2 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setTtsMid(req.machineId);
+                                    }}
+                                    className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold cursor-pointer"
+                                    title="Nạp vào ô tạo key"
+                                  >
+                                    📋 Nạp
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleActivateMachineByYear(req.machineId, 1, currentAdminName, {
+                                      fullName: req.fullName,
+                                      schoolUnit: req.schoolUnit,
+                                      phone: req.phoneNumber,
+                                      appId: 'smart-listening',
+                                      appName: 'Smart Listening Pro (Tạo Bài Nghe SGK)',
+                                      issueNumber: req.issueNumber,
+                                      reqId: req.id
+                                    })}
+                                    className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold cursor-pointer shadow"
+                                  >
+                                    ⚡ 1 Năm
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleActivateMachineByYear(req.machineId, 99, currentAdminName, {
+                                      fullName: req.fullName,
+                                      schoolUnit: req.schoolUnit,
+                                      phone: req.phoneNumber,
+                                      appId: 'smart-listening',
+                                      appName: 'Smart Listening Pro (Tạo Bài Nghe SGK)',
+                                      issueNumber: req.issueNumber,
+                                      reqId: req.id
+                                    })}
+                                    className="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold cursor-pointer shadow"
+                                  >
+                                    👑 Trọn Đời
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* CARD TẠO KEY ED25519 - SMART LISTENING PRO */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-950 border border-emerald-500/40 space-y-3 my-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-emerald-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-400" />
+                  KÝ SỐ ED25519 & TẠO KEY BẢN QUYỀN SMART LISTENING PRO (CHUYỂN VB THÀNH BÀI NGHE)
+                </h4>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Chuẩn thuật toán Tao_Key_Ban_Quyen.py (Khóa riêng Ed25519 Thầy Thành)
+                </span>
+              </div>
+
+              <form onSubmit={handleGenerateTTSKey} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="md:col-span-2">
+                    <label className="block text-slate-300 font-bold mb-1 text-xs">
+                      1. Nhập Mã Máy (Hardware Code) của Khách Hàng:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: MB-8F22-A109"
+                      value={ttsMid}
+                      onChange={(e) => setTtsMid(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-sm uppercase text-cyan-300 focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1 text-xs">
+                      2. Chọn Gói Bản Quyền:
+                    </label>
+                    <select
+                      value={ttsPackage}
+                      onChange={(e) => setTtsPackage(e.target.value as any)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value="lifetime">VIP Trọn Đời (Khuyên dùng)</option>
+                      <option value="1year">1 Năm</option>
+                      <option value="2year">2 Năm</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    KÝ SỐ & TẠO MÃ KÍCH HOẠT PRO (ED25519)
+                  </button>
+
+                  {ttsGenError && (
+                    <span className="text-rose-400 font-semibold text-xs">{ttsGenError}</span>
+                  )}
+                </div>
+              </form>
+
+              {/* KẾT QUẢ SINH KEY & TIN NHẮN ZALO */}
+              {ttsKeyResult && (
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1 text-xs">
+                      Mã Key kích hoạt Ed25519:
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={ttsKeyResult}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-emerald-500/50 font-mono text-xs text-emerald-300 font-bold select-all focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyTTSKey}
+                        className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 border border-slate-700 cursor-pointer"
+                      >
+                        {ttsCopiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {ttsCopiedKey ? 'Đã Chép' : 'Chép Key'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1 text-xs">
+                      Mẫu tin nhắn Zalo gửi giáo viên:
+                    </label>
+                    <div className="flex items-start gap-2">
+                      <textarea
+                        readOnly
+                        rows={5}
+                        value={ttsZaloMsg}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-800 font-sans text-xs text-slate-300 select-all focus:outline-none leading-relaxed"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyTTSZaloMsg}
+                        className="py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center gap-1.5 shrink-0 shadow-md cursor-pointer"
+                      >
+                        {ttsCopiedMsg ? <Check className="w-4 h-4 text-amber-300" /> : <Send className="w-4 h-4" />}
+                        {ttsCopiedMsg ? 'Đã Chép' : 'Chép Tin Zalo'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* CONTROLS BAR */}
