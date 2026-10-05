@@ -1140,6 +1140,9 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500 text-rose-300 text-xs font-semibold flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-rose-400" />
                     <span>{activationError}</span>
+                  </div>
+                )}
+
                 {/* NÚT ĐỒNG BỘ BẢN QUYỀN TỪ CLOUD */}
                 <button
                   type="button"
