@@ -1,5 +1,18 @@
 [
   {
+    "id": "REG-1791170286608",
+    "machineId": "DVT-MATHPT-0B1D-A6A7",
+    "fullName": "Đinh Thành -",
+    "schoolUnit": "THCS Đồng Yên",
+    "phoneNumber": "0915213717",
+    "appId": "taode-tienganh-thpt-thpt",
+    "appName": "Tạo Đề Toán THPT (Kết nối tri thức với cuộc sống)",
+    "packageType": "1YEAR",
+    "price": "Bản quyền theo năm",
+    "status": "PENDING",
+    "createdAt": "05/10/2026 10:18:06"
+  },
+  {
     "id": "REG-1791125144502",
     "machineId": "DVT-ENGPT-0B1D-A6A7",
     "fullName": "Đinh Văn Thành - Test",

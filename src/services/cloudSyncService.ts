@@ -46,6 +46,16 @@ export const isAppMatching = (
     return true;
   }
 
+  // Các Môn THPT 2025+ Độc Lập
+  const thptSubjs = ['toan', 'vatly', 'hoa', 'sinh', 'tin', 'lichsu', 'diali', 'gdktpl', 'congnghe', 'nguvan', 'engpt'];
+  for (const s of thptSubjs) {
+    if (target.includes(s) && (target.includes('thpt') || target.includes('pt'))) {
+      const matchS = rId.includes(s) || rName.includes(s);
+      const matchPt = rId.includes('thpt') || rId.includes('pt') || rName.includes('thpt');
+      return matchS && matchPt;
+    }
+  }
+
   // Tiếng Anh THCS
   if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
     return (
