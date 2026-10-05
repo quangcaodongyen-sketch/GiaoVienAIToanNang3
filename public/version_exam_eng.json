@@ -1,8 +1,8 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.5.4",
-  "latestVersion": "3.5.4",
+  "currentVersion": "3.5.5",
+  "latestVersion": "3.5.5",
   "releaseDate": "05/10/2026",
   "changelog": "• NÂNG CẤP 10 MÃ ĐỀ: Bổ sung tuỳ chọn mở rộng cho phép tạo tối đa lên tới 10 mã đề trong một lần chạy (Độc quyền bản Pro).\n• CHUẨN HÓA KHUNG MA TRẬN 16 CỘT: Cập nhật cấu trúc bảng Ma trận chuẩn mẫu Bộ GD&ĐT / CV 7991.\n• BỔ SUNG DÒNG TỔNG TRONG BẢN ĐẶC TẢ.\n• SỬA DÃN DÒNG RỘNG & TRUE/FALSE CÙNG DÒNG.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
