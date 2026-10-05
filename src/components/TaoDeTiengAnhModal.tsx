@@ -570,53 +570,73 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                       </table>
                     </div>
 
-                    {/* BẢNG GỢI Ý KIỂM TRA NÓI (SPEAKING) DÀNH CHO HỌC SINH */}
-                    <div className="mt-6 p-4 rounded-xl border border-blue-300 bg-blue-50/50">
-                      <p className="font-bold text-[#0047AB] text-[12pt] mb-3 uppercase flex items-center gap-2">
-                        <span>★ BẢNG GỢI Ý KIỂM TRA NÓI – PART D: SPEAKING (CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM):</span>
+                    {/* III. PHẦN THI NÓI (SPEAKING TEST: 2.0 ĐIỂM) - CHUẨN THEO BỘ GD&ĐT */}
+                    <div className="mt-6 pt-4 border-t border-slate-300">
+                      <p className="font-bold text-[#1a202c] text-[13pt] mb-2 uppercase">
+                        III. PHẦN THI NÓI (SPEAKING TEST: 2.0 ĐIỂM)
                       </p>
-                      <table className="w-full border-collapse border border-blue-300 text-center text-[11pt]">
+                      <table className="w-full border-collapse border border-slate-800 text-[11pt] text-left">
                         <thead>
-                          <tr className="bg-blue-100/70 text-[#0047AB] font-bold">
-                            <th className="border border-blue-300 p-1.5 w-8">STT</th>
-                            <th className="border border-blue-300 p-1.5 text-left pl-3">Chủ đề / Nội dung gợi ý kiểm tra nói</th>
-                            <th className="border border-blue-300 p-1.5 w-20">Thời gian</th>
-                            <th className="border border-blue-300 p-1.5 w-16">Điểm</th>
-                            <th className="border border-blue-300 p-1.5 text-left pl-3">Tiêu chí đánh giá</th>
+                          <tr className="bg-slate-100 text-black font-bold text-center">
+                            <th className="border border-slate-800 p-2 w-[18%]">To do</th>
+                            <th className="border border-slate-800 p-2 w-[34%]">To say (Examiner)</th>
+                            <th className="border border-slate-800 p-2 w-[28%]">Response (Students)</th>
+                            <th className="border border-slate-800 p-2 w-[20%]">Back-up</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td className="border border-blue-300 p-1 font-bold">1</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Talk about your favourite leisure activity and explain why you like it. (Nói về hoạt động giải trí yêu thích và lý do.)</td>
-                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
-                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">3.0 đ</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Phát âm rõ ràng, đúng ngữ pháp, nội dung đủ ý, tự nhiên, tự tin.</td>
+                          <tr className="align-top">
+                            <td className="border border-slate-800 p-2 text-center">
+                              <div className="font-semibold text-black">Part 1: Interview</div>
+                              <div className="text-black">(0.6 pt)</div>
+                            </td>
+                            <td className="border border-slate-800 p-2">
+                              <p className="font-medium text-black">Examiner asks 2-3 personal questions:</p>
+                              <p className="text-black">- What is your name and class?</p>
+                              <p className="text-black">- What do you usually do in your free time?</p>
+                              <p className="text-black">- Which school subject do you like best?</p>
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Student responds naturally with full sentences and accurate grammar.
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Back-up: Can you tell me more about your hobby?
+                            </td>
                           </tr>
-                          <tr>
-                            <td className="border border-blue-300 p-1 font-bold">2</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Describe your school and compare it with a school in another country. (Mô tả và so sánh trường học.)</td>
-                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
-                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">3.0 đ</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Dùng cấu trúc so sánh hơn/nhất đúng, từ vựng phong phú, diễn đạt mạch lạc.</td>
+                          <tr className="align-top">
+                            <td className="border border-slate-800 p-2 text-center">
+                              <div className="font-semibold text-black">Part 2: Topic Speaking</div>
+                              <div className="text-black">(0.8 pt)</div>
+                            </td>
+                            <td className="border border-slate-800 p-2">
+                              <p className="font-medium text-black">Examiner presents a topic based on Unit 1 đến Unit 6 (Thêm Unit 4: Neighbourhood, Unit 5: Natural Wonders, Unit 6: Tet):</p>
+                              <p className="text-black">- Talk about a festival, favourite food, or dream career.</p>
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Student speaks continuously for 1-1.5 minutes covering key points.
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Back-up: Why is this important to you?
+                            </td>
                           </tr>
-                          <tr>
-                            <td className="border border-blue-300 p-1 font-bold">3</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Ask and answer questions with a partner about a topic in the unit. (Hỏi đáp theo cặp về chủ điểm bài học.)</td>
-                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
-                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">4.0 đ</td>
-                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Tương tác tốt, câu hỏi phù hợp ngữ cảnh, trả lời đầy đủ, phát âm chuẩn.</td>
+                          <tr className="align-top">
+                            <td className="border border-slate-800 p-2 text-center">
+                              <div className="font-semibold text-black">Part 3: Follow-up</div>
+                              <div className="text-black">(0.6 pt)</div>
+                            </td>
+                            <td className="border border-slate-800 p-2">
+                              <p className="font-medium text-black">Examiner asks 2 open-ended follow-up questions to test fluency and critical thinking.</p>
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Student explains viewpoints confidently with expanded vocabulary.
+                            </td>
+                            <td className="border border-slate-800 p-2 text-black">
+                              Back-up: What do you think about the future?
+                            </td>
                           </tr>
                         </tbody>
-                        <tfoot>
-                          <tr className="bg-blue-100/50">
-                            <td colSpan={3} className="border border-blue-300 p-1.5 font-bold text-right pr-3 text-[#0047AB]">TỔNG ĐIỂM KIỂM TRA NÓI:</td>
-                            <td className="border border-blue-300 p-1.5 font-bold text-[#FF0000] text-[13pt]">10 đ</td>
-                            <td className="border border-blue-300 p-1.5 text-left pl-3 text-[#0047AB] text-[10pt]">GV chấm theo thang điểm 10. Quy về điểm hệ số theo quy định.</td>
-                          </tr>
-                        </tfoot>
                       </table>
-                      <p className="mt-2 text-[10pt] text-[#0047AB] italic">* GV có thể điều chỉnh chủ đề phù hợp với nội dung Unit đang học và trình độ học sinh. Kiểm tra nói được thực hiện bên ngoài giờ kiểm tra viết.</p>
+                      <p className="mt-2 text-[10pt] text-slate-600 italic">* Lưu ý: Phần thi Nói (Speaking Test 2.0đ) được giáo viên tổ chức phỏng vấn trực tiếp từng học sinh hoặc theo nhóm nhỏ theo bảng hướng dẫn trên.</p>
                     </div>
                   </div>
 
