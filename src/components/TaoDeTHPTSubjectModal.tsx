@@ -366,9 +366,7 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
                 <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
                   <a
                     href={curSub.zipUrl}
-                    download={`Bo_Cai_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THPT_Pass_123.zip`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    download={curSub.zipUrl.split('/').pop()}
                     className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
@@ -377,9 +375,7 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
 
                   <a
                     href={curSub.exeUrl}
-                    download={`Cai_Dat_TaoDe_${curSub.name.replace(/\s+/g, '_')}_THPT.exe`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    download={curSub.exeUrl.split('/').pop()}
                     className="w-full sm:w-auto py-3 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
                   >
                     <Download className="w-4 h-4 text-cyan-400" />
