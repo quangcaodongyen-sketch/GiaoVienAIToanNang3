@@ -60,6 +60,16 @@ export const EXAM_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+// Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Toán THPT Kết Nối Tri Thức (QĐ 764/BGDĐT)
+export const EXAM_TOAN_THPT_RESOURCES = {
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
+  exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Toan_THPT.exe",
+  exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
+  dotmUrl: "/TaoDe_Toan_THPT.dotm",
+  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+};
+
 // Cấu hình link tài nguyên của Trung Tâm Tạo Đề 7 Môn THCS & 7 App Độc Lập (CV 7991)
 export const EXAM_7MON_RESOURCES = {
   // Link tải trọn bộ tổng hợp 7 môn Hub .zip (Pass: 123)

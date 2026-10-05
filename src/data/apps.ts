@@ -55,6 +55,20 @@ export const apps: AppCard[] = [
     "order": 2.5
   },
 
+  // ==================== APP RA ĐỀ TOÁN THPT (LỚP 10 - 11 - 12 - QĐ 764/BGDĐT) ====================
+  {
+    "id": "tao-de-toan-thpt",
+    "title": "TẠO ĐỀ TOÁN THPT (LỚP 10, 11, 12)",
+    "description": "Tạo đề kiểm tra Toán THPT cấu trúc mới từ năm 2025 (QĐ 764/BGDĐT). Ma trận 16 cột 3 phần (Trắc nghiệm nhiều lựa chọn, Đúng/Sai, Trả lời ngắn), 4 mã đề hoán vị (101-104, 111-114, 121-124), đáp án đỏ và bảng điểm nhận xét.",
+    "image": "/taode_toan.png",
+    "url": "#tao-de-toan-thpt",
+    "category": "ĐỀ THI & ĐÁNH GIÁ (CV 7991 & QĐ 764)",
+    "badge": "BẢN QUYỀN PRO",
+    "active": true,
+    "featured": true,
+    "order": 2.6
+  },
+
   // ==================== ƯU TIÊN 3: APP TẠO BÀI NGHE MP3 ====================
   {
     "id": "smart-listening-pro",

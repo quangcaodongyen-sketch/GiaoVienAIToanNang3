@@ -26,6 +26,7 @@ import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 import { TaoDeTiengAnhTHPTModal } from './components/TaoDeTiengAnhTHPTModal';
+import { TaoDeToanTHPTModal } from './components/TaoDeToanTHPTModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
 import { ScreenRecordModal } from './components/ScreenRecordModal';
 import { CleanerModal } from './components/CleanerModal';
@@ -47,6 +48,7 @@ export default function App() {
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showTaoDeTHPTModal, setShowTaoDeTHPTModal] = useState(false);
+  const [showTaoDeToanTHPTModal, setShowTaoDeToanTHPTModal] = useState(false);
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
   const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
   const [showCleanerModal, setShowCleanerModal] = useState(false);
@@ -144,6 +146,7 @@ export default function App() {
     setShowNLSAIModal(false);
     setShowTaoDeModal(false);
     setShowTaoDeTHPTModal(false);
+    setShowTaoDeToanTHPTModal(false);
     setShowSinhDeBienTheModal(false);
     setShowScreenRecordModal(false);
     setShowCleanerModal(false);
@@ -187,6 +190,10 @@ export default function App() {
       else if (hash === '#tao-de-tieng-anh-thpt') {
         setShowTaoDeTHPTModal(true);
         webSecurityGuard.setActiveApp('tao-de-tieng-anh-thpt', 'Tạo Đề Tiếng Anh THPT (Lớp 10, 11, 12)');
+      }
+      else if (hash === '#tao-de-toan-thpt') {
+        setShowTaoDeToanTHPTModal(true);
+        webSecurityGuard.setActiveApp('tao-de-toan-thpt', 'Tạo Đề Toán THPT (QĐ 764/BGDĐT)');
       }
       else if (hash === '#tao-de-toan') {
         setThcs8MonSelectedSubject('TOAN');
@@ -332,6 +339,11 @@ export default function App() {
     if (app.id === 'tao-de-tieng-anh-thpt' || app.url === '#tao-de-tieng-anh-thpt') {
       e.preventDefault();
       setShowTaoDeTHPTModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-toan-thpt' || app.url === '#tao-de-toan-thpt') {
+      e.preventDefault();
+      setShowTaoDeToanTHPTModal(true);
       return;
     }
     if (app.id === 'sinhdebienthe' || app.url === '#sinh-de-bien-the') {
@@ -1108,6 +1120,13 @@ export default function App() {
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH THPT (LỚP 10 - 11 - 12) MODAL (3 TABS) */}
       <TaoDeTiengAnhTHPTModal
         isOpen={showTaoDeTHPTModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* TẠO ĐỀ KIỂM TRA TOÁN THPT (LỚP 10 - 11 - 12) MODAL (3 TABS) */}
+      <TaoDeToanTHPTModal
+        isOpen={showTaoDeToanTHPTModal}
         onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />

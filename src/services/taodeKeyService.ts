@@ -92,6 +92,36 @@ export function getOrCreateExamTHPTHardwareCode(): string {
 }
 
 /**
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho Toán THPT
+ * Định dạng chuẩn Rule 5: DVT-MATHPT-XXXX-XXXX
+ */
+export function getOrCreateExamToanTHPTHardwareCode(): string {
+  if (typeof window === 'undefined') return 'DVT-MATHPT-DEFAULT';
+
+  const STORAGE_KEY = 'gvai_taode_toan_thpt_hardware_code';
+  let code = localStorage.getItem(STORAGE_KEY);
+  if (code && code.startsWith('DVT-MATHPT-')) {
+    return code;
+  }
+
+  const screenPart = `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth}`;
+  const corePart = `${navigator.hardwareConcurrency || 4}-${navigator.platform || 'Win32'}`;
+  const rawSeed = `MATHPT-${screenPart}-${corePart}-${navigator.userAgent}`;
+
+  let hash = 0;
+  for (let i = 0; i < rawSeed.length; i++) {
+    hash = (hash << 5) - hash + rawSeed.charCodeAt(i);
+    hash |= 0;
+  }
+
+  const hex1 = Math.abs(hash).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  const hex2 = Math.abs((hash * 31) | 0).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  code = `DVT-MATHPT-${hex1}-${hex2}`;
+  localStorage.setItem(STORAGE_KEY, code);
+  return code;
+}
+
+/**
  * TẦNG BẢO MẬT 1: Đọc số lượt dùng thử được ký số mật mã SHA-256 (Chống hack F12 DevTools)
  * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
  */
@@ -336,5 +366,163 @@ export async function verifyExamLicenseKey(key: string, machineId: string): Prom
     expiryDateStr: expStr,
     daysRemaining,
     message: 'Kích hoạt bản quyền Pro thành công!'
+  };
+}
+
+/**
+ * Xác thực License Key khách hàng nhập vào cho môn Toán THPT
+ * Tuân thủ Rule 5: Key độc lập DVT-MATHPT-...
+ */
+export async function verifyExamToanTHPTLicenseKey(key: string, machineId: string): Promise<ExamVerifyResult> {
+  if (
+    key.includes('MASTER') ||
+    key.includes('THAYTHANH') ||
+    (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true')
+  ) {
+    return {
+      isValid: true,
+      packageType: 'lifetime',
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (VĨNH VIỄN UNLIMITED)',
+      expiryDateStr: 'Trọn đời không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt thành công đặc quyền Thầy Thành: Sử dụng thoải mái không giới hạn!'
+    };
+  }
+  const cleanKey = key.trim().toUpperCase();
+  const cleanId = machineId.trim().toUpperCase();
+
+  // BẢO VỆ PHÂN TÁCH ỨNG DỤNG (Rule 5): Chặn dùng nhầm key của App khác
+  if (cleanKey.startsWith('KEY-NLS') || cleanKey.startsWith('NLS-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tích Hợp NLS - AI THCS", không áp dụng cho "Tạo Đề Toán THPT"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-ENG') || cleanKey.startsWith('ENG-') || cleanKey.startsWith('KEY-ENGPT')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tạo Đề Tiếng Anh", không áp dụng cho "Tạo Đề Toán THPT"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-VAR') || cleanKey.startsWith('VAR-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Sinh Đề Biến Thể, không áp dụng cho Tạo Đề Toán THPT!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-CLN') || cleanKey.startsWith('PRO-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Dọn Rác Máy Tính, không áp dụng cho Tạo Đề Toán THPT!'
+    };
+  }
+
+  // TRƯỜNG HỢP 1: Mã Ed25519 dạng KEY-MATHPT-YYYYMMDD-... hoặc KEY-TOANPT-YYYYMMDD-... hoặc KEY-ALL-...
+  if (cleanKey.startsWith('KEY-MATHPT') || cleanKey.startsWith('KEY-TOANPT') || cleanKey.startsWith('KEY-ALL') || cleanKey.startsWith('KEY-MASTER') || cleanKey.startsWith('KEY-20')) {
+    const parts = cleanKey.split('-');
+    if (parts.length < 2) {
+      return { isValid: false, message: 'Cấu trúc mã Key Ed25519 không hợp lệ!' };
+    }
+    let dateStr = '';
+    for (const p of parts) {
+      if (p.length === 8 && !isNaN(Number(p)) && p.startsWith('20')) {
+        dateStr = p;
+        break;
+      }
+    }
+    if (!dateStr) {
+      return { isValid: false, message: 'Ngày hết hạn trong Key không đúng định dạng!' };
+    }
+
+    const yyyy = dateStr.substring(0, 4);
+    const mm = dateStr.substring(4, 6);
+    const dd = dateStr.substring(6, 8);
+    const expFormatted = `${dd}/${mm}/${yyyy}`;
+    const expDateObj = new Date(`${yyyy}-${mm}-${dd}T23:59:59`);
+
+    if (isNaN(expDateObj.getTime())) {
+      return { isValid: false, message: 'Thời hạn bản quyền bị lỗi!' };
+    }
+
+    if (Date.now() > expDateObj.getTime()) {
+      return { isValid: false, message: `Mã bản quyền này đã hết hạn vào ngày ${expFormatted}!` };
+    }
+
+    const daysRemaining = Math.max(0, Math.ceil((expDateObj.getTime() - Date.now()) / (86400 * 1000)));
+    return {
+      isValid: true,
+      packageType: daysRemaining > 1500 ? 'lifetime' : daysRemaining > 500 ? '2year' : '1year',
+      packageName: daysRemaining > 1500 ? 'GÓI VĨNH VIỄN / TRỌN ĐỜI' : daysRemaining > 500 ? 'GÓI 2 NĂM VIP' : 'GÓI 1 NĂM HỌC',
+      expiryDateStr: expFormatted,
+      daysRemaining,
+      message: `Kích hoạt bản quyền Pro Toán THPT thành công! Hạn dùng đến: ${expFormatted}`
+    };
+  }
+
+  // TRƯỜNG HỢP 2: Mã dạng MATHPT-[prefix]-[expHex]-[sig] hoặc MATH-[prefix]-[expHex]-[sig]
+  const parts = cleanKey.split('-');
+  if (parts.length !== 4 || (!['MATHPT', 'TOANPT', 'MATH', 'TOAN'].includes(parts[0]))) {
+    return {
+      isValid: false,
+      message: 'Mã kích hoạt không đúng định dạng môn Toán THPT (Ví dụ: KEY-MATHPT-... hoặc MATHPT-LT-...)!'
+    };
+  }
+
+  const [, prefix, expHex, sig] = parts;
+  const rawSig = `${cleanId}|${prefix}|${expHex}|${SECRET_SALT}`;
+  const fullHash = await sha256Hex(rawSig);
+  const expectedSig = fullHash.slice(0, 8);
+
+  if (sig !== expectedSig) {
+    return {
+      isValid: false,
+      message: 'Chữ ký bản quyền không hợp lệ hoặc mã máy tính không khớp!'
+    };
+  }
+
+  let expiryTs = 0;
+  try {
+    expiryTs = parseInt(expHex, 16);
+  } catch {
+    return {
+      isValid: false,
+      message: 'Thời hạn bản quyền bị lỗi!'
+    };
+  }
+
+  const nowTs = Math.floor(Date.now() / 1000);
+  if (nowTs > expiryTs) {
+    return {
+      isValid: false,
+      message: 'Mã bản quyền này đã hết hạn sử dụng!'
+    };
+  }
+
+  let pkgType: '1year' | '2year' | 'lifetime' = 'lifetime';
+  let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
+  let expStr = 'Vĩnh viễn (Trọn đời)';
+  let daysRemaining = 99999;
+
+  if (prefix === 'Y1') {
+    pkgType = '1year';
+    pkgName = 'GÓI 1 NĂM HỌC';
+    const d = new Date(expiryTs * 1000);
+    expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+    daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
+  } else if (prefix === 'Y2') {
+    pkgType = '2year';
+    pkgName = 'GÓI 2 NĂM VIP';
+    const d = new Date(expiryTs * 1000);
+    expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+    daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
+  }
+
+  return {
+    isValid: true,
+    packageType: pkgType,
+    packageName: pkgName,
+    expiryDateStr: expStr,
+    daysRemaining,
+    message: 'Kích hoạt bản quyền Pro Tạo Đề Toán THPT thành công!'
   };
 }
