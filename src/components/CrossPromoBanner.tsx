@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, ArrowRight, Zap, BookOpen, FileCheck, ExternalLink, Download } from 'lucide-react';
+import { MATHSTUDIO_RESOURCES } from '../config/brand';
 
 interface PromoItem {
   id: string;
@@ -41,7 +42,7 @@ const PROMO_ITEMS: PromoItem[] = [
     actionText: 'Tải Về Dùng Thử',
     hash: '#mathstudio',
     isDownload: true,
-    downloadUrl: '/MathStudio_Pro_Pass_123.zip'
+    downloadUrl: MATHSTUDIO_RESOURCES.fullZipUrl
   },
   {
     id: 'bienthe',

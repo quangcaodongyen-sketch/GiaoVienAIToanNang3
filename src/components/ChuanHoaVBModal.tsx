@@ -23,7 +23,7 @@ import {
   FileDown,
   MessageCircle
 } from 'lucide-react';
-import { BRAND, CHUAN_HOA_VB_RESOURCES } from '../config/brand';
+import { BRAND, CHUAN_HOA_VB_RESOURCES, MATHSTUDIO_RESOURCES } from '../config/brand';
 import {
   getOrCreateCHVBHardwareCode,
   getSecureCHVBTrialRemaining,
@@ -955,7 +955,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </a>
 
                     <a
-                      href="/AI_Word_Assistant.dotm"
+                      href={CHUAN_HOA_VB_RESOURCES.addinUrl}
                       download="ChuanHoaVanBan_AIWord_WordAddIn_NghiDinh30.dotm"
                       className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
                     >
@@ -1054,8 +1054,8 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
               </div>
 
               <a
-                href="/Cai_Dat_Chuan_Hoa_Van_Ban_ND30.exe"
-                download="Cai_Dat_Chuan_Hoa_Van_Ban_ND30.exe"
+                href={CHUAN_HOA_VB_RESOURCES.exeUrl}
+                download="Cai_Dat_AI_Word.exe"
                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-2 shrink-0"
               >
                 <Download className="w-4 h-4" />
@@ -1133,7 +1133,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </p>
                   </div>
                   <a
-                    href="/MathStudio_Pro_Pass_123.zip"
+                    href={MATHSTUDIO_RESOURCES.fullZipUrl}
                     download="MathStudio_Pro_Pass_123.zip"
                     className="w-full py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
                   >

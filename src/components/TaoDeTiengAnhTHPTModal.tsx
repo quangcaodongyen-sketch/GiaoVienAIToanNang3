@@ -25,8 +25,7 @@ import {
   Layers,
   Shuffle
 } from 'lucide-react';
-import { BRAND, THPT_10MON_RESOURCES } from '../config/brand';
-import { cloudSyncService } from '../services/cloudSyncService';
+import { BRAND, EXAM_THPT_RESOURCES, EXAM_TIENG_ANH_THPT_RESOURCES, THPT_10MON_RESOURCES } from '../config/brand';
 import {
   getOrCreateExamTHPTHardwareCode,
   verifyExamLicenseKey,
@@ -160,9 +159,9 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
     }
   };
 
-  const downloadAllInOneUrl = THPT_10MON_RESOURCES.subjects.TIENGANH.zipUrl;
-  const downloadZipUrl = THPT_10MON_RESOURCES.subjects.TIENGANH.zipUrl;
-  const downloadDotmUrl = "/TaoDe_TiengAnh_THPT.dotm";
+  const downloadAllInOneUrl = EXAM_THPT_RESOURCES.subjects.TIENGANH.exeUrl;
+  const downloadZipUrl = EXAM_THPT_RESOURCES.subjects.TIENGANH.zipUrl;
+  const downloadDotmUrl = EXAM_THPT_RESOURCES.subjects.TIENGANH.dotmUrl;
 
   // Danh sách mã đề theo lớp
   const getExamCodePrefix = () => {

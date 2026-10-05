@@ -318,13 +318,22 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 <p className="text-xs text-slate-300 leading-relaxed">
                   Đã nén an toàn trong file .ZIP với mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải 100% không bị trình duyệt Chrome/Cốc Cốc hay Windows Defender ngăn chặn.
                 </p>
-                <a
-                  href={EXAM_15P_RESOURCES.fullZipUrl}
-                  download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
-                  className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition hover:scale-[1.01]"
-                >
-                  <Download className="w-4 h-4" /> 🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
-                </a>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <a
+                    href={EXAM_15P_RESOURCES.fullZipUrl}
+                    download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
+                    className="py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition text-center"
+                  >
+                    <Download className="w-4 h-4" /> 🚀 TẢI BẢN NÉN (.ZIP PASS: 123)
+                  </a>
+                  <a
+                    href={(EXAM_15P_RESOURCES as any).dotmUrl || "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.dotm"}
+                    download="TaoDe_15Phut_TiengAnh_THCS.dotm"
+                    className="py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition text-center"
+                  >
+                    <Download className="w-4 h-4" /> 📄 TẢI ADD-IN WORD (.DOTM)
+                  </a>
+                </div>
               </div>
 
               {/* Hướng dẫn 3 bước */}

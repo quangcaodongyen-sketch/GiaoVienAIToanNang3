@@ -773,7 +773,7 @@ ${exportDisabilityProc}
                       </p>
                     </div>
                     <a
-                      href="/TichHop_NLS_AI.dotm"
+                      href={NLS_RESOURCES.addinUrl}
                       download="TichHop_NLS_AI.dotm"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
                     >

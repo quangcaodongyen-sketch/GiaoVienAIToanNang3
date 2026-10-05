@@ -26,7 +26,7 @@ import {
   MessageCircle,
   FileText
 } from 'lucide-react';
-import { BRAND, CLEANER_RESOURCES } from '../config/brand';
+import { BRAND, CLEANER_RESOURCES, MATHSTUDIO_RESOURCES } from '../config/brand';
 import {
   getOrCreateCleanerHardwareCode,
   getSecureCleanerTrialRemaining,
@@ -836,8 +836,8 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                 </div>
 
                 <a
-                  href="/Cai_Dat_DinhThanh_Cleaner_Pro.exe"
-                  download="Cai_Dat_DinhThanh_Cleaner_Pro.exe"
+                  href={CLEANER_RESOURCES.exeUrl}
+                  download="DinhThanh_Cleaner_Pro.exe"
                   className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-2 shrink-0"
                 >
                   <Download className="w-4 h-4" />
@@ -915,7 +915,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                       </p>
                     </div>
                     <a
-                      href="/MathStudio_Pro_Pass_123.zip"
+                      href={MATHSTUDIO_RESOURCES.fullZipUrl}
                       download="MathStudio_Pro_Pass_123.zip"
                       className="w-full py-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition"
                     >

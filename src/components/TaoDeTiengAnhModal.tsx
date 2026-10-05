@@ -713,13 +713,27 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                       Bao gồm cả <b>Bộ cài Word 1-Click</b> (Cai_Dat_TaoDe_TiengAnh_THCS.exe) và <b>Bản Desktop chạy độc lập</b> (Tao_De_Tieng_Anh_Desktop.exe). Đã nén an toàn với mật khẩu <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải siêu tốc 100% không bị trình duyệt hay Windows Defender chặn.
                     </p>
                   </div>
-                  <div className="pt-2">
+                  <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <a
+                      href={EXAM_RESOURCES.exeUrl}
+                      download="Cai_Dat_TaoDe_TiengAnh_THCS.exe"
+                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer text-center"
+                    >
+                      <Download className="w-4 h-4 shrink-0" /> Tải Bộ Cài (.EXE)
+                    </a>
                     <a
                       href={EXAM_RESOURCES.fullZipUrl}
                       download="Tao_De_Tieng_Anh_THCS_Pass_123.zip"
-                      className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer hover:scale-[1.01]"
+                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/20 transition-all cursor-pointer text-center"
                     >
-                      <Download className="w-4 h-4" /> 🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
+                      <Download className="w-4 h-4 shrink-0" /> Bản Nén (.ZIP Pass: 123)
+                    </a>
+                    <a
+                      href={EXAM_RESOURCES.dotmUrl}
+                      download="TaoDe_TiengAnh_THCS.dotm"
+                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20 transition-all cursor-pointer text-center"
+                    >
+                      <Download className="w-4 h-4 shrink-0" /> File Add-in (.DOTM)
                     </a>
                   </div>
                 </div>

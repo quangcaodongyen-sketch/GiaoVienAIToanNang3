@@ -362,15 +362,36 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
                   </div>
                 </div>
 
-                {/* NÚT TẢI XUỐNG CHÍNH MÔN THPT */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center gap-3">
+                {/* 3 LỰA CHỌN TẢI VỀ: EXE, ZIP, DOTM */}
+                <div className="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* LỰA CHỌN 1: BỘ CÀI EXE TỰ ĐỘNG */}
+                  <a
+                    href={curSub.exeUrl}
+                    download={curSub.exeUrl.split('/').pop()}
+                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/30 cursor-pointer text-center"
+                  >
+                    <Download className="w-4 h-4 shrink-0" />
+                    <span>Tải Bộ Cài Word (.EXE)</span>
+                  </a>
+
+                  {/* LỰA CHỌN 2: BẢN NÉN ZIP PASS 123 */}
                   <a
                     href={curSub.zipUrl}
                     download={curSub.zipUrl.split('/').pop()}
-                    className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer hover:scale-[1.01]"
+                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-blue-600/30 cursor-pointer text-center"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - MẬT KHẨU: 123)</span>
+                    <Download className="w-4 h-4 shrink-0" />
+                    <span>Bản Nén (.ZIP Pass: 123)</span>
+                  </a>
+
+                  {/* LỰA CHỌN 3: FILE ADD-IN DOTM WORD */}
+                  <a
+                    href={(curSub as any).dotmUrl || `https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_${curSub.appTag || 'TOAN'}.dotm`}
+                    download={`TaoDe_${curSub.appTag || 'THPT'}.dotm`}
+                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-purple-600/30 cursor-pointer text-center"
+                  >
+                    <FileText className="w-4 h-4 shrink-0" />
+                    <span>File Add-in (.DOTM)</span>
                   </a>
                 </div>
               </div>

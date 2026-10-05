@@ -809,7 +809,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                       </p>
                     </div>
                     <a
-                      href="/DinhThanh_MathStudio.dotm"
+                      href={(MATHSTUDIO_RESOURCES as any).addinUrl || "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/DinhThanh_MathStudio.dotm"}
                       download="DinhThanh_MathStudio.dotm"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
                     >

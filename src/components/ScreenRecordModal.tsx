@@ -38,7 +38,7 @@ import {
   Tv,
   MessageCircle
 } from "lucide-react";
-import { BRAND } from "../config/brand";
+import { BRAND, SCREEN_RECORD_RESOURCES } from "../config/brand";
 import {
   getOrCreateRecordHardwareCode,
   getSecureRecordTrialRemaining,
@@ -1182,7 +1182,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 </div>
 
                 <a
-                  href="/Screen_Record_Pro_V2.exe"
+                  href={SCREEN_RECORD_RESOURCES.exeUrl}
                   download="CaiDat_Screen_Record_Pro_V2_QuayManHinh.exe"
                   className="py-3 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                 >
@@ -1205,7 +1205,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                   </p>
                 </div>
                 <a
-                  href="/Screen_Record_Pro_V2.exe"
+                  href={SCREEN_RECORD_RESOURCES.exeUrl}
                   download="Screen_Record_Pro_V2_QuayManHinh_Portable.exe"
                   className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700"
                 >
