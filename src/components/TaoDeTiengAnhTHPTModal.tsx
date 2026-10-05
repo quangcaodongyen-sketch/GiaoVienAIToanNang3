@@ -160,8 +160,8 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
     }
   };
 
-  const downloadAllInOneUrl = "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe";
-  const downloadZipUrl = "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip";
+  const downloadAllInOneUrl = "/Cai_Dat_TaoDe_TiengAnh_THPT.exe";
+  const downloadZipUrl = "/Tao_De_Tieng_Anh_THPT_Pass_123.zip";
   const downloadDotmUrl = "/TaoDe_TiengAnh_THPT.dotm";
 
   // Danh sách mã đề theo lớp
