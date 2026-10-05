@@ -54,7 +54,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const [previewFace, setPreviewFace] = useState<1 | 2 | 3>(1);
   const [currentCode, setCurrentCode] = useState<1 | 2>(1);
 
-  const [schoolName] = useState<string>('TRƯỜNG THCS ĐỒNG YÊN');
+  const [schoolName] = useState<string>('TRƯỜNG THCS ....................');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [isProActive, setIsProActive] = useState<boolean>(false);
@@ -491,7 +491,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                           type="text"
                           value={regSchool}
                           onChange={(e) => setRegSchool(e.target.value)}
-                          placeholder="Ví dụ: THCS Đồng Yên"
+                          placeholder="Ví dụ: THCS Chu Văn An..."
                           className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
                         />
                       </div>

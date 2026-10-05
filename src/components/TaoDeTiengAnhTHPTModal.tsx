@@ -53,8 +53,8 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [numVariants, setNumVariants] = useState<number>(4);
   const [generationMode, setGenerationMode] = useState<string>('shuffle'); // 'shuffle' | 'distinct'
-  const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO TUYÊN QUANG');
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THPT ĐỒNG YÊN');
+  const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO ....................');
+  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THPT ....................');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
@@ -66,7 +66,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
   // Form đăng ký Giáo viên
   const [regName, setRegName] = useState<string>('');
   const [regPhone, setRegPhone] = useState<string>('');
-  const [regSchool, setRegSchool] = useState<string>('TRƯỜNG THPT ĐỒNG YÊN');
+  const [regSchool, setRegSchool] = useState<string>('');
   const [regNote, setRegNote] = useState<string>('');
   const [regSent, setRegSent] = useState<boolean>(false);
   const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
@@ -507,7 +507,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   {/* THÔNG TIN MA TRẬN */}
                   <div className="p-2.5 rounded bg-slate-50 border border-slate-200 text-xs text-slate-700">
                     <p className="font-bold text-center text-red-600 uppercase text-xs">
-                      A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN BGD&amp;ĐT VÀ SỞ GD&amp;ĐT TUYÊN QUANG)
+                      A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN BGD&amp;ĐT TỪ 2025)
                     </p>
                     <p className="italic text-center mt-0.5">
                       Đề thi gồm 4 phần: Listening (2.0đ) • Language (2.5đ) • Reading (2.5đ) • Writing (1.0đ - 2.0đ) • Speaking test ({selectedTerm.startsWith('CK') ? '2.0đ' : '0.0đ'}).
@@ -997,7 +997,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                         type="text"
                         value={regSchool}
                         onChange={(e) => setRegSchool(e.target.value)}
-                        placeholder="TRƯỜNG THPT ĐỒNG YÊN"
+                        placeholder="Ví dụ: THPT Chu Văn An..."
                         className="w-full bg-slate-900 border border-slate-700 rounded px-3 py-1.5 text-xs text-white focus:border-violet-500 focus:outline-none"
                       />
                     </div>

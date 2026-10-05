@@ -662,8 +662,8 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     {/* TIÊU ĐỀ ĐỀ THI SƯ PHẠM */}
                     <div className="grid grid-cols-2 gap-4 pb-3 border-b-2 border-slate-800 text-center">
                       <div>
-                        <p className="font-bold text-xs uppercase">{examData.parentAgency || 'UBND HUYỆN BẮC QUANG - PHÒNG GD&ĐT'}</p>
-                        <p className="font-black text-sm uppercase text-[#123A63]">{examData.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN'}</p>
+                        <p className="font-bold text-xs uppercase">{examData.parentAgency || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO ....................'}</p>
+                        <p className="font-black text-sm uppercase text-[#123A63]">{examData.schoolName || 'TRƯỜNG THCS ....................'}</p>
                       </div>
                       <div>
                         <p className="font-black text-sm uppercase text-[#FF0000]">
@@ -1050,7 +1050,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       type="text"
                       value={regSchool}
                       onChange={(e) => setRegSchool(e.target.value)}
-                      placeholder="Ví dụ: Trường THCS Đồng Yên"
+                      placeholder="Ví dụ: Trường THCS Chu Văn An..."
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>

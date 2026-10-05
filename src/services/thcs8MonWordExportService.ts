@@ -58,8 +58,8 @@ export function getTHCS8MonExamSuite(
 
   const termTitle = termTitleMap[termCode] || 'Giữa Học Kỳ I';
   const schoolYear = '2026 - 2027';
-  const parentAgency = 'UBND XÃ ĐỒNG YÊN';
-  const schoolName = 'TRƯỜNG THCS ĐỒNG YÊN';
+  const parentAgency = 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO ....................';
+  const schoolName = 'TRƯỜNG THCS ....................';
 
   switch (subjectId) {
     case 'TOAN':
@@ -1284,7 +1284,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
             ....................................................................
           </td>
           <td style="width: 55%; text-align: center; border: none; font-size: 11pt;">
-            <i>Đồng Yên, ngày ..... tháng ..... năm 2026</i><br/>
+            <i>.........., ngày ..... tháng ..... năm 2026</i><br/>
             <b>GIÁO VIÊN BIÊN SOẠN & PHẦN MỀM</b><br/>
             <i>(Đã kiểm duyệt chuẩn 100% CV 7991)</i><br/><br/><br/><br/>
             <b>Thầy giáo Đinh Văn Thành</b><br/>
