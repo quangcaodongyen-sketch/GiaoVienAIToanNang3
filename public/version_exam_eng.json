@@ -4,9 +4,15 @@
   "currentVersion": "3.5.5",
   "latestVersion": "3.5.5",
   "releaseDate": "05/10/2026",
-  "changelog": "• NÂNG CẤP 10 MÃ ĐỀ: Bổ sung tuỳ chọn mở rộng cho phép tạo tối đa lên tới 10 mã đề trong một lần chạy (Độc quyền bản Pro).\n• CHUẨN HÓA KHUNG MA TRẬN 16 CỘT: Cập nhật cấu trúc bảng Ma trận chuẩn mẫu Bộ GD&ĐT / CV 7991.\n• BỔ SUNG DÒNG TỔNG TRONG BẢN ĐẶC TẢ.\n• SỬA DÃN DÒNG RỘNG & TRUE/FALSE CÙNG DÒNG.",
+  "changelog": [
+    "🔥 [Tính Năng Mới] Nâng cấp Tính năng Tạo đề với 3 Mức độ khó (Cơ bản - Tiêu chuẩn - Nâng cao) để giáo viên tuỳ chọn theo học lực học sinh.",
+    "📚 [Dữ Liệu] Tăng cường số lượng câu hỏi trong Ngân hàng cho Lớp 6 - Học kỳ 1 làm bản thử nghiệm.",
+    "⚡ [Tối Ưu] Nâng cấp bộ lọc thông minh bốc câu hỏi theo tỉ lệ mức độ khó yêu cầu.",
+    "• NÂNG CẤP 10 MÃ ĐỀ: Bổ sung tuỳ chọn mở rộng cho phép tạo tối đa lên tới 10 mã đề trong một lần chạy (Độc quyền bản Pro).\n• CHUẨN HÓA KHUNG MA TRẬN 16 CỘT: Cập nhật cấu trúc bảng Ma trận chuẩn mẫu Bộ GD&ĐT / CV 7991.\n• BỔ SUNG DÒNG TỔNG TRONG BẢN ĐẶC TẢ.\n• SỬA DÃN DÒNG RỘNG & TRUE/FALSE CÙNG DÒNG."
+  ],
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
-  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên",
+  "version": "3.6.0"
 }
