@@ -48,6 +48,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [selectedGrade, setSelectedGrade] = useState<string>('9');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [selectedNumVariants, setSelectedNumVariants] = useState<number>(2);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Tiêu chuẩn (Phân hóa chung)');
   const [schoolAgency, setSchoolAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
   const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
@@ -370,9 +371,9 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               </div>
 
               {/* Form Tùy Chọn Đề Thi */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Khối Lớp (Global Success):</label>
+                  <label className="block text-xs font-bold text-slate-300 mb-1">Khối Lớp (Global):</label>
                   <select
                     value={selectedGrade}
                     onChange={(e) => setSelectedGrade(e.target.value)}
@@ -400,6 +401,19 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </div>
 
                 <div>
+                  <label className="block text-xs font-bold text-amber-400 mb-1">Mức Độ Đề:</label>
+                  <select
+                    value={selectedDifficulty}
+                    onChange={(e) => setSelectedDifficulty(e.target.value)}
+                    className="w-full bg-slate-800 border border-amber-500/50 rounded-xl px-3 py-2.5 text-sm text-amber-300 focus:outline-none focus:border-amber-400 font-semibold"
+                  >
+                    <option value="Tiêu chuẩn (Phân hóa chung)">Tiêu chuẩn (Phân hóa)</option>
+                    <option value="Cơ bản (Dễ - TB, Yếu)">Cơ bản (Dễ - TB, Yếu)</option>
+                    <option value="Nâng cao (Khó - Khá, Giỏi)">Nâng cao (Khó - Khá, Giỏi)</option>
+                  </select>
+                </div>
+
+                <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">Số Mã Đề:</label>
                   <select
                     value={selectedNumVariants}
@@ -412,6 +426,10 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <option value={4}>4 mã đề</option>
                     <option value={5}>5 mã đề</option>
                     <option value={6}>6 mã đề</option>
+                    <option value={7}>7 mã đề</option>
+                    <option value={8}>8 mã đề</option>
+                    <option value={9}>9 mã đề</option>
+                    <option value={10}>10 mã đề (Pro)</option>
                   </select>
                 </div>
 
