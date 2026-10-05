@@ -30,24 +30,39 @@ export const REGISTERABLE_APPS: RegisterableApp[] = [
   // 1. Tích hợp NLS AI
   { id: 'tich-hop-nls-ai', name: 'Tích Hợp NLS & AI Vào Giáo Án THCS (TT 02 & QĐ 2422)', category: 'Năng Lực Số & AI' },
   
-  // 2. Bộ môn tạo đề
-  { id: 'taode-toan', name: 'Tạo Đề & Ma Trận Đề - Môn Toán THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-van', name: 'Tạo Đề & Ma Trận Đề - Môn Ngữ Văn THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-tienganh', name: 'Tạo Đề & Ma Trận Đề - Môn Tiếng Anh Global Success', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-khtn', name: 'Tạo Đề & Ma Trận Đề - Môn KHTN THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-sudia', name: 'Tạo Đề & Ma Trận Đề - Môn Lịch Sử & Địa Lí THCS', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-gdcd', name: 'Tạo Đề & Ma Trận Đề - Môn GDCD THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-tin', name: 'Tạo Đề & Ma Trận Đề - Môn Tin Học THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
-  { id: 'taode-congnghe', name: 'Tạo Đề & Ma Trận Đề - Môn Công Nghệ THCS (CV 7991)', category: 'Bộ Môn Tạo Đề' },
+  // 2. Bộ môn tạo đề THCS (CV 7991)
+  { id: 'taode-toan', name: 'Tạo Đề & Ma Trận Đề - Môn Toán THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-van', name: 'Tạo Đề & Ma Trận Đề - Môn Ngữ Văn THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-tienganh', name: 'Tạo Đề & Ma Trận Đề - Môn Tiếng Anh Global Success', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-15p-tienganh', name: 'Tạo Đề 15 Phút Tiếng Anh THCS (48 Units)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-khtn', name: 'Tạo Đề & Ma Trận Đề - Môn KHTN THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-sudia', name: 'Tạo Đề & Ma Trận Đề - Môn Lịch Sử & Địa Lí THCS', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-gdcd', name: 'Tạo Đề & Ma Trận Đề - Môn GDCD THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-tin', name: 'Tạo Đề & Ma Trận Đề - Môn Tin Học THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
+  { id: 'taode-congnghe', name: 'Tạo Đề & Ma Trận Đề - Môn Công Nghệ THCS (CV 7991)', category: 'Bộ Môn Tạo Đề THCS' },
 
-  // 3. Tiện ích sư phạm chuyên sâu
+  // 3. Bộ môn tạo đề THPT (Định dạng mới 2025+ & QĐ 764/BGDĐT)
+  { id: 'taode-toan-thpt', name: 'Tạo Đề Toán THPT (QĐ 764/BGDĐT - 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-tienganh-thpt', name: 'Tạo Đề Tiếng Anh THPT Global Success (Lớp 10, 11, 12)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-nguvan-thpt', name: 'Tạo Đề Ngữ Văn THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-vatli-thpt', name: 'Tạo Đề Vật Lí THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-hoahoc-thpt', name: 'Tạo Đề Hóa Học THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-sinhhoc-thpt', name: 'Tạo Đề Sinh Học THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-tinhoc-thpt', name: 'Tạo Đề Tin Học THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-lichsu-thpt', name: 'Tạo Đề Lịch Sử THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-diali-thpt', name: 'Tạo Đề Địa Lí THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-gdktpl-thpt', name: 'Tạo Đề GDKT & PL THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+  { id: 'taode-congnghe-thpt', name: 'Tạo Đề Công Nghệ THPT (Cấu Trúc Mới 2025+)', category: 'Bộ Môn Tạo Đề THPT' },
+
+  // 4. Tiện ích sư phạm chuyên sâu
   { id: 'smart-listening', name: 'Luyện Nghe & Tạo Audio MP3 Tiếng Anh Global Success', category: 'Tiện Ích Sư Phạm' },
   { id: 'sinh-de-bien-the', name: 'Sinh 3 Đề Biến Thể Tương Đương Từ Đề Gốc', category: 'Tiện Ích Sư Phạm' },
   { id: 'chuan-hoa-nd30', name: 'Chuẩn Hóa Thể Thức Văn Bản Theo Nghị Định 30/2020', category: 'Tiện Ích Sư Phạm' },
   { id: 'tach-gop-pdf', name: 'Tách & Gộp File PDF Giáo Dục Tự Động', category: 'Tiện Ích Sư Phạm' },
   { id: 'cleaner', name: 'Dọn Rác & Tối Ưu Tốc Độ Máy Tính Windows', category: 'Tiện Ích Sư Phạm' },
   { id: 'screen-record', name: 'Quay Màn Hình Bài Giảng & Xuất Video MP4', category: 'Tiện Ích Sư Phạm' },
-  { id: 'viet-skkn', name: 'Hỗ Trợ Soạn Sáng Kiến Kinh Nghiệm (SKKN) Giáo Viên', category: 'Tiện Ích Sư Phạm' }
+  { id: 'viet-skkn', name: 'Hỗ Trợ Soạn Sáng Kiến Kinh Nghiệm (SKKN) Giáo Viên', category: 'Tiện Ích Sư Phạm' },
+  { id: 'mathstudio', name: 'Đinh Thành MathStudio 2026+ (Word & Mathpix)', category: 'Tiện Ích Sư Phạm' }
 ];
 
 interface TrialRegisterModalProps {

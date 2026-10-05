@@ -654,9 +654,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           } else if (effectiveAppId.includes('vatli') || cleanMidUpper.includes('PHYPT') || cleanMidUpper.includes('LYPT')) {
             appTag = 'PHYPT';
             prodId = 'PHYPT';
-          } else if (effectiveAppId.includes('hoa') || cleanMidUpper.includes('CHEPT') || cleanMidUpper.includes('HOAPT')) {
-            appTag = 'CHEPT';
-            prodId = 'CHEPT';
+          } else if (effectiveAppId.includes('hoa') || cleanMidUpper.includes('CHMPT') || cleanMidUpper.includes('CHEPT') || cleanMidUpper.includes('HOAPT')) {
+            appTag = 'CHMPT';
+            prodId = 'CHMPT';
           } else if (effectiveAppId.includes('sinh') || cleanMidUpper.includes('BIOPT') || cleanMidUpper.includes('SINHPT')) {
             appTag = 'BIOPT';
             prodId = 'BIOPT';
@@ -669,9 +669,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           } else if (effectiveAppId.includes('diali') || cleanMidUpper.includes('GEOPT') || cleanMidUpper.includes('DIAPT')) {
             appTag = 'GEOPT';
             prodId = 'GEOPT';
-          } else if (effectiveAppId.includes('gdkt') || cleanMidUpper.includes('GDKTPT') || cleanMidUpper.includes('PLPT')) {
-            appTag = 'GDKTPT';
-            prodId = 'GDKTPT';
+          } else if (effectiveAppId.includes('gdkt') || cleanMidUpper.includes('ECLEGPT') || cleanMidUpper.includes('GDKTPT') || cleanMidUpper.includes('PLPT')) {
+            appTag = 'ECLEGPT';
+            prodId = 'ECLEGPT';
           } else if (effectiveAppId.includes('congnghe') || cleanMidUpper.includes('TECHPT') || cleanMidUpper.includes('CNPT')) {
             appTag = 'TECHPT';
             prodId = 'TECHPT';

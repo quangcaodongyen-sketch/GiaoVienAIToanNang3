@@ -39,6 +39,7 @@ import {
   consumeSecureBientheTrial,
   verifyBientheLicenseKey
 } from "../services/bientheKeyService";
+import { cloudSyncService } from "../services/cloudSyncService";
 import { webSecurityGuard } from "../services/webSecurityGuard";
 
 interface SinhDeBienTheModalProps {
@@ -269,6 +270,27 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
     navigator.clipboard.writeText(hardwareCode);
     setCopiedHw(true);
     setTimeout(() => setCopiedHw(false), 2000);
+  };
+
+  const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
+  const handleCloudSync = async () => {
+    setIsSyncingCloud(true);
+    try {
+      const res = await cloudSyncService.checkCurrentMachineCloudStatus(hardwareCode, 'sinh-de-bien-the');
+      if (res.isApproved) {
+        setIsProActive(true);
+        localStorage.setItem("gvai_bienthe_is_vip_pro", "true");
+        setTrialRemaining(999);
+        setActivationSuccess(`🎉 Chúc mừng Thầy/Cô!\nMáy tính [${hardwareCode}] đã được kích hoạt ${res.packageType || 'Pro'} trên Web Cloud bởi ${res.approvedBy || 'Thầy Thành'}!`);
+        alert(`🎉 Chúc mừng Thầy/Cô!\n\nMáy tính [${hardwareCode}] đã được duyệt bản quyền ${res.packageType || 'Pro'} cho ứng dụng "Sinh Đề Biến Thể" trên Web Cloud bởi ${res.approvedBy || 'Thầy Thành'}!`);
+      } else {
+        alert(`ℹ️ Chưa tìm thấy phê duyệt cho ứng dụng Sinh Đề Biến Thể trên Cloud của máy tính [${hardwareCode}].\n\nNếu Thầy/Cô đã gửi đơn, xin vui lòng chờ Thầy Thành duyệt hoặc nhắn tin Zalo 0915.213717 để được hỗ trợ tức thì!`);
+      }
+    } catch (e) {
+      alert("⚠️ Không thể kết nối Cloud. Vui lòng kiểm tra lại mạng Internet.");
+    } finally {
+      setIsSyncingCloud(false);
+    }
   };
 
   return (
@@ -1118,8 +1140,16 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500 text-rose-300 text-xs font-semibold flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-rose-400" />
                     <span>{activationError}</span>
-                  </div>
-                )}
+                {/* NÚT ĐỒNG BỘ BẢN QUYỀN TỪ CLOUD */}
+                <button
+                  type="button"
+                  onClick={handleCloudSync}
+                  disabled={isSyncingCloud}
+                  className="w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer mt-3"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                  <span>{isSyncingCloud ? 'ĐANG KẾT NỐI VÀ ĐỒNG BỘ TỪ WEB CLOUD...' : '🔄 CẬP NHẬT / ĐỒNG BỘ BẢN QUYỀN TỪ WEB CLOUD (LÀM MỚI TỨC THÌ)'}</span>
+                </button>
               </form>
             </div>
 
