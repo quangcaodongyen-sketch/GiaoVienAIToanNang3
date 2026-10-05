@@ -613,69 +613,29 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               {/* Danh sách các gói cài đặt tải về - TÊN FILE ĐẶT RÕ RÀNG */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                {/* Bộ cài Word 1-Click */}
-                <div className="p-5 rounded-2xl bg-slate-800/80 border border-blue-500/30 hover:border-blue-500/60 transition-all flex flex-col justify-between">
+                {/* Trọn bộ cài đặt ZIP Pass 123 */}
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-950/40 to-slate-900 border border-emerald-500/40 shadow-xl col-span-1 sm:col-span-2 flex flex-col justify-between space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                        KHUYÊN DÙNG CHO GV
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        TRỌN BỘ PRO • PASS GIẢI NÉN: 123
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">77 MB</span>
+                      <span className="text-xs text-slate-400 font-mono">117 MB</span>
                     </div>
-                    <h4 className="text-base font-bold text-white mb-1">Bộ Cài Đặt Tích Hợp Word 1-Click</h4>
+                    <h4 className="text-base font-bold text-white mb-1">Trọn Bộ Phần Mềm Tạo Đề Tiếng Anh THCS (Công văn 7991)</h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Tự động nhúng thanh công cụ "📝 TẠO ĐỀ TIẾNG ANH THCS" vào Microsoft Word. Tên file: <strong>Cai_Dat_TaoDe_TiengAnh_THCS.exe</strong>
+                      Bao gồm cả <b>Bộ cài Word 1-Click</b> (Cai_Dat_TaoDe_TiengAnh_THCS.exe) và <b>Bản Desktop chạy độc lập</b> (Tao_De_Tieng_Anh_Desktop.exe). Đã nén an toàn với mật khẩu <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải siêu tốc 100% không bị trình duyệt hay Windows Defender chặn.
                     </p>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-slate-700/60 flex items-center gap-2">
-                    <a
-                      href={EXAM_RESOURCES.exeWordUrl}
-                      download="Cai_Dat_TaoDe_TiengAnh_THCS.exe"
-                      className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all cursor-pointer"
-                    >
-                      <Download className="w-4 h-4" /> Tải Bộ Cài Word (.exe)
-                    </a>
-                  </div>
-                </div>
-
-                {/* Trọn bộ nén ZIP Pass 123 */}
-                <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/80 hover:border-slate-600 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                        MẬT KHẨU: 123
-                      </span>
-                      <span className="text-xs text-slate-400 font-mono">76 MB</span>
-                    </div>
-                    <h4 className="text-base font-bold text-white mb-1">Trọn Bộ Bản Nén ZIP (Pass: 123)</h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Chống trình duyệt chặn nhầm. Tên file: <strong>Tao_De_Tieng_Anh_THCS_Pass_123.zip</strong>
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-slate-700/60 flex items-center gap-2">
+                  <div className="pt-2">
                     <a
                       href={EXAM_RESOURCES.fullZipUrl}
                       download="Tao_De_Tieng_Anh_THCS_Pass_123.zip"
-                      className="flex-1 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer hover:scale-[1.01]"
                     >
-                      <Download className="w-4 h-4" /> Tải Bản Nén ZIP (.zip)
+                      <Download className="w-4 h-4" /> 🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
                     </a>
                   </div>
-                </div>
-
-                {/* Bản Desktop Chạy Trực Tiếp */}
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-between">
-                  <div>
-                    <h5 className="text-xs font-bold text-white">Bản Desktop Chạy Trực Tiếp</h5>
-                    <p className="text-[11px] text-slate-400">Tên file: <strong>Tao_De_Tieng_Anh_Desktop.exe</strong> (45 MB)</p>
-                  </div>
-                  <a
-                    href={EXAM_RESOURCES.exeDesktopUrl}
-                    download="Tao_De_Tieng_Anh_Desktop.exe"
-                    className="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Tải về
-                  </a>
                 </div>
 
                 {/* Nền Tảng Tiếng Anh Online */}

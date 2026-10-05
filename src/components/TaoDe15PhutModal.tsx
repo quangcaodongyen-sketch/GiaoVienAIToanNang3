@@ -18,7 +18,7 @@ import {
   ExternalLink,
   Laptop
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, EXAM_15P_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import {
   getOrCreateExam15PHardwareCode,
@@ -304,51 +304,27 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           {activeTab === 'download' && (
             <div className="space-y-6">
               
-              {/* Thẻ tải bộ cài */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 bg-gradient-to-br from-blue-950/40 via-slate-900 to-slate-950 rounded-2xl border border-blue-500/40 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold text-xl border border-blue-500/30">
-                      💻
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">BỘ CÀI DESKTOP (.EXE)</h4>
-                      <p className="text-xs text-slate-400">Phiên bản offline không cần mạng</p>
-                    </div>
+              {/* Thẻ tải bộ cài chính */}
+              <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3 shadow-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
+                    📦
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Tạo đề siêu tốc chỉ 1 giây, tự động xuất Word trọn bộ 48 Units (Lớp 6, 7, 8, 9).
-                  </p>
-                  <a
-                    href="/TaoDe_15Phut_TiengAnh_THCS.exe"
-                    download
-                    className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition"
-                  >
-                    <Download className="w-4 h-4" /> Tải Bộ Cài .EXE (44.7 MB)
-                  </a>
-                </div>
-
-                <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
-                      📦
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">BẢN NÉN ZIP (MẬT KHẨU: 123)</h4>
-                      <p className="text-xs text-slate-400">Tránh trình duyệt hoặc Antivirus chặn</p>
-                    </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">TRỌN BỘ CÀI ĐẶT TẠO ĐỀ 15 PHÚT PRO (.ZIP - MẬT KHẨU: 123)</h4>
+                    <p className="text-xs text-slate-400">Phiên bản offline trọn bộ 48 Units (Lớp 6, 7, 8, 9) • Tải trực tiếp siêu tốc từ GitHub Releases</p>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Dành cho các máy tính bật tường lửa cao hoặc Windows Defender cảnh báo file tải về.
-                  </p>
-                  <a
-                    href="/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
-                    download
-                    className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition"
-                  >
-                    <Download className="w-4 h-4" /> Tải Bản Nén ZIP (Pass: 123)
-                  </a>
                 </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Đã nén an toàn trong file .ZIP với mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải 100% không bị trình duyệt Chrome/Cốc Cốc hay Windows Defender ngăn chặn.
+                </p>
+                <a
+                  href={EXAM_15P_RESOURCES.fullZipUrl}
+                  download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition hover:scale-[1.01]"
+                >
+                  <Download className="w-4 h-4" /> 🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
+                </a>
               </div>
 
               {/* Hướng dẫn 3 bước */}

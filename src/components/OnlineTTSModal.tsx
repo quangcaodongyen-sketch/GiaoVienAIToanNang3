@@ -39,7 +39,7 @@ import {
   FastForward,
   RefreshCw
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, SMART_LISTENING_RESOURCES } from '../config/brand';
 import { licenseService } from '../services/licenseService';
 import { cloudSyncService } from '../services/cloudSyncService';
 import {
@@ -1182,7 +1182,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               </div>
             </div>
 
-            {/* 2. NÚT TẢI VỀ BẢN CÀI ĐẶT TRỰC TIẾP CHO GIÁO VIÊN (22 MB - DƯỚI 25 MB GITHUB) */}
+            {/* 2. NÚT TẢI VỀ BẢN CÀI ĐẶT TRỰC TIẾP CHO GIÁO VIÊN (ZIP PASS 123 TRỰC TIẾP TỪ GITHUB RELEASES) */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-teal-950/90 border border-emerald-500/40 space-y-3 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -1191,40 +1191,20 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                     Phần Mềm Smart Listening Pro (Bản 1-Click Chạy Ngay)
                   </h4>
                   <p className="text-[11px] text-slate-300 mt-1">
-                    Dung lượng: <b>22 MB</b> – Đã nén mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> (giúp tải 100% không bị trình duyệt Chrome/Cốc Cốc chặn).
+                    Dung lượng: <b>22.8 MB</b> – Đã nén mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> (giúp tải 100% tốc độ cao không bị trình duyệt hay Antivirus chặn).
                   </p>
                 </div>
 
-                {/* CÁC NÚT TẢI: BỘ CÀI ĐẶT TỰ ĐỘNG, .EXE CHẠY NGAY HOẶC .ZIP PASS 123 */}
-                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                {/* NÚT TẢI CHÍNH TRỌN BỘ CÀI PRO */}
+                <div className="flex items-center gap-2 shrink-0">
                   <a
-                    href="/Cai_Dat_Smart_Listening_Pro.exe"
-                    download="Cai_Dat_Smart_Listening_Pro.exe"
-                    className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/30 transition-all hover:scale-105"
-                    title="Bộ cài đặt 1-Click: Tự động cài đặt & tạo biểu tượng Icon ra ngoài Màn hình Desktop"
-                  >
-                    <Sparkles className="w-4 h-4 text-slate-950" />
-                    🚀 Tải Bộ Cài Đặt Tự Động (.exe Tạo Desktop)
-                  </a>
-
-                  <a
-                    href="/Smart%20Listening%20Pro.exe"
-                    download="Smart Listening Pro.exe"
-                    className="py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/30 transition-all hover:scale-105"
-                    title="Tải trực tiếp file .exe - Tự động tạo biểu tượng Desktop khi mở"
-                  >
-                    <Download className="w-4 h-4" />
-                    Bản .exe (Chạy Ngay)
-                  </a>
-
-                  <a
-                    href="/Smart_Listening_Pro_Pass_123.zip"
+                    href={SMART_LISTENING_RESOURCES.fullZipUrl}
                     download="Smart_Listening_Pro_Pass_123.zip"
-                    className="py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
-                    title="Bản nén zip có mật khẩu 123 - Tránh chặn tải trên mọi trình duyệt"
+                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
+                    title="Tải bản nén zip trọn gói có mật khẩu 123 - Tránh chặn tải trên mọi trình duyệt"
                   >
                     <Download className="w-4 h-4" />
-                    Bản Nén (.zip Pass: 123)
+                    🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
                   </a>
                 </div>
               </div>
@@ -1233,15 +1213,15 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-emerald-500/20 text-[11px]">
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
                   <span className="font-bold text-emerald-400 block mb-0.5">Bước 1: Tải về máy</span>
-                  <span className="text-slate-300">Nên chọn <strong>"🚀 Tải Bộ Cài Đặt Tự Động"</strong> để app tự động xuất hiện trên Màn hình Desktop ngay sau 1 click.</span>
+                  <span className="text-slate-300">Bấm nút <strong>"🚀 Tải Bộ Cài Đặt Pro"</strong> ở trên để tải file nén .ZIP siêu tốc từ GitHub Releases.</span>
                 </div>
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Mở cài đặt</span>
-                  <span className="text-slate-300">Nhấp đúp mở file vừa tải. Nếu Windows hiện thông báo xanh lam, bấm <em>"More info" &rarr; "Run anyway"</em>.</span>
+                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Giải nén bằng mật khẩu 123</span>
+                  <span className="text-slate-300">Nhấp chuột phải vào file ZIP ➔ Chọn <em>Extract Here</em> ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</span>
                 </div>
                 <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Sử dụng từ Desktop</span>
-                  <span className="text-slate-300">Biểu tượng <code>Smart Listening Pro</code> sẽ tự động xuất hiện trên Desktop. Nhấp đúp biểu tượng để mở tạo bài nghe!</span>
+                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Chạy ứng dụng</span>
+                  <span className="text-slate-300">Nhấp đúp mở file <code>Smart Listening Pro.exe</code> để bắt đầu tạo bài nghe Tiếng Anh ngay!</span>
                 </div>
               </div>
             </div>

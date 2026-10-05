@@ -883,29 +883,15 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   ))}
                 </div>
 
-                {/* NÚT TẢI XUỐNG RIÊNG CHO MÔN */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+                {/* NÚT TẢI XUỐNG CHÍNH MÔN THCS */}
+                <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center gap-3">
                   <a
                     href={curSub.zipUrl}
                     download={`Bo_Cai_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS_Pass_123.zip`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer"
+                    className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />
-                    <span>TẢI BẢN ZIP (PASS: 123)</span>
-                  </a>
-
-                  <a
-                    href={curSub.exeUrl}
-                    download={`Phan_Mem_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS.exe`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto py-3 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer"
-                    title="Tải trực tiếp tệp chạy .EXE của môn này"
-                  >
-                    <Download className="w-4 h-4 text-cyan-400" />
-                    <span>Tải file .EXE trực tiếp</span>
+                    <span>🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - MẬT KHẨU: 123)</span>
                   </a>
                 </div>
               </div>
