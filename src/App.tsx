@@ -35,6 +35,7 @@ import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
 import { MathStudioModal } from './components/MathStudioModal';
 import { TaoDe15PhutModal } from './components/TaoDe15PhutModal';
+import { TaoDeTHPTSubjectModal } from './components/TaoDeTHPTSubjectModal';
 import { CrossPromoBanner } from './components/CrossPromoBanner';
 import { webSecurityGuard } from './services/webSecurityGuard';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
@@ -49,6 +50,8 @@ export default function App() {
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showTaoDeTHPTModal, setShowTaoDeTHPTModal] = useState(false);
   const [showTaoDeToanTHPTModal, setShowTaoDeToanTHPTModal] = useState(false);
+  const [showTaoDeTHPTSubjectModal, setShowTaoDeTHPTSubjectModal] = useState(false);
+  const [thptSelectedSubject, setThptSelectedSubject] = useState<string>('TOAN');
   const [showSinhDeBienTheModal, setShowSinhDeBienTheModal] = useState(false);
   const [showScreenRecordModal, setShowScreenRecordModal] = useState(false);
   const [showCleanerModal, setShowCleanerModal] = useState(false);
@@ -147,6 +150,7 @@ export default function App() {
     setShowTaoDeModal(false);
     setShowTaoDeTHPTModal(false);
     setShowTaoDeToanTHPTModal(false);
+    setShowTaoDeTHPTSubjectModal(false);
     setShowSinhDeBienTheModal(false);
     setShowScreenRecordModal(false);
     setShowCleanerModal(false);
@@ -194,6 +198,51 @@ export default function App() {
       else if (hash === '#tao-de-toan-thpt') {
         setShowTaoDeToanTHPTModal(true);
         webSecurityGuard.setActiveApp('tao-de-toan-thpt', 'Tạo Đề Toán THPT (QĐ 764/BGDĐT)');
+      }
+      else if (hash === '#tao-de-van-thpt') {
+        setThptSelectedSubject('NGUVAN');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-van-thpt', 'Tạo Đề Ngữ Văn THPT (2025+)');
+      }
+      else if (hash === '#tao-de-vatli-thpt') {
+        setThptSelectedSubject('VATLI');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-vatli-thpt', 'Tạo Đề Vật Lí THPT (2025+)');
+      }
+      else if (hash === '#tao-de-hoahoc-thpt') {
+        setThptSelectedSubject('HOAHOC');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-hoahoc-thpt', 'Tạo Đề Hóa Học THPT (2025+)');
+      }
+      else if (hash === '#tao-de-sinhhoc-thpt') {
+        setThptSelectedSubject('SINHHOC');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-sinhhoc-thpt', 'Tạo Đề Sinh Học THPT (2025+)');
+      }
+      else if (hash === '#tao-de-tin-thpt') {
+        setThptSelectedSubject('TINHOC');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tin-thpt', 'Tạo Đề Tin Học THPT (2025+)');
+      }
+      else if (hash === '#tao-de-lichsu-thpt') {
+        setThptSelectedSubject('LICHSU');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-lichsu-thpt', 'Tạo Đề Lịch Sử THPT (2025+)');
+      }
+      else if (hash === '#tao-de-diali-thpt') {
+        setThptSelectedSubject('DIALI');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-diali-thpt', 'Tạo Đề Địa Lí THPT (2025+)');
+      }
+      else if (hash === '#tao-de-gdktpl-thpt') {
+        setThptSelectedSubject('GDKTPL');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-gdktpl-thpt', 'Tạo Đề GDKT & PL THPT (2025+)');
+      }
+      else if (hash === '#tao-de-cn-thpt') {
+        setThptSelectedSubject('CONGNGHE');
+        setShowTaoDeTHPTSubjectModal(true);
+        webSecurityGuard.setActiveApp('tao-de-cn-thpt', 'Tạo Đề Công Nghệ THPT (2025+)');
       }
       else if (hash === '#tao-de-toan') {
         setThcs8MonSelectedSubject('TOAN');
@@ -291,20 +340,15 @@ export default function App() {
   const filteredApps = activeApps.filter((app) => {
     // Lọc theo Tab Danh mục
     if (selectedCategory !== 'ALL') {
-      if (selectedCategory === 'NLS') {
+      if (selectedCategory === 'THCS') {
+        if (!app.category.includes('THCS')) return false;
+      } else if (selectedCategory === 'THPT') {
+        if (!app.category.includes('THPT')) return false;
+      } else if (selectedCategory === 'NLS') {
         const isNls = app.category.includes('5512') || app.id.includes('nls') || app.id.includes('soangiaoan');
         if (!isNls) return false;
-      } else if (selectedCategory === 'EXAM') {
-        const isExam = app.category.includes('7991') || app.id.includes('tao-de') || app.id.includes('bienthe') || app.id.includes('15p');
-        if (!isExam) return false;
-      } else if (selectedCategory === 'MATH') {
-        const isMath = app.category.includes('MATHPIX') || app.id.includes('math') || app.id.includes('toan');
-        if (!isMath) return false;
-      } else if (selectedCategory === 'AUDIO') {
-        const isAudio = app.category.includes('NGOẠI NGỮ') || app.id.includes('listening') || app.id.includes('tieng-anh');
-        if (!isAudio) return false;
       } else if (selectedCategory === 'UTILITY') {
-        const isUtility = app.category.includes('TIỆN ÍCH') || app.id.includes('cleaner') || app.id.includes('record') || app.id.includes('pdf') || app.id.includes('chuan-hoa');
+        const isUtility = app.category.includes('TIỆN ÍCH') || app.id.includes('cleaner') || app.id.includes('record') || app.id.includes('pdf') || app.id.includes('chuan-hoa') || app.id.includes('math') || app.id.includes('listening') || app.id.includes('troly');
         if (!isUtility) return false;
       }
     }
@@ -344,6 +388,60 @@ export default function App() {
     if (app.id === 'tao-de-toan-thpt' || app.url === '#tao-de-toan-thpt') {
       e.preventDefault();
       setShowTaoDeToanTHPTModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-van-thpt' || app.url === '#tao-de-van-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('NGUVAN');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-vatli-thpt' || app.url === '#tao-de-vatli-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('VATLI');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-hoahoc-thpt' || app.url === '#tao-de-hoahoc-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('HOAHOC');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-sinhhoc-thpt' || app.url === '#tao-de-sinhhoc-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('SINHHOC');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tin-thpt' || app.url === '#tao-de-tin-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('TINHOC');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-lichsu-thpt' || app.url === '#tao-de-lichsu-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('LICHSU');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-diali-thpt' || app.url === '#tao-de-diali-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('DIALI');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-gdktpl-thpt' || app.url === '#tao-de-gdktpl-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('GDKTPL');
+      setShowTaoDeTHPTSubjectModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-cn-thpt' || app.url === '#tao-de-cn-thpt') {
+      e.preventDefault();
+      setThptSelectedSubject('CONGNGHE');
+      setShowTaoDeTHPTSubjectModal(true);
       return;
     }
     if (app.id === 'sinhdebienthe' || app.url === '#sinh-de-bien-the') {
@@ -705,13 +803,13 @@ export default function App() {
               <div className="space-y-1.5 max-w-2xl">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[11px] font-bold uppercase tracking-wider border border-cyan-400/30">
                   <Sparkles className="w-3 h-3 text-amber-300" />
-                  <span>Hệ Sinh Thái Sư Phạm THCS 2026</span>
+                  <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026</span>
                 </div>
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
                   Bộ Công Cụ Hỗ Trợ Giáo Viên AI Toàn Năng
                 </h1>
                 <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
-                  Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (THCS Đồng Yên) • Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề 12 môn (CV 7991) & tiện ích Toán học Mathpix.
+                  Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (THCS Đồng Yên) • Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ các môn.
                 </p>
               </div>
 
@@ -749,7 +847,7 @@ export default function App() {
                   <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100 shrink-0"></div>
                   <div>
                     <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                      <span>Kho Ứng Dụng Chuyên Môn THCS 2026</span>
+                      <span>Kho Ứng Dụng Chuyên Môn THCS & THPT 2026</span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
                         Chuẩn Bộ GD&ĐT
                       </span>
@@ -792,11 +890,10 @@ export default function App() {
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-sans">
                 {[
                   { id: 'ALL', label: 'Tất Cả Ứng Dụng', count: activeApps.length },
-                  { id: 'NLS', label: 'Giáo Án & NLS (5512)', count: activeApps.filter(a => a.category.includes('5512') || a.id.includes('nls')).length },
-                  { id: 'EXAM', label: 'Đề Thi 12 Môn (7991)', count: activeApps.filter(a => a.category.includes('7991') || a.id.includes('tao-de') || a.id.includes('bienthe') || a.id.includes('15p')).length },
-                  { id: 'MATH', label: 'Toán Học & Mathpix', count: activeApps.filter(a => a.category.includes('MATHPIX') || a.id.includes('math') || a.id.includes('toan')).length },
-                  { id: 'AUDIO', label: 'Bài Giảng & Ngoại Ngữ', count: activeApps.filter(a => a.category.includes('NGOẠI NGỮ') || a.id.includes('listening') || a.id.includes('tieng-anh')).length },
-                  { id: 'UTILITY', label: 'Tiện Ích Sư Phạm', count: activeApps.filter(a => a.category.includes('TIỆN ÍCH') || a.id.includes('cleaner') || a.id.includes('record') || a.id.includes('pdf') || a.id.includes('chuan-hoa')).length },
+                  { id: 'THCS', label: '🏫 Đề Thi Cấp THCS (CV 7991)', count: activeApps.filter(a => a.category.includes('THCS')).length },
+                  { id: 'THPT', label: '🎓 Đề Thi Cấp THPT (2025+)', count: activeApps.filter(a => a.category.includes('THPT')).length },
+                  { id: 'NLS', label: '📝 Giáo Án & NLS (5512)', count: activeApps.filter(a => a.category.includes('5512') || a.id.includes('nls')).length },
+                  { id: 'UTILITY', label: '🛠️ Tiện Ích Sư Phạm', count: activeApps.filter(a => a.category.includes('TIỆN ÍCH') || a.id.includes('cleaner') || a.id.includes('record') || a.id.includes('pdf') || a.id.includes('chuan-hoa') || a.id.includes('math') || a.id.includes('listening') || a.id.includes('troly')).length },
                 ].map((tab) => {
                   const isActive = selectedCategory === tab.id;
                   return (
@@ -873,6 +970,30 @@ export default function App() {
                           <span className="text-xs font-semibold">GV AI TOÀN NĂNG</span>
                         </div>
                       )}
+                      {/* Badge Cấp học rõ nét ở góc trên bên trái */}
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+                        {app.levelBadge === 'THCS' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-700 text-white backdrop-blur-xs shadow-md border border-blue-400/50 tracking-wide flex items-center gap-1">
+                            🏫 CẤP THCS
+                          </span>
+                        )}
+                        {app.levelBadge === 'THPT' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-purple-700 text-white backdrop-blur-xs shadow-md border border-purple-400/50 tracking-wide flex items-center gap-1">
+                            🎓 CẤP THPT
+                          </span>
+                        )}
+                        {app.levelBadge === 'CV 5512' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-700 text-white backdrop-blur-xs shadow-md border border-emerald-400/50 tracking-wide flex items-center gap-1">
+                            📝 CV 5512
+                          </span>
+                        )}
+                        {app.levelBadge === 'TIỆN ÍCH' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-slate-700 text-white backdrop-blur-xs shadow-md border border-slate-500/50 tracking-wide flex items-center gap-1">
+                            🛠️ TIỆN ÍCH
+                          </span>
+                        )}
+                      </div>
+
                       <div className="absolute top-3 right-3 flex items-center gap-1.5">
                         {app.featured && (
                           <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-xs flex items-center gap-1">
@@ -1128,6 +1249,14 @@ export default function App() {
       <TaoDeToanTHPTModal
         isOpen={showTaoDeToanTHPTModal}
         onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* HỆ THỐNG TẠO ĐỀ CÁC MÔN THPT (11 MÔN - ĐỊNH DẠNG MỚI 2025+) (3 TABS) */}
+      <TaoDeTHPTSubjectModal
+        isOpen={showTaoDeTHPTSubjectModal}
+        onClose={closeAllModals}
+        initialSubject={thptSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 

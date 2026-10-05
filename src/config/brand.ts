@@ -70,6 +70,122 @@ export const EXAM_TOAN_THPT_RESOURCES = {
   videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+// Cấu hình link tài nguyên của 11 Môn Tạo Đề THPT (Định Dạng Mới BGD&ĐT từ 2025)
+export const EXAM_THPT_RESOURCES = {
+  subjects: {
+    TOAN: {
+      name: "Toán học",
+      fullName: "Môn Toán học THPT",
+      appTag: "MATHPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Toan_THPT.exe",
+      size: "119 MB",
+      icon: "📐",
+      color: "from-blue-600 to-indigo-600"
+    },
+    TIENGANH: {
+      name: "Tiếng Anh",
+      fullName: "Môn Tiếng Anh THPT",
+      appTag: "ENGPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
+      size: "118 MB",
+      icon: "🇬🇧",
+      color: "from-teal-600 to-emerald-600"
+    },
+    NGUVAN: {
+      name: "Ngữ văn",
+      fullName: "Môn Ngữ văn THPT",
+      appTag: "LITPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_NguVan_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_NguVan_THPT.exe",
+      size: "118 MB",
+      icon: "📖",
+      color: "from-rose-600 to-red-600"
+    },
+    VATLI: {
+      name: "Vật lí",
+      fullName: "Môn Vật lí THPT",
+      appTag: "PHYPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_VatLi_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_VatLi_THPT.exe",
+      size: "118 MB",
+      icon: "⚡",
+      color: "from-violet-600 to-purple-600"
+    },
+    HOAHOC: {
+      name: "Hóa học",
+      fullName: "Môn Hóa học THPT",
+      appTag: "CHMPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_HoaHoc_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_HoaHoc_THPT.exe",
+      size: "118 MB",
+      icon: "🧪",
+      color: "from-amber-600 to-orange-600"
+    },
+    SINHHOC: {
+      name: "Sinh học",
+      fullName: "Môn Sinh học THPT",
+      appTag: "BIOPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_SinhHoc_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_SinhHoc_THPT.exe",
+      size: "118 MB",
+      icon: "🧬",
+      color: "from-emerald-600 to-teal-600"
+    },
+    TINHOC: {
+      name: "Tin học",
+      fullName: "Môn Tin học THPT",
+      appTag: "INFPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_TinHoc_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TinHoc_THPT.exe",
+      size: "118 MB",
+      icon: "💻",
+      color: "from-sky-600 to-cyan-600"
+    },
+    LICHSU: {
+      name: "Lịch sử",
+      fullName: "Môn Lịch sử THPT",
+      appTag: "HISPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_LichSu_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LichSu_THPT.exe",
+      size: "118 MB",
+      icon: "🏛️",
+      color: "from-orange-600 to-red-600"
+    },
+    DIALI: {
+      name: "Địa lí",
+      fullName: "Môn Địa lí THPT",
+      appTag: "GEOPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_DiaLi_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_DiaLi_THPT.exe",
+      size: "118 MB",
+      icon: "🌍",
+      color: "from-yellow-600 to-amber-600"
+    },
+    GDKTPL: {
+      name: "GDKT & PL",
+      fullName: "Môn GDKT & PL THPT",
+      appTag: "ECLEGPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDKTPL_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_GDKTPL_THPT.exe",
+      size: "118 MB",
+      icon: "⚖️",
+      color: "from-purple-600 to-indigo-600"
+    },
+    CONGNGHE: {
+      name: "Công nghệ",
+      fullName: "Môn Công nghệ THPT",
+      appTag: "TECHPT",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_CongNghe_THPT_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_CongNghe_THPT.exe",
+      size: "118 MB",
+      icon: "⚙️",
+      color: "from-slate-600 to-zinc-600"
+    }
+  }
+};
+
 // Cấu hình link tài nguyên của Trung Tâm Tạo Đề 7 Môn THCS & 7 App Độc Lập (CV 7991)
 export const EXAM_7MON_RESOURCES = {
   // Link tải trọn bộ tổng hợp 7 môn Hub .zip (Pass: 123)
