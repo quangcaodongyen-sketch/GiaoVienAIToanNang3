@@ -29,7 +29,7 @@ import {
   MessageCircle,
   Lock
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, PDF_SUITE_RESOURCES } from '../config/brand';
 import {
   getOrCreatePDFHardwareCode,
   getSecurePDFTrialRemaining,
@@ -808,8 +808,8 @@ startxref
                   </h4>
                   <div className="space-y-2.5">
                     <a
-                      href="/PDF_Suite_Pro_Pass_123.zip"
-                      download="PDF_Suite_Pro_TachGopPDF_TronBo_Pass123.zip"
+                      href={PDF_SUITE_RESOURCES.fullZipUrl}
+                      download="PDF_Suite_Pro_Pass_123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-pink-900/40 to-slate-800 hover:from-pink-800/60 hover:to-slate-700 border border-pink-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -888,12 +888,12 @@ startxref
               </div>
 
               <a
-                href="/Cai_Dat_PDF_Suite_Pro.exe"
-                download="Cai_Dat_PDF_Suite_Pro.exe"
+                href={PDF_SUITE_RESOURCES.fullZipUrl}
+                download="PDF_Suite_Pro_Pass_123.zip"
                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-2 shrink-0"
               >
                 <Download className="w-4 h-4" />
-                <span>Tải Bản Máy Tính (.exe)</span>
+                <span>Tải Bản Máy Tính (.zip Pass: 123)</span>
               </a>
             </div>
 

@@ -25,7 +25,7 @@ import {
   ShieldAlert,
   MessageCircle
 } from "lucide-react";
-import { BRAND } from "../config/brand";
+import { BRAND, SINH_DE_BIEN_THE_RESOURCES } from "../config/brand";
 import {
   BientheSuiteData,
   BIENTHE_PRESETS,
@@ -986,7 +986,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   </p>
                 </div>
                 <a
-                  href="/Sinh_3_De_Bien_The_VIP_Pass_123.zip"
+                  href={SINH_DE_BIEN_THE_RESOURCES.fullZipUrl}
                   download="Sinh3De_BienThe_VIP_TiengAnh_TronBo_Pass123.zip"
                   className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
                 >

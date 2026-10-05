@@ -32,7 +32,7 @@ import {
   Code2,
   Lock
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, MATHSTUDIO_RESOURCES } from '../config/brand';
 import { verifyKeyFormat } from '../services/nlsKeyService';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { ADMIN_WHITELIST_MACHINES } from '../services/activityTrackingService';
@@ -773,7 +773,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                       </p>
                     </div>
                     <a
-                      href="/MathStudio_Pro_Pass_123.zip"
+                      href={MATHSTUDIO_RESOURCES.fullZipUrl}
                       download="MathStudio_Pro_Pass_123.zip"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap shadow-lg shadow-emerald-500/20 cursor-pointer"
                     >
@@ -785,18 +785,18 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   {/* PHƯƠNG ÁN 2: BẢN .EXE TRỰC TIẾP */}
                   <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
                     <div>
-                      <span className="text-xs font-bold text-white">File Cài Đặt Tự Động (.exe trực tiếp)</span>
+                      <span className="text-xs font-bold text-white">File Cài Đặt Tự Động (.exe trong Zip)</span>
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        Dành cho máy tính không bị chặn tải exe. Tên file: <strong>Cai_Dat_MathStudio.exe</strong>
+                        Dành cho máy tính tự động bung cài. Gói nén chuẩn: <strong>MathStudio_Pro_Pass_123.zip</strong>
                       </p>
                     </div>
                     <a
-                      href="/Cai_Dat_MathStudio.exe"
-                      download="Cai_Dat_MathStudio.exe"
+                      href={MATHSTUDIO_RESOURCES.fullZipUrl}
+                      download="MathStudio_Pro_Pass_123.zip"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition whitespace-nowrap cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
-                      Tải File .EXE (1 MB)
+                      Tải Bộ Cài (.ZIP Pass: 123)
                     </a>
                   </div>
 

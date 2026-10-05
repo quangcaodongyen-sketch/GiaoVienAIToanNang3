@@ -23,7 +23,7 @@ import {
   FileDown,
   MessageCircle
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, CHUAN_HOA_VB_RESOURCES } from '../config/brand';
 import {
   getOrCreateCHVBHardwareCode,
   getSecureCHVBTrialRemaining,
@@ -936,8 +936,8 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   </h4>
                   <div className="space-y-2.5">
                     <a
-                      href="/Cai_Dat_AI_Word.exe"
-                      download="CaiDat_ChuanHoaVanBan_AIWord_NghiDinh30.exe"
+                      href={CHUAN_HOA_VB_RESOURCES.fullZipUrl}
+                      download="CaiDat_ChuanHoaVanBan_AIWord_NghiDinh30.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-900/40 to-slate-800 hover:from-blue-800/60 hover:to-slate-700 border border-blue-700/40 transition-all group"
                     >
                       <div className="flex items-center gap-3">
@@ -946,7 +946,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white group-hover:text-blue-300">
-                            Bộ Cài Desktop (.exe)
+                            Bộ Cài Desktop (.exe trong Zip)
                           </p>
                           <p className="text-[10px] text-slate-400">Cài đặt tự động vào Windows</p>
                         </div>
@@ -974,7 +974,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     </a>
 
                     <a
-                      href="/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip"
+                      href={CHUAN_HOA_VB_RESOURCES.fullZipUrl}
                       download="ChuanHoaVanBan_AIWord_VIP_TronBo_Pass123.zip"
                       className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-900/40 to-slate-800 hover:from-amber-800/60 hover:to-slate-700 border border-amber-600/40 transition-all group"
                     >

@@ -26,7 +26,7 @@ import {
   MessageCircle,
   FileText
 } from 'lucide-react';
-import { BRAND } from '../config/brand';
+import { BRAND, CLEANER_RESOURCES } from '../config/brand';
 import {
   getOrCreateCleanerHardwareCode,
   getSecureCleanerTrialRemaining,
@@ -734,11 +734,11 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                     </p>
                   </div>
                   <a
-                    href="/DinhThanh_Cleaner_Pro.exe"
-                    download="CaiDat_DinhThanh_Cleaner_Pro_DonRacMayTinh.exe"
+                    href={CLEANER_RESOURCES.fullZipUrl}
+                    download="DinhThanh_Cleaner_Pro_v4.5_Pass_123.zip"
                     className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-950/30"
                   >
-                    <Download className="w-4 h-4" /> Tải DinhThanh_Cleaner_Pro.exe (11.2 MB)
+                    <Download className="w-4 h-4" /> Tải Bản Pro (.ZIP Pass: 123)
                   </a>
                 </div>
 
@@ -759,11 +759,11 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                     </p>
                   </div>
                   <a
-                    href="/DinhThanh_Cleaner_Pro_v4.5.zip"
+                    href={CLEANER_RESOURCES.fullZipUrl}
                     download="DinhThanh_Cleaner_Pro_v4.5_TronBo_Pass123.zip"
                     className="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-sky-950/30"
                   >
-                    <Download className="w-4 h-4" /> Tải Gói Nén .ZIP (10.9 MB)
+                    <Download className="w-4 h-4" /> Tải Gói Nén .ZIP (Pass: 123)
                   </a>
                 </div>
               </div>
