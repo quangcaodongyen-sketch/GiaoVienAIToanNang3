@@ -47,6 +47,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [examGenerated, setExamGenerated] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<string>('9');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
+  const [selectedNumVariants, setSelectedNumVariants] = useState<number>(2);
   const [schoolAgency, setSchoolAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
   const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
@@ -369,7 +370,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               </div>
 
               {/* Form Tùy Chọn Đề Thi */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">Khối Lớp (Global Success):</label>
                   <select
@@ -395,6 +396,22 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <option value="CK1">Cuối Học Kỳ 1 (Unit 1 - 6)</option>
                     <option value="GK2">Giữa Học Kỳ 2 (Unit 7 - 9)</option>
                     <option value="CK2">Cuối Học Kỳ 2 (Unit 7 - 12)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 mb-1">Số Mã Đề:</label>
+                  <select
+                    value={selectedNumVariants}
+                    onChange={(e) => setSelectedNumVariants(parseInt(e.target.value))}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 font-semibold"
+                  >
+                    <option value={1}>1 mã đề</option>
+                    <option value={2}>2 mã đề</option>
+                    <option value={3}>3 mã đề</option>
+                    <option value={4}>4 mã đề</option>
+                    <option value={5}>5 mã đề</option>
+                    <option value={6}>6 mã đề</option>
                   </select>
                 </div>
 
@@ -484,7 +501,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   </div>
 
                   <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded text-[#FF0000] text-[11pt] font-sans">
-                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, 02 Mã đề trắc nghiệm khách quan + tự luận. <strong>(ĐÁP ÁN ĐÚNG ĐƯỢC ĐÁNH DẤU CHỮ MÀU ĐỎ ĐỂ GIÁO VIÊN TIỆN THEO DÕI VÀ CHẤM BÀI)</strong>.
+                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, <strong>{selectedNumVariants.toString().padStart(2,'0')} Mã đề</strong> trắc nghiệm khách quan + tự luận. <strong>(ĐÁP ÁN ĐÚNG ĐƯỢC ĐÁNH DẤU CHỮ MÀU ĐỎ ĐỂ GIÁO VIÊN TIỆN THEO DÕI VÀ CHẤM BÀI)</strong>.
                   </div>
 
                   {/* NỘI DUNG ĐỀ THI KÈM ĐÁP ÁN CHỮ ĐỎ */}
@@ -551,6 +568,55 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                           </tr>
                         </tbody>
                       </table>
+                    </div>
+
+                    {/* BẢNG GỢI Ý KIỂM TRA NÓI (SPEAKING) DÀNH CHO HỌC SINH */}
+                    <div className="mt-6 p-4 rounded-xl border border-blue-300 bg-blue-50/50">
+                      <p className="font-bold text-[#0047AB] text-[12pt] mb-3 uppercase flex items-center gap-2">
+                        <span>★ BẢNG GỢI Ý KIỂM TRA NÓI – PART D: SPEAKING (CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM):</span>
+                      </p>
+                      <table className="w-full border-collapse border border-blue-300 text-center text-[11pt]">
+                        <thead>
+                          <tr className="bg-blue-100/70 text-[#0047AB] font-bold">
+                            <th className="border border-blue-300 p-1.5 w-8">STT</th>
+                            <th className="border border-blue-300 p-1.5 text-left pl-3">Chủ đề / Nội dung gợi ý kiểm tra nói</th>
+                            <th className="border border-blue-300 p-1.5 w-20">Thời gian</th>
+                            <th className="border border-blue-300 p-1.5 w-16">Điểm</th>
+                            <th className="border border-blue-300 p-1.5 text-left pl-3">Tiêu chí đánh giá</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td className="border border-blue-300 p-1 font-bold">1</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Talk about your favourite leisure activity and explain why you like it. (Nói về hoạt động giải trí yêu thích và lý do.)</td>
+                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
+                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">3.0 đ</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Phát âm rõ ràng, đúng ngữ pháp, nội dung đủ ý, tự nhiên, tự tin.</td>
+                          </tr>
+                          <tr>
+                            <td className="border border-blue-300 p-1 font-bold">2</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Describe your school and compare it with a school in another country. (Mô tả và so sánh trường học.)</td>
+                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
+                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">3.0 đ</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Dùng cấu trúc so sánh hơn/nhất đúng, từ vựng phong phú, diễn đạt mạch lạc.</td>
+                          </tr>
+                          <tr>
+                            <td className="border border-blue-300 p-1 font-bold">3</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Ask and answer questions with a partner about a topic in the unit. (Hỏi đáp theo cặp về chủ điểm bài học.)</td>
+                            <td className="border border-blue-300 p-1">2 – 3 phút</td>
+                            <td className="border border-blue-300 p-1 text-[#FF0000] font-normal">4.0 đ</td>
+                            <td className="border border-blue-300 p-1 text-left pl-3 text-[#FF0000]">Tương tác tốt, câu hỏi phù hợp ngữ cảnh, trả lời đầy đủ, phát âm chuẩn.</td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr className="bg-blue-100/50">
+                            <td colSpan={3} className="border border-blue-300 p-1.5 font-bold text-right pr-3 text-[#0047AB]">TỔNG ĐIỂM KIỂM TRA NÓI:</td>
+                            <td className="border border-blue-300 p-1.5 font-bold text-[#FF0000] text-[13pt]">10 đ</td>
+                            <td className="border border-blue-300 p-1.5 text-left pl-3 text-[#0047AB] text-[10pt]">GV chấm theo thang điểm 10. Quy về điểm hệ số theo quy định.</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                      <p className="mt-2 text-[10pt] text-[#0047AB] italic">* GV có thể điều chỉnh chủ đề phù hợp với nội dung Unit đang học và trình độ học sinh. Kiểm tra nói được thực hiện bên ngoài giờ kiểm tra viết.</p>
                     </div>
                   </div>
 
