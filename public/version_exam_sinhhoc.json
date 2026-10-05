@@ -1,0 +1,12 @@
+{
+  "appId": "taode-sinhhoc-thpt",
+  "appName": "Tạo Đề Kiểm Tra & Đề Cương Ôn Tập Sinh học THPT Kết nối tri thức",
+  "currentVersion": "3.6.0",
+  "latestVersion": "3.6.0",
+  "releaseDate": "05/10/2026",
+  "changelog": "• Nâng cấp tùy chọn số lượng mã đề linh hoạt mỗi lần tạo: 1 mã đề, 2 mã đề hoặc 4 mã đề\n• Đáp án chữ in thường (bold=False), phương án đúng in chữ màu đỏ #FF0000 trực tiếp trong đề thi\n• Căn chỉnh phương án trắc nghiệm thẳng hàng đều cột bằng Tab Stops sư phạm chuẩn mực\n• Đảo câu hỏi và đảo đáp án khoa học, đáp án đúng in màu đỏ tươi #FF0000\n• Bảng đối chiếu đáp án song song N cột tự động co giãn theo số lượng mã đề ở sau cùng đề thi\n• Tích hợp thanh Ribbon Word Add-in 1-Click và Bản chạy trực tiếp Desktop",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_SinhHoc_THPT.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_SinhHoc_THPT_Pass_123.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THPT Đồng Yên"
+}
