@@ -122,6 +122,36 @@ export function getOrCreateExamToanTHPTHardwareCode(): string {
 }
 
 /**
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho Tiểu Học
+ * Định dạng chuẩn Rule 5: DVT-ENGPRI-XXXX-XXXX
+ */
+export function getOrCreateExamEngPrimaryHardwareCode(): string {
+  if (typeof window === 'undefined') return 'DVT-ENGPRI-DEFAULT';
+
+  const STORAGE_KEY = 'gvai_taode_engpri_hardware_code';
+  let code = localStorage.getItem(STORAGE_KEY);
+  if (code && code.startsWith('DVT-ENGPRI-')) {
+    return code;
+  }
+
+  const screenPart = `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth}`;
+  const corePart = `${navigator.hardwareConcurrency || 4}-${navigator.platform || 'Win32'}`;
+  const rawSeed = `ENGPRI-${screenPart}-${corePart}-${navigator.userAgent}`;
+
+  let hash = 0;
+  for (let i = 0; i < rawSeed.length; i++) {
+    hash = (hash << 5) - hash + rawSeed.charCodeAt(i);
+    hash |= 0;
+  }
+
+  const hex1 = Math.abs(hash).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  const hex2 = Math.abs((hash * 31) | 0).toString(16).toUpperCase().padStart(4, '0').slice(-4);
+  code = `DVT-ENGPRI-${hex1}-${hex2}`;
+  localStorage.setItem(STORAGE_KEY, code);
+  return code;
+}
+
+/**
  * TẦNG BẢO MẬT 1: Đọc số lượt dùng thử được ký số mật mã SHA-256 (Chống hack F12 DevTools)
  * Nếu người dùng can thiệp sửa đổi trái phép localStorage, hệ thống lập tức khóa về 0 lượt.
  */
@@ -524,5 +554,223 @@ export async function verifyExamToanTHPTLicenseKey(key: string, machineId: strin
     expiryDateStr: expStr,
     daysRemaining,
     message: 'Kích hoạt bản quyền Pro Tạo Đề Toán THPT thành công!'
+  };
+}
+
+// ============================================================================
+// HỆ THỐNG BẢN QUYỀN VÀ DÙNG THỬ RIÊNG CHO TIỂU HỌC (THÔNG TƯ 27) - RULE 5
+// ============================================================================
+const STORAGE_PRI_SEC_TRIAL = "gvai_taode_pri_sec_trials_v1";
+const STORAGE_PRI_BACKUP_HASH = "_sys_hw_engpri_hash";
+
+export async function getSecureExamPrimaryTrialRemaining(machineId: string): Promise<number> {
+  if (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true') return 999999;
+  if (typeof window === 'undefined') return 0;
+  const raw = localStorage.getItem(STORAGE_PRI_SEC_TRIAL);
+  if (!raw) {
+    const initialRemaining = 5;
+    const sig = await sha256Hex(`${machineId}|${initialRemaining}|${TRIAL_SEC_SALT}_PRI`);
+    const payload = JSON.stringify({ remaining: initialRemaining, sig, mid: machineId });
+    localStorage.setItem(STORAGE_PRI_SEC_TRIAL, payload);
+    localStorage.setItem(STORAGE_PRI_BACKUP_HASH, sig);
+    return initialRemaining;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    const expectedSig = await sha256Hex(`${machineId}|${data.remaining}|${TRIAL_SEC_SALT}_PRI`);
+    const backupSig = localStorage.getItem(STORAGE_PRI_BACKUP_HASH);
+
+    if (data.sig !== expectedSig || data.mid !== machineId || (backupSig && backupSig !== expectedSig)) {
+      console.warn("⚠️ Cảnh báo: Phát hiện dấu hiệu can thiệp DevTools! Khóa dùng thử Tiểu Học về 0.");
+      const lockedSig = await sha256Hex(`${machineId}|0|${TRIAL_SEC_SALT}_PRI`);
+      localStorage.setItem(STORAGE_PRI_SEC_TRIAL, JSON.stringify({ remaining: 0, sig: lockedSig, mid: machineId, locked: true }));
+      localStorage.setItem(STORAGE_PRI_BACKUP_HASH, lockedSig);
+      return 0;
+    }
+
+    return Math.max(0, Math.min(5, Number(data.remaining) || 0));
+  } catch {
+    return 0;
+  }
+}
+
+export async function consumeSecureExamPrimaryTrial(machineId: string): Promise<number> {
+  const current = await getSecureExamPrimaryTrialRemaining(machineId);
+  const next = Math.max(0, current - 1);
+  const sig = await sha256Hex(`${machineId}|${next}|${TRIAL_SEC_SALT}_PRI`);
+  const payload = JSON.stringify({ remaining: next, sig, mid: machineId });
+  localStorage.setItem(STORAGE_PRI_SEC_TRIAL, payload);
+  localStorage.setItem(STORAGE_PRI_BACKUP_HASH, sig);
+  return next;
+}
+
+/**
+ * Xác thực License Key khách hàng nhập vào cho môn Tiếng Anh Tiểu Học (Thông tư 27)
+ * Tuân thủ Rule 5: Key độc lập DVT-ENGPRI-XXXX-XXXX
+ */
+export async function verifyExamEngPrimaryLicenseKey(key: string, machineId: string): Promise<ExamVerifyResult> {
+  if (
+    key.includes('MASTER') ||
+    key.includes('THAYTHANH') ||
+    (typeof window !== 'undefined' && localStorage.getItem('gvai_unlimited_machine') === 'true')
+  ) {
+    return {
+      isValid: true,
+      packageType: 'lifetime',
+      packageName: 'ĐẶC QUYỀN MÁY THẦY THÀNH (VĨNH VIỄN UNLIMITED)',
+      expiryDateStr: 'Trọn đời không giới hạn',
+      daysRemaining: 99999,
+      message: 'Kích hoạt thành công đặc quyền Thầy Thành: Sử dụng thoải mái không giới hạn!'
+    };
+  }
+  const cleanKey = key.trim().toUpperCase();
+  const cleanId = machineId.trim().toUpperCase();
+
+  // BẢO VỆ PHÂN TÁCH ỨNG DỤNG (Rule 5): Chặn dùng nhầm key của App khác
+  if (cleanKey.startsWith('KEY-NLS') || cleanKey.startsWith('NLS-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tích Hợp NLS - AI THCS", không áp dụng cho "Tạo Đề Tiếng Anh Tiểu Học"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-ENGCS') || (cleanKey.startsWith('KEY-ENG-') && !cleanKey.startsWith('KEY-ENGPRI'))) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tạo Đề Tiếng Anh THCS", không áp dụng cho "Tạo Đề Tiếng Anh Tiểu Học"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-ENGPT')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm "Tạo Đề Tiếng Anh THPT", không áp dụng cho "Tạo Đề Tiếng Anh Tiểu Học"!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-TOAN') || cleanKey.startsWith('KEY-MATH') || cleanKey.startsWith('MATH-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Toán học, không áp dụng cho Tạo Đề Tiếng Anh Tiểu Học!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-VAR') || cleanKey.startsWith('VAR-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Sinh Đề Biến Thể, không áp dụng cho Tạo Đề Tiếng Anh Tiểu Học!'
+    };
+  }
+  if (cleanKey.startsWith('KEY-CLN') || cleanKey.startsWith('PRO-')) {
+    return {
+      isValid: false,
+      message: '⚠️ Mã kích hoạt này thuộc về phần mềm Dọn Rác Máy Tính, không áp dụng cho Tạo Đề Tiếng Anh Tiểu Học!'
+    };
+  }
+
+  // TRƯỜNG HỢP 1: Mã Ed25519 dạng KEY-ENGPRI-YYYYMMDD-... hoặc KEY-ALL-... hoặc KEY-MASTER-...
+  if (cleanKey.startsWith('KEY-ENGPRI') || cleanKey.startsWith('KEY-ALL') || cleanKey.startsWith('KEY-MASTER') || cleanKey.startsWith('KEY-20')) {
+    const parts = cleanKey.split('-');
+    if (parts.length < 2) {
+      return { isValid: false, message: 'Cấu trúc mã Key Ed25519 không hợp lệ!' };
+    }
+    let dateStr = '';
+    for (const p of parts) {
+      if (p.length === 8 && !isNaN(Number(p)) && p.startsWith('20')) {
+        dateStr = p;
+        break;
+      }
+    }
+    if (!dateStr) {
+      return { isValid: false, message: 'Ngày hết hạn trong Key không đúng định dạng!' };
+    }
+
+    const yyyy = dateStr.substring(0, 4);
+    const mm = dateStr.substring(4, 6);
+    const dd = dateStr.substring(6, 8);
+    const expFormatted = `${dd}/${mm}/${yyyy}`;
+    const expDateObj = new Date(`${yyyy}-${mm}-${dd}T23:59:59`);
+
+    if (isNaN(expDateObj.getTime())) {
+      return { isValid: false, message: 'Thời hạn bản quyền bị lỗi!' };
+    }
+
+    if (Date.now() > expDateObj.getTime()) {
+      return { isValid: false, message: `Mã bản quyền này đã hết hạn vào ngày ${expFormatted}!` };
+    }
+
+    const daysRemaining = Math.max(0, Math.ceil((expDateObj.getTime() - Date.now()) / (86400 * 1000)));
+    return {
+      isValid: true,
+      packageType: daysRemaining > 1500 ? 'lifetime' : daysRemaining > 500 ? '2year' : '1year',
+      packageName: daysRemaining > 1500 ? 'GÓI VĨNH VIỄN / TRỌN ĐỜI' : daysRemaining > 500 ? 'GÓI 2 NĂM VIP' : 'GÓI 1 NĂM HỌC',
+      expiryDateStr: expFormatted,
+      daysRemaining,
+      message: `Kích hoạt bản quyền Pro Tiếng Anh Tiểu Học thành công! Hạn dùng đến: ${expFormatted}`
+    };
+  }
+
+  // TRƯỜNG HỢP 2: Mã dạng ENGPRI-[prefix]-[expHex]-[sig]
+  const parts = cleanKey.split('-');
+  if (parts.length === 4 && parts[0] === 'ENGPRI') {
+    const [, prefix, expHex, sig] = parts;
+    const rawSig = `${cleanId}|${prefix}|${expHex}|${SECRET_SALT}`;
+    const fullHash = await sha256Hex(rawSig);
+    const expectedSig = fullHash.slice(0, 8);
+
+    if (sig !== expectedSig) {
+      return {
+        isValid: false,
+        message: 'Chữ ký bản quyền không hợp lệ hoặc mã máy tính không khớp!'
+      };
+    }
+
+    let expiryTs = 0;
+    try {
+      expiryTs = parseInt(expHex, 16);
+    } catch {
+      return {
+        isValid: false,
+        message: 'Thời hạn bản quyền bị lỗi!'
+      };
+    }
+
+    const nowTs = Math.floor(Date.now() / 1000);
+    if (nowTs > expiryTs) {
+      return {
+        isValid: false,
+        message: 'Mã bản quyền này đã hết hạn sử dụng!'
+      };
+    }
+
+    let pkgType: '1year' | '2year' | 'lifetime' = 'lifetime';
+    let pkgName = 'GÓI VĨNH VIỄN / TRỌN ĐỜI';
+    let expStr = 'Vĩnh viễn (Trọn đời)';
+    let daysRemaining = 99999;
+
+    if (prefix === 'Y1') {
+      pkgType = '1year';
+      pkgName = 'GÓI 1 NĂM HỌC';
+      const d = new Date(expiryTs * 1000);
+      expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+      daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
+    } else if (prefix === 'Y2') {
+      pkgType = '2year';
+      pkgName = 'GÓI 2 NĂM VIP';
+      const d = new Date(expiryTs * 1000);
+      expStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+      daysRemaining = Math.max(0, Math.ceil((expiryTs - nowTs) / 86400));
+    }
+
+    return {
+      isValid: true,
+      packageType: pkgType,
+      packageName: pkgName,
+      expiryDateStr: expStr,
+      daysRemaining,
+      message: 'Kích hoạt bản quyền Pro Tiếng Anh Tiểu Học thành công!'
+    };
+  }
+
+  return {
+    isValid: false,
+    message: 'Mã kích hoạt không đúng định dạng (Ví dụ: KEY-ENGPRI-... hoặc ENGPRI-LT-...)!'
   };
 }

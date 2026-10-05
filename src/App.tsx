@@ -25,6 +25,7 @@ import { activityTrackingService, ADMIN_WHITELIST_MACHINES } from './services/ac
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
+import { TaoDeTiengAnhTieuHocModal } from './components/TaoDeTiengAnhTieuHocModal';
 import { TaoDeTiengAnhTHPTModal } from './components/TaoDeTiengAnhTHPTModal';
 import { TaoDeToanTHPTModal } from './components/TaoDeToanTHPTModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
@@ -48,6 +49,7 @@ export default function App() {
   const [showListeningModal, setShowListeningModal] = useState(false);
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
+  const [showTaoDeTieuHocModal, setShowTaoDeTieuHocModal] = useState(false);
   const [showTaoDeTHPTModal, setShowTaoDeTHPTModal] = useState(false);
   const [showTaoDeToanTHPTModal, setShowTaoDeToanTHPTModal] = useState(false);
   const [showTaoDeTHPTSubjectModal, setShowTaoDeTHPTSubjectModal] = useState(false);
@@ -148,6 +150,7 @@ export default function App() {
     setShowListeningModal(false);
     setShowNLSAIModal(false);
     setShowTaoDeModal(false);
+    setShowTaoDeTieuHocModal(false);
     setShowTaoDeTHPTModal(false);
     setShowTaoDeToanTHPTModal(false);
     setShowTaoDeTHPTSubjectModal(false);
@@ -190,6 +193,10 @@ export default function App() {
       if (hash === '#tao-de-tieng-anh') {
         setShowTaoDeModal(true);
         webSecurityGuard.setActiveApp('tao-de-tieng-anh-thcs', 'Tạo Đề Tiếng Anh THCS (CV 7991)');
+      }
+      else if (hash === '#taode-tienganh-tieuhoc' || hash === '#tao-de-tieng-anh-tieu-hoc') {
+        setShowTaoDeTieuHocModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tieng-anh-tieu-hoc', 'Tạo Đề Tiếng Anh Tiểu Học (TT 27)');
       }
       else if (hash === '#tao-de-tieng-anh-thpt') {
         setShowTaoDeTHPTModal(true);
@@ -344,6 +351,8 @@ export default function App() {
         if (!app.category.includes('THCS')) return false;
       } else if (selectedCategory === 'THPT') {
         if (!app.category.includes('THPT')) return false;
+      } else if (selectedCategory === 'PRIMARY') {
+        if (!app.category.includes('TIỂU HỌC') && app.levelBadge !== 'TIỂU HỌC') return false;
       } else if (selectedCategory === 'NLS') {
         const isNls = app.category.includes('5512') || app.id.includes('nls') || app.id.includes('soangiaoan');
         if (!isNls) return false;
@@ -373,6 +382,11 @@ export default function App() {
     if (app.id === 'tichhop-nls-ai-thcs' || app.id === 'soangiaoannanglucso') {
       e.preventDefault();
       setShowNLSAIModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-tieng-anh-tieu-hoc' || app.url === '#taode-tienganh-tieuhoc') {
+      e.preventDefault();
+      setShowTaoDeTieuHocModal(true);
       return;
     }
     if (app.id === 'tao-de-tieng-anh-thcs' || app.url === '#tao-de-tieng-anh') {
@@ -890,6 +904,7 @@ export default function App() {
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-sans">
                 {[
                   { id: 'ALL', label: 'Tất Cả Ứng Dụng', count: activeApps.length },
+                  { id: 'PRIMARY', label: '🎒 Đề Thi Tiểu Học (TT 27)', count: activeApps.filter(a => a.category.includes('TIỂU HỌC') || a.levelBadge === 'TIỂU HỌC').length },
                   { id: 'THCS', label: '🏫 Đề Thi Cấp THCS (CV 7991)', count: activeApps.filter(a => a.category.includes('THCS')).length },
                   { id: 'THPT', label: '🎓 Đề Thi Cấp THPT (2025+)', count: activeApps.filter(a => a.category.includes('THPT')).length },
                   { id: 'NLS', label: '📝 Giáo Án & NLS (5512)', count: activeApps.filter(a => a.category.includes('5512') || a.id.includes('nls')).length },
@@ -972,6 +987,11 @@ export default function App() {
                       )}
                       {/* Badge Cấp học rõ nét ở góc trên bên trái */}
                       <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+                        {app.levelBadge === 'TIỂU HỌC' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-600 text-white backdrop-blur-xs shadow-md border border-amber-400/50 tracking-wide flex items-center gap-1">
+                            🎒 TIỂU HỌC
+                          </span>
+                        )}
                         {app.levelBadge === 'THCS' && (
                           <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-700 text-white backdrop-blur-xs shadow-md border border-blue-400/50 tracking-wide flex items-center gap-1">
                             🏫 CẤP THCS
@@ -1227,6 +1247,13 @@ export default function App() {
       {/* TÍCH HỢP NLS - AI THCS (ADD-INS V3) MODAL (3 TABS) */}
       <NLSAIModal
         isOpen={showNLSAIModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
+
+      {/* TẠO ĐỀ TIẾNG ANH TIỂU HỌC (GLOBAL SUCCESS - THÔNG TƯ 27) MODAL (3 TABS) */}
+      <TaoDeTiengAnhTieuHocModal
+        isOpen={showTaoDeTieuHocModal}
         onClose={closeAllModals}
         onOpenAdmin={() => setShowAdminDashboard(true)}
       />

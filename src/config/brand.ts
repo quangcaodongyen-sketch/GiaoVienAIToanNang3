@@ -60,6 +60,17 @@ export const EXAM_15P_RESOURCES = {
   videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
 };
 
+// Cấu hình link tài nguyên Tạo Đề Tiếng Anh Tiểu Học (Lớp 1-5 Global Success - TT 27)
+export const EXAM_ENG_PRIMARY_RESOURCES = {
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
+  exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
+  exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
+  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
+  dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THCS.dotm",
+  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+};
+
 // Cấu hình link tài nguyên Smart Listening Pro (Audio Text To Speech)
 export const SMART_LISTENING_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",

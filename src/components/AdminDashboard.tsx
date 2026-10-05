@@ -172,7 +172,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
 
   // State cho Tool Tạo Key Bản Quyền - Tạo Đề Tiếng Anh (CV 7991 & THPT)
   const [examMid, setExamMid] = useState('');
-  const [examLevel, setExamLevel] = useState<'THCS' | 'THPT'>('THPT');
+  const [examLevel, setExamLevel] = useState<'THCS' | 'THPT' | 'TIEUHOC'>('THPT');
   const [examPackage, setExamPackage] = useState<'1year' | '2year' | 'lifetime'>('lifetime');
   const [examKeyResult, setExamKeyResult] = useState('');
   const [examZaloMsg, setExamZaloMsg] = useState('');
@@ -628,7 +628,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           zaloMsg = genRes.zaloMessage;
         }
         // H. Tạo Đề Tiếng Anh THCS Global Success (SHA-256)
-        else if (effectiveAppId === 'taode_tienganh_thcs' || cleanMidUpper.includes('ENGCS') || (cleanMidUpper.startsWith('DVT-ENG-') && !cleanMidUpper.includes('ENGPT') && !cleanMidUpper.includes('ENG15'))) {
+        else if (effectiveAppId === 'taode_tienganh_thcs' || cleanMidUpper.includes('ENGCS') || (cleanMidUpper.startsWith('DVT-ENG-') && !cleanMidUpper.includes('ENGPT') && !cleanMidUpper.includes('ENG15') && !cleanMidUpper.includes('ENGPRI'))) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
           const genRes = await generateExamLicenseKey(cleanMid, pkgType);
           licenseKey = genRes.key;
@@ -643,7 +643,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           expDateStr = genRes.expiryDateStr;
           zaloMsg = genRes.zaloMessage;
         }
-        // J. CÁC MÔN HỌC THPT 2025+ VÀ NLS-AI (MẬT MÃ BẤT ĐỐI XỨNG ED25519 ĐỘC LẬP TỪNG MÔN)
+        // J. CÁC MÔN HỌC THPT 2025+, TIỂU HỌC VÀ NLS-AI (MẬT MÃ BẤT ĐỐI XỨNG ED25519 ĐỘC LẬP TỪNG MÔN)
         else {
           let appTag = 'NLS';
           let prodId = 'NLS_AI_THCS';
@@ -681,6 +681,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           } else if (effectiveAppId.includes('engpt') || cleanMidUpper.includes('ENGPT')) {
             appTag = 'ENGPT';
             prodId = 'ENGPT';
+          } else if (effectiveAppId.includes('engpri') || effectiveAppId.includes('tieuhoc') || cleanMidUpper.includes('ENGPRI')) {
+            appTag = 'ENGPRI';
+            prodId = 'ENGPRI';
           } else if (effectiveAppId.includes('math') || cleanMidUpper.includes('MATH')) {
             appTag = 'MATH';
             prodId = 'MATH_STUDIO';
@@ -1113,13 +1116,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         setExamGenError('Vui lòng nhập Mã máy tính (Hardware Code) của khách hàng!');
         return;
       }
-      const isTHPT = examLevel === 'THPT' || cleanId.includes('THPT') || cleanId.includes('ENGPT');
+      const isPrimary = examLevel === 'TIEUHOC' || cleanId.includes('ENGPRI') || cleanId.includes('PRI');
+      const isTHPT = !isPrimary && (examLevel === 'THPT' || cleanId.includes('THPT') || cleanId.includes('ENGPT'));
       const years = examPackage === 'lifetime' ? 99 : examPackage === '2year' ? 2 : 1;
       let finalKey = '';
       let expDateStr = '';
       const pkgName = examPackage === 'lifetime' ? 'BẢN QUYỀN VIP TRỌN ĐỜI' : examPackage === '2year' ? 'GÓI 2 NĂM VIP' : 'GÓI 1 NĂM';
 
-      if (isTHPT) {
+      if (isPrimary) {
+        const edRes = await generateEd25519Key(cleanId, years, 'ENGPRI', 'ENGPRI');
+        finalKey = edRes.key;
+        expDateStr = edRes.expDate;
+      } else if (isTHPT) {
         const edRes = await generateEd25519Key(cleanId, years, 'ENGPT', 'ENGPT');
         finalKey = edRes.key;
         expDateStr = edRes.expDate;
@@ -1130,9 +1138,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       }
       setExamKeyResult(finalKey);
 
-      const appTitle = isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
-      const authorTitle = isTHPT ? 'Thầy giáo Đinh Văn Thành – THPT Đồng Yên' : 'Thầy giáo Đinh Văn Thành – THCS Đồng Yên';
-      const appNameGuide = isTHPT ? 'Tạo đề kiểm tra Tiếng Anh Global Success THPT' : 'Tạo đề kiểm tra Tiếng Anh Global Success THCS';
+      const appTitle = isPrimary
+        ? 'TẠO ĐỀ TIẾNG ANH TIỂU HỌC GLOBAL SUCCESS (THÔNG TƯ 27)'
+        : isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
+      const authorTitle = isPrimary
+        ? 'Thầy giáo Đinh Văn Thành – Cổng Giáo Viên AI Toàn Năng'
+        : isTHPT ? 'Thầy giáo Đinh Văn Thành – THPT Đồng Yên' : 'Thầy giáo Đinh Văn Thành – THCS Đồng Yên';
+      const appNameGuide = isPrimary
+        ? 'Tạo đề kiểm tra Tiếng Anh Global Success Tiểu Học (TT 27)'
+        : isTHPT ? 'Tạo đề kiểm tra Tiếng Anh Global Success THPT' : 'Tạo đề kiểm tra Tiếng Anh Global Success THCS';
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ${appTitle}:
 ----------------------------------------------------------------------
@@ -2597,6 +2611,9 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               <option value="taode_thpt_nguvan">📖 Ngữ Văn THPT (DVT-LITPT)</option>
                               <option value="taode_thpt_tienganh">🇬🇧 Tiếng Anh THPT (DVT-ENGPT)</option>
                             </optgroup>
+                            <optgroup label="🎒 HỆ THỐNG TIỂU HỌC (THÔNG TƯ 27)">
+                              <option value="taode_tieuhoc_tienganh">🎒 Tiếng Anh Tiểu Học (DVT-ENGPRI)</option>
+                            </optgroup>
                             <optgroup label="⚡ HỆ SINH THÁI THCS & TIỆN ÍCH SƯ PHẠM">
                               <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
                               <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
@@ -2736,6 +2753,9 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           <option value="congnghe">⚙️ Công Nghệ THPT</option>
                           <option value="nguvan">📖 Ngữ Văn THPT</option>
                           <option value="engpt">🇬🇧 Tiếng Anh THPT</option>
+                        </optgroup>
+                        <optgroup label="🎒 HỆ THỐNG TIỂU HỌC (THÔNG TƯ 27)">
+                          <option value="engpri">🎒 Tiếng Anh Tiểu Học (TT 27)</option>
                         </optgroup>
                         <optgroup label="⚡ HỆ SINH THÁI THCS & TIỆN ÍCH">
                           <option value="nls">⚡ Tích Hợp NLS - AI</option>
@@ -4519,6 +4539,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     >
                       <option value="THPT">THPT (Lớp 10, 11, 12)</option>
                       <option value="THCS">THCS (Lớp 6, 7, 8, 9)</option>
+                      <option value="TIEUHOC">Tiểu Học (Lớp 1, 2, 3, 4, 5 - TT 27)</option>
                     </select>
                   </div>
 

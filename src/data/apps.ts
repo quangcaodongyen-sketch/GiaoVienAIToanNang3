@@ -5,7 +5,7 @@ export interface AppCard {
   image: string;
   url: string;
   category: string;
-  levelBadge?: 'THCS' | 'THPT' | 'CV 5512' | 'TIỆN ÍCH';
+  levelBadge?: 'THCS' | 'THPT' | 'TIỂU HỌC' | 'CV 5512' | 'TIỆN ÍCH';
   badge?: string;
   active: boolean;
   featured: boolean;
@@ -29,6 +29,21 @@ export const apps: AppCard[] = [
     order: 1
   },
 
+  // ==================== NHÓM TIỂU HỌC: BÁM SÁT THÔNG TƯ 27/2020 ====================
+  {
+    id: "tao-de-tieng-anh-tieu-hoc",
+    title: "TẠO ĐỀ TIẾNG ANH TIỂU HỌC (TT 27)",
+    description: "Tạo đề kiểm tra Tiếng Anh 4 kỹ năng Tiểu Học (Lớp 1-5 Global Success) chuẩn Thông tư 27 kèm Ma trận 4 mức độ, bản đặc tả, audio script và phiếu nhận xét.",
+    image: "/taode_tienganh_tieuhoc.png",
+    url: "#taode-tienganh-tieuhoc",
+    category: "ĐỀ THI TIỂU HỌC (TT 27)",
+    levelBadge: "TIỂU HỌC",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 2
+  },
+
   // ==================== NHÓM 1: CẤP THCS (CV 7991) ====================
   {
     id: "tao-de-tieng-anh-thcs",
@@ -41,7 +56,7 @@ export const apps: AppCard[] = [
     badge: "BẢN QUYỀN PRO",
     active: true,
     featured: true,
-    order: 2
+    order: 3
   },
   {
     id: "tao-de-15p-tienganh",

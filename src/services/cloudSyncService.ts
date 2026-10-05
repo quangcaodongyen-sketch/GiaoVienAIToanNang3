@@ -56,6 +56,16 @@ export const isAppMatching = (
     }
   }
 
+  // Tiếng Anh Tiểu Học (Thông tư 27)
+  if (target.includes('engpri') || target.includes('tieuhoc') || target.includes('pri')) {
+    return (
+      rId.includes('engpri') ||
+      rId.includes('tieuhoc') ||
+      rName.includes('tiểu học') ||
+      rName.includes('thông tư 27')
+    );
+  }
+
   // Tiếng Anh THCS
   if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
     return (
