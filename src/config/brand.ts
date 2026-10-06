@@ -291,9 +291,9 @@ export const EXAM_7MON_RESOURCES = {
     },
     KHTN: {
       name: "Khoa học tự nhiên",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Cai_Dat_TaoDe_KHTN_THCS.exe",
+      exeUrl: "/Cai_Dat_TaoDe_KHTN_THCS.exe",
+      size: "78 MB",
       icon: "🔬",
       color: "from-emerald-600 to-teal-600"
     },
