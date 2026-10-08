@@ -23,7 +23,7 @@ import {
   GraduationCap,
   Crown
 } from 'lucide-react';
-import { BRAND, EXAM_7MON_RESOURCES } from '../config/brand';
+import { BRAND, EXAM_7MON_RESOURCES, EXAM_LICHSU_THCS_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import {
