@@ -30,7 +30,8 @@ export const SUBJECT_MAP: Record<string, { name: string; icon: string; color: st
   SUDIA: { name: 'Môn Lịch sử & Địa lí', icon: '🌍', color: '#d97706' },
   TIN: { name: 'Môn Tin học', icon: '💻', color: '#0891b2' },
   GDCD: { name: 'Môn Giáo dục công dân', icon: '⚖️', color: '#e11d48' },
-  CN: { name: 'Môn Công nghệ', icon: '⚙️', color: '#ea580c' }
+  CN: { name: 'Môn Công nghệ', icon: '⚙️', color: '#ea580c' },
+  LICHSU: { name: 'Môn Lịch sử', icon: '🏛️', color: '#d97706' }
 };
 
 /**
@@ -264,7 +265,7 @@ export async function activateTHCS8MLicense_orig(key: string, clientHwid: string
   }
 
   // Trường hợp 2: Key Desktop từng môn (MATH-..., VAN-..., ENG-..., KHTN-..., v.v.)
-  const desktopPrefixes = ['MATH', 'VAN', 'ENG', 'KHTN', 'SUDIA', 'TIN', 'GDCD', 'CN'];
+  const desktopPrefixes = ['MATH', 'VAN', 'ENG', 'KHTN', 'SUDIA', 'LICHSU', 'LS', 'TIN', 'GDCD', 'CN'];
   if (parts.length === 4 && desktopPrefixes.includes(parts[0])) {
     const subPrefix = parts[0];
     const pkgCode = parts[1]; // LT, Y1, Y2
@@ -277,6 +278,7 @@ export async function activateTHCS8MLicense_orig(key: string, clientHwid: string
     else if (subPrefix === 'ENG') scope = 'ENG';
     else if (subPrefix === 'KHTN') scope = 'KHTN';
     else if (subPrefix === 'SUDIA') scope = 'SUDIA';
+    else if (subPrefix === 'LICHSU' || subPrefix === 'LS') scope = 'LICHSU';
     else if (subPrefix === 'TIN') scope = 'TIN';
     else if (subPrefix === 'GDCD') scope = 'GDCD';
     else if (subPrefix === 'CN') scope = 'CN';

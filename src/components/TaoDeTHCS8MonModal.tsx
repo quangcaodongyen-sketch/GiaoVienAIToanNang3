@@ -174,10 +174,27 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     exeUrl: EXAM_7MON_RESOURCES.subjects.CN.exeUrl,
     accentColor: 'from-teal-600 to-emerald-600',
     badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
+  },
+  LICHSU: {
+    key: 'LICHSU',
+    name: 'Lịch sử',
+    fullName: 'Môn Lịch sử THCS',
+    icon: '🏛️',
+    size: '91 MB',
+    desc: 'Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả 7 cột và đề kiểm tra Lịch sử 6, 7, 8, 9 chuẩn Công văn 7991.',
+    highlights: [
+      'Cấu trúc chuẩn CV 7991: 12 câu TN (3.0đ), 4 câu Đúng/Sai tư liệu (4.0đ), 2 câu Tự luận (3.0đ)',
+      'Bám sát 4 khối lớp 6, 7, 8, 9 sách Kết nối tri thức với cuộc sống',
+      'Tích hợp Add-in Word Ribbon và xuất song song Bản Giáo viên & Bản Học sinh'
+    ],
+    zipUrl: EXAM_LICHSU_THCS_RESOURCES.fullZipUrl,
+    exeUrl: EXAM_LICHSU_THCS_RESOURCES.exeUrl,
+    accentColor: 'from-amber-600 to-yellow-600',
+    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40'
   }
 };
 
-const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'TIN', 'CN'];
+const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'TIN', 'CN'];
 
 export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   isOpen,

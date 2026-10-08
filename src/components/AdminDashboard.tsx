@@ -53,6 +53,7 @@ import { generateCleanerLicenseKey } from '../services/cleanerKeyService';
 import { generateCHVBLicenseKey, buildCHVBZaloMessage } from '../services/chuanhoaVBKeyService';
 import { generatePDFLicenseKey, buildPDFZaloMessage } from '../services/pdfSuiteKeyService';
 import { generateTHCS8MLicenseKey, SUBJECT_MAP } from '../services/taoDeTHCS8MonKeyService';
+import { generateLSTHCSLicenseKey, buildLSTHCSZaloMessage } from '../services/taodeLichSuTHCSKeyService';
 import { generateExam15PLicenseKey } from '../services/taode15pKeyService';
 import { generateSmartListeningLicenseKey } from '../services/smartListeningKeyService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
@@ -643,6 +644,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
           zaloMsg = genRes.zaloMessage;
+        }
+        // I-2. Tạo Đề Lịch Sử THCS Chuyên Sâu (CV 7991)
+        else if (effectiveAppId.includes('lichsu_thcs') || effectiveAppId === 'taode_lichsu_thcs' || cleanMidUpper.includes('LSTHCS') || cleanMidUpper.includes('LS-DVT')) {
+          const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
+          const genRes = await generateLSTHCSLicenseKey(cleanMid, pkgType);
+          licenseKey = genRes.key;
+          expDateStr = genRes.expDate;
+          zaloMsg = buildLSTHCSZaloMessage(reg.fullName, reg.schoolUnit, cleanMid, genRes.key, genRes.expDate, pkgType === '2year' ? 'Gói 2 Năm' : 'Gói 1 Năm');
         }
         // J. CÁC MÔN HỌC THPT 2025+, TIỂU HỌC VÀ NLS-AI (MẬT MÃ BẤT ĐỐI XỨNG ED25519 ĐỘC LẬP TỪNG MÔN)
         else {

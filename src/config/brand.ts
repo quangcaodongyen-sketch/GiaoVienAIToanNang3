@@ -328,11 +328,28 @@ export const EXAM_7MON_RESOURCES = {
       size: "34 MB",
       icon: "⚙️",
       color: "from-slate-600 to-zinc-600"
+    },
+    LICHSU: {
+      name: "Lịch sử",
+      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
+      size: "91 MB",
+      icon: "🏛️",
+      color: "from-amber-600 to-yellow-600"
     }
   }
 };
 
 export const EXAM_8MON_RESOURCES = EXAM_7MON_RESOURCES;
+
+// Cấu hình link tài nguyên Tạo Đề Lịch Sử THCS Chuyên Sâu (CV 7991)
+export const EXAM_LICHSU_THCS_RESOURCES = {
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
+  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
+  dotmUrl: "/TaoDe_LS_THCS.dotm",
+  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+};
 
 
 // CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG

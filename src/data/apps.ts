@@ -124,6 +124,19 @@ export const apps: AppCard[] = [
     order: 7
   },
   {
+    id: "tao-de-lich-su-thcs",
+    title: "TẠO ĐỀ LỊCH SỬ THCS (CV 7991)",
+    description: "Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả 7 cột và đề kiểm tra Lịch sử THCS (Lớp 6, 7, 8, 9 - KNTT) kèm hướng dẫn chấm chi tiết.",
+    image: "/taode_lichsu_thcs.png",
+    url: "#tao-de-lichsu-thcs",
+    category: "ĐỀ THI CẤP THCS (CV 7991)",
+    levelBadge: "THCS",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 7.5
+  },
+  {
     id: "tao-de-gdcd-thcs",
     title: "TẠO ĐỀ GIÁO DỤC CÔNG DÂN THCS (CV 7991)",
     description: "Tạo đề kiểm tra Giáo dục công dân THCS trắc nghiệm và câu hỏi xử lý tình huống thực tế.",

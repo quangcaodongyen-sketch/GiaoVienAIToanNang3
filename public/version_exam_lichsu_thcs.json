@@ -1,0 +1,12 @@
+{
+  "appId": "exam-ls",
+  "appName": "Tạo Đề Kiểm Tra Lịch Sử THCS Kết nối tri thức (CV 7991)",
+  "currentVersion": "3.6.0",
+  "latestVersion": "3.6.0",
+  "releaseDate": "08/10/2026",
+  "changelog": "• Chuẩn hóa 100% cấu trúc Đề kiểm tra môn Lịch sử THCS (Công văn 7991/BGDĐT):\n  - Phần I: 12 câu Trắc nghiệm nhiều lựa chọn (3,0 điểm) - Nhận biết\n  - Phần II: 04 câu Trắc nghiệm Đúng - Sai có đoạn tư liệu (4,0 điểm) - Thông hiểu & Vận dụng\n  - Phần III: 02 câu Tự luận (3,0 điểm) - Thông hiểu & Vận dụng liên hệ thực tiễn\n• Ma trận 16 cột 3 tầng chuẩn CV 7991, Bản đặc tả 7 cột chi tiết kèm Hướng dẫn chấm & Đáp án thang điểm 10,0\n• Đầy đủ 4 khối Lớp 6, 7, 8, 9 bộ sách Kết nối tri thức với cuộc sống\n• Xuất song song Bản Giáo viên (Master) và Bản Học sinh sạch 100% không lộ vết đáp án\n• Tích hợp Microsoft Word Add-in Ribbon độc lập và bảo mật bản quyền Ed25519",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS.zip",
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+}

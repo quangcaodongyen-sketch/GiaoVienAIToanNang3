@@ -34,6 +34,7 @@ import { CleanerModal } from './components/CleanerModal';
 import { ChuanHoaVBModal } from './components/ChuanHoaVBModal';
 import { TachGopPDFModal } from './components/TachGopPDFModal';
 import { TaoDeTHCS8MonModal } from './components/TaoDeTHCS8MonModal';
+import { TaoDeLichSuTHCSModal } from './components/TaoDeLichSuTHCSModal';
 import { MathStudioModal } from './components/MathStudioModal';
 import { TaoDe15PhutModal } from './components/TaoDe15PhutModal';
 import { TaoDeTHPTSubjectModal } from './components/TaoDeTHPTSubjectModal';
@@ -60,6 +61,7 @@ export default function App() {
   const [showChuanHoaVBModal, setShowChuanHoaVBModal] = useState(false);
   const [showTachGopPDFModal, setShowTachGopPDFModal] = useState(false);
   const [showTaoDeTHCS8MonModal, setShowTaoDeTHCS8MonModal] = useState(false);
+  const [showTaoDeLichSuTHCSModal, setShowTaoDeLichSuTHCSModal] = useState(false);
   const [showMathStudioModal, setShowMathStudioModal] = useState(false);
   const [showTaoDe15PhutModal, setShowTaoDe15PhutModal] = useState(false);
   const [thcs8MonSelectedSubject, setThcs8MonSelectedSubject] = useState<string>('TOAN');
@@ -160,6 +162,7 @@ export default function App() {
     setShowChuanHoaVBModal(false);
     setShowTachGopPDFModal(false);
     setShowTaoDeTHCS8MonModal(false);
+    setShowTaoDeLichSuTHCSModal(false);
     setShowMathStudioModal(false);
     setShowTaoDe15PhutModal(false);
     setShowAdminDashboard(false);
@@ -270,6 +273,10 @@ export default function App() {
         setThcs8MonSelectedSubject('SUDIA');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-sudia-thcs', 'Tạo Đề Lịch Sử - Địa Lí THCS');
+      }
+      else if (hash === '#tao-de-lichsu' || hash === '#tao-de-lich-su-thcs' || hash === '#tao-de-lichsu-thcs') {
+        setShowTaoDeLichSuTHCSModal(true);
+        webSecurityGuard.setActiveApp('tao-de-lichsu-thcs', 'Tạo Đề Lịch Sử THCS (CV 7991)');
       }
       else if (hash === '#tao-de-tin') {
         setThcs8MonSelectedSubject('TIN');
@@ -515,6 +522,11 @@ export default function App() {
       e.preventDefault();
       setThcs8MonSelectedSubject('SUDIA');
       setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-lich-su-thcs' || app.id === 'tao-de-lichsu-thcs' || app.url === '#tao-de-lichsu-thcs' || app.url === '#tao-de-lichsu') {
+      e.preventDefault();
+      setShowTaoDeLichSuTHCSModal(true);
       return;
     }
     if (app.id === 'tao-de-tin-thcs' || app.url === '#tao-de-tin') {
@@ -1330,6 +1342,13 @@ export default function App() {
         selectedSubject={thcs8MonSelectedSubject}
         onOpenAdmin={() => setShowAdminDashboard(true)}
         onSwitchToEnglish={() => setShowTaoDeModal(true)}
+      />
+
+      {/* PHẦN MỀM TẠO ĐỀ LỊCH SỬ THCS (CV 7991) - MÔN CHUYÊN BIỆT */}
+      <TaoDeLichSuTHCSModal
+        isOpen={showTaoDeLichSuTHCSModal}
+        onClose={closeAllModals}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
       />
 
       {/* ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX) */}

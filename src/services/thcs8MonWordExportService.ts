@@ -982,6 +982,179 @@ export function getTHCS8MonExamSuite(
         }
       };
 
+    case 'LICHSU':
+    case 'LS':
+      return {
+        subjectId: 'LICHSU',
+        subjectName: 'Lịch sử',
+        grade,
+        termCode,
+        termTitle,
+        examCode,
+        timeMinutes: 45,
+        schoolYear,
+        parentAgency,
+        schoolName,
+        parts: [
+          {
+            title: 'PHẦN I. CÂU HỎI TRẮC NGHIỆM NHIỀU LỰA CHỌN',
+            points: '3,0 điểm',
+            instruction: 'Khoanh tròn vào một chữ cái A, B, C hoặc D đứng trước phương án trả lời đúng (12 câu, mỗi câu 0,25 điểm):',
+            questions: [
+              {
+                num: 1,
+                content: 'Phong trào Văn hóa Phục hưng (thế kỉ XIV - XVII) bắt đầu khởi xướng tại quốc gia nào ở Tây Âu?',
+                options: ['A. Vương quốc Anh', 'B. Bán đảo I-ta-li-a (Ý)', 'C. Nước Pháp', 'D. Nước Đức'],
+                correctKey: 'B'
+              },
+              {
+                num: 2,
+                content: 'Tác phẩm văn học nổi tiếng "Hăm-lét", "Rô-mê-ô và Giu-li-ét" là kiệt tác của danh nhân Phục hưng nào?',
+                options: ['A. Lô-pha Phơ-răng-xoa', 'B. U-i-li-am Sếch-xpia', 'C. Mi-ken-lăng-giơ', 'D. Lê-ô-na đơ Vanh-xi'],
+                correctKey: 'B'
+              },
+              {
+                num: 3,
+                content: 'Các cuộc phát kiến địa lí thế kỉ XV - XVI gắn liền với tên tuổi của những nhà thám hiểm nổi tiếng nào?',
+                options: ['A. N.Cơ-péc-ních và G.Ga-li-lê', 'B. C.Cô-lôm-bô và Ph.Ma-gien-lăng', 'C. Sếch-xpia và Đan-tê', 'D. T.Mo-rơ và Ra-bơ-le'],
+                correctKey: 'B'
+              },
+              {
+                num: 4,
+                content: 'Chiến thắng Bạch Đằng năm 938 do Ngô Quyền lãnh đạo đã đánh tan đạo quân xâm lược nào?',
+                options: ['A. Quân Tống', 'B. Quân Nam Hán', 'C. Quân Đường', 'D. Quân Nguyên Mông'],
+                correctKey: 'B'
+              },
+              {
+                num: 5,
+                content: 'Năm 1010, vua Lý Thái Tổ quyết định dời đô từ Hoa Lư về đâu và đổi tên thành gì?',
+                options: ['A. Về Cổ Loa, đổi tên thành Đông Đô', 'B. Về Đại La, đổi tên thành Thăng Long', 'C. Về Tây Đô, đổi tên thành Vạn Xuân', 'D. Về Phú Xuân, đổi tên thành Huế'],
+                correctKey: 'B'
+              },
+              {
+                num: 6,
+                content: 'Tác phẩm được xem là bản Tuyên ngôn Độc lập đầu tiên của dân tộc Việt Nam thời nhà Lý là:',
+                options: ['A. Hịch tướng sĩ (Trần Quốc Tuấn)', 'B. Bài thơ thần "Nam quốc sơn hà" (Lý Thường Kiệt)', 'C. Bình Ngô đại cáo (Nguyễn Trãi)', 'D. Tuyên ngôn Độc lập (Chủ tịch Hồ Chí Minh)'],
+                correctKey: 'B'
+              },
+              {
+                num: 7,
+                content: 'Ba lần chiến thắng oanh liệt quân xâm lược Mông - Nguyên (1258, 1285, 1288) diễn ra dưới triều đại phong kiến nào?',
+                options: ['A. Triều Tiền Lê', 'B. Triều Lý', 'C. Triều Trần', 'D. Triều Hậu Lê'],
+                correctKey: 'C'
+              },
+              {
+                num: 8,
+                content: 'Hội nghị Diên Hồng (1284) do Thượng hoàng Trần Thánh Tông triệu tập thể hiện tinh thần dân chủ và quyết tâm:',
+                options: ['A. Cầu hòa giữ yên bờ cõi', 'B. Toàn dân đồng lòng đánh giặc cứu nước ("Nên đánh!")', 'C. Dời kinh đô lánh giặc', 'D. Phân chia ruộng đất cho nhân dân'],
+                correctKey: 'B'
+              },
+              {
+                num: 9,
+                content: 'Khởi nghĩa Lam Sơn (1418 - 1427) do vị anh hùng dân tộc nào phát động và lãnh đạo giành toàn thắng?',
+                options: ['A. Lê Lợi', 'B. Nguyễn Trãi', 'C. Trần Hưng Đạo', 'D. Quang Trung - Nguyễn Huệ'],
+                correctKey: 'A'
+              },
+              {
+                num: 10,
+                content: 'Chiến thắng Ngọc Hồi - Đống Đa lịch sử vào mùa xuân Kỷ Dậu (1789) do người anh hùng áo vải nào chỉ huy?',
+                options: ['A. Nguyễn Huệ (Vua Quang Trung)', 'B. Nguyễn Nhạc', 'C. Nguyễn Lữ', 'D. Ngô Thì Nhậm'],
+                correctKey: 'A'
+              },
+              {
+                num: 11,
+                content: 'Bộ luật Hồng Đức (Quốc triều hình luật) được ban hành hoàn chỉnh dưới thời trị vì của vị vua nào thời Lê sơ?',
+                options: ['A. Vua Lê Thái Tổ', 'B. Vua Lê Thánh Tông', 'C. Vua Lê Nhân Tông', 'D. Vua Lê Thái Tông'],
+                correctKey: 'B'
+              },
+              {
+                num: 12,
+                content: 'Đặc trưng cơ bản của chế độ phong kiến phương Tây thời kỳ trung đại là:',
+                options: ['A. Tình trạng cát cứ phân quyền lãnh địa phong kiến', 'B. Tập quyền chuyên chế tuyệt đối từ đầu', 'C. Nền kinh tế hàng hóa mở rộng', 'D. Xã hội không có giai cấp bóc lột'],
+                correctKey: 'A'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN II. CÂU HỎI ĐÚNG - SAI CÓ ĐOẠN TƯ LIỆU',
+            points: '4,0 điểm',
+            instruction: 'Đọc kĩ đoạn trích tư liệu lịch sử sau đây và chọn Đúng (Đ) hoặc Sai (S) cho từng ý a, b, c, d:',
+            passage: '“Năm 938, vua Nam Hán sai con trai là Vạn Vương Hoằng Tháo đem quân sang xâm lược nước ta... Ngô Quyền bàn với các tướng rằng: Hoằng Tháo là đứa trẻ dại, đem quân từ xa đến, quân lính mỏi mệt... Nếu ta sai người vạt nhọn cọc lớn, bịt sắt cắm ngầm trước ở cửa biển, khi thuyền giặc theo nước triều lên tiến vào trong hàng cọc, bấy giờ ta sẽ dốc toàn lực đánh quật lại, thế tất giặc phải tan vỡ!”\n(Theo Đại Việt sử ký toàn thư)',
+            questions: [
+              {
+                num: 'Câu 13',
+                content: 'Dựa vào đoạn trích tư liệu trên, nhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Đoạn tư liệu phản ánh kế sách đánh giặc độc đáo của Ngô Quyền trong trận Bạch Đằng năm 938.\n' +
+                         'b) Hoằng Tháo là một danh tướng lão luyện, dày dạn kinh nghiệm chiến trường phương Nam.\n' +
+                         'c) Kế sách lợi dụng thủy triều và cắm cọc gỗ bịt sắt thể hiện nghệ thuật quân sự tài tình, sáng tạo của cha ông ta.\n' +
+                         'd) Chiến thắng Bạch Đằng năm 938 đã kết thúc hơn 1000 năm Bắc thuộc, mở ra kỷ nguyên độc lập, tự chủ lâu dài cho dân tộc.',
+                options: ['a) Đúng', 'b) Sai', 'c) Đúng', 'd) Đúng'],
+                correctKey: 'a-Đ, b-S, c-Đ, d-Đ'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN III. TỰ LUẬN LIÊN HỆ THỰC TIỄN',
+            points: '3,0 điểm',
+            questions: [
+              {
+                num: 'Câu 14',
+                points: '2,0 điểm',
+                content: 'Trình bày ý nghĩa lịch sử sâu sắc của chiến thắng Bạch Đằng năm 938. Vì sao nhà sử học Lê Văn Hưu đánh giá công đức của Ngô Quyền: "Ngô Quyền cứu dân khỏi cơn đắm đuối, mở mang bờ cõi, dựng lại nước nhà, công đức ấy thật vô lượng"?'
+              },
+              {
+                num: 'Câu 15',
+                points: '1,0 điểm',
+                content: 'Từ truyền thống yêu nước, bất khuất chống ngoại xâm của cha ông trong lịch sử, theo em thế hệ học sinh THCS hôm nay cần làm gì để góp phần xây dựng và bảo vệ chủ quyền biên giới, hải đảo thiêng liêng của Tổ quốc?'
+              }
+            ]
+          }
+        ],
+        matrix: {
+          headers: ['Mạch kiến thức Lịch sử', 'Chủ đề đơn vị kiến thức', 'Nhận biết (TN)', 'Thông hiểu (Đ/S)', 'Vận dụng (TL)', 'Vận dụng cao (TL)', 'Tổng điểm', 'Tỉ lệ %'],
+          rows: [
+            ['Lịch sử Thế giới', 'Tây Âu trung đại & Văn hóa Phục hưng', '3 câu (0,75đ)', '0', '0', '0', '0,75 điểm', '7,5%'],
+            ['Lịch sử Việt Nam (Cổ - Trung đại)', 'Khởi nghĩa thời Bắc thuộc & Chiến thắng Bạch Đằng 938', '5 câu (1,25đ)', 'Câu 13 (2,0đ)', 'Câu 14 (1,5đ)', '0', '4,75 điểm', '47,5%'],
+            ['Lịch sử Việt Nam (Các triều đại Lý - Trần - Lê)', 'Thời Lý, Trần, Khởi nghĩa Lam Sơn, Phong trào Tây Sơn', '4 câu (1,00đ)', 'Câu 13 (2,0đ)', '0', '0', '3,00 điểm', '30,0%'],
+            ['Vận dụng liên hệ thực tiễn', 'Bảo vệ chủ quyền biên cương và hải đảo Tổ quốc', '0', '0', 'Câu 14b (0,5đ)', 'Câu 15 (1,0đ)', '1,50 điểm', '15,0%'],
+            ['TỔNG ĐIỂM', 'Cấu trúc định dạng chuẩn CV 7991/BGDĐT', '3,0 điểm (30%)', '4,0 điểm (40%)', '2,0 điểm (20%)', '1,0 điểm (10%)', '10,0 điểm', '100%']
+          ]
+        },
+        specification: {
+          headers: ['TT', 'Mạch kiến thức', 'Đơn vị kiến thức', 'Mức độ & Yêu cầu cần đạt chuẩn CTGDPT 2018', 'Câu hỏi & Điểm'],
+          rows: [
+            ['1', 'Lịch sử thế giới', 'Phong trào Văn hóa Phục hưng', 'Nhận biết cái nôi phong trào, danh nhân, tác phẩm tiêu biểu', 'Câu 1, 2, 3 (0,75 điểm)'],
+            ['2', 'Thời kỳ Bắc thuộc', 'Chiến thắng Bạch Đằng năm 938', 'Hiểu rõ hoàn cảnh, kế sách lợi dụng thủy triều cắm cọc ngầm, ý nghĩa bước ngoặt lịch sử', 'Câu 4, 13, 14 (4,75 điểm)'],
+            ['3', 'Thời Lý - Trần - Lê sơ', 'Đại Việt thời Lý - Trần và Lê sơ', 'Nhận biết các mốc son: Dời đô 1010, Nam quốc sơn hà, Ba lần đại thắng Nguyên - Mông, Khởi nghĩa Lam Sơn, Luật Hồng Đức', 'Câu 5, 6, 7, 8, 9, 10, 11, 12 (2,0 điểm)'],
+            ['4', 'Trách nhiệm công dân', 'Chủ quyền biên cương hải đảo', 'Vận dụng hiểu biết lịch sử vào liên hệ trách nhiệm tuổi trẻ trong bảo vệ chủ quyền đất nước', 'Câu 15 (1,0 điểm)']
+          ]
+        },
+        answerGuide: {
+          mcqAnswers: [
+            { q: 1, ans: 'B' }, { q: 2, ans: 'B' }, { q: 3, ans: 'B' }, { q: 4, ans: 'B' },
+            { q: 5, ans: 'B' }, { q: 6, ans: 'B' }, { q: 7, ans: 'C' }, { q: 8, ans: 'B' },
+            { q: 9, ans: 'A' }, { q: 10, ans: 'A' }, { q: 11, ans: 'B' }, { q: 12, ans: 'A' }
+          ],
+          essayGuide: [
+            {
+              question: 'Câu 13 (Đúng - Sai có tư liệu)',
+              step: 'Mệnh đề a: Đúng (0.5đ)\nMệnh đề b: Sai (Vạn Vương Hoằng Tháo trẻ tuổi, kiêu căng, khinh địch) (0.5đ)\nMệnh đề c: Đúng (Nghệ thuật quân sự cắm cọc gỗ chông ngầm) (1.0đ)\nMệnh đề d: Đúng (Ý nghĩa lịch sử chấm dứt hơn 1000 năm Bắc thuộc) (1.0đ)',
+              point: '4,00 điểm'
+            },
+            {
+              question: 'Câu 14 (Ý nghĩa lịch sử chiến thắng Bạch Đằng)',
+              step: '1. Ý nghĩa: Tiêu diệt hoàn toàn quân Nam Hán, đập tan mưu đồ xâm lược; Chấm dứt vĩnh viễn hơn 10 thế kỷ Bắc thuộc của phong kiến phương Bắc; Khẳng định quyền làm chủ non sông, mở ra kỷ nguyên độc lập tự chủ lâu dài cho dân tộc (1.0đ).\n2. Nhận định Lê Văn Hưu: Ngô Quyền đã nối lại quốc thống, rửa sạch nỗi nhục mất nước ngàn năm, xứng đáng là vị "vua của các vua", mở đầu kỷ nguyên phục hưng rạng rỡ của đất nước (1.0đ).',
+              point: '2,00 điểm'
+            },
+            {
+              question: 'Câu 15 (Liên hệ trách nhiệm học sinh)',
+              step: '1. Nhận thức: Tự hào sâu sắc về truyền thống lịch sử kiên cường của dân tộc, trân trọng hòa bình độc lập hôm nay (0.25đ).\n2. Hành động học tập: Ra sức học tập tốt, rèn luyện đạo đức, nắm vững tri thức khoa học và ngoại ngữ (0.25đ).\n3. Trách nhiệm chủ quyền: Tích cực tìm hiểu lịch sử chủ quyền biển đảo Tổ quốc (Hoàng Sa, Trường Sa); Không chia sẻ thông tin xấu độc; Sẵn sàng đóng góp sức trẻ cho sự nghiệp bảo vệ quê hương đất nước (0.50đ).',
+              point: '1,00 điểm'
+            }
+          ]
+        }
+      };
+
     default:
       return getTHCS8MonExamSuite('TOAN', grade, termCode, examCode);
   }
