@@ -2080,7 +2080,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ TOÀN DIỆN'}
+                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ KÍCH HOẠT PRO'}
                 </h2>
                 <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
                   {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN MAI TÌNH' : '👑 ADMIN THẦY THÀNH'}
@@ -2089,7 +2089,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
               <p className="text-xs text-slate-400">
                 {userRole === 'SUB_ADMIN' 
                   ? 'Tài khoản phụ: Mai Tình – Mọi thao tác kích hoạt được lưu vết tự động vào hệ thống' 
-                  : 'Thầy giáo Đinh Văn Thành – Toàn quyền quản trị, theo dõi người dùng & thống kê hệ thống'}
+                  : 'Thầy giáo Đinh Văn Thành – Quản lý danh sách Giáo viên & Duyệt Cấp bản quyền Pro 1-Click'}
               </p>
             </div>
           </div>
@@ -2123,24 +2123,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
               )}
             </button>
 
-            <button
-              onClick={() => {
-                setAdminTab('security');
-                loadTrackingData();
-              }}
-              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black shadow-lg cursor-pointer ${
-                adminTab === 'security'
-                  ? 'bg-red-600 text-white ring-2 ring-red-400'
-                  : 'bg-red-950/80 hover:bg-red-900/80 text-red-200 border-2 border-red-500/80 hover:border-red-400 animate-pulse'
-              }`}
-              title="Xem ngay các máy tính đang can thiệp bẻ khóa"
-            >
-              <ShieldAlert className="w-4 h-4 text-red-400" />
-              <span>🚨 CẢNH BÁO XÂM NHẬP</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black">
-                {securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'}
-              </span>
-            </button>
+            {/* Security button removed */}
             <button
               onClick={() => setShowConfigModal(true)}
               className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
@@ -2181,23 +2164,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             )}
           </button>
 
-          <button
-            onClick={() => {
-              setAdminTab('security');
-              loadTrackingData();
-            }}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-              adminTab === 'security'
-                ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white shadow-lg shadow-rose-600/40 ring-2 ring-red-400 font-extrabold'
-                : 'bg-red-950/80 border-2 border-red-500/80 text-red-200 hover:bg-red-900/90 hover:text-white'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4 text-red-400 animate-pulse" />
-            <span className="font-extrabold text-white">🚨 1. CẢNH BÁO XÂM NHẬP & BẺ KHÓA</span>
-            <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-bounce">
-              {securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'}
-            </span>
-          </button>
+          {/* Security tab button removed */}
 
 
           <button
@@ -2423,17 +2390,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                       )}
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAdminTab('security');
-                        loadTrackingData();
-                      }}
-                      className="px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer bg-red-600/30 text-red-300 border border-red-500/60 hover:bg-red-600 hover:text-white animate-pulse"
-                    >
-                      <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
-                      <span>4. 🛡️ Cảnh Báo Xâm Nhập ({securityAlerts.filter(a => a.status === 'UNRESOLVED').length || '1'})</span>
-                    </button>
+                    {/* Security subtab button removed */}
                   </>
                 )}
               </div>
@@ -2471,11 +2428,11 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[11px] animate-pulse">GIÁM SÁT AN NINH 24/7</span>
-                    <h4 className="text-sm font-black text-white group-hover:text-red-300 transition-colors">TRUNG TÂM PHÁT HIỆN XÂM NHẬP & BẺ KHÓA PHẦN MỀM</h4>
+                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[11px] animate-pulse"></span>
+                    <h4 className="text-sm font-black text-white group-hover:text-red-300 transition-colors"></h4>
                   </div>
                   <p className="text-xs text-red-200/80 mt-0.5">
-                    Hệ thống tự động theo dõi, thu thập IP, cấu hình máy tính và đối chiếu danh tính giáo viên đang có hành vi mở F12/DevTools hoặc can thiệp bẻ khóa.
+                    
                   </p>
                 </div>
               </div>
