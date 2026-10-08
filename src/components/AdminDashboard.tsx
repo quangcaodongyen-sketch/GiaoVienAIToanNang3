@@ -123,7 +123,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [directAppId, setDirectAppId] = useState('taode_thpt_toan');
   const [directPkg, setDirectPkg] = useState<'1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME'>('1YEAR');
   const [isDirectApproving, setIsDirectApproving] = useState(false);
-  const [showDirectForm, setShowDirectForm] = useState(true);
+  const [showDirectForm, setShowDirectForm] = useState(false);
+  const [showKeyGenDropdown, setShowKeyGenDropdown] = useState(false);
 
   // State Tab Cảnh Báo Xâm Nhập & Chống Bẻ Khóa
   const [securityAlerts, setSecurityAlerts] = useState<SecurityAlertItem[]>([]);
@@ -2141,308 +2142,216 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
           </div>
         </div>
 
-        {/* TAB CHUYỂN ĐỔI */}
-        <div className="flex gap-2 my-3 border-b border-slate-800 pb-2 text-xs font-bold shrink-0 overflow-x-auto">
-          <button
-            onClick={() => {
-              setAdminTab('tracking');
-              loadTrackingData();
-            }}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-              adminTab === 'tracking'
-                ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black shadow-lg shadow-amber-500/30 ring-2 ring-amber-300'
-                : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
-            }`}
-          >
-            <Crown className="w-4 h-4 text-amber-900" />
-            <span className="font-extrabold text-xs sm:text-sm">👑 0. DUYỆT THÀNH VIÊN & BẢN QUYỀN PRO</span>
-            {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-pulse flex items-center gap-1 shadow-md shadow-red-500/40">
-                <span>⏳ Chờ duyệt:</span>
-                <span>{registrationRequests.filter(r => r.status === 'PENDING').length}</span>
-              </span>
-            )}
-          </button>
+        {/* ========================================================================= */}
+        {/* THANH ĐIỀU HƯỚNG QUẢN TRỊ TINH GỌN (5 MỤC CHÍNH ĐẲNG CẤP)                   */}
+        {/* ========================================================================= */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 my-2.5 border-b border-slate-800 pb-2.5 text-xs font-bold shrink-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
+            {/* 1. DUYỆT & KÍCH HOẠT THÀNH VIÊN (TAB CHÍNH MẶC ĐỊNH) */}
+            <button
+              onClick={() => {
+                setAdminTab('tracking');
+                setTrackingSubTab('requests');
+                loadTrackingData();
+              }}
+              className={`py-2 px-3.5 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+                adminTab === 'tracking' && trackingSubTab === 'requests'
+                  ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black shadow-lg shadow-amber-500/30 ring-2 ring-amber-300'
+                  : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
+              }`}
+            >
+              <UserCheck className="w-4 h-4 text-emerald-950" />
+              <span className="font-extrabold text-xs sm:text-sm">👑 1. DUYỆT THÀNH VIÊN & BẢN QUYỀN PRO</span>
+              {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-pulse flex items-center gap-1 shadow-md shadow-red-500/40">
+                  <span>⏳ Chờ duyệt:</span>
+                  <span>{registrationRequests.filter(r => r.status === 'PENDING').length}</span>
+                </span>
+              )}
+            </button>
 
-          {/* Security tab button removed */}
-
-
-          <button
-            onClick={() => setAdminTab('tts')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'tts'
-                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            {userRole === 'SUB_ADMIN' ? '👑 Kích Hoạt Bản Quyền Giáo Viên' : '1. Quản Lý Bản Quyền Chung'}
-          </button>
-          {userRole === 'ADMIN' && (
-          <>
-          <button
-            onClick={() => setAdminTab('nls')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'nls'
-                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <FileCode className="w-4 h-4" />
-            2. NLS-AI V3 (Ed25519)
-          </button>
-          <button
-            onClick={() => setAdminTab('taode')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'taode'
-                ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            3. Đề Tiếng Anh (CV 7991)
-          </button>
-          <button
-            onClick={() => setAdminTab('bienthe')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'bienthe'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            4. Sinh 3 Đề Biến Thể (VIP)
-          </button>
-          <button
-            onClick={() => setAdminTab('record')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'record'
-                ? 'bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-md shadow-rose-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            5. Screen Record V2 (VIP)
-          </button>
-          <button
-            onClick={() => setAdminTab('cleaner')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'cleaner'
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            6. Đinh Thành Cleaner Pro (VIP)
-          </button>
-          <button
-            onClick={() => setAdminTab('chuanhoavb')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'chuanhoavb'
-                ? 'bg-gradient-to-r from-red-600 to-amber-500 text-white shadow-md shadow-red-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            7. Chuẩn Hóa VB (NĐ 30)
-          </button>
-          <button
-            onClick={() => setAdminTab('pdfsuite')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'pdfsuite'
-                ? 'bg-gradient-to-r from-pink-600 to-indigo-600 text-white shadow-md shadow-pink-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            8. PDF Suite Pro (Tách/Gộp)
-          </button>
-          <button
-            onClick={() => setAdminTab('thcs8m')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'thcs8m'
-                ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 text-white shadow-md shadow-blue-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4 text-amber-300" />
-            9. Tạo Đề 8 Môn THCS (CV 7991)
-          </button>
-          <button
-            onClick={() => setAdminTab('mathstudio')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'mathstudio'
-                ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white shadow-md shadow-violet-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4 text-amber-300" />
-            10. MathStudio 2026+ (Ed25519)
-          </button>
-          <button
-            onClick={() => setAdminTab('de15p')}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'de15p'
-                ? 'bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 text-white shadow-md shadow-cyan-600/20'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <Crown className="w-4 h-4 text-amber-300" />
-            11. Tạo Đề 15P Tiếng Anh (48 Units)
-          </button>
-          <button
-            onClick={() => {
-              setAdminTab('security');
-              loadTrackingData();
-            }}
-            className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 ${
-              adminTab === 'security'
-                ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white shadow-md shadow-rose-600/30'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
-            <span>12. Cảnh Báo Xâm Nhập & Chống Bẻ Khóa</span>
-            {securityAlerts.filter(a => a.status === 'UNRESOLVED').length > 0 && (
-              <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
-                {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
-              </span>
-            )}
-          </button>
-          </>
-          )}
-        </div>
-
-
-        {/* TAB 1: SMART LISTENING PRO (CLOUD DATABASE) */}
-        {/* ===================================================================== */}
-        {/* TAB 0: THỐNG KÊ TRUY CẬP, DÙNG THỬ & THEO DÕI THEO ID MÁY (ADMIN)    */}
-        {/* ===================================================================== */}
-        {/* ===================================================================== */}
-        {/* TAB 0: QUẢN LÝ ĐƠN ĐĂNG KÝ, THỐNG KÊ WEB & LỊCH SỬ DÙNG THEO NGÀY GIỜ */}
-        {/* ===================================================================== */}
-        {adminTab === 'tracking' && (
-          <div className="flex-1 flex flex-col min-h-0 space-y-3">
-            {/* SUB-NAVIGATION TABS */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-              <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            {userRole === 'ADMIN' && (
+              <>
+                {/* 2. HẠN NGẠCH CÀI ĐẶT 12 APP */}
                 <button
-                  type="button"
-                  onClick={() => setTrackingSubTab('requests')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                    trackingSubTab === 'requests'
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                      : 'text-slate-400 hover:text-white'
+                  onClick={() => {
+                    setAdminTab('tracking');
+                    setTrackingSubTab('quota');
+                    loadTrackingData();
+                  }}
+                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                    adminTab === 'tracking' && trackingSubTab === 'quota'
+                      ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                      : 'bg-slate-800 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span>👑 1. DUYỆT THÀNH VIÊN & BẢN QUYỀN PRO</span>
-                  {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
-                    <span className="px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
-                      {registrationRequests.filter(r => r.status === 'PENDING').length}
+                  <BarChart3 className="w-4 h-4" />
+                  <span>2. 📊 Hạn Ngạch 12 App</span>
+                </button>
+
+                {/* 3. THỐNG KÊ TRUY CẬP & LỊCH SỬ */}
+                <button
+                  onClick={() => {
+                    setAdminTab('tracking');
+                    setTrackingSubTab('stats');
+                    loadTrackingData();
+                  }}
+                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                    adminTab === 'tracking' && trackingSubTab === 'stats'
+                      ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
+                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <History className="w-4 h-4" />
+                  <span>3. Thống Kê & Lịch Sử</span>
+                </button>
+
+                {/* 4. QUẢN LÝ MÁY BỊ KHÓA */}
+                <button
+                  onClick={() => {
+                    setAdminTab('tracking');
+                    setTrackingSubTab('machines');
+                    loadTrackingData();
+                  }}
+                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                    adminTab === 'tracking' && trackingSubTab === 'machines'
+                      ? 'bg-sky-500 text-slate-950 font-black shadow-md shadow-sky-500/20'
+                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Laptop className="w-4 h-4" />
+                  <span>4. Máy Bị Khóa</span>
+                  {blockedMachines.length > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black">
+                      {blockedMachines.length}
                     </span>
                   )}
                 </button>
 
-                {userRole === 'ADMIN' && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setTrackingSubTab('quota')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                        trackingSubTab === 'quota'
-                          ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <BarChart3 className="w-3.5 h-3.5" />
-                      <span>2. 📊 Hạn Ngạch Cài Đặt & Update ({ecosystemQuota?.appsStats?.length || 12} App)</span>
-                    </button>
+                {/* 5. DROPDOWN BỘ TẠO KEY ED25519 THEO TỪNG APP */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowKeyGenDropdown(!showKeyGenDropdown)}
+                    className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                      ['nls', 'taode', 'bienthe', 'record', 'cleaner', 'chuanhoavb', 'pdfsuite', 'thcs8m', 'mathstudio', 'de15p', 'tts'].includes(adminTab)
+                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black shadow-md shadow-purple-600/30 ring-2 ring-purple-300'
+                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Crown className="w-4 h-4 text-amber-300" />
+                    <span>🛠️ Bộ Tạo Key Offline ({['nls', 'taode', 'bienthe', 'record', 'cleaner', 'chuanhoavb', 'pdfsuite', 'thcs8m', 'mathstudio', 'de15p', 'tts'].includes(adminTab) ? 'Đang Mở' : '11 Tool'}) ▼</span>
+                  </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setTrackingSubTab('stats')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                        trackingSubTab === 'stats'
-                          ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <History className="w-3.5 h-3.5" />
-                      <span>3. Thống Kê Web & Lịch Sử Theo Ngày Giờ</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setTrackingSubTab('machines')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                        trackingSubTab === 'machines'
-                          ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <Laptop className="w-3.5 h-3.5" />
-                      <span>4. Quản Lý Máy & Khóa Vĩnh Viễn</span>
-                      {blockedMachines.length > 0 && (
-                        <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black">
-                          {blockedMachines.length}
-                        </span>
-                      )}
-                    </button>
-
-                    {/* Security subtab button removed */}
-                  </>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 text-xs">
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[11px] animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-                  🟢 TỰ ĐỘNG CẬP NHẬT TRỰC TIẾP (4s/lần)
+                  {showKeyGenDropdown && (
+                    <div className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
+                      <div className="text-[11px] font-bold text-slate-400 px-2 py-1 border-b border-slate-800 mb-1 flex justify-between items-center">
+                        <span>CHỌN TOOL SINH KEY ED25519:</span>
+                        <button onClick={() => setShowKeyGenDropdown(false)} className="text-slate-400 hover:text-white">✕</button>
+                      </div>
+                      <div className="max-h-80 overflow-y-auto space-y-1 text-xs">
+                        {[
+                          { id: 'nls', name: '⚡ Tích Hợp NLS - AI V3', desc: 'Ed25519 Word Add-in' },
+                          { id: 'taode', name: '🇬🇧 Đề Tiếng Anh (CV 7991)', desc: 'Global Success THCS' },
+                          { id: 'mathstudio', name: '📐 MathStudio 2026+', desc: 'Soạn Toán & Vẽ hình AI' },
+                          { id: 'thcs8m', name: '📝 Tạo Đề THCS 8 Môn', desc: 'Chuẩn CV 7991 đủ môn' },
+                          { id: 'de15p', name: '⏱️ Tạo Đề 15P Tiếng Anh', desc: 'Đề 15 phút 48 Units' },
+                          { id: 'bienthe', name: '🔀 Sinh 3 Đề Biến Thể VIP', desc: 'Trộn đề ma trận chuẩn' },
+                          { id: 'chuanhoavb', name: '📑 Chuẩn Hóa VB (NĐ 30)', desc: 'Chuẩn thể thức Nghị định 30' },
+                          { id: 'tts', name: '🎙️ Smart Listening Pro (TTS)', desc: 'Tạo bài nghe SGK' },
+                          { id: 'cleaner', name: '🧹 Dinh Thanh Cleaner Pro', desc: 'Dọn rác & Tối ưu máy' },
+                          { id: 'pdfsuite', name: '📄 PDF Suite Pro', desc: 'Tách & Gộp PDF chuẩn' },
+                          { id: 'record', name: '🎥 Screen Record Pro V2', desc: 'Ghi màn hình bài giảng' },
+                        ].map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setAdminTab(item.id as any);
+                              setShowKeyGenDropdown(false);
+                            }}
+                            className={`w-full text-left p-2 rounded-xl transition flex flex-col ${
+                              adminTab === item.id
+                                ? 'bg-purple-600 text-white font-bold'
+                                : 'hover:bg-slate-800 text-slate-300'
+                            }`}
+                          >
+                            <span className="font-bold text-xs">{item.name}</span>
+                            <span className="text-[10px] text-slate-400">{item.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <span className="text-slate-400">
-                  Admin: <strong className="text-amber-300">{currentAdminName}</strong>
-                </span>
-                <button
-                  type="button"
-                  onClick={loadTrackingData}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 text-xs cursor-pointer transition"
-                >
-                  <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-                  Làm mới
-                </button>
-              </div>
-            </div>
 
-            {/* BANNER CẢNH BÁO AN NINH XÂM NHẬP & PHÁ KHÓA KHẨN CẤP */}
-            <div 
+                {/* 6. GIÁM SÁT AN NINH */}
+                <button
+                  onClick={() => {
+                    setAdminTab('security');
+                    loadTrackingData();
+                  }}
+                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                    adminTab === 'security'
+                      ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-black shadow-md shadow-rose-600/30'
+                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <ShieldAlert className="w-4 h-4 text-rose-400" />
+                  <span>5. 🛡️ An Ninh</span>
+                  {securityAlerts.filter(a => a.status === 'UNRESOLVED').length > 0 && (
+                    <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
+                      {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
+                    </span>
+                  )}
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* THANH TRẠNG THÁI GỌN GÀNG GÓC PHẢI */}
+          <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-bold text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span>
+              <span>🟢 Tự động đồng bộ</span>
+            </div>
+            <button
+              type="button"
+              onClick={loadTrackingData}
+              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 text-xs cursor-pointer transition font-semibold"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+              <span>Làm mới</span>
+            </button>
+          </div>
+        </div>
+
+        {/* NÚT QUAY LẠI KHI ĐANG Ở CÁC TOOL LẺ NGOÀI TRACKING & SECURITY */}
+        {adminTab !== 'tracking' && adminTab !== 'security' && (
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between mb-3 text-xs">
+            <div className="flex items-center gap-2 text-slate-300">
+              <span className="text-amber-400 font-bold">🛠️ Đang mở công cụ sinh key:</span>
+              <span className="font-extrabold text-white uppercase">{adminTab}</span>
+            </div>
+            <button
+              type="button"
               onClick={() => {
-                setAdminTab('security');
+                setAdminTab('tracking');
+                setTrackingSubTab('requests');
                 loadTrackingData();
               }}
-              className="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-2 border-red-500/80 hover:border-red-400 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer transition-all hover:scale-[1.005] shadow-lg shadow-red-950/40 group"
+              className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black transition flex items-center gap-1.5 cursor-pointer shadow"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-600/30 border border-red-500/60 flex items-center justify-center text-red-400 shrink-0 group-hover:scale-110 transition-transform">
-                  <ShieldAlert className="w-6 h-6 animate-pulse" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[11px] animate-pulse"></span>
-                    <h4 className="text-sm font-black text-white group-hover:text-red-300 transition-colors"></h4>
-                  </div>
-                  <p className="text-xs text-red-200/80 mt-0.5">
-                    
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-red-600/40">
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>Vào Bảng Báo Cáo Xâm Nhập ({securityAlerts.length}) &rarr;</span>
-                </span>
-              </div>
-            </div>
+              <span>⬅ Quay lại Duyệt Thành Viên</span>
+            </button>
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* NỘI DUNG CHÍNH: QUẢN LÝ ĐƠN ĐĂNG KÝ, THỐNG KÊ WEB & HẠN NGẠCH         */}
+        {/* ===================================================================== */}
+        {adminTab === 'tracking' && (
+          <div className="flex-1 flex flex-col min-h-0 space-y-3">
 
             {/* ========================================================= */}
             {/* SUBTAB 1: ĐƠN ĐĂNG KÝ THÀNH VIÊN CẦN DUYỆT (ALL APPS)    */}
@@ -2450,36 +2359,62 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         {trackingSubTab === 'requests' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3">
                 {/* ========================================================================= */}
-                {/* 👑 FORM DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY TỪ ZALO)       */}
-                {/* ========================================================================= */}
-                <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border-2 border-emerald-500/60 rounded-2xl p-4 shadow-xl shadow-emerald-950/30">
-                  <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
-                        <UserCheck className="w-5 h-5" />
+                {/* 👑 FORM DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY TỪ ZALO) */}
+                {!showDirectForm ? (
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/60 border border-emerald-500/40 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-emerald-400 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black shrink-0">
+                        <UserCheck className="w-4 h-4" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-black text-white flex items-center gap-2 flex-wrap">
-                          <span>➕ DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY)</span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
-                            Cấp Key Ngay
+                        <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                          <span>⚡ CẤP BẢN QUYỀN PRO BẰNG MÃ MÁY (DÁN TỪ ZALO GỬI SANG)</span>
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+                            Tự nhập mã máy
                           </span>
-                        </h3>
-                        <p className="text-[11px] text-slate-400">
-                          Thầy Thành dán mã máy của giáo viên (từ Zalo gửi sang) để Duyệt, Ký số Ed25519 độc lập & Đồng bộ Cloud tức thì
+                        </h4>
+                        <p className="text-[11px] text-slate-400 hidden sm:block">
+                          Thầy Thành dán mã máy của Giáo viên để Duyệt, Ký số Ed25519 độc lập theo từng ứng dụng & Cấp Key tức thì
                         </p>
                       </div>
                     </div>
                     <button
                       type="button"
-                      onClick={() => setShowDirectForm(!showDirectForm)}
-                      className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 cursor-pointer font-bold"
+                      onClick={() => setShowDirectForm(true)}
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition cursor-pointer shrink-0"
                     >
-                      {showDirectForm ? 'Thu gọn ▲' : 'Mở rộng ▼'}
+                      <UserCheck className="w-3.5 h-3.5" />
+                      <span>➕ Nhập Mã Máy</span>
                     </button>
                   </div>
+                ) : (
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border-2 border-emerald-500/60 rounded-2xl p-4 shadow-xl shadow-emerald-950/30 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
+                          <UserCheck className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-black text-white flex items-center gap-2 flex-wrap">
+                            <span>➕ DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY)</span>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                              Cấp Key Ngay
+                            </span>
+                          </h3>
+                          <p className="text-[11px] text-slate-400">
+                            Thầy Thành dán mã máy của giáo viên (từ Zalo gửi sang) để Duyệt, Ký số Ed25519 độc lập & Đồng bộ Cloud tức thì
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowDirectForm(false)}
+                        className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 cursor-pointer font-bold transition hover:bg-slate-700"
+                      >
+                        Thu gọn ▲
+                      </button>
+                    </div>
 
-                  {showDirectForm && (
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
                         {/* Ô 1: Mã máy tính */}
@@ -2641,8 +2576,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* THANH ĐIỀU KHIỂN BỘ LỌC, TÌM KIẾM & SẮP XẾP ĐA NĂNG */}
                 <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5">
@@ -2789,6 +2724,10 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           return true;
                         })
                         .sort((a, b) => {
+                          // ƯU TIÊN ĐƠN CHỜ DUYỆT (PENDING) LÊN ĐẦU BẢNG ĐỂ ADMIN KHÔNG BỊ SÓT
+                          if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+                          if (b.status === 'PENDING' && a.status !== 'PENDING') return 1;
+
                           if (regSortBy === 'name_asc') {
                             return (a.fullName || '').localeCompare(b.fullName || '');
                           } else if (regSortBy === 'school') {
@@ -2799,7 +2738,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         .map((req, rIdx) => {
                           const isBlocked = blockedMachines.some(b => b.machineId === req.machineId);
                           return (
-                            <tr key={req.id || rIdx} className="hover:bg-slate-900/80 transition-colors">
+                            <tr 
+                              key={req.id || rIdx} 
+                              className={`transition-colors ${
+                                req.status === 'PENDING'
+                                  ? 'bg-amber-950/40 border-l-4 border-amber-400 hover:bg-amber-950/60'
+                                  : 'hover:bg-slate-900/80'
+                              }`}
+                            >
                               {/* 1. ID Máy Tính & Ứng Dụng */}
                               <td className="py-3 px-3">
                                 <div className="font-mono text-cyan-300 font-bold text-xs flex items-center gap-1.5">
@@ -2836,10 +2782,11 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                       href={`https://zalo.me/${req.phoneNumber.replace(/[^0-9]/g, '')}`}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="px-1.5 py-0.5 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-[10px] border border-emerald-500/30 font-bold transition flex items-center gap-1"
+                                      className="px-2 py-1 rounded-lg bg-emerald-600/30 hover:bg-emerald-500 text-emerald-300 hover:text-white text-xs border border-emerald-500/40 font-bold transition flex items-center gap-1 shadow-sm shrink-0"
                                       title="Nhắn tin Zalo với Giáo viên này"
                                     >
-                                      Chat Zalo ↗
+                                      <span>💬 Chat Zalo</span>
+                                      <span className="text-[10px]">↗</span>
                                     </a>
                                   )}
                                 </div>
@@ -3034,11 +2981,11 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-2.5 py-1.5 rounded-xl bg-sky-600/30 hover:bg-sky-600 text-sky-200 hover:text-white border border-sky-500/40 text-xs font-bold transition cursor-pointer flex items-center gap-1"
+                                        className="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold shadow-md shadow-sky-600/30 hover:text-white border border-sky-500/40 text-xs font-bold transition cursor-pointer flex items-center gap-1"
                                         title="Xem lại Key và mẫu tin nhắn Zalo gửi GV"
                                       >
                                         <Key className="w-3.5 h-3.5" />
-                                        <span>Xem Key</span>
+                                        <span>🔑 Xem Key & Mẫu Zalo</span>
                                       </button>
 
                                       {/* Nút Gia hạn thêm 1 năm */}

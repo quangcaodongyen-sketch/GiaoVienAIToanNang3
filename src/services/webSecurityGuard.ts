@@ -73,25 +73,31 @@ class WebSecurityGuard {
       }
     }, true);
 
-    // 2. Giám sát kích thước DevTools cửa sổ dock
-    let lastWidth = window.outerWidth - window.innerWidth;
-    let lastHeight = window.outerHeight - window.innerHeight;
-    window.addEventListener('resize', () => {
-      if (this.isDevOrAdmin()) return;
-      const widthDiff = window.outerWidth - window.innerWidth;
-      const heightDiff = window.outerHeight - window.innerHeight;
-      
-      if ((widthDiff > 180 || heightDiff > 180) && (!this.devtoolsOpenDetected)) {
-        this.devtoolsOpenDetected = true;
-        this.triggerAlert(
-          'DEBUGGER',
-          `Phát hiện mở DevTools dạng Dock/Inspect Element trên ứng dụng: ${this.activeAppName}`,
-          'CRITICAL'
-        );
-      }
-      lastWidth = widthDiff;
-      lastHeight = heightDiff;
-    });
+    // 2. Giám sát kích thước DevTools cửa sổ dock (Chỉ áp dụng trên máy tính PC/Laptop, TUYỆT ĐỐI không áp dụng trên điện thoại/máy tính bảng)
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 1);
+
+    if (!isMobileDevice) {
+      let lastWidth = window.outerWidth - window.innerWidth;
+      let lastHeight = window.outerHeight - window.innerHeight;
+      window.addEventListener('resize', () => {
+        if (this.isDevOrAdmin()) return;
+        const widthDiff = window.outerWidth - window.innerWidth;
+        const heightDiff = window.outerHeight - window.innerHeight;
+        
+        // Chỉ cảnh báo nếu độ chênh lệch cực lớn trên Desktop (>250px) và không phải do co dãn màn hình thông thường
+        if ((widthDiff > 250 || heightDiff > 250) && (!this.devtoolsOpenDetected)) {
+          this.devtoolsOpenDetected = true;
+          this.triggerAlert(
+            'DEBUGGER',
+            `Phát hiện mở DevTools dạng Dock/Inspect Element trên ứng dụng: ${this.activeAppName}`,
+            'CRITICAL'
+          );
+        }
+        lastWidth = widthDiff;
+        lastHeight = heightDiff;
+      });
+    }
 
     // 3. Giám sát can thiệp trái phép vào LocalStorage (Bẻ khóa lượt dùng thử, sửa Key)
     this.watchStorageTampering();
