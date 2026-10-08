@@ -2574,6 +2574,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             <optgroup label="⚡ HỆ SINH THÁI THCS & TIỆN ÍCH SƯ PHẠM">
                               <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
                               <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
+                              <option value="taode_nguvan_thcs">📖 Tạo Đề Ngữ Văn THCS (DVT-VANCS)</option>
                               <option value="taode_thcs_8m">📝 Tạo Đề THCS 8 Môn (DVT-THCS8M)</option>
                               <option value="taode_15p">⏱️ Tạo Đề 15 Phút Tiếng Anh (DVT-ENG15)</option>
                               <option value="smart_listening_tts">🎙️ Smart Listening Pro (MB-)</option>
