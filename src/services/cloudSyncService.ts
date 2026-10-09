@@ -98,12 +98,18 @@ export const isAppMatching = (
     );
   }
 
+  // Tạo Đề Khoa Học Tự Nhiên THCS (KHTN)
+  if (target.includes('khtn') || target.includes('khoa học tự nhiên') || target.includes('tu_nhien') || target.includes('tunhien')) {
+    return rId.includes('khtn') || rName.includes('khtn') || rName.includes('khoa học tự nhiên');
+  }
+
   // Tạo Đề 8 Môn / Toán THCS
   if (target.includes('8mon') || target.includes('toan') || target.includes('van') || (target.includes('math') && !target.includes('mathstudio'))) {
     const isEng = rId.includes('eng') || rName.includes('tiếng anh');
     const isNls = rId.includes('nls') || rName.includes('năng lực số');
     const isMathStudio = rId.includes('mathstudio') || rName.includes('mathstudio');
-    if (isEng || isNls || isMathStudio) return false;
+    const isKhtn = rId.includes('khtn') || rName.includes('khoa học tự nhiên');
+    if (isEng || isNls || isMathStudio || isKhtn) return false;
     return (
       rId.includes('8mon') ||
       rId.includes('toan') ||

@@ -316,7 +316,7 @@ export async function activateTHCS8MLicense_orig(key: string, clientHwid: string
 export async function generateTHCS8MLicenseKey(
   targetHwid: string,
   scope: string = 'ALL',
-  pkg: '1year' | '2year' | 'lifetime' = 'lifetime'
+  pkg: '1year' | '2year' | '3year' | 'lifetime' = 'lifetime'
 ): Promise<{
   licenseKey: string;
   expDateStr: string;
@@ -340,6 +340,11 @@ export async function generateTHCS8MLicenseKey(
     expiryTs = now + 730 * 86400;
     const d = new Date(expiryTs * 1000);
     expDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+  } else if (pkg === '3year') {
+    pkgCode = '3Y';
+    expiryTs = now + 1095 * 86400;
+    const d = new Date(expiryTs * 1000);
+    expDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   }
 
   const expHex = expiryTs.toString(16).toUpperCase().padStart(8, '0');
@@ -350,11 +355,12 @@ export async function generateTHCS8MLicenseKey(
   const licenseKey = `TH8M-${cleanScope}-${pkgCode}-${expHex}-${sig}`;
   const scopeName = SUBJECT_MAP[cleanScope]?.name || cleanScope;
 
+  const pkgLabel = pkg === 'lifetime' ? 'Trọn Đời (Vĩnh Viễn)' : (pkg === '3year' ? 'Gói 3 Năm Pro' : (pkg === '2year' ? 'Gói 2 Năm VIP' : 'Gói 1 Năm'));
   const zaloMessage = `Kính gửi Quý Thầy/Cô!
 Thầy giáo Đinh Văn Thành (THCS Đồng Yên - 0915.213717) trân trọng gửi Quý Thầy/Cô thông tin kích hoạt Bản quyền Phần mềm Tạo Đề Kiểm Tra THCS:
 
 - Phạm vi: ${scopeName}
-- Gói bản quyền: ${pkg === 'lifetime' ? 'Trọn Đời (Vĩnh Viễn)' : (pkg === '1year' ? 'Gói 1 Năm' : 'Gói 2 Năm')}
+- Gói bản quyền: ${pkgLabel}
 - Thời hạn sử dụng: ${expDateStr}
 - Mã máy tính (HWID): ${cleanHwid}
 - MÃ BẢN QUYỀN PRO:

@@ -183,7 +183,7 @@ export async function generateSmartListeningLicenseKey(
   let packageName = 'Gói VIP Trọn Đời (Khuyên Dùng)';
   let expiryDateStr = 'Vĩnh viễn (Trọn đời)';
 
-  if (pkgNorm === '1YEAR' || pkgNorm === '1YEAR') {
+  if (pkgNorm === '1YEAR') {
     prefix = 'Y1';
     expiryTs = nowTs + 365 * 86400;
     packageName = 'Gói Bản Quyền 1 Năm';
@@ -193,6 +193,12 @@ export async function generateSmartListeningLicenseKey(
     prefix = 'Y2';
     expiryTs = nowTs + 730 * 86400;
     packageName = 'Gói Bản Quyền 2 Năm';
+    const d = new Date(expiryTs * 1000);
+    expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+  } else if (pkgNorm === '3YEAR') {
+    prefix = 'Y3';
+    expiryTs = nowTs + 1095 * 86400;
+    packageName = 'Gói Bản Quyền 3 Năm';
     const d = new Date(expiryTs * 1000);
     expiryDateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   } else if (customDays && customDays > 0) {
@@ -321,7 +327,7 @@ export async function verifySmartListeningLicenseKey(
   }
 
   // Fallback kiểm tra cấu trúc key chuẩn nếu Web Crypto subtle không hỗ trợ
-  if (!isSigValid && sigStr.length >= 30 && (prefix === 'LT' || prefix === 'Y1' || prefix === 'Y2' || prefix === 'CU')) {
+  if (!isSigValid && sigStr.length >= 30 && (prefix === 'LT' || prefix === 'Y1' || prefix === 'Y2' || prefix === 'Y3' || prefix === 'CU')) {
     isSigValid = true;
   }
 
