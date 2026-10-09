@@ -1341,8 +1341,8 @@ export default function App() {
                 <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
                   <Award className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Độc Lập Bản Quyền</div>
-                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Mã máy DVT-..., bảo mật Ed25519</div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Bản Quyền Chính Hãng</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Khóa theo mã máy, bảo mật chữ ký số cao cấp</div>
                   </div>
                 </div>
 
