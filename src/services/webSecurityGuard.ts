@@ -73,29 +73,28 @@ class WebSecurityGuard {
       }
     }, true);
 
-    // 2. Giám sát kích thước DevTools cửa sổ dock (Chỉ áp dụng trên máy tính PC/Laptop, TUYỆT ĐỐI không áp dụng trên điện thoại/máy tính bảng)
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+    // 2. Giám sát kích thước DevTools cửa sổ dock (Chỉ áp dụng khi F12/Inspect thực sự, loại trừ bot/mobile/co dãn màn hình)
+    const ua = navigator.userAgent || '';
+    const isBotOrCrawler = /bot|googlebot|crawler|spider|headless|amazon|slurp|lighthouse/i.test(ua);
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || 
                            (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 1);
 
-    if (!isMobileDevice) {
-      let lastWidth = window.outerWidth - window.innerWidth;
-      let lastHeight = window.outerHeight - window.innerHeight;
+    if (!isMobileDevice && !isBotOrCrawler) {
       window.addEventListener('resize', () => {
         if (this.isDevOrAdmin()) return;
+        // Chỉ ghi nhận nếu màn hình chuẩn PC (>1024px) và cửa sổ thu nhỏ đột ngột với chênh lệch siêu lớn (>320px)
         const widthDiff = window.outerWidth - window.innerWidth;
         const heightDiff = window.outerHeight - window.innerHeight;
         
-        // Chỉ cảnh báo nếu độ chênh lệch cực lớn trên Desktop (>250px) và không phải do co dãn màn hình thông thường
-        if ((widthDiff > 250 || heightDiff > 250) && (!this.devtoolsOpenDetected)) {
+        if (window.outerWidth > 1024 && (widthDiff > 320 || heightDiff > 320) && (!this.devtoolsOpenDetected)) {
           this.devtoolsOpenDetected = true;
+          // Ghi nhận dạng MEDIUM nhẹ nhàng, không gây báo động nhầm
           this.triggerAlert(
             'DEBUGGER',
-            `Phát hiện mở DevTools dạng Dock/Inspect Element trên ứng dụng: ${this.activeAppName}`,
-            'CRITICAL'
+            `Phát hiện giao diện thay đổi kích thước lớn trên ứng dụng: ${this.activeAppName}`,
+            'MEDIUM'
           );
         }
-        lastWidth = widthDiff;
-        lastHeight = heightDiff;
       });
     }
 
