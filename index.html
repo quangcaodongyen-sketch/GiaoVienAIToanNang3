@@ -11,6 +11,11 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
+      // Tự động chuyển hướng tức thì từ tên miền cũ vercel.app sang tên miền chính thức dekiemtraso.com
+      if (window.location.hostname === 'giao-vien-ai-toan-nang3.vercel.app') {
+        window.location.replace('https://www.dekiemtraso.com' + window.location.pathname + window.location.search + window.location.hash);
+      }
+
       // Tự động xóa bộ nhớ đệm cache phiên bản cũ
       (function() {
         var CURRENT_VER = "20261005_v5_thcs_thpt_separate";

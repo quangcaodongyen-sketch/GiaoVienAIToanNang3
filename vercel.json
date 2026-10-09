@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "giao-vien-ai-toan-nang3.vercel.app"
+        }
+      ],
+      "destination": "https://www.dekiemtraso.com/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!assets/|.*\\..*).*)$",
+      "destination": "/index.html"
+    }
+  ]
+}
