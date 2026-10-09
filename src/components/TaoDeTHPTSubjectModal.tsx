@@ -326,122 +326,56 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-4 max-w-3xl mx-auto">
-              {/* CARD TẢI BỘ CÀI CHÍNH */}
-              <div className="p-5 rounded-3xl bg-gradient-to-br from-slate-900 via-blue-950/40 to-slate-900 border border-blue-500/40 shadow-xl relative overflow-hidden">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-start gap-3.5">
-                    <div className="text-4xl p-3 rounded-2xl bg-slate-950 border border-slate-800 shrink-0">
+              {/* KHỐI TẢI BỘ CÀI ĐƠN GIẢN - ÍT NÚT, ÍT CHỮ, RÕ RÀNG BẢN CẬP NHẬT */}
+              <div className="p-5 rounded-2xl bg-slate-900 border-2 border-emerald-500/60 shadow-2xl space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl p-2 rounded-xl bg-slate-950 border border-slate-800 shrink-0">
                       {curSub.icon}
-                    </div>
+                    </span>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-base sm:text-lg font-black text-white uppercase">
-                          PHẦN MỀM TẠO ĐỀ {curSub.fullName}
-                        </h4>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                          {curSub.size}
+                      <h4 className="text-base font-bold text-white flex items-center gap-2">
+                        <span>Phần Mềm Tạo Đề {curSub.fullName} THPT (CV 7991 / 2025)</span>
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                          v3.9.0 (Mới nhất)
                         </span>
-                      </div>
-                      <p className="text-xs text-slate-300 mt-1 max-w-xl leading-relaxed">
-                        Tự động tạo ma trận 16 cột, bản đặc tả và đề kiểm tra định kỳ chuẩn định dạng mới từ năm 2025. Hỗ trợ xuất file Word A4 chuẩn mực kèm đáp án chữ đỏ.
+                      </h4>
+                      <p className="text-xs text-amber-300 font-medium mt-1 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Bản cập nhật đưa lên web: <strong>09/10/2026 (Lúc 23:45:00)</strong></span>
                       </p>
                     </div>
                   </div>
+                  <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700 shrink-0">
+                    Dung lượng: {curSub.size || '~75 MB'}
+                  </span>
                 </div>
 
-                {/* 3 ĐIỂM NỔI BẬT */}
-                <div className="mt-4 pt-4 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-300 flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Cấu trúc 3 phần trắc nghiệm chuẩn Bộ GD&ĐT</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-300 flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Ma trận 16 cột 3 tầng nhận biết, thông hiểu, vận dụng</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-300 flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>Tích hợp thanh công cụ Word Ribbon & bản Desktop</span>
-                  </div>
-                </div>
-
-                {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
-                <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-950 to-cyan-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1.5 shadow-lg">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <div className="flex items-center gap-2 font-black text-emerald-400 text-xs uppercase tracking-wide">
-                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
-                    </div>
-                    <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      Phiên bản v3.8.2 (Mới nhất)
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20">
-                    <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (22:58:23)</span></div>
-                    <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% ({curSub.size})</span></div>
-                    <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
-                  </div>
-                </div>
-
-                {/* 3 LỰA CHỌN TẢI VỀ: EXE, ZIP, DOTM */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {/* LỰA CHỌN 1: BỘ CÀI EXE TỰ ĐỘNG */}
+                {/* 2 NÚT TẢI BỘ CÀI CHÍNH */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <a
                     href={curSub.exeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/30 cursor-pointer text-center"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer text-center"
                   >
-                    <Download className="w-4 h-4 shrink-0" />
-                    <span>Tải Bộ Cài Word (.EXE)</span>
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BỘ CÀI BẢN .EXE</span>
                   </a>
-
-                  {/* LỰA CHỌN 2: BẢN NÉN ZIP PASS 123 */}
                   <a
                     href={curSub.zipUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-blue-600/30 cursor-pointer text-center"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer text-center"
                   >
-                    <Download className="w-4 h-4 shrink-0" />
-                    <span>Bản Nén (.ZIP Pass: 123)</span>
-                  </a>
-
-                  {/* LỰA CHỌN 3: FILE ADD-IN DOTM WORD */}
-                  <a
-                    href={(curSub as any).dotmUrl || `https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_${curSub.appTag || 'TOAN'}.dotm`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-purple-600/30 cursor-pointer text-center"
-                  >
-                    <FileText className="w-4 h-4 shrink-0" />
-                    <span>File Add-in (.DOTM)</span>
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BẢN NÉN .ZIP (Pass: 123)</span>
                   </a>
                 </div>
-              </div>
 
-              {/* HƯỚNG DẪN CÀI ĐẶT NHANH 3 BƯỚC */}
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-                <h5 className="font-bold text-white text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  HƯỚNG DẪN CÀI ĐẶT 3 BƯỚC NHANH:
-                </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center">1</span>
-                    <h6 className="font-bold text-white text-xs">Tải file .ZIP</h6>
-                    <p className="text-[11px] text-slate-400">Bấm nút Tải bản ZIP ở trên về máy tính của Thầy/Cô.</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
-                    <h6 className="font-bold text-white text-xs">Giải nén bằng Pass: 123</h6>
-                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP ➔ Extract Here ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center">3</span>
-                    <h6 className="font-bold text-white text-xs">Chạy ứng dụng</h6>
-                    <p className="text-[11px] text-slate-400">Mở file bộ cài hoặc bấm `Chay_Ung_Dung.bat` để bắt đầu ra đề ngay.</p>
-                  </div>
+                <div className="p-3 rounded-xl bg-slate-950 text-center text-xs text-slate-300 space-y-1 border border-slate-800">
+                  <p>🔑 Mật khẩu giải nén bản .ZIP: <code className="text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded">123</code></p>
+                  <p className="text-[11px] text-slate-400">Tương thích Windows 10/11 &amp; Microsoft Word 2016-2024 • Định dạng đề THPT 2025 chuẩn Bộ GD&amp;ĐT</p>
                 </div>
               </div>
             </div>

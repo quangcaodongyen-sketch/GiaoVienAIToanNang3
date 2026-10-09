@@ -1,16 +1,10 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.8.0",
-  "latestVersion": "3.8.0",
-  "releaseDate": "09/10/2026",
-  "changelog": [
-    "• [09/10/2026 - v3.8.0] Cập nhật bản vá lỗi mới nhất & đồng bộ hệ thống. Định hướng tải bộ cài PC để sử dụng đầy đủ tính năng ra đề kiểm tra, xuất file Word chuẩn mực không lỗi font MathType/LaTeX.",
-    "🚀 [Cực Kì Quan Trọng] Hỗ trợ tạo từ 1 đến 10 mã đề chuẩn xác theo đúng tuỳ chọn của giáo viên (khắc phục triệt để lỗi chỉ tạo được 2-4 mã).",
-    "🔥 [Tính Năng Mới] Bổ sung tuỳ chọn 3 Mức độ khó: Cơ bản (Dễ) - Tiêu chuẩn (Phân hóa chung) - Nâng cao (Khó) để giáo viên tuỳ chọn theo học lực học sinh.",
-    "📚 [Dữ Liệu] Tăng cường số lượng câu hỏi trong Ngân hàng cho tất cả các phần (Đọc hiểu, Nghe hiểu, Trắc nghiệm, Tự luận, Viết lại câu, Sắp xếp từ).",
-    "⚡ [Tối Ưu] Nâng cấp bộ lọc thông minh bốc câu hỏi chính xác theo tỉ lệ mức độ khó yêu cầu, sửa triệt để chế độ Đề mới tương đương."
-  ],
+  "currentVersion": "3.9.0",
+  "latestVersion": "3.9.0",
+  "releaseDate": "09/10/2026 (Lúc 23:45:00)",
+  "changelog": "• [09/10/2026 (Lúc 23:45:00) - v3.9.0] Cập nhật bộ cài chuẩn mới nhất đưa lên web cho Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)\n• Đã đồng bộ mã máy, ký số bản quyền & tích hợp giao diện điều khiển hiện đại\n• Bộ cài đặt PC sạch 100%, không bị diệt virus chặn, tương thích Microsoft Word 2016-2024",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",

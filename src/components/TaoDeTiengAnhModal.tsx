@@ -777,8 +777,8 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           {/* TAB 2: TẢI VỀ & HƯỚNG DẪN                                                */}
           {/* ========================================================================= */}
           {activeTab === 'download' && (
-            <div className="space-y-6">
-              {/* Video Player Full HD nhúng trực tiếp */}
+            <div className="space-y-5">
+              {/* Video Hướng dẫn phát trực tiếp */}
               <div className="rounded-2xl overflow-hidden bg-slate-950 border border-slate-700/80 shadow-xl">
                 <div className="relative aspect-video bg-slate-900 flex items-center justify-center">
                   <video
@@ -801,87 +801,55 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     download="Huong_Dan_Tao_De_Tieng_Anh_THCS_CV7991.mp4"
                     className="text-blue-400 hover:underline flex items-center gap-1 font-bold"
                   >
-                    <Download className="w-3.5 h-3.5" /> Tải video về máy
+                    <Download className="w-3.5 h-3.5" /> Tải video MP4
                   </a>
                 </div>
               </div>
 
-              {/* Danh sách các gói cài đặt tải về - TÊN FILE ĐẶT RÕ RÀNG */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                {/* Trọn bộ cài đặt ZIP Pass 123 */}
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-950/40 to-slate-900 border border-emerald-500/40 shadow-xl col-span-1 sm:col-span-2 flex flex-col justify-between space-y-3">
+              {/* KHỐI TẢI BỘ CÀI ĐƠN GIẢN - ÍT NÚT, ÍT CHỮ, RÕ RÀNG BẢN CẬP NHẬT */}
+              <div className="p-5 rounded-2xl bg-slate-900 border-2 border-emerald-500/60 shadow-2xl space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        TRỌN BỘ PRO • PASS GIẢI NÉN: 123
+                    <h4 className="text-base font-bold text-white flex items-center gap-2">
+                      <span>Phần Mềm Tạo Đề Tiếng Anh THCS (Công Văn 7991)</span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        v3.9.0 (Mới nhất)
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">117 MB</span>
-                    </div>
-                    <h4 className="text-base font-bold text-white mb-1">Trọn Bộ Phần Mềm Tạo Đề Tiếng Anh THCS (Công văn 7991)</h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      Bao gồm cả <b>Bộ cài Word 1-Click</b> (Cai_Dat_TaoDe_TiengAnh_THCS.exe) và <b>Bản Desktop chạy độc lập</b> (Tao_De_Tieng_Anh_Desktop.exe). Đã nén an toàn với mật khẩu <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải siêu tốc 100% không bị trình duyệt hay Windows Defender chặn.
+                    </h4>
+                    <p className="text-xs text-amber-300 font-medium mt-1 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Bản cập nhật đưa lên web: <strong>09/10/2026 (Lúc 23:45:00)</strong></span>
                     </p>
                   </div>
-
-                  {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
-                  <div className="p-3 rounded-xl bg-slate-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1">
-                    <div className="flex items-center justify-between flex-wrap gap-1">
-                      <div className="flex items-center gap-1.5 font-bold text-emerald-400 text-xs">
-                        <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                        <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB</span>
-                      </div>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        v3.8.2 (Mới nhất)
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-slate-300 flex flex-wrap gap-3 font-mono pt-0.5">
-                      <span>🕒 Cập nhật: <strong className="text-amber-300">09/10/2026 (22:58:23)</strong></span>
-                      <span>📦 Bộ cài PC: <strong className="text-cyan-300">File .exe sạch mới 100%</strong></span>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <a
-                      href={EXAM_RESOURCES.exeUrl}
-                      download="Cai_Dat_TaoDe_TiengAnh_THCS.exe"
-                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer text-center"
-                    >
-                      <Download className="w-4 h-4 shrink-0" /> Tải Bộ Cài (.EXE)
-                    </a>
-                    <a
-                      href={EXAM_RESOURCES.fullZipUrl}
-                      download="Tao_De_Tieng_Anh_THCS_Pass_123.zip"
-                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/20 transition-all cursor-pointer text-center"
-                    >
-                      <Download className="w-4 h-4 shrink-0" /> Bản Nén (.ZIP Pass: 123)
-                    </a>
-                    <a
-                      href={EXAM_RESOURCES.dotmUrl}
-                      download="TaoDe_TiengAnh_THCS.dotm"
-                      className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-purple-600/20 transition-all cursor-pointer text-center"
-                    >
-                      <Download className="w-4 h-4 shrink-0" /> File Add-in (.DOTM)
-                    </a>
-                  </div>
+                  <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                    Dung lượng: ~44 MB
+                  </span>
                 </div>
 
-                {/* Nền Tảng Tiếng Anh Online */}
-                <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-950/60 to-slate-800/60 border border-indigo-500/30 flex items-center justify-between">
-                  <div>
-                    <h5 className="text-xs font-bold text-white">Website Tiếng Anh Trực Tuyến</h5>
-                    <p className="text-[11px] text-indigo-300">EnglishExam Global Success (Kho đề online)</p>
-                  </div>
+                {/* 2 NÚT TẢI BỘ CÀI CHÍNH */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <a
-                    href="/web-tieng-anh/index.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/30"
+                    href={EXAM_RESOURCES.exeUrl}
+                    download="Cai_Dat_TaoDe_TiengAnh_THCS.exe"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer text-center"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Mở Web Trực Tuyến
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BỘ CÀI BẢN .EXE</span>
+                  </a>
+                  <a
+                    href={EXAM_RESOURCES.fullZipUrl}
+                    download="Tao_De_Tieng_Anh_THCS_Pass_123.zip"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer text-center"
+                  >
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BẢN NÉN .ZIP (Pass: 123)</span>
                   </a>
                 </div>
 
+                <div className="p-3 rounded-xl bg-slate-950 text-center text-xs text-slate-300 space-y-1 border border-slate-800">
+                  <p>🔑 Mật khẩu giải nén bản .ZIP: <code className="text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded">123</code></p>
+                  <p className="text-[11px] text-slate-400">Tương thích Windows 10/11 &amp; Microsoft Word 2016-2024 • Không bị diệt virus chặn</p>
+                </div>
               </div>
             </div>
           )}

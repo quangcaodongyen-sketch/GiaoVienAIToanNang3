@@ -313,78 +313,51 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           {/* TAB 1: TẢI BỘ CÀI MÁY TÍNH (.EXE / .ZIP PASS: 123) */}
           {/* ========================================================================= */}
           {activeTab === 'download' && (
-            <div className="space-y-6">
-
-              {/* Thẻ tải bộ cài chính */}
-              <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3 shadow-xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
-                    📦
-                  </div>
+            <div className="space-y-5">
+              {/* KHỐI TẢI BỘ CÀI ĐƠN GIẢN - ÍT NÚT, ÍT CHỮ, RÕ RÀNG BẢN CẬP NHẬT */}
+              <div className="p-5 rounded-2xl bg-slate-900 border-2 border-emerald-500/60 shadow-2xl space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                   <div>
-                    <h4 className="font-bold text-white text-sm">TRỌN BỘ CÀI ĐẶT TẠO ĐỀ 15 PHÚT PRO (.ZIP - MẬT KHẨU: 123)</h4>
-                    <p className="text-xs text-slate-400">Phiên bản offline trọn bộ 48 Units (Lớp 6, 7, 8, 9) • Tải trực tiếp siêu tốc từ GitHub Releases</p>
+                    <h4 className="text-base font-bold text-white flex items-center gap-2">
+                      <span>Phần Mềm Tạo Đề 15 Phút Tiếng Anh THCS (48 Units)</span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        v3.9.0 (Mới nhất)
+                      </span>
+                    </h4>
+                    <p className="text-xs text-amber-300 font-medium mt-1 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Bản cập nhật đưa lên web: <strong>09/10/2026 (Lúc 23:45:00)</strong></span>
+                    </p>
                   </div>
+                  <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                    Dung lượng: ~44 MB
+                  </span>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Đã nén an toàn trong file .ZIP với mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải 100% không bị trình duyệt Chrome/Cốc Cốc hay Windows Defender ngăn chặn.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+
+                {/* 2 NÚT TẢI BỘ CÀI CHÍNH */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <a
+                    href="https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.exe"
+                    download="TaoDe_15Phut_TiengAnh_THCS.exe"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer text-center"
+                  >
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BỘ CÀI BẢN .EXE</span>
+                  </a>
                   <a
                     href={EXAM_15P_RESOURCES.fullZipUrl}
                     download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
-                    className="py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition text-center"
+                    className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer text-center"
                   >
-                    <Download className="w-4 h-4" /> 🚀 TẢI BẢN NÉN (.ZIP PASS: 123)
-                  </a>
-                  <a
-                    href={(EXAM_15P_RESOURCES as any).dotmUrl || "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.dotm"}
-                    download="TaoDe_15Phut_TiengAnh_THCS.dotm"
-                    className="py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition text-center"
-                  >
-                    <Download className="w-4 h-4" /> 📄 TẢI ADD-IN WORD (.DOTM)
+                    <Download className="w-5 h-5 shrink-0" />
+                    <span>TẢI BẢN NÉN .ZIP (Pass: 123)</span>
                   </a>
                 </div>
-              </div>
 
-              {/* Hướng dẫn 3 bước */}
-              <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
-                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                  <span>📖</span> Quy trình 3 bước sử dụng chuẩn mực:
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-blue-400 mb-1">Bước 1: Chọn Khối & Unit</div>
-                    <p className="text-slate-400">Chọn khối lớp 6, 7, 8, 9 và bài học cần kiểm tra 15 phút.</p>
-                  </div>
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-indigo-400 mb-1">Bước 2: Sinh 2 Mã Đề</div>
-                    <p className="text-slate-400">Hệ thống tự động hoán vị câu hỏi, sinh cặp mã đối xứng (601-602, 701-702...).</p>
-                  </div>
-                  <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                    <div className="font-bold text-emerald-400 mb-1">Bước 3: In & Chấm Nhanh</div>
-                    <p className="text-slate-400">Xuất file Word hoặc in ấn 5 mặt: 2 mặt đề, 2 phiếu trắc nghiệm, 1 bảng đáp án.</p>
-                  </div>
+                <div className="p-3 rounded-xl bg-slate-950 text-center text-xs text-slate-300 space-y-1 border border-slate-800">
+                  <p>🔑 Mật khẩu giải nén bản .ZIP: <code className="text-amber-300 font-bold bg-amber-500/20 px-2 py-0.5 rounded">123</code></p>
+                  <p className="text-[11px] text-slate-400">Tương thích Windows 10/11 &amp; Microsoft Word 2016-2024 • Tự động đảo 2 mã đề đối xứng</p>
                 </div>
-              </div>
-
-              {/* Gợi ý chuyển app */}
-              <div className="p-4 bg-blue-950/30 border border-blue-500/20 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                <div>
-                  <div className="font-bold text-white">Thầy/Cô cần tạo đề kiểm tra 4 kỹ năng chuẩn Bộ GD&ĐT?</div>
-                  <p className="text-slate-400 mt-0.5">Sử dụng phần mềm Tạo Đề Tiếng Anh THCS (Công văn 7991).</p>
-                </div>
-                {onSwitchToStandardExam && (
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onSwitchToStandardExam();
-                    }}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition shrink-0"
-                  >
-                    Mở App Tạo Đề CV 7991
-                  </button>
-                )}
               </div>
             </div>
           )}
