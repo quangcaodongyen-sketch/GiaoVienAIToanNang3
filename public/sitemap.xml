@@ -6,7 +6,7 @@
   
   <!-- Trang Chủ Chính -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/</loc>
+    <loc>https://dekiemtraso.com/</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Chuẩn Hóa Văn Bản Nghị Định 30 & Soạn Giáo Án 5512 (AI Word) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#chuan-hoa-vb</loc>
+    <loc>https://dekiemtraso.com/#chuan-hoa-vb</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -22,7 +22,7 @@
 
   <!-- 1. Tạo Đề Kiểm Tra Môn Toán Học THCS (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-toan</loc>
+    <loc>https://dekiemtraso.com/#tao-de-toan</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -30,7 +30,7 @@
 
   <!-- 2. Tạo Đề Kiểm Tra Môn Ngữ Văn THCS (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-van</loc>
+    <loc>https://dekiemtraso.com/#tao-de-van</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -38,7 +38,7 @@
 
   <!-- 3. Tạo Đề Tiếng Anh Global Success (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tieng-anh</loc>
+    <loc>https://dekiemtraso.com/#tao-de-tieng-anh</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -46,7 +46,7 @@
 
   <!-- 4. Tạo Đề Khoa Học Tự Nhiên KHTN (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-khtn</loc>
+    <loc>https://dekiemtraso.com/#tao-de-khtn</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
@@ -54,7 +54,7 @@
 
   <!-- 5. Tạo Đề Lịch Sử và Địa Lí THCS (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-sudia</loc>
+    <loc>https://dekiemtraso.com/#tao-de-sudia</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -62,7 +62,7 @@
 
   <!-- 6. Tạo Đề Kiểm Tra Môn Tin Học THCS (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tin</loc>
+    <loc>https://dekiemtraso.com/#tao-de-tin</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -70,7 +70,7 @@
 
   <!-- 7. Tạo Đề Giáo Dục Công Dân GDCD (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-gdcd</loc>
+    <loc>https://dekiemtraso.com/#tao-de-gdcd</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -78,7 +78,7 @@
 
   <!-- 8. Tạo Đề Kiểm Tra Môn Công Nghệ THCS (CV 7991) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-cn</loc>
+    <loc>https://dekiemtraso.com/#tao-de-cn</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -86,7 +86,7 @@
 
   <!-- PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#tach-gop-pdf</loc>
+    <loc>https://dekiemtraso.com/#tach-gop-pdf</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -94,7 +94,7 @@
 
   <!-- Smart Listening Pro (Tạo Bài Nghe Tiếng Anh) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#smart-listening</loc>
+    <loc>https://dekiemtraso.com/#smart-listening</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -102,7 +102,7 @@
 
   <!-- Tích Hợp NLS - AI THCS (CV 5512) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#nls-ai</loc>
+    <loc>https://dekiemtraso.com/#nls-ai</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -110,7 +110,7 @@
 
   <!-- Sinh 3 Đề Biến Thể VIP (AI PRO) -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#sinh-de-bien-the</loc>
+    <loc>https://dekiemtraso.com/#sinh-de-bien-the</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -118,7 +118,7 @@
 
   <!-- Screen Record Pro V2 -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#screen-record</loc>
+    <loc>https://dekiemtraso.com/#screen-record</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
@@ -126,7 +126,7 @@
 
   <!-- Đinh Thành Cleaner Pro v4.5 VIP -->
   <url>
-    <loc>https://giao-vien-ai-toan-nang3.vercel.app/#cleaner-pro</loc>
+    <loc>https://dekiemtraso.com/#cleaner-pro</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>

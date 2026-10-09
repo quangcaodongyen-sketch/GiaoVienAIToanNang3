@@ -644,7 +644,7 @@ export default function App() {
             <span className="text-slate-700 hidden md:inline">|</span>
             <button
               onClick={() => {
-                navigator.clipboard.writeText('https://giao-vien-ai-toan-nang3.vercel.app/');
+                navigator.clipboard.writeText('https://dekiemtraso.com/');
                 alert('Đã sao chép liên kết Website Giáo Viên AI Toàn Năng! Thầy/Cô hãy gửi Zalo hoặc Facebook để chia sẻ cho đồng nghiệp trong trường nhé!');
               }}
               className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white transition cursor-pointer text-[11px] font-semibold border border-slate-700/80"

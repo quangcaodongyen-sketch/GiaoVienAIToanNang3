@@ -1,7 +1,7 @@
 // Script tự động khai báo Sitemap và IndexNow cho website Giáo Viên AI Toàn Năng
-// Website: https://giao-vien-ai-toan-nang3.vercel.app/
+// Website: https://dekiemtraso.com/
 
-const SITE_URL = 'https://giao-vien-ai-toan-nang3.vercel.app';
+const SITE_URL = 'https://dekiemtraso.com';
 const SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 const INDEXNOW_KEY = 'c0e86d2643a6479ebffb53e87877e699';
 
@@ -28,7 +28,7 @@ async function pingIndexNow() {
   console.log('🚀 Đang gửi thông báo IndexNow đến máy chủ tìm kiếm quốc tế...');
   try {
     const payload = {
-      host: 'giao-vien-ai-toan-nang3.vercel.app',
+      host: 'dekiemtraso.com',
       key: INDEXNOW_KEY,
       keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
       urlList: URLS

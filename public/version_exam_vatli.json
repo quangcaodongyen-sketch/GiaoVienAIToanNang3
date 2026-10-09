@@ -7,6 +7,6 @@
   "changelog": "• Thống nhất mã đề chuẩn BGD: Lớp 10 (101..104), Lớp 11 (111..114), Lớp 12 (121..124)\n• Mã đề thi đặt ở trên bảng biểu (dòng Họ tên, Lớp, Mã đề thi)\n• Tích hợp Bảng ghi chấm điểm và nhận xét của giáo viên chuẩn mực sư phạm\n• Tên bộ sách Kết nối tri thức với cuộc sống chỉ ghi trên công cụ tạo đề, không hiển thị tên bộ sách trong đề thi\n• Đáp án câu đúng in chữ màu đỏ #FF0000 trong đề thi (giáo viên nhấn Ctrl+A đổi màu đen là in được ngay)\n• Toàn bộ lời giải chi tiết, phân tích và biểu điểm nằm ở phần Hướng dẫn chấm phía sau",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_VatLi_THPT.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_VatLi_THPT_Pass_123.zip",
-  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "websiteUrl": "https://dekiemtraso.com/",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THPT Đồng Yên"
 }

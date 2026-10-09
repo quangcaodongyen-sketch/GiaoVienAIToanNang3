@@ -1922,26 +1922,26 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
     setPingStatusMsg('🚀 Đang gửi toàn bộ 16 liên kết website đến hệ thống tìm kiếm tự động quốc tế (Google đối tác, Cốc Cốc, Bing, Yandex, Yahoo)...');
     try {
       const payload = {
-        host: 'giao-vien-ai-toan-nang3.vercel.app',
+        host: 'dekiemtraso.com',
         key: 'c0e86d2643a6479ebffb53e87877e699',
-        keyLocation: 'https://giao-vien-ai-toan-nang3.vercel.app/c0e86d2643a6479ebffb53e87877e699.txt',
+        keyLocation: 'https://dekiemtraso.com/c0e86d2643a6479ebffb53e87877e699.txt',
         urlList: [
-          'https://giao-vien-ai-toan-nang3.vercel.app/',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#chuan-hoa-vb',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-toan',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-van',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tieng-anh',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-khtn',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-sudia',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-tin',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-gdcd',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tao-de-cn',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#tach-gop-pdf',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#smart-listening',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#sinh-de-bien-the',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#screen-record',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#cleaner-pro',
-          'https://giao-vien-ai-toan-nang3.vercel.app/#nls-ai'
+          'https://dekiemtraso.com/',
+          'https://dekiemtraso.com/#chuan-hoa-vb',
+          'https://dekiemtraso.com/#tao-de-toan',
+          'https://dekiemtraso.com/#tao-de-van',
+          'https://dekiemtraso.com/#tao-de-tieng-anh',
+          'https://dekiemtraso.com/#tao-de-khtn',
+          'https://dekiemtraso.com/#tao-de-sudia',
+          'https://dekiemtraso.com/#tao-de-tin',
+          'https://dekiemtraso.com/#tao-de-gdcd',
+          'https://dekiemtraso.com/#tao-de-cn',
+          'https://dekiemtraso.com/#tach-gop-pdf',
+          'https://dekiemtraso.com/#smart-listening',
+          'https://dekiemtraso.com/#sinh-de-bien-the',
+          'https://dekiemtraso.com/#screen-record',
+          'https://dekiemtraso.com/#cleaner-pro',
+          'https://dekiemtraso.com/#nls-ai'
         ]
       };
 
@@ -1965,7 +1965,7 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
 
   // Cỗ máy sinh bài viết quảng cáo tự động theo chuyên đề sư phạm
   const getMarketingPostContent = (topic: 'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF') => {
-    const siteUrl = 'https://giao-vien-ai-toan-nang3.vercel.app/';
+    const siteUrl = 'https://dekiemtraso.com/';
     const hotline = '0915.213717';
     const author = 'Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên)';
 
