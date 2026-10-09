@@ -15,7 +15,18 @@ import {
   Crown,
   Search,
   CheckCircle2,
-  Check
+  Check,
+  Palette,
+  LayoutGrid,
+  ListFilter,
+  SlidersHorizontal,
+  Globe,
+  Copy,
+  Info,
+  ChevronRight,
+  BookOpen,
+  Award,
+  Zap
 } from 'lucide-react';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
@@ -43,9 +54,254 @@ import { webSecurityGuard } from './services/webSecurityGuard';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
 import { systemMaintenanceService } from './services/systemMaintenanceService';
 
+export type ThemeMode = 'pedagogical' | 'dark-cyber' | 'emerald-sage' | 'royal-purple';
+export type ViewMode = 'grid' | 'compact';
+
+export interface ThemeConfig {
+  id: ThemeMode;
+  name: string;
+  shortName: string;
+  icon: string;
+  description: string;
+  pageBg: string;
+  topbarBg: string;
+  topbarText: string;
+  topbarBorder: string;
+  navbarBg: string;
+  navBorder: string;
+  textHeading: string;
+  textBody: string;
+  textMuted: string;
+  heroGradient: string;
+  heroBorder: string;
+  heroBadge: string;
+  cardBg: string;
+  cardBorder: string;
+  cardHoverBorder: string;
+  cardHoverShadow: string;
+  filterBoxBg: string;
+  filterBoxBorder: string;
+  activeTabBg: string;
+  activeTabText: string;
+  activeTabShadow: string;
+  inactiveTabBg: string;
+  inactiveTabText: string;
+  primaryBtn: string;
+  badgeBg: string;
+  footerBg: string;
+  footerBorder: string;
+  accentColor: string;
+}
+
+const THEMES: Record<ThemeMode, ThemeConfig> = {
+  'pedagogical': {
+    id: 'pedagogical',
+    name: 'Sư Phạm Chuẩn Mực',
+    shortName: 'Sư Phạm',
+    icon: '🎓',
+    description: 'Tông Xanh Lam & Trắng dịu mắt, trang nhã, chuẩn mực sư phạm Việt Nam',
+    pageBg: 'bg-[#F4F7FB]',
+    topbarBg: 'bg-[#091C36]',
+    topbarText: 'text-slate-200',
+    topbarBorder: 'border-blue-900/40',
+    navbarBg: 'bg-white/95 backdrop-blur-md',
+    navBorder: 'border-slate-200/90',
+    textHeading: 'text-slate-900',
+    textBody: 'text-slate-700',
+    textMuted: 'text-slate-500',
+    heroGradient: 'bg-gradient-to-br from-[#0C233E] via-[#143B64] to-[#1E4E85]',
+    heroBorder: 'border-blue-800/40',
+    heroBadge: 'bg-cyan-400/20 text-cyan-300 border-cyan-400/30',
+    cardBg: 'bg-white',
+    cardBorder: 'border-slate-200/90',
+    cardHoverBorder: 'hover:border-blue-400',
+    cardHoverShadow: 'hover:shadow-xl hover:shadow-blue-600/10',
+    filterBoxBg: 'bg-white',
+    filterBoxBorder: 'border-slate-200/90',
+    activeTabBg: 'bg-blue-600',
+    activeTabText: 'text-white',
+    activeTabShadow: 'shadow-md shadow-blue-600/30',
+    inactiveTabBg: 'bg-slate-100 hover:bg-slate-200/80',
+    inactiveTabText: 'text-slate-700',
+    primaryBtn: 'bg-gradient-to-r from-[#103055] via-[#194573] to-[#2563EB] hover:from-[#0b223d] hover:to-blue-700 text-white',
+    badgeBg: 'bg-blue-50 text-blue-700 border-blue-200/60',
+    footerBg: 'bg-[#081526]',
+    footerBorder: 'border-slate-800',
+    accentColor: '#2563EB'
+  },
+  'dark-cyber': {
+    id: 'dark-cyber',
+    name: 'Đêm AI Chuyên Nghiệp',
+    shortName: 'Đêm AI',
+    icon: '🌌',
+    description: 'Chế độ tối công nghệ cao, tương phản sắc nét, làm việc ban đêm không mỏi mắt',
+    pageBg: 'bg-[#070B14]',
+    topbarBg: 'bg-[#030712]',
+    topbarText: 'text-slate-300',
+    topbarBorder: 'border-slate-800',
+    navbarBg: 'bg-[#0B1222]/95 backdrop-blur-md',
+    navBorder: 'border-slate-800',
+    textHeading: 'text-white',
+    textBody: 'text-slate-300',
+    textMuted: 'text-slate-400',
+    heroGradient: 'bg-gradient-to-br from-[#0B1120] via-[#101D38] to-[#15274E]',
+    heroBorder: 'border-cyan-500/30',
+    heroBadge: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30',
+    cardBg: 'bg-[#0F172A]',
+    cardBorder: 'border-slate-800',
+    cardHoverBorder: 'hover:border-cyan-400/80',
+    cardHoverShadow: 'hover:shadow-xl hover:shadow-cyan-500/15',
+    filterBoxBg: 'bg-[#0B1222]',
+    filterBoxBorder: 'border-slate-800',
+    activeTabBg: 'bg-cyan-500',
+    activeTabText: 'text-slate-950 font-black',
+    activeTabShadow: 'shadow-md shadow-cyan-500/30',
+    inactiveTabBg: 'bg-slate-800/80 hover:bg-slate-700',
+    inactiveTabText: 'text-slate-300',
+    primaryBtn: 'bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold',
+    badgeBg: 'bg-cyan-950/70 text-cyan-300 border-cyan-800/60',
+    footerBg: 'bg-[#030611]',
+    footerBorder: 'border-slate-800/80',
+    accentColor: '#06B6D4'
+  },
+  'emerald-sage': {
+    id: 'emerald-sage',
+    name: 'Xanh Tri Thức Học Đường',
+    shortName: 'Tri Thức',
+    icon: '🌿',
+    description: 'Tông Xanh Ngọc Lục Bảo tươi mát, khơi gợi cảm hứng giáo dục đổi mới',
+    pageBg: 'bg-[#F1F7F4]',
+    topbarBg: 'bg-[#052C20]',
+    topbarText: 'text-emerald-100',
+    topbarBorder: 'border-emerald-900/40',
+    navbarBg: 'bg-white/95 backdrop-blur-md',
+    navBorder: 'border-emerald-100',
+    textHeading: 'text-slate-900',
+    textBody: 'text-slate-700',
+    textMuted: 'text-slate-500',
+    heroGradient: 'bg-gradient-to-br from-[#064E3B] via-[#047857] to-[#0D9488]',
+    heroBorder: 'border-emerald-600/40',
+    heroBadge: 'bg-emerald-400/20 text-emerald-200 border-emerald-400/30',
+    cardBg: 'bg-white',
+    cardBorder: 'border-emerald-100/90',
+    cardHoverBorder: 'hover:border-emerald-400',
+    cardHoverShadow: 'hover:shadow-xl hover:shadow-emerald-600/10',
+    filterBoxBg: 'bg-white',
+    filterBoxBorder: 'border-emerald-100/90',
+    activeTabBg: 'bg-emerald-600',
+    activeTabText: 'text-white',
+    activeTabShadow: 'shadow-md shadow-emerald-600/30',
+    inactiveTabBg: 'bg-emerald-50/70 hover:bg-emerald-100/80',
+    inactiveTabText: 'text-emerald-900',
+    primaryBtn: 'bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-600 hover:from-emerald-800 hover:to-teal-600 text-white font-bold',
+    badgeBg: 'bg-emerald-50 text-emerald-800 border-emerald-200/60',
+    footerBg: 'bg-[#04241A]',
+    footerBorder: 'border-emerald-900/50',
+    accentColor: '#10B981'
+  },
+  'royal-purple': {
+    id: 'royal-purple',
+    name: 'Tím Sáng Tạo Số',
+    shortName: 'Sáng Tạo',
+    icon: '🔮',
+    description: 'Tông Tím Hoàng Gia hiện đại, đậm chất công nghệ giáo dục kỷ nguyên số',
+    pageBg: 'bg-[#F8F5FC]',
+    topbarBg: 'bg-[#1C0B3B]',
+    topbarText: 'text-purple-100',
+    topbarBorder: 'border-purple-900/40',
+    navbarBg: 'bg-white/95 backdrop-blur-md',
+    navBorder: 'border-purple-100',
+    textHeading: 'text-slate-900',
+    textBody: 'text-slate-700',
+    textMuted: 'text-slate-500',
+    heroGradient: 'bg-gradient-to-br from-[#2E1065] via-[#4C1D95] to-[#6D28D9]',
+    heroBorder: 'border-purple-600/40',
+    heroBadge: 'bg-purple-400/20 text-purple-200 border-purple-400/30',
+    cardBg: 'bg-white',
+    cardBorder: 'border-purple-100/90',
+    cardHoverBorder: 'hover:border-purple-400',
+    cardHoverShadow: 'hover:shadow-xl hover:shadow-purple-600/10',
+    filterBoxBg: 'bg-white',
+    filterBoxBorder: 'border-purple-100/90',
+    activeTabBg: 'bg-purple-600',
+    activeTabText: 'text-white',
+    activeTabShadow: 'shadow-md shadow-purple-600/30',
+    inactiveTabBg: 'bg-purple-50/70 hover:bg-purple-100/80',
+    inactiveTabText: 'text-purple-900',
+    primaryBtn: 'bg-gradient-to-r from-[#3B0764] via-[#581C87] to-[#7E22CE] hover:from-[#2e054f] hover:to-purple-700 text-white font-bold',
+    badgeBg: 'bg-purple-50 text-purple-800 border-purple-200/60',
+    footerBg: 'bg-[#14062E]',
+    footerBorder: 'border-purple-900/50',
+    accentColor: '#8B5CF6'
+  }
+};
+
+const QUICK_SUBJECT_CHIPS = [
+  { label: 'Tất cả môn', query: '' },
+  { label: 'Tiếng Anh', query: 'tiếng anh' },
+  { label: 'Toán học', query: 'toán' },
+  { label: 'Ngữ văn', query: 'văn' },
+  { label: 'KHTN & Lý Hóa', query: 'khoa học tự nhiên' },
+  { label: 'Lịch sử', query: 'lịch sử' },
+  { label: 'Địa lí', query: 'địa lí' },
+  { label: 'Tin học', query: 'tin học' },
+  { label: 'GDCD & CN', query: 'công dân' },
+  { label: 'Cấp THCS (CV 7991)', query: '7991' },
+  { label: 'Cấp THPT (2025+)', query: 'thpt' },
+  { label: 'Kế hoạch 5512', query: '5512' },
+  { label: 'Chuẩn NĐ 30', query: 'nghị định 30' }
+];
+
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Quản lý Chế độ Giao diện (Theme) & Bố cục Hiển thị (View Mode)
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const saved = localStorage.getItem('gvai_theme_mode');
+    if (saved === 'pedagogical' || saved === 'dark-cyber' || saved === 'emerald-sage' || saved === 'royal-purple') {
+      return saved;
+    }
+    return 'pedagogical';
+  });
+
+  const [appViewMode, setAppViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem('gvai_app_view_mode');
+    if (saved === 'grid' || saved === 'compact') {
+      return saved;
+    }
+    return 'grid';
+  });
+
+  const [themeToast, setThemeToast] = useState<string | null>(null);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+
+  const changeTheme = (mode: ThemeMode) => {
+    setThemeMode(mode);
+    localStorage.setItem('gvai_theme_mode', mode);
+    setShowThemeMenu(false);
+    const names: Record<ThemeMode, string> = {
+      'pedagogical': '🎓 Sư Phạm Chuẩn Mực',
+      'dark-cyber': '🌌 Đêm AI Chuyên Nghiệp',
+      'emerald-sage': '🌿 Xanh Tri Thức Học Đường',
+      'royal-purple': '🔮 Tím Sáng Tạo Số'
+    };
+    setThemeToast(`Đã chuyển sang giao diện: ${names[mode]}`);
+    setTimeout(() => setThemeToast(null), 3000);
+  };
+
+  const changeViewMode = (mode: ViewMode) => {
+    setAppViewMode(mode);
+    localStorage.setItem('gvai_app_view_mode', mode);
+    const names: Record<ViewMode, string> = {
+      'grid': '🎴 Dạng Thẻ Lưới Trực Quan',
+      'compact': '📋 Dạng Danh Mục Khoa Học Gọn Gàng'
+    };
+    setThemeToast(`Đã chuyển bố cục: ${names[mode]}`);
+    setTimeout(() => setThemeToast(null), 2500);
+  };
+
+  const t = THEMES[themeMode];
   const [showSKKNModal, setShowSKKNModal] = useState(false);
   const [showListeningModal, setShowListeningModal] = useState(false);
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
@@ -573,7 +829,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8FC] text-[#172033] flex flex-col font-sans">
+    <div className={`min-h-screen ${t.pageBg} ${t.textBody} flex flex-col font-sans transition-colors duration-300 relative`}>
       {/* BANNER NỔI BẬT DÀNH CHO ADMIN KHI WEB ĐANG KHÓA NÂNG CẤP */}
       {isMaintenanceLocked && (
         <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white px-3 sm:px-6 py-2.5 text-xs sm:text-sm font-bold flex flex-wrap items-center justify-between gap-2 shadow-xl z-50 sticky top-0 border-b border-red-400/40">
@@ -605,23 +861,87 @@ export default function App() {
         </div>
       )}
 
-      {/* TOP ANNOUNCEMENT & UTILITIES BAR - TINH TẾ, KHÔNG TRÙNG LẶP */}
-      <div className="bg-[#071322] text-white text-[11px] sm:text-xs py-2 px-4 border-b border-blue-900/40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      {/* TOP ANNOUNCEMENT & UTILITIES BAR - TÊN MIỀN DEKIEMTRASO.COM & TÙY BIẾN GIAO DIỆN */}
+      <div className={`${t.topbarBg} ${t.topbarText} text-[11px] sm:text-xs py-2 px-3 sm:px-4 border-b ${t.topbarBorder} transition-colors duration-300`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
+          {/* Cổng thông tin chính thức */}
           <div className="flex items-center gap-2 truncate">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-bold text-[10px] tracking-wide uppercase">
-              <Sparkles className="w-3 h-3 text-amber-300 animate-pulse" />
-              Kỷ Nguyên Số 2026
+            <a 
+              href="https://dekiemtraso.com"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-bold text-[10px] tracking-wide uppercase hover:bg-cyan-500/25 transition shrink-0"
+              title="Cổng thông tin & Hệ sinh thái Phần mềm Giáo Viên AI Toàn Năng"
+            >
+              <Globe className="w-3 h-3 text-cyan-300 animate-pulse" />
+              <span>dekiemtraso.com</span>
+            </a>
+            <span className="hidden md:inline font-medium text-slate-300 truncate">
+              Nền tảng Trợ lý AI Sư Phạm & Tạo Đề Kiểm Tra Số Chuẩn 100% Bộ GD&ĐT 2026
             </span>
-            <span className="hidden sm:inline text-slate-300 font-medium truncate">
-              Nền tảng Trợ lý Trí tuệ Nhân tạo & Giải pháp Số hóa Giáo dục THCS Chuẩn Bộ GD&ĐT
-            </span>
-            <span className="sm:hidden text-slate-300 font-medium truncate">
-              Trợ lý AI Giáo Dục THCS 2026
+            <span className="md:hidden text-slate-300 font-medium truncate">
+              Đề Kiểm Tra Số 2026
             </span>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0 font-medium text-slate-300">
+          {/* Thanh công cụ giao diện & Hỗ trợ kỹ thuật */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 font-medium">
+            {/* Bộ chuyển đổi Giao diện màu sắc trực tiếp */}
+            <div className="hidden lg:flex items-center gap-1 bg-black/30 p-1 rounded-full border border-white/10 text-[10px]">
+              <span className="px-2 text-slate-300 font-bold flex items-center gap-1">
+                <Palette className="w-3 h-3 text-amber-300" />
+                <span>Giao diện:</span>
+              </span>
+              {(Object.keys(THEMES) as ThemeMode[]).map((mode) => {
+                const cfg = THEMES[mode];
+                const isAct = themeMode === mode;
+                return (
+                  <button
+                    key={mode}
+                    onClick={() => changeTheme(mode)}
+                    className={`px-2.5 py-0.5 rounded-full transition flex items-center gap-1 cursor-pointer font-bold ${
+                      isAct
+                        ? 'bg-white text-slate-950 shadow-xs'
+                        : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    }`}
+                    title={cfg.description}
+                  >
+                    <span>{cfg.icon}</span>
+                    <span>{cfg.shortName}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Bộ chuyển đổi Bố cục Thẻ lưới / Danh mục khoa học */}
+            <div className="hidden sm:flex items-center gap-0.5 bg-black/30 p-0.5 rounded-xl border border-white/10 text-[11px]">
+              <button
+                onClick={() => changeViewMode('grid')}
+                className={`px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer font-bold ${
+                  appViewMode === 'grid'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+                title="Xem dạng thẻ lưới trực quan có ảnh minh họa"
+              >
+                <LayoutGrid className="w-3 h-3" />
+                <span className="hidden xl:inline">Thẻ lưới</span>
+              </button>
+              <button
+                onClick={() => changeViewMode('compact')}
+                className={`px-2 py-0.5 rounded-lg transition flex items-center gap-1 cursor-pointer font-bold ${
+                  appViewMode === 'compact'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+                title="Xem dạng danh mục khoa học gọn gàng, tiện theo dõi"
+              >
+                <ListFilter className="w-3 h-3" />
+                <span className="hidden xl:inline">Danh mục</span>
+              </button>
+            </div>
+
+            <span className="text-white/20 hidden sm:inline">|</span>
+
+            {/* Hotline & Zalo Thầy Thành */}
             <a
               href={BRAND.zaloUrl}
               target="_blank"
@@ -630,38 +950,31 @@ export default function App() {
               title="Nhắn tin Zalo trực tiếp hỗ trợ kỹ thuật"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Hỗ trợ trực tuyến: <strong className="text-emerald-400 font-semibold">{BRAND.phone}</strong></span>
+              <span className="hidden sm:inline">Zalo Thầy Thành:</span>
+              <strong className="text-emerald-400 font-bold">{BRAND.phone}</strong>
             </a>
-            <span className="text-slate-700 hidden md:inline">|</span>
+
             <button
               onClick={() => {
-                navigator.clipboard.writeText('https://dekiemtraso.com/');
-                alert('Đã sao chép liên kết Website Giáo Viên AI Toàn Năng! Thầy/Cô hãy gửi Zalo hoặc Facebook để chia sẻ cho đồng nghiệp trong trường nhé!');
+                navigator.clipboard.writeText('https://dekiemtraso.com');
+                setThemeToast('Đã sao chép link dekiemtraso.com để gửi cho đồng nghiệp!');
+                setTimeout(() => setThemeToast(null), 2500);
               }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white transition cursor-pointer text-[11px] font-semibold border border-slate-700/80"
-              title="Sao chép link gửi cho đồng nghiệp"
+              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition cursor-pointer text-[10px] font-semibold border border-white/15"
+              title="Sao chép link trang web để gửi cho đồng nghiệp trong trường"
             >
-              <Share2 className="w-3 h-3 text-cyan-300" />
-              <span>Chia sẻ</span>
+              <Copy className="w-2.5 h-2.5 text-cyan-300" />
+              <span className="hidden sm:inline">Sao chép</span>
             </button>
-            <span className="text-slate-700 hidden lg:inline">|</span>
-            <a
-              href={BRAND.facebookUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
-            >
-              <span>Facebook</span>
-            </a>
           </div>
         </div>
       </div>
 
-      {/* MAIN NAVBAR - SANG TRỌNG, ĐẲNG CẤP CHUẨN SAAS */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs transition-all">
+      {/* MAIN NAVBAR - SANG TRỌNG, ĐẲNG CẤP CHUẨN SAAS GIÁO DỤC */}
+      <header className={`sticky top-0 z-50 ${t.navbarBg} border-b ${t.navBorder} shadow-xs transition-colors duration-300`}>
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
-            {/* Logo & Brand Identity */}
+            {/* Logo & Nhận diện thương hiệu */}
             <a href="#apps" className="flex items-center gap-3 sm:gap-3.5 group">
               <div className="relative">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#0B1E36] via-[#123A63] to-[#2563EB] flex items-center justify-center text-white shadow-md shadow-blue-900/20 group-hover:scale-105 group-hover:shadow-blue-600/30 transition-all duration-300 ring-2 ring-blue-500/20">
@@ -674,7 +987,7 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-base sm:text-xl font-black tracking-tight text-slate-900">
+                  <h1 className={`text-base sm:text-xl font-black tracking-tight ${t.textHeading}`}>
                     GIÁO VIÊN AI <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">TOÀN NĂNG</span>
                   </h1>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
@@ -682,37 +995,96 @@ export default function App() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                  <p className={`text-[11px] sm:text-xs ${t.textMuted} font-medium`}>
                     {BRAND.slogan}
                   </p>
                   <span className="text-slate-300 hidden sm:inline">•</span>
-                  <span className="text-[11px] text-teal-700 font-bold hidden sm:inline">
+                  <span className="text-[11px] text-teal-700 dark:text-teal-400 font-bold hidden sm:inline">
                     Thầy {BRAND.author}
                   </span>
                 </div>
               </div>
             </a>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-slate-700 text-xs xl:text-sm font-bold">
+            {/* Desktop Navigation & Actions */}
+            <div className="hidden lg:flex items-center gap-2 text-xs xl:text-sm font-bold">
+              {/* Nút Kho Ứng Dụng */}
               <a
                 href="#apps"
-                className="px-3.5 py-2 rounded-xl text-blue-700 bg-blue-50/80 hover:bg-blue-100 transition-colors flex items-center gap-1.5"
+                className={`px-3 py-2 rounded-xl text-blue-600 bg-blue-50/80 dark:bg-blue-950/40 hover:bg-blue-100 transition-colors flex items-center gap-1.5`}
               >
                 <Layers className="w-4 h-4 text-blue-600" />
                 <span>Kho Ứng Dụng ({activeApps.length})</span>
               </a>
-              <a
-                href="#footer-info"
-                className="px-3.5 py-2 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/60 transition-colors"
+
+              {/* Nút Đổi Giao Diện Dropdown / Menu */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowThemeMenu(!showThemeMenu)}
+                  className={`px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer text-xs ${t.textHeading}`}
+                  title="Thay đổi giao diện màu sắc của website"
+                >
+                  <Palette className="w-3.5 h-3.5 text-blue-600" />
+                  <span>{t.icon} {t.shortName}</span>
+                </button>
+
+                {showThemeMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-50 animate-fadeIn space-y-1">
+                    <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                      Chọn Giao Diện Website
+                    </div>
+                    {(Object.keys(THEMES) as ThemeMode[]).map((mode) => {
+                      const cfg = THEMES[mode];
+                      const isAct = themeMode === mode;
+                      return (
+                        <button
+                          key={mode}
+                          onClick={() => changeTheme(mode)}
+                          className={`w-full text-left px-3 py-2 rounded-xl transition flex items-center justify-between text-xs font-semibold cursor-pointer ${
+                            isAct
+                              ? 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold'
+                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-base">{cfg.icon}</span>
+                            <div>
+                              <div>{cfg.name}</div>
+                              <div className="text-[10px] text-slate-400 font-normal line-clamp-1">{cfg.description}</div>
+                            </div>
+                          </div>
+                          {isAct && <Check className="w-4 h-4 text-blue-600 shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Nút Đổi Bố Cục Thẻ / Bảng */}
+              <button
+                type="button"
+                onClick={() => changeViewMode(appViewMode === 'grid' ? 'compact' : 'grid')}
+                className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer text-xs"
+                title="Chuyển đổi giữa Dạng Thẻ Lưới và Dạng Danh Mục Khoa Học"
               >
-                Tác Giả & Hỗ Trợ
-              </a>
+                {appViewMode === 'grid' ? (
+                  <>
+                    <ListFilter className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Dạng Danh Mục</span>
+                  </>
+                ) : (
+                  <>
+                    <LayoutGrid className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Dạng Thẻ Lưới</span>
+                  </>
+                )}
+              </button>
             </div>
 
-            {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-2 lg:gap-2.5 font-medium text-slate-700 text-sm">
-              {/* Nút Đăng Ký Dùng Thử */}
+            {/* Action Buttons: Dùng thử 5 lần, Admin & Hotline */}
+            <div className="hidden md:flex items-center gap-2 lg:gap-2.5 font-medium text-sm">
               <button
                 onClick={() => setShowTrialModal(true)}
                 className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all text-xs font-black flex items-center gap-1.5 active:scale-95 cursor-pointer"
@@ -722,22 +1094,20 @@ export default function App() {
                 <span>DÙNG THỬ 5 LẦN</span>
               </button>
 
-              {/* Nút Quản Trị Admin */}
               <button
                 onClick={() => setShowAdminDashboard(true)}
-                className="px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-300 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs group cursor-pointer"
+                className="px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs group cursor-pointer"
                 title="Bảng Quản Trị Bản Quyền Cloud 24/7"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
                 <span>Quản Trị</span>
               </button>
 
-              {/* Hotline Pill */}
               <a
                 href={BRAND.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50 text-slate-800 hover:text-blue-700 border border-slate-200 hover:border-blue-200 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+                className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 text-slate-800 dark:text-slate-200 hover:text-blue-700 border border-slate-200 dark:border-slate-700 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs"
                 title={`Hotline / Zalo: ${BRAND.phone}`}
               >
                 <Phone className="w-3.5 h-3.5 text-teal-600" />
@@ -746,19 +1116,73 @@ export default function App() {
               </a>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors border border-slate-200"
+              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-700"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6 text-slate-800" /> : <Menu className="w-6 h-6 text-slate-800" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
-          {/* Mobile Drawer */}
+          {/* Mobile Drawer Menu */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-3 border-t border-slate-200/80 flex flex-col gap-2 font-medium text-slate-700 text-sm animate-fadeIn">
+            <div className="md:hidden py-3 border-t border-slate-200/80 dark:border-slate-800 flex flex-col gap-2 font-medium text-sm animate-fadeIn">
+              {/* Chọn giao diện trên di động */}
+              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <Palette className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Chọn Giao Diện Website</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(Object.keys(THEMES) as ThemeMode[]).map((mode) => {
+                    const cfg = THEMES[mode];
+                    const isAct = themeMode === mode;
+                    return (
+                      <button
+                        key={mode}
+                        onClick={() => changeTheme(mode)}
+                        className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                          isAct
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600'
+                        }`}
+                      >
+                        <span>{cfg.icon}</span>
+                        <span>{cfg.shortName}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Chọn bố cục trên di động */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => changeViewMode('grid')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                    appViewMode === 'grid'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Dạng Thẻ Lưới</span>
+                </button>
+                <button
+                  onClick={() => changeViewMode('compact')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                    appViewMode === 'compact'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <ListFilter className="w-3.5 h-3.5" />
+                  <span>Danh Mục Gọn</span>
+                </button>
+              </div>
+
               <a 
                 href="#apps" 
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -767,16 +1191,17 @@ export default function App() {
                 <Layers className="w-4 h-4 text-blue-600" />
                 Kho Ứng Dụng ({activeApps.length})
               </a>
+
               <a 
                 href="#footer-info" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 font-semibold flex items-center gap-2.5 transition-colors"
+                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 dark:text-slate-200 font-semibold flex items-center gap-2.5 transition-colors"
               >
                 <UserCheck className="w-4 h-4 text-indigo-600" />
                 Thông Tin Tác Giả & Hỗ Trợ
               </a>
 
-              <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
@@ -813,78 +1238,168 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {/* HERO SECTION NGẮN GỌN, TINH TẾ - TẬP TRUNG VÀO KHO ỨNG DỤNG */}
-        <section className="pt-3 pb-2 sm:pt-5 sm:pb-3 bg-[#F6F8FC]">
+        {/* HERO SECTION KHOA HỌC, GIÁO DỤC, UY TÍN SƯ PHẠM */}
+        <section className={`pt-3 pb-3 sm:pt-6 sm:pb-4 transition-colors duration-300`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="rounded-2xl bg-gradient-to-r from-[#0F2744] via-[#163B66] to-[#1E4E85] text-white p-4 sm:p-6 shadow-md border border-blue-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1.5 max-w-2xl">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 text-[11px] font-bold uppercase tracking-wider border border-cyan-400/30">
-                  <Sparkles className="w-3 h-3 text-amber-300" />
-                  <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026</span>
+            <div className={`rounded-3xl ${t.heroGradient} text-white p-5 sm:p-7 shadow-xl border ${t.heroBorder} flex flex-col gap-5 transition-all duration-300`}>
+              
+              {/* Header Hero */}
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div className="space-y-2 max-w-3xl">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-cyan-200 text-xs font-bold uppercase tracking-wider border border-white/20 backdrop-blur-xs">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                    <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026 • Chuẩn 100% Bộ GD&ĐT</span>
+                  </div>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
+                    Nền Tảng Trợ Lý AI & Tạo Đề Kiểm Tra Số Chuẩn Mực
+                  </h1>
+                  <p className="text-xs sm:text-sm text-blue-50/90 leading-relaxed font-normal">
+                    Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (Trường THCS Đồng Yên) • Hotline/Zalo: <strong>{BRAND.phone}</strong>. Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ 18+ môn học, chuyển đổi công thức Toán học Mathpix sang Word, căn lề chuẩn Nghị định 30/2020.
+                  </p>
                 </div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
-                  Bộ Công Cụ Hỗ Trợ Giáo Viên AI Toàn Năng
-                </h1>
-                <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
-                  Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (THCS Đồng Yên) • Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ các môn.
-                </p>
+
+                {/* Hero Action CTA Buttons */}
+                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                  <button
+                    onClick={() => setShowTrialModal(true)}
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>DÙNG THỬ 5 LẦN</span>
+                  </button>
+                  <a
+                    href={BRAND.zaloUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5"
+                  >
+                    <MessageCircle className="w-4 h-4 text-teal-300" />
+                    <span>Zalo Thầy Thành</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const modes: ThemeMode[] = ['pedagogical', 'dark-cyber', 'emerald-sage', 'royal-purple'];
+                      const next = modes[(modes.indexOf(themeMode) + 1) % modes.length];
+                      changeTheme(next);
+                    }}
+                    className="px-3 py-2.5 rounded-xl bg-black/30 hover:bg-black/50 text-white border border-white/20 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    title="Bấm để chuyển sang giao diện tiếp theo"
+                  >
+                    <Palette className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Đổi Giao Diện ({t.shortName})</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                <button
-                  onClick={() => setShowTrialModal(true)}
-                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Dùng thử 5 lần</span>
-                </button>
-                <a
-                  href={BRAND.zaloUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold text-xs transition-all flex items-center gap-1.5"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 text-teal-300" />
-                  <span>Zalo Thầy Thành</span>
-                </a>
+              {/* 4 Trụ Cột Khoa Học Sư Phạm (Scientific Pedagogical Badges) */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 pt-3 border-t border-white/15 text-xs">
+                <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
+                  <BookOpen className="w-4 h-4 text-cyan-300 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Chuẩn Quy Định BGD&ĐT</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">CV 7991 • QĐ 764 • CV 5512 • TT 27</div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
+                  <Zap className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">18+ Môn Học Toàn Diện</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Toán, Văn, Anh, KHTN, Sử, Địa, Tin...</div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
+                  <Award className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Độc Lập Bản Quyền</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Mã máy DVT-..., bảo mật Ed25519</div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
+                  <Globe className="w-4 h-4 text-purple-300 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Trực Tuyến & Cài Máy</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Dùng trên Web & Add-in Office Word</div>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
         </section>
 
-
-        {/* APPS SECTION (PRIMARY SHOWCASE) */}
-        <section id="apps" className="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-[#F6F8FC]">
+        {/* APPS SECTION (PRIMARY SHOWCASE) - GIAO DIỆN & BỘ LỌC KHOA HỌC */}
+        <section id="apps" className="pt-3 pb-12 sm:pt-4 sm:pb-16 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* THANH TÌM KIẾM VÀ BỘ LỌC TABS HIỆN ĐẠI */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-4 sm:p-5 mb-6 transition-all space-y-4">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-                {/* TIÊU ĐỀ BỘ CÔNG CỤ */}
+            
+            {/* THANH TÌM KIẾM, ĐIỀU KHIỂN GIAO DIỆN VÀ BỘ LỌC TABS KHOA HỌC */}
+            <div className={`${t.filterBoxBg} rounded-3xl border ${t.filterBoxBorder} shadow-sm p-4 sm:p-5 mb-6 transition-all space-y-4`}>
+              
+              {/* Hàng 1: Tiêu đề + Chuyển đổi Bố cục + Ô tìm kiếm */}
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                {/* Tiêu đề & Trạng thái giao diện */}
                 <div className="flex items-center gap-3">
-                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100 shrink-0"></div>
+                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950 shrink-0"></div>
                   <div>
-                    <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+                    <h2 className={`text-base sm:text-lg font-black ${t.textHeading} tracking-tight flex flex-wrap items-center gap-2`}>
                       <span>Kho Ứng Dụng Chuyên Môn THCS & THPT 2026</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${t.badgeBg}`}>
                         Chuẩn Bộ GD&ĐT
                       </span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {t.icon} {t.name}
+                      </span>
                     </h2>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className={`text-xs ${t.textMuted} mt-0.5`}>
                       Chọn lọc công cụ chuyên biệt theo nhu cầu soạn bài và kiểm tra đánh giá của Thầy/Cô
                     </p>
                   </div>
                 </div>
 
-                {/* Ô TÌM KIẾM NHANH + BỘ ĐẾM SỐ LƯỢNG */}
-                <div className="flex items-center gap-2.5 shrink-0">
-                  <div className="relative w-full sm:w-80">
+                {/* Bộ nút chuyển đổi View Mode + Ô tìm kiếm */}
+                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                  {/* Nút Bố cục Thẻ Lưới vs Danh Mục Khoa Học */}
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => changeViewMode('grid')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                        appViewMode === 'grid'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                      title="Xem dạng thẻ lưới trực quan có hình ảnh"
+                    >
+                      <LayoutGrid className="w-3.5 h-3.5" />
+                      <span>Thẻ Lưới</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeViewMode('compact')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                        appViewMode === 'compact'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                      title="Xem dạng danh mục khoa học gọn gàng"
+                    >
+                      <ListFilter className="w-3.5 h-3.5" />
+                      <span>Danh Mục Khoa Học</span>
+                    </button>
+                  </div>
+
+                  {/* Ô tìm kiếm nhanh */}
+                  <div className="relative w-full sm:w-72">
                     <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       type="text"
-                      placeholder="Tìm môn học, tên ứng dụng hoặc mã văn bản..."
+                      placeholder="Tìm môn học, tên ứng dụng..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-8 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 placeholder-slate-400 transition"
+                      className="w-full pl-9 pr-8 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 transition"
                     />
                     {searchQuery && (
                       <button
@@ -896,14 +1411,16 @@ export default function App() {
                       </button>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 font-black bg-slate-100 px-3.5 py-2.5 rounded-2xl border border-slate-200/80 shrink-0">
+
+                  {/* Bộ đếm kết quả */}
+                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 font-black bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shrink-0">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>{filteredApps.length}/{activeApps.length}</span>
                   </span>
                 </div>
               </div>
 
-              {/* BỘ LỌC DANH MỤC DẠNG TAB (CATEGORY TABS) */}
+              {/* Hàng 2: Bộ lọc danh mục cấp học (Category Tabs) */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-sans">
                 {[
                   { id: 'ALL', label: 'Tất Cả Ứng Dụng', count: activeApps.length },
@@ -921,13 +1438,13 @@ export default function App() {
                       onClick={() => setSelectedCategory(tab.id)}
                       className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
                         isActive
-                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
+                          ? `${t.activeTabBg} ${t.activeTabText} ${t.activeTabShadow}`
+                          : `${t.inactiveTabBg} ${t.inactiveTabText}`
                       }`}
                     >
                       <span>{tab.label}</span>
                       <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                       }`}>
                         {tab.count}
                       </span>
@@ -935,8 +1452,31 @@ export default function App() {
                   );
                 })}
               </div>
+
+              {/* Hàng 3: Gợi ý tìm nhanh theo môn học (Quick Subject Chips) */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pt-1 scrollbar-none text-[11px]">
+                <span className="text-slate-400 font-semibold shrink-0">Lọc nhanh:</span>
+                {QUICK_SUBJECT_CHIPS.map((chip, idx) => {
+                  const isCurrent = searchQuery.toLowerCase() === chip.query.toLowerCase();
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSearchQuery(chip.query)}
+                      className={`px-2.5 py-1 rounded-lg transition shrink-0 cursor-pointer font-medium ${
+                        isCurrent
+                          ? 'bg-blue-600 text-white font-bold'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            {/* BANNER QUẢNG CÁO CHÉO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH (NHẤP NHÁY NHẸ, 1-CLICK TẢI / TRẢI NGHIỆM) */}
+
+            {/* BANNER QUẢNG CÁO CHÉO CÁC APP TÍNH TIỀN PRO */}
             <div className="mb-6">
               <CrossPromoBanner
                 onNavigateApp={(hash) => {
@@ -945,36 +1485,138 @@ export default function App() {
               />
             </div>
 
-            {/* EMPTY STATE */}
+            {/* EMPTY STATE KHI KHÔNG TÌM THẤY KẾT QUẢ */}
             {filteredApps.length === 0 ? (
-              <div className="max-w-md mx-auto py-12 px-6 bg-white rounded-2xl border border-slate-200 shadow-sm text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+              <div className={`max-w-md mx-auto py-12 px-6 ${t.cardBg} rounded-3xl border ${t.cardBorder} shadow-sm text-center`}>
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600">
                   <Search className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-[#123A63] mb-1">
+                <h3 className={`text-base font-bold ${t.textHeading} mb-1`}>
                   Không tìm thấy ứng dụng phù hợp
                 </h3>
-                <p className="text-xs text-slate-500 mb-4">
+                <p className={`text-xs ${t.textMuted} mb-4`}>
                   Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ {activeApps.length} ứng dụng.
                 </p>
                 <button
-                  onClick={() => setSearchQuery('')}
-                  className="px-4 py-2 rounded-xl bg-[#123A63] text-white text-xs font-bold hover:bg-blue-900 transition-colors shadow-sm cursor-pointer"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('ALL');
+                  }}
+                  className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-colors shadow-sm cursor-pointer`}
                 >
                   Xem toàn bộ {activeApps.length} ứng dụng
                 </button>
               </div>
+            ) : appViewMode === 'compact' ? (
+              /* ==================== BỐ CỤC 1: DẠNG DANH MỤC KHOA HỌC GỌN GÀNG ==================== */
+              <div className="space-y-3">
+                <div className="hidden md:flex items-center justify-between px-4 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <span className="w-7 text-center">STT</span>
+                    <span className="w-14 text-center">Ảnh</span>
+                    <span>Tên Ứng Dụng & Phân Loại Môn Học</span>
+                  </div>
+                  <div>Thao Tác & Trải Nghiệm</div>
+                </div>
+
+                {filteredApps.map((app, index) => (
+                  <div
+                    key={app.id}
+                    className={`p-3.5 sm:p-4 rounded-2xl ${t.cardBg} border ${t.cardBorder} ${t.cardHoverBorder} ${t.cardHoverShadow} transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-3.5 group`}
+                  >
+                    {/* Phần Trái: STT + Thumbnail + Tên Ứng Dụng + Badges */}
+                    <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
+                      <span className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold text-xs flex items-center justify-center shrink-0">
+                        {index + 1}
+                      </span>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+                        {!appImgErrors[app.id] ? (
+                          <img 
+                            src={app.image} 
+                            alt={app.title} 
+                            onError={() => handleAppImgError(app.id)} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100 dark:bg-slate-800">
+                            <Layers className="w-5 h-5" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-black ${
+                            app.levelBadge === 'TIỂU HỌC' ? 'bg-amber-600 text-white' :
+                            app.levelBadge === 'THCS' ? 'bg-blue-700 text-white' :
+                            app.levelBadge === 'THPT' ? 'bg-purple-700 text-white' :
+                            app.levelBadge === 'CV 5512' ? 'bg-emerald-700 text-white' :
+                            'bg-slate-700 text-white'
+                          }`}>
+                            {app.levelBadge || 'TIỆN ÍCH'}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${t.badgeBg}`}>
+                            {app.category}
+                          </span>
+                          {app.featured && (
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-gradient-to-r from-amber-500 to-yellow-500 text-white flex items-center gap-1">
+                              <Crown className="w-2.5 h-2.5" />
+                              HOT
+                            </span>
+                          )}
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                            app.badge === 'MIỄN PHÍ' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' :
+                            app.badge === 'NỘI BỘ ADMIN' ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' :
+                            'bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300'
+                          }`}>
+                            {app.badge}
+                          </span>
+                        </div>
+                        <h3 className={`text-sm sm:text-base font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors truncate`}>
+                          {app.title}
+                        </h3>
+                        <p className={`text-xs ${t.textMuted} line-clamp-1 mt-0.5`}>
+                          {app.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Phần Phải: Nút mở công cụ ngay */}
+                    <div className="flex items-center gap-2 shrink-0 justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                      {app.url && app.url.startsWith('http') ? (
+                        <a
+                          href={app.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:shadow`}
+                        >
+                          <span>Mở công cụ</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => handleAppClick(app, e)}
+                          className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:shadow cursor-pointer`}
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Trải nghiệm ngay</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-              /* ACTIVE APPS GRID */
+              /* ==================== BỐ CỤC 2: DẠNG THẺ LƯỚI TRỰC QUAN (GRID VIEW) ==================== */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
                 {filteredApps.map((app) => (
                   <div
                     key={app.id}
-                    className={`group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300/80 transition-all duration-300 flex flex-col hover:-translate-y-1 ${
+                    className={`group ${t.cardBg} rounded-2xl border ${t.cardBorder} overflow-hidden shadow-xs ${t.cardHoverBorder} ${t.cardHoverShadow} transition-all duration-300 flex flex-col hover:-translate-y-1 ${
                       app.featured ? 'ring-2 ring-amber-400/80 shadow-amber-500/10' : ''
                     }`}
                   >
-                    <div className="relative h-48 bg-slate-100 overflow-hidden">
+                    <div className="relative h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
                       {!appImgErrors[app.id] ? (
                         <img
                           src={app.image}
@@ -983,40 +1625,42 @@ export default function App() {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-slate-400">
                           <Layers className="w-12 h-12 mb-2" />
                           <span className="text-xs font-semibold">GV AI TOÀN NĂNG</span>
                         </div>
                       )}
+                      
                       {/* Badge Cấp học rõ nét ở góc trên bên trái */}
                       <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
                         {app.levelBadge === 'TIỂU HỌC' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-600 text-white backdrop-blur-xs shadow-md border border-amber-400/50 tracking-wide flex items-center gap-1">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-600 text-white shadow-md border border-amber-400/50 tracking-wide flex items-center gap-1">
                             🎒 TIỂU HỌC
                           </span>
                         )}
                         {app.levelBadge === 'THCS' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-700 text-white backdrop-blur-xs shadow-md border border-blue-400/50 tracking-wide flex items-center gap-1">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-700 text-white shadow-md border border-blue-400/50 tracking-wide flex items-center gap-1">
                             🏫 CẤP THCS
                           </span>
                         )}
                         {app.levelBadge === 'THPT' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-purple-700 text-white backdrop-blur-xs shadow-md border border-purple-400/50 tracking-wide flex items-center gap-1">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-purple-700 text-white shadow-md border border-purple-400/50 tracking-wide flex items-center gap-1">
                             🎓 CẤP THPT
                           </span>
                         )}
                         {app.levelBadge === 'CV 5512' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-700 text-white backdrop-blur-xs shadow-md border border-emerald-400/50 tracking-wide flex items-center gap-1">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-700 text-white shadow-md border border-emerald-400/50 tracking-wide flex items-center gap-1">
                             📝 CV 5512
                           </span>
                         )}
                         {app.levelBadge === 'TIỆN ÍCH' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-slate-700 text-white backdrop-blur-xs shadow-md border border-slate-500/50 tracking-wide flex items-center gap-1">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-slate-700 text-white shadow-md border border-slate-500/50 tracking-wide flex items-center gap-1">
                             🛠️ TIỆN ÍCH
                           </span>
                         )}
                       </div>
 
+                      {/* Badge HOT và Bản Quyền PRO ở góc trên bên phải */}
                       <div className="absolute top-3 right-3 flex items-center gap-1.5">
                         {app.featured && (
                           <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-xs flex items-center gap-1">
@@ -1032,8 +1676,9 @@ export default function App() {
                           {app.badge}
                         </span>
                       </div>
+                      
                       <div className="absolute bottom-3 left-3">
-                        <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white/90 text-slate-700 shadow-xs backdrop-blur-xs">
+                        <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs backdrop-blur-xs">
                           {app.category}
                         </span>
                       </div>
@@ -1041,10 +1686,10 @@ export default function App() {
 
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div>
-                        <h3 className="text-lg font-bold text-[#123A63] group-hover:text-[#2563EB] transition-colors line-clamp-1">
+                        <h3 className={`text-lg font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors line-clamp-1`}>
                           {app.title}
                         </h3>
-                        <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-3">
+                        <p className={`text-sm ${t.textMuted} leading-relaxed mt-2 line-clamp-3`}>
                           {app.description}
                         </p>
                       </div>
@@ -1054,7 +1699,7 @@ export default function App() {
                           href={app.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]"
+                          className={`w-full py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]`}
                         >
                           Mở công cụ ngay
                           <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -1063,7 +1708,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={(e) => handleAppClick(app, e)}
-                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#123A63] via-[#1A4574] to-[#2563EB] hover:from-[#0d2847] hover:to-blue-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer"
+                          className={`w-full py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer`}
                         >
                           Mở công cụ ngay
                           <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12 text-amber-300" />
@@ -1080,7 +1725,7 @@ export default function App() {
       </main>
 
       {/* FOOTER & THÔNG TIN TÁC GIẢ TƯƠNG PHẢN CAO (#footer-info) */}
-      <footer id="footer-info" className="bg-[#0A192F] text-white border-t-2 border-[#1E293B] py-10 sm:py-12">
+      <footer id="footer-info" className={`${t.footerBg} text-white border-t-2 ${t.footerBorder} py-10 sm:py-12 transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
             
@@ -1095,27 +1740,31 @@ export default function App() {
                     {BRAND.websiteTitle}
                   </h2>
                   <p className="text-xs text-cyan-400 font-semibold">
-                    Hệ Sinh Thái Ứng Dụng Chuyên Môn Giáo Viên THCS
+                    Cổng Đề Kiểm Tra Số & Hệ Sinh Thái Trợ Lý AI Giáo Viên THCS & THPT
                   </p>
                 </div>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
-                Bộ công cụ chuyên biệt hỗ trợ soạn giáo án tích hợp Năng lực số (CV 5512), sinh ma trận & đề kiểm tra 12 môn (CV 7991), chuyển đổi công thức Toán học Mathpix sang Word và các tiện ích sư phạm thiết thực.
+                Bộ công cụ chuyên biệt hỗ trợ soạn giáo án tích hợp Năng lực số (CV 5512), sinh ma trận & đề kiểm tra 18+ môn THCS (CV 7991) & THPT (2025+), chuyển đổi công thức Toán học Mathpix sang Word, căn lề văn bản chuẩn Nghị định 30/2020 và các tiện ích sư phạm thiết thực.
               </p>
 
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-emerald-400 border border-slate-700 font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-emerald-400 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Kích hoạt độc lập từng app
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700 font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-cyan-300 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Tiện ích miễn phí trọn đời
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-slate-700 font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-amber-300 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Bảo mật Ed25519 Offline
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-purple-300 border border-slate-700 font-medium">
+                  <Globe className="w-3.5 h-3.5" />
+                  Tên miền dekiemtraso.com
                 </span>
               </div>
             </div>
@@ -1174,7 +1823,7 @@ export default function App() {
           {/* Dòng bản quyền & Cổng Admin */}
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
             <div>
-              {BRAND.copyright}
+              {BRAND.copyright} • Chính thức trên <a href="https://dekiemtraso.com" className="text-cyan-400 hover:underline font-bold">dekiemtraso.com</a>
             </div>
 
             <div className="flex items-center gap-3">
@@ -1198,6 +1847,14 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* THÔNG BÁO TOAST KHI CHUYỂN GIAO DIỆN HOẶC BỐ CỤC */}
+      {themeToast && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-slate-950/95 text-white text-xs font-bold shadow-2xl border border-slate-700/90 flex items-center gap-2 animate-bounce backdrop-blur-md">
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          <span>{themeToast}</span>
+        </div>
+      )}
 
       {/* SKKN MODAL IF NEEDED */}
       {showSKKNModal && (
