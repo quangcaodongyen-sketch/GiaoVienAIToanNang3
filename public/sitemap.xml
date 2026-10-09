@@ -7,127 +7,193 @@
   <!-- Trang Chủ Chính -->
   <url>
     <loc>https://dekiemtraso.com/</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Chuẩn Hóa Văn Bản Nghị Định 30 & Soạn Giáo Án 5512 (AI Word) -->
+  <!-- Tích Hợp NLS - AI (CV 5512) -->
   <url>
-    <loc>https://dekiemtraso.com/#chuan-hoa-vb</loc>
-    <lastmod>2026-09-25</lastmod>
+    <loc>https://dekiemtraso.com/#nls-ai</loc>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- 1. Tạo Đề Kiểm Tra Môn Toán Học THCS (CV 7991) -->
+  <!-- Chuẩn Hóa Văn Bản Nghị Định 30 (AI Word) -->
+  <url>
+    <loc>https://dekiemtraso.com/#chuan-hoa-vb</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- CẤP THCS (CÔNG VĂN 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-toan</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- 2. Tạo Đề Kiểm Tra Môn Ngữ Văn THCS (CV 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-van</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- 3. Tạo Đề Tiếng Anh Global Success (CV 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-tieng-anh</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- 4. Tạo Đề Khoa Học Tự Nhiên KHTN (CV 7991) -->
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-15p-tienganh</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://dekiemtraso.com/#tao-de-khtn</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- 5. Tạo Đề Lịch Sử và Địa Lí THCS (CV 7991) -->
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-lichsu-thcs</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://dekiemtraso.com/#tao-de-sudia</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- 6. Tạo Đề Kiểm Tra Môn Tin Học THCS (CV 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-tin</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- 7. Tạo Đề Giáo Dục Công Dân GDCD (CV 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-gdcd</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- 8. Tạo Đề Kiểm Tra Môn Công Nghệ THCS (CV 7991) -->
   <url>
     <loc>https://dekiemtraso.com/#tao-de-cn</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI) -->
+  <!-- CẤP THPT (CẤU TRÚC MỚI 2025+) -->
   <url>
-    <loc>https://dekiemtraso.com/#tach-gop-pdf</loc>
-    <lastmod>2026-09-25</lastmod>
+    <loc>https://dekiemtraso.com/#tao-de-tieng-anh-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-toan-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-van-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-vatli-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-hoahoc-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-sinhhoc-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-tin-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-lichsu-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-diali-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-gdktpl-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dekiemtraso.com/#tao-de-cn-thpt</loc>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Smart Listening Pro (Tạo Bài Nghe Tiếng Anh) -->
+  <!-- TIỂU HỌC (THÔNG TƯ 27) -->
+  <url>
+    <loc>https://dekiemtraso.com/#taode-tienganh-tieuhoc</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- CÁC TIỆN ÍCH BỔ TRỢ -->
   <url>
     <loc>https://dekiemtraso.com/#smart-listening</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Tích Hợp NLS - AI THCS (CV 5512) -->
   <url>
-    <loc>https://dekiemtraso.com/#nls-ai</loc>
-    <lastmod>2026-09-25</lastmod>
+    <loc>https://dekiemtraso.com/#tach-gop-pdf</loc>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Sinh 3 Đề Biến Thể VIP (AI PRO) -->
   <url>
     <loc>https://dekiemtraso.com/#sinh-de-bien-the</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Screen Record Pro V2 -->
   <url>
     <loc>https://dekiemtraso.com/#screen-record</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
-
-  <!-- Đinh Thành Cleaner Pro v4.5 VIP -->
   <url>
     <loc>https://dekiemtraso.com/#cleaner-pro</loc>
-    <lastmod>2026-09-25</lastmod>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
