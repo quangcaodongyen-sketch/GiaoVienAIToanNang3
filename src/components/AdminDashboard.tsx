@@ -7107,6 +7107,24 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     {f === 'CRITICAL' && '🔴 Mức Nguy Cấp'}
                   </button>
                 ))}
+
+                {securityAlerts.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (window.confirm('XÁC NHẬN XÓA TẤT CẢ CẢNH BÁO AN NINH NHẦM?\n\nToàn bộ danh sách cảnh báo nhầm hiện tại sẽ được dọn dẹp sạch sẻ khỏi hệ thống Cloud.')) {
+                        setActionNotice({ type: 'loading', title: 'Đang dọn dẹp cảnh báo...', message: 'Đang xóa toàn bộ cảnh báo nhầm trên Cloud' });
+                        await cloudSyncService.clearAllSecurityAlerts(securityAlerts);
+                        setSecurityAlerts([]);
+                        setActionNotice({ type: 'success', title: 'Đã xóa sạch tất cả cảnh báo!', message: 'Danh sách cảnh báo an ninh đã được làm sạch hoàn toàn.' });
+                      }
+                    }}
+                    className="py-1.5 px-3 rounded-lg bg-rose-600/90 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 ml-2"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xóa Tất Cả Cảnh Báo Nhầm</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -7294,19 +7312,20 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                 <span>Lập Bằng Chứng</span>
                               </button>
 
-                              {alert.phoneGuess && (
-                                <a
-                                  href={`https://zalo.me/${alert.phoneGuess.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                                    `Kính gửi Thầy/Cô ${alert.teacherGuess || ''},\nHệ thống an ninh của Thầy giáo Đinh Văn Thành phát hiện máy tính [${alert.computerName}] (Mã máy: ${alert.machineId}) vừa có hành vi can thiệp phần mềm: ${alert.tamperDetails}.\nKính đề nghị Thầy/Cô liên hệ Thầy Thành (0915.213717) để làm rõ.`
-                                  )}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="py-1 px-2 rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-[10px] flex items-center justify-center gap-1 transition"
-                                >
-                                  <Send className="w-2.5 h-2.5" />
-                                  <span>Zalo Đối Chất</span>
-                                </a>
-                              )}
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  if (window.confirm(`XÁC NHẬN XÓA CẢNH BÁO NHẦM!\n\n• Cảnh báo: ${alert.computerName} (${alert.userName})\n• Lý do: ${alert.tamperDetails}\n\nThực hiện xóa cảnh báo này khỏi danh sách?`)) {
+                                    await cloudSyncService.dismissSecurityAlert(alert.id, alert.issueNumber);
+                                    setSecurityAlerts(prev => prev.filter(a => a.id !== alert.id));
+                                    setActionNotice({ type: 'success', title: 'Đã xóa cảnh báo nhầm!', message: 'Cảnh báo đã được loại bỏ thành công.' });
+                                  }
+                                }}
+                                className="py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 font-semibold text-[11px] flex items-center justify-center gap-1 border border-slate-700 hover:border-rose-700/60 transition cursor-pointer"
+                              >
+                                <Trash2 className="w-3 h-3 text-rose-400" />
+                                <span>Xóa Cảnh Báo</span>
+                              </button>
                             </div>
                           </td>
                         </tr>

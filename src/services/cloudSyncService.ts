@@ -745,6 +745,19 @@ ${JSON.stringify(payloadData, null, 2)}
           for (const iss of issues) {
             const labels = (iss.labels || []).map((l: any) => (l.name || '').toLowerCase());
             const title = iss.title || '';
+
+            // Bỏ qua tuyệt đối các cảnh báo đã xóa / báo nhầm / bỏ qua
+            if (
+              labels.includes('status:deleted') ||
+              labels.includes('false-positive') ||
+              labels.includes('status:ignored') ||
+              labels.includes('status:resolved') ||
+              title.includes('[ĐÃ XÓA]') ||
+              title.includes('ĐÃ XÓA')
+            ) {
+              continue;
+            }
+
             if (labels.includes('security:alert') || labels.includes('tamper') || title.includes('[CẢNH BÁO XÂM NHẬP]') || title.includes('CẢNH BÁO')) {
               // Parse payload nếu có
               let parsed: Partial<SecurityAlertItem> = {};
@@ -825,7 +838,7 @@ ${JSON.stringify(payloadData, null, 2)}
     return alerts;
   }
 
-  // Đóng hoặc bỏ qua cảnh báo
+  // Đóng hoặc bỏ qua / xóa cảnh báo nhầm
   public async dismissSecurityAlert(alertId: string, issueNumber?: number): Promise<boolean> {
     try {
       if (issueNumber) {
@@ -834,9 +847,24 @@ ${JSON.stringify(payloadData, null, 2)}
           headers: getHeaders(),
           body: JSON.stringify({
             state: 'closed',
-            labels: ['security:alert', 'status:resolved']
+            title: `[ĐÃ XÓA CẢNH BÁO] Alert #${issueNumber}`,
+            labels: ['security:alert', 'status:deleted', 'false-positive']
           })
         });
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Xóa sạch tất cả cảnh báo nhầm khỏi giao diện Admin Dashboard
+  public async clearAllSecurityAlerts(alerts: SecurityAlertItem[]): Promise<boolean> {
+    try {
+      for (const item of alerts) {
+        if (item.issueNumber) {
+          await this.dismissSecurityAlert(item.id, item.issueNumber);
+        }
       }
       return true;
     } catch {
