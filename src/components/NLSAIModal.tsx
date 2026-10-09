@@ -33,6 +33,8 @@ import { BRAND, NLS_RESOURCES } from '../config/brand';
 import { getOrCreateNLSHardwareCode, verifyKeyFormat } from '../services/nlsKeyService';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 import { CrossPromoBanner } from './CrossPromoBanner';
 
 interface NLSAIModalProps {
@@ -186,6 +188,7 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
 
   useEffect(() => {
     if (isOpen) {
+      syncBrowserHash('#nls-ai');
       const code = getOrCreateNLSHardwareCode();
       setDetectedMid(code);
 
@@ -647,6 +650,11 @@ ${exportDisabilityProc}
           </div>
 
           <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#nls-ai" 
+              appName="Tích Hợp NLS & AI" 
+              compact={true} 
+            />
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
@@ -665,6 +673,12 @@ ${exportDisabilityProc}
             </button>
           </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#nls-ai" 
+          appName="Tích Hợp NLS & AI (CV 5512)" 
+        />
 
         {/* 2 TABS NAVIGATION GỌN GÀNG, CHUYÊN NGHIỆP */}
         <div className="bg-slate-950/90 px-4 sm:px-6 pt-3 border-b border-slate-800/90 flex gap-2 sm:gap-4 shrink-0 overflow-x-auto text-xs">

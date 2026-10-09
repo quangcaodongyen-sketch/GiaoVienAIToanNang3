@@ -30,6 +30,8 @@ import {
 } from '../services/taodeKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import { CrossPromoBanner } from './CrossPromoBanner';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeTiengAnhModalProps {
   isOpen: boolean;
@@ -70,6 +72,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   useEffect(() => {
     if (!isOpen) return;
+    syncBrowserHash('#tao-de-tieng-anh');
     const mid = getOrCreateExamHardwareCode();
     setDetectedMid(mid);
 
@@ -225,13 +228,26 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#tao-de-tieng-anh" 
+              appName="Tạo Đề Tiếng Anh THCS" 
+              compact={true} 
+            />
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#tao-de-tieng-anh" 
+          appName="Tạo Đề Tiếng Anh THCS (CV 7991)" 
+        />
 
         {/* TABS NAVIGATION CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ BẢN QUYỀN */}
         <div className="flex border-b border-slate-800 bg-slate-900/60 px-6 shrink-0 overflow-x-auto">

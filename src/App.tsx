@@ -53,6 +53,7 @@ import { CrossPromoBanner } from './components/CrossPromoBanner';
 import { webSecurityGuard } from './services/webSecurityGuard';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
 import { systemMaintenanceService } from './services/systemMaintenanceService';
+import { getAppShareUrl, copyToClipboard, syncBrowserHash } from './utils/shareUtils';
 
 export type ThemeMode = 'pedagogical' | 'dark-cyber' | 'emerald-sage' | 'royal-purple';
 export type ViewMode = 'grid' | 'compact';
@@ -587,7 +588,11 @@ export default function App() {
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+    window.addEventListener('popstate', handleHash);
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('popstate', handleHash);
+    };
   }, []);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -626,8 +631,30 @@ export default function App() {
     );
   });
 
+  const [copyToast, setCopyToast] = useState<{ visible: boolean; url: string; title: string }>({
+    visible: false,
+    url: '',
+    title: ''
+  });
+
+  const handleCopyShareLink = async (appUrl: string, appTitle: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const shareUrl = getAppShareUrl(appUrl);
+    const ok = await copyToClipboard(shareUrl);
+    if (ok) {
+      setCopyToast({ visible: true, url: shareUrl, title: appTitle });
+      setTimeout(() => {
+        setCopyToast((prev) => ({ ...prev, visible: false }));
+      }, 3500);
+    }
+  };
+
   const handleAppClick = (app: AppCard, e: React.MouseEvent) => {
     webSecurityGuard.setActiveApp(app.id, app.title);
+    if (app.url && app.url.startsWith('#')) {
+      syncBrowserHash(app.url);
+    }
     if (app.id === 'smart-listening-pro') {
       e.preventDefault();
       setShowListeningModal(true);
@@ -1580,8 +1607,17 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Phần Phải: Nút mở công cụ ngay */}
+                    {/* Phần Phải: Nút Copy Link gửi khách & Mở công cụ */}
                     <div className="flex items-center gap-2 shrink-0 justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopyShareLink(app.url, app.title, e)}
+                        className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+                        title={`Sao chép link gửi khách: ${getAppShareUrl(app.url)}`}
+                      >
+                        <Copy className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span>Copy Link</span>
+                      </button>
                       {app.url && app.url.startsWith('http') ? (
                         <a
                           href={app.url}
@@ -1694,26 +1730,37 @@ export default function App() {
                         </p>
                       </div>
 
-                      {app.url && app.url.startsWith('http') ? (
-                        <a
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`w-full py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]`}
-                        >
-                          Mở công cụ ngay
-                          <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </a>
-                      ) : (
+                      <div className="flex items-center gap-2">
+                        {app.url && app.url.startsWith('http') ? (
+                          <a
+                            href={app.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex-1 py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]`}
+                          >
+                            <span>Mở công cụ ngay</span>
+                            <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                          </a>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={(e) => handleAppClick(app, e)}
+                            className={`flex-1 py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer`}
+                          >
+                            <span>Mở công cụ ngay</span>
+                            <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12 text-amber-300" />
+                          </button>
+                        )}
                         <button
                           type="button"
-                          onClick={(e) => handleAppClick(app, e)}
-                          className={`w-full py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer`}
+                          onClick={(e) => handleCopyShareLink(app.url, app.title, e)}
+                          className="py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0 shadow-xs active:scale-95"
+                          title={`Sao chép link gửi khách: ${getAppShareUrl(app.url)}`}
                         >
-                          Mở công cụ ngay
-                          <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12 text-amber-300" />
+                          <Copy className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span className="hidden sm:inline">Copy Link</span>
                         </button>
-                      )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -2064,6 +2111,29 @@ export default function App() {
           onClose={() => setShowTrialModal(false)}
         />
       )}
+      {/* FLOATING TOAST THÔNG BÁO SAO CHÉP LINK GỬI KHÁCH THÀNH CÔNG */}
+      {copyToast.visible && (
+        <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 max-w-sm bg-slate-950/95 border-2 border-emerald-500 text-white p-4 rounded-2xl shadow-2xl shadow-emerald-950/60 flex items-start gap-3 backdrop-blur-md animate-bounce">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 mt-0.5">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-black text-emerald-400 text-xs sm:text-sm uppercase tracking-wide">
+              ĐÃ SAO CHÉP LINK GỬI KHÁCH!
+            </div>
+            <div className="text-white text-xs font-semibold truncate mt-0.5">
+              {copyToast.title}
+            </div>
+            <code className="block bg-slate-900 border border-slate-800 text-cyan-300 font-mono text-[11px] px-2 py-1 rounded-lg mt-1 truncate select-all">
+              {copyToast.url}
+            </code>
+            <div className="text-slate-400 text-[10px] mt-1">
+              Thầy có thể dán (Ctrl+V) vào Zalo / Facebook để gửi giáo viên ngay.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
       <a
         href={BRAND.zaloUrl}

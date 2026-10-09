@@ -43,6 +43,8 @@ import {
   PRODUCT_NAME,
   APP_TAG
 } from '../services/taodeLichSuTHCSKeyService';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeLichSuTHCSModalProps {
   isOpen: boolean;
@@ -82,6 +84,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      syncBrowserHash('#tao-de-lichsu');
       webSecurityGuard.setActiveApp('tao-de-lichsu-thcs', PRODUCT_NAME);
       const hw = getOrCreateLSTHCSHardwareCode();
       setHardwareCode(hw);
@@ -219,6 +222,11 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#tao-de-lichsu" 
+              appName="Tạo Đề Lịch Sử THCS" 
+              compact={true} 
+            />
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
@@ -236,6 +244,12 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
             </button>
           </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#tao-de-lichsu" 
+          appName="Tạo Đề Lịch Sử THCS (CV 7991)" 
+        />
 
         {/* 3 TAB NAVIGATION */}
         <div className="flex border-b border-slate-800 bg-slate-900/90 px-6">

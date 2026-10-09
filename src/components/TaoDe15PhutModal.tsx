@@ -28,6 +28,8 @@ import {
   decrementExam15PTrial
 } from '../services/taode15pKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDe15PhutModalProps {
   isOpen: boolean;
@@ -73,6 +75,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    syncBrowserHash('#tao-de-15p-tienganh');
     const mid = getOrCreateExam15PHardwareCode();
     setDetectedMid(mid);
 
@@ -225,6 +228,11 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           </div>
           
           <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#tao-de-15p-tienganh" 
+              appName="Tạo Đề 15 Phút Tiếng Anh" 
+              compact={true} 
+            />
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
@@ -245,6 +253,12 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
             </button>
           </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#tao-de-15p-tienganh" 
+          appName="Tạo Đề 15 Phút Tiếng Anh (Global Success)" 
+        />
 
         {/* 3 Tabs Navigation Bar - Chuẩn mô hình NLS-AI */}
         <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2 overflow-x-auto">

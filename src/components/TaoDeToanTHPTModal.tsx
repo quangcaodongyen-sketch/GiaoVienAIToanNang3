@@ -26,6 +26,8 @@ import {
   ExamVerifyResult
 } from '../services/taodeKeyService';
 import { CrossPromoBanner } from './CrossPromoBanner';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeToanTHPTModalProps {
   isOpen: boolean;
@@ -64,6 +66,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
 
   useEffect(() => {
     if (!isOpen) return;
+    syncBrowserHash('#tao-de-toan-thpt');
     const toanMid = getOrCreateExamToanTHPTHardwareCode();
     setDetectedMid(toanMid);
 
@@ -189,13 +192,26 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#tao-de-toan-thpt" 
+              appName="Tạo Đề Toán THPT" 
+              compact={true} 
+            />
+            <button
+              onClick={onClose}
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#tao-de-toan-thpt" 
+          appName="Tạo Đề Toán THPT (QĐ 764/BGDĐT)" 
+        />
 
         {/* 3 TABS ĐIỀU HƯỚNG */}
         <div className="flex border-b border-slate-800 bg-slate-950/40 px-6 shrink-0 gap-2">

@@ -26,6 +26,22 @@ import {
 import { BRAND, EXAM_THPT_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
+
+export const THPT_HASH_MAP: Record<string, string> = {
+  TOAN: '#tao-de-toan-thpt',
+  TIENGANH: '#tao-de-tieng-anh-thpt',
+  NGUVAN: '#tao-de-van-thpt',
+  VATLI: '#tao-de-vatli-thpt',
+  HOAHOC: '#tao-de-hoahoc-thpt',
+  SINHHOC: '#tao-de-sinhhoc-thpt',
+  TINHOC: '#tao-de-tin-thpt',
+  LICHSU: '#tao-de-lichsu-thpt',
+  DIALI: '#tao-de-diali-thpt',
+  GDKTPL: '#tao-de-gdktpl-thpt',
+  CONGNGHE: '#tao-de-cn-thpt',
+};
 
 interface TaoDeTHPTSubjectModalProps {
   isOpen: boolean;
@@ -70,6 +86,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
   useEffect(() => {
     if (initialSubject && EXAM_THPT_RESOURCES.subjects[initialSubject as keyof typeof EXAM_THPT_RESOURCES.subjects]) {
       setCurrentSubKey(initialSubject);
+      syncBrowserHash(THPT_HASH_MAP[initialSubject] || '#tao-de-van-thpt');
     }
   }, [initialSubject, isOpen]);
 
@@ -249,13 +266,26 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl={THPT_HASH_MAP[currentSubKey] || '#tao-de-van-thpt'} 
+              appName={curSub.name} 
+              compact={true} 
+            />
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl={THPT_HASH_MAP[currentSubKey] || '#tao-de-van-thpt'} 
+          appName={curSub.name} 
+        />
 
         {/* THANH CHỌN BỘ MÔN THPT (11 MÔN ĐỘC LẬP) */}
         <div className="px-4 py-2.5 bg-slate-950/90 border-b border-slate-800/80 overflow-x-auto flex items-center gap-1.5 scrollbar-none shrink-0">
@@ -265,7 +295,10 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
             return (
               <button
                 key={key}
-                onClick={() => setCurrentSubKey(key)}
+                onClick={() => {
+                  setCurrentSubKey(key);
+                  syncBrowserHash(THPT_HASH_MAP[key] || '#tao-de-van-thpt');
+                }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
                   isSel
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'

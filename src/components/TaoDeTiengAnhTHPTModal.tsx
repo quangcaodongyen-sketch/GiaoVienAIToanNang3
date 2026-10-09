@@ -34,6 +34,8 @@ import {
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { CrossPromoBanner } from './CrossPromoBanner';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeTiengAnhTHPTModalProps {
   isOpen: boolean;
@@ -74,6 +76,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
 
   useEffect(() => {
     if (!isOpen) return;
+    syncBrowserHash('#tao-de-tieng-anh-thpt');
     const thptMid = getOrCreateExamTHPTHardwareCode();
     setDetectedMid(thptMid);
 
@@ -197,13 +200,26 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#tao-de-tieng-anh-thpt" 
+              appName="Tạo Đề Tiếng Anh THPT" 
+              compact={true} 
+            />
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#tao-de-tieng-anh-thpt" 
+          appName="Tạo Đề Tiếng Anh THPT (Lớp 10, 11, 12)" 
+        />
 
         {/* TABS NAVIGATION CHUẨN 3 TAB THEO RULE 2 */}
         <div className="flex border-b border-slate-800 bg-slate-950/50 px-5 pt-3 gap-2 sm:gap-4 overflow-x-auto shrink-0">

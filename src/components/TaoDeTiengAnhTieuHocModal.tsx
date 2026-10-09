@@ -34,6 +34,8 @@ import {
 } from '../services/taodeKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import { CrossPromoBanner } from './CrossPromoBanner';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeTiengAnhTieuHocModalProps {
   isOpen: boolean;
@@ -73,6 +75,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
 
   useEffect(() => {
     if (!isOpen) return;
+    syncBrowserHash('#taode-tienganh-tieuhoc');
     const priMid = getOrCreateExamEngPrimaryHardwareCode();
     setDetectedMid(priMid);
 
@@ -185,14 +188,27 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
             </div>
           </div>
           
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#taode-tienganh-tieuhoc" 
+              appName="Tạo Đề Tiếng Anh Tiểu Học" 
+              compact={true} 
+            />
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-xl bg-slate-800/80 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#taode-tienganh-tieuhoc" 
+          appName="Tạo Đề Tiếng Anh Tiểu Học (TT 27)" 
+        />
 
         {/* 3 TABS NAVIGATION (Rule 2) */}
         <div className="flex border-b border-slate-800 bg-slate-950/60 px-5 gap-2 shrink-0">

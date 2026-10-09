@@ -38,6 +38,8 @@ import { cloudSyncService } from '../services/cloudSyncService';
 import { ADMIN_WHITELIST_MACHINES } from '../services/activityTrackingService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import { CrossPromoBanner } from './CrossPromoBanner';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface MathStudioModalProps {
   isOpen: boolean;
@@ -155,6 +157,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
 
   useEffect(() => {
     if (isOpen) {
+      syncBrowserHash('#mathstudio');
       const code = getOrCreateMathStudioHardwareCode();
       setDetectedMid(code);
 
@@ -389,6 +392,11 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           </div>
 
           <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl="#mathstudio" 
+              appName="MathStudio 2026+" 
+              compact={true} 
+            />
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
@@ -407,6 +415,12 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
             </button>
           </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl="#mathstudio" 
+          appName="Đinh Thành MathStudio 2026+ (Word & Mathpix)" 
+        />
 
         {/* KIỂM TRA QUYỀN TRUY CẬP: NẾU KHÔNG PHẢI ADMIN THÌ HIỂN THỊ MÀN HÌNH BẢO VỆ NỘI BỘ */}
         {!isAdminAuthorized ? (

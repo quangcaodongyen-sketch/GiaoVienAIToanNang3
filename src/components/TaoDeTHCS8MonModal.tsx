@@ -31,6 +31,8 @@ import {
   downloadTHCS8MonWordDoc,
   THCS8MonExamData
 } from '../services/thcs8MonWordExportService';
+import { ShareLinkBar } from './ShareLinkBar';
+import { syncBrowserHash } from '../utils/shareUtils';
 
 interface TaoDeTHCS8MonModalProps {
   isOpen: boolean;
@@ -196,6 +198,17 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
 
 const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'TIN', 'CN'];
 
+export const SUBJECT_HASH_MAP: Record<string, string> = {
+  TOAN: '#tao-de-toan',
+  VAN: '#tao-de-van',
+  KHTN: '#tao-de-khtn',
+  SUDIA: '#tao-de-sudia',
+  LICHSU: '#tao-de-lichsu',
+  TIN: '#tao-de-tin',
+  GDCD: '#tao-de-gdcd',
+  CN: '#tao-de-cn',
+};
+
 export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   isOpen,
   onClose,
@@ -244,6 +257,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
     const finalSub = resolveSubKey();
     setCurrentSubjectKey(finalSub);
+    syncBrowserHash(SUBJECT_HASH_MAP[finalSub] || '#tao-de-toan');
 
     let mid = localStorage.getItem('gvai_taode_hw_code');
     if (!mid) {
@@ -426,14 +440,27 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
-            title="Đóng cửa sổ"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ShareLinkBar 
+              appUrl={SUBJECT_HASH_MAP[currentSubjectKey] || '#tao-de-toan'} 
+              appName={curSub.name} 
+              compact={true} 
+            />
+            <button
+              onClick={onClose}
+              className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+              title="Đóng cửa sổ"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
+        <ShareLinkBar 
+          appUrl={SUBJECT_HASH_MAP[currentSubjectKey] || '#tao-de-toan'} 
+          appName={curSub.name} 
+        />
 
         {/* NAVIGATION TABS (CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ KÍCH HOẠT) */}
         <div className="px-5 pt-2.5 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0 flex-wrap gap-2">
@@ -527,6 +554,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       onChange={(e) => {
                         const val = e.target.value;
                         setCurrentSubjectKey(val);
+                        syncBrowserHash(SUBJECT_HASH_MAP[val] || '#tao-de-toan');
                         try {
                           const suite = getTHCS8MonExamSuite(val, selectedGrade, selectedTerm, selectedExamCode);
                           setExamData(suite);
@@ -887,7 +915,10 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       <button
                         key={key}
                         type="button"
-                        onClick={() => setCurrentSubjectKey(key)}
+                        onClick={() => {
+                          setCurrentSubjectKey(key);
+                          syncBrowserHash(SUBJECT_HASH_MAP[key] || '#tao-de-toan');
+                        }}
                         className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
                           currentSubjectKey === key
                             ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30'
