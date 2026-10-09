@@ -1,10 +1,10 @@
 {
   "appId": "exam-8mon",
   "appName": "Trung Tâm Tạo Đề 8 Môn THCS (CV 7991)",
-  "currentVersion": "3.8.0",
-  "latestVersion": "3.8.0",
+  "currentVersion": "3.8.1",
+  "latestVersion": "3.8.1",
   "releaseDate": "09/10/2026",
-  "changelog": "• [09/10/2026 - v3.8.0] Cập nhật bản vá lỗi mới nhất & đồng bộ hệ thống. Định hướng tải bộ cài PC để sử dụng đầy đủ tính năng ra đề kiểm tra, xuất file Word chuẩn mực không lỗi font MathType/LaTeX.\n• Tự động kích hoạt bản quyền Pro tức thì từ Web Admin ngay khi được phê duyệt\n• Tự động đồng bộ ngầm và kiểm tra phiên bản mới định kỳ\n• Thêm hộp thoại thông báo cập nhật phiên bản mới hiện đại\n• Trọn bộ 8 môn: Toán, Văn, KHTN, Sử Địa, GDCD, Tin, Công nghệ, Tiếng Anh\n• Chuẩn ma trận đặc tả Công văn 7991/BGDĐT - 4 mức độ nhận thức",
+  "changelog": "• [09/10/2026 - v3.8.1] Cập nhật bộ cài chuẩn mới nhất cho môn Khoa học tự nhiên THCS (KHTN)\n• [09/10/2026 - v3.8.0] Cập nhật bản vá lỗi mới nhất & đồng bộ hệ thống. Định hướng tải bộ cài PC để sử dụng đầy đủ tính năng ra đề kiểm tra, xuất file Word chuẩn mực không lỗi font MathType/LaTeX.\n• Tự động kích hoạt bản quyền Pro tức thì từ Web Admin ngay khi được phê duyệt\n• Tự động đồng bộ ngầm và kiểm tra phiên bản mới định kỳ\n• Thêm hộp thoại thông báo cập nhật phiên bản mới hiện đại\n• Trọn bộ 8 môn: Toán, Văn, KHTN, Sử Địa, GDCD, Tin, Công nghệ, Tiếng Anh\n• Chuẩn ma trận đặc tả Công văn 7991/BGDĐT - 4 mức độ nhận thức",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS_Pass_123.zip",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
