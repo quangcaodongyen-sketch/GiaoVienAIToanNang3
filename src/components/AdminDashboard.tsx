@@ -875,23 +875,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         }
       );
 
-      // 3. Cập nhật state UI TỨC THỜI TRONG 0.01 GIÂY
-      setRegistrationRequests(prev => prev.map(r => {
-        const isTarget = (options?.reqId && r.id === options.reqId) || 
-                         (r.machineId === cleanMid && (r.appId === effectiveAppId || isAppMatching(r.appId, r.appName, effectiveAppId)));
-        if (isTarget) {
-          return {
-            ...r,
-            status: 'APPROVED',
-            packageType: pkg,
-            reviewedBy: reviewer,
-            reviewedAt: new Date().toLocaleString('vi-VN'),
-            daysRemaining: durationDays,
-            expiryDateStr: expDateStr
-          };
-        }
-        return r;
-      }));
+      // 3. Cập nhật state UI TỨC THỜI TRONG 0.01 GIÂY & LƯU LOCAL STORAGE
+      setRegistrationRequests(prev => {
+        const nextList = prev.map(r => {
+          const isTarget = (options?.reqId && r.id === options.reqId) || 
+                           (r.machineId === cleanMid && (r.appId === effectiveAppId || isAppMatching(r.appId, r.appName, effectiveAppId)));
+          if (isTarget) {
+            return {
+              ...r,
+              status: 'APPROVED' as const,
+              packageType: pkg,
+              reviewedBy: reviewer,
+              reviewedAt: new Date().toLocaleString('vi-VN'),
+              daysRemaining: durationDays,
+              expiryDateStr: expDateStr
+            };
+          }
+          return r;
+        });
+        localStorage.setItem('gvai_registration_requests', JSON.stringify(nextList));
+        return nextList;
+      });
 
       setTrackedMachines(prev => prev.map(m => {
         if (m.machineId === cleanMid) {
@@ -3412,11 +3416,15 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                               reqId: req.id
                                             }
                                           )}
-                                          className="flex-1 py-1.5 px-1.5 rounded-xl bg-emerald-800/40 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-emerald-600/30 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                                          title="Gia hạn thêm 1 năm"
+                                          className={`flex-1 py-1.5 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer border ${
+                                            req.packageType === '1YEAR' || !req.packageType
+                                              ? 'bg-emerald-600 text-white border-emerald-400 font-black shadow-md ring-1 ring-emerald-300'
+                                              : 'bg-slate-950/80 hover:bg-emerald-900/60 text-slate-300 border-slate-700'
+                                          }`}
+                                          title="Duyệt / Đổi sang Gói 1 Năm"
                                         >
-                                          <RefreshCw className="w-3 h-3" />
-                                          <span>+1 Năm</span>
+                                          <CheckCircle2 className="w-3 h-3 text-emerald-300" />
+                                          <span>1 Năm</span>
                                         </button>
 
                                         <button
@@ -3435,11 +3443,15 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                               reqId: req.id
                                             }
                                           )}
-                                          className="flex-1 py-1.5 px-1.5 rounded-xl bg-amber-800/40 hover:bg-amber-700 text-amber-300 hover:text-white border border-amber-600/30 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                                          title="Gia hạn thêm 2 năm"
+                                          className={`flex-1 py-1.5 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer border ${
+                                            req.packageType === '2YEAR'
+                                              ? 'bg-amber-600 text-white border-amber-400 font-black shadow-md ring-1 ring-amber-300'
+                                              : 'bg-slate-950/80 hover:bg-amber-900/60 text-slate-300 border-slate-700'
+                                          }`}
+                                          title="Duyệt / Đổi sang Gói 2 Năm VIP"
                                         >
                                           <Crown className="w-3 h-3 text-yellow-300" />
-                                          <span>+2 Năm</span>
+                                          <span>2 Năm</span>
                                         </button>
 
                                         <button
@@ -3458,11 +3470,15 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                               reqId: req.id
                                             }
                                           )}
-                                          className="flex-1 py-1.5 px-1.5 rounded-xl bg-cyan-800/40 hover:bg-cyan-700 text-cyan-300 hover:text-white border border-cyan-600/30 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                                          title="Gia hạn thêm 3 năm"
+                                          className={`flex-1 py-1.5 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer border ${
+                                            req.packageType === '3YEAR'
+                                              ? 'bg-cyan-600 text-white border-cyan-400 font-black shadow-md ring-1 ring-cyan-300'
+                                              : 'bg-slate-950/80 hover:bg-cyan-900/60 text-slate-300 border-slate-700'
+                                          }`}
+                                          title="Duyệt / Đổi sang Gói 3 Năm Pro"
                                         >
                                           <Sparkles className="w-3 h-3 text-cyan-300" />
-                                          <span>+3 Năm</span>
+                                          <span>3 Năm</span>
                                         </button>
 
                                         <button
@@ -3481,10 +3497,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                               reqId: req.id
                                             }
                                           )}
-                                          className="flex-1 py-1.5 px-1.5 rounded-xl bg-purple-800/40 hover:bg-purple-700 text-purple-300 hover:text-white border border-purple-600/30 text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                                          title="Nâng cấp lên Trọn Đời"
+                                          className={`flex-1 py-1.5 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer border ${
+                                            req.packageType === 'LIFETIME'
+                                              ? 'bg-purple-600 text-white border-purple-400 font-black shadow-md ring-1 ring-purple-300'
+                                              : 'bg-slate-950/80 hover:bg-purple-900/60 text-slate-300 border-slate-700'
+                                          }`}
+                                          title="Duyệt / Đổi sang Gói Trọn Đời"
                                         >
-                                          <Sparkles className="w-3 h-3" />
+                                          <Crown className="w-3 h-3 text-purple-300" />
                                           <span>Trọn Đời</span>
                                         </button>
 

@@ -299,14 +299,14 @@ ${JSON.stringify(payloadData, null, 2)}
         const titleUpper = (issue.title || '').toUpperCase();
         const labelsList = (issue.labels || []).map((l: any) => (l.name || '').toLowerCase());
 
-        let approvedPkg: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | null = null;
-        if (labelsList.includes('package:2year') || labelsList.includes('2year') || titleUpper.includes('GÓI 2 NĂM') || titleUpper.includes('2 NĂM') || titleUpper.includes('2YEAR')) {
+        let approvedPkg: '1YEAR' | '2YEAR' | '3YEAR' | 'TRIAL_5' | 'LIFETIME' | null = null;
+        if (labelsList.includes('package:lifetime') || labelsList.includes('lifetime') || titleUpper.includes('TRỌN ĐỜI') || titleUpper.includes('LIFETIME')) {
+          approvedPkg = 'LIFETIME';
+        } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM PRO') || titleUpper.includes('3YEAR')) {
+          approvedPkg = '3YEAR';
+        } else if (labelsList.includes('package:2year') || labelsList.includes('2year') || titleUpper.includes('GÓI 2 NĂM') || titleUpper.includes('2 NĂM VIP') || titleUpper.includes('2YEAR')) {
           approvedPkg = '2YEAR';
-        } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM') || titleUpper.includes('3YEAR')) {
-          approvedPkg = '3YEAR';
-        } else if (labelsList.includes('package:3year') || labelsList.includes('3year') || titleUpper.includes('GÓI 3 NĂM') || titleUpper.includes('3 NĂM')) {
-          approvedPkg = '3YEAR';
-        } else if (labelsList.includes('package:1year') || titleUpper.includes('GÓI 1 NĂM') || titleUpper.includes('1 NĂM')) {
+        } else if (labelsList.includes('package:1year') || labelsList.includes('1year') || titleUpper.includes('GÓI 1 NĂM') || titleUpper.includes('1 NĂM')) {
           approvedPkg = '1YEAR';
         }
 
