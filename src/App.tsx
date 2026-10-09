@@ -435,7 +435,8 @@ export default function App() {
   useEffect(() => {
     activityTrackingService.trackAppVisit('home', 'Trang Chủ Giáo Viên AI Toàn Năng');
     const handleHash = () => {
-      const hash = window.location.hash;
+      const rawHash = window.location.hash;
+      const hash = rawHash.replace(/_/g, '-');
       if (hash === '#dung-thu' || hash === '#trial') {
         setShowTrialModal(true);
         webSecurityGuard.setActiveApp('trial', 'Đăng Ký Trải Nghiệm Giáo Viên AI');
@@ -457,67 +458,67 @@ export default function App() {
         setShowTaoDeToanTHPTModal(true);
         webSecurityGuard.setActiveApp('tao-de-toan-thpt', 'Tạo Đề Toán THPT (QĐ 764/BGDĐT)');
       }
-      else if (hash === '#tao-de-van-thpt') {
+      else if (hash === '#tao-de-van-thpt' || hash === '#tao-de-nguvan-thpt') {
         setThptSelectedSubject('NGUVAN');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-van-thpt', 'Tạo Đề Ngữ Văn THPT (2025+)');
       }
-      else if (hash === '#tao-de-vatli-thpt') {
+      else if (hash === '#tao-de-vatli-thpt' || hash === '#tao-de-vat-li-thpt' || hash === '#tao-de-ly-thpt') {
         setThptSelectedSubject('VATLI');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-vatli-thpt', 'Tạo Đề Vật Lí THPT (2025+)');
       }
-      else if (hash === '#tao-de-hoahoc-thpt') {
+      else if (hash === '#tao-de-hoahoc-thpt' || hash === '#tao-de-hoa-hoc-thpt' || hash === '#tao-de-hoa-thpt') {
         setThptSelectedSubject('HOAHOC');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-hoahoc-thpt', 'Tạo Đề Hóa Học THPT (2025+)');
       }
-      else if (hash === '#tao-de-sinhhoc-thpt') {
+      else if (hash === '#tao-de-sinhhoc-thpt' || hash === '#tao-de-sinh-hoc-thpt' || hash === '#tao-de-sinh-thpt') {
         setThptSelectedSubject('SINHHOC');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-sinhhoc-thpt', 'Tạo Đề Sinh Học THPT (2025+)');
       }
-      else if (hash === '#tao-de-tin-thpt') {
+      else if (hash === '#tao-de-tin-thpt' || hash === '#tao-de-tinhoc-thpt') {
         setThptSelectedSubject('TINHOC');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-tin-thpt', 'Tạo Đề Tin Học THPT (2025+)');
       }
-      else if (hash === '#tao-de-lichsu-thpt') {
+      else if (hash === '#tao-de-lichsu-thpt' || hash === '#tao-de-lich-su-thpt' || hash === '#tao-de-su-thpt') {
         setThptSelectedSubject('LICHSU');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-lichsu-thpt', 'Tạo Đề Lịch Sử THPT (2025+)');
       }
-      else if (hash === '#tao-de-diali-thpt') {
+      else if (hash === '#tao-de-diali-thpt' || hash === '#tao-de-dia-li-thpt' || hash === '#tao-de-dia-thpt') {
         setThptSelectedSubject('DIALI');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-diali-thpt', 'Tạo Đề Địa Lí THPT (2025+)');
       }
-      else if (hash === '#tao-de-gdktpl-thpt') {
+      else if (hash === '#tao-de-gdktpl-thpt' || hash === '#tao-de-gdkt-pl-thpt' || hash === '#tao-de-kinhte-phapluat-thpt') {
         setThptSelectedSubject('GDKTPL');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-gdktpl-thpt', 'Tạo Đề GDKT & PL THPT (2025+)');
       }
-      else if (hash === '#tao-de-cn-thpt') {
+      else if (hash === '#tao-de-cn-thpt' || hash === '#tao-de-congnghe-thpt' || hash === '#tao-de-cong-nghe-thpt') {
         setThptSelectedSubject('CONGNGHE');
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-cn-thpt', 'Tạo Đề Công Nghệ THPT (2025+)');
       }
-      else if (hash === '#tao-de-toan') {
+      else if (hash === '#tao-de-toan' || hash === '#tao-de-toan-thcs') {
         setThcs8MonSelectedSubject('TOAN');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-toan-thcs', 'Tạo Đề Toán THCS (CV 7991)');
       }
-      else if (hash === '#tao-de-van') {
+      else if (hash === '#tao-de-van' || hash === '#tao-de-van-thcs' || hash === '#tao-de-nguvan-thcs') {
         setThcs8MonSelectedSubject('VAN');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-van-thcs', 'Tạo Đề Ngữ Văn THCS (CV 7991)');
       }
-      else if (hash === '#tao-de-khtn') {
+      else if (hash === '#tao-de-khtn' || hash === '#tao-de-khtn-thcs') {
         setThcs8MonSelectedSubject('KHTN');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-khtn-thcs', 'Tạo Đề KHTN THCS (CV 7991)');
       }
-      else if (hash === '#tao-de-sudia') {
+      else if (hash === '#tao-de-sudia' || hash === '#tao-de-sudia-thcs' || hash === '#tao-de-su-dia-thcs') {
         setThcs8MonSelectedSubject('SUDIA');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-sudia-thcs', 'Tạo Đề Lịch Sử - Địa Lí THCS');
@@ -526,17 +527,17 @@ export default function App() {
         setShowTaoDeLichSuTHCSModal(true);
         webSecurityGuard.setActiveApp('tao-de-lichsu-thcs', 'Tạo Đề Lịch Sử THCS (CV 7991)');
       }
-      else if (hash === '#tao-de-tin') {
+      else if (hash === '#tao-de-tin' || hash === '#tao-de-tin-thcs' || hash === '#tao-de-tinhoc-thcs') {
         setThcs8MonSelectedSubject('TIN');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-tin-thcs', 'Tạo Đề Tin Học THCS');
       }
-      else if (hash === '#tao-de-gdcd') {
+      else if (hash === '#tao-de-gdcd' || hash === '#tao-de-gdcd-thcs' || hash === '#tao-de-giao-duc-cong-dan-thcs') {
         setThcs8MonSelectedSubject('GDCD');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-gdcd-thcs', 'Tạo Đề GDCD THCS');
       }
-      else if (hash === '#tao-de-cn') {
+      else if (hash === '#tao-de-cn' || hash === '#tao-de-cn-thcs' || hash === '#tao-de-congnghe-thcs' || hash === '#tao-de-cong-nghe-thcs' || hash === '#tao-de-cong-nghe') {
         setThcs8MonSelectedSubject('CN');
         setShowTaoDeTHCS8MonModal(true);
         webSecurityGuard.setActiveApp('tao-de-cn-thcs', 'Tạo Đề Công Nghệ THCS');

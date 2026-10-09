@@ -165,15 +165,15 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     name: 'Công nghệ',
     fullName: 'Môn Công nghệ THCS',
     icon: '⚙️',
-    size: '34 MB',
+    size: '35 MB',
     desc: 'Kiến thức nông nghiệp công nghệ cao, cơ khí chế tạo và mạch điện ứng dụng thực tế CTGDPT 2018.',
     highlights: [
       'Chuyên đề công nghệ gia đình, trồng trọt và chăn nuôi công nghệ cao',
       'Bản vẽ kỹ thuật, cơ khí chế tạo và thiết kế mạch điện ứng dụng an toàn',
       'Đầy đủ ma trận, đặc tả và barem điểm chấm chi tiết theo từng mức độ'
     ],
-    zipUrl: EXAM_7MON_RESOURCES.subjects.CN.zipUrl,
-    exeUrl: EXAM_7MON_RESOURCES.subjects.CN.exeUrl,
+    zipUrl: '/Tao_De_Cong_Nghe_THCS_Pass_123.zip',
+    exeUrl: '/Tao_De_Cong_Nghe_THCS.exe',
     accentColor: 'from-teal-600 to-emerald-600',
     badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
   },
@@ -223,7 +223,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   };
 
   const [currentSubjectKey, setCurrentSubjectKey] = useState<string>(resolveSubKey);
-  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
+  const [activeTab, setActiveTab] = useState<'preview' | 'download' | 'register'>('preview');
 
   // Cấu hình tạo đề trực tuyến
   const [selectedGrade, setSelectedGrade] = useState<string>('7');
@@ -462,43 +462,43 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           appName={curSub.name} 
         />
 
-        {/* NAVIGATION TABS (CHUẨN THEO NLS-AI: TẢI VỀ MÁY TÍNH & ĐĂNG KÝ KÍCH HOẠT) */}
+        {/* NAVIGATION TABS CHUẨN SƯ PHẠM 3 TAB: TRẢI NGHIỆM ONLINE - TẢI VỀ - BẢN QUYỀN */}
         <div className="px-5 pt-2.5 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0 flex-wrap gap-2">
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setActiveTab('preview')}
+              className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'preview'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/40 ring-1 ring-blue-400'
+                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>1. TRẢI NGHIỆM TRỰC TUYẾN (DÙNG THỬ 5 LẦN)</span>
+            </button>
+
             <button
               onClick={() => setActiveTab('download')}
               className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 activeTab === 'download'
-                  ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30'
+                  ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30 ring-1 ring-cyan-400'
                   : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
               }`}
             >
               <Download className="w-3.5 h-3.5" />
-              1. TẢI BỘ CÀI MÁY TÍNH (.EXE / .ZIP)
+              <span>2. TẢI VỀ & HƯỚNG DẪN</span>
             </button>
 
             <button
               onClick={() => setActiveTab('register')}
               className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 activeTab === 'register'
-                  ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
+                  ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30 ring-1 ring-amber-400'
                   : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
-              2. BẢN QUYỀN & KÍCH HOẠT
-            </button>
-
-            <button
-              onClick={() => setActiveTab('preview')}
-              className={`px-3.5 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
-                activeTab === 'preview'
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              3. XEM MẪU ĐỀ THI SƯ PHẠM
+              <span>3. BẢN QUYỀN & KÍCH HOẠT</span>
             </button>
           </div>
 
@@ -968,15 +968,37 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   ))}
                 </div>
 
-                {/* NÚT TẢI XUỐNG CHÍNH MÔN THCS */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center gap-3">
+                {/* CỤM NÚT TẢI XUỐNG ĐẦY ĐỦ: .EXE + .ZIP PASS 123 + .DOCX HƯỚNG DẪN */}
+                <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+                  {/* Nút 1: Tải bộ cài .EXE */}
+                  <a
+                    href={curSub.exeUrl}
+                    download={`Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS.exe`}
+                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30 cursor-pointer hover:scale-[1.01]"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>🚀 TẢI BỘ CÀI (.EXE - CÀI ĐẶT NHANH)</span>
+                  </a>
+
+                  {/* Nút 2: Tải bản nén .ZIP */}
                   <a
                     href={curSub.zipUrl}
                     download={`Bo_Cai_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS_Pass_123.zip`}
-                    className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/20 cursor-pointer hover:scale-[1.01]"
+                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />
-                    <span>🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - MẬT KHẨU: 123)</span>
+                    <span>📦 TẢI BẢN NÉN (.ZIP - MẬT KHẨU: 123)</span>
+                  </a>
+
+                  {/* Nút 3: Tải tài liệu hướng dẫn Word */}
+                  <a
+                    href="/HUONG_DAN_TAO_DE_THCS_8_MON.docx"
+                    download="HUONG_DAN_TAO_DE_THCS_8_MON.docx"
+                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer"
+                    title="Tải file tài liệu hướng dẫn chi tiết (.docx)"
+                  >
+                    <FileText className="w-4 h-4 text-amber-400" />
+                    <span>HƯỚNG DẪN (.DOCX)</span>
                   </a>
                 </div>
               </div>

@@ -58,7 +58,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
 }) => {
   const subjectList = Object.entries(EXAM_THPT_RESOURCES.subjects);
   const [currentSubKey, setCurrentSubKey] = useState<string>(initialSubject || 'TOAN');
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('download');
+  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
   const curSub = EXAM_THPT_RESOURCES.subjects[currentSubKey as keyof typeof EXAM_THPT_RESOURCES.subjects] || EXAM_THPT_RESOURCES.subjects.TOAN;
 
@@ -312,39 +312,39 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
           })}
         </div>
 
-        {/* 3 TABS ĐIỀU HƯỚNG */}
+        {/* 3 TABS ĐIỀU HƯỚNG CHUẨN SƯ PHẠM: TRẢI NGHIỆM ONLINE - TẢI VỀ - BẢN QUYỀN */}
         <div className="px-5 pt-3 border-b border-slate-800 bg-slate-900/50 flex gap-2 shrink-0">
-          <button
-            onClick={() => setActiveTab('download')}
-            className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'download'
-                ? 'border-blue-500 text-blue-400 bg-slate-800/60'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>1. Tải Về Cài Đặt ({curSub.size})</span>
-          </button>
           <button
             onClick={() => setActiveTab('online')}
             className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'online'
-                ? 'border-emerald-500 text-emerald-400 bg-slate-800/60'
+                ? 'border-emerald-500 text-emerald-300 bg-emerald-950/40 font-black'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>2. Trải Nghiệm Trực Tuyến</span>
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>1. Trải Nghiệm Trực Tuyến (Dùng thử 5 lần)</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('download')}
+            className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'download'
+                ? 'border-blue-500 text-blue-300 bg-blue-950/40 font-black'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Download className="w-3.5 h-3.5 text-cyan-400" />
+            <span>2. Tải Về Cài Đặt ({curSub.size})</span>
           </button>
           <button
             onClick={() => setActiveTab('register')}
             className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'register'
-                ? 'border-amber-500 text-amber-400 bg-slate-800/60'
+                ? 'border-amber-500 text-amber-300 bg-amber-950/40 font-black'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            <Crown className="w-3.5 h-3.5" />
+            <Crown className="w-3.5 h-3.5 text-yellow-400" />
             <span>3. Bản Quyền & Kích Hoạt Pro</span>
           </button>
         </div>

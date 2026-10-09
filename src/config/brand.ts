@@ -275,64 +275,64 @@ export const EXAM_7MON_RESOURCES = {
   subjects: {
     TOAN: {
       name: "Toán học",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS.exe",
-      size: "127 MB",
+      zipUrl: "/Tao_De_Toan_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Toan_THCS.exe",
+      size: "134 MB",
       icon: "📐",
       color: "from-blue-600 to-indigo-600"
     },
     VAN: {
       name: "Ngữ văn",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Van_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Van_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Tao_De_Van_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Van_THCS.exe",
+      size: "35 MB",
       icon: "📖",
       color: "from-rose-600 to-red-600"
     },
     KHTN: {
       name: "Khoa học tự nhiên",
-      zipUrl: "/Cai_Dat_TaoDe_KHTN_THCS.exe",
-      exeUrl: "/Cai_Dat_TaoDe_KHTN_THCS.exe",
-      size: "78 MB",
+      zipUrl: "/Tao_De_KHTN_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_KHTN_THCS.exe",
+      size: "35 MB",
       icon: "🔬",
       color: "from-emerald-600 to-teal-600"
     },
     SUDIA: {
       name: "Lịch sử & Địa lí",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Su_Dia_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Su_Dia_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Tao_De_Su_Dia_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Su_Dia_THCS.exe",
+      size: "35 MB",
       icon: "🌍",
       color: "from-amber-600 to-orange-600"
     },
     GDCD: {
       name: "Giáo dục công dân",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDCD_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDCD_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Tao_De_GDCD_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_GDCD_THCS.exe",
+      size: "35 MB",
       icon: "⚖️",
       color: "from-red-600 to-pink-600"
     },
     TIN: {
       name: "Tin học",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Tin_Hoc_THCS.exe",
+      size: "35 MB",
       icon: "💻",
       color: "from-sky-600 to-cyan-600"
     },
     CN: {
       name: "Công nghệ",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS.exe",
-      size: "34 MB",
+      zipUrl: "/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
+      exeUrl: "/Tao_De_Cong_Nghe_THCS.exe",
+      size: "35 MB",
       icon: "⚙️",
-      color: "from-slate-600 to-zinc-600"
+      color: "from-teal-600 to-emerald-600"
     },
     LICHSU: {
       name: "Lịch sử",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
+      zipUrl: "/Tao_De_Lich_Su_THCS_Pass_123.zip",
+      exeUrl: "/Cai_Dat_TaoDe_LS_THCS.exe",
       size: "91 MB",
       icon: "🏛️",
       color: "from-amber-600 to-yellow-600"
