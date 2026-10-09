@@ -63,12 +63,12 @@ export const apps: AppCard[] = [
   {
     id: "tao-de-15p-tienganh",
     title: "TẠO ĐỀ 15P ANH THCS (CV 7991)",
-    description: "Tạo đề kiểm tra 15 phút trắc nghiệm Tiếng Anh theo từng Unit bám sát giáo trình THCS.",
+    description: "Công cụ tạo đề kiểm tra 15 phút trắc nghiệm Tiếng Anh nội bộ dành riêng cho Quản trị viên (Admin).",
     image: "/taode_15p_tienganh.png",
     url: "#tao-de-15p-tienganh",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "NỘI BỘ ADMIN",
     active: true,
     featured: true,
     order: 3

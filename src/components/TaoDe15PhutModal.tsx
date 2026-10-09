@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { BRAND, EXAM_15P_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
+import { InternalAdminGuard } from './InternalAdminGuard';
 import {
   getOrCreateExam15PHardwareCode,
   verifyExam15PLicenseKey,
@@ -72,12 +73,25 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const [regNote, setRegNote] = useState<string>('');
   const [regSent, setRegSent] = useState<boolean>(false);
   const [isSyncingCloud, setIsSyncingCloud] = useState<boolean>(false);
+  const [isAdminAuthorized, setIsAdminAuthorized] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+      localStorage.getItem('gvai_unlimited_machine') === 'true'
+    );
+  });
 
   useEffect(() => {
     if (!isOpen) return;
     syncBrowserHash('#tao-de-15p-tienganh');
     const mid = getOrCreateExam15PHardwareCode();
     setDetectedMid(mid);
+
+    if (mid.includes('DVT') || mid === 'GV-0DAD-F76C') {
+      setIsAdminAuthorized(true);
+      setIsProActive(true);
+    }
 
     const savedPro = localStorage.getItem('gvai_taode15p_is_pro_active') === 'true';
     if (savedPro) {
@@ -260,8 +274,20 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           appName="Tạo Đề 15 Phút Tiếng Anh (Global Success)"
         />
 
-        {/* 3 Tabs Navigation Bar - Chuẩn mô hình NLS-AI */}
-        <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2 overflow-x-auto">
+        {!isAdminAuthorized ? (
+          <InternalAdminGuard
+            appName="Tạo Đề 15 Phút Tiếng Anh THCS (CV 7991)"
+            appDescription="hiện đang trong giai đoạn kiểm thử nội bộ dành riêng cho Quản trị viên (Admin Thầy Đinh Văn Thành)."
+            onUnlocked={() => {
+              setIsAdminAuthorized(true);
+              setIsProActive(true);
+            }}
+            onClose={onClose}
+          />
+        ) : (
+          <>
+            {/* 2 Tabs Navigation Bar */}
+            <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('download')}
             className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${activeTab === 'download'
@@ -904,6 +930,8 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           )}
 
         </div>
+          </>
+        )}
 
         {/* Footer Modal */}
         <div className="px-5 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
