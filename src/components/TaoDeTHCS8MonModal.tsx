@@ -172,8 +172,8 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
       'Bản vẽ kỹ thuật, cơ khí chế tạo và thiết kế mạch điện ứng dụng an toàn',
       'Đầy đủ ma trận, đặc tả và barem điểm chấm chi tiết theo từng mức độ'
     ],
-    zipUrl: '/Tao_De_Cong_Nghe_THCS_Pass_123.zip',
-    exeUrl: '/Tao_De_Cong_Nghe_THCS.exe',
+    zipUrl: EXAM_7MON_RESOURCES.subjects.CN.zipUrl,
+    exeUrl: EXAM_7MON_RESOURCES.subjects.CN.exeUrl,
     accentColor: 'from-teal-600 to-emerald-600',
     badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
   },
@@ -1087,7 +1087,8 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   {/* Nút 1: Tải bộ cài .EXE */}
                   <a
                     href={curSub.exeUrl}
-                    download={`Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS.exe`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />
@@ -1097,7 +1098,8 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   {/* Nút 2: Tải bản nén .ZIP */}
                   <a
                     href={curSub.zipUrl}
-                    download={`Bo_Cai_Tao_De_${curSub.name.replace(/\s+/g, '_')}_THCS_Pass_123.zip`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />

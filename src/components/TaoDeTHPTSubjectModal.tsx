@@ -409,7 +409,8 @@ Kính mời Thầy/Cô liên hệ Thầy giáo Đinh Văn Thành qua Zalo: 0915.
                   {/* LỰA CHỌN 1: BỘ CÀI EXE TỰ ĐỘNG */}
                   <a
                     href={curSub.exeUrl}
-                    download={curSub.exeUrl.split('/').pop()}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/30 cursor-pointer text-center"
                   >
                     <Download className="w-4 h-4 shrink-0" />
@@ -419,7 +420,8 @@ Kính mời Thầy/Cô liên hệ Thầy giáo Đinh Văn Thành qua Zalo: 0915.
                   {/* LỰA CHỌN 2: BẢN NÉN ZIP PASS 123 */}
                   <a
                     href={curSub.zipUrl}
-                    download={curSub.zipUrl.split('/').pop()}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-blue-600/30 cursor-pointer text-center"
                   >
                     <Download className="w-4 h-4 shrink-0" />
@@ -429,7 +431,8 @@ Kính mời Thầy/Cô liên hệ Thầy giáo Đinh Văn Thành qua Zalo: 0915.
                   {/* LỰA CHỌN 3: FILE ADD-IN DOTM WORD */}
                   <a
                     href={(curSub as any).dotmUrl || `https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_${curSub.appTag || 'TOAN'}.dotm`}
-                    download={`TaoDe_${curSub.appTag || 'THPT'}.dotm`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="py-3 px-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-purple-600/30 cursor-pointer text-center"
                   >
                     <FileText className="w-4 h-4 shrink-0" />
