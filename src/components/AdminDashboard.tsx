@@ -40,7 +40,12 @@ import {
   Zap,
   Download,
   ShieldCheck,
-  Users
+  Users,
+  LayoutGrid,
+  Table as TableIcon,
+  ListFilter,
+  Smartphone,
+  CheckCircle
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
@@ -115,6 +120,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [regSearchTerm, setRegSearchTerm] = useState('');
   const [regAppFilter, setRegAppFilter] = useState('ALL');
   const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
+
+  // Chế độ xem thành viên: 'cards' (Dạng Thẻ Trực Quan - Dễ Xem Nhất) hoặc 'table' (Dạng Bảng Danh Sách)
+  const [regViewMode, setRegViewMode] = useState<'cards' | 'table'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('gvai_admin_reg_view_mode');
+      if (saved === 'cards' || saved === 'table') return saved;
+    }
+    return 'cards';
+  });
+
+  // Modal Hồ Sơ Chi Tiết & Kích Hoạt Nhanh cho từng thành viên
+  const [quickModalReq, setQuickModalReq] = useState<(RegistrationRequest & { issueNumber?: number }) | null>(null);
+  const [quickModalPkg, setQuickModalPkg] = useState<'1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME'>('1YEAR');
+  const [copiedNotice, setCopiedNotice] = useState<string | null>(null);
+  const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string>(() => new Date().toLocaleTimeString('vi-VN'));
+
+  const handleCopyTextWithNotice = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedNotice(label);
+    setTimeout(() => setCopiedNotice(null), 2500);
+  };
+
+  const handleToggleViewMode = (mode: 'cards' | 'table') => {
+    setRegViewMode(mode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gvai_admin_reg_view_mode', mode);
+    }
+  };
 
   // State Form Duyệt & Cấp Key Trực Tiếp (Tự nhập mã máy)
   const [directMid, setDirectMid] = useState('');
@@ -382,6 +416,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   };
 
   const loadTrackingData = async () => {
+    setIsCloudSyncing(true);
     // Tự động dọn sạch triệt để mọi mã test demo rác cũ (GV-TEST-9999, Thầy Nguyễn Văn An...)
     const DEMO_TEST_IDS = ['GV-TEST-9999', 'GV-TEST', 'GV-A7B8-90F1', 'GV-8F22-A109'];
     activityTrackingService.unblockMachine('GV-33B3-4A70');
@@ -641,8 +676,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         else if (effectiveAppId.includes('thcs8m') || cleanMidUpper.includes('THCS8M')) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
           const genRes = await generateTHCS8MLicenseKey(cleanMid, 'toan', pkgType);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expiryDateStr;
+          licenseKey = genRes.licenseKey || (genRes as any).key;
+          expDateStr = genRes.expDateStr;
           zaloMsg = genRes.zaloMessage;
         }
         // I-2. Tạo Đề Lịch Sử THCS Chuyên Sâu (CV 7991)
@@ -651,7 +686,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateLSTHCSLicenseKey(cleanMid, pkgType);
           licenseKey = genRes.key;
           expDateStr = genRes.expDate;
-          zaloMsg = buildLSTHCSZaloMessage(reg.fullName, reg.schoolUnit, cleanMid, genRes.key, genRes.expDate, pkgType === '2year' ? 'Gói 2 Năm' : 'Gói 1 Năm');
+          zaloMsg = buildLSTHCSZaloMessage(effectiveFullName, effectiveSchool, cleanMid, genRes.key, genRes.expDate, pkgType === '2year' ? 'Gói 2 Năm' : 'Gói 1 Năm');
+        }
+        // I-3. Tạo Đề Khoa Học Tự Nhiên THCS (KHTN - Vật lí, Hóa học, Sinh học)
+        else if (effectiveAppId.includes('khtn') || cleanMidUpper.includes('KHTN') || cleanMidUpper.startsWith('KHTN-DVT-')) {
+          const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
+          const genRes = await generateTHCS8MLicenseKey(cleanMid, 'KHTN', pkgType);
+          licenseKey = genRes.licenseKey || (genRes as any).key;
+          expDateStr = genRes.expDateStr;
+          zaloMsg = genRes.zaloMessage;
         }
         // J. CÁC MÔN HỌC THPT 2025+, TIỂU HỌC VÀ NLS-AI (MẬT MÃ BẤT ĐỐI XỨNG ED25519 ĐỘC LẬP TỪNG MÔN)
         else {
@@ -2078,7 +2121,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
       onClick={onClose}
     >
       <div 
-        className="bg-slate-900 border border-slate-800 rounded-3xl max-w-6xl w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[95vh] flex flex-col cursor-default"
+        className="bg-slate-900 border border-slate-800 rounded-3xl max-w-7xl xl:max-w-[96vw] w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[96vh] flex flex-col cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         {/* TOP HEADER */}
@@ -2366,37 +2409,205 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             {/* SUBTAB 1: ĐƠN ĐĂNG KÝ THÀNH VIÊN CẦN DUYỆT (ALL APPS)    */}
             {/* ========================================================= */}
                         {trackingSubTab === 'requests' && (
-              <div className="flex-1 flex flex-col min-h-0 space-y-3">
+              <div className="flex-1 flex flex-col min-h-0 space-y-3.5">
                 {/* ========================================================================= */}
-                {/* 👑 FORM DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY TỪ ZALO) */}
-                {!showDirectForm ? (
-                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/60 border border-emerald-500/40 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-md hover:border-emerald-400 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black shrink-0">
-                        <UserCheck className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-2">
-                          <span>⚡ CẤP BẢN QUYỀN PRO BẰNG MÃ MÁY (DÁN TỪ ZALO GỬI SANG)</span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
-                            Tự nhập mã máy
+                {/* 1. BỘ THẺ KPI THỐNG KÊ TỔNG QUAN SIÊU NỔI BẬT (QUICK KPI OVERVIEW)          */}
+                {/* ========================================================================= */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 shrink-0">
+                  {/* Card 1: Chờ Duyệt Cấp Key (NỔI BẬT NHẤT VỚI HIỆU ỨNG PULSE ĐỎ/HỒNG NEON) */}
+                  {(() => {
+                    const pendingList = registrationRequests.filter(r => r.status === 'PENDING');
+                    const pendingCount = pendingList.length;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setReqFilter('PENDING');
+                          setRegSearchTerm('');
+                        }}
+                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
+                          reqFilter === 'PENDING'
+                            ? 'bg-gradient-to-br from-rose-950 via-red-950 to-slate-900 border-red-500 shadow-xl shadow-red-500/30 ring-2 ring-red-400'
+                            : pendingCount > 0
+                            ? 'bg-gradient-to-br from-red-950/80 via-slate-900 to-slate-900 border-red-500/70 hover:border-red-400 hover:shadow-lg hover:shadow-red-500/20'
+                            : 'bg-slate-900/90 border-slate-800 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+                            <Clock className={`w-3.5 h-3.5 ${pendingCount > 0 ? 'text-rose-400 animate-spin' : 'text-slate-400'}`} />
+                            <span>1. CHỜ DUYỆT CẤP KEY</span>
                           </span>
-                        </h4>
-                        <p className="text-[11px] text-slate-400 hidden sm:block">
-                          Thầy Thành dán mã máy của Giáo viên để Duyệt, Ký số Ed25519 độc lập theo từng ứng dụng & Cấp Key tức thì
-                        </p>
-                      </div>
+                          {pendingCount > 0 && (
+                            <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] animate-pulse shadow-sm shadow-red-500/50">
+                              Cần Duyệt Gấp!
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className={`text-2xl sm:text-3xl font-black tracking-tight ${pendingCount > 0 ? 'text-white' : 'text-slate-400'}`}>
+                            {pendingCount}
+                          </span>
+                          <span className="text-xs text-rose-200/90 font-bold">
+                            {pendingCount > 0 ? 'đơn giáo viên mới gửi' : 'đã duyệt hết'}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
+                          <span>👉 Bấm lọc danh sách chờ duyệt</span>
+                        </div>
+                      </button>
+                    );
+                  })()}
+
+                  {/* Card 2: Đã Kích Hoạt Pro */}
+                  {(() => {
+                    const approvedCount = registrationRequests.filter(r => r.status === 'APPROVED').length;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setReqFilter('APPROVED');
+                          setRegSearchTerm('');
+                        }}
+                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
+                          reqFilter === 'APPROVED'
+                            ? 'bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-900 border-emerald-500 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400'
+                            : 'bg-slate-900/90 border-emerald-500/40 hover:border-emerald-400'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>2. ĐÃ KÍCH HOẠT PRO</span>
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] border border-emerald-500/30">
+                            Đang hoạt động
+                          </span>
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl sm:text-3xl font-black text-emerald-300 tracking-tight">
+                            {approvedCount}
+                          </span>
+                          <span className="text-xs text-emerald-400/80 font-bold">máy giáo viên</span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
+                          <span>👉 Bấm xem thành viên đã có key</span>
+                        </div>
+                      </button>
+                    );
+                  })()}
+
+                  {/* Card 3: Tổng Đơn Đăng Ký */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReqFilter('ALL');
+                      setRegSearchTerm('');
+                      setRegAppFilter('ALL');
+                    }}
+                    className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
+                      reqFilter === 'ALL' && regAppFilter === 'ALL'
+                        ? 'bg-gradient-to-br from-cyan-950 via-slate-900 to-slate-900 border-cyan-500 shadow-xl shadow-cyan-500/20 ring-2 ring-cyan-400'
+                        : 'bg-slate-900/90 border-cyan-500/40 hover:border-cyan-400'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                        <Users className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>3. TỔNG THÀNH VIÊN</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-[10px] border border-cyan-500/30">
+                        Toàn Quốc
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                        {registrationRequests.length}
+                      </span>
+                      <span className="text-xs text-cyan-300/80 font-bold">hồ sơ đăng ký</span>
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
+                      <span>👉 Bấm để xem toàn bộ danh sách</span>
+                    </div>
+                  </button>
+
+                  {/* Card 4: Nút Đồng Bộ GitHub Cloud Live */}
+                  <div className="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-amber-950/20">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                        <Cloud className="w-3.5 h-3.5 text-amber-400" />
+                        <span>4. ĐỒNG BỘ CLOUD LIVE</span>
+                      </span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block animate-ping"></span>
+                    </div>
+                    <div className="text-[11px] text-slate-300 font-medium">
+                      <span>Cập nhật lúc: </span>
+                      <span className="font-bold text-amber-300 font-mono">{lastSyncTime}</span>
                     </div>
                     <button
                       type="button"
-                      onClick={() => setShowDirectForm(true)}
-                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition cursor-pointer shrink-0"
+                      disabled={isCloudSyncing}
+                      onClick={loadTrackingData}
+                      className="mt-2 w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer disabled:opacity-50"
                     >
-                      <UserCheck className="w-3.5 h-3.5" />
-                      <span>➕ Nhập Mã Máy</span>
+                      <RefreshCw className={`w-3.5 h-3.5 text-slate-950 ${isCloudSyncing ? 'animate-spin' : ''}`} />
+                      <span>{isCloudSyncing ? 'Đang Tải Cloud...' : '🔄 Làm Mới Cloud Ngay'}</span>
                     </button>
                   </div>
-                ) : (
+                </div>
+
+                {/* ========================================================================= */}
+                {/* 2. THANH CÔNG CỤ: CHUYỂN CHẾ ĐỘ XEM (THẺ VS BẢNG) & CẤP KEY THỦ CÔNG       */}
+                {/* ========================================================================= */}
+                <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-900/95 border border-slate-800 p-2.5 rounded-2xl shrink-0">
+                  {/* Trái: Chuyển đổi View Mode */}
+                  <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleViewMode('cards')}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
+                        regViewMode === 'cards'
+                          ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/20 ring-1 ring-amber-300'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      }`}
+                      title="Xem dạng thẻ trực quan: Thông tin to rõ, có nút Chat Zalo, Gọi, Duyệt nhanh 1 chạm"
+                    >
+                      <LayoutGrid className="w-3.5 h-3.5" />
+                      <span>🗂️ Dạng Thẻ Trực Quan (Khuyên Dùng)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleToggleViewMode('table')}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
+                        regViewMode === 'table'
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 shadow-md shadow-cyan-500/20 ring-1 ring-cyan-300'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      }`}
+                      title="Xem dạng bảng danh sách tổng hợp"
+                    >
+                      <TableIcon className="w-3.5 h-3.5" />
+                      <span>📊 Dạng Bảng Tổng Hợp</span>
+                    </button>
+                  </div>
+
+                  {/* Phải: Nút Accordion Cấp Key Thủ Công */}
+                  <button
+                    type="button"
+                    onClick={() => setShowDirectForm(!showDirectForm)}
+                    className={`px-3.5 py-1.5 rounded-xl border text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
+                      showDirectForm
+                        ? 'bg-emerald-600 text-white border-emerald-400 shadow-md shadow-emerald-600/30'
+                        : 'bg-slate-800 hover:bg-slate-700 text-emerald-300 border-emerald-500/40'
+                    }`}
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>{showDirectForm ? '▲ Thu Gọn Form Nhập Mã Máy' : '➕ Cấp Key Thủ Công (Dán Mã Máy Từ Zalo)'}</span>
+                  </button>
+                </div>
+
+                {/* FORM NHẬP MÃ MÁY TRỰC TIẾP (ACCORDION - CHỈ MỞ KHI CẦN) */}
+                {showDirectForm && (
                   <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border-2 border-emerald-500/60 rounded-2xl p-4 shadow-xl shadow-emerald-950/30 animate-in fade-in duration-150">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-3">
                       <div className="flex items-center gap-2.5">
@@ -2434,7 +2645,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           </label>
                           <input
                             type="text"
-                            placeholder="VD: DVT-TOANPT-8A2F-9B1C / MB-..."
+                            placeholder="VD: KHTN-DVT-... / DVT-ENGCS-... / MB-..."
                             value={directMid}
                             onChange={(e) => setDirectMid(e.target.value.toUpperCase())}
                             className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-amber-500/50 text-cyan-300 font-mono text-xs font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400"
@@ -2449,7 +2660,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           </label>
                           <input
                             type="text"
-                            placeholder="VD: Thầy / Cô Nguyễn Văn A..."
+                            placeholder="VD: Thầy / Cô..."
                             value={directName}
                             onChange={(e) => setDirectName(e.target.value)}
                             className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
@@ -2479,7 +2690,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           </label>
                           <input
                             type="text"
-                            placeholder="VD: Trường THPT Đồng Yên..."
+                            placeholder="VD: Trường THCS Đồng Yên..."
                             value={directSchool}
                             onChange={(e) => setDirectSchool(e.target.value)}
                             className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
@@ -2488,21 +2699,36 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 items-end">
-                        {/* Ô 5: Chọn Môn Học / Ứng Dụng */}
+                        {/* Ô 5: Chọn Ứng Dụng */}
                         <div className="md:col-span-1">
-                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
-                            <Zap className="w-3.5 h-3.5 text-amber-400" />
-                            <span>Ứng Dụng / Môn Học Cần Cấp:</span>
+                          <label className="block text-[11px] font-bold text-cyan-300 mb-1 flex items-center gap-1">
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span>Ứng Dụng Cần Kích Hoạt (Độc lập):</span>
                           </label>
                           <select
                             value={directAppId}
                             onChange={(e) => setDirectAppId(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-amber-300 font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-cyan-500/50 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
                           >
+                            <optgroup label="🔬 HỆ THỐNG THCS (CV 7991 & KNTT)">
+                              <option value="taode_khtn_thcs">🔬 Tạo Đề Khoa Học Tự Nhiên THCS (KHTN-DVT)</option>
+                              <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
+                              <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
+                              <option value="taode_thcs_8m">📝 Tạo Đề THCS 8 Môn (DVT-THCS8M)</option>
+                              <option value="taode_lichsu_thcs">🏛️ Tạo Đề Lịch Sử THCS (DVT-LSTHCS)</option>
+                              <option value="taode_15p">⏱️ Tạo Đề 15 Phút Tiếng Anh (DVT-ENG15)</option>
+                              <option value="smart_listening_tts">🎙️ Smart Listening Pro (MB-)</option>
+                              <option value="math_studio">📐 Đinh Thành MathStudio 2026+ (DVT-MATH)</option>
+                              <option value="sinh_de_bien_the">🔀 Sinh 3 Đề Biến Thể VIP (DVT-BIENTHE)</option>
+                              <option value="chuan_hoa_vb">📑 Chuẩn Hóa Văn Bản AI (DVT-CHVB)</option>
+                              <option value="cleaner_pro">🧹 Dinh Thanh Cleaner Pro (DVT-CLEANER)</option>
+                              <option value="pdf_suite">📄 PDF Suite Pro (DVT-PDF)</option>
+                              <option value="screen_record">🎥 Screen Record Pro V2 (DVT-RECORD)</option>
+                            </optgroup>
                             <optgroup label="📝 BỘ TẠO ĐỀ THPT 11 MÔN (2025+)">
                               <option value="taode_thpt_toan">🔢 Toán Học THPT (DVT-MATHPT)</option>
-                              <option value="taode_thpt_vatly">⚡ Vật Lí THPT (DVT-PHYPT)</option>
-                              <option value="taode_thpt_hoa">⚗️ Hóa Học THPT (DVT-CHEPT)</option>
+                              <option value="taode_thpt_vatli">⚡ Vật Lí THPT (DVT-PHYPT)</option>
+                              <option value="taode_thpt_hoa">⚗️ Hóa Học THPT (DVT-CHMPT)</option>
                               <option value="taode_thpt_sinh">🧬 Sinh Học THPT (DVT-BIOPT)</option>
                               <option value="taode_thpt_tin">💻 Tin Học THPT (DVT-INFPT)</option>
                               <option value="taode_thpt_lichsu">🏛️ Lịch Sử THPT (DVT-HISPT)</option>
@@ -2512,22 +2738,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               <option value="taode_thpt_nguvan">📖 Ngữ Văn THPT (DVT-LITPT)</option>
                               <option value="taode_thpt_tienganh">🇬🇧 Tiếng Anh THPT (DVT-ENGPT)</option>
                             </optgroup>
-                            <optgroup label="🎒 HỆ THỐNG TIỂU HỌC (THÔNG TƯ 27)">
+                            <optgroup label="🎒 TIỂU HỌC">
                               <option value="taode_tieuhoc_tienganh">🎒 Tiếng Anh Tiểu Học (DVT-ENGPRI)</option>
-                            </optgroup>
-                            <optgroup label="⚡ HỆ SINH THÁI THCS & TIỆN ÍCH SƯ PHẠM">
-                              <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
-                              <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
-                              <option value="taode_nguvan_thcs">📖 Tạo Đề Ngữ Văn THCS (DVT-VANCS)</option>
-                              <option value="taode_thcs_8m">📝 Tạo Đề THCS 8 Môn (DVT-THCS8M)</option>
-                              <option value="taode_15p">⏱️ Tạo Đề 15 Phút Tiếng Anh (DVT-ENG15)</option>
-                              <option value="smart_listening_tts">🎙️ Smart Listening Pro (MB-)</option>
-                              <option value="sinh_de_bien_the">🔀 Sinh 3 Đề Biến Thể VIP (DVT-BIENTHE)</option>
-                              <option value="math_studio">📐 Đinh Thành MathStudio 2026+ (DVT-MATH)</option>
-                              <option value="chuan_hoa_vb">📑 Chuẩn Hóa Văn Bản AI (DVT-CHVB)</option>
-                              <option value="cleaner_pro">🧹 Dinh Thanh Cleaner Pro (DVT-CLEANER)</option>
-                              <option value="pdf_suite">📄 PDF Suite Pro (DVT-PDF)</option>
-                              <option value="screen_record">🎥 Screen Record Pro V2 (DVT-RECORD)</option>
                             </optgroup>
                           </select>
                         </div>
@@ -2588,12 +2800,17 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   </div>
                 )}
 
-                {/* THANH ĐIỀU KHIỂN BỘ LỌC, TÌM KIẾM & SẮP XẾP ĐA NĂNG */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5">
+                {/* ========================================================================= */}
+                {/* 3. THANH ĐIỀU KHIỂN BỘ LỌC, TÌM KIẾM & SẮP XẾP ĐA NĂNG                     */}
+                {/* ========================================================================= */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5 shrink-0">
                   <div className="flex flex-wrap items-center justify-between gap-2.5">
                     {/* 1. Lọc theo trạng thái */}
-                    <div className="flex items-center gap-1.5 text-xs">
-                      <span className="text-slate-400 font-semibold">Trạng thái:</span>
+                    <div className="flex items-center gap-1.5 text-xs flex-wrap">
+                      <span className="text-slate-400 font-semibold flex items-center gap-1">
+                        <Filter className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Trạng thái:</span>
+                      </span>
                       {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map(st => {
                         const count = registrationRequests.filter(r => st === 'ALL' ? true : r.status === st).length;
                         return (
@@ -2601,15 +2818,19 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             key={st}
                             type="button"
                             onClick={() => setReqFilter(st)}
-                            className={`px-2.5 py-1 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1 ${
+                            className={`px-3 py-1 rounded-xl font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
                               reqFilter === st
-                                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                                ? st === 'PENDING'
+                                  ? 'bg-red-600 text-white shadow-md shadow-red-600/40 font-black ring-1 ring-red-300'
+                                  : st === 'APPROVED'
+                                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 font-black'
+                                  : 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                                 : 'bg-slate-800 text-slate-400 hover:text-white'
                             }`}
                           >
-                            <span>{st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? 'Chờ Duyệt' : st === 'APPROVED' ? 'Đã Duyệt' : 'Từ Chối'}</span>
+                            <span>{st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? '⏳ Chờ Duyệt' : st === 'APPROVED' ? '✅ Đã Duyệt' : '❌ Từ Chối'}</span>
                             <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                              st === 'PENDING' && count > 0 ? 'bg-red-600 text-white animate-pulse' : 'bg-slate-950/60 text-slate-300'
+                              st === 'PENDING' && count > 0 ? 'bg-white text-red-700 animate-pulse' : 'bg-slate-950/60 text-slate-300'
                             }`}>
                               {count}
                             </span>
@@ -2624,7 +2845,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                       <select
                         value={regSortBy}
                         onChange={(e) => setRegSortBy(e.target.value as any)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
                       >
                         <option value="newest">⏰ Mới nhất (Thời gian gửi)</option>
                         <option value="name_asc">👤 Tên Giáo viên (A - Z)</option>
@@ -2634,15 +2855,32 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   </div>
 
                   <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 border-t border-slate-800/80">
-                    {/* 3. Lọc theo Ứng dụng cụ thể */}
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-slate-400 font-semibold">Lọc Ứng Dụng:</span>
+                    {/* 3. Lọc theo Ứng dụng cụ thể (Đầy đủ mọi môn) */}
+                    <div className="flex items-center gap-2 text-xs flex-1 max-w-xl">
+                      <span className="text-slate-400 font-semibold shrink-0">Lọc Môn / App:</span>
                       <select
                         value={regAppFilter}
                         onChange={(e) => setRegAppFilter(e.target.value)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
                       >
-                        <option value="ALL">📦 Tất Cả Ứng Dụng ({registrationRequests.length})</option>
+                        <option value="ALL">📦 Tất Cả Môn Học & Ứng Dụng ({registrationRequests.length})</option>
+                        <optgroup label="🔬 HỆ THỐNG THCS (CÔNG VĂN 7991 & KẾT NỐI TRI THỨC)">
+                          <option value="khtn">🔬 Khoa Học Tự Nhiên THCS (KHTN)</option>
+                          <option value="eng">🇬🇧 Tiếng Anh Global Success THCS</option>
+                          <option value="nls">⚡ Tích Hợp NLS - AI THCS</option>
+                          <option value="taode">📝 Tạo Đề THCS 8 Môn Chuẩn CV 7991</option>
+                          <option value="lichsu">🏛️ Lịch Sử THCS Chuyên Sâu</option>
+                          <option value="toan">📐 Toán Học THCS</option>
+                          <option value="van">📖 Ngữ Văn THCS</option>
+                          <option value="15p">⏱️ Tạo Đề 15 Phút Tiếng Anh</option>
+                          <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
+                          <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
+                          <option value="mathstudio">📐 Đinh Thành MathStudio 2026+</option>
+                          <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
+                          <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
+                          <option value="pdfsuite">📄 PDF Suite Pro</option>
+                          <option value="record">🎥 Screen Record Pro V2</option>
+                        </optgroup>
                         <optgroup label="📝 BỘ TẠO ĐỀ THPT 11 MÔN (2025+)">
                           <option value="toan">🔢 Toán Học THPT</option>
                           <option value="vatli">⚡ Vật Lí THPT</option>
@@ -2656,34 +2894,22 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           <option value="nguvan">📖 Ngữ Văn THPT</option>
                           <option value="engpt">🇬🇧 Tiếng Anh THPT</option>
                         </optgroup>
-                        <optgroup label="🎒 HỆ THỐNG TIỂU HỌC (THÔNG TƯ 27)">
-                          <option value="engpri">🎒 Tiếng Anh Tiểu Học (TT 27)</option>
-                        </optgroup>
-                        <optgroup label="⚡ HỆ SINH THÁI THCS & TIỆN ÍCH">
-                          <option value="nls">⚡ Tích Hợp NLS - AI</option>
-                          <option value="taode">📝 Trung Tâm Tạo Đề THCS (8 Môn)</option>
-                          <option value="eng">🇬🇧 Tiếng Anh Global Success THCS</option>
-                          <option value="15p">⏱️ Tạo Đề 15 Phút Tiếng Anh</option>
-                          <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
-                          <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
-                          <option value="mathstudio">📐 Đinh Thành MathStudio 2026+</option>
-                          <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
-                          <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
-                          <option value="pdfsuite">📄 PDF Suite Pro</option>
-                          <option value="record">🎥 Screen Record Pro V2</option>
+                        <optgroup label="🎒 TIỂU HỌC">
+                          <option value="engpri">🎒 Tiếng Anh Tiểu Học (Thông tư 27)</option>
                         </optgroup>
                       </select>
                     </div>
 
-                    {/* 4. Ô tìm kiếm trực tiếp */}
-                    <div className="relative min-w-[260px]">
+                    {/* 4. Ô tìm kiếm trực tiếp siêu nhạy */}
+                    <div className="relative min-w-[280px] flex-1 max-w-md">
                       <input
                         type="text"
-                        placeholder="🔍 Tìm Tên GV / SĐT / Trường / Mã máy..."
+                        placeholder="🔍 Tìm Tên GV / Số ĐT / Trường / Mã máy..."
                         value={regSearchTerm}
                         onChange={(e) => setRegSearchTerm(e.target.value)}
-                        className="w-full px-3 py-1 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-medium"
+                        className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-medium"
                       />
+                      <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
                       {regSearchTerm && (
                         <button
                           type="button"
@@ -2697,195 +2923,262 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   </div>
                 </div>
 
-                {/* BẢNG ĐƠN ĐĂNG KÝ BẢN QUYỀN THỰC TẾ CỦA GIÁO VIÊN */}
-                <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60 shadow-inner">
-                  <table className="w-full text-left text-xs border-collapse">
-                    <thead className="sticky top-0 bg-slate-900/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-800 z-10">
-                      <tr>
-                        <th className="py-3 px-3">ID Máy Tính & Ứng Dụng</th>
-                        <th className="py-3 px-3">Giáo Viên & Đơn Vị</th>
-                        <th className="py-3 px-3">Số ĐT / Zalo</th>
-                        <th className="py-3 px-3">Gói & Thời Hạn Còn Lại</th>
-                        <th className="py-3 px-3">Trạng Thái</th>
-                        <th className="py-3 px-3 text-right">Kích Hoạt & Quản Trị</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-800/60">
-                      {registrationRequests
-                        .filter(r => {
-                          if (reqFilter !== 'ALL' && r.status !== reqFilter) return false;
-                          if (regAppFilter !== 'ALL') {
-                            const appK = (r.appId || r.appName || '').toLowerCase();
-                            if (regAppFilter === 'tts') {
-                              if (!appK.includes('tts') && !appK.includes('speech') && !appK.includes('listening') && !appK.includes('bài nghe') && !appK.includes('smart-listening') && !r.machineId.toUpperCase().startsWith('MB-')) return false;
-                            } else {
-                              if (!appK.includes(regAppFilter.toLowerCase())) return false;
-                            }
-                          }
-                          if (regSearchTerm.trim()) {
-                            const q = regSearchTerm.toLowerCase();
-                            const matchMid = r.machineId.toLowerCase().includes(q);
-                            const matchName = (r.fullName || '').toLowerCase().includes(q);
-                            const matchSchool = (r.schoolUnit || '').toLowerCase().includes(q);
-                            const matchPhone = (r.phoneNumber || '').includes(q);
-                            if (!matchMid && !matchName && !matchSchool && !matchPhone) return false;
-                          }
-                          return true;
-                        })
-                        .sort((a, b) => {
-                          // ƯU TIÊN ĐƠN CHỜ DUYỆT (PENDING) LÊN ĐẦU BẢNG ĐỂ ADMIN KHÔNG BỊ SÓT
-                          if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
-                          if (b.status === 'PENDING' && a.status !== 'PENDING') return 1;
+                {/* ========================================================================= */}
+                {/* 4. VÙNG DANH SÁCH THÀNH VIÊN: DẠNG THẺ (CARD VIEW) HOẶC BẢNG (TABLE VIEW)  */}
+                {/* ========================================================================= */}
+                {(() => {
+                  const filteredList = registrationRequests
+                    .filter(r => {
+                      if (reqFilter !== 'ALL' && r.status !== reqFilter) return false;
+                      if (regAppFilter !== 'ALL') {
+                        const appK = (r.appId || r.appName || '').toLowerCase();
+                        if (regAppFilter === 'tts') {
+                          if (!appK.includes('tts') && !appK.includes('speech') && !appK.includes('listening') && !appK.includes('bài nghe') && !appK.includes('smart-listening') && !r.machineId.toUpperCase().startsWith('MB-')) return false;
+                        } else if (regAppFilter === 'khtn') {
+                          if (!appK.includes('khtn') && !appK.includes('tự nhiên') && !r.machineId.toUpperCase().includes('KHTN')) return false;
+                        } else {
+                          if (!appK.includes(regAppFilter.toLowerCase())) return false;
+                        }
+                      }
+                      if (regSearchTerm.trim()) {
+                        const q = regSearchTerm.toLowerCase();
+                        const matchMid = r.machineId.toLowerCase().includes(q);
+                        const matchName = (r.fullName || '').toLowerCase().includes(q);
+                        const matchSchool = (r.schoolUnit || '').toLowerCase().includes(q);
+                        const matchPhone = (r.phoneNumber || '').includes(q);
+                        const matchApp = (r.appName || '').toLowerCase().includes(q);
+                        if (!matchMid && !matchName && !matchSchool && !matchPhone && !matchApp) return false;
+                      }
+                      return true;
+                    })
+                    .sort((a, b) => {
+                      // ƯU TIÊN ĐƠN CHỜ DUYỆT (PENDING) LÊN ĐẦU TIÊN
+                      if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+                      if (b.status === 'PENDING' && a.status !== 'PENDING') return 1;
 
-                          if (regSortBy === 'name_asc') {
-                            return (a.fullName || '').localeCompare(b.fullName || '');
-                          } else if (regSortBy === 'school') {
-                            return (a.schoolUnit || '').localeCompare(b.schoolUnit || '');
-                          }
-                          return 0; // newest giữ nguyên thứ tự cloud
-                        })
-                        .map((req, rIdx) => {
-                          const isBlocked = blockedMachines.some(b => b.machineId === req.machineId);
-                          return (
-                            <tr 
-                              key={req.id || rIdx} 
-                              className={`transition-colors ${
-                                req.status === 'PENDING'
-                                  ? 'bg-amber-950/40 border-l-4 border-amber-400 hover:bg-amber-950/60'
-                                  : 'hover:bg-slate-900/80'
-                              }`}
-                            >
-                              {/* 1. ID Máy Tính & Ứng Dụng */}
-                              <td className="py-3 px-3">
-                                <div className="font-mono text-cyan-300 font-bold text-xs flex items-center gap-1.5">
-                                  <span>💻 {req.machineId}</span>
-                                  {req.issueNumber && (
-                                    <span className="px-1.5 py-0.2 rounded bg-slate-800 text-[10px] text-slate-400 font-normal">
-                                      #{req.issueNumber}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="mt-1">
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold">
-                                    ⚡ {req.appName || 'Tích Hợp NLS - AI'}
-                                  </span>
-                                </div>
-                              </td>
+                      if (regSortBy === 'name_asc') {
+                        return (a.fullName || '').localeCompare(b.fullName || '');
+                      } else if (regSortBy === 'school') {
+                        return (a.schoolUnit || '').localeCompare(b.schoolUnit || '');
+                      }
+                      return 0; // Giữ thứ tự mới nhất từ Cloud
+                    });
 
-                              {/* 2. Giáo Viên & Đơn Vị */}
-                              <td className="py-3 px-3">
-                                <div className="font-bold text-white text-[13px] flex items-center gap-1.5">
-                                  <span>{req.fullName || 'Chưa cung cấp'}</span>
-                                </div>
-                                <div className="text-slate-400 text-[11px] mt-0.5">
-                                  🏫 {req.schoolUnit || 'Chưa có thông tin trường'}
-                                </div>
-                              </td>
+                  if (filteredList.length === 0) {
+                    return (
+                      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-950/60 border border-slate-800 rounded-2xl text-center">
+                        <UserCheck className="w-12 h-12 text-slate-600 mb-3" />
+                        <h4 className="text-base font-bold text-white mb-1">Không tìm thấy thành viên đăng ký phù hợp</h4>
+                        <p className="text-xs text-slate-400 max-w-md">
+                          Không có đơn đăng ký nào khớp với bộ lọc hoặc từ khóa tìm kiếm của Thầy Thành. Hãy thử chọn "Tất Cả" hoặc xóa từ khóa tìm kiếm.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReqFilter('ALL');
+                            setRegAppFilter('ALL');
+                            setRegSearchTerm('');
+                          }}
+                          className="mt-3 px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold transition"
+                        >
+                          Xóa Bộ Lọc & Xem Tất Cả
+                        </button>
+                      </div>
+                    );
+                  }
 
-                              {/* 3. Số ĐT / Zalo */}
-                              <td className="py-3 px-3">
-                                <div className="font-mono text-emerald-400 font-bold text-xs flex items-center gap-2">
-                                  <span>📞 {req.phoneNumber || '-'}</span>
-                                  {req.phoneNumber && (
-                                    <a
-                                      href={`https://zalo.me/${req.phoneNumber.replace(/[^0-9]/g, '')}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="px-2 py-1 rounded-lg bg-emerald-600/30 hover:bg-emerald-500 text-emerald-300 hover:text-white text-xs border border-emerald-500/40 font-bold transition flex items-center gap-1 shadow-sm shrink-0"
-                                      title="Nhắn tin Zalo với Giáo viên này"
-                                    >
-                                      <span>💬 Chat Zalo</span>
-                                      <span className="text-[10px]">↗</span>
-                                    </a>
-                                  )}
-                                </div>
-                              </td>
+                  // -------------------------------------------------------------
+                  // A. CHẾ ĐỘ 1: XEM DẠNG THẺ (CARD VIEW - MẶC ĐỊNH & KHUYÊN DÙNG)
+                  // -------------------------------------------------------------
+                  if (regViewMode === 'cards') {
+                    return (
+                      <div className="flex-1 overflow-y-auto pr-1">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pb-4">
+                          {filteredList.map((req) => {
+                            const isBlocked = blockedMachines.some(b => b.machineId === req.machineId);
+                            const cleanPhone = (req.phoneNumber || '').replace(/[^0-9]/g, '');
+                            const isPending = req.status === 'PENDING';
+                            const isApproved = req.status === 'APPROVED';
 
-                              {/* 4. Gói & Thời Hạn Còn Lại */}
-                              <td className="py-3 px-3">
-                                <div className="font-bold flex items-center gap-1.5 flex-wrap">
-                                  <span className={`px-2 py-0.5 rounded-md text-[11px] font-black ${
-                                    req.packageType === '3YEAR' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' :
-                                    req.packageType === '2YEAR' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                                    req.packageType === 'LIFETIME' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' :
-                                    'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                                  }`}>
-                                    {req.packageType === '3YEAR' ? '👑 Gói 3 Năm VIP' :
-                                     req.packageType === '2YEAR' ? '👑 Gói 2 Năm VIP' :
-                                     req.packageType === '1YEAR' ? '📦 Gói 1 Năm' :
-                                     req.packageType === 'LIFETIME' ? '🌟 Trọn Đời' : '🎁 Dùng thử'}
-                                  </span>
-                                </div>
+                            // Tách 2 chữ cái đầu cho avatar
+                            const nameParts = (req.fullName || 'GV').trim().split(/\s+/);
+                            const initials = nameParts.length === 1
+                              ? nameParts[0].substring(0, 2).toUpperCase()
+                              : (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
 
-                                {req.status === 'APPROVED' ? (
-                                  <div className="mt-1 flex items-center gap-1 flex-wrap">
-                                    {req.isLifetime || req.packageType === 'LIFETIME' ? (
-                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-200 border border-purple-500/30 text-[10px] font-bold">
-                                        👑 Vĩnh viễn (Trọn đời)
-                                      </span>
-                                    ) : req.daysRemaining !== undefined ? (
-                                      req.daysRemaining <= 0 ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-600/50 text-[10px] font-bold">
-                                          ❌ Hết hạn ({req.expiryDateStr})
+                            // Nhận diện icon môn học
+                            const appLower = (req.appName || req.appId || '').toLowerCase();
+                            const isKHTN = appLower.includes('khtn') || appLower.includes('tự nhiên') || req.machineId.toUpperCase().includes('KHTN');
+                            const isEng = appLower.includes('tiếng anh') || appLower.includes('eng') || req.machineId.toUpperCase().includes('ENG');
+                            const isToan = appLower.includes('toán') || appLower.includes('math') || req.machineId.toUpperCase().includes('MATH');
+                            const isNLS = appLower.includes('nls') || appLower.includes('năng lực số');
+                            const isSu = appLower.includes('sử') || appLower.includes('his');
+
+                            return (
+                              <div
+                                key={req.id || req.machineId}
+                                className={`rounded-2xl p-4 border transition-all duration-200 flex flex-col justify-between shadow-xl relative overflow-hidden group ${
+                                  isPending
+                                    ? 'bg-gradient-to-br from-red-950/60 via-slate-900 to-slate-900 border-red-500/80 shadow-red-950/30 ring-1 ring-red-500/40 hover:border-red-400'
+                                    : isApproved
+                                    ? 'bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40 border-emerald-500/50 hover:border-emerald-400 shadow-slate-950/50'
+                                    : 'bg-slate-900/90 border-slate-800'
+                                }`}
+                              >
+                                {/* Dải trang trí LED viền trên card */}
+                                <div className={`absolute top-0 left-0 right-0 h-1.5 ${
+                                  isPending ? 'bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 animate-pulse' : isApproved ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-slate-700'
+                                }`} />
+
+                                <div>
+                                  {/* 1. Header Thẻ: Avatar, Họ Tên, Trường & Badge Trạng Thái */}
+                                  <div className="flex items-start justify-between gap-2 mb-3 pt-1">
+                                    <div className="flex items-center gap-2.5">
+                                      {/* Avatar tròn với gradient */}
+                                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 shadow-md ${
+                                        isPending
+                                          ? 'bg-gradient-to-tr from-red-600 to-amber-500 text-white shadow-red-600/30'
+                                          : 'bg-gradient-to-tr from-emerald-600 to-teal-400 text-white shadow-emerald-600/30'
+                                      }`}>
+                                        {initials}
+                                      </div>
+                                      <div>
+                                        <h4 className="text-base font-black text-amber-300 group-hover:text-amber-200 transition-colors leading-tight">
+                                          {req.fullName || 'Thầy/Cô Giáo Viên'}
+                                        </h4>
+                                        <div className="flex items-center gap-1 text-slate-300 text-xs mt-0.5 font-medium">
+                                          <Building2 className="w-3 h-3 text-purple-400 shrink-0" />
+                                          <span className="truncate max-w-[190px]">{req.schoolUnit || 'Trường THCS'}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Badge Trạng thái nổi bật */}
+                                    <div className="shrink-0">
+                                      {isBlocked ? (
+                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold">
+                                          🔒 ĐÃ KHÓA
                                         </span>
-                                      ) : req.daysRemaining <= 7 ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[10px] shadow-sm shadow-rose-500/40 animate-bounce">
-                                          🔥 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                      ) : isApproved ? (
+                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black">
+                                          ✅ ĐÃ CẤP PRO
                                         </span>
-                                      ) : req.daysRemaining <= 30 ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black animate-pulse">
-                                          ⚠️ Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
-                                        </span>
-                                      ) : req.daysRemaining <= 60 ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-bold">
-                                          🔵 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                      ) : req.status === 'REJECTED' ? (
+                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold">
+                                          ❌ TỪ CHỐI
                                         </span>
                                       ) : (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
-                                          🟢 Còn {req.daysRemaining} ngày (Hạn: {req.expiryDateStr})
+                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 text-white font-black text-[11px] shadow-md shadow-red-600/40 animate-pulse border border-red-300/40">
+                                          ⏳ CHỜ DUYỆT
                                         </span>
-                                      )
-                                    ) : (
-                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
-                                        🟢 Đang hoạt động (Hạn: {req.expiryDateStr || 'Chuẩn'})
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* 2. Khối Ứng Dụng Đăng Ký */}
+                                  <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 mb-2.5 flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      <span className="text-lg shrink-0">
+                                        {isKHTN ? '🔬' : isEng ? '🇬🇧' : isToan ? '📐' : isNLS ? '⚡' : isSu ? '🏛️' : '📦'}
+                                      </span>
+                                      <div className="min-w-0">
+                                        <span className="text-[10px] uppercase font-bold text-slate-400 block leading-tight">Ứng Dụng Đăng Ký:</span>
+                                        <span className="text-xs font-black text-cyan-300 truncate block">
+                                          {req.appName || 'Tạo Đề Kiểm Tra'}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-extrabold text-[11px] shrink-0">
+                                      {req.packageType === 'LIFETIME' ? 'Trọn Đời' : req.packageType === '3YEAR' ? 'Gói 3 Năm' : req.packageType === '2YEAR' ? 'Gói 2 Năm' : 'Gói 1 Năm'}
+                                    </span>
+                                  </div>
+
+                                  {/* 3. Khối Số Điện Thoại & Tiện Ích Zalo Trực Tiếp */}
+                                  <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 mb-2.5 flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                                        <Phone className="w-3.5 h-3.5" />
+                                      </div>
+                                      <div>
+                                        <span className="text-[10px] font-bold text-slate-400 block leading-tight">Số ĐT / Zalo:</span>
+                                        <span className="text-sm font-mono font-black text-emerald-300 tracking-wide">
+                                          {req.phoneNumber || 'Chưa có SĐT'}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    {/* Hàng nút Zalo & Gọi & Chép nhanh */}
+                                    {cleanPhone && (
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        <a
+                                          href={`https://zalo.me/${cleanPhone}`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] flex items-center gap-1 transition shadow-sm cursor-pointer"
+                                          title="Mở Zalo nhắn tin trực tiếp với giáo viên"
+                                        >
+                                          <MessageCircle className="w-3.5 h-3.5" />
+                                          <span>Zalo</span>
+                                        </a>
+
+                                        <a
+                                          href={`tel:${cleanPhone}`}
+                                          className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-300 transition"
+                                          title="Gọi điện thoại"
+                                        >
+                                          <Phone className="w-3.5 h-3.5" />
+                                        </a>
+
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCopyTextWithNotice(req.phoneNumber || cleanPhone, 'Số Điện Thoại')}
+                                          className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                                          title="Sao chép số điện thoại"
+                                        >
+                                          <Copy className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* 4. Khối Mã Máy Tính (Hardware ID) & Thời Gian */}
+                                  <div className="bg-slate-950/40 border border-slate-800/60 rounded-xl p-2.5 mb-3 flex items-center justify-between text-xs font-mono">
+                                    <div className="min-w-0 pr-2">
+                                      <span className="text-[10px] font-bold text-slate-400 block font-sans leading-tight">Mã Máy Tính (Hardware ID):</span>
+                                      <span className="text-xs font-mono font-bold text-cyan-300 truncate block">
+                                        {req.machineId}
+                                      </span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleCopyTextWithNotice(req.machineId, 'Mã Máy Tính')}
+                                      className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-cyan-900/60 text-cyan-300 hover:text-white border border-cyan-800/40 font-bold text-[10px] flex items-center gap-1 transition cursor-pointer shrink-0"
+                                      title="Sao chép Mã máy 1 chạm"
+                                    >
+                                      <Copy className="w-3 h-3" />
+                                      <span>Chép</span>
+                                    </button>
+                                  </div>
+
+                                  {/* Thông tin hạn dùng / thời gian gửi */}
+                                  <div className="text-[11px] text-slate-400 flex items-center justify-between mb-3 px-1">
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3 text-slate-500" />
+                                      <span>Gửi: {req.createdAt || 'Mới đây'}</span>
+                                    </span>
+                                    {isApproved && (
+                                      <span className="text-emerald-400 font-bold">
+                                        {req.daysRemaining ? `🟢 Còn ${req.daysRemaining} ngày` : '🟢 Hoạt động'}
                                       </span>
                                     )}
                                   </div>
-                                ) : (
-                                  <div className="font-mono text-slate-400 text-[10px] mt-1 flex items-center gap-1">
-                                    <Clock className="w-3 h-3 text-slate-500" />
-                                    <span>Gửi: {req.createdAt || 'Mới đây'}</span>
-                                  </div>
-                                )}
-                              </td>
+                                </div>
 
-                              {/* 5. Trạng Thái */}
-                              <td className="py-3 px-3">
-                                {isBlocked ? (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-bold">
-                                    🔒 ĐÃ KHÓA TRUY CẬP
-                                  </span>
-                                ) : req.status === 'APPROVED' ? (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
-                                    ✅ ĐÃ KÍCH HOẠT PRO
-                                  </span>
-                                ) : req.status === 'REJECTED' ? (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[11px] font-bold">
-                                    ❌ ĐÃ TỪ CHỐI
-                                  </span>
-                                ) : (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 text-white font-black text-[11px] shadow-sm shadow-red-500/30 animate-pulse">
-                                    ⏳ CHỜ DUYỆT CẤP KEY
-                                  </span>
-                                )}
-                              </td>
-
-                              {/* 6. Thao Tác Kích Hoạt & Quản Trị */}
-                              <td className="py-3 px-3 text-right">
-                                <div className="flex items-center justify-end gap-1.5 flex-wrap">
-                                  {req.status === 'PENDING' ? (
-                                    <>
-                                      {/* NÚT DUYỆT CHÍNH - To rõ nổi bật màu xanh lá cây rực rỡ */}
+                                {/* 5. Footer Thẻ: HÀNG NÚT THAO TÁC DUYỆT & KÍCH HOẠT SIÊU TO RÕ */}
+                                <div className="border-t border-slate-800/80 pt-3">
+                                  {isPending ? (
+                                    <div className="space-y-2">
+                                      {/* NÚT DUYỆT CHÍNH TO BẢN: DUYỆT 1 NĂM */}
                                       <button
                                         type="button"
                                         disabled={approvingId !== null}
@@ -2902,212 +3195,614 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 hover:from-emerald-500 hover:to-green-500 disabled:opacity-50 text-white font-black text-xs shadow-lg shadow-emerald-600/40 border border-emerald-400/60 transition cursor-pointer flex items-center gap-1.5 animate-pulse"
-                                        title="Duyệt đơn và cấp mã bản quyền 1 Năm cho Giáo viên"
+                                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 hover:from-emerald-500 hover:to-green-500 text-white font-black text-xs shadow-lg shadow-emerald-600/40 border border-emerald-400/60 flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
                                       >
                                         {approvingId === `${req.machineId}_1YEAR` ? (
-                                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                          <RefreshCw className="w-4 h-4 animate-spin text-white" />
                                         ) : (
                                           <CheckCircle2 className="w-4 h-4 text-white" />
                                         )}
-                                        <span>{approvingId === `${req.machineId}_1YEAR` ? 'Đang duyệt...' : '✅ DUYỆT 1 NĂM'}</span>
+                                        <span>{approvingId === `${req.machineId}_1YEAR` ? 'Đang duyệt & Ký số...' : '✅ DUYỆT & CẤP KEY 1 NĂM'}</span>
                                       </button>
 
-                                      {/* Duyệt gói 2 Năm */}
-                                      <button
-                                        type="button"
-                                        disabled={approvingId !== null}
-                                        onClick={() => handleActivateMachineByYear(
-                                          req.machineId,
-                                          '2YEAR',
-                                          {
-                                            issueNumber: req.issueNumber,
-                                            fullName: req.fullName,
-                                            phoneNumber: req.phoneNumber,
-                                            schoolUnit: req.schoolUnit,
-                                            appId: req.appId,
-                                            appName: req.appName,
-                                            reqId: req.id
-                                          }
-                                        )}
-                                        className="px-2.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs shadow-sm shadow-amber-600/30 transition cursor-pointer flex items-center gap-1"
-                                        title="Duyệt gói 2 Năm VIP"
-                                      >
-                                        <Crown className="w-3.5 h-3.5" />
-                                        <span>2 Năm</span>
-                                      </button>
+                                      {/* Hàng nút gói phụ: 2 Năm, Trọn Đời, Mở Hồ Sơ, Khóa, Xóa */}
+                                      <div className="flex items-center gap-1.5 justify-between">
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            '2YEAR',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="flex-1 py-1.5 px-2 rounded-xl bg-amber-600/80 hover:bg-amber-500 text-white font-bold text-xs flex items-center justify-center gap-1 transition"
+                                          title="Duyệt gói 2 Năm VIP"
+                                        >
+                                          <Crown className="w-3 h-3 text-yellow-300" />
+                                          <span>2 Năm</span>
+                                        </button>
 
-                                      {/* Duyệt gói Trọn Đời */}
-                                      <button
-                                        type="button"
-                                        disabled={approvingId !== null}
-                                        onClick={() => handleActivateMachineByYear(
-                                          req.machineId,
-                                          'LIFETIME',
-                                          {
-                                            issueNumber: req.issueNumber,
-                                            fullName: req.fullName,
-                                            phoneNumber: req.phoneNumber,
-                                            schoolUnit: req.schoolUnit,
-                                            appId: req.appId,
-                                            appName: req.appName,
-                                            reqId: req.id
-                                          }
-                                        )}
-                                        className="px-2.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold text-xs shadow-sm shadow-purple-600/30 transition cursor-pointer flex items-center gap-1"
-                                        title="Duyệt gói Bản quyền Trọn Đời (Vĩnh viễn)"
-                                      >
-                                        <Sparkles className="w-3.5 h-3.5" />
-                                        <span>Trọn Đời</span>
-                                      </button>
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            'LIFETIME',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="flex-1 py-1.5 px-2 rounded-xl bg-purple-700/80 hover:bg-purple-600 text-white font-bold text-xs flex items-center justify-center gap-1 transition"
+                                          title="Duyệt gói Trọn Đời (Vĩnh viễn)"
+                                        >
+                                          <Sparkles className="w-3 h-3 text-purple-300" />
+                                          <span>Trọn Đời</span>
+                                        </button>
 
-                                      {/* Nút Từ chối */}
-                                      <button
-                                        type="button"
-                                        onClick={() => handleRejectReq(req.id, req.issueNumber)}
-                                        className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-rose-300 hover:text-white border border-rose-800/40 text-xs font-semibold transition cursor-pointer flex items-center gap-1"
-                                        title="Từ chối đơn đăng ký này"
-                                      >
-                                        <UserX className="w-3.5 h-3.5" />
-                                        <span>Từ chối</span>
-                                      </button>
-                                    </>
-                                  ) : req.status === 'APPROVED' ? (
-                                    <>
-                                      {/* Nút Xem / Cấp lại Key + Mẫu Zalo */}
-                                      <button
-                                        type="button"
-                                        onClick={() => handleActivateMachineByYear(
-                                          req.machineId,
-                                          (req.packageType as any) || '1YEAR',
-                                          {
-                                            issueNumber: req.issueNumber,
-                                            fullName: req.fullName,
-                                            phoneNumber: req.phoneNumber,
-                                            schoolUnit: req.schoolUnit,
-                                            appId: req.appId,
-                                            appName: req.appName,
-                                            reqId: req.id
-                                          }
-                                        )}
-                                        className="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold shadow-md shadow-sky-600/30 hover:text-white border border-sky-500/40 text-xs font-bold transition cursor-pointer flex items-center gap-1"
-                                        title="Xem lại Key và mẫu tin nhắn Zalo gửi GV"
-                                      >
-                                        <Key className="w-3.5 h-3.5" />
-                                        <span>🔑 Xem Key & Mẫu Zalo</span>
-                                      </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setQuickModalReq(req);
+                                            setQuickModalPkg(req.packageType === 'LIFETIME' ? 'LIFETIME' : req.packageType === '3YEAR' ? '3YEAR' : req.packageType === '2YEAR' ? '2YEAR' : '1YEAR');
+                                          }}
+                                          className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition"
+                                          title="Mở hồ sơ chi tiết và tùy chọn kích hoạt"
+                                        >
+                                          <Eye className="w-4 h-4" />
+                                        </button>
 
-                                      {/* Nút Gia hạn thêm 1 năm */}
-                                      <button
-                                        type="button"
-                                        disabled={approvingId !== null}
-                                        onClick={() => handleActivateMachineByYear(
-                                          req.machineId,
-                                          '1YEAR',
-                                          {
-                                            issueNumber: req.issueNumber,
-                                            fullName: req.fullName,
-                                            phoneNumber: req.phoneNumber,
-                                            schoolUnit: req.schoolUnit,
-                                            appId: req.appId,
-                                            appName: req.appName,
-                                            reqId: req.id
-                                          }
-                                        )}
-                                        className="px-2 py-1.5 rounded-xl bg-emerald-800/40 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-emerald-600/30 text-xs font-bold transition cursor-pointer flex items-center gap-1"
-                                        title="Gia hạn thêm 1 Năm bản quyền"
-                                      >
-                                        <RefreshCw className="w-3 h-3" />
-                                        <span>+1 Năm</span>
-                                      </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteAndBlockMachine(req.machineId)}
+                                          className="p-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 transition"
+                                          title="Khóa máy này"
+                                        >
+                                          <Lock className="w-4 h-4" />
+                                        </button>
 
-                                      {/* Nâng cấp Trọn đời */}
-                                      <button
-                                        type="button"
-                                        disabled={approvingId !== null}
-                                        onClick={() => handleActivateMachineByYear(
-                                          req.machineId,
-                                          'LIFETIME',
-                                          {
-                                            issueNumber: req.issueNumber,
-                                            fullName: req.fullName,
-                                            phoneNumber: req.phoneNumber,
-                                            schoolUnit: req.schoolUnit,
-                                            appId: req.appId,
-                                            appName: req.appName,
-                                            reqId: req.id
-                                          }
-                                        )}
-                                        className="px-2 py-1.5 rounded-xl bg-purple-800/40 hover:bg-purple-700 text-purple-300 hover:text-white border border-purple-600/30 text-xs font-bold transition cursor-pointer flex items-center gap-1"
-                                        title="Nâng cấp lên Trọn Đời (Vĩnh viễn)"
-                                      >
-                                        <Sparkles className="w-3 h-3" />
-                                        <span>Trọn Đời</span>
-                                      </button>
-                                    </>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteRegistration(req.id, req.machineId, req.issueNumber)}
+                                          className="p-1.5 rounded-xl bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white transition"
+                                          title="Xóa đơn này"
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                    </div>
                                   ) : (
-                                    /* Đơn bị từ chối -> Cho phép duyệt lại */
+                                    <div className="space-y-2">
+                                      {/* NÚT XEM LẠI KEY VÀ MẪU TIN NHẮN ZALO */}
+                                      <button
+                                        type="button"
+                                        onClick={() => handleViewKeyAndZalo(
+                                          req.machineId,
+                                          req.fullName,
+                                          req.phoneNumber,
+                                          req.packageType || '1YEAR',
+                                          req.daysRemaining || 365,
+                                          req.expiryDateStr || 'Chuẩn'
+                                        )}
+                                        className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer"
+                                      >
+                                        <Key className="w-4 h-4 text-slate-950" />
+                                        <span>🔑 XEM KEY & SAO CHÉP TIN ZALO</span>
+                                      </button>
+
+                                      <div className="flex items-center gap-1.5 justify-between">
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            '1YEAR',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="flex-1 py-1.5 px-2 rounded-xl bg-emerald-800/40 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-emerald-600/30 text-xs font-bold transition flex items-center justify-center gap-1"
+                                          title="Gia hạn thêm 1 năm"
+                                        >
+                                          <RefreshCw className="w-3 h-3" />
+                                          <span>+1 Năm</span>
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            'LIFETIME',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="flex-1 py-1.5 px-2 rounded-xl bg-purple-800/40 hover:bg-purple-700 text-purple-300 hover:text-white border border-purple-600/30 text-xs font-bold transition flex items-center justify-center gap-1"
+                                          title="Nâng cấp lên Trọn Đời"
+                                        >
+                                          <Sparkles className="w-3 h-3" />
+                                          <span>Trọn Đời</span>
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteAndBlockMachine(req.machineId)}
+                                          className="p-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 transition"
+                                          title="Khóa máy"
+                                        >
+                                          <Lock className="w-4 h-4" />
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteRegistration(req.id, req.machineId, req.issueNumber)}
+                                          className="p-1.5 rounded-xl bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white transition"
+                                          title="Xóa đơn"
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // -------------------------------------------------------------
+                  // B. CHẾ ĐỘ 2: XEM DẠNG BẢNG (TABLE VIEW TỐI ƯU CỰC RỘNG)
+                  // -------------------------------------------------------------
+                  return (
+                    <div className="flex-1 overflow-y-auto border border-slate-800 rounded-2xl bg-slate-950/60 shadow-inner">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="sticky top-0 bg-slate-900/95 backdrop-blur-md text-slate-300 font-semibold uppercase tracking-wider border-b border-slate-800 z-10">
+                          <tr>
+                            <th className="py-3 px-3.5">Giáo Viên & Đơn Vị</th>
+                            <th className="py-3 px-3">Môn / Ứng Dụng</th>
+                            <th className="py-3 px-3">Số ĐT / Zalo</th>
+                            <th className="py-3 px-3">ID Máy Tính</th>
+                            <th className="py-3 px-3">Gói & Hạn Dùng</th>
+                            <th className="py-3 px-3">Trạng Thái</th>
+                            <th className="py-3 px-3.5 text-right">Kích Hoạt & Quản Trị</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800/60">
+                          {filteredList.map((req, rIdx) => {
+                            const isBlocked = blockedMachines.some(b => b.machineId === req.machineId);
+                            const cleanPhone = (req.phoneNumber || '').replace(/[^0-9]/g, '');
+                            const isPending = req.status === 'PENDING';
+                            const isApproved = req.status === 'APPROVED';
+
+                            return (
+                              <tr
+                                key={req.id || `${req.machineId}_${rIdx}`}
+                                className={`transition-colors ${
+                                  isPending
+                                    ? 'bg-red-950/20 hover:bg-red-950/30'
+                                    : 'hover:bg-slate-900/60'
+                                }`}
+                              >
+                                {/* 1. Giáo Viên & Đơn Vị */}
+                                <td className="py-3 px-3.5">
+                                  <div className="font-black text-amber-300 text-sm">
+                                    {req.fullName || 'Thầy/Cô Giáo Viên'}
+                                  </div>
+                                  <div className="text-slate-400 text-xs flex items-center gap-1 mt-0.5 font-medium">
+                                    <Building2 className="w-3 h-3 text-purple-400 shrink-0" />
+                                    <span>{req.schoolUnit || 'Trường THCS'}</span>
+                                  </div>
+                                </td>
+
+                                {/* 2. Môn / Ứng Dụng */}
+                                <td className="py-3 px-3">
+                                  <div className="font-bold text-cyan-300 text-xs">
+                                    {req.appName || 'Tạo Đề Kiểm Tra'}
+                                  </div>
+                                  <span className="inline-block mt-0.5 px-2 py-0.2 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-bold">
+                                    {req.packageType === 'LIFETIME' ? 'Trọn Đời' : req.packageType === '3YEAR' ? '3 Năm' : req.packageType === '2YEAR' ? '2 Năm' : '1 Năm'}
+                                  </span>
+                                </td>
+
+                                {/* 3. Số ĐT / Zalo */}
+                                <td className="py-3 px-3">
+                                  <div className="font-mono font-black text-emerald-300 text-xs mb-1">
+                                    {req.phoneNumber || '---'}
+                                  </div>
+                                  {cleanPhone && (
+                                    <div className="flex items-center gap-1">
+                                      <a
+                                        href={`https://zalo.me/${cleanPhone}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] flex items-center gap-1 transition"
+                                      >
+                                        <MessageCircle className="w-3 h-3" />
+                                        <span>Zalo</span>
+                                      </a>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleCopyTextWithNotice(req.phoneNumber || cleanPhone, 'Số ĐT')}
+                                        className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300"
+                                        title="Chép SĐT"
+                                      >
+                                        <Copy className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  )}
+                                </td>
+
+                                {/* 4. ID Máy Tính */}
+                                <td className="py-3 px-3">
+                                  <div className="flex items-center gap-1">
+                                    <span className="font-mono font-bold text-cyan-300 text-xs select-all">
+                                      {req.machineId}
+                                    </span>
                                     <button
                                       type="button"
-                                      disabled={approvingId !== null}
-                                      onClick={() => handleActivateMachineByYear(
-                                        req.machineId,
-                                        '1YEAR',
-                                        {
-                                          issueNumber: req.issueNumber,
-                                          fullName: req.fullName,
-                                          phoneNumber: req.phoneNumber,
-                                          schoolUnit: req.schoolUnit,
-                                          appId: req.appId,
-                                          appName: req.appName,
-                                          reqId: req.id
-                                        }
-                                      )}
-                                      className="px-2.5 py-1.5 rounded-xl bg-emerald-600/40 hover:bg-emerald-600 text-emerald-200 hover:text-white text-xs font-bold transition cursor-pointer flex items-center gap-1"
-                                      title="Duyệt lại đơn này"
+                                      onClick={() => handleCopyTextWithNotice(req.machineId, 'Mã Máy')}
+                                      className="p-1 rounded bg-slate-800 hover:bg-cyan-900/60 text-cyan-300"
+                                      title="Chép mã máy"
                                     >
-                                      <Check className="w-3.5 h-3.5" />
-                                      <span>Duyệt Lại</span>
+                                      <Copy className="w-3 h-3" />
                                     </button>
+                                  </div>
+                                </td>
+
+                                {/* 5. Gói & Hạn Dùng */}
+                                <td className="py-3 px-3">
+                                  {isApproved ? (
+                                    <div className="text-emerald-400 font-bold text-xs">
+                                      {req.daysRemaining ? `🟢 Còn ${req.daysRemaining} ngày` : '🟢 Đang hoạt động'}
+                                      <div className="text-slate-400 text-[10px] font-mono">Hạn: {req.expiryDateStr || 'Chuẩn'}</div>
+                                    </div>
+                                  ) : (
+                                    <div className="text-slate-400 text-[11px] font-mono flex items-center gap-1">
+                                      <Clock className="w-3 h-3 text-slate-500" />
+                                      <span>{req.createdAt || 'Mới đây'}</span>
+                                    </div>
                                   )}
+                                </td>
 
-                                  {/* Nút Tạm Khóa Máy */}
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteAndBlockMachine(req.machineId)}
-                                    className="p-2 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-rose-300 hover:text-white border border-rose-800/40 transition cursor-pointer"
-                                    title="Tạm khóa máy tính này không cho dùng hệ thống"
-                                  >
-                                    <Lock className="w-3.5 h-3.5" />
-                                  </button>
+                                {/* 6. Trạng Thái */}
+                                <td className="py-3 px-3">
+                                  {isBlocked ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-bold">
+                                      🔒 ĐÃ KHÓA
+                                    </span>
+                                  ) : isApproved ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-black">
+                                      ✅ ĐÃ CẤP PRO
+                                    </span>
+                                  ) : req.status === 'REJECTED' ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[11px] font-bold">
+                                      ❌ TỪ CHỐI
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 text-white font-black text-[11px] shadow-sm shadow-red-500/30 animate-pulse">
+                                      ⏳ CHỜ DUYỆT
+                                    </span>
+                                  )}
+                                </td>
 
-                                  {/* Nút Xóa Tài Khoản / Đơn */}
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteRegistration(req.id, req.machineId, req.issueNumber)}
-                                    className="p-2 rounded-xl bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white transition cursor-pointer"
-                                    title="Xóa vĩnh viễn tài khoản / đơn đăng ký này"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                                {/* 7. Kích Hoạt & Quản Trị */}
+                                <td className="py-3 px-3.5 text-right">
+                                  <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                                    {isPending ? (
+                                      <>
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            '1YEAR',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-black text-xs shadow-md shadow-emerald-600/40 border border-emerald-400/60 flex items-center gap-1 cursor-pointer transition disabled:opacity-50"
+                                        >
+                                          {approvingId === `${req.machineId}_1YEAR` ? (
+                                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                          ) : (
+                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                          )}
+                                          <span>DUYỆT 1 NĂM</span>
+                                        </button>
 
-                      {registrationRequests.length === 0 && (
-                        <tr>
-                          <td colSpan={6} className="py-12 text-center text-slate-400">
-                            <UserCheck className="w-8 h-8 mx-auto mb-2 text-slate-600 opacity-50" />
-                            <div className="font-semibold text-sm">Chưa có đơn đăng ký nào trên hệ thống Cloud.</div>
-                            <div className="text-xs text-slate-500 mt-1">Khi Giáo viên đăng ký từ Web hoặc Word Add-in, đơn sẽ hiển thị ngay tức thì tại đây!</div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            '2YEAR',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="px-2 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs"
+                                          title="Duyệt 2 Năm"
+                                        >
+                                          2 Năm
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            'LIFETIME',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="px-2 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs"
+                                          title="Duyệt Trọn Đời"
+                                        >
+                                          Trọn Đời
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleViewKeyAndZalo(
+                                            req.machineId,
+                                            req.fullName,
+                                            req.phoneNumber,
+                                            req.packageType || '1YEAR',
+                                            req.daysRemaining || 365,
+                                            req.expiryDateStr || 'Chuẩn'
+                                          )}
+                                          className="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1 shadow"
+                                        >
+                                          <Key className="w-3.5 h-3.5" />
+                                          <span>Xem Key & Zalo</span>
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          disabled={approvingId !== null}
+                                          onClick={() => handleActivateMachineByYear(
+                                            req.machineId,
+                                            '1YEAR',
+                                            {
+                                              issueNumber: req.issueNumber,
+                                              fullName: req.fullName,
+                                              phoneNumber: req.phoneNumber,
+                                              schoolUnit: req.schoolUnit,
+                                              appId: req.appId,
+                                              appName: req.appName,
+                                              reqId: req.id
+                                            }
+                                          )}
+                                          className="px-2 py-1.5 rounded-xl bg-emerald-800/40 hover:bg-emerald-700 text-emerald-300 text-xs font-bold"
+                                          title="Gia hạn 1 Năm"
+                                        >
+                                          +1 Năm
+                                        </button>
+                                      </>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteAndBlockMachine(req.machineId)}
+                                      className="p-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40"
+                                      title="Khóa máy"
+                                    >
+                                      <Lock className="w-3.5 h-3.5" />
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteRegistration(req.id, req.machineId, req.issueNumber)}
+                                      className="p-1.5 rounded-xl bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white"
+                                      title="Xóa đơn"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })()}
+
+                {/* ========================================================================= */}
+                {/* 5. MODAL HỒ SƠ CHI TIẾT & KÍCH HOẠT NHANH (QUICK ACTION MODAL)              */}
+                {/* ========================================================================= */}
+                {quickModalReq && (
+                  <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+                    <div className="bg-slate-900 border border-amber-500/60 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl shadow-amber-950/40 relative">
+                      <button
+                        onClick={() => setQuickModalReq(null)}
+                        className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+
+                      <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-slate-950 font-black shadow-lg">
+                          <Crown className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-white flex items-center gap-2">
+                            <span>HỒ SƠ DUYỆT BẢN QUYỀN PRO</span>
+                          </h3>
+                          <p className="text-xs text-amber-300 font-medium">
+                            Kích hoạt tức thì & Ký số Ed25519 cho Giáo viên
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5 text-xs">
+                        <div className="flex justify-between items-center py-1 border-b border-slate-800">
+                          <span className="text-slate-400">👤 Họ và Tên:</span>
+                          <span className="font-black text-amber-300 text-sm">{quickModalReq.fullName}</span>
+                        </div>
+
+                        <div className="flex justify-between items-center py-1 border-b border-slate-800">
+                          <span className="text-slate-400">🏫 Trường / Đơn Vị:</span>
+                          <span className="font-bold text-white">{quickModalReq.schoolUnit || 'Trường THCS'}</span>
+                        </div>
+
+                        <div className="flex justify-between items-center py-1 border-b border-slate-800">
+                          <span className="text-slate-400">📱 Số ĐT / Zalo:</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-black text-emerald-300 text-sm">{quickModalReq.phoneNumber}</span>
+                            {quickModalReq.phoneNumber && (
+                              <a
+                                href={`https://zalo.me/${quickModalReq.phoneNumber.replace(/[^0-9]/g, '')}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-2 py-0.5 rounded-lg bg-sky-600 text-white font-bold text-[10px] flex items-center gap-1"
+                              >
+                                <MessageCircle className="w-3 h-3" />
+                                <span>Zalo</span>
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-center py-1 border-b border-slate-800">
+                          <span className="text-slate-400">📦 Ứng Dụng Đăng Ký:</span>
+                          <span className="font-bold text-cyan-300">{quickModalReq.appName}</span>
+                        </div>
+
+                        <div className="flex justify-between items-center py-1">
+                          <span className="text-slate-400">💻 Mã Máy (ID):</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono font-bold text-cyan-300">{quickModalReq.machineId}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopyTextWithNotice(quickModalReq.machineId, 'Mã Máy')}
+                              className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Chọn Gói Kích Hoạt */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1">
+                          <Crown className="w-3.5 h-3.5 text-yellow-400" />
+                          <span>Chọn Thời Hạn Cấp Bản Quyền:</span>
+                        </label>
+                        <div className="grid grid-cols-4 gap-1.5">
+                          {(['1YEAR', '2YEAR', '3YEAR', 'LIFETIME'] as const).map(pkg => (
+                            <button
+                              key={pkg}
+                              type="button"
+                              onClick={() => setQuickModalPkg(pkg)}
+                              className={`py-2 px-1 rounded-xl text-xs font-black transition cursor-pointer text-center ${
+                                quickModalPkg === pkg
+                                  ? pkg === 'LIFETIME'
+                                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/40 ring-1 ring-purple-300'
+                                    : pkg === '2YEAR'
+                                    ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/40 ring-1 ring-amber-300'
+                                    : pkg === '3YEAR'
+                                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/40 ring-1 ring-indigo-300'
+                                    : 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/40 ring-1 ring-emerald-300'
+                                  : 'bg-slate-800 text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {pkg === '1YEAR' ? '1 Năm' : pkg === '2YEAR' ? '2 Năm VIP' : pkg === '3YEAR' ? '3 Năm Pro' : 'Trọn Đời'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Nút Kích Hoạt Ngay */}
+                      <div className="pt-2 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const req = quickModalReq;
+                            setQuickModalReq(null);
+                            handleActivateMachineByYear(
+                              req.machineId,
+                              quickModalPkg,
+                              {
+                                issueNumber: req.issueNumber,
+                                fullName: req.fullName,
+                                phoneNumber: req.phoneNumber,
+                                schoolUnit: req.schoolUnit,
+                                appId: req.appId,
+                                appName: req.appName,
+                                reqId: req.id
+                              }
+                            );
+                          }}
+                          className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-green-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/40 cursor-pointer transition"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>✅ XÁC NHẬN DUYỆT & CẤP KEY NGAY</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TOAST THÔNG BÁO SAO CHÉP CLIPBOARD */}
+                {copiedNotice && (
+                  <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white text-xs font-black px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2 border border-emerald-300 animate-in slide-in-from-bottom duration-200">
+                    <CheckCircle className="w-4 h-4 text-white" />
+                    <span>Đã sao chép {copiedNotice} vào bộ nhớ tạm!</span>
+                  </div>
+                )}
               </div>
             )}
 
