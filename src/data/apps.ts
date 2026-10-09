@@ -19,7 +19,7 @@ export const apps: AppCard[] = [
   // ==================== CÔNG CỤ CHỦ LỰC: NĂNG LỰC SỐ & AI ====================
   {
     id: "tichhop-nls-ai-thcs",
-    title: "TÍCH HỢP NĂNG LỰC SỐ & AI (CV 5512)",
+    title: "NLS & AI GIÁO VIÊN (CV 5512)",
     description: "Tự động bổ sung Năng lực số, STEM, AI và Giáo dục hòa nhập vào giáo án chuẩn CV 5512 cho cấp THCS và THPT.",
     image: "/giaoanNLS.png",
     url: "#nls-ai",
@@ -34,7 +34,7 @@ export const apps: AppCard[] = [
   // ==================== NHÓM TIỂU HỌC: BÁM SÁT THÔNG TƯ 27/2020 ====================
   {
     id: "tao-de-tieng-anh-tieu-hoc",
-    title: "TẠO ĐỀ TIẾNG ANH TIỂU HỌC (TT 27)",
+    title: "TẠO ĐỀ ANH TIỂU HỌC (TT 27)",
     description: "Tạo đề kiểm tra Tiếng Anh 4 kỹ năng Tiểu Học (Lớp 1-5 Global Success) chuẩn Thông tư 27 kèm Ma trận 4 mức độ, bản đặc tả, audio script và phiếu nhận xét.",
     image: "/taode_tienganh_tieuhoc.png",
     url: "#taode-tienganh-tieuhoc",
@@ -49,7 +49,7 @@ export const apps: AppCard[] = [
   // ==================== NHÓM 1: CẤP THCS (CV 7991) ====================
   {
     id: "tao-de-tieng-anh-thcs",
-    title: "TẠO ĐỀ TIẾNG ANH THCS (CV 7991)",
+    title: "TẠO ĐỀ ANH THCS (CV 7991)",
     description: "Tạo đề kiểm tra Tiếng Anh 4 kỹ năng THCS kèm ma trận, bản đặc tả, audio script và đáp án chi tiết.",
     image: "/taode_tienganh.png",
     url: "#tao-de-tieng-anh",
@@ -62,7 +62,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-15p-tienganh",
-    title: "TẠO ĐỀ 15 PHÚT TIẾNG ANH THCS",
+    title: "TẠO ĐỀ 15P ANH THCS (CV 7991)",
     description: "Tạo đề kiểm tra 15 phút trắc nghiệm Tiếng Anh theo từng Unit bám sát giáo trình THCS.",
     image: "/taode_15p_tienganh.png",
     url: "#tao-de-15p-tienganh",
@@ -194,7 +194,7 @@ export const apps: AppCard[] = [
   // ==================== NHÓM 2: CẤP THPT (ĐỊNH DẠNG MỚI 2025+) ====================
   {
     id: "tao-de-tieng-anh-thpt",
-    title: "TẠO ĐỀ TIẾNG ANH THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ ANH THPT (2025+)",
     description: "Tạo đề kiểm tra Tiếng Anh THPT định dạng mới kèm ma trận, bản đặc tả và đáp án chi tiết.",
     image: "/taode_tienganh_thpt.png",
     url: "#tao-de-tieng-anh-thpt",
@@ -207,7 +207,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-toan-thpt",
-    title: "TẠO ĐỀ TOÁN THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ TOÁN THPT (2025+)",
     description: "Tạo đề kiểm tra Toán THPT cấu trúc mới gồm 3 phần trắc nghiệm kèm ma trận và đáp án.",
     image: "/taode_toan_thpt.png",
     url: "#tao-de-toan-thpt",
@@ -220,7 +220,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-van-thpt",
-    title: "TẠO ĐỀ NGỮ VĂN THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ VĂN THPT (2025+)",
     description: "Tạo đề kiểm tra Ngữ văn THPT với ngữ liệu ngoài SGK, đọc hiểu và viết văn kèm biểu điểm.",
     image: "/taode_nguvan_thpt.png",
     url: "#tao-de-van-thpt",
@@ -233,7 +233,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-vatli-thpt",
-    title: "TẠO ĐỀ VẬT LÍ THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ VẬT LÍ THPT (2025+)",
     description: "Tạo đề kiểm tra Vật lí THPT định dạng mới gồm trắc nghiệm nhiều lựa chọn và đúng/sai.",
     image: "/taode_vatli_thpt.png",
     url: "#tao-de-vatli-thpt",
@@ -246,7 +246,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-hoahoc-thpt",
-    title: "TẠO ĐỀ HÓA HỌC THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ HÓA HỌC THPT (2025+)",
     description: "Tạo đề kiểm tra Hóa học THPT cấu trúc mới kèm ma trận, bản đặc tả và bảng đáp án.",
     image: "/taode_hoahoc_thpt.png",
     url: "#tao-de-hoahoc-thpt",
@@ -259,7 +259,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-sinhhoc-thpt",
-    title: "TẠO ĐỀ SINH HỌC THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ SINH HỌC THPT (2025+)",
     description: "Tạo đề kiểm tra Sinh học THPT định dạng mới gồm trắc nghiệm và câu hỏi trả lời ngắn.",
     image: "/taode_sinhhoc_thpt.png",
     url: "#tao-de-sinhhoc-thpt",
@@ -272,7 +272,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-tin-thpt",
-    title: "TẠO ĐỀ TIN HỌC THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ TIN HỌC THPT (2025+)",
     description: "Tạo đề kiểm tra Tin học THPT theo định hướng Khoa học máy tính và Tin học ứng dụng.",
     image: "/taode_tinhoc_thpt.png",
     url: "#tao-de-tin-thpt",
@@ -285,7 +285,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-lichsu-thpt",
-    title: "TẠO ĐỀ LỊCH SỬ THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ LỊCH SỬ THPT (2025+)",
     description: "Tạo đề kiểm tra Lịch sử THPT định dạng mới với các chủ đề lịch sử Việt Nam và thế giới.",
     image: "/taode_lichsu_thpt.png",
     url: "#tao-de-lichsu-thpt",
@@ -298,7 +298,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-diali-thpt",
-    title: "TẠO ĐỀ ĐỊA LÍ THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ ĐỊA LÍ THPT (2025+)",
     description: "Tạo đề kiểm tra Địa lí THPT định dạng mới kết hợp lý thuyết và kỹ năng sử dụng Atlat.",
     image: "/taode_diali_thpt.png",
     url: "#tao-de-diali-thpt",
@@ -311,7 +311,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-gdktpl-thpt",
-    title: "TẠO ĐỀ GDKT & PL THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ GDKT & PL THPT (2025+)",
     description: "Tạo đề kiểm tra Giáo dục kinh tế & Pháp luật THPT với các tình huống pháp lý thực tiễn.",
     image: "/taode_gdktpl_thpt.png",
     url: "#tao-de-gdktpl-thpt",
@@ -324,7 +324,7 @@ export const apps: AppCard[] = [
   },
   {
     id: "tao-de-cn-thpt",
-    title: "TẠO ĐỀ CÔNG NGHỆ THPT (LỚP 10, 11, 12)",
+    title: "TẠO ĐỀ CÔNG NGHỆ THPT (2025+)",
     description: "Tạo đề kiểm tra Công nghệ THPT theo định hướng Công nghiệp và Nông nghiệp.",
     image: "/taode_congnghe_thpt.png",
     url: "#tao-de-cn-thpt",
