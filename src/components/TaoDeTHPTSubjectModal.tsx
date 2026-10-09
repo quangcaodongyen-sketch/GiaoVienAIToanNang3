@@ -58,7 +58,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
 }) => {
   const subjectList = Object.entries(EXAM_THPT_RESOURCES.subjects);
   const [currentSubKey, setCurrentSubKey] = useState<string>(initialSubject || 'TOAN');
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'online' | 'register'>('download');
 
   const curSub = EXAM_THPT_RESOURCES.subjects[currentSubKey as keyof typeof EXAM_THPT_RESOURCES.subjects] || EXAM_THPT_RESOURCES.subjects.TOAN;
 
@@ -200,48 +200,9 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
   };
 
   const handleGenerateOnline = () => {
-    if (!isProActive) {
-      if (trialRemaining <= 0) {
-        alert(`Thầy/Cô đã hoàn thành 3/3 lượt trải nghiệm miễn phí môn ${curSub.name} trên máy tính này!\n\nVui lòng đăng ký bản quyền Pro qua Zalo Thầy Thành: 0915.213717 để tiếp tục sử dụng không giới hạn.`);
-        setActiveTab('register');
-        return;
-      }
-      const nextRemaining = Math.max(0, trialRemaining - 1);
-      setTrialRemaining(nextRemaining);
-      localStorage.setItem(`gvai_trial_remaining_${curSub.appTag.toLowerCase()}`, String(nextRemaining));
-    }
-
-    setIsGenerating(true);
-    setTimeout(() => {
-      setIsGenerating(false);
-      const isTrial = !isProActive;
-      setGeneratedPreview(`SỞ GIÁO DỤC VÀ ĐÀO TẠO ....................
-TRƯỜNG THPT ....................
-MÃ ĐỀ THI: ${selectedGrade}01 - ${selectedTerm}
-
-ĐỀ KIỂM TRA ĐỊNH KỲ ${curSub.fullName.toUpperCase()} - LỚP ${selectedGrade}
-(Cấu trúc định dạng mới theo chuẩn Quyết định 764/BGDĐT từ năm 2025)
-
-PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (4 LỰA CHỌN - 1 ĐÁP ÁN ĐÚNG)
-Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
-${isTrial ? `[ĐÁP ÁN: Hiển thị 6 câu đầu (1..6) - Từ câu 7..12 bị KHÓA BẢN QUYỀN PRO]` : `[ĐÁP ÁN: Toàn bộ đáp án đúng in màu đỏ #FF0000 chuẩn sư phạm]`}
-
-PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG SAI
-Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
-• Điểm phần Đúng/Sai: Đúng 1 ý: 0.1đ | Đúng 2 ý: 0.25đ | Đúng 3 ý: 0.5đ | Đúng 4 ý: 1.0đ.
-${isTrial ? `[ĐÁP ÁN: Hiển thị câu 1, 2 - Câu 3, 4 bị KHÓA BẢN QUYỀN PRO]` : `[ĐÁP ÁN: Đầy đủ bảng đối chiếu Đúng/Sai chuẩn mực]`}
-
-PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (ĐIỀN SỐ HOẶC KẾT QUẢ RÚT GỌN)
-Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác vào phiếu trả lời.
-${isTrial ? `[ĐÁP ÁN: Hiển thị 3 câu đầu - 3 câu sau bị KHÓA BẢN QUYỀN PRO]
-
-------------------------------------------------------------------------
-⭐ THÔNG BÁO BẢN QUYỀN: BẢN DÙNG THỬ CHỈ XEM ĐƯỢC 1/2 ĐÁP ÁN ĐỀ THI ⭐
-Kính mời Thầy/Cô liên hệ Thầy giáo Đinh Văn Thành qua Zalo: 0915.213717
-để kích hoạt Bản Quyền Pro: Mở khóa 100% đáp án, ma trận 16 cột và xuất file Word!` : `[ĐÁP ÁN: Đầy đủ 100% đáp án số và hướng dẫn giải chi tiết]`}
-
---- MA TRẬN 16 CỘT & BẢN ĐẶC TẢ ĐÃ TỰ ĐỘNG ĐƯỢC TẠO HOÀN CHỈNH KÈM THEO FILE WORD ---`);
-    }, 600);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn 100% Bộ GD&ĐT không lỗi font MathType/LaTeX và nhận các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    setActiveTab('download');
+    return;
   };
 
   return (

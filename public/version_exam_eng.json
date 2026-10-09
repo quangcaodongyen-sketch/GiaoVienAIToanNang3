@@ -1,10 +1,11 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "3.6.0",
-  "latestVersion": "3.6.0",
-  "releaseDate": "05/10/2026",
+  "currentVersion": "3.8.0",
+  "latestVersion": "3.8.0",
+  "releaseDate": "09/10/2026",
   "changelog": [
+    "• [09/10/2026 - v3.8.0] Cập nhật bản vá lỗi mới nhất & đồng bộ hệ thống. Định hướng tải bộ cài PC để sử dụng đầy đủ tính năng ra đề kiểm tra, xuất file Word chuẩn mực không lỗi font MathType/LaTeX.",
     "🚀 [Cực Kì Quan Trọng] Hỗ trợ tạo từ 1 đến 10 mã đề chuẩn xác theo đúng tuỳ chọn của giáo viên (khắc phục triệt để lỗi chỉ tạo được 2-4 mã).",
     "🔥 [Tính Năng Mới] Bổ sung tuỳ chọn 3 Mức độ khó: Cơ bản (Dễ) - Tiêu chuẩn (Phân hóa chung) - Nâng cao (Khó) để giáo viên tuỳ chọn theo học lực học sinh.",
     "📚 [Dữ Liệu] Tăng cường số lượng câu hỏi trong Ngân hàng cho tất cả các phần (Đọc hiểu, Nghe hiểu, Trắc nghiệm, Tự luận, Viết lại câu, Sắp xếp từ).",
@@ -14,5 +15,5 @@
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
   "author": "Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717 - THCS Đồng Yên",
-  "version": "3.6.0"
+  "version": "3.8.0"
 }

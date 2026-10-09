@@ -45,7 +45,7 @@ interface TaoDeTiengAnhTieuHocModalProps {
 
 export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Modal 3 Tabs chuẩn quy định Rule 2
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính (Rule 2)
   const [trialRemaining, setTrialRemaining] = useState<number>(5);

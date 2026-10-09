@@ -223,7 +223,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   };
 
   const [currentSubjectKey, setCurrentSubjectKey] = useState<string>(resolveSubKey);
-  const [activeTab, setActiveTab] = useState<'preview' | 'download' | 'register'>('preview');
+  const [activeTab, setActiveTab] = useState<'download' | 'preview' | 'register'>('download');
 
   // Cấu hình tạo đề trực tuyến
   const [selectedGrade, setSelectedGrade] = useState<string>('7');
@@ -295,32 +295,11 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
   const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.GDCD;
 
-  // Bấm tạo đề trực tuyến (1 đề mỗi lần, trừ 1 lượt dùng thử)
+  // Bấm tạo đề trực tuyến -> Hướng dẫn tải PC app
   const handleGenerateOnline = () => {
-    if (!isProActive && trialRemaining <= 0) {
-      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.`);
-      setActiveTab('register');
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
-      setExamData(suite);
-      setHasGenerated(true);
-
-      if (!isProActive) {
-        const nextRem = Math.max(0, trialRemaining - 1);
-        setTrialRemaining(nextRem);
-        const trialKey = `gvai_taode_${currentSubjectKey.toLowerCase()}_trial_remaining`;
-        localStorage.setItem(trialKey, nextRem.toString());
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Có lỗi khi tạo đề. Vui lòng thử lại!');
-    } finally {
-      setIsGenerating(false);
-    }
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font MathType/LaTeX và nhận đầy đủ các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    setActiveTab('download');
+    return;
   };
 
   // Xử lý tạo đề mới & Xuất file Word (Trải nghiệm trực tuyến)
@@ -483,21 +462,9 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           appName={curSub.name} 
         />
 
-        {/* NAVIGATION TABS CHUẨN SƯ PHẠM 3 TAB: TRẢI NGHIỆM ONLINE - TẢI VỀ - BẢN QUYỀN */}
+        {/* NAVIGATION TABS CHUẨN SƯ PHẠM 3 TAB: TẢI VỀ - TRẢI NGHIỆM TRỰC TUYẾN - BẢN QUYỀN */}
         <div className="px-5 pt-2.5 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between shrink-0 flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setActiveTab('preview')}
-              className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
-                activeTab === 'preview'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/40 ring-1 ring-blue-400'
-                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>1. TRẢI NGHIỆM TRỰC TUYẾN (DÙNG THỬ 3 LẦN)</span>
-            </button>
-
             <button
               onClick={() => setActiveTab('download')}
               className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
@@ -506,8 +473,20 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>2. TẢI VỀ & HƯỚNG DẪN</span>
+              <Download className="w-3.5 h-3.5 text-amber-300" />
+              <span>1. TẢI BỘ CÀI VỀ MÁY TÍNH (KHUYÊN DÙNG)</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('preview')}
+              className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
+                activeTab === 'preview'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/40 ring-1 ring-blue-400'
+                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>2. XEM GIAO DIỆN & MÔ PHỎNG</span>
             </button>
 
             <button

@@ -57,7 +57,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'trial' | 'download' | 'license'>('trial');
+  const [activeTab, setActiveTab] = useState<'download' | 'trial' | 'license'>('download');
   const [grade, setGrade] = useState<'6' | '7' | '8' | '9'>('8');
   const [termCode, setTermCode] = useState<'GK1' | 'CK1' | 'GK2' | 'CK2'>('GK1');
   const [examCode, setExamCode] = useState('801');
@@ -104,24 +104,9 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   if (!isOpen) return null;
 
   const handleGenerateExam = async () => {
-    if (!isPro && trialsRemaining <= 0) {
-      setShowExpiredNotice(true);
-      setActiveTab('license');
-      return;
-    }
-
-    if (!isPro) {
-      const { success, remaining } = await consumeLSTHCSTrialTurn();
-      if (!success) {
-        setShowExpiredNotice(true);
-        setActiveTab('license');
-        return;
-      }
-      setTrialsRemaining(remaining);
-    }
-
-    const data = getTHCS8MonExamSuite('LICHSU', grade, termCode, examCode);
-    setExamData(data);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ LỊCH SỬ THCS ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font và nhận các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    setActiveTab('download');
+    return;
   };
 
   const handleExportWord = async () => {
