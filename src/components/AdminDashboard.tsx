@@ -82,7 +82,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Tạo Đề 15P Tiếng Anh, Security Alerts
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'tracking' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'de15p' | 'security'>('tracking');
+  const [adminTab, setAdminTab] = useState<'key_gen' | 'tracking' | 'system' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'de15p' | 'security'>('key_gen');
+  const [systemSubTab, setSystemSubTab] = useState<'quota' | 'stats' | 'machines' | 'security'>('quota');
   
   // State Tab Marketing & Quảng cáo tự động Việt Nam
   const [marketingTopic, setMarketingTopic] = useState<'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF'>('ALL');
@@ -434,7 +435,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setIsAuthenticated(true);
       setUserRole('ADMIN');
       setCurrentAdminName('Thầy Đinh Văn Thành (Admin)');
-      setAdminTab('tracking');
+      setAdminTab('key_gen');
       setPinError(false);
       loadTrackingData();
       loadData();
@@ -448,7 +449,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       setIsAuthenticated(true);
       setUserRole('SUB_ADMIN');
       setCurrentAdminName('Thầy Nguyễn Văn Tiềm - Phó Quản trị');
-      setAdminTab('tracking');
+      setAdminTab('key_gen');
       setTrackingSubTab('requests');
       setPinError(false);
       loadTrackingData();
@@ -2204,195 +2205,138 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
 🌟 TOP CÔNG CỤ CẦN THIẾT NHẤT CHO NĂM HỌC MỚI:
 1️⃣ Tạo Đề Kiểm Tra 8 Môn THCS chuẩn 100% CV 7991 (Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ).
 2️⃣ Tạo Đề Tiếng Anh Global Success xuất kèm Audio Script và file nghe MP3.
-3️⃣ Chuẩn hóa văn bản hành chính theo Nghị định 30/2020 trong Word chỉ 1-click.
-4️⃣ Soạn giáo án bài dạy chuẩn Công văn 5512 đủ 4 hoạt động.
-5️⃣ Sinh 3 đề biến thể tương đương chống nhìn bài trong phòng thi.
-6️⃣ PDF Suite Pro: Tách, gộp và tự động lọc trang trắng rác khi scan tài liệu.
-7️⃣ Screen Record Pro V2: Quay màn hình bài giảng BTV Full HD khử tạp âm.
-8️⃣ Đinh Thành Cleaner Pro v4.5 VIP: Dọn rác tăng tốc máy tính giáo viên êm mượt.
-
-🎁 TOÀN BỘ CÔNG CỤ ĐỀU CÓ CHÍNH SÁCH DÙNG THỬ TRỰC TUYẾN 5 LẦN MIỄN PHÍ TRÊN WEB!
-👉 Kính mời Thầy/Cô vào trải nghiệm ngay: ${siteUrl}
-📞 Hotline/Zalo hỗ trợ và cài đặt từ xa: ${hotline}
-Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết dạy thăng hoa! ❤️
-#giaovienaitoannang #thaydinhvanthanh #thcsdongyen #phanmemgiaovien #cv7991 #soangiaoan5512`;
-    }
-  };
-
-  return (
-    <div 
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-slate-900 border border-slate-800 rounded-3xl max-w-7xl xl:max-w-[96vw] w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[96vh] flex flex-col cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* TOP HEADER */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md shadow-amber-500/20">
-              <Crown className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ KÍCH HOẠT PRO'}
-                </h2>
-                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
-                  {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN MAI TÌNH' : '👑 ADMIN THẦY THÀNH'}
-                </span>
-              </div>
-              <p className="text-xs text-slate-400">
-                {userRole === 'SUB_ADMIN' 
-                  ? 'Tài khoản phụ: Mai Tình – Mọi thao tác kích hoạt được lưu vết tự động vào hệ thống' 
-                  : 'Thầy giáo Đinh Văn Thành – Quản lý danh sách Giáo viên & Duyệt Cấp bản quyền Pro 1-Click'}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* NÚT KHÓA / MỞ KHÓA WEB (NÂNG CẤP BẢO TRÌ) */}
+3️⃣ Chuẩn hóa văn bản hành chính theo Ngh        {/* ========================================================================= */}
+        {/* THANH ĐIỀU HƯỚNG QUẢN TRỊ ĐỒNG BỘ 3 TAB CHÍNH (ĐIỆN THOẠI & MÁY TÍNH)      */}
+        {/* ========================================================================= */}
+        <div className="flex flex-wrap items-center justify-between gap-2 my-2 border-b border-slate-800 pb-2.5 text-xs font-bold shrink-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 w-full sm:w-auto">
+            {/* 1. CẤP KEY KHÁCH HÀNG (1-CHẠM) - MẶC ĐỊNH MỞ ĐẦU TIÊN */}
             <button
-              onClick={handleToggleMaintenanceLock}
-              disabled={isTogglingMaintenance}
-              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black shadow-lg cursor-pointer ${
-                isMaintenanceLocked
-                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 text-white border-2 border-emerald-300 hover:from-emerald-500 hover:to-teal-400 shadow-emerald-600/40 animate-pulse'
-                  : 'bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border-2 border-amber-500/80 hover:border-amber-400'
+              type="button"
+              onClick={() => setAdminTab('key_gen')}
+              className={`py-2.5 px-3.5 sm:px-4 rounded-xl flex items-center gap-2 transition-all cursor-pointer font-black text-xs sm:text-sm shadow-md shrink-0 ${
+                adminTab === 'key_gen'
+                  ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-slate-950 shadow-amber-500/30 ring-2 ring-amber-300'
+                  : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
               }`}
-              title={
-                isMaintenanceLocked 
-                  ? 'Website đang KHÓA NÂNG CẤP (Khách chỉ thấy thông báo). Bấm để MỞ LẠI cho toàn quốc.' 
-                  : 'Bấm để TẠM DỪNG NÂNG CẤP website (Khách chỉ xem thông báo nâng cấp).'
-              }
             >
-              {isMaintenanceLocked ? (
-                <>
-                  <Unlock className="w-4 h-4 text-emerald-200 animate-spin" />
-                  <span>🔓 MỞ KHÓA WEB (ĐANG KHÓA)</span>
-                </>
-              ) : (
-                <>
-                  <Lock className="w-4 h-4 text-amber-400" />
-                  <span>🔒 KHÓA WEB (NÂNG CẤP)</span>
-                </>
-              )}
+              <Key className="w-4 h-4 text-slate-950" />
+              <span>🔑 1. CẤP KEY (1-CHẠM)</span>
             </button>
 
-            {/* Security button removed */}
+            {/* 2. DUYỆT ĐƠN CLOUD */}
             <button
-              onClick={() => setShowConfigModal(true)}
-              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
-              title="Cấu hình Cloud Database"
-            >
-              <Cloud className="w-4 h-4 text-sky-400" />
-              <span className="hidden sm:inline">Kết nối Cloud</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* THANH ĐIỀU HƯỚNG QUẢN TRỊ TINH GỌN (5 MỤC CHÍNH ĐẲNG CẤP)                   */}
-        {/* ========================================================================= */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 my-2.5 border-b border-slate-800 pb-2.5 text-xs font-bold shrink-0">
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
-            {/* 1. DUYỆT & KÍCH HOẠT THÀNH VIÊN (TAB CHÍNH MẶC ĐỊNH) */}
-            <button
+              type="button"
               onClick={() => {
                 setAdminTab('tracking');
                 setTrackingSubTab('requests');
                 loadTrackingData();
               }}
-              className={`py-2 px-3.5 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+              className={`py-2.5 px-3.5 sm:px-4 rounded-xl flex items-center gap-2 transition-all cursor-pointer font-black text-xs sm:text-sm shadow-md shrink-0 ${
                 adminTab === 'tracking' && trackingSubTab === 'requests'
-                  ? 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black shadow-lg shadow-amber-500/30 ring-2 ring-amber-300'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 shadow-emerald-500/30 ring-2 ring-emerald-300'
                   : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
               }`}
             >
-              <UserCheck className="w-4 h-4 text-emerald-950" />
-              <span className="font-extrabold text-xs sm:text-sm">👑 1. DUYỆT THÀNH VIÊN & BẢN QUYỀN PRO</span>
+              <Cloud className="w-4 h-4" />
+              <span>☁️ 2. DUYỆT ĐƠN CLOUD</span>
               {registrationRequests.filter(r => r.status === 'PENDING').length > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-pulse flex items-center gap-1 shadow-md shadow-red-500/40">
-                  <span>⏳ Chờ duyệt:</span>
-                  <span>{registrationRequests.filter(r => r.status === 'PENDING').length}</span>
+                <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[11px] font-black animate-pulse shadow">
+                  {registrationRequests.filter(r => r.status === 'PENDING').length}
                 </span>
               )}
             </button>
 
             {userRole === 'ADMIN' && (
               <>
-                {/* 2. HẠN NGẠCH CÀI ĐẶT 12 APP */}
+                {/* 3. THỐNG KÊ & AN NINH */}
                 <button
+                  type="button"
                   onClick={() => {
-                    setAdminTab('tracking');
-                    setTrackingSubTab('quota');
+                    setAdminTab('system');
                     loadTrackingData();
                   }}
-                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                    adminTab === 'tracking' && trackingSubTab === 'quota'
-                      ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                  className={`py-2.5 px-3.5 sm:px-4 rounded-xl flex items-center gap-2 transition-all cursor-pointer font-black text-xs sm:text-sm shadow-md shrink-0 ${
+                    adminTab === 'system' || (adminTab === 'tracking' && trackingSubTab !== 'requests') || adminTab === 'security'
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 shadow-cyan-500/30 ring-2 ring-cyan-300'
+                      : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" />
-                  <span>2. 📊 Hạn Ngạch 12 App</span>
+                  <span>📊 3. THỐNG KÊ & AN NINH</span>
                 </button>
 
-                {/* 3. THỐNG KÊ TRUY CẬP & LỊCH SỬ */}
-                <button
-                  onClick={() => {
-                    setAdminTab('tracking');
-                    setTrackingSubTab('stats');
-                    loadTrackingData();
-                  }}
-                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                    adminTab === 'tracking' && trackingSubTab === 'stats'
-                      ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <History className="w-4 h-4" />
-                  <span>3. Thống Kê & Lịch Sử</span>
-                </button>
-
-                {/* 4. QUẢN LÝ MÁY BỊ KHÓA */}
-                <button
-                  onClick={() => {
-                    setAdminTab('tracking');
-                    setTrackingSubTab('machines');
-                    loadTrackingData();
-                  }}
-                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                    adminTab === 'tracking' && trackingSubTab === 'machines'
-                      ? 'bg-sky-500 text-slate-950 font-black shadow-md shadow-sky-500/20'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <Laptop className="w-4 h-4" />
-                  <span>4. Máy Bị Khóa</span>
-                  {blockedMachines.length > 0 && (
-                    <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-black">
-                      {blockedMachines.length}
-                    </span>
-                  )}
-                </button>
-
-                {/* 5. DROPDOWN BỘ TẠO KEY ED25519 THEO TỪNG APP */}
-                <div className="relative">
+                {/* 4. DROPDOWN 11 TOOL LẺ OFFLINE */}
+                <div className="relative shrink-0">
                   <button
                     type="button"
                     onClick={() => setShowKeyGenDropdown(!showKeyGenDropdown)}
-                    className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+                    className={`py-2.5 px-3 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer text-xs font-bold ${
                       ['nls', 'taode', 'bienthe', 'record', 'cleaner', 'chuanhoavb', 'pdfsuite', 'thcs8m', 'mathstudio', 'de15p', 'tts'].includes(adminTab)
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black shadow-md shadow-purple-600/30 ring-2 ring-purple-300'
+                        ? 'bg-purple-600 text-white font-black shadow-md ring-2 ring-purple-300'
                         : 'bg-slate-800 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Crown className="w-4 h-4 text-amber-300" />
+                    <span>🛠️ Tool Lẻ ({['nls', 'taode', 'bienthe', 'record', 'cleaner', 'chuanhoavb', 'pdfsuite', 'thcs8m', 'mathstudio', 'de15p', 'tts'].includes(adminTab) ? 'Đang Mở' : '11 App'}) ▼</span>
+                  </button>
+
+                  {showKeyGenDropdown && (
+                    <div className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in">
+                      <div className="text-[11px] font-bold text-slate-400 px-2 py-1 border-b border-slate-800 mb-1 flex justify-between items-center">
+                        <span>CHỌN TOOL SINH KEY ED25519:</span>
+                        <button onClick={() => setShowKeyGenDropdown(false)} className="text-slate-400 hover:text-white">✕</button>
+                      </div>
+                      <div className="max-h-80 overflow-y-auto space-y-1 text-xs">
+                        {[
+                          { id: 'nls', name: '⚡ Tích Hợp NLS - AI V3', desc: 'Ed25519 Word Add-in' },
+                          { id: 'taode', name: '🇬🇧 Đề Tiếng Anh (CV 7991)', desc: 'Global Success THCS' },
+                          { id: 'mathstudio', name: '📐 MathStudio 2026+', desc: 'Soạn Toán & Vẽ hình AI' },
+                          { id: 'thcs8m', name: '📝 Tạo Đề THCS 8 Môn', desc: 'Chuẩn CV 7991 đủ môn' },
+                          { id: 'de15p', name: '⏱️ Tạo Đề 15P Tiếng Anh', desc: 'Đề 15 phút 48 Units' },
+                          { id: 'bienthe', name: '🔀 Sinh 3 Đề Biến Thể VIP', desc: 'Trộn đề ma trận chuẩn' },
+                          { id: 'chuanhoavb', name: '📑 Chuẩn Hóa VB (NĐ 30)', desc: 'Chuẩn thể thức Nghị định 30' },
+                          { id: 'tts', name: '🎙️ Smart Listening Pro (TTS)', desc: 'Tạo bài nghe SGK' },
+                          { id: 'cleaner', name: '🧹 Dinh Thanh Cleaner Pro', desc: 'Dọn rác & Tối ưu máy' },
+                          { id: 'pdfsuite', name: '📄 PDF Suite Pro', desc: 'Tách & Gộp PDF chuẩn' },
+                          { id: 'record', name: '🎥 Screen Record Pro V2', desc: 'Ghi màn hình bài giảng' },
+                        ].map((item) => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setAdminTab(item.id as any);
+                              setShowKeyGenDropdown(false);
+                            }}
+                            className={`w-full text-left p-2 rounded-xl transition flex flex-col ${
+                              adminTab === item.id
+                                ? 'bg-purple-600 text-white font-bold'
+                                : 'hover:bg-slate-800 text-slate-300'
+                            }`}
+                          >
+                            <span className="font-bold text-xs">{item.name}</span>
+                            <span className="text-[10px] text-slate-400">{item.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 text-xs">
+            <button
+              type="button"
+              onClick={loadTrackingData}
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1.5 text-xs cursor-pointer transition font-semibold"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Làm mới</span>
+            </button>
+          </div>
+        </div>'bg-slate-800 text-slate-400 hover:text-white'
                     }`}
                   >
                     <Crown className="w-4 h-4 text-amber-300" />
@@ -2500,6 +2444,319 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
             >
               <span>⬅ Quay lại Duyệt Thành Viên</span>
             </button>
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* TAB 1: BỘ TẠO KEY 1-CHẠM TỔNG HỢP (MÁY TÍNH & ĐIỆN THOẠI)                 */}
+        {/* ===================================================================== */}
+        {adminTab === 'key_gen' && (
+          <div className="flex-1 flex flex-col min-h-0 overflow-y-auto space-y-4 pr-1">
+            <div className="bg-gradient-to-br from-slate-900 via-indigo-950/70 to-slate-900 border-2 border-amber-500/70 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden">
+              {/* Dải LED trang trí viền trên */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-emerald-400 to-cyan-400 animate-pulse" />
+
+              <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-3 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-amber-400/30">
+                    <Key className="w-5 h-5 text-slate-950" />
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                      <span>⚡ CẤP BẢN QUYỀN PRO SIÊU TỐC (MÁY TÍNH & ĐIỆN THOẠI)</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                        Ký số Ed25519
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Thầy Thành dán mã máy từ Zalo khách gửi → Hệ thống tự nhận diện môn → Bấm 1 chạm cấp key ngay!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {/* Ô 1: Mã máy tính kèm nút Dán Clipboard */}
+                  <div className="sm:col-span-2 lg:col-span-1">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-bold text-amber-300 flex items-center gap-1">
+                        <Laptop className="w-4 h-4 text-amber-400" />
+                        <span>Mã Máy Tính (Hardware ID) *:</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handlePasteToDirectMid}
+                        className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1 transition cursor-pointer active:scale-95"
+                        title="Dán nhanh mã máy từ bộ nhớ tạm Clipboard"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>📋 Dán từ Zalo</span>
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Dán mã máy (VD: DVT-TECHPT-...)"
+                      value={directMid}
+                      onChange={(e) => handleDirectMidChange(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border-2 border-amber-500/70 text-cyan-300 font-mono text-sm sm:text-base font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400 shadow-inner"
+                    />
+                  </div>
+
+                  {/* Ô 2: Họ và tên */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1">
+                      <Users className="w-4 h-4 text-blue-400" />
+                      <span>Họ và Tên Giáo Viên:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: Thầy / Cô..."
+                      value={directName}
+                      onChange={(e) => setDirectName(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
+                    />
+                  </div>
+
+                  {/* Ô 3: Số ĐT / Zalo */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1">
+                      <Phone className="w-4 h-4 text-emerald-400" />
+                      <span>Số Điện Thoại / Zalo:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: 0915213717..."
+                      value={directPhone}
+                      onChange={(e) => setDirectPhone(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-400"
+                    />
+                  </div>
+
+                  {/* Ô 4: Trường / Đơn vị */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1">
+                      <Building2 className="w-4 h-4 text-purple-400" />
+                      <span>Trường / Đơn Vị Công Tác:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="VD: Trường THPT..."
+                      value={directSchool}
+                      onChange={(e) => setDirectSchool(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                  {/* Ô 5: Chọn Ứng Dụng (Chiếm 5/12 cột) */}
+                  <div className="md:col-span-5">
+                    <label className="block text-xs font-bold text-cyan-300 mb-1.5 flex items-center gap-1">
+                      <Sparkles className="w-4 h-4 text-cyan-400" />
+                      <span>Môn Học / Ứng Dụng (Tự nhận diện):</span>
+                    </label>
+                    <select
+                      value={directAppId}
+                      onChange={(e) => setDirectAppId(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border-2 border-cyan-500/70 text-cyan-300 font-bold text-xs sm:text-sm focus:outline-none focus:border-cyan-400 cursor-pointer shadow-inner"
+                    >
+                      <optgroup label="⚙️ BỘ TẠO ĐỀ THPT 11 MÔN (2025+ ĐỊNH DẠNG MỚI BGD)">
+                        <option value="taode_thpt_congnghe">⚙️ Công Nghệ THPT (DVT-TECHPT)</option>
+                        <option value="taode_thpt_toan">🔢 Toán Học THPT (DVT-MATHPT)</option>
+                        <option value="taode_thpt_vatli">⚡ Vật Lí THPT (DVT-PHYPT)</option>
+                        <option value="taode_thpt_hoa">⚗️ Hóa Học THPT (DVT-CHMPT)</option>
+                        <option value="taode_thpt_sinh">🧬 Sinh Học THPT (DVT-BIOPT)</option>
+                        <option value="taode_thpt_tin">💻 Tin Học THPT (DVT-INFPT)</option>
+                        <option value="taode_thpt_lichsu">🏛️ Lịch Sử THPT (DVT-HISPT)</option>
+                        <option value="taode_thpt_diali">🌍 Địa Lí THPT (DVT-GEOPT)</option>
+                        <option value="taode_thpt_gdktpl">⚖️ GDKT & PL THPT (DVT-GDKTPT)</option>
+                        <option value="taode_thpt_nguvan">📖 Ngữ Văn THPT (DVT-LITPT)</option>
+                        <option value="taode_thpt_tienganh">🇬🇧 Tiếng Anh THPT (DVT-ENGPT)</option>
+                      </optgroup>
+                      <optgroup label="🔬 HỆ THỐNG THCS (CV 7991 & KẾT NỐI TRI THỨC)">
+                        <option value="taode_khtn_thcs">🔬 Tạo Đề Khoa Học Tự Nhiên THCS (KHTN-DVT)</option>
+                        <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
+                        <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
+                        <option value="taode_thcs_8m">📝 Tạo Đề THCS 8 Môn (DVT-THCS8M)</option>
+                        <option value="taode_lichsu_thcs">🏛️ Tạo Đề Lịch Sử THCS (DVT-LSTHCS)</option>
+                        <option value="taode_15p">⏱️ Tạo Đề 15 Phút Tiếng Anh (DVT-ENG15)</option>
+                        <option value="smart_listening_tts">🎙️ Smart Listening Pro (MB-)</option>
+                        <option value="math_studio">📐 Đinh Thành MathStudio 2026+ (DVT-MATH)</option>
+                        <option value="sinh_de_bien_the">🔀 Sinh 3 Đề Biến Thể VIP (DVT-BIENTHE)</option>
+                        <option value="chuan_hoa_vb">📑 Chuẩn Hóa Văn Bản AI (DVT-CHVB)</option>
+                        <option value="cleaner_pro">🧹 Dinh Thanh Cleaner Pro (DVT-CLEANER)</option>
+                        <option value="pdf_suite">📄 PDF Suite Pro (DVT-PDF)</option>
+                        <option value="screen_record">🎥 Screen Record Pro V2 (DVT-RECORD)</option>
+                      </optgroup>
+                      <optgroup label="🎒 TIỂU HỌC">
+                        <option value="taode_tieuhoc_tienganh">🎒 Tiếng Anh Tiểu Học (DVT-ENGPRI)</option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  {/* Ô 6: Chọn Gói Bản Quyền (Chiếm 4/12 cột) */}
+                  <div className="md:col-span-4">
+                    <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1">
+                      <Crown className="w-4 h-4 text-yellow-400" />
+                      <span>Gói Thời Hạn Bản Quyền:</span>
+                    </label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {(['1YEAR', '2YEAR', '3YEAR', 'LIFETIME'] as const).map((pkg) => (
+                        <button
+                          key={pkg}
+                          type="button"
+                          onClick={() => setDirectPkg(pkg)}
+                          className={`py-2.5 px-1 rounded-xl text-xs font-black transition cursor-pointer text-center ${
+                            directPkg === pkg
+                              ? pkg === 'LIFETIME'
+                                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md ring-2 ring-purple-300'
+                                : pkg === '3YEAR'
+                                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md ring-2 ring-cyan-300'
+                                : pkg === '2YEAR'
+                                ? 'bg-gradient-to-r from-amber-600 to-yellow-600 text-white shadow-md ring-2 ring-amber-300'
+                                : 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-md ring-2 ring-emerald-300'
+                              : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800'
+                          }`}
+                        >
+                          {pkg === '1YEAR' ? '1 Năm' : pkg === '2YEAR' ? '2 Năm' : pkg === '3YEAR' ? '3 Năm' : 'Trọn Đời'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Nút DUYỆT & CẤP KEY NGAY (Chiếm 3/12 cột) */}
+                  <div className="md:col-span-3">
+                    <button
+                      type="button"
+                      disabled={isDirectApproving || !directMid.trim()}
+                      onClick={handleDirectApproveSubmit}
+                      className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-green-600 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-white font-black text-xs sm:text-sm shadow-xl shadow-emerald-600/40 border border-emerald-300 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95"
+                    >
+                      {isDirectApproving ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                          <span>Đang ký số...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 text-white" />
+                          <span>⚡ CẤP PRO & TẠO KEY</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* KẾT QUẢ KÍCH HOẠT VÀ NÚT CHÉP ZALO CHO KHÁCH (NẾU VỪA TẠO) */}
+            {activationSuccessData && (
+              <div className="bg-emerald-950/90 border-2 border-emerald-500 rounded-2xl p-4 sm:p-5 shadow-2xl animate-in fade-in duration-200">
+                <div className="flex items-center justify-between border-b border-emerald-800/80 pb-3 mb-3">
+                  <div className="flex items-center gap-2 text-emerald-300 font-black text-sm sm:text-base">
+                    <CheckCircle className="w-5 h-5 text-emerald-400" />
+                    <span>🎉 ĐÃ TẠO BẢN QUYỀN PRO THÀNH CÔNG CHO KHÁCH HÀNG!</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActivationSuccessData(null)}
+                    className="text-slate-400 hover:text-white text-xs font-bold px-2.5 py-1 bg-slate-900 rounded-lg border border-slate-700 cursor-pointer"
+                  >
+                    ✕ Đóng kết quả
+                  </button>
+                </div>
+
+                <div className="space-y-3 text-xs sm:text-sm">
+                  <div className="bg-slate-950 p-3 rounded-xl border border-emerald-600/50">
+                    <div className="text-amber-300 font-bold mb-1">🔑 MÃ KEY BẢN QUYỀN PRO (ED25519):</div>
+                    <div className="flex items-center justify-between gap-2 bg-slate-900 p-2.5 rounded-lg border border-slate-700 font-mono text-cyan-300 text-xs sm:text-sm break-all font-bold">
+                      <span>{activationSuccessData.licenseKey}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyTextWithNotice(activationSuccessData.licenseKey, 'Mã Key')}
+                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 cursor-pointer shadow"
+                      >
+                        📋 Sao Chép Key
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950 p-3 rounded-xl border border-emerald-600/50">
+                    <div className="text-amber-300 font-bold mb-1">💬 TIN NHẮN ZALO GỬI KHÁCH HÀNG:</div>
+                    <textarea
+                      readOnly
+                      rows={6}
+                      value={activationSuccessData.zaloMsg}
+                      className="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-mono text-xs focus:outline-none"
+                    />
+                    <div className="flex items-center justify-end gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => handleCopyTextWithNotice(activationSuccessData.zaloMsg, 'Tin nhắn Zalo')}
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-xs sm:text-sm shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95 transition"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>💬 SAO CHÉP TIN NHẮN ZALO GỬI KHÁCH</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* TAB 3: THỐNG KÊ & AN NINH (SYSTEM)                                    */}
+        {/* ===================================================================== */}
+        {adminTab === 'system' && (
+          <div className="flex-1 flex flex-col min-h-0 space-y-3 overflow-y-auto pr-1">
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSystemSubTab('quota')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  systemSubTab === 'quota' ? 'bg-cyan-500 text-slate-950 font-black' : 'bg-slate-950 text-slate-400 hover:text-white'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>📊 Hạn Ngạch 12 App</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSystemSubTab('stats')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  systemSubTab === 'stats' ? 'bg-emerald-500 text-slate-950 font-black' : 'bg-slate-950 text-slate-400 hover:text-white'
+                }`}
+              >
+                <History className="w-4 h-4" />
+                <span>📜 Thống Kê & Lịch Sử</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSystemSubTab('machines')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  systemSubTab === 'machines' ? 'bg-sky-500 text-slate-950 font-black' : 'bg-slate-950 text-slate-400 hover:text-white'
+                }`}
+              >
+                <Laptop className="w-4 h-4" />
+                <span>💻 Máy Bị Khóa ({blockedMachines.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSystemSubTab('security')}
+                className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  systemSubTab === 'security' ? 'bg-rose-600 text-white font-black' : 'bg-slate-950 text-slate-400 hover:text-white'
+                }`}
+              >
+                <ShieldAlert className="w-4 h-4" />
+                <span>🛡️ An Ninh ({securityAlerts.filter(a => a.status === 'UNRESOLVED').length})</span>
+              </button>
+            </div>
           </div>
         )}
 
