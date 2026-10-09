@@ -38,11 +38,11 @@ interface TaoDe15PhutModalProps {
   onSwitchToStandardExam?: () => void;
 }
 
-export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({ 
-  isOpen, 
-  onClose, 
+export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
+  isOpen,
+  onClose,
   onOpenAdmin,
-  onSwitchToStandardExam 
+  onSwitchToStandardExam
 }) => {
   // Chuẩn hóa theo mô hình NLS-AI: Mặc định Tab Tải về máy tính
   const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
@@ -205,7 +205,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-5xl bg-slate-900 border border-blue-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
-        
+
         {/* Header Modal */}
         <div className="px-5 py-4 bg-gradient-to-r from-slate-950 via-blue-950/80 to-slate-950 border-b border-blue-500/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -226,12 +226,12 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
-            <ShareLinkBar 
-              appUrl="#tao-de-15p-tienganh" 
-              appName="Tạo Đề 15 Phút Tiếng Anh" 
-              compact={true} 
+            <ShareLinkBar
+              appUrl="#tao-de-15p-tienganh"
+              appName="Tạo Đề 15 Phút Tiếng Anh"
+              compact={true}
             />
             {onOpenAdmin && (
               <button
@@ -255,20 +255,19 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
         </div>
 
         {/* THANH LINK GỬI KHÁCH HÀNG (TRỰC QUAN - COPY 1 CHẠM GỬI ZALO) */}
-        <ShareLinkBar 
-          appUrl="#tao-de-15p-tienganh" 
-          appName="Tạo Đề 15 Phút Tiếng Anh (Global Success)" 
+        <ShareLinkBar
+          appUrl="#tao-de-15p-tienganh"
+          appName="Tạo Đề 15 Phút Tiếng Anh (Global Success)"
         />
 
         {/* 3 Tabs Navigation Bar - Chuẩn mô hình NLS-AI */}
         <div className="flex border-b border-slate-800 bg-slate-950/70 px-4 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('download')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
-              activeTab === 'download'
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${activeTab === 'download'
                 ? 'border-blue-500 text-blue-400 bg-blue-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
+              }`}
           >
             <Download className="w-4 h-4 text-cyan-400" />
             <span>1. Tải Bản Máy Tính (.exe / .zip Pass: 123)</span>
@@ -276,11 +275,10 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
-              activeTab === 'register'
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${activeTab === 'register'
                 ? 'border-amber-500 text-amber-400 bg-amber-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
+              }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
             <span>2. Bản Quyền & Kích Hoạt</span>
@@ -293,11 +291,10 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
           <button
             onClick={() => setActiveTab('preview')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${
-              activeTab === 'preview'
+            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${activeTab === 'preview'
                 ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
+              }`}
           >
             <Eye className="w-4 h-4 text-emerald-400" />
             <span>3. Xem Mẫu Đề Thi 15 Phút</span>
@@ -311,30 +308,13 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
         {/* Modal Content Body */}
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
-          
+
           {/* ========================================================================= */}
           {/* TAB 1: TẢI BỘ CÀI MÁY TÍNH (.EXE / .ZIP PASS: 123) */}
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-6">
-              {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-950 to-cyan-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1.5 shadow-lg">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-2 font-black text-emerald-400 text-xs uppercase tracking-wide">
-                    <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    Phiên bản v3.8.2 (Mới nhất)
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20 font-mono">
-                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (22:58:23)</span></div>
-                  <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100%</span></div>
-                  <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
-                </div>
-              </div>
-              
+
               {/* Thẻ tải bộ cài chính */}
               <div className="p-5 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 rounded-2xl border border-emerald-500/40 space-y-3 shadow-xl">
                 <div className="flex items-center gap-3">
@@ -414,7 +394,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-6">
-              
+
               {/* Thẻ hiển thị Mã máy tính */}
               <div className="p-5 bg-slate-950/80 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -567,11 +547,10 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
 
                 {verifyResult && (
                   <div
-                    className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
-                      verifyResult.isValid
+                    className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${verifyResult.isValid
                         ? 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300'
                         : 'bg-red-950/50 border-red-500/40 text-red-300'
-                    }`}
+                      }`}
                   >
                     {verifyResult.isValid ? (
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -619,7 +598,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           {/* ========================================================================= */}
           {activeTab === 'preview' && (
             <div className="space-y-5">
-              
+
               {/* Banner nhắc nhở tải bản máy tính chuẩn mực NLS-AI */}
               <div className="p-4 bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/50 border border-amber-500/40 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div className="flex items-start gap-2.5">
@@ -654,8 +633,8 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                           isProActive
                             ? 'text-emerald-400'
                             : idx <= 5 - trialRemaining
-                            ? 'text-blue-500'
-                            : 'text-slate-700'
+                              ? 'text-blue-500'
+                              : 'text-slate-700'
                         }
                       >
                         ●
@@ -689,11 +668,10 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                       <button
                         key={g}
                         onClick={() => setSelectedGrade(g)}
-                        className={`py-2 text-xs font-bold rounded-lg border transition ${
-                          selectedGrade === g
+                        className={`py-2 text-xs font-bold rounded-lg border transition ${selectedGrade === g
                             ? 'bg-blue-600 text-white border-blue-500 shadow'
                             : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
-                        }`}
+                          }`}
                       >
                         Lớp {g}
                       </button>
@@ -736,25 +714,22 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                   <span className="text-slate-400 font-semibold">Xem trang:</span>
                   <button
                     onClick={() => setPreviewFace(1)}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition ${
-                      previewFace === 1 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg font-bold transition ${previewFace === 1 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+                      }`}
                   >
                     📄 Đề 20 câu (Trang 1/3)
                   </button>
                   <button
                     onClick={() => setPreviewFace(2)}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition ${
-                      previewFace === 2 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg font-bold transition ${previewFace === 2 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+                      }`}
                   >
                     📝 Phiếu TN (Trang 2/4)
                   </button>
                   <button
                     onClick={() => setPreviewFace(3)}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition ${
-                      previewFace === 3 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg font-bold transition ${previewFace === 3 ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+                      }`}
                   >
                     🔑 Đáp án nhanh (Trang 5)
                   </button>
@@ -765,21 +740,19 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     <span className="text-slate-400 font-medium">Mã đề:</span>
                     <button
                       onClick={() => setCurrentCode(1)}
-                      className={`px-2.5 py-1 rounded font-mono font-bold ${
-                        currentCode === 1
+                      className={`px-2.5 py-1 rounded font-mono font-bold ${currentCode === 1
                           ? 'bg-blue-600 text-white'
                           : 'bg-slate-900 text-slate-400 hover:text-white'
-                      }`}
+                        }`}
                     >
                       {code1}
                     </button>
                     <button
                       onClick={() => setCurrentCode(2)}
-                      className={`px-2.5 py-1 rounded font-mono font-bold ${
-                        currentCode === 2
+                      className={`px-2.5 py-1 rounded font-mono font-bold ${currentCode === 2
                           ? 'bg-indigo-600 text-white'
                           : 'bg-slate-900 text-slate-400 hover:text-white'
-                      }`}
+                        }`}
                     >
                       {code2}
                     </button>
