@@ -175,17 +175,17 @@ export async function verifyExam15PLicenseKey(
 }
 
 /**
- * Quản lý số lượt dùng thử (mặc định 5 lần)
+ * Quản lý số lượt dùng thử (mặc định 3 lần)
  */
 export function getExam15PTrialRemaining(): number {
-  if (typeof window === 'undefined') return 5;
+  if (typeof window === 'undefined') return 3;
   const saved = localStorage.getItem(STORAGE_SEC_TRIAL);
   if (saved === null) {
-    localStorage.setItem(STORAGE_SEC_TRIAL, '5');
-    return 5;
+    localStorage.setItem(STORAGE_SEC_TRIAL, '3');
+    return 3;
   }
   const val = parseInt(saved, 10);
-  return isNaN(val) ? 0 : Math.max(0, Math.min(5, val));
+  return isNaN(val) ? 0 : Math.max(0, Math.min(3, val));
 }
 
 export function decrementExam15PTrial(): number {

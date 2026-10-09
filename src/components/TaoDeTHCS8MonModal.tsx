@@ -230,13 +230,12 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
   const [selectedExamCode, setSelectedExamCode] = useState<string>('701');
   const [activeView, setActiveView] = useState<'exam' | 'matrix' | 'spec' | 'answers'>('exam');
-  const [examData, setExamData] = useState<THCS8MonExamData>(() => {
-    return getTHCS8MonExamSuite(resolveSubKey(), '7', 'GK1', '701');
-  });
+  const [hasGenerated, setHasGenerated] = useState<boolean>(false);
+  const [examData, setExamData] = useState<THCS8MonExamData | null>(null);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
-  // Bản quyền & Dùng thử 5 lượt
-  const [trialRemaining, setTrialRemaining] = useState<number>(5);
+  // Bản quyền & Dùng thử 3 lượt (Mỗi môn được 3 lần)
+  const [trialRemaining, setTrialRemaining] = useState<number>(3);
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [isProActive, setIsProActive] = useState<boolean>(false);
   const [inputKey, setInputKey] = useState<string>('');
@@ -272,50 +271,72 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 5 lần (chuẩn lưu số lượt còn lại 5 -> 0)
+    // Kiểm tra số lượt dùng thử 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
     const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_remaining`;
     const savedRemaining = localStorage.getItem(trialKey);
-    let remaining = 5;
+    let remaining = 3;
     if (savedPro) {
       remaining = 999;
     } else if (savedRemaining !== null) {
       remaining = parseInt(savedRemaining, 10);
-      if (isNaN(remaining)) remaining = 5;
+      if (isNaN(remaining)) remaining = 3;
     } else {
-      localStorage.setItem(trialKey, '5');
-      remaining = 5;
+      localStorage.setItem(trialKey, '3');
+      remaining = 3;
     }
     setTrialRemaining(remaining);
 
-    // Tải đề mẫu an toàn theo đúng môn hiện tại
-    try {
-      const suite = getTHCS8MonExamSuite(finalSub, selectedGrade, selectedTerm, selectedExamCode);
-      setExamData(suite);
-    } catch (e) {
-      console.warn('[TaoDeTHCS] Lỗi khởi tạo đề ban đầu:', e);
-    }
+    // TUYỆT ĐỐI KHÔNG NẠP SẴN ĐỀ MẪU: Đặt trạng thái chờ, giáo viên phải bấm Tạo đề mới sinh
+    setHasGenerated(false);
+    setExamData(null);
   }, [isOpen, selectedSubject, initialSubject]);
 
   if (!isOpen) return null;
 
   const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.GDCD;
 
-  // Xử lý tạo đề mới & Xuất file Word (Trải nghiệm trực tuyến)
-  const handleExportWordDoc = () => {
+  // Bấm tạo đề trực tuyến (1 đề mỗi lần, trừ 1 lượt dùng thử)
+  const handleGenerateOnline = () => {
     if (!isProActive && trialRemaining <= 0) {
-      alert(`⚠️ Thầy/Cô đã dùng hết 5 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.`);
+      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.`);
       setActiveTab('register');
       return;
     }
 
+    setIsGenerating(true);
     try {
-      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
+      const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
+      setExamData(suite);
+      setHasGenerated(true);
+
       if (!isProActive) {
         const nextRem = Math.max(0, trialRemaining - 1);
         setTrialRemaining(nextRem);
         const trialKey = `gvai_taode_${currentSubjectKey.toLowerCase()}_trial_remaining`;
         localStorage.setItem(trialKey, nextRem.toString());
       }
+    } catch (err) {
+      console.error(err);
+      alert('Có lỗi khi tạo đề. Vui lòng thử lại!');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Xử lý tạo đề mới & Xuất file Word (Trải nghiệm trực tuyến)
+  const handleExportWordDoc = () => {
+    if (!hasGenerated || !examData) {
+      handleGenerateOnline();
+      return;
+    }
+    if (!isProActive && trialRemaining <= 0 && !hasGenerated) {
+      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro.`);
+      setActiveTab('register');
+      return;
+    }
+
+    try {
+      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode, isProActive);
     } catch (err) {
       console.error(err);
       alert('Có lỗi xảy ra khi tải file Word. Vui lòng thử lại!');
@@ -474,7 +495,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>1. TRẢI NGHIỆM TRỰC TUYẾN (DÙNG THỬ 5 LẦN)</span>
+              <span>1. TRẢI NGHIỆM TRỰC TUYẾN (DÙNG THỬ 3 LẦN)</span>
             </button>
 
             <button
@@ -512,7 +533,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 onClick={() => setActiveTab('register')}
                 className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 font-bold hover:bg-amber-500/20 transition cursor-pointer text-[11px]"
               >
-                <Sparkles className="w-3 h-3 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Đăng ký bản quyền Pro</span>
               </button>
             )}
@@ -523,23 +544,24 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar">
           
           {/* ========================================================================= */}
-          {/* TAB 3: XEM MẪU ĐỀ THI SƯ PHẠM (CV 7991) */}
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN - DÙNG THỬ 3 LẦN (KHÔNG CẤP ĐỀ MẪU CÓ SẴN)   */}
           {/* ========================================================================= */}
           {activeTab === 'preview' && (
             <div className="space-y-4 max-w-4xl mx-auto">
-              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2.5">
-                  <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
-                  <div>
-                    <span className="font-bold block text-white text-[13px]">Bản Xem Thử Mẫu Đề Kiểm Tra Sư Phạm (CV 7991)</span>
-                    <span className="text-[11px] text-amber-200/80">Để tạo đề tự động cho tất cả các khối lớp, sinh ma trận, đặc tả và xuất file Word in ấn, Quý Thầy/Cô vui lòng tải phần mềm về máy tính.</span>
-                  </div>
+              {/* THANH THÔNG TIN GỌN NHẸ */}
+              <div className="p-3 rounded-2xl bg-blue-950/40 border border-blue-500/30 text-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-white text-xs">🎯 TẠO ĐỀ {curSub.name.toUpperCase()} (CV 7991)</span>
+                  <span className="text-slate-400 hidden sm:inline">•</span>
+                  <span className="text-amber-300 text-[11px] font-semibold">
+                    {isProActive ? 'Bản quyền Pro không giới hạn' : `Dùng thử miễn phí: Còn ${trialRemaining}/3 lượt (${[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})`}
+                  </span>
                 </div>
                 <button
                   onClick={() => setActiveTab('download')}
-                  className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shrink-0 flex items-center gap-1 transition cursor-pointer"
+                  className="px-3 py-1 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shrink-0 flex items-center gap-1 transition cursor-pointer"
                 >
-                  <Download className="w-3.5 h-3.5" /> Tải Bộ Cài Ngay
+                  <Download className="w-3.5 h-3.5" /> Tải Bộ Cài PC
                 </button>
               </div>
               
@@ -555,12 +577,8 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                         const val = e.target.value;
                         setCurrentSubjectKey(val);
                         syncBrowserHash(SUBJECT_HASH_MAP[val] || '#tao-de-toan');
-                        try {
-                          const suite = getTHCS8MonExamSuite(val, selectedGrade, selectedTerm, selectedExamCode);
-                          setExamData(suite);
-                        } catch (err) {
-                          console.warn(err);
-                        }
+                        setHasGenerated(false);
+                        setExamData(null);
                       }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
@@ -580,14 +598,9 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <select
                       value={selectedGrade}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        setSelectedGrade(val);
-                        try {
-                          const suite = getTHCS8MonExamSuite(currentSubjectKey, val, selectedTerm, selectedExamCode);
-                          setExamData(suite);
-                        } catch (err) {
-                          console.warn(err);
-                        }
+                        setSelectedGrade(e.target.value);
+                        setHasGenerated(false);
+                        setExamData(null);
                       }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
@@ -604,14 +617,9 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <select
                       value={selectedTerm}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        setSelectedTerm(val);
-                        try {
-                          const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, val, selectedExamCode);
-                          setExamData(suite);
-                        } catch (err) {
-                          console.warn(err);
-                        }
+                        setSelectedTerm(e.target.value);
+                        setHasGenerated(false);
+                        setExamData(null);
                       }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
@@ -629,14 +637,9 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <select
                       value={selectedExamCode}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        setSelectedExamCode(val);
-                        try {
-                          const suite = getTHCS8MonExamSuite(currentSubjectKey, selectedGrade, selectedTerm, val);
-                          setExamData(suite);
-                        } catch (err) {
-                          console.warn(err);
-                        }
+                        setSelectedExamCode(e.target.value);
+                        setHasGenerated(false);
+                        setExamData(null);
                       }}
                       className="w-full px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     >
@@ -648,37 +651,55 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                 </div>
 
-                {/* THANH ĐIỀU HƯỚNG TẢI PHẦN MỀM & ĐĂNG KÝ BẢN QUYỀN TRÊN MÁY TÍNH */}
+                {/* CỤM NÚT TẠO ĐỀ & XUẤT WORD */}
                 <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
+                  {/* NÚT BẤM TẠO ĐỀ TRỰC TUYẾN CHÍNH */}
+                  <button
+                    type="button"
+                    onClick={handleGenerateOnline}
+                    disabled={isGenerating}
+                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                  >
+                    <Sparkles className={`w-4 h-4 text-amber-300 ${isGenerating ? 'animate-spin' : ''}`} />
+                    <span>{isGenerating ? 'ĐANG KHỞI TẠO ĐỀ THI...' : `🚀 BẤM TẠO ĐỀ MÔN ${curSub.name.toUpperCase()} (LỚP ${selectedGrade})`}</span>
+                    {!isProActive && (
+                      <span className="ml-1 px-2 py-0.5 rounded-full bg-black/40 text-[10px] text-amber-300 font-mono">
+                        {trialRemaining}/3 LƯỢT ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                      </span>
+                    )}
+                  </button>
+
+                  {/* NÚT XUẤT FILE WORD */}
                   <button
                     type="button"
                     onClick={handleExportWordDoc}
-                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
+                    disabled={!hasGenerated}
+                    className={`w-full sm:w-auto py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer ${
+                      hasGenerated
+                        ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30 hover:from-emerald-500 hover:to-teal-500'
+                        : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                    }`}
+                    title={hasGenerated ? 'Tải file Word đề thi chuẩn in ấn (.doc)' : 'Vui lòng bấm nút [Bấm Tạo Đề] ở trên trước khi tải file Word'}
                   >
-                    <Download className="w-4 h-4 text-white" />
-                    <span>📥 XUẤT FILE WORD CHUẨN IN ẤN (.DOC)</span>
-                    {!isProActive && (
-                      <span className="ml-1 px-2 py-0.5 rounded-full bg-black/40 text-[10px] text-amber-300 font-mono">
-                        {trialRemaining}/5 LƯỢT ({[1, 2, 3, 4, 5].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
-                      </span>
-                    )}
+                    <Download className="w-4 h-4" />
+                    <span>XUẤT WORD (.DOC)</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setActiveTab('download')}
-                    className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer"
+                    className="w-full sm:w-auto py-3 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer"
                   >
-                    <Download className="w-4 h-4" />
+                    <Laptop className="w-4 h-4 text-cyan-400" />
                     <span>TẢI BỘ CÀI PC</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setActiveTab('register')}
-                    className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-600/20 transition cursor-pointer"
+                    className="w-full sm:w-auto py-3 px-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-600/20 transition cursor-pointer"
                   >
-                    <Crown className="w-4 h-4" />
+                    <Crown className="w-4 h-4 text-yellow-300" />
                     <span>BẢN QUYỀN PRO</span>
                   </button>
                 </div>
@@ -738,8 +759,28 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               {/* KHUNG HIỂN THỊ NỘI DUNG SƯ PHẠM CHUẨN */}
               <div className="p-5 sm:p-6 rounded-2xl bg-white text-slate-900 border border-slate-300 shadow-inner font-serif text-[13pt] leading-relaxed max-h-[55vh] overflow-y-auto custom-scrollbar">
                 
-                {/* 1. XEM ĐỀ THI HỌC SINH */}
-                {activeView === 'exam' && examData && (
+                {/* TRẠNG THÁI CHƯA TẠO ĐỀ: KHÔNG HIỂN THỊ ĐỀ MẪU CÓ SẴN */}
+                {(!hasGenerated || !examData) && (
+                  <div className="py-12 px-6 text-center space-y-3 bg-slate-50 rounded-xl border border-dashed border-slate-300 font-sans">
+                    <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl shadow-sm">
+                      📝
+                    </div>
+                    <h4 className="font-black text-slate-800 text-base uppercase">CHƯA KHỞI TẠO ĐỀ KIỂM TRA</h4>
+                    <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+                      Thầy/Cô vui lòng chọn <b>Khối Lớp</b>, <b>Kỳ Kiểm Tra</b>, <b>Mã Đề</b> ở trên rồi bấm nút:
+                      <br/>
+                      <strong className="text-blue-700 text-sm"> [🚀 BẤM TẠO ĐỀ MÔN {curSub.name.toUpperCase()}]</strong>
+                    </p>
+                    <div className="pt-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold font-mono">
+                        🎁 Dùng thử miễn phí: Còn {trialRemaining}/3 lượt môn {curSub.name} ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* 1. XEM ĐỀ THI HỌC SINH (KHI ĐÃ BẤM TẠO ĐỀ) */}
+                {hasGenerated && activeView === 'exam' && examData && (
                   <div className="space-y-4">
                     {/* TIÊU ĐỀ ĐỀ THI SƯ PHẠM */}
                     <div className="grid grid-cols-2 gap-4 pb-3 border-b-2 border-slate-800 text-center">
@@ -789,7 +830,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 )}
 
                 {/* 2. XEM MA TRẬN ĐỀ THI (CV 7991) */}
-                {activeView === 'matrix' && examData?.matrix && (
+                {hasGenerated && activeView === 'matrix' && examData?.matrix && (
                   <div className="space-y-3">
                     <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
                       KHUNG MA TRẬN ĐỀ KIỂM TRA {examData.subjectName?.toUpperCase()} {examData.grade} (CV 7991)
@@ -822,7 +863,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 )}
 
                 {/* 3. XEM BẢN ĐẶC TẢ KỸ THUẬT (CV 7991) */}
-                {activeView === 'spec' && examData?.specification && (
+                {hasGenerated && activeView === 'spec' && examData?.specification && (
                   <div className="space-y-3">
                     <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
                       BẢN ĐẶC TẢ KỸ THUẬT ĐỀ KIỂM TRA {examData.subjectName?.toUpperCase()} {examData.grade} (CV 7991)
@@ -854,43 +895,116 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                 )}
 
-                {/* 4. XEM ĐÁP ÁN & BIỂU ĐIỂM CHI TIẾT */}
-                {activeView === 'answers' && examData && (
-                  <div className="space-y-3">
-                    <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
-                      HƯỚNG DẪN CHẤM & ĐÁP ÁN ĐỀ {examData.examCode} - {examData.subjectName?.toUpperCase()} {examData.grade}
-                    </h4>
+                {/* 4. XEM ĐÁP ÁN & BIỂU ĐIỂM (BẢN DÙNG THỬ CHỈ XEM 1/2 ĐÁP ÁN, PRO MỞ 100%) */}
+                {hasGenerated && activeView === 'answers' && examData && (() => {
+                  const totalQuestions = examData.parts?.[0]?.questions?.length || 16;
+                  const halfCount = Math.ceil(totalQuestions / 2);
 
-                    {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM */}
-                    <div className="space-y-2">
-                      <h5 className="font-bold text-xs text-slate-900">I. ĐÁP ÁN PHẦN TRẮC NGHIỆM KHÁCH QUAN:</h5>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center text-xs">
-                        {examData.parts?.[0]?.questions?.map((q, idx) => (
-                          <div key={idx} className="p-1.5 border border-slate-300 rounded bg-slate-50">
-                            <span className="font-bold text-slate-700 block">C{q.num}</span>
-                            <span className="font-black text-[#FF0000]">{q.correctKey || 'A'}</span>
-                          </div>
-                        ))}
+                  return (
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
+                        HƯỚNG DẪN CHẤM & ĐÁP ÁN ĐỀ {examData.examCode} - {examData.subjectName?.toUpperCase()} {examData.grade}
+                      </h4>
+
+                      {/* BẢNG ĐÁP ÁN TRẮC NGHIỆM */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h5 className="font-bold text-xs text-slate-900">I. ĐÁP ÁN TRẮC NGHIỆM KHÁCH QUAN:</h5>
+                          {!isProActive && (
+                            <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-bold border border-amber-200">
+                              Bản dùng thử: Hiển thị {halfCount}/{totalQuestions} câu
+                            </span>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center text-xs">
+                          {examData.parts?.[0]?.questions?.map((q, idx) => {
+                            const isLocked = !isProActive && idx >= halfCount;
+                            return (
+                              <div
+                                key={idx}
+                                className={`p-1.5 border rounded ${
+                                  isLocked
+                                    ? 'border-amber-300 bg-amber-50/80 text-amber-800'
+                                    : 'border-slate-300 bg-slate-50'
+                                }`}
+                              >
+                                <span className="font-bold text-slate-700 block">C{q.num}</span>
+                                {isLocked ? (
+                                  <span className="text-[10px] font-bold text-amber-700 flex items-center justify-center gap-0.5">
+                                    <Lock className="w-2.5 h-2.5" /> Khóa
+                                  </span>
+                                ) : (
+                                  <span className="font-black text-[#FF0000]">{q.correctKey || 'A'}</span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
+
+                      {/* BIỂU ĐIỂM TỰ LUẬN TÌNH HUỐNG */}
+                      {examData.parts?.[1] && (
+                        <div className="space-y-2 pt-3 border-t border-slate-200">
+                          <h5 className="font-bold text-xs text-slate-900">II. HƯỚNG DẪN CHẤM PHẦN TỰ LUẬN:</h5>
+                          {examData.parts[1].questions?.map((t, idx) => {
+                            const isLocked = !isProActive && idx > 0;
+                            return (
+                              <div key={idx} className="p-2.5 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
+                                <p className="font-bold text-blue-900">{t.num} ({t.points}):</p>
+                                {isLocked ? (
+                                  <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-800 italic">
+                                    🔒 <b>[KHÓA BẢN QUYỀN PRO]</b> Nâng cấp Pro để xem toàn bộ nội dung đáp án chi tiết, các bước thực hiện và biểu điểm phân hóa của câu này.
+                                  </div>
+                                ) : (
+                                  <>
+                                    <p className="text-slate-800 whitespace-pre-line">{t.content}</p>
+                                    <p className="text-emerald-700 font-semibold mt-1">
+                                      ✓ Tiêu chuẩn chấm: Trả lời đúng trọng tâm chuẩn mực sư phạm, lập luận logic, nêu được giải pháp thực tiễn.
+                                    </p>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* BANNER QUẢNG CÁO NÂNG CẤP BẢN QUYỀN PRO SƯ PHẠM */}
+                      {!isProActive && (
+                        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-2 border-amber-400 text-slate-900 space-y-2 font-sans mt-3 shadow-sm">
+                          <div className="flex items-center gap-2">
+                            <Crown className="w-5 h-5 text-amber-600 shrink-0" />
+                            <h5 className="font-black text-xs text-amber-950 uppercase tracking-wide">
+                              ⭐ BẢN DÙNG THỬ CHỈ HIỂN THỊ ĐÁP ÁN 1/2 ĐỀ THI ⭐
+                            </h5>
+                          </div>
+                          <p className="text-xs text-slate-700 leading-relaxed">
+                            Để xem <b>100% toàn bộ đáp án</b>, lời giải chi tiết từng bước, ma trận và tải file Word không giới hạn, kính mời Quý Thầy/Cô nâng cấp lên <b>Bản Quyền Pro</b>:
+                          </p>
+                          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                            <a
+                              href="https://zalo.me/0915213717"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" />
+                              <span>Nhắn Zalo Thầy Thành: 0915.213717</span>
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => setActiveTab('register')}
+                              className="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-1.5 shadow cursor-pointer"
+                            >
+                              <Key className="w-3.5 h-3.5" />
+                              <span>Kích Hoạt Bản Quyền Pro</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-
-                    {/* BIỂU ĐIỂM TỰ LUẬN TÌNH HUỐNG */}
-                    {examData.parts?.[1] && (
-                      <div className="space-y-2 pt-3 border-t border-slate-200">
-                        <h5 className="font-bold text-xs text-slate-900">II. HƯỚNG DẪN CHẤM PHẦN TỰ LUẬN XỬ LÝ TÌNH HUỐNG:</h5>
-                        {examData.parts[1].questions?.map((t, idx) => (
-                          <div key={idx} className="p-2.5 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
-                            <p className="font-bold text-blue-900">{t.num} ({t.points}):</p>
-                            <p className="text-slate-800 whitespace-pre-line">{t.content}</p>
-                            <p className="text-emerald-700 font-semibold mt-1">
-                              ✓ Tiêu chuẩn chấm: Trả lời đúng trọng tâm chuẩn mực đạo đức & pháp luật, lập luận logic, nêu được giải pháp thực tiễn.
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                  );
+                })()}
 
               </div>
             </div>

@@ -218,7 +218,7 @@ async function computeTrialHash(remaining: number, mid: string): Promise<string>
 }
 
 export async function getSecureLSTHCSTrialRemaining(): Promise<number> {
-  if (typeof window === 'undefined') return 5;
+  if (typeof window === 'undefined') return 3;
   if (isLSTHCSProActivated()) return 999;
 
   const mid = getOrCreateLSTHCSHardwareCode();
@@ -226,7 +226,7 @@ export async function getSecureLSTHCSTrialRemaining(): Promise<number> {
   const hash = localStorage.getItem(TRIAL_HASH_KEY);
 
   if (raw === null || hash === null) {
-    const def = 5;
+    const def = 3;
     const h = await computeTrialHash(def, mid);
     localStorage.setItem(TRIAL_STORAGE_KEY, String(def));
     localStorage.setItem(TRIAL_HASH_KEY, h);

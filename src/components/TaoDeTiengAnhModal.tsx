@@ -81,13 +81,13 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       setIsProActive(true);
     }
 
-    // Đọc số lượt dùng thử từ localStorage
+    // Đọc số lượt dùng thử từ localStorage (Chuẩn 3 lần/môn)
     const savedTrial = localStorage.getItem('gvai_taode_eng_trial_remaining');
     if (savedTrial !== null) {
       setTrialRemaining(parseInt(savedTrial, 10));
     } else {
-      localStorage.setItem('gvai_taode_eng_trial_remaining', '5');
-      setTrialRemaining(5);
+      localStorage.setItem('gvai_taode_eng_trial_remaining', '3');
+      setTrialRemaining(3);
     }
   }, [isOpen]);
 
@@ -136,7 +136,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   const handleOnlineGenerate = () => {
     if (!isProActive && trialRemaining <= 0) {
-      alert('⚠️ Thầy/Cô đã dùng hết 5 lượt dùng thử trực tuyến miễn phí!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.');
+      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử trực tuyến miễn phí!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để liên hệ Thầy Thành kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.');
       setActiveTab('register');
       return;
     }
@@ -151,7 +151,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
         setTrialRemaining(nextRem);
         localStorage.setItem('gvai_taode_eng_trial_remaining', nextRem.toString());
       }
-    }, 1200);
+    }, 800);
   };
 
   const handleSendRegistration = async () => {
@@ -344,7 +344,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </a>
               </div>
 
-              {/* Card Tiến trình Dùng thử 5 Chấm */}
+              {/* Card Tiến trình Dùng thử 3 Chấm */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-800/80 to-indigo-950/40 border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
@@ -355,26 +355,26 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                       </span>
                     ) : (
                       <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        {trialRemaining > 0 ? `Còn ${trialRemaining}/5 lượt trên máy này` : '⚠️ Đã hết 5 lượt dùng thử'}
+                        {trialRemaining > 0 ? `Còn ${trialRemaining}/3 lượt trên máy này` : '⚠️ Đã hết 3 lượt dùng thử'}
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-slate-400 mt-1">
-                    Mỗi thiết bị được tạo thử đúng 05 bộ đề kiểm tra hoàn chỉnh chuẩn CV 7991.
+                    Mỗi thiết bị được tạo thử 03 bộ đề kiểm tra (xem 1/2 đáp án, tạo 1 đề/lần). Bản quyền Pro xem trọn vẹn và không giới hạn.
                   </p>
                 </div>
 
-                {/* Thanh 5 Chấm trực quan */}
+                {/* Thanh 3 Chấm trực quan */}
                 {!isProActive && (
                   <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-2 rounded-xl border border-slate-700">
-                    <span className="text-xs text-slate-400 font-medium mr-1">Tiến trình:</span>
-                    {[1, 2, 3, 4, 5].map((idx) => {
+                    <span className="text-xs text-slate-400 font-medium mr-1">Tiến trình (3 lượt):</span>
+                    {[1, 2, 3].map((idx) => {
                       const isUsed = idx > trialRemaining;
                       return (
                         <div
                           key={idx}
                           title={isUsed ? `Lượt ${idx}: Đã dùng` : `Lượt ${idx}: Còn lại`}
-                          className={`w-3.5 h-3.5 rounded-full transition-all ${
+                          className={`w-4 h-4 rounded-full transition-all ${
                             isUsed 
                               ? 'bg-slate-600 border border-slate-500' 
                               : 'bg-emerald-400 shadow-md shadow-emerald-500/40 animate-pulse'
@@ -430,22 +430,27 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Số Mã Đề:</label>
+                  <label className="block text-xs font-bold text-slate-300 mb-1">Số Mã Đề (1 đề/lần):</label>
                   <select
-                    value={selectedNumVariants}
-                    onChange={(e) => setSelectedNumVariants(parseInt(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 font-semibold"
+                    value={isProActive ? selectedNumVariants : 1}
+                    onChange={(e) => isProActive && setSelectedNumVariants(parseInt(e.target.value))}
+                    disabled={!isProActive}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 font-semibold disabled:opacity-75"
                   >
-                    <option value={1}>1 mã đề</option>
-                    <option value={2}>2 mã đề</option>
-                    <option value={3}>3 mã đề</option>
-                    <option value={4}>4 mã đề</option>
-                    <option value={5}>5 mã đề</option>
-                    <option value={6}>6 mã đề</option>
-                    <option value={7}>7 mã đề</option>
-                    <option value={8}>8 mã đề</option>
-                    <option value={9}>9 mã đề</option>
-                    <option value={10}>10 mã đề (Pro)</option>
+                    <option value={1}>1 mã đề {isProActive ? '' : '(Dùng thử)'}</option>
+                    {isProActive && (
+                      <>
+                        <option value={2}>2 mã đề</option>
+                        <option value={3}>3 mã đề</option>
+                        <option value={4}>4 mã đề</option>
+                        <option value={5}>5 mã đề</option>
+                        <option value={6}>6 mã đề</option>
+                        <option value={7}>7 mã đề</option>
+                        <option value={8}>8 mã đề</option>
+                        <option value={9}>9 mã đề</option>
+                        <option value={10}>10 mã đề (Pro)</option>
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -482,26 +487,71 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 </div>
               </div>
 
+              {/* NÚT TẠO ĐỀ TRỰC TUYẾN (BẮT BUỘC BẤM ĐỂ SINH ĐỀ, KHÔNG NẠP SẴN MẪU) */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleOnlineGenerate}
+                  disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
+                  className={`w-full py-3.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer ${
+                    !isProActive && trialRemaining <= 0
+                      ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                      : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white shadow-emerald-500/30 active:scale-[0.99]'
+                  }`}
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                      <span>Đang tổng hợp Đề Tiếng Anh Lớp {selectedGrade} chuẩn CV 7991...</span>
+                    </>
+                  ) : !isProActive && trialRemaining <= 0 ? (
+                    <>
+                      <Lock className="w-4 h-4 text-amber-400" />
+                      <span>Hết 3 lượt dùng thử – Vui lòng nâng cấp bản quyền Pro</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 text-yellow-300" />
+                      <span>🚀 BẤM TẠO ĐỀ TIẾNG ANH LỚP {selectedGrade} ({isProActive ? 'BẢN QUYỀN PRO' : `DÙNG THỬ CÒN ${trialRemaining}/3 LƯỢT`})</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               {/* THANH ĐIỀU HƯỚNG TẢI PHẦN MỀM & ĐĂNG KÝ BẢN QUYỀN TRÊN MÁY TÍNH */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setActiveTab('download')}
-                  className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>📥 TẢI PHẦN MỀM ĐỂ TẠO ĐỀ & XUẤT WORD TRÊN MÁY TÍNH</span>
+                  <Download className="w-4 h-4 text-cyan-400" />
+                  <span>Tải bản máy tính (.exe) để xuất file Word trọn gói</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('register')}
-                  className="w-full sm:w-auto py-3.5 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition cursor-pointer"
+                  className="w-full sm:w-auto py-3 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-amber-600/20 transition cursor-pointer"
                 >
                   <Crown className="w-4 h-4" />
-                  <span>🔑 ĐĂNG KÝ BẢN QUYỀN PRO SƯ PHẠM</span>
+                  <span>🔑 Kích hoạt Bản quyền Pro</span>
                 </button>
               </div>
+
+              {/* MÀN HÌNH CHỜ KHI CHƯA BẤM TẠO ĐỀ */}
+              {!examGenerated && (
+                <div className="p-8 rounded-2xl bg-slate-900/60 border border-dashed border-slate-700 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mx-auto text-blue-400">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-sm font-bold text-white">Chưa tạo đề kiểm tra</h4>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                    Hệ thống không cung cấp sẵn đề mẫu để sao chép tự do. Quý Thầy/Cô vui lòng bấm nút 
+                    <strong className="text-emerald-400"> "🚀 BẤM TẠO ĐỀ TIẾNG ANH"</strong> ở trên để hệ thống tự động sinh 01 đề hoàn chỉnh (Dùng thử 3 lần, xem 1/2 đáp án).
+                  </p>
+                </div>
+              )}
 
               {/* Preview Khung Đề Thi Sư Phạm (Times New Roman 13pt) */}
               {examGenerated && (
@@ -512,11 +562,11 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <div className="p-3.5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
                       <div className="flex items-center gap-2 text-amber-900 font-bold text-[13px] mb-1">
                         <Sparkles className="w-4 h-4 text-amber-600" />
-                        <span>HỆ THỐNG TẠO ĐỀ KIỂM TRA THCS CHUẨN CV 7991 (BẢN DÙNG THỬ SƯ PHẠM)</span>
+                        <span>BẢN DÙNG THỬ SƯ PHẠM (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
                       </div>
                       <p className="text-slate-700 leading-normal">
                         • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
-                        • Đăng ký Bản quyền Pro để tạo không giới hạn 48 Units (Lớp 6, 7, 8, 9), xuất file âm thanh Audio Script MP3 và <strong>tự động gỡ bỏ thông báo dùng thử này</strong>!
+                        • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để đánh giá chất lượng. Để mở khóa toàn bộ đáp án, xuất file Word và audio MP3, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
                       </p>
                     </div>
                   )}
@@ -535,10 +585,11 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   </div>
 
                   <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded text-[#FF0000] text-[11pt] font-sans">
-                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, <strong>{selectedNumVariants.toString().padStart(2,'0')} Mã đề</strong> trắc nghiệm khách quan + tự luận. <strong>(ĐÁP ÁN ĐÚNG ĐƯỢC ĐÁNH DẤU CHỮ MÀU ĐỎ ĐỂ GIÁO VIÊN TIỆN THEO DÕI VÀ CHẤM BÀI)</strong>.
+                    <strong>✔ TÍCH HỢP CHUẨN CÔNG VĂN 7991/BGDĐT:</strong> Đầy đủ Ma trận 4 mức độ nhận thức, Bản đặc tả kỹ thuật chi tiết, <strong>01 Mã đề</strong> trắc nghiệm khách quan + tự luận. 
+                    {!isProActive && <strong> (BẢN DÙNG THỬ CHỈ HIỂN THỊ 1/2 ĐÁP ÁN ĐỂ BẢO VỆ TÁC QUYỀN)</strong>}
                   </div>
 
-                  {/* NỘI DUNG ĐỀ THI KÈM ĐÁP ÁN CHỮ ĐỎ */}
+                  {/* NỘI DUNG ĐỀ THI KÈM ĐÁP ÁN CHỮ ĐỎ (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
                   <div className="space-y-4">
                     <p className="font-bold uppercase text-[12pt]">PART A. LISTENING (2.0 points)</p>
                     <p className="italic text-[11pt]">Listen to the conversation and choose the correct answer A, B, C or D.</p>
@@ -554,23 +605,40 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <p><strong>Question 2.</strong> Life in the countryside is much ________ than life in the big city.</p>
                     <p className="pl-6">
                       A. peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
-                      <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ B. more peaceful</span> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      {isProActive ? (
+                        <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ B. more peaceful</span>
+                      ) : (
+                        <span className="text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                          🔒 [Đáp án câu 2 đã bị khóa - Nâng cấp Pro để xem]
+                        </span>
+                      )} &nbsp;&nbsp;&nbsp;&nbsp; 
                       C. as peaceful &nbsp;&nbsp;&nbsp;&nbsp; 
                       D. most peaceful
                     </p>
 
                     <p><strong>Question 3.</strong> Nam didn't go to school yesterday ________ he had a severe fever.</p>
                     <p className="pl-6">
-                      <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ A. because</span> &nbsp;&nbsp;&nbsp;&nbsp; 
+                      {isProActive ? (
+                        <span className="text-[#FF0000] font-normal underline bg-red-50/60 px-1.5 py-0.5 rounded">✔ A. because</span>
+                      ) : (
+                        <span className="text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                          🔒 [Đáp án câu 3 đã bị khóa - Nâng cấp Pro để xem]
+                        </span>
+                      )} &nbsp;&nbsp;&nbsp;&nbsp; 
                       B. although &nbsp;&nbsp;&nbsp;&nbsp; 
                       C. but &nbsp;&nbsp;&nbsp;&nbsp; 
                       D. so
                     </p>
 
-                    {/* BẢNG ĐÁP ÁN CHỮ ĐỎ DÀNH RIÊNG CHO GIÁO VIÊN (KHÔNG IN ĐẬM) */}
+                    {/* BẢNG ĐÁP ÁN CHỮ ĐỎ DÀNH RIÊNG CHO GIÁO VIÊN (HIỂN THỊ 1/2 KHI !isProActive) */}
                     <div className="mt-6 p-4 rounded-xl border border-red-300 bg-red-50/50">
-                      <p className="font-bold text-[#FF0000] text-[12pt] mb-2 uppercase flex items-center gap-2">
-                        <span>★ BẢNG ĐÁP ÁN VÀ THANG ĐIỂM CHI TIẾT (CHỮ MÀU ĐỎ, KHÔNG IN ĐẬM):</span>
+                      <p className="font-bold text-[#FF0000] text-[12pt] mb-2 uppercase flex items-center justify-between">
+                        <span>★ BẢNG ĐÁP ÁN VÀ THANG ĐIỂM CHI TIẾT {isProActive ? '(TOÀN BỘ ĐỀ)' : '(DÙNG THỬ 1/2 ĐÁP ÁN)'}:</span>
+                        {!isProActive && (
+                          <span className="text-xs font-sans font-bold bg-amber-200 text-amber-900 px-2 py-0.5 rounded border border-amber-400">
+                            🔒 1/2 Đáp Án Khóa Pro
+                          </span>
+                        )}
                       </p>
                       <table className="w-full border-collapse border border-red-300 text-center text-[11pt]">
                         <thead>
@@ -590,15 +658,23 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                           </tr>
                           <tr>
                             <td className="border border-red-300 p-1 font-bold">2</td>
-                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">B</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">
+                              {isProActive ? 'B' : '🔒 Khóa Pro'}
+                            </td>
                             <td className="border border-red-300 p-1">0.25 đ</td>
-                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">So sánh hơn tính từ dài: much + more peaceful + than.</td>
+                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">
+                              {isProActive ? 'So sánh hơn tính từ dài: much + more peaceful + than.' : '🔒 Nội dung giải thích dành cho bản quyền Pro (Zalo: 0915.213717)'}
+                            </td>
                           </tr>
                           <tr>
                             <td className="border border-red-300 p-1 font-bold">3</td>
-                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">A</td>
+                            <td className="border border-red-300 p-1 text-[#FF0000] font-normal text-[13pt]">
+                              {isProActive ? 'A' : '🔒 Khóa Pro'}
+                            </td>
                             <td className="border border-red-300 p-1">0.25 đ</td>
-                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">Liên từ chỉ nguyên nhân: because + clause (chỉ lý do sốt).</td>
+                            <td className="border border-red-300 p-1 text-left pl-3 text-[#FF0000]">
+                              {isProActive ? 'Liên từ chỉ nguyên nhân: because + clause (chỉ lý do sốt).' : '🔒 Nội dung giải thích dành cho bản quyền Pro (Zalo: 0915.213717)'}
+                            </td>
                           </tr>
                         </tbody>
                       </table>

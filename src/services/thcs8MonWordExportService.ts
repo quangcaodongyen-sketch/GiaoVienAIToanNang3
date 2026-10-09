@@ -1163,7 +1163,7 @@ export function getTHCS8MonExamSuite(
 /**
  * Hàm sinh chuỗi HTML Word chuẩn 100% template Bộ GD&ĐT và Công văn 7991/BGDĐT
  */
-export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
+export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean = false): string {
   const {
     subjectName, grade, termTitle, examCode, timeMinutes, schoolYear, parentAgency, schoolName,
     parts, matrix, specification, answerGuide
@@ -1406,7 +1406,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
 
       <!-- Bảng đáp án trắc nghiệm -->
       <div style="font-weight: bold; font-size: 12pt; color: #000; margin-top: 6pt; margin-bottom: 3pt;">
-        1. ĐÁP ÁN PHẦN TRẮC NGHIỆM:
+        1. ĐÁP ÁN PHẦN TRẮC NGHIỆM ${!isPro ? '<span style="color: #FF0000; font-size: 11pt;">(Bản dùng thử: Hiển thị 1/2 số câu - Nâng cấp Pro để mở khóa 100%)</span>' : ''}:
       </div>
       <table class="tbl-border" style="font-size: 10pt; text-align: center; margin-bottom: 10pt;">
         <tr class="bg-head">
@@ -1415,7 +1415,10 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
         </tr>
         <tr>
           <td style="font-weight: bold; background-color: #F8F9FA;">Đáp án</td>
-          ${answerGuide.mcqAnswers.slice(0, 8).map(m => `<td style="font-weight: bold; color: #FF0000; font-weight: bold; font-size: 12pt; padding: 3pt;">${m.ans}</td>`).join('')}
+          ${answerGuide.mcqAnswers.slice(0, 8).map((m, idx) => {
+            const isLocked = !isPro && idx >= Math.ceil(answerGuide.mcqAnswers.length / 2);
+            return `<td style="font-weight: bold; color: ${isLocked ? '#888888' : '#FF0000'}; font-size: ${isLocked ? '9pt' : '12pt'}; padding: 3pt;">${isLocked ? '🔒 Pro' : m.ans}</td>`;
+          }).join('')}
         </tr>
         ${answerGuide.mcqAnswers.length > 8 ? `
           <tr class="bg-head">
@@ -1424,7 +1427,11 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
           </tr>
           <tr>
             <td style="font-weight: bold; background-color: #F8F9FA;">Đáp án</td>
-            ${answerGuide.mcqAnswers.slice(8).map(m => `<td style="font-weight: bold; color: #FF0000; font-weight: bold; font-size: 12pt; padding: 3pt;">${m.ans}</td>`).join('')}
+            ${answerGuide.mcqAnswers.slice(8).map((m, idx) => {
+              const realIdx = 8 + idx;
+              const isLocked = !isPro && realIdx >= Math.ceil(answerGuide.mcqAnswers.length / 2);
+              return `<td style="font-weight: bold; color: ${isLocked ? '#888888' : '#FF0000'}; font-size: ${isLocked ? '9pt' : '12pt'}; padding: 3pt;">${isLocked ? '🔒 Pro' : m.ans}</td>`;
+            }).join('')}
           </tr>
         ` : ''}
       </table>
@@ -1439,14 +1446,44 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData): string {
           <th style="width: 67%; text-align: center; padding: 3.5pt;"><b>Nội dung đáp án & Các bước thực hiện</b></th>
           <th style="width: 15%; text-align: center; padding: 3.5pt;"><b>Điểm</b></th>
         </tr>
-        ${answerGuide.essayGuide.map(item => `
-          <tr>
-            <td style="font-weight: bold; text-align: center; padding: 3pt;">${item.question}</td>
-            <td style="padding: 3pt 6pt; text-align: justify; color: #FF0000; font-weight: 500;">${item.step.replace(/\n/g, '<br/>')}</td>
-            <td style="font-weight: bold; text-align: center; padding: 3pt; color: #FF0000;">${item.point}</td>
-          </tr>
-        `).join('')}
+        ${answerGuide.essayGuide.map((item, idx) => {
+          const isLocked = !isPro && idx >= Math.ceil(answerGuide.essayGuide.length / 2);
+          return `
+            <tr>
+              <td style="font-weight: bold; text-align: center; padding: 3pt;">${item.question}</td>
+              <td style="padding: 3pt 6pt; text-align: justify; color: ${isLocked ? '#888888' : '#FF0000'}; font-weight: 500; font-style: ${isLocked ? 'italic' : 'normal'};">
+                ${isLocked ? '🔒 [KHÓA BẢN QUYỀN PRO] Quý Thầy/Cô vui lòng nâng cấp bản quyền Pro để xem toàn bộ lời giải chi tiết, các bước thực hiện và thang điểm chuẩn (Hotline / Zalo Thầy Thành: 0915.213717).' : item.step.replace(/\n/g, '<br/>')}
+              </td>
+              <td style="font-weight: bold; text-align: center; padding: 3pt; color: #FF0000;">
+                ${isLocked ? '🔒' : item.point}
+              </td>
+            </tr>
+          `;
+        }).join('')}
       </table>
+
+      ${!isPro ? `
+      <!-- BANNER QUẢNG CÁO NÂNG CẤP BẢN QUYỀN PRO SƯ PHẠM -->
+      <table style="width: 100%; border: 2px dashed #E11D48; background-color: #FFF1F2; margin-top: 10pt; margin-bottom: 14pt; padding: 8pt; page-break-inside: avoid;">
+        <tr>
+          <td style="border: none; text-align: center; padding: 8pt; font-family: 'Times New Roman', serif;">
+            <div style="font-size: 13pt; font-weight: bold; color: #BE123C; text-transform: uppercase;">
+              ⭐ THÔNG BÁO: ĐÂY LÀ ĐỀ THI TRẢI NGHIỆM DÙNG THỬ (HIỂN THỊ 1/2 ĐÁP ÁN) ⭐
+            </div>
+            <div style="font-size: 11pt; color: #333333; margin-top: 4pt; line-height: 1.4;">
+              Để mở khóa <b>100% toàn bộ đáp án</b>, lời giải chi tiết từng bước, ma trận 16 cột và tạo đề không giới hạn số lượng,<br/>
+              kính mời Thầy/Cô liên hệ tác giả để nhận tư vấn và kích hoạt bản quyền Pro ưu đãi sư phạm:
+            </div>
+            <div style="font-size: 12pt; font-weight: bold; color: #047857; margin-top: 6pt;">
+              📞 THẦY GIÁO ĐINH VĂN THÀNH — HOTLINE / ZALO: 0915.213717 (TRƯỜNG THCS ĐỒNG YÊN)
+            </div>
+            <div style="font-size: 10pt; color: #666666; margin-top: 2pt;">
+              Website chính thức: <b>https://dekiemtraso.com/</b>
+            </div>
+          </td>
+        </tr>
+      </table>
+      ` : ''}
 
       <!-- Chữ ký người biên soạn & bản quyền tác giả -->
       <table style="width: 100%; border: none; margin-top: 14pt; page-break-inside: avoid;">
@@ -1478,10 +1515,11 @@ export function downloadTHCS8MonWordDoc(
   subjectId: string,
   grade: string = '7',
   termCode: string = 'GK1',
-  examCode: string = '701'
+  examCode: string = '701',
+  isPro: boolean = false
 ): void {
   const data = getTHCS8MonExamSuite(subjectId, grade, termCode, examCode);
-  const htmlDoc = generateTHCS8MonWordHtml(data);
+  const htmlDoc = generateTHCS8MonWordHtml(data, isPro);
   const blob = new Blob(['\ufeff', htmlDoc], { type: 'application/msword;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

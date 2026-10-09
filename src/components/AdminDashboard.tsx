@@ -122,13 +122,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [regAppFilter, setRegAppFilter] = useState('ALL');
   const [regSortBy, setRegSortBy] = useState<'newest' | 'name_asc' | 'school'>('newest');
 
-  // Chế độ xem thành viên: Mặc định 'table' (Dạng Bảng Excel Tổng Hợp - Dễ Xem & Dễ Kích Hoạt) hoặc 'cards' (Dạng Thẻ)
+  // Chế độ xem thành viên: Trên điện thoại (< 768px) mặc định 'cards' (Dạng Thẻ) để nút duyệt to rõ, trên máy tính có thể chọn 'table'
   const [regViewMode, setRegViewMode] = useState<'cards' | 'table'>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('gvai_admin_reg_view_mode');
       if (saved === 'cards' || saved === 'table') return saved;
+      if (window.innerWidth < 768) return 'cards';
     }
-    return 'table';
+    return 'cards';
   });
 
   // Modal Hồ Sơ Chi Tiết & Kích Hoạt Nhanh cho từng thành viên
@@ -151,16 +152,57 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     }
   };
 
-  // State Form Duyệt & Cấp Key Trực Tiếp (Tự nhập mã máy)
+  // State Form Duyệt & Cấp Key Trực Tiếp (Mặc định mở sẵn để Admin trên điện thoại thấy ngay lập tức)
   const [directMid, setDirectMid] = useState('');
   const [directName, setDirectName] = useState('');
   const [directPhone, setDirectPhone] = useState('');
   const [directSchool, setDirectSchool] = useState('');
-  const [directAppId, setDirectAppId] = useState('taode_thpt_toan');
+  const [directAppId, setDirectAppId] = useState('taode_thpt_congnghe');
   const [directPkg, setDirectPkg] = useState<'1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME'>('1YEAR');
   const [isDirectApproving, setIsDirectApproving] = useState(false);
-  const [showDirectForm, setShowDirectForm] = useState(false);
+  const [showDirectForm, setShowDirectForm] = useState(true);
   const [showKeyGenDropdown, setShowKeyGenDropdown] = useState(false);
+
+  // Tự động nhận diện ứng dụng từ tiền tố mã máy tính khi nhập hoặc dán
+  const handleDirectMidChange = (val: string) => {
+    const up = val.toUpperCase().trim();
+    setDirectMid(up);
+    if (up.includes('TECHPT') || up.includes('CONGNGHEPT')) setDirectAppId('taode_thpt_congnghe');
+    else if (up.includes('MATHPT') || up.includes('TOANPT')) setDirectAppId('taode_thpt_toan');
+    else if (up.includes('PHYPT') || up.includes('VATLIPT')) setDirectAppId('taode_thpt_vatli');
+    else if (up.includes('CHMPT') || up.includes('HOAPT')) setDirectAppId('taode_thpt_hoa');
+    else if (up.includes('BIOPT') || up.includes('SINHPT')) setDirectAppId('taode_thpt_sinh');
+    else if (up.includes('INFPT') || up.includes('TINPT')) setDirectAppId('taode_thpt_tin');
+    else if (up.includes('HISPT') || up.includes('LICHSUPT')) setDirectAppId('taode_thpt_lichsu');
+    else if (up.includes('GEOPT') || up.includes('DIALIPT')) setDirectAppId('taode_thpt_diali');
+    else if (up.includes('GDKTPT')) setDirectAppId('taode_thpt_gdktpl');
+    else if (up.includes('LITPT') || up.includes('NGUVANPT')) setDirectAppId('taode_thpt_nguvan');
+    else if (up.includes('ENGPT')) setDirectAppId('taode_thpt_tienganh');
+    else if (up.includes('KHTN')) setDirectAppId('taode_khtn_thcs');
+    else if (up.includes('ENGCS') || up.startsWith('DVT-ENG-')) setDirectAppId('taode_tienganh_thcs');
+    else if (up.includes('ENG15')) setDirectAppId('taode_15p');
+    else if (up.includes('LSTHCS') || up.includes('LS-DVT')) setDirectAppId('taode_lichsu_thcs');
+    else if (up.includes('THCS8M')) setDirectAppId('taode_thcs_8m');
+    else if (up.includes('NLS')) setDirectAppId('nls_ai_thcs');
+    else if (up.includes('MATH')) setDirectAppId('math_studio');
+    else if (up.includes('BIENTHE')) setDirectAppId('sinh_de_bien_the');
+    else if (up.includes('CHVB')) setDirectAppId('chuan_hoa_vb');
+    else if (up.includes('CLEANER')) setDirectAppId('cleaner_pro');
+    else if (up.includes('PDF')) setDirectAppId('pdf_suite');
+    else if (up.includes('RECORD')) setDirectAppId('screen_record');
+    else if (up.startsWith('MB-') || up.includes('TTS') || up.includes('LISTEN')) setDirectAppId('smart_listening_tts');
+  };
+
+  const handlePasteToDirectMid = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        handleDirectMidChange(text);
+      }
+    } catch {
+      // Fallback nếu trình duyệt chặn quyền đọc clipboard
+    }
+  };
 
   // State Tab Cảnh Báo Xâm Nhập & Chống Bẻ Khóa
   const [securityAlerts, setSecurityAlerts] = useState<SecurityAlertItem[]>([]);
@@ -2635,53 +2677,72 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   );
                 })()}
 
-                {/* FORM NHẬP MÃ MÁY TRỰC TIẾP (ACCORDION - CHỈ MỞ KHI CẦN) */}
+                {/* ========================================================================= */}
+                {/* WIDGET CẤP BẢN QUYỀN PRO SIÊU TỐC CHO KHÁCH (MÁY TÍNH & ĐIỆN THOẠI)         */}
+                {/* ========================================================================= */}
                 {showDirectForm && (
-                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border border-emerald-500/50 rounded-xl p-3 shadow-xl shrink-0 animate-in fade-in duration-150">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2 mb-2.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-md bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
-                          <UserCheck className="w-3.5 h-3.5" />
+                  <div className="bg-gradient-to-br from-slate-900 via-indigo-950/60 to-slate-900 border-2 border-emerald-500/70 rounded-2xl p-3.5 sm:p-4 shadow-2xl shrink-0 animate-in fade-in duration-150 relative overflow-hidden">
+                    {/* Dải LED trang trí viền trên */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-400 to-amber-400 animate-pulse" />
+
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-emerald-500/30">
+                          <Crown className="w-4 h-4 text-slate-950" />
                         </div>
                         <div>
-                          <h3 className="text-xs font-black text-white flex items-center gap-1.5">
-                            <span>➕ CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY TỪ ZALO)</span>
-                            <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-bold">
+                          <h3 className="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                            <span>⚡ CẤP BẢN QUYỀN PRO SIÊU TỐC (MÁY TÍNH & ĐIỆN THOẠI)</span>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
                               Ký số Ed25519
                             </span>
                           </h3>
+                          <p className="text-[11px] text-slate-400">
+                            Thầy Thành dán mã máy từ Zalo khách gửi → Hệ thống tự nhận diện môn → Bấm 1 chạm cấp key ngay!
+                          </p>
                         </div>
                       </div>
                       <button
                         type="button"
                         onClick={() => setShowDirectForm(false)}
-                        className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 cursor-pointer font-bold transition"
+                        className="text-[11px] text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 cursor-pointer font-bold transition shrink-0"
                       >
                         Thu gọn ▲
                       </button>
                     </div>
 
-                    <div className="space-y-2.5">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-                        {/* Ô 1: Mã máy tính */}
-                        <div>
-                          <label className="block text-[10px] font-bold text-amber-400 mb-0.5 flex items-center gap-1">
-                            <Laptop className="w-3 h-3" />
-                            <span>Mã Máy Tính (Bắt buộc) *:</span>
-                          </label>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                        {/* Ô 1: Mã máy tính kèm nút Dán Clipboard */}
+                        <div className="sm:col-span-2 lg:col-span-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="text-[11px] font-bold text-amber-300 flex items-center gap-1">
+                              <Laptop className="w-3.5 h-3.5 text-amber-400" />
+                              <span>Mã Máy Tính (Hardware ID) *:</span>
+                            </label>
+                            <button
+                              type="button"
+                              onClick={handlePasteToDirectMid}
+                              className="px-2 py-0.5 rounded-md bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 text-[10px] font-bold flex items-center gap-1 transition cursor-pointer"
+                              title="Dán nhanh mã máy từ bộ nhớ tạm Clipboard"
+                            >
+                              <Copy className="w-3 h-3" />
+                              <span>Dán từ Zalo</span>
+                            </button>
+                          </div>
                           <input
                             type="text"
-                            placeholder="VD: KHTN-DVT-... / DVT-ENGCS-... / MB-..."
+                            placeholder="Dán mã máy (VD: DVT-TECHPT-...)"
                             value={directMid}
-                            onChange={(e) => setDirectMid(e.target.value.toUpperCase())}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-amber-500/50 text-cyan-300 font-mono text-xs font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400"
+                            onChange={(e) => handleDirectMidChange(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border-2 border-amber-500/60 text-cyan-300 font-mono text-xs sm:text-sm font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400 shadow-inner"
                           />
                         </div>
 
                         {/* Ô 2: Họ và tên */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
-                            <Users className="w-3 h-3 text-blue-400" />
+                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
+                            <Users className="w-3.5 h-3.5 text-blue-400" />
                             <span>Họ và Tên Giáo Viên:</span>
                           </label>
                           <input
@@ -2689,14 +2750,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             placeholder="VD: Thầy / Cô..."
                             value={directName}
                             onChange={(e) => setDirectName(e.target.value)}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
                           />
                         </div>
 
                         {/* Ô 3: Số ĐT / Zalo */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
-                            <Phone className="w-3 h-3 text-emerald-400" />
+                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
+                            <Phone className="w-3.5 h-3.5 text-emerald-400" />
                             <span>Số Điện Thoại / Zalo:</span>
                           </label>
                           <input
@@ -2704,39 +2765,52 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             placeholder="VD: 0915213717..."
                             value={directPhone}
                             onChange={(e) => setDirectPhone(e.target.value)}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-400"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-400"
                           />
                         </div>
 
                         {/* Ô 4: Trường / Đơn vị */}
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
-                            <Building2 className="w-3 h-3 text-purple-400" />
+                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
+                            <Building2 className="w-3.5 h-3.5 text-purple-400" />
                             <span>Trường / Đơn Vị Công Tác:</span>
                           </label>
                           <input
                             type="text"
-                            placeholder="VD: Trường THCS..."
+                            placeholder="VD: Trường THPT..."
                             value={directSchool}
                             onChange={(e) => setDirectSchool(e.target.value)}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
-                        {/* Ô 5: Chọn Ứng Dụng */}
-                        <div className="md:col-span-1">
-                          <label className="block text-[10px] font-bold text-cyan-300 mb-0.5 flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" />
-                            <span>Ứng Dụng Cần Kích Hoạt (Độc lập):</span>
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-end">
+                        {/* Ô 5: Chọn Ứng Dụng (Chiếm 5/12 cột) */}
+                        <div className="md:col-span-5">
+                          <label className="block text-[11px] font-bold text-cyan-300 mb-1 flex items-center gap-1">
+                            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>Môn Học / Ứng Dụng (Tự nhận diện):</span>
                           </label>
                           <select
                             value={directAppId}
                             onChange={(e) => setDirectAppId(e.target.value)}
-                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-cyan-500/50 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-950 border-2 border-cyan-500/60 text-cyan-300 font-bold text-xs sm:text-sm focus:outline-none focus:border-cyan-400 cursor-pointer shadow-inner"
                           >
-                            <optgroup label="🔬 HỆ THỐNG THCS (CV 7991 & KNTT)">
+                            <optgroup label="⚙️ BỘ TẠO ĐỀ THPT 11 MÔN (2025+ ĐỊNH DẠNG MỚI BGD)">
+                              <option value="taode_thpt_congnghe">⚙️ Công Nghệ THPT (DVT-TECHPT)</option>
+                              <option value="taode_thpt_toan">🔢 Toán Học THPT (DVT-MATHPT)</option>
+                              <option value="taode_thpt_vatli">⚡ Vật Lí THPT (DVT-PHYPT)</option>
+                              <option value="taode_thpt_hoa">⚗️ Hóa Học THPT (DVT-CHMPT)</option>
+                              <option value="taode_thpt_sinh">🧬 Sinh Học THPT (DVT-BIOPT)</option>
+                              <option value="taode_thpt_tin">💻 Tin Học THPT (DVT-INFPT)</option>
+                              <option value="taode_thpt_lichsu">🏛️ Lịch Sử THPT (DVT-HISPT)</option>
+                              <option value="taode_thpt_diali">🌍 Địa Lí THPT (DVT-GEOPT)</option>
+                              <option value="taode_thpt_gdktpl">⚖️ GDKT & PL THPT (DVT-GDKTPT)</option>
+                              <option value="taode_thpt_nguvan">📖 Ngữ Văn THPT (DVT-LITPT)</option>
+                              <option value="taode_thpt_tienganh">🇬🇧 Tiếng Anh THPT (DVT-ENGPT)</option>
+                            </optgroup>
+                            <optgroup label="🔬 HỆ THỐNG THCS (CV 7991 & KẾT NỐI TRI THỨC)">
                               <option value="taode_khtn_thcs">🔬 Tạo Đề Khoa Học Tự Nhiên THCS (KHTN-DVT)</option>
                               <option value="taode_tienganh_thcs">🇬🇧 Tạo Đề Tiếng Anh THCS Global (DVT-ENGCS)</option>
                               <option value="nls_ai_thcs">⚡ Tích Hợp NLS - AI THCS (DVT-NLS)</option>
@@ -2751,47 +2825,34 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                               <option value="pdf_suite">📄 PDF Suite Pro (DVT-PDF)</option>
                               <option value="screen_record">🎥 Screen Record Pro V2 (DVT-RECORD)</option>
                             </optgroup>
-                            <optgroup label="📝 BỘ TẠO ĐỀ THPT 11 MÔN (2025+)">
-                              <option value="taode_thpt_toan">🔢 Toán Học THPT (DVT-MATHPT)</option>
-                              <option value="taode_thpt_vatli">⚡ Vật Lí THPT (DVT-PHYPT)</option>
-                              <option value="taode_thpt_hoa">⚗️ Hóa Học THPT (DVT-CHMPT)</option>
-                              <option value="taode_thpt_sinh">🧬 Sinh Học THPT (DVT-BIOPT)</option>
-                              <option value="taode_thpt_tin">💻 Tin Học THPT (DVT-INFPT)</option>
-                              <option value="taode_thpt_lichsu">🏛️ Lịch Sử THPT (DVT-HISPT)</option>
-                              <option value="taode_thpt_diali">🌍 Địa Lí THPT (DVT-GEOPT)</option>
-                              <option value="taode_thpt_gdktpl">⚖️ GDKT & PL THPT (DVT-GDKTPT)</option>
-                              <option value="taode_thpt_congnghe">⚙️ Công Nghệ THPT (DVT-TECHPT)</option>
-                              <option value="taode_thpt_nguvan">📖 Ngữ Văn THPT (DVT-LITPT)</option>
-                              <option value="taode_thpt_tienganh">🇬🇧 Tiếng Anh THPT (DVT-ENGPT)</option>
-                            </optgroup>
                             <optgroup label="🎒 TIỂU HỌC">
                               <option value="taode_tieuhoc_tienganh">🎒 Tiếng Anh Tiểu Học (DVT-ENGPRI)</option>
                             </optgroup>
                           </select>
                         </div>
 
-                        {/* Ô 6: Chọn Gói Bản Quyền */}
-                        <div className="md:col-span-1">
-                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
-                            <Crown className="w-3 h-3 text-yellow-400" />
-                            <span>Thời Hạn Gói Bản Quyền:</span>
+                        {/* Ô 6: Chọn Gói Bản Quyền (Chiếm 4/12 cột) */}
+                        <div className="md:col-span-4">
+                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
+                            <Crown className="w-3.5 h-3.5 text-yellow-400" />
+                            <span>Gói Thời Hạn Bản Quyền:</span>
                           </label>
-                          <div className="grid grid-cols-4 gap-1">
+                          <div className="grid grid-cols-4 gap-1.5">
                             {(['1YEAR', '2YEAR', '3YEAR', 'LIFETIME'] as const).map((pkg) => (
                               <button
                                 key={pkg}
                                 type="button"
                                 onClick={() => setDirectPkg(pkg)}
-                                className={`py-1.5 px-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer text-center ${
+                                className={`py-2 px-1 rounded-xl text-xs font-black transition cursor-pointer text-center ${
                                   directPkg === pkg
                                     ? pkg === 'LIFETIME'
-                                      ? 'bg-purple-600 text-white shadow-sm'
+                                      ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md ring-2 ring-purple-300'
                                       : pkg === '3YEAR'
-                                      ? 'bg-indigo-600 text-white shadow-sm'
+                                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md ring-2 ring-cyan-300'
                                       : pkg === '2YEAR'
-                                      ? 'bg-amber-600 text-white shadow-sm'
-                                      : 'bg-emerald-600 text-white shadow-sm'
-                                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                                      ? 'bg-gradient-to-r from-amber-600 to-yellow-600 text-white shadow-md ring-2 ring-amber-300'
+                                      : 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-md ring-2 ring-emerald-300'
+                                    : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800'
                                 }`}
                               >
                                 {pkg === '1YEAR' ? '1 Năm' : pkg === '2YEAR' ? '2 Năm' : pkg === '3YEAR' ? '3 Năm' : 'Trọn Đời'}
@@ -2800,23 +2861,23 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                           </div>
                         </div>
 
-                        {/* Nút DUYỆT & CẤP KEY NGAY */}
-                        <div className="md:col-span-1">
+                        {/* Nút DUYỆT & CẤP KEY NGAY (Chiếm 3/12 cột) */}
+                        <div className="md:col-span-3">
                           <button
                             type="button"
                             disabled={isDirectApproving || !directMid.trim()}
                             onClick={handleDirectApproveSubmit}
-                            className="w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white font-black text-xs shadow-md shadow-emerald-600/30 border border-emerald-400/50 flex items-center justify-center gap-1.5 cursor-pointer transition transform active:scale-95"
+                            className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 via-green-600 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 text-white font-black text-xs sm:text-sm shadow-xl shadow-emerald-600/40 border border-emerald-300 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95"
                           >
                             {isDirectApproving ? (
                               <>
-                                <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
-                                <span>Đang Ký số Ed25519...</span>
+                                <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                                <span>Đang ký số...</span>
                               </>
                             ) : (
                               <>
-                                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                                <span>DUYỆT & CẤP KEY NGAY</span>
+                                <CheckCircle2 className="w-4 h-4 text-white" />
+                                <span>⚡ CẤP PRO & TẠO KEY</span>
                               </>
                             )}
                           </button>

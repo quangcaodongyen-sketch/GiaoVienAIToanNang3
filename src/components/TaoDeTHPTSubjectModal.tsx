@@ -110,17 +110,17 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
     const savedPro = localStorage.getItem(proKey) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 5 lần (chuẩn lưu số lượt còn lại 5 -> 0)
+    // Kiểm tra số lượt dùng thử 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
     const trialKey = `gvai_trial_remaining_${appTag.toLowerCase()}`;
     const savedRemaining = localStorage.getItem(trialKey);
     if (savedPro) {
       setTrialRemaining(999);
     } else if (savedRemaining !== null) {
       const rem = parseInt(savedRemaining, 10);
-      setTrialRemaining(isNaN(rem) ? 5 : rem);
+      setTrialRemaining(isNaN(rem) ? 3 : rem);
     } else {
-      localStorage.setItem(trialKey, '5');
-      setTrialRemaining(5);
+      localStorage.setItem(trialKey, '3');
+      setTrialRemaining(3);
     }
 
     setVerifyMsg('');
@@ -202,18 +202,19 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
   const handleGenerateOnline = () => {
     if (!isProActive) {
       if (trialRemaining <= 0) {
-        alert(`Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí môn ${curSub.name} trên máy tính này!\n\nVui lòng đăng ký bản quyền Pro qua Zalo Thầy Thành: 0915.213717 để tiếp tục sử dụng không giới hạn.`);
+        alert(`Thầy/Cô đã hoàn thành 3/3 lượt trải nghiệm miễn phí môn ${curSub.name} trên máy tính này!\n\nVui lòng đăng ký bản quyền Pro qua Zalo Thầy Thành: 0915.213717 để tiếp tục sử dụng không giới hạn.`);
         setActiveTab('register');
         return;
       }
       const nextRemaining = Math.max(0, trialRemaining - 1);
       setTrialRemaining(nextRemaining);
-      localStorage.setItem(`gvai_trial_${curSub.appTag.toLowerCase()}`, String(5 - nextRemaining));
+      localStorage.setItem(`gvai_trial_remaining_${curSub.appTag.toLowerCase()}`, String(nextRemaining));
     }
 
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
+      const isTrial = !isProActive;
       setGeneratedPreview(`SỞ GIÁO DỤC VÀ ĐÀO TẠO ....................
 TRƯỜNG THPT ....................
 MÃ ĐỀ THI: ${selectedGrade}01 - ${selectedTerm}
@@ -223,17 +224,24 @@ MÃ ĐỀ THI: ${selectedGrade}01 - ${selectedTerm}
 
 PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (4 LỰA CHỌN - 1 ĐÁP ÁN ĐÚNG)
 Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
-[ĐÁP ÁN ĐỎ: Tự động bôi đỏ đáp án đúng chuẩn mực sư phạm]
+${isTrial ? `[ĐÁP ÁN: Hiển thị 6 câu đầu (1..6) - Từ câu 7..12 bị KHÓA BẢN QUYỀN PRO]` : `[ĐÁP ÁN: Toàn bộ đáp án đúng in màu đỏ #FF0000 chuẩn sư phạm]`}
 
 PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG SAI
 Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
 • Điểm phần Đúng/Sai: Đúng 1 ý: 0.1đ | Đúng 2 ý: 0.25đ | Đúng 3 ý: 0.5đ | Đúng 4 ý: 1.0đ.
+${isTrial ? `[ĐÁP ÁN: Hiển thị câu 1, 2 - Câu 3, 4 bị KHÓA BẢN QUYỀN PRO]` : `[ĐÁP ÁN: Đầy đủ bảng đối chiếu Đúng/Sai chuẩn mực]`}
 
 PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (ĐIỀN SỐ HOẶC KẾT QUẢ RÚT GỌN)
 Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác vào phiếu trả lời.
+${isTrial ? `[ĐÁP ÁN: Hiển thị 3 câu đầu - 3 câu sau bị KHÓA BẢN QUYỀN PRO]
+
+------------------------------------------------------------------------
+⭐ THÔNG BÁO BẢN QUYỀN: BẢN DÙNG THỬ CHỈ XEM ĐƯỢC 1/2 ĐÁP ÁN ĐỀ THI ⭐
+Kính mời Thầy/Cô liên hệ Thầy giáo Đinh Văn Thành qua Zalo: 0915.213717
+để kích hoạt Bản Quyền Pro: Mở khóa 100% đáp án, ma trận 16 cột và xuất file Word!` : `[ĐÁP ÁN: Đầy đủ 100% đáp án số và hướng dẫn giải chi tiết]`}
 
 --- MA TRẬN 16 CỘT & BẢN ĐẶC TẢ ĐÃ TỰ ĐỘNG ĐƯỢC TẠO HOÀN CHỈNH KÈM THEO FILE WORD ---`);
-    }, 800);
+    }, 600);
   };
 
   return (
@@ -323,7 +331,7 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>1. Trải Nghiệm Trực Tuyến (Dùng thử 5 lần)</span>
+            <span>1. Trải Nghiệm Trực Tuyến (Dùng thử 3 lần)</span>
           </button>
           <button
             onClick={() => setActiveTab('download')}
@@ -539,7 +547,27 @@ Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả chính xác
                 </button>
               </div>
 
-              {/* KHUNG HIỂN THỊ KẾT QUẢ ĐỀ THI */}
+              {/* TRẠNG THÁI CHƯA TẠO ĐỀ */}
+              {!generatedPreview && (
+                <div className="py-12 px-6 text-center space-y-3 bg-slate-950/60 rounded-2xl border border-dashed border-slate-700">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-2xl shadow-sm">
+                    📝
+                  </div>
+                  <h4 className="font-black text-white text-base uppercase">CHƯA KHỞI TẠO ĐỀ THI {curSub.name.toUpperCase()}</h4>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                    Thầy/Cô vui lòng chọn <b>Khối lớp</b>, <b>Kỳ kiểm tra</b> ở trên và bấm nút:
+                    <br/>
+                    <strong className="text-cyan-400 text-sm"> [TẠO ĐỀ KIỂM TRA MÔN {curSub.name.toUpperCase()}]</strong>
+                  </p>
+                  <div className="pt-2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono">
+                      🎁 Dùng thử miễn phí: Còn {trialRemaining}/3 lượt ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* KHUNG HIỂN THỊ KẾT QUẢ ĐỀ THI KHI ĐÃ BẤM TẠO ĐỀ */}
               {generatedPreview && (
                 <div className="p-4 rounded-2xl bg-white text-slate-900 border border-slate-200 shadow-md space-y-2">
                   <div className="flex items-center justify-between border-b pb-2 border-slate-200">

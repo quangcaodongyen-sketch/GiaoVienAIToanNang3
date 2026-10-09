@@ -39,12 +39,13 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
   // Modal 3 Tabs chuẩn quy định Rule 2
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
-  // State Dùng thử 5 lần cố định trên máy tính
-  const [trialRemaining, setTrialRemaining] = useState<number>(5);
+  // State Dùng thử 3 lần cố định trên máy tính
+  const [trialRemaining, setTrialRemaining] = useState<number>(3);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [hasGeneratedExam, setHasGeneratedExam] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<string>('10');
   const [selectedTerm, setSelectedTerm] = useState<string>('GK1');
-  const [numVariants, setNumVariants] = useState<number>(4);
+  const [numVariants, setNumVariants] = useState<number>(1);
   const [generationMode, setGenerationMode] = useState<string>('shuffle');
   const [schoolAgency, setSchoolAgency] = useState<string>('SỞ GIÁO DỤC VÀ ĐÀO TẠO ....................');
   const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THPT ....................');
@@ -75,13 +76,13 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
       setIsProActive(true);
     }
 
-    // Đọc số lượt dùng thử từ localStorage
+    // Đọc số lượt dùng thử từ localStorage (Chuẩn 3 lần/môn)
     const savedTrial = localStorage.getItem('gvai_taode_toan_thpt_trial_remaining');
     if (savedTrial !== null) {
       setTrialRemaining(parseInt(savedTrial, 10));
     } else {
-      localStorage.setItem('gvai_taode_toan_thpt_trial_remaining', '5');
-      setTrialRemaining(5);
+      localStorage.setItem('gvai_taode_toan_thpt_trial_remaining', '3');
+      setTrialRemaining(3);
     }
   }, [isOpen]);
 
@@ -110,6 +111,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
 
   const handleGenerateExamOnline = () => {
     if (!isProActive && trialRemaining <= 0) {
+      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn Toán THPT!\n\nVui lòng kích hoạt Bản quyền Pro để sử dụng không giới hạn và xem đầy đủ 100% đáp án.');
       setActiveTab('register');
       return;
     }
@@ -117,13 +119,14 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
+      setHasGeneratedExam(true);
 
       if (!isProActive) {
         const nextCount = Math.max(0, trialRemaining - 1);
         setTrialRemaining(nextCount);
         localStorage.setItem('gvai_taode_toan_thpt_trial_remaining', nextCount.toString());
       }
-    }, 1000);
+    }, 800);
   };
 
   const handleSendRegForm = async (e: React.FormEvent) => {
@@ -341,14 +344,20 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1.5">Số mã đề hoán vị</label>
+                    <label className="block text-xs font-medium text-slate-400 mb-1.5">Số mã đề (1 đề/lần)</label>
                     <select
-                      value={numVariants}
-                      onChange={(e) => setNumVariants(Number(e.target.value))}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-blue-500"
+                      value={isProActive ? numVariants : 1}
+                      onChange={(e) => isProActive && setNumVariants(Number(e.target.value))}
+                      disabled={!isProActive}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-blue-500 disabled:opacity-75"
                     >
-                      <option value={2}>2 Mã đề</option>
-                      <option value={4}>4 Mã đề chuẩn BGD</option>
+                      <option value={1}>1 Mã đề {isProActive ? '' : '(Dùng thử)'}</option>
+                      {isProActive && (
+                        <>
+                          <option value={2}>2 Mã đề</option>
+                          <option value={4}>4 Mã đề chuẩn BGD</option>
+                        </>
+                      )}
                     </select>
                   </div>
 
@@ -397,23 +406,19 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
                   <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <span className="font-semibold text-slate-300">Danh sách mã đề sẽ xuất:</span>
-                    <div className="flex items-center gap-1.5">
-                      {variantCodes.map((code) => (
-                        <span key={code} className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-xs border border-blue-500/30">
-                          {code}
-                        </span>
-                      ))}
-                    </div>
+                    <span className="font-semibold text-slate-300">Mã đề sẽ xuất:</span>
+                    <span className="px-2.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono font-bold text-xs border border-blue-500/30">
+                      {variantCodes[0]} {isProActive ? '' : '(1 đề duy nhất)'}
+                    </span>
                   </div>
 
                   <button
                     onClick={handleGenerateExamOnline}
                     disabled={isGenerating || (!isProActive && trialRemaining <= 0)}
-                    className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg ${
+                    className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer ${
                       !isProActive && trialRemaining <= 0
                         ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/30 active:scale-95'
+                        : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-600/30 active:scale-95'
                     }`}
                   >
                     {isGenerating ? (
@@ -422,129 +427,193 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       </>
                     ) : !isProActive && trialRemaining <= 0 ? (
                       <>
-                        <Lock className="w-4 h-4 text-amber-400" /> Đã hết 5 lượt dùng thử - Kích hoạt Pro
+                        <Lock className="w-4 h-4 text-amber-400" /> Hết 3 lượt dùng thử – Nâng cấp Pro
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-4 h-4" /> Xuất Đề Toán THPT Chuẩn Mực ({isProActive ? 'Không giới hạn' : `Còn ${trialRemaining} lượt`})
+                        <Sparkles className="w-4 h-4" /> 🚀 BẤM XUẤT ĐỀ TOÁN LỚP {selectedGrade} ({isProActive ? 'Bản Quyền Pro' : `Dùng thử còn ${trialRemaining}/3 lượt`})
                       </>
                     )}
                   </button>
                 </div>
               </div>
 
+              {/* MÀN HÌNH CHỜ KHI CHƯA BẤM TẠO ĐỀ */}
+              {!hasGeneratedExam && (
+                <div className="p-8 rounded-2xl bg-slate-900/60 border border-dashed border-slate-700 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mx-auto text-blue-400">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-sm font-bold text-white">Chưa tạo đề kiểm tra Toán THPT</h4>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                    Hệ thống không cung cấp sẵn đề mẫu để copy dùng luôn mà không nuôi app. Quý Thầy/Cô vui lòng bấm nút 
+                    <strong className="text-cyan-400"> "🚀 BẤM XUẤT ĐỀ TOÁN LỚP {selectedGrade}"</strong> ở trên để sinh đề thi bám sát Quyết định 764/BGDĐT (Dùng thử 3 lần, xem 1/2 đáp án).
+                  </p>
+                </div>
+              )}
+
               {/* VÙNG XEM TRƯỚC SƯ PHẠM (CHUẨN FONT TIMES NEW ROMAN, ĐÁP ÁN ĐỎ, BẢNG ĐIỂM NHẬN XÉT) */}
-              <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto">
-                {/* TIÊU NGỮ VÀ KHUNG ĐỀ THI */}
-                <div className="flex justify-between items-start text-center mb-4 text-[12pt] border-b pb-3 border-slate-300">
-                  <div className="text-center font-bold">
-                    <p className="uppercase">{schoolAgency}</p>
-                    <p className="uppercase font-extrabold text-blue-900">{schoolName}</p>
-                    <p className="text-[11pt] font-normal italic mt-0.5">(Đề thi gồm có 04 trang)</p>
-                  </div>
-                  <div className="text-center font-bold">
-                    <p className="uppercase">KIỂM TRA {selectedTerm === 'GK1' ? 'GIỮA HỌC KỲ I' : selectedTerm === 'CK1' ? 'CUỐI HỌC KỲ I' : selectedTerm === 'GK2' ? 'GIỮA HỌC KỲ II' : 'CUỐI HỌC KỲ II'}</p>
-                    <p className="uppercase text-blue-900">MÔN TOÁN – LỚP {selectedGrade}</p>
-                    <p className="text-[11pt] font-normal italic mt-0.5">Năm học: {schoolYear} • Thời gian: 90 phút</p>
-                  </div>
-                </div>
-
-                {/* DÒNG HỌ TÊN, LỚP VÀ MÃ ĐỀ THI TRÊN BẢNG BIỂU THEO QUY CHUẨN */}
-                <div className="flex justify-between items-center text-[12pt] font-semibold mb-3 px-1">
-                  <div>Họ và tên thí sinh: .................................................................................</div>
-                  <div>Lớp: ....................</div>
-                  <div className="border-2 border-slate-800 px-3 py-0.5 font-bold font-mono text-[13pt] bg-slate-100">
-                    Mã đề thi: {variantCodes[0]}
-                  </div>
-                </div>
-
-                {/* BẢNG GHI CHẤM ĐIỂM VÀ NHẬN XÉT CỦA GIÁO VIÊN THEO QUY CHUẨN */}
-                <div className="w-full border-2 border-slate-800 my-4 text-[11pt]">
-                  <div className="grid grid-cols-2 border-b border-slate-800 font-bold text-center bg-slate-100">
-                    <div className="py-1.5 border-r border-slate-800">ĐIỂM SỐ</div>
-                    <div className="py-1.5">NHẬN XÉT CỦA THẦY / CÔ GIÁO</div>
-                  </div>
-                  <div className="grid grid-cols-2 h-16">
-                    <div className="border-r border-slate-800 flex items-center justify-around font-medium text-slate-500 text-center px-2">
-                      <div>Bằng số: .........</div>
-                      <div>Bằng chữ: .........</div>
+              {hasGeneratedExam && (
+                <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-4 animate-fade-in">
+                  
+                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
+                  {!isProActive && (
+                    <div className="p-3.5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
+                      <div className="flex items-center gap-2 text-amber-900 font-bold text-[13px] mb-1">
+                        <Sparkles className="w-4 h-4 text-amber-600" />
+                        <span>BẢN DÙNG THỬ SƯ PHẠM TOÁN THPT (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
+                      </div>
+                      <p className="text-slate-700 leading-normal">
+                        • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để kiểm chứng ma trận chuẩn BGD. Để mở khóa toàn bộ đáp án, xuất file Word và ma trận đặc tả, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
+                      </p>
                     </div>
-                    <div className="p-2 text-slate-500 italic text-[10pt]">
-                      ....................................................................................................................................
+                  )}
+
+                  {/* TIÊU NGỮ VÀ KHUNG ĐỀ THI */}
+                  <div className="flex justify-between items-start text-center mb-4 text-[12pt] border-b pb-3 border-slate-300">
+                    <div className="text-center font-bold">
+                      <p className="uppercase">{schoolAgency}</p>
+                      <p className="uppercase font-extrabold text-blue-900">{schoolName}</p>
+                      <p className="text-[11pt] font-normal italic mt-0.5">(Đề thi gồm có 04 trang)</p>
+                    </div>
+                    <div className="text-center font-bold">
+                      <p className="uppercase">KIỂM TRA {selectedTerm === 'GK1' ? 'GIỮA HỌC KỲ I' : selectedTerm === 'CK1' ? 'CUỐI HỌC KỲ I' : selectedTerm === 'GK2' ? 'GIỮA HỌC KỲ II' : 'CUỐI HỌC KỲ II'}</p>
+                      <p className="uppercase text-blue-900">MÔN TOÁN – LỚP {selectedGrade}</p>
+                      <p className="text-[11pt] font-normal italic mt-0.5">Năm học: {schoolYear} • Thời gian: 90 phút</p>
                     </div>
                   </div>
-                </div>
 
-                {/* NỘI DUNG ĐỀ THI MÔN TOÁN THPT ĐỊNH DẠNG MỚI */}
-                <div className="space-y-4 text-justify mt-5">
-                  <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400">
-                    PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (Thí sinh trả lời từ câu 1 đến câu 12)
+                  {/* DÒNG HỌ TÊN, LỚP VÀ MÃ ĐỀ THI TRÊN BẢNG BIỂU THEO QUY CHUẨN */}
+                  <div className="flex justify-between items-center text-[12pt] font-semibold mb-3 px-1">
+                    <div>Họ và tên thí sinh: .................................................................................</div>
+                    <div>Lớp: ....................</div>
+                    <div className="border-2 border-slate-800 px-3 py-0.5 font-bold font-mono text-[13pt] bg-slate-100">
+                      Mã đề thi: {variantCodes[0]}
+                    </div>
                   </div>
-                  <p className="italic text-[11pt] text-slate-600">
-                    Mỗi câu hỏi thí sinh chỉ chọn một phương án. (Mỗi câu trả lời đúng thí sinh được 0,25 điểm)
-                  </p>
 
-                  <div className="space-y-3">
+                  {/* BẢNG GHI CHẤM ĐIỂM VÀ NHẬN XÉT CỦA GIÁO VIÊN THEO QUY CHUẨN */}
+                  <div className="w-full border-2 border-slate-800 my-4 text-[11pt]">
+                    <div className="grid grid-cols-2 border-b border-slate-800 font-bold text-center bg-slate-100">
+                      <div className="py-1.5 border-r border-slate-800">ĐIỂM SỐ</div>
+                      <div className="py-1.5">NHẬN XÉT CỦA THẦY / CÔ GIÁO</div>
+                    </div>
+                    <div className="grid grid-cols-2 h-16">
+                      <div className="border-r border-slate-800 flex items-center justify-around font-medium text-slate-500 text-center px-2">
+                        <div>Bằng số: .........</div>
+                        <div>Bằng chữ: .........</div>
+                      </div>
+                      <div className="p-2 text-slate-500 italic text-[10pt]">
+                        ....................................................................................................................................
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* NỘI DUNG ĐỀ THI MÔN TOÁN THPT ĐỊNH DẠNG MỚI (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
+                  <div className="space-y-4 text-justify mt-5">
+                    <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 flex items-center justify-between">
+                      <span>PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (Từ câu 1 đến câu 12)</span>
+                      {!isProActive && <span className="text-xs font-sans text-amber-700 bg-amber-100 px-2 py-0.5 rounded">🔒 1/2 Đáp án khóa Pro</span>}
+                    </div>
+                    <p className="italic text-[11pt] text-slate-600">
+                      Mỗi câu hỏi thí sinh chỉ chọn một phương án. (Mỗi câu trả lời đúng thí sinh được 0,25 điểm)
+                    </p>
+
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-semibold">
+                          Câu 1: Cho tập hợp <span className="font-sans font-bold">A = &#123;x &isin; &Ropf; | x&#178; - 5x + 6 = 0&#125;</span>. Tập hợp A được viết dưới dạng liệt kê các phần tử là:
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-1.5 pl-3">
+                          <span className="font-bold text-[#FF0000]">✔ A. A = &#123;2; 3&#125;.</span>
+                          <span>B. A = &#123;-2; -3&#125;.</span>
+                          <span>C. A = &#123;1; 6&#125;.</span>
+                          <span>D. A = &#123;-1; 6&#125;.</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold">
+                          Câu 2: Bất phương trình nào sau đây là bất phương trình bậc nhất hai ẩn?
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-1.5 pl-3">
+                          <span>A. 2x&#178; + 3y &le; 0.</span>
+                          {isProActive ? (
+                            <span className="font-bold text-[#FF0000]">✔ B. 2x - 3y + 1 &gt; 0.</span>
+                          ) : (
+                            <span className="text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                              🔒 [Đáp án câu 2 đã bị khóa - Nâng cấp Pro để xem]
+                            </span>
+                          )}
+                          <span>C. 2x + 3y&#178; &ge; 5.</span>
+                          <span>D. 2xy - 3y &lt; 1.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 pt-4 flex items-center justify-between">
+                      <span>PHẦN II. Câu trắc nghiệm đúng sai (Từ câu 1 đến câu 4)</span>
+                      {!isProActive && <span className="text-xs font-sans text-amber-700 bg-amber-100 px-2 py-0.5 rounded">🔒 1/2 Đáp án khóa Pro</span>}
+                    </div>
+                    <p className="italic text-[11pt] text-slate-600">
+                      Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
+                    </p>
                     <div>
                       <p className="font-semibold">
-                        Câu 1: Cho tập hợp <span className="font-sans font-bold">A = &#123;x &isin; &Ropf; | x&#178; - 5x + 6 = 0&#125;</span>. Tập hợp A được viết dưới dạng liệt kê các phần tử là:
+                        Câu 1: Cho hàm số bậc hai <span className="font-sans font-bold">y = f(x) = ax&#178; + bx + c (a &ne; 0)</span> có đồ thị là parabol (P) với đỉnh <span className="font-sans">I(1; -4)</span> và đi qua điểm <span className="font-sans">A(0; -3)</span>.
                       </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-1.5 pl-3">
-                        <span className="font-bold text-[#FF0000]">A. A = &#123;2; 3&#125;.</span>
-                        <span>B. A = &#123;-2; -3&#125;.</span>
-                        <span>C. A = &#123;1; 6&#125;.</span>
-                        <span>D. A = &#123;-1; 6&#125;.</span>
+                      <div className="pl-4 space-y-1 mt-1.5">
+                        <p>a) Trục đối xứng của parabol (P) là đường thẳng <span className="font-sans">x = 1</span>. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
+                        <p>b) Hàm số đồng biến trên khoảng <span className="font-sans">(-&infin;; 1)</span>. <span className="text-[#FF0000] font-bold">[SAI]</span></p>
+                        <p>c) Đồ thị cắt trục hoành tại hai điểm phân biệt có hoành độ dương. <span className="text-[#FF0000] font-bold">[SAI]</span></p>
+                        <p>d) Giá trị nhỏ nhất của hàm số trên đoạn <span className="font-sans">[0; 3]</span> bằng -4. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
                       </div>
                     </div>
 
                     <div>
                       <p className="font-semibold">
-                        Câu 2: Bất phương trình nào sau đây là bất phương trình bậc nhất hai ẩn?
+                        Câu 2: Cho tam giác ABC có độ dài các cạnh a, b, c và bán kính đường tròn ngoại tiếp R.
                       </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-1.5 pl-3">
-                        <span>A. 2x&#178; + 3y &le; 0.</span>
-                        <span className="font-bold text-[#FF0000]">B. 2x - 3y + 1 &gt; 0.</span>
-                        <span>C. 2x + 3y&#178; &ge; 5.</span>
-                        <span>D. 2xy - 3y &lt; 1.</span>
+                      <div className="pl-4 space-y-1 mt-1.5">
+                        {isProActive ? (
+                          <>
+                            <p>a) Định lí sin: a / sinA = 2R. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
+                            <p>b) Diện tích S = abc / 4R. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
+                          </>
+                        ) : (
+                          <div className="p-2.5 rounded-lg bg-amber-100 border border-amber-300 text-amber-900 text-xs font-sans font-bold">
+                            🔒 [Đáp án chi tiết câu 2, 3, 4 đã bị khóa trong bản dùng thử – Vui lòng nâng cấp Pro qua Zalo: 0915.213717]
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
 
-                  <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 pt-4">
-                    PHẦN II. Câu trắc nghiệm đúng sai (Thí sinh trả lời từ câu 1 đến câu 4)
-                  </div>
-                  <p className="italic text-[11pt] text-slate-600">
-                    Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
-                  </p>
-                  <div>
-                    <p className="font-semibold">
-                      Câu 1: Cho hàm số bậc hai <span className="font-sans font-bold">y = f(x) = ax&#178; + bx + c (a &ne; 0)</span> có đồ thị là parabol (P) với đỉnh <span className="font-sans">I(1; -4)</span> và đi qua điểm <span className="font-sans">A(0; -3)</span>.
-                    </p>
-                    <div className="pl-4 space-y-1 mt-1.5">
-                      <p>a) Trục đối xứng của parabol (P) là đường thẳng <span className="font-sans">x = 1</span>. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
-                      <p>b) Hàm số đồng biến trên khoảng <span className="font-sans">(-&infin;; 1)</span>. <span className="text-[#FF0000] font-bold">[SAI]</span></p>
-                      <p>c) Đồ thị cắt trục hoành tại hai điểm phân biệt có hoành độ dương. <span className="text-[#FF0000] font-bold">[SAI]</span></p>
-                      <p>d) Giá trị nhỏ nhất của hàm số trên đoạn <span className="font-sans">[0; 3]</span> bằng -4. <span className="text-[#FF0000] font-bold">[ĐÚNG]</span></p>
+                    <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 pt-4 flex items-center justify-between">
+                      <span>PHẦN III. Câu trắc nghiệm trả lời ngắn (Từ câu 1 đến câu 6)</span>
+                      {!isProActive && <span className="text-xs font-sans text-amber-700 bg-amber-100 px-2 py-0.5 rounded">🔒 1/2 Đáp án khóa Pro</span>}
                     </div>
+                    <div>
+                      <p className="font-semibold">
+                        Câu 1: Một mảnh vườn hình chữ nhật có chu vi bằng 40 m. Để diện tích mảnh vườn lớn nhất thì chiều dài của mảnh vườn bằng bao nhiêu mét?
+                      </p>
+                      <p className="pl-3 mt-1 font-bold text-[#FF0000]">
+                        Đáp án: 10
+                      </p>
+                    </div>
+
+                    {!isProActive && (
+                      <div className="p-3 rounded-xl bg-amber-100 border border-amber-300 text-amber-900 text-xs font-sans font-bold mt-2">
+                        🔒 [Đáp án các câu trả lời ngắn từ câu 2 đến câu 6 đã bị khóa ở bản dùng thử. Quý Thầy/Cô vui lòng nâng cấp Bản quyền Pro để xem toàn bộ đáp án 100%]
+                      </div>
+                    )}
                   </div>
 
-                  <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 pt-4">
-                    PHẦN III. Câu trắc nghiệm trả lời ngắn (Thí sinh trả lời từ câu 1 đến câu 6)
-                  </div>
-                  <div>
-                    <p className="font-semibold">
-                      Câu 1: Một mảnh vườn hình chữ nhật có chu vi bằng 40 m. Để diện tích mảnh vườn lớn nhất thì chiều dài của mảnh vườn bằng bao nhiêu mét?
-                    </p>
-                    <p className="pl-3 mt-1 font-bold text-[#FF0000]">
-                      Đáp án: 10
-                    </p>
+                  <div className="mt-6 pt-4 border-t border-slate-300 text-center italic text-[11pt] text-slate-600">
+                    ------------------------- HẾT -------------------------
                   </div>
                 </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-300 text-center italic text-[11pt] text-slate-600">
-                  ------------------------- HẾT -------------------------
-                </div>
-              </div>
+              )}
             </div>
           )}
 

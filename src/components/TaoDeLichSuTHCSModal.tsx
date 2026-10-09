@@ -97,12 +97,9 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
           setShowExpiredNotice(true);
         }
       });
-
-      // Tải dữ liệu đề thi Lịch Sử
-      const data = getTHCS8MonExamSuite('LICHSU', grade, termCode, examCode);
-      setExamData(data);
+      // Không tự động nạp trước đề mẫu để bảo vệ tác quyền
     }
-  }, [isOpen, grade, termCode, examCode]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -113,14 +110,16 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
       return;
     }
 
-    const { success, remaining } = await consumeLSTHCSTrialTurn();
-    if (!success && !isPro) {
-      setShowExpiredNotice(true);
-      setActiveTab('license');
-      return;
+    if (!isPro) {
+      const { success, remaining } = await consumeLSTHCSTrialTurn();
+      if (!success) {
+        setShowExpiredNotice(true);
+        setActiveTab('license');
+        return;
+      }
+      setTrialsRemaining(remaining);
     }
 
-    setTrialsRemaining(remaining);
     const data = getTHCS8MonExamSuite('LICHSU', grade, termCode, examCode);
     setExamData(data);
   };
@@ -145,9 +144,10 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         }
         setTrialsRemaining(remaining);
       }
-      downloadTHCS8MonWordDoc('LICHSU', grade, termCode, examCode);
+      await downloadTHCS8MonWordDoc(examData, `De_LichSu_${grade}_${termCode}.doc`, isPro);
     } catch (err) {
       console.error(err);
+      alert('Không thể xuất file Word. Vui lòng thử lại!');
     } finally {
       setIsExporting(false);
     }
@@ -325,7 +325,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
           {activeTab === 'trial' && (
             <div className="space-y-6">
               
-              {/* THANH TIẾN TRÌNH DÙNG THỬ 5 CHẤM */}
+              {/* THANH TIẾN TRÌNH DÙNG THỬ 3 CHẤM */}
               {!isPro && (
                 <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
@@ -334,17 +334,17 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white">
-                        Hạn ngạch dùng thử sư phạm: Còn {trialsRemaining} / 5 lượt tạo đề
+                        Hạn ngạch dùng thử sư phạm: Còn {trialsRemaining} / 3 lượt tạo đề
                       </div>
                       <div className="text-xs text-slate-400">
-                        Mỗi thiết bị được trải nghiệm đủ 5 lần tạo đề đầy đủ Ma trận, Đặc tả và Đề thi Word chuẩn
+                        Mỗi thiết bị được trải nghiệm đúng 3 lần tạo đề (xem 1/2 đáp án, tạo 1 đề/lần). Kích hoạt Pro xem trọn vẹn.
                       </div>
                     </div>
                   </div>
 
-                  {/* 5 chấm tiến trình ● ● ● ○ ○ */}
+                  {/* 3 chấm tiến trình ● ● ● */}
                   <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map(idx => (
+                    {[1, 2, 3].map(idx => (
                       <span
                         key={idx}
                         className={`inline-block w-4 h-4 rounded-full transition-all ${
@@ -425,23 +425,39 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                     <button
                       onClick={handleGenerateExam}
                       disabled={!isPro && trialsRemaining <= 0}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white rounded-lg text-sm font-bold shadow-md shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 rounded-xl text-sm font-black shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
                     >
-                      <RefreshCw className="w-4 h-4" />
-                      Tạo Đề Lịch Sử Mới
+                      <Sparkles className="w-4 h-4" />
+                      🚀 BẤM TẠO ĐỀ LỊCH SỬ THCS ({isPro ? 'Bản Quyền Pro' : `Còn ${trialsRemaining}/3 lượt`})
                     </button>
 
-                    <button
-                      onClick={handleExportWord}
-                      disabled={isExporting || (!isPro && trialsRemaining <= 0)}
-                      className="flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-bold shadow-md shadow-emerald-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    >
-                      <Download className="w-4 h-4" />
-                      {isExporting ? 'Đang xuất Word...' : 'Tải File Word (.docx)'}
-                    </button>
+                    {examData && (
+                      <button
+                        onClick={handleExportWord}
+                        disabled={isExporting || (!isPro && trialsRemaining <= 0)}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-bold shadow-md shadow-emerald-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+                      >
+                        <Download className="w-4 h-4" />
+                        {isExporting ? 'Đang xuất Word...' : 'Tải File Word (.doc)'}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
+
+              {/* MÀN HÌNH CHỜ KHI CHƯA BẤM TẠO ĐỀ */}
+              {!examData && (
+                <div className="p-8 rounded-2xl bg-slate-900/60 border border-dashed border-slate-700 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-sm font-bold text-white">Chưa tạo đề kiểm tra Lịch Sử THCS</h4>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                    Hệ thống không cung cấp sẵn đề mẫu để copy dùng luôn mà không nuôi app. Quý Thầy/Cô vui lòng bấm nút 
+                    <strong className="text-amber-400"> "🚀 BẤM TẠO ĐỀ LỊCH SỬ THCS"</strong> ở trên để hệ thống tự động sinh 01 đề hoàn chỉnh (Dùng thử 3 lần, xem 1/2 đáp án).
+                  </p>
+                </div>
+              )}
 
               {/* KHUNG XEM TRƯỚC SƯ PHẠM CHUẨN TIMES NEW ROMAN 13PT */}
               {examData && (
