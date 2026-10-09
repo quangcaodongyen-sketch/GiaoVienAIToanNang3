@@ -37,6 +37,7 @@ import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
 import { TaoDeTiengAnhModal } from './components/TaoDeTiengAnhModal';
 import { TaoDeTiengAnhTieuHocModal } from './components/TaoDeTiengAnhTieuHocModal';
+import { TaoDeTiengVietTieuHocModal } from './components/TaoDeTiengVietTieuHocModal';
 import { TaoDeTiengAnhTHPTModal } from './components/TaoDeTiengAnhTHPTModal';
 import { TaoDeToanTHPTModal } from './components/TaoDeToanTHPTModal';
 import { SinhDeBienTheModal } from './components/SinhDeBienTheModal';
@@ -308,6 +309,7 @@ export default function App() {
   const [showNLSAIModal, setShowNLSAIModal] = useState(false);
   const [showTaoDeModal, setShowTaoDeModal] = useState(false);
   const [showTaoDeTieuHocModal, setShowTaoDeTieuHocModal] = useState(false);
+  const [showTaoDeTiengVietTieuHocModal, setShowTaoDeTiengVietTieuHocModal] = useState(false);
   const [showTaoDeTHPTModal, setShowTaoDeTHPTModal] = useState(false);
   const [showTaoDeToanTHPTModal, setShowTaoDeToanTHPTModal] = useState(false);
   const [showTaoDeTHPTSubjectModal, setShowTaoDeTHPTSubjectModal] = useState(false);
@@ -401,6 +403,7 @@ export default function App() {
     setShowNLSAIModal(false);
     setShowTaoDeModal(false);
     setShowTaoDeTieuHocModal(false);
+    setShowTaoDeTiengVietTieuHocModal(false);
     setShowTaoDeTHPTModal(false);
     setShowTaoDeToanTHPTModal(false);
     setShowTaoDeTHPTSubjectModal(false);
@@ -449,6 +452,10 @@ export default function App() {
       else if (hash === '#taode-tienganh-tieuhoc' || hash === '#tao-de-tieng-anh-tieu-hoc') {
         setShowTaoDeTieuHocModal(true);
         webSecurityGuard.setActiveApp('tao-de-tieng-anh-tieu-hoc', 'Tạo Đề Tiếng Anh Tiểu Học (TT 27)');
+      }
+      else if (hash === '#taode-tiengviet-tieuhoc' || hash === '#tao-de-tieng-viet-tieu-hoc') {
+        setShowTaoDeTiengVietTieuHocModal(true);
+        webSecurityGuard.setActiveApp('tao-de-tieng-viet-tieu-hoc', 'Tạo Đề Tiếng Việt Tiểu Học (TT 27)');
       }
       else if (hash === '#tao-de-tieng-anh-thpt') {
         setShowTaoDeTHPTModal(true);
@@ -1983,6 +1990,11 @@ export default function App() {
           onClose={closeAllModals}
           onOpenAdmin={() => setShowAdminDashboard(true)}
         />
+      <TaoDeTiengVietTieuHocModal
+        isOpen={showTaoDeTiengVietTieuHocModal}
+        onClose={() => setShowTaoDeTiengVietTieuHocModal(false)}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
+      />
       )}
 
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}

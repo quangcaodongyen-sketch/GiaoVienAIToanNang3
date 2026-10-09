@@ -45,6 +45,19 @@ export const apps: AppCard[] = [
     featured: true,
     order: 2
   },
+  {
+    id: "tao-de-tieng-viet-tieu-hoc",
+    title: "TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC (TT 27)",
+    description: "Tạo đề kiểm tra Tiếng Việt Tiểu Học (Lớp 1-5) chuẩn Thông tư 27 gồm Đọc thành tiếng, Đọc hiểu, Chính tả, Tập làm văn kèm Ma trận và Bản đặc tả.",
+    image: "/taode_tiengviet_tieuhoc.png",
+    url: "#taode-tiengviet-tieuhoc",
+    category: "ĐỀ THI TIỂU HỌC (TT 27)",
+    levelBadge: "TIỂU HỌC",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 2
+  },
 
   // ==================== NHÓM 1: CẤP THCS (CV 7991) ====================
   {
