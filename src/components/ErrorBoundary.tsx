@@ -69,6 +69,23 @@ export class ErrorBoundary extends Component<Props, State> {
               <p className="text-xs text-slate-400">
                 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên (Hotline/Zalo: <strong>0915.213717</strong>)
               </p>
+              {this.state.error && (
+                <div className="mt-3 text-left bg-slate-950/90 p-3 rounded-xl border border-red-900/60 text-xs font-mono">
+                  <div className="font-bold text-red-400 mb-1 flex items-center gap-1.5">
+                    <span>⚠️ Lỗi phát hiện:</span>
+                    <span className="text-red-300 font-semibold">{this.state.error.name}</span>
+                  </div>
+                  <div className="text-red-200 text-[11px] break-all">{this.state.error.message}</div>
+                  {this.state.error.stack && (
+                    <details className="mt-2 text-slate-400 text-[10px]">
+                      <summary className="cursor-pointer hover:text-slate-200">Chi tiết dấu vết lỗi (Stack trace)</summary>
+                      <pre className="mt-1 p-2 bg-slate-900 rounded text-slate-400 overflow-x-auto whitespace-pre-wrap max-h-36">
+                        {this.state.error.stack}
+                      </pre>
+                    </details>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">

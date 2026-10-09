@@ -77,20 +77,11 @@ export default function App() {
     const isAdmin = ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT');
 
     if (isAdmin) {
-      // 👑 TỰ ĐỘNG KÍCH HOẠT ĐẶC QUYỀN RIÊNG CHO MÁY THẦY THÀNH / ADMIN
-      localStorage.setItem('gvai_unlimited_machine', 'true');
-      localStorage.setItem('gvai_taode_active_key', 'DVT-ENG-LIFETIME-MASTER-PRO-KEY');
-      localStorage.setItem('gvai_bienthe_active_key', 'DVT-BIENTHE-LIFETIME-MASTER');
-      localStorage.setItem('gvai_nls_active_key', 'DVT-NLS-LIFETIME-MASTER');
-      localStorage.setItem('gvai_cleaner_active_key', 'DVT-CLEANER-LIFETIME-MASTER');
-      localStorage.setItem('gvai_mathstudio_active_key', 'DVT-MATH-LIFETIME-MASTER');
       localStorage.removeItem('gvai_blocked_machines');
       localStorage.removeItem('gvai_blocked_list');
       activityTrackingService.unblockMachine(mid);
       setIsCurrentBlocked(false);
     } else {
-      // 🛡️ BẢO VỆ BẢN QUYỀN MÁY GIÁO VIÊN / KHÁCH HÀNG:
-      // Mỗi App kích hoạt độc lập, TUYỆT ĐỐI KHÔNG mở khóa chéo hay mở khóa toàn bộ!
       localStorage.removeItem('gvai_unlimited_machine');
       // Dọn dẹp các master key rò rỉ nếu từng vô tình lưu
       if (localStorage.getItem('gvai_taode_active_key')?.includes('DVT-ENG-LIFETIME-MASTER')) {
@@ -1251,135 +1242,171 @@ export default function App() {
       )}
 
       {/* ONLINE TTS & SMART LISTENING PRO MODAL (3 TABS) */}
-      <OnlineTTSModal
-        isOpen={showListeningModal}
-        onClose={closeAllModals}
-      />
+      {showListeningModal && (
+        <OnlineTTSModal
+          isOpen={showListeningModal}
+          onClose={closeAllModals}
+        />
+      )}
 
       {/* TÍCH HỢP NLS - AI THCS (ADD-INS V3) MODAL (3 TABS) */}
-      <NLSAIModal
-        isOpen={showNLSAIModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showNLSAIModal && (
+        <NLSAIModal
+          isOpen={showNLSAIModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* TẠO ĐỀ TIẾNG ANH TIỂU HỌC (GLOBAL SUCCESS - THÔNG TƯ 27) MODAL (3 TABS) */}
-      <TaoDeTiengAnhTieuHocModal
-        isOpen={showTaoDeTieuHocModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeTieuHocModal && (
+        <TaoDeTiengAnhTieuHocModal
+          isOpen={showTaoDeTieuHocModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}
-      <TaoDeTiengAnhModal
-        isOpen={showTaoDeModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeModal && (
+        <TaoDeTiengAnhModal
+          isOpen={showTaoDeModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH THPT (LỚP 10 - 11 - 12) MODAL (3 TABS) */}
-      <TaoDeTiengAnhTHPTModal
-        isOpen={showTaoDeTHPTModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeTHPTModal && (
+        <TaoDeTiengAnhTHPTModal
+          isOpen={showTaoDeTHPTModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* TẠO ĐỀ KIỂM TRA TOÁN THPT (LỚP 10 - 11 - 12) MODAL (3 TABS) */}
-      <TaoDeToanTHPTModal
-        isOpen={showTaoDeToanTHPTModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeToanTHPTModal && (
+        <TaoDeToanTHPTModal
+          isOpen={showTaoDeToanTHPTModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* HỆ THỐNG TẠO ĐỀ CÁC MÔN THPT (11 MÔN - ĐỊNH DẠNG MỚI 2025+) (3 TABS) */}
-      <TaoDeTHPTSubjectModal
-        isOpen={showTaoDeTHPTSubjectModal}
-        onClose={closeAllModals}
-        initialSubject={thptSelectedSubject}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeTHPTSubjectModal && (
+        <TaoDeTHPTSubjectModal
+          isOpen={showTaoDeTHPTSubjectModal}
+          onClose={closeAllModals}
+          initialSubject={thptSelectedSubject}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* SINH 3 ĐỀ BIẾN THỂ VIP (V1) MODAL (3 TABS) */}
-      <SinhDeBienTheModal
-        isOpen={showSinhDeBienTheModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showSinhDeBienTheModal && (
+        <SinhDeBienTheModal
+          isOpen={showSinhDeBienTheModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* SCREEN RECORD PRO V2 (3 TABS) */}
-      <ScreenRecordModal
-        isOpen={showScreenRecordModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showScreenRecordModal && (
+        <ScreenRecordModal
+          isOpen={showScreenRecordModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* ĐINH THÀNH CLEANER PRO v4.5 VIP (3 TABS) */}
-      <CleanerModal
-        isOpen={showCleanerModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showCleanerModal && (
+        <CleanerModal
+          isOpen={showCleanerModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020) (3 TABS) */}
-      <ChuanHoaVBModal
-        isOpen={showChuanHoaVBModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showChuanHoaVBModal && (
+        <ChuanHoaVBModal
+          isOpen={showChuanHoaVBModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI) (3 TABS) */}
-      <TachGopPDFModal
-        isOpen={showTachGopPDFModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTachGopPDFModal && (
+        <TachGopPDFModal
+          isOpen={showTachGopPDFModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (7 MÔN & 7 APP ĐỘC LẬP) */}
-      <TaoDeTHCS8MonModal
-        isOpen={showTaoDeTHCS8MonModal}
-        onClose={closeAllModals}
-        initialSubject={thcs8MonSelectedSubject}
-        selectedSubject={thcs8MonSelectedSubject}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-        onSwitchToEnglish={() => setShowTaoDeModal(true)}
-      />
+      {showTaoDeTHCS8MonModal && (
+        <TaoDeTHCS8MonModal
+          isOpen={showTaoDeTHCS8MonModal}
+          onClose={closeAllModals}
+          initialSubject={thcs8MonSelectedSubject}
+          selectedSubject={thcs8MonSelectedSubject}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+          onSwitchToEnglish={() => setShowTaoDeModal(true)}
+        />
+      )}
 
       {/* PHẦN MỀM TẠO ĐỀ LỊCH SỬ THCS (CV 7991) - MÔN CHUYÊN BIỆT */}
-      <TaoDeLichSuTHCSModal
-        isOpen={showTaoDeLichSuTHCSModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showTaoDeLichSuTHCSModal && (
+        <TaoDeLichSuTHCSModal
+          isOpen={showTaoDeLichSuTHCSModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* ĐINH THÀNH MATHSTUDIO 2026+ (WORD & MATHPIX) */}
-      <MathStudioModal
-        isOpen={showMathStudioModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      {showMathStudioModal && (
+        <MathStudioModal
+          isOpen={showMathStudioModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
+      )}
 
       {/* TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS) - CHỈ DÀNH CHO ADMIN */}
-      <TaoDe15PhutModal
-        isOpen={showTaoDe15PhutModal}
-        onClose={closeAllModals}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-        onSwitchToStandardExam={() => {
-          closeAllModals();
-          setShowTaoDeModal(true);
-        }}
-      />
+      {showTaoDe15PhutModal && (
+        <TaoDe15PhutModal
+          isOpen={showTaoDe15PhutModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+          onSwitchToStandardExam={() => {
+            closeAllModals();
+            setShowTaoDeModal(true);
+          }}
+        />
+      )}
 
       {/* CLOUD ADMIN DASHBOARD 24/7 */}
-      <AdminDashboard
-        isOpen={showAdminDashboard}
-        onClose={closeAllModals}
-      />
+      {showAdminDashboard && (
+        <AdminDashboard
+          isOpen={showAdminDashboard}
+          onClose={closeAllModals}
+        />
+      )}
 
-            {/* MODAL ĐĂNG KÝ DÙNG THỬ 5 LẦN */}
-      <TrialRegisterModal
-        isOpen={showTrialModal}
-        onClose={() => setShowTrialModal(false)}
-      />
+      {/* MODAL ĐĂNG KÝ DÙNG THỬ 5 LẦN */}
+      {showTrialModal && (
+        <TrialRegisterModal
+          isOpen={showTrialModal}
+          onClose={() => setShowTrialModal(false)}
+        />
+      )}
       {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
       <a
         href={BRAND.zaloUrl}

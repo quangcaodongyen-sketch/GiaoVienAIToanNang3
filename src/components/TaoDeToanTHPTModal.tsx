@@ -715,7 +715,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       </div>
                     </div>
                     <a
-                      href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                      href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-4 w-full py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
@@ -736,7 +736,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       </div>
                     </div>
                     <a
-                      href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                      href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-4 w-full py-2 rounded-xl bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
@@ -760,7 +760,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       </div>
                     </div>
                     <a
-                      href={`https://zalo.me/${BRAND.author.phone.replace(/[^0-9]/g, '')}`}
+                      href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-4 w-full py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black flex items-center justify-center gap-1.5 transition-all shadow-md"

@@ -258,15 +258,18 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 5 lần
-    const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_count`;
-    const savedCount = localStorage.getItem(trialKey);
+    // Kiểm tra số lượt dùng thử 5 lần (chuẩn lưu số lượt còn lại 5 -> 0)
+    const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_remaining`;
+    const savedRemaining = localStorage.getItem(trialKey);
     let remaining = 5;
     if (savedPro) {
       remaining = 999;
-    } else if (savedCount !== null) {
-      const used = parseInt(savedCount, 10) || 0;
-      remaining = Math.max(0, 5 - used);
+    } else if (savedRemaining !== null) {
+      remaining = parseInt(savedRemaining, 10);
+      if (isNaN(remaining)) remaining = 5;
+    } else {
+      localStorage.setItem(trialKey, '5');
+      remaining = 5;
     }
     setTrialRemaining(remaining);
 
@@ -283,7 +286,27 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
   const curSub = SUBJECT_DETAILS[currentSubjectKey] || SUBJECT_DETAILS.GDCD;
 
-  // Xử lý tạo đề mới (Trải nghiệm trực tuyến)
+  // Xử lý tạo đề mới & Xuất file Word (Trải nghiệm trực tuyến)
+  const handleExportWordDoc = () => {
+    if (!isProActive && trialRemaining <= 0) {
+      alert(`⚠️ Thầy/Cô đã dùng hết 5 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.`);
+      setActiveTab('register');
+      return;
+    }
+
+    try {
+      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode);
+      if (!isProActive) {
+        const nextRem = Math.max(0, trialRemaining - 1);
+        setTrialRemaining(nextRem);
+        const trialKey = `gvai_taode_${currentSubjectKey.toLowerCase()}_trial_remaining`;
+        localStorage.setItem(trialKey, nextRem.toString());
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Có lỗi xảy ra khi tải file Word. Vui lòng thử lại!');
+    }
+  };
 
 
   const handleCopyMid = () => {
@@ -601,20 +624,34 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
                   <button
                     type="button"
+                    onClick={handleExportWordDoc}
+                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
+                  >
+                    <Download className="w-4 h-4 text-white" />
+                    <span>📥 XUẤT FILE WORD CHUẨN IN ẤN (.DOC)</span>
+                    {!isProActive && (
+                      <span className="ml-1 px-2 py-0.5 rounded-full bg-black/40 text-[10px] text-amber-300 font-mono">
+                        {trialRemaining}/5 LƯỢT ({[1, 2, 3, 4, 5].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={() => setActiveTab('download')}
-                    className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                    className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    <span>📥 TẢI PHẦN MỀM ĐỂ TẠO ĐỀ & XUẤT WORD TRÊN MÁY TÍNH</span>
+                    <span>TẢI BỘ CÀI PC</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setActiveTab('register')}
-                    className="w-full sm:w-auto py-2.5 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition cursor-pointer"
+                    className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-600/20 transition cursor-pointer"
                   >
                     <Crown className="w-4 h-4" />
-                    <span>🔑 ĐĂNG KÝ BẢN QUYỀN PRO SƯ PHẠM</span>
+                    <span>BẢN QUYỀN PRO</span>
                   </button>
                 </div>
               </div>

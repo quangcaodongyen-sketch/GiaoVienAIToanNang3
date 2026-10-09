@@ -93,15 +93,16 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
     const savedPro = localStorage.getItem(proKey) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 5 lần
-    const trialKey = `gvai_trial_${appTag.toLowerCase()}`;
-    const savedCount = localStorage.getItem(trialKey);
+    // Kiểm tra số lượt dùng thử 5 lần (chuẩn lưu số lượt còn lại 5 -> 0)
+    const trialKey = `gvai_trial_remaining_${appTag.toLowerCase()}`;
+    const savedRemaining = localStorage.getItem(trialKey);
     if (savedPro) {
       setTrialRemaining(999);
-    } else if (savedCount !== null) {
-      const used = parseInt(savedCount, 10) || 0;
-      setTrialRemaining(Math.max(0, 5 - used));
+    } else if (savedRemaining !== null) {
+      const rem = parseInt(savedRemaining, 10);
+      setTrialRemaining(isNaN(rem) ? 5 : rem);
     } else {
+      localStorage.setItem(trialKey, '5');
       setTrialRemaining(5);
     }
 

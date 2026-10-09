@@ -142,7 +142,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         }
         setTrialsRemaining(remaining);
       }
-      downloadTHCS8MonWordDoc(examData);
+      downloadTHCS8MonWordDoc('LICHSU', grade, termCode, examCode);
     } catch (err) {
       console.error(err);
     } finally {

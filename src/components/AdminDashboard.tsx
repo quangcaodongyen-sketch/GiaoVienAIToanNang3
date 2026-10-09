@@ -45,7 +45,8 @@ import {
   Table as TableIcon,
   ListFilter,
   Smartphone,
-  CheckCircle
+  CheckCircle,
+  Filter
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
@@ -586,6 +587,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     const years = pkg === '3YEAR' ? 3 : pkg === '2YEAR' ? 2 : pkg === 'LIFETIME' ? 99 : 1;
     const durationDays = years === 99 ? 36500 : years * 365;
     const pkgLabel = pkg === 'LIFETIME' ? 'Bản quyền Trọn Đời' : pkg === '3YEAR' ? 'Gói 3 Năm Pro' : pkg === '2YEAR' ? 'Gói 2 Năm VIP' : pkg === 'TRIAL_5' ? 'Dùng thử 5 lần' : 'Gói 1 Năm';
+    const expDateObj = new Date(Date.now() + durationDays * 86400 * 1000);
+    const targetExpDate = `${expDateObj.getDate().toString().padStart(2, '0')}/${(expDateObj.getMonth() + 1).toString().padStart(2, '0')}/${expDateObj.getFullYear()}`;
 
     setActionNotice({
       type: 'loading',
@@ -614,31 +617,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateSmartListeningLicenseKey(cleanMid, ttsPkg);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = genRes.zaloMessage;
+          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Smart Listening Pro:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // B. Chuẩn Hóa Văn Bản AI
         else if (effectiveAppId.includes('chvb') || effectiveAppId.includes('chuan_hoa_vb') || cleanMidUpper.includes('CHVB')) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
-          const genRes = await generateCHVBLicenseKey(cleanMid, pkgType);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expiryDateStr;
-          zaloMsg = buildCHVBZaloMessage(cleanMid, genRes.key, genRes.expiryDateStr, genRes.packageName);
+          const keyStr = await generateCHVBLicenseKey(cleanMid, pkgType);
+          licenseKey = keyStr;
+          expDateStr = targetExpDate;
+          zaloMsg = buildCHVBZaloMessage(cleanMid, keyStr, pkgLabel);
         }
         // C. PDF Suite Pro
         else if (effectiveAppId.includes('pdf') || cleanMidUpper.includes('PDF')) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
-          const genRes = await generatePDFLicenseKey(cleanMid, pkgType);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expiryDateStr;
-          zaloMsg = buildPDFZaloMessage(cleanMid, genRes.key, genRes.expiryDateStr, genRes.packageName);
+          const keyStr = await generatePDFLicenseKey(cleanMid, pkgType);
+          licenseKey = keyStr;
+          expDateStr = targetExpDate;
+          zaloMsg = buildPDFZaloMessage(cleanMid, keyStr, pkgLabel);
         }
         // D. Cleaner Pro
         else if (effectiveAppId.includes('cleaner') || cleanMidUpper.includes('CLEANER')) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
-          const genRes = await generateCleanerLicenseKey(cleanMid, pkgType);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expiryDateStr;
-          zaloMsg = genRes.zaloMessage;
+          const keyStr = await generateCleanerLicenseKey(cleanMid, pkgType);
+          licenseKey = keyStr;
+          expDateStr = targetExpDate;
+          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Cleaner Pro v4.5:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // E. Screen Record Pro V2
         else if (effectiveAppId.includes('record') || cleanMidUpper.includes('RECORD')) {
@@ -646,7 +649,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateRecordLicenseKey(cleanMid, pkgType);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = genRes.zaloMessage;
+          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Screen Record Pro V2:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // F. Sinh 3 Đề Biến Thể VIP
         else if (effectiveAppId.includes('bienthe') || cleanMidUpper.includes('BIENTHE')) {
@@ -654,15 +657,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateBientheLicenseKey(cleanMid, pkgType);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = genRes.zaloMessage;
+          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Sinh 3 Đề Biến Thể VIP:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // G. Tạo Đề 15 Phút Tiếng Anh
         else if (effectiveAppId.includes('15p') || cleanMidUpper.includes('ENG15')) {
           const pkgType = years === 99 ? 'lifetime' : years === 2 ? '2year' : '1year';
-          const genRes = await generateExam15PLicenseKey(cleanMid, pkgType);
-          licenseKey = genRes.key;
-          expDateStr = genRes.expiryDateStr;
-          zaloMsg = genRes.zaloMessage;
+          const keyStr = await generateExam15PLicenseKey(cleanMid, pkgType);
+          licenseKey = keyStr;
+          expDateStr = targetExpDate;
+          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Tạo Đề 15 Phút Tiếng Anh:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // H. Tạo Đề Tiếng Anh THCS Global Success (SHA-256)
         else if (effectiveAppId === 'taode_tienganh_thcs' || cleanMidUpper.includes('ENGCS') || (cleanMidUpper.startsWith('DVT-ENG-') && !cleanMidUpper.includes('ENGPT') && !cleanMidUpper.includes('ENG15') && !cleanMidUpper.includes('ENGPRI'))) {
@@ -899,6 +902,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
       appId: targetReq?.appId,
       appName: targetReq?.appName,
       reqId: id
+    });
+  };
+
+  const handleViewKeyAndZalo = async (
+    machineId: string,
+    fullName: string,
+    phoneNumber: string,
+    packageType: string = '1YEAR',
+    daysRemaining: number = 365,
+    expiryDateStr: string = 'Chuẩn'
+  ) => {
+    const targetReq = registrationRequests.find(r => r.machineId === machineId);
+    await handleActivateMachineByYear(machineId, (packageType as any) || '1YEAR', {
+      issueNumber: targetReq?.issueNumber,
+      fullName: fullName || targetReq?.fullName,
+      schoolUnit: targetReq?.schoolUnit,
+      phoneNumber: phoneNumber || targetReq?.phoneNumber,
+      appId: targetReq?.appId,
+      appName: targetReq?.appName,
+      reqId: targetReq?.id
     });
   };
 

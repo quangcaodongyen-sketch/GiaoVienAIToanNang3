@@ -148,6 +148,24 @@ export const isAppMatching = (
 };
 
 class CloudSyncService {
+  // Alias tiện ích tương thích ngược
+  public async submitRegistrationRequest(req: any): Promise<any> {
+    return this.submitRegistrationToCloud(req);
+  }
+
+  public async register(req: any): Promise<any> {
+    return this.submitRegistrationToCloud({
+      machineId: req.machineId,
+      fullName: req.fullName,
+      schoolUnit: req.schoolName || req.schoolUnit || 'Trường THCS',
+      phoneNumber: req.phoneNumber || req.phoneZalo || '',
+      appId: req.appId,
+      appName: req.appName,
+      packageType: req.packageType || '1YEAR',
+      price: req.price || 'Liên hệ Zalo'
+    });
+  }
+
   // Gửi đơn đăng ký của giáo viên lên Cloud
   public async submitRegistrationToCloud(req: {
     machineId: string;

@@ -736,7 +736,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
 
                 <div className="flex flex-col gap-3 shrink-0 w-full sm:w-auto">
                   <a
-                    href={EXAM_ENG_PRIMARY_RESOURCES.DOWNLOAD_ZIP_URL}
+                    href={EXAM_ENG_PRIMARY_RESOURCES.fullZipUrl}
                     download="Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip"
                     className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-sky-600/30 hover:scale-[1.02] transition-all"
                   >

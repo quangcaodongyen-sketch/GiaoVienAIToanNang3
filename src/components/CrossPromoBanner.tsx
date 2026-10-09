@@ -57,17 +57,20 @@ const PROMO_ITEMS: PromoItem[] = [
 
 interface CrossPromoBannerProps {
   currentAppId?: string;
+  currentToolId?: string;
   onNavigateApp?: (hash: string) => void;
   className?: string;
 }
 
 export const CrossPromoBanner: React.FC<CrossPromoBannerProps> = ({
   currentAppId,
+  currentToolId,
   onNavigateApp,
   className = ''
 }) => {
   // Lọc bỏ app hiện tại để quảng cáo chéo các app khác
-  const eligiblePromos = PROMO_ITEMS.filter((p) => p.id !== currentAppId);
+  const activeId = currentAppId || currentToolId;
+  const eligiblePromos = PROMO_ITEMS.filter((p) => p.id !== activeId);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Tự động chuyển luân phiên mỗi 7 giây

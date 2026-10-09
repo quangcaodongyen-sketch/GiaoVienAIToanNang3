@@ -32,6 +32,7 @@ import {
   ExamVerifyResult
 } from '../services/taodeKeyService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
+import { cloudSyncService } from '../services/cloudSyncService';
 import { CrossPromoBanner } from './CrossPromoBanner';
 
 interface TaoDeTiengAnhTHPTModalProps {
