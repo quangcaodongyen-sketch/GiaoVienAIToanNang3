@@ -1,8 +1,8 @@
 export const BRAND = {
   websiteTitle: "GIÁO VIÊN AI TOÀN NĂNG",
   shortTitle: "GV AI TOÀN NĂNG",
-  author: "Đinh Văn Thành",
-  job: "Giáo viên Tiếng Anh",
+  author: "Tác giả Đinh Thành - ĐT: 0915.213717",
+  job: "Giáo viên",
   organization: "Trường THCS Đồng Yên",
   address: "Xã Đồng Yên, tỉnh Tuyên Quang",
   phone: "0915.213717",
@@ -10,24 +10,24 @@ export const BRAND = {
   zalo: "0915213717",
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
-  slogan: "Công nghệ gần gũi – Dạy học hiệu quả",
-  description: "Hệ sinh thái công cụ AI thiết thực hỗ trợ giáo viên trong giảng dạy, quản lý và chuyển đổi số giáo dục.",
-  copyright: "© 2026 Đinh Văn Thành. All rights reserved.",
+  slogan: "Công cụ hỗ trợ, tham khảo dành cho giáo viên.",
+  description: "Hệ sinh thái công cụ hỗ trợ, tham khảo dành cho giáo viên trong giảng dạy, quản lý và hỗ trợ công việc chuyên môn.",
+  copyright: "© 2026 Tác giả Đinh Thành - ĐT: 0915.213717. Công cụ hỗ trợ, tham khảo dành cho giáo viên.",
   
   hero: {
     title: "GIÁO VIÊN AI TOÀN NĂNG",
-    subtitle: "Công cụ AI thiết thực dành cho giáo viên",
-    description: "Khám phá hệ sinh thái công cụ hỗ trợ soạn giảng, tạo đề kiểm tra, thiết kế học liệu, chuẩn hóa văn bản và ứng dụng trí tuệ nhân tạo trong giáo dục."
+    subtitle: "Công cụ hỗ trợ, tham khảo dành cho giáo viên",
+    description: "Khám phá hệ sinh thái công cụ hỗ trợ, tham khảo dành cho giáo viên soạn giảng, tạo đề kiểm tra, thiết kế học liệu và tối ưu thời gian giảng dạy."
   },
   
   about: {
     title: "Về tác giả",
-    greeting: "Tôi là Đinh Văn Thành – Giáo viên Tiếng Anh tại Trường THCS Đồng Yên.",
-    paragraph1: "Là giáo viên trực tiếp giảng dạy cấp THCS, tôi chủ động xây dựng và hoàn thiện bộ phần mềm này xuất phát từ chính nhu cầu công việc thực tế hàng ngày của mình và đồng nghiệp, bám sát các văn bản quy định mới nhất của Bộ Giáo dục & Đào tạo.",
-    paragraph2: "Hệ thống tập trung giải quyết 4 nhóm công việc chuyên môn cốt lõi: Tích hợp Năng lực số (NLS) & AI vào Giáo án theo CV 5512 (12 bộ môn); Tạo đề kiểm tra định kỳ 8 môn THCS chuẩn ma trận, bản đặc tả CV 7991 và sinh đề biến thể; Tạo bài nghe Tiếng Anh Global Success (Online TTS); cùng các tiện ích Chuẩn hóa thể thức văn bản NĐ 30, tách gộp PDF và tối ưu máy tính.",
-    paragraph3: "Các phần mềm đều được đóng gói đơn giản, bấm chạy trực tiếp trên máy tính của thầy cô, không phụ thuộc mạng phức tạp, tiết kiệm thời gian và giải quyết đúng công việc cần làm mỗi ngày.",
-    quote: "“Phần mềm phục vụ giáo viên phải thiết thực, dễ dùng và giải quyết chính xác công việc hàng ngày.”",
-    photoAlt: "Đinh Văn Thành – Giáo viên Tiếng Anh Trường THCS Đồng Yên"
+    greeting: "Tôi là Đinh Thành – Tác giả phát triển công cụ hỗ trợ, tham khảo dành cho giáo viên.",
+    paragraph1: "Xuất phát từ thực tế giảng dạy, tôi xây dựng hệ thống phần mềm mang tính chất chia sẻ công cụ hỗ trợ, tham khảo dành cho giáo viên nhằm phục vụ công việc hàng ngày.",
+    paragraph2: "Hệ thống hỗ trợ 4 nhóm công việc chuyên môn chính: Tham khảo tích hợp Năng lực số (NLS) & AI vào Giáo án; Tham khảo tạo đề kiểm tra định kỳ các cấp; Hỗ trợ tạo bài nghe Tiếng Anh cùng các tiện ích hỗ trợ văn bản và máy tính.",
+    paragraph3: "Các công cụ được thiết kế đơn giản, chạy trực tiếp trên máy tính cá nhân để hỗ trợ đồng nghiệp tiết kiệm thời gian công việc chuyên môn.",
+    quote: "“Phần mềm là công cụ hỗ trợ, tham khảo dành cho giáo viên, thiết thực và tiện ích trong công việc chuyên môn hàng ngày.”",
+    photoAlt: "Tác giả Đinh Thành - ĐT: 0915.213717"
   }
 };
 

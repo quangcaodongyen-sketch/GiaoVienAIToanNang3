@@ -17,7 +17,7 @@ export const ADMIN_WHITELIST_MACHINES = [
 ];
 /**
  * DỊCH VỤ THEO DÕI HOẠT ĐỘNG, ĐĂNG KÝ THÀNH VIÊN & QUẢN TRỊ MÁY TÍNH
- * Hệ sinh thái Giáo Viên AI Toàn Năng - Thầy Đinh Văn Thành
+ * Hệ sinh thái Giáo Viên AI Toàn Năng - Tác giả Đinh Thành
  */
 
 import { licenseService } from './licenseService';
@@ -349,7 +349,7 @@ class ActivityTrackingService {
   }
 
   // XÓA TÀI KHOẢN VÀ KHÓA VĨNH VIỄN (Admin đã xóa tk nào thì tk đó không hoạt động được nữa)
-  public deleteAndBlockMachine(machineId: string, adminName: string = 'Thầy Đinh Văn Thành'): void {
+  public deleteAndBlockMachine(machineId: string, adminName: string = 'Tác giả Đinh Thành'): void {
     // Xóa triệt để khỏi danh sách máy bị khóa để không hiện lại
     this.unblockMachine(machineId);
 

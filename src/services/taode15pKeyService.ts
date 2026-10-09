@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // ============================================================================
 
 const SECRET_SALT = "THANH_DONG_YEN_0915213717_15MIN_ENG_PRO";
@@ -34,7 +34,7 @@ async function sha256Hex(message: string): Promise<string> {
 }
 
 /**
- * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Tác giả Đinh Thành
  * Định dạng: DVT-15M-XXXX-XXXX
  */
 export function getOrCreateExam15PHardwareCode(): string {

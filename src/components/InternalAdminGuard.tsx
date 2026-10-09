@@ -51,7 +51,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
             Phần mềm <strong className="text-amber-300">{appName}</strong> {appDescription}
           </p>
           <p className="text-xs text-rose-300 font-semibold leading-relaxed">
-            Để đảm bảo chất lượng sư phạm và tác quyền, phần mềm <strong>KHÓA SỬ DỤNG VÀ TẢI VỀ CÔNG KHAI</strong> đối với người dùng đại trà. Chỉ Thầy giáo Đinh Văn Thành (Admin) được mở quyền truy cập.
+            Để đảm bảo chất lượng sư phạm và tác quyền, phần mềm <strong>KHÓA SỬ DỤNG VÀ TẢI VỀ CÔNG KHAI</strong> đối với người dùng đại trà. Chỉ Tác giả Đinh Thành - ĐT: 0915.213717 (Admin) được mở quyền truy cập.
           </p>
         </div>
 
@@ -62,12 +62,12 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
             Liên hệ Admin Thầy Thành để kích hoạt bản quyền & báo giá ưu đãi:
           </p>
           <div className="text-slate-300 space-y-1">
-            <p>• Tác giả & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong> – THCS Đồng Yên</p>
+            <p>• Tác giả & Quản trị: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> – THCS Đồng Yên</p>
             <p>• Hotline / Zalo chính thức: <strong className="text-emerald-400 font-mono text-sm">0915.213717</strong></p>
           </div>
           <div className="pt-1 flex gap-2">
             <a
-              href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Kính gửi Thầy Đinh Văn Thành - Em muốn đăng ký mở khóa bản quyền Pro ứng dụng ${appName}`)}`}
+              href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(`Kính gửi Tác giả Đinh Thành - Em muốn đăng ký mở khóa bản quyền Pro ứng dụng ${appName}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer"
@@ -81,7 +81,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
         <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-rose-500/40 space-y-3 shadow-2xl">
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
             <ShieldCheck className="w-4 h-4 text-rose-400" />
-            <span>Xác thực Mật khẩu Admin (Thầy Đinh Văn Thành):</span>
+            <span>Xác thực Mật khẩu Admin (Tác giả Đinh Thành):</span>
           </div>
           <form onSubmit={handleVerify} className="space-y-2">
             <div className="flex gap-2">

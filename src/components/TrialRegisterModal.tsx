@@ -242,7 +242,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
             Kích Hoạt Bản Quyền Pro
           </h3>
           <p className="text-xs text-slate-300 mt-1">
-            Thầy/Cô chọn ứng dụng cụ thể có nhu cầu sử dụng và gửi thông tin cho Admin Thầy Đinh Văn Thành để kích hoạt Pro trực tuyến.
+            Thầy/Cô chọn ứng dụng cụ thể có nhu cầu sử dụng và gửi thông tin cho Admin Tác giả Đinh Thành để kích hoạt Pro trực tuyến.
           </p>
         </div>
 
@@ -255,7 +255,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 <div className="space-y-1">
                   <p className="font-bold text-emerald-300 text-base">Đã gửi đơn đăng ký thành công!</p>
                   <p className="text-xs text-emerald-200/90 leading-relaxed">
-                    Thông tin của Thầy/Cô đã được cập nhật lên hệ thống Cloud. Admin Thầy Đinh Văn Thành sẽ duyệt và kích hoạt trực tuyến đúng ứng dụng Thầy/Cô đã chọn.
+                    Thông tin của Thầy/Cô đã được cập nhật lên hệ thống Cloud. Admin Tác giả Đinh Thành sẽ duyệt và kích hoạt trực tuyến đúng ứng dụng Thầy/Cô đã chọn.
                   </p>
                   <div className="mt-2.5 p-3 rounded-lg bg-slate-950/80 border border-emerald-500/30 text-xs space-y-1.5">
                     <div><strong>Họ và tên:</strong> <span className="text-white">{submittedData.fullName}</span></div>
@@ -463,7 +463,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-400 text-center pt-1">
-                Admin Thầy Đinh Văn Thành (0915.213717) duyệt và kích hoạt trực tuyến theo đúng ứng dụng đã chọn.
+                Admin Tác giả Đinh Thành (0915.213717) duyệt và kích hoạt trực tuyến theo đúng ứng dụng đã chọn.
               </p>
             </form>
           )}

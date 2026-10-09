@@ -910,7 +910,7 @@ export default function App() {
               <span>dekiemtraso.com</span>
             </a>
             <span className="hidden md:inline font-medium text-slate-300 truncate">
-              Nền tảng Trợ lý AI Sư Phạm & Tạo Đề Kiểm Tra Số Chuẩn 100% Bộ GD&ĐT 2026
+              Nền tảng Trợ lý AI Sư Phạm & Tạo Đề Kiểm Tra Số Tham khảo dành cho giáo viên Bộ GD&ĐT 2026
             </span>
             <span className="md:hidden text-slate-300 font-medium truncate">
               Đề Kiểm Tra Số 2026
@@ -1283,13 +1283,13 @@ export default function App() {
                 <div className="space-y-2 max-w-3xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-cyan-200 text-xs font-bold uppercase tracking-wider border border-white/20 backdrop-blur-xs">
                     <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                    <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026 • Chuẩn 100% Bộ GD&ĐT</span>
+                    <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026 • Tham khảo dành cho giáo viên Bộ GD&ĐT</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
                     Nền Tảng Trợ Lý AI & Tạo Đề Kiểm Tra Số Chuẩn Mực
                   </h1>
                   <p className="text-xs sm:text-sm text-blue-50/90 leading-relaxed font-normal">
-                    Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> (Trường THCS Đồng Yên) • Hotline/Zalo: <strong>{BRAND.phone}</strong>. Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ 18+ môn học, chuyển đổi công thức Toán học Mathpix sang Word, căn lề chuẩn Nghị định 30/2020.
+                    Tác giả: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> (Trường THCS Đồng Yên) • Hotline/Zalo: <strong>{BRAND.phone}</strong>. Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ 18+ môn học, chuyển đổi công thức Toán học Mathpix sang Word, căn lề chuẩn Nghị định 30/2020.
                   </p>
                 </div>
 
@@ -2166,7 +2166,7 @@ export default function App() {
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-40 p-3 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-[#0D9488] to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-teal-900/40 flex items-center gap-2 hover:scale-105 transition-all border border-teal-400/30 group"
-        title="Chat Zalo Thầy Đinh Văn Thành (0915.213717)"
+        title="Chat Zalo Tác giả Đinh Thành (0915.213717)"
       >
         <span className="relative flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>

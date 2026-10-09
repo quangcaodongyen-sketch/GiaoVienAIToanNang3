@@ -196,7 +196,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả: Thầy giáo Đinh Văn Thành (0915.213717)
+                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (0915.213717)
               </p>
             </div>
           </div>
@@ -953,7 +953,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
                     <h5 className="text-sm font-bold text-white">ĐÃ GỬI THÔNG TIN LÊN HỆ THỐNG CỦA ADMIN!</h5>
                     <p className="text-xs text-slate-300">
-                      Thầy Đinh Văn Thành đã nhận được thông tin đăng ký của Thầy/Cô. Để được duyệt và nhận mã key nhanh nhất, xin vui lòng nhắn tin trực tiếp qua Zalo.
+                      Tác giả Đinh Thành đã nhận được thông tin đăng ký của Thầy/Cô. Để được duyệt và nhận mã key nhanh nhất, xin vui lòng nhắn tin trực tiếp qua Zalo.
                     </p>
                     <a
                       href={BRAND.zaloUrl}
@@ -1040,7 +1040,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         {/* FOOTER */}
         <div className="px-6 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 shrink-0">
           <div className="flex items-center gap-3">
-            <span>© 2026 Thầy giáo Đinh Văn Thành – THPT Đồng Yên</span>
+            <span>© 2026 Tác giả Đinh Thành - ĐT: 0915.213717 – THPT Đồng Yên</span>
             <span className="hidden sm:inline">•</span>
             <span className="text-amber-400 font-medium">Hotline / Zalo: 0915.213717</span>
           </div>

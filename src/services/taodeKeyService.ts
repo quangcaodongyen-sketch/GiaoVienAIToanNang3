@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ TẠO ĐỀ TIẾNG ANH GLOBAL SUCCESS (CV 7991)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 HMAC Signature chuẩn khớp 100% với Tool_Tao_Key_Ban_Quyen_Thanh.py
 // Bảo mật: Hệ thống bảo vệ nhiều tầng lớp (Hardware Lock, Anti-Tamper Trial Storage, SHA-256 Signature)
 // ============================================================================
@@ -30,7 +30,7 @@ async function sha256Hex(message: string): Promise<string> {
 }
 
 /**
- * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Tác giả Đinh Thành
  * Định dạng: DVT-ENG-XXXX-XXXX
  */
 export function getOrCreateExamHardwareCode(): string {
@@ -61,7 +61,7 @@ export function getOrCreateExamHardwareCode(): string {
 }
 
 /**
- * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho THPT
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Tác giả Đinh Thành cho THPT
  * Định dạng chuẩn Rule 5: DVT-ENGPT-XXXX-XXXX
  */
 export function getOrCreateExamTHPTHardwareCode(): string {
@@ -92,7 +92,7 @@ export function getOrCreateExamTHPTHardwareCode(): string {
 }
 
 /**
- * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho Toán THPT
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Tác giả Đinh Thành cho Toán THPT
  * Định dạng chuẩn Rule 5: DVT-MATHPT-XXXX-XXXX
  */
 export function getOrCreateExamToanTHPTHardwareCode(): string {
@@ -122,7 +122,7 @@ export function getOrCreateExamToanTHPTHardwareCode(): string {
 }
 
 /**
- * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Thầy Đinh Văn Thành cho Tiểu Học
+ * Lấy hoặc khởi tạo Mã máy tính Hardware Code chuẩn thương hiệu Tác giả Đinh Thành cho Tiểu Học
  * Định dạng chuẩn Rule 5: DVT-ENGPRI-XXXX-XXXX
  */
 export function getOrCreateExamEngPrimaryHardwareCode(): string {
@@ -203,7 +203,7 @@ export async function consumeSecureExamTrial(machineId: string): Promise<number>
 }
 
 /**
- * Tạo License Key chuẩn dành cho Quản trị viên (Thầy Đinh Văn Thành)
+ * Tạo License Key chuẩn dành cho Quản trị viên (Tác giả Đinh Thành)
  * Khớp 100% với Tool_Tao_Key_Ban_Quyen_Thanh.py
  */
 export async function generateExamLicenseKey(

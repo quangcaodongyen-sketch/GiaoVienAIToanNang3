@@ -1,6 +1,6 @@
 // ============================================================================
 // ĐỘNG CƠ SINH 3 ĐỀ BIẾN THỂ VIP & ĐÁP ÁN CHI TIẾT (V1)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Chức năng:
 // 1. Phân tích ma trận đề gốc (Lớp 6, 7, 8, 9, Kỹ năng, Số câu, Mức độ khó)
 // 2. Sinh 3 đề biến thể tương đương:
@@ -8,7 +8,7 @@
 //    - Đề 2 (Biến thể trung bình): Đổi câu hỏi và ngữ cảnh, bài đọc viết mới theo chủ đề
 //    - Đề 3 (Biến thể sâu): Câu hỏi độc lập hoàn toàn, bám sát ma trận kiến thức
 // 3. Đầy đủ Đề thi + Đáp án (Audio Script, Sample Writing, Speaking cues & answers)
-// 4. Xuất file Microsoft Word (.doc) chuẩn 100% Sư phạm (A4, Times New Roman 13pt, ngắt trang section break)
+// 4. Xuất file Microsoft Word (.doc) tham khảo dành cho giáo viên Sư phạm (A4, Times New Roman 13pt, ngắt trang section break)
 // ============================================================================
 
 export interface ExamAnalysis {
@@ -622,7 +622,7 @@ PHẦN 2: ĐÁP ÁN
 
 /**
  * Xuất 1 đề biến thể hoặc trọn bộ 3 đề ra file Microsoft Word (.doc)
- * Chuẩn 100% Sư phạm:
+ * Tham khảo dành cho giáo viên Sư phạm:
  * - Font: Times New Roman 13pt
  * - Canh lề A4 chuẩn: Trên/Dưới 12.7mm, Trái/Phải 15.2mm
  * - Khoảng cách dòng: 1.15
@@ -652,7 +652,7 @@ export function exportBientheToWordHtml(
               ⚠️ BẢN DÙNG THỬ HỆ THỐNG GIÁO VIÊN AI TOÀN NĂNG 3.0
             </div>
             <div style="font-size: 10pt; color: #7F1D1D; margin-top: 2pt;">
-              Bản quyền phát triển: <strong>Thầy giáo Đinh Văn Thành - Trường THCS Đồng Yên</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
+              Bản quyền phát triển: <strong>Tác giả Đinh Thành - ĐT: 0915.213717 - Trường THCS Đồng Yên</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
             </div>
             <div style="font-size: 9.5pt; color: #991B1B; font-style: italic; margin-top: 2pt;">
               Kích hoạt bản quyền Pro để gỡ bỏ dòng này và mở khóa tính năng sinh ma trận đặc tả tự động không giới hạn!

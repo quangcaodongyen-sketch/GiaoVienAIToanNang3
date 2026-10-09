@@ -1,7 +1,7 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN HỆ THỐNG PHẦN MỀM TẠO ĐỀ KIỂM TRA THCS (8 MÔN)
 // CHUẨN CÔNG VĂN 7991/BGDĐT & BỘ SÁCH KẾT NỐI TRI THỨC VỚI CUỘC SỐNG
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – Hotline/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Hotline/Zalo: 0915.213717
 // Thuật toán: SHA-256 & HMAC Hardware Binding, Quản lý Gói 8 Môn & Từng Môn Lẻ
 // ============================================================================
 
@@ -357,7 +357,7 @@ export async function generateTHCS8MLicenseKey(
 
   const pkgLabel = pkg === 'lifetime' ? 'Trọn Đời (Vĩnh Viễn)' : (pkg === '3year' ? 'Gói 3 Năm Pro' : (pkg === '2year' ? 'Gói 2 Năm VIP' : 'Gói 1 Năm'));
   const zaloMessage = `Kính gửi Quý Thầy/Cô!
-Thầy giáo Đinh Văn Thành (THCS Đồng Yên - 0915.213717) trân trọng gửi Quý Thầy/Cô thông tin kích hoạt Bản quyền Phần mềm Tạo Đề Kiểm Tra THCS:
+Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên - 0915.213717) trân trọng gửi Quý Thầy/Cô thông tin kích hoạt Bản quyền Phần mềm Tạo Đề Kiểm Tra THCS:
 
 - Phạm vi: ${scopeName}
 - Gói bản quyền: ${pkgLabel}

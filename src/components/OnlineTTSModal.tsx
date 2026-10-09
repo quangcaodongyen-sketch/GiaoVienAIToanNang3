@@ -1,5 +1,5 @@
 import { TrialRegisterModal } from './TrialRegisterModal';
-// Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Thầy Đinh Văn Thành & Nữ miền Bắc)
+// Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Tác giả Đinh Thành & Nữ miền Bắc)
 export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
 Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
 Thầy Cô có thể chọn môn học, khối lớp, phân môn và xuất file Microsoft Word đầy đủ để sử dụng ngay trong công tác giảng dạy. Chúc quý Thầy Cô thực hiện thành công!`;
@@ -9,7 +9,7 @@ Video hôm nay sẽ hướng dẫn quy trình chuẩn hóa văn bản hành chí
 Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của Ủy ban nhân dân xã Đồng Yên, Trường Trung học cơ sở Đồng Yên, và khung chữ ký của Hiệu trưởng.
 Chỉ trong chưa đầy một giây, văn bản của Thầy Cô sẽ đạt chuẩn khảo thí và thể thức văn bản quốc gia!`;
 
-export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Thầy Đinh Văn Thành, giáo viên Trường Trung học cơ sở Đồng Yên.
+export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Tác giả Đinh Thành, giáo viên Trường Trung học cơ sở Đồng Yên.
 Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assistant tích hợp trực tiếp vào Microsoft Word.
 Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
 Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
@@ -760,7 +760,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                   <img
                     src="/dinhvanthanh.jpg"
-                    alt="Thầy Đinh Văn Thành"
+                    alt="Tác giả Đinh Thành"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';

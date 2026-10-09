@@ -143,7 +143,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
             {appName}
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Điền thông tin gửi Admin Thầy Đinh Văn Thành để kích hoạt trực tuyến theo năm.
+            Điền thông tin gửi Admin Tác giả Đinh Thành để kích hoạt trực tuyến theo năm.
           </p>
         </div>
 
@@ -156,7 +156,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
                 <div>
                   <p className="font-bold text-emerald-300 text-base">Đã gửi thông tin cho Admin thành công!</p>
                   <p className="text-xs text-emerald-200/90 mt-1">
-                    Admin Thầy Đinh Văn Thành đã nhận được thông tin để duyệt và kích hoạt trực tuyến theo năm cho Thầy/Cô.
+                    Admin Tác giả Đinh Thành đã nhận được thông tin để duyệt và kích hoạt trực tuyến theo năm cho Thầy/Cô.
                   </p>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
               </div>
 
               <p className="text-[11px] text-slate-400 text-center pt-1">
-                Admin Thầy Đinh Văn Thành (Hotline / Zalo: 0915.213717).
+                Admin Tác giả Đinh Thành (Hotline / Zalo: 0915.213717).
               </p>
             </form>
           )}

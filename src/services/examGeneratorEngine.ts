@@ -794,7 +794,7 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
 }
 
 /**
- * Xuất file Word HTML chuẩn 100% template của Thầy Đinh Văn Thành
+ * Xuất file Word HTML tham khảo dành cho giáo viên template của Tác giả Đinh Thành
  * Cố định trang chuẩn xác: ngắt trang đúng vị trí, không bị nhảy dòng/sang trang bừa bãi
  */
 export function exportToWordHtml(suite: ExamSuiteData): string {

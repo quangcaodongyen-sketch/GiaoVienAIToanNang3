@@ -236,7 +236,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Tác giả: Thầy giáo Đinh Văn Thành • THCS Đồng Yên • Hotline/Zalo: 0915.213717
+                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 • THCS Đồng Yên • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -277,7 +277,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
         {!isAdminAuthorized ? (
           <InternalAdminGuard
             appName="Tạo Đề 15 Phút Tiếng Anh THCS (CV 7991)"
-            appDescription="hiện đang trong giai đoạn kiểm thử nội bộ dành riêng cho Quản trị viên (Admin Thầy Đinh Văn Thành)."
+            appDescription="hiện đang trong giai đoạn kiểm thử nội bộ dành riêng cho Quản trị viên (Admin Tác giả Đinh Thành)."
             onUnlocked={() => {
               setIsAdminAuthorized(true);
               setIsProActive(true);
@@ -389,7 +389,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     {detectedMid || 'DVT-15M-8899-AABB'}
                   </div>
                   <p className="text-xs text-slate-400 mt-1">
-                    Gửi mã này cho Thầy Đinh Văn Thành để nhận Khóa kích hoạt bản quyền.
+                    Gửi mã này cho Tác giả Đinh Thành để nhận Khóa kích hoạt bản quyền.
                   </p>
                 </div>
 
@@ -681,7 +681,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
         {/* Footer Modal */}
         <div className="px-5 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
           <div>
-            Hỗ trợ kỹ thuật: <b>Thầy Đinh Văn Thành</b> (Zalo: 0915.213717)
+            Hỗ trợ kỹ thuật: <b>Tác giả Đinh Thành</b> (Zalo: 0915.213717)
           </div>
           <button
             onClick={onClose}

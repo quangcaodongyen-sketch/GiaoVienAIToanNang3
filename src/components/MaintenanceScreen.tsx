@@ -64,7 +64,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
               </span>
             </h1>
             <p className="text-[10px] text-slate-400">
-              Tác giả: Thầy giáo Đinh Văn Thành – Trường THCS Đồng Yên
+              Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – Trường THCS Đồng Yên
             </p>
           </div>
         </div>
@@ -105,7 +105,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
               Web đang nâng cấp, vui lòng ghé thăm sau!
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
-              Kính gửi Quý Thầy/Cô và các bạn đồng nghiệp! Website hiện đang được <strong className="text-amber-300">Thầy giáo Đinh Văn Thành</strong> tiến hành bảo trì định kỳ, tối ưu hóa hệ sinh thái và nâng cấp các thuật toán sư phạm mới.
+              Kính gửi Quý Thầy/Cô và các bạn đồng nghiệp! Website hiện đang được <strong className="text-amber-300">Tác giả Đinh Thành - ĐT: 0915.213717</strong> tiến hành bảo trì định kỳ, tối ưu hóa hệ sinh thái và nâng cấp các thuật toán sư phạm mới.
             </p>
           </div>
 
@@ -158,7 +158,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
                 <span>Xác Thực Mật Khẩu Admin</span>
               </div>
               <p className="text-[11px] text-slate-400">
-                Dành riêng cho Thầy giáo Đinh Văn Thành để vào kiểm tra, sửa đổi và mở lại website cho giáo viên.
+                Dành riêng cho Tác giả Đinh Thành - ĐT: 0915.213717 để vào kiểm tra, sửa đổi và mở lại website cho giáo viên.
               </p>
 
               <form onSubmit={handleAdminSubmit} className="space-y-3">
@@ -215,7 +215,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
       {/* FOOTER */}
       <footer className="relative z-10 border-t border-slate-800/80 bg-slate-950/70 backdrop-blur-md px-4 py-3 text-center text-xs text-slate-500">
         <p>
-          Bản quyền © 2026 <strong>Thầy giáo Đinh Văn Thành</strong> – Trường THCS Đồng Yên. Hotline / Zalo: <strong>{BRAND.phone}</strong>
+          Bản quyền © 2026 <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> – Trường THCS Đồng Yên. Hotline / Zalo: <strong>{BRAND.phone}</strong>
         </p>
       </footer>
     </div>

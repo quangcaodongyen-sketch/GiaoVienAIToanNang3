@@ -191,7 +191,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả: Thầy giáo Đinh Văn Thành (0915.213717)
+                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (0915.213717)
               </p>
             </div>
           </div>
@@ -427,7 +427,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                         <span>BẢN DÙNG THỬ SƯ PHẠM TOÁN THPT (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
                       </div>
                       <p className="text-slate-700 leading-normal">
-                        • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Tác quyền & Quản trị: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
                         • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để kiểm chứng ma trận chuẩn BGD. Để mở khóa toàn bộ đáp án, xuất file Word và ma trận đặc tả, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
                       </p>
                     </div>
@@ -728,7 +728,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 {/* Ô NHẬP KEY KÍCH HOẠT */}
                 <div className="space-y-2">
                   <label className="block text-xs font-bold text-slate-300">
-                    Nhập mã bản quyền Pro (Do Thầy Đinh Văn Thành cấp):
+                    Nhập mã bản quyền Pro (Do Tác giả Đinh Thành cấp):
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -848,7 +848,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                     <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
                     <h6 className="font-bold text-white text-sm">Đã gửi thông tin đăng ký thành công!</h6>
                     <p className="text-xs text-slate-300">
-                      Hệ thống đã chuyển thông tin tới Thầy Đinh Văn Thành. Thầy Thành sẽ chủ động liên hệ qua Zalo của Thầy/Cô để tư vấn và cấp key bản quyền.
+                      Hệ thống đã chuyển thông tin tới Tác giả Đinh Thành. Thầy Thành sẽ chủ động liên hệ qua Zalo của Thầy/Cô để tư vấn và cấp key bản quyền.
                     </p>
                   </div>
                 ) : (
@@ -929,7 +929,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         {/* FOOTER MODAL */}
         <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 border-t border-slate-800 bg-slate-950/80 text-xs text-slate-400 shrink-0 gap-2">
           <div className="flex items-center gap-3">
-            <span>Tác giả: <strong className="text-white">Thầy Đinh Văn Thành</strong> (THCS Đồng Yên)</span>
+            <span>Tác giả: <strong className="text-white">Tác giả Đinh Thành</strong> (THCS Đồng Yên)</span>
             <span>•</span>
             <span>Hotline / Zalo: <strong className="text-blue-400">0915.213717</strong></span>
           </div>

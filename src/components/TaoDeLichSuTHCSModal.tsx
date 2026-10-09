@@ -104,7 +104,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   if (!isOpen) return null;
 
   const handleGenerateExam = async () => {
-    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ LỊCH SỬ THCS ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font và nhận các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ LỊCH SỬ THCS ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font và nhận các bản vá lỗi mới nhất của Tác giả Đinh Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
     setActiveTab('download');
     return;
   };
@@ -201,7 +201,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Bám sát SGK Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9) • Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+                Bám sát SGK Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9) • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên)
               </p>
             </div>
           </div>
@@ -886,7 +886,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                     </div>
                     <div className="sm:col-span-3 flex items-center justify-between pt-2">
                       <div className="text-[11px] text-slate-400">
-                        * Hoặc kết nối trực tiếp qua Zalo: <strong>0915.213717 (Thầy Đinh Văn Thành)</strong>
+                        * Hoặc kết nối trực tiếp qua Zalo: <strong>0915.213717 (Tác giả Đinh Thành)</strong>
                       </div>
                       <button
                         type="submit"
@@ -908,7 +908,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         {/* FOOTER MODAL */}
         <div className="px-6 py-3.5 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
           <div>
-            Tác giả: <strong>Thầy giáo Đinh Văn Thành</strong> • Trường THCS Đồng Yên • Hotline/Zalo: <strong>0915.213717</strong>
+            Tác giả: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> • Trường THCS Đồng Yên • Hotline/Zalo: <strong>0915.213717</strong>
           </div>
           <div className="flex items-center gap-3">
             <a

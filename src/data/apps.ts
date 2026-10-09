@@ -379,7 +379,7 @@ export const apps: AppCard[] = [
   {
     id: "chuanhoavanbanvip",
     title: "CHUẨN HÓA VĂN BẢN (NĐ 30)",
-    description: "Căn lề, chèn Quốc hiệu, khung ký tên chuẩn 100% Nghị định 30/2020 trong Word.",
+    description: "Căn lề, chèn Quốc hiệu, khung ký tên tham khảo dành cho giáo viên Nghị định 30/2020 trong Word.",
     image: "/chuanhoavanbanvip.jpg",
     url: "#chuan-hoa-vb",
     category: "BÀI GIẢNG & TIỆN ÍCH",

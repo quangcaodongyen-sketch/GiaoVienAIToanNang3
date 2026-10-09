@@ -1,7 +1,7 @@
 /**
  * THCS 8 Môn Word Export Service
- * Hệ thống sinh đề kiểm tra chuẩn 100% Công văn 7991/BGDĐT & Sách Kết Nối Tri Thức
- * Tác giả: Thầy giáo Đinh Văn Thành - Trường THCS Đồng Yên (Zalo: 0915.213717)
+ * Hệ thống sinh đề kiểm tra tham khảo dành cho giáo viên Công văn 7991/BGDĐT & Sách Kết Nối Tri Thức
+ * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Trường THCS Đồng Yên (Zalo: 0915.213717)
  */
 
 export interface THCS8MonExamData {
@@ -1161,7 +1161,7 @@ export function getTHCS8MonExamSuite(
 }
 
 /**
- * Hàm sinh chuỗi HTML Word chuẩn 100% template Bộ GD&ĐT và Công văn 7991/BGDĐT
+ * Hàm sinh chuỗi HTML Word tham khảo dành cho giáo viên template Bộ GD&ĐT và Công văn 7991/BGDĐT
  */
 export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean = false): string {
   const {
@@ -1496,8 +1496,8 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
           <td style="width: 55%; text-align: center; border: none; font-size: 11pt;">
             <i>.........., ngày ..... tháng ..... năm 2026</i><br/>
             <b>GIÁO VIÊN BIÊN SOẠN & PHẦN MỀM</b><br/>
-            <i>(Đã kiểm duyệt chuẩn 100% CV 7991)</i><br/><br/><br/><br/>
-            <b>Thầy giáo Đinh Văn Thành</b><br/>
+            <i>(Đã kiểm duyệt tham khảo dành cho giáo viên CV 7991)</i><br/><br/><br/><br/>
+            <b>Tác giả Đinh Thành - ĐT: 0915.213717</b><br/>
             <span style="font-size: 9.5pt; color: #444;">Trường THCS Đồng Yên – Hotline/Zalo: 0915.213717</span>
           </td>
         </tr>

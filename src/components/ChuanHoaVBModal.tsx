@@ -579,7 +579,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
           <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
             <span>Tác giả:</span>
-            <strong className="text-white font-medium">Thầy Đinh Văn Thành (0915.213717)</strong>
+            <strong className="text-white font-medium">Tác giả Đinh Thành (0915.213717)</strong>
           </div>
         </div>
 
@@ -797,7 +797,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                 </div>
 
                 <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)</span>
+                  <span>Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên)</span>
                   <a
                     href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"

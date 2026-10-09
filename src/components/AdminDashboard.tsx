@@ -416,7 +416,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   const [trackingSearch, setTrackingSearch] = useState('');
 
     // Hỗ trợ 2 cấp tài khoản quản trị bảo mật cao (Ẩn tuyệt đối khỏi giao diện người dùng):
-  // 1. Kichhoat123@ -> Admin Chính: Thầy Đinh Văn Thành (Toàn quyền quản trị cao nhất)
+  // 1. Kichhoat123@ -> Admin Chính: Tác giả Đinh Thành (Toàn quyền quản trị cao nhất)
   // 2. Tiemgiang123@ -> Phó Quản trị: Thầy Nguyễn Văn Tiềm (Hỗ trợ duyệt và kích hoạt có lưu vết)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -434,7 +434,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     ) {
       setIsAuthenticated(true);
       setUserRole('ADMIN');
-      setCurrentAdminName('Thầy Đinh Văn Thành (Admin)');
+      setCurrentAdminName('Tác giả Đinh Thành (Admin)');
       setAdminTab('key_gen');
       setPinError(false);
       loadTrackingData();
@@ -566,7 +566,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // Hàm Khóa / Mở Khóa Tài Khoản và Thiết Bị Trực Tiếp
   const handleToggleLockMachine = async (machineId: string, isCurrentlyBlocked: boolean) => {
     const cleanMid = machineId.trim().toUpperCase();
-    const reviewer = currentAdminName || 'Thầy Đinh Văn Thành (Admin)';
+    const reviewer = currentAdminName || 'Tác giả Đinh Thành (Admin)';
     
     if (isCurrentlyBlocked) {
       if (window.confirm(`Thầy có muốn MỞ KHÓA truy cập cho máy [${cleanMid}] không?`)) {
@@ -674,7 +674,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     });
 
     try {
-      const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình - Phó Quản trị' : 'Thầy Đinh Văn Thành (Admin)');
+      const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình - Phó Quản trị' : 'Tác giả Đinh Thành (Admin)');
       const effectiveFullName = options?.fullName || 'Thầy/Cô Giáo viên';
       const effectivePhone = options?.phoneNumber || '';
       const effectiveSchool = options?.schoolUnit || '';
@@ -694,7 +694,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateSmartListeningLicenseKey(cleanMid, ttsPkg as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Smart Listening Pro:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Smart Listening Pro:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // B. Chuẩn Hóa Văn Bản AI
         else if (effectiveAppId.includes('chvb') || effectiveAppId.includes('chuan_hoa_vb') || cleanMidUpper.includes('CHVB')) {
@@ -718,7 +718,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const keyStr = await generateCleanerLicenseKey(cleanMid, pkgType as any);
           licenseKey = keyStr;
           expDateStr = targetExpDate;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Cleaner Pro v4.5:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Cleaner Pro v4.5:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // E. Screen Record Pro V2
         else if (effectiveAppId.includes('record') || cleanMidUpper.includes('RECORD')) {
@@ -726,7 +726,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateRecordLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Screen Record Pro V2:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Screen Record Pro V2:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // F. Sinh 3 Đề Biến Thể VIP
         else if (effectiveAppId.includes('bienthe') || cleanMidUpper.includes('BIENTHE')) {
@@ -734,7 +734,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateBientheLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Sinh 3 Đề Biến Thể VIP:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Sinh 3 Đề Biến Thể VIP:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // G. Tạo Đề 15 Phút Tiếng Anh
         else if (effectiveAppId.includes('15p') || cleanMidUpper.includes('ENG15')) {
@@ -742,7 +742,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const keyStr = await generateExam15PLicenseKey(cleanMid, pkgType as any);
           licenseKey = keyStr;
           expDateStr = targetExpDate;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Tạo Đề 15 Phút Tiếng Anh:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Tạo Đề 15 Phút Tiếng Anh:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // H. Tạo Đề Tiếng Anh THCS Global Success (SHA-256)
         else if (effectiveAppId === 'taode_tienganh_thcs' || cleanMidUpper.includes('ENGCS') || (cleanMidUpper.startsWith('DVT-ENG-') && !cleanMidUpper.includes('ENGPT') && !cleanMidUpper.includes('ENG15') && !cleanMidUpper.includes('ENGPRI'))) {
@@ -750,7 +750,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateExamLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nThầy giáo Đinh Văn Thành (0915.213717) xin gửi Mã kích hoạt Bản quyền Pro Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Pro Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // I. Tạo Đề THCS 8 Môn (CV 7991)
         else if (effectiveAppId.includes('thcs8m') || cleanMidUpper.includes('THCS8M')) {
@@ -1071,7 +1071,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   };
 
   const handleRejectReq = async (id: string, issueNumber?: number) => {
-    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Thầy Đinh Văn Thành');
+    const reviewer = currentAdminName || (userRole === 'SUB_ADMIN' ? 'Cô Mai Tình' : 'Tác giả Đinh Thành');
     if (window.confirm('Thầy/Cô có chắc chắn muốn TỪ CHỐI đơn đăng ký này?')) {
       activityTrackingService.rejectRegistration(id, reviewer);
       if (issueNumber) {
@@ -1300,8 +1300,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         ? 'TẠO ĐỀ TIẾNG ANH TIỂU HỌC GLOBAL SUCCESS (THÔNG TƯ 27)'
         : isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
       const authorTitle = isPrimary
-        ? 'Thầy giáo Đinh Văn Thành – Cổng Giáo Viên AI Toàn Năng'
-        : isTHPT ? 'Thầy giáo Đinh Văn Thành – THPT Đồng Yên' : 'Thầy giáo Đinh Văn Thành – THCS Đồng Yên';
+        ? 'Tác giả Đinh Thành - ĐT: 0915.213717 – Cổng Giáo Viên AI Toàn Năng'
+        : isTHPT ? 'Tác giả Đinh Thành - ĐT: 0915.213717 – THPT Đồng Yên' : 'Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên';
       const appNameGuide = isPrimary
         ? 'Tạo đề kiểm tra Tiếng Anh Global Success Tiểu Học (TT 27)'
         : isTHPT ? 'Tạo đề kiểm tra Tiếng Anh Global Success THPT' : 'Tạo đề kiểm tra Tiếng Anh Global Success THCS';
@@ -1368,7 +1368,7 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM SINH 3 ĐỀ BIẾN THỂ VIP (V1):
 ----------------------------------------------------------------------
-📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${res.packageName}
@@ -1428,7 +1428,7 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM SCREEN RECORD PRO V2 (QUAY MÀN HÌNH BTV):
 ----------------------------------------------------------------------
-📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${res.packageName}
@@ -1491,7 +1491,7 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ĐINH THÀNH CLEANER PRO v4.5 VIP ULTRA:
 ----------------------------------------------------------------------
-📌 Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên
+📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${pkgName}
@@ -1736,7 +1736,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       const dvtWordKey = `DVT-${licType}-${hStr.substr(0, 4)}-${hStr.substr(4, 4)}-${hStr.substr(8, 4)}-${hStr.substr(12, 4)}`;
 
       const customZaloMsg = `KÍNH GỬI QUÝ THẦY/CÔ!
-Thầy Đinh Văn Thành xin gửi Thầy/Cô thông tin kích hoạt bản quyền Đinh Thành MathStudio 2026+ Pro:
+Tác giả Đinh Thành xin gửi Thầy/Cô thông tin kích hoạt bản quyền Đinh Thành MathStudio 2026+ Pro:
 ----------------------------------------
 👉 Ứng dụng: Đinh Thành MathStudio 2026+ Pro (Word & Mathpix)
 👉 Mã máy tính: ${cleanId}
@@ -1753,7 +1753,7 @@ HƯỚNG DẪN KÍCH HOẠT:
 • Trên Web: Vào tab "Bản Quyền & Kích Hoạt" -> Dán mã vào ô kích hoạt.
 
 Chúc Quý Thầy/Cô biên soạn đề thi Toán tốc độ cao và giảng dạy hiệu quả!
-Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915.213717.`;
+Mọi hỗ trợ xin liên hệ: Tác giả Đinh Thành - Hotline / Zalo: 0915.213717.`;
 
       setMathKeyResult(dvtWordKey);
       setMathZaloMsg(customZaloMsg);
@@ -1803,7 +1803,7 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
       setDe15pKeyResult(key);
 
       const pkgName = de15pPackage === '1year' ? '1 Năm' : de15pPackage === '2year' ? '2 Năm' : 'Trọn Đời (Vĩnh Viễn)';
-      const msg = `Kính gửi Quý Thầy/Cô,\nThầy Đinh Văn Thành gửi mã kích hoạt Bản Quyền Pro phần mềm "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS)":\n- Mã máy: ${cleanId}\n- Gói bản quyền: ${pkgName}\n- Khóa kích hoạt: ${key}\n\nThầy/Cô mở phần mềm hoặc truy cập web, vào tab Bản quyền & Kích hoạt, dán mã key trên để sử dụng trọn vẹn toàn bộ 48 Units ạ. Chúc Thầy/Cô dạy tốt!\nHotline/Zalo: 0915.213717.`;
+      const msg = `Kính gửi Quý Thầy/Cô,\nTác giả Đinh Thành gửi mã kích hoạt Bản Quyền Pro phần mềm "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS)":\n- Mã máy: ${cleanId}\n- Gói bản quyền: ${pkgName}\n- Khóa kích hoạt: ${key}\n\nThầy/Cô mở phần mềm hoặc truy cập web, vào tab Bản quyền & Kích hoạt, dán mã key trên để sử dụng trọn vẹn toàn bộ 48 Units ạ. Chúc Thầy/Cô dạy tốt!\nHotline/Zalo: 0915.213717.`;
       setDe15pZaloMsg(msg);
 
       const newRecord = {
@@ -2008,12 +2008,12 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
   const revokedCount = licenses.filter(x => x.status === 'REVOKED').length;
 
   const handleApprove = async (mid: string) => {
-    await licenseService.approve(mid, currentAdminName || 'Thầy Đinh Văn Thành');
+    await licenseService.approve(mid, currentAdminName || 'Tác giả Đinh Thành');
     await loadData();
   };
 
   const handleExtend = async (mid: string, pkg: '1YEAR' | '2YEAR' | 'LIFETIME') => {
-    await licenseService.extend(mid, pkg, currentAdminName || 'Thầy Đinh Văn Thành');
+    await licenseService.extend(mid, pkg, currentAdminName || 'Tác giả Đinh Thành');
     await loadData();
   };
 
@@ -2115,7 +2115,7 @@ Mọi hỗ trợ xin liên hệ: Thầy Đinh Văn Thành - Hotline / Zalo: 0915
   const getMarketingPostContent = (topic: 'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF') => {
     const siteUrl = 'https://dekiemtraso.com/';
     const hotline = '0915.213717';
-    const author = 'Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên)';
+    const author = 'Tác giả Đinh Thành - ĐT: 0915.213717 (Trường THCS Đồng Yên)';
 
     switch (topic) {
       case 'ENG':
@@ -2125,7 +2125,7 @@ Kính gửi quý Thầy/Cô dạy bộ môn Tiếng Anh THCS trên toàn quốc!
 Thầy/Cô đang mệt mỏi vì phải tự soạn ma trận, bản đặc tả kỹ thuật, chia tỉ lệ câu hỏi và tìm audio nghe cho đề thi định kỳ?
 
 👉 Phần mềm của ${author} đã giải quyết trọn vẹn:
-✅ Tự động sinh Ma trận & Bản đặc tả chuẩn 100% CV 7991 của Bộ GD&ĐT.
+✅ Tự động sinh Ma trận & Bản đặc tả tham khảo dành cho giáo viên CV 7991 của Bộ GD&ĐT.
 ✅ Đầy đủ 4 kỹ năng (Nghe - Đọc - Viết - Ngôn ngữ), xuất đề in ấn A4 cực đẹp.
 ✅ Tích hợp tạo Audio Script và xuất file nghe MP3 giọng bản ngữ chuẩn quốc tế.
 ✅ Xuất file Word (.docx) bấm 1 phát in luôn, không cần căn chỉnh lại!
@@ -2203,7 +2203,7 @@ Kính gửi quý Thầy/Cô giáo 63 tỉnh thành trên toàn quốc!
 Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sách, ${author} trân trọng giới thiệu Hệ sinh thái phần mềm sư phạm thực chiến 2026:
 
 🌟 TOP CÔNG CỤ CẦN THIẾT NHẤT CHO NĂM HỌC MỚI:
-1️⃣ Tạo Đề Kiểm Tra 8 Môn THCS chuẩn 100% CV 7991 (Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ).
+1️⃣ Tạo Đề Kiểm Tra 8 Môn THCS tham khảo dành cho giáo viên CV 7991 (Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ).
 2️⃣ Tạo Đề Tiếng Anh Global Success xuất kèm Audio Script và file nghe MP3.
 3️⃣ Chuẩn hóa văn bản hành chính theo Ngh        {/* ========================================================================= */}
         {/* THANH ĐIỀU HƯỚNG QUẢN TRỊ ĐỒNG BỘ 3 TAB CHÍNH (ĐIỆN THOẠI & MÁY TÍNH)      */}
@@ -4799,7 +4799,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                                   </span>
                                   {activeLicense && (
                                     <div className="text-[10px] text-amber-300 font-medium mt-0.5">
-                                      👤 Kích hoạt bởi: <b>{activeLicense.activated_by || 'Thầy Đinh Văn Thành (Admin)'}</b>
+                                      👤 Kích hoạt bởi: <b>{activeLicense.activated_by || 'Tác giả Đinh Thành (Admin)'}</b>
                                     </div>
                                   )}
                                   {!activeLicense && (
@@ -5753,7 +5753,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   MẬT MÃ SHA-256 & TẠO KEY BẢN QUYỀN - SINH 3 ĐỀ BIẾN THỂ VIP (V1)
                 </h4>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  Thuật toán bientheKeyService.ts (Thầy Đinh Văn Thành)
+                  Thuật toán bientheKeyService.ts (Tác giả Đinh Thành)
                 </span>
               </div>
 
@@ -5913,7 +5913,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   MẬT MÃ SHA-256 & TẠO KEY BẢN QUYỀN - SCREEN RECORD PRO V2
                 </h4>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  Thuật toán recordKeyService.ts (Thầy Đinh Văn Thành)
+                  Thuật toán recordKeyService.ts (Tác giả Đinh Thành)
                 </span>
               </div>
 
@@ -6073,7 +6073,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   MẬT MÃ SHA-256 & TẠO KEY BẢN QUYỀN - ĐINH THÀNH CLEANER PRO v4.5 VIP
                 </div>
                 <div>
-                  Thuật toán tương thích 100% với <code>Tao_Key_Ban_Quyen.py</code> và phần mềm desktop <code>DinhThanh_Cleaner_Pro.exe</code> của Thầy Đinh Văn Thành.
+                  Thuật toán tương thích 100% với <code>Tao_Key_Ban_Quyen.py</code> và phần mềm desktop <code>DinhThanh_Cleaner_Pro.exe</code> của Tác giả Đinh Thành.
                 </div>
               </div>
             </div>
@@ -6769,7 +6769,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   CHỮ KÝ SỐ ED25519 & CẤP BẢN QUYỀN - ĐINH THÀNH MATHSTUDIO 2026+ PRO
                 </h4>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  Mật mã Ed25519 bất đối xứng • Tác giả Thầy Đinh Văn Thành
+                  Mật mã Ed25519 bất đối xứng • Tác giả Tác giả Đinh Thành
                 </span>
               </div>
 
@@ -6937,7 +6937,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   CẤP BẢN QUYỀN PRO - TẠO ĐỀ 15 PHÚT TIẾNG ANH THCS (48 UNITS GLOBAL SUCCESS)
                 </h4>
                 <span className="text-[11px] text-slate-400 font-mono">
-                  Mã hóa SHA-256 HMAC • Tác giả Thầy Đinh Văn Thành
+                  Mã hóa SHA-256 HMAC • Tác giả Tác giả Đinh Thành
                 </span>
               </div>
 
@@ -7121,7 +7121,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   <label className="block text-slate-300 font-semibold mb-1">Tên Thầy/Cô</label>
                   <input
                     type="text"
-                    placeholder="Ví dụ: Thầy Đinh Văn Thành"
+                    placeholder="Ví dụ: Tác giả Đinh Thành"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-amber-400"
@@ -7536,7 +7536,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                                       const ok = await cloudSyncService.resolveSecurityAlertWithBlock(
                                         alert.id,
                                         alert.machineId,
-                                        currentAdminName || 'Thầy Đinh Văn Thành',
+                                        currentAdminName || 'Tác giả Đinh Thành',
                                         alert.tamperDetails,
                                         alert.issueNumber
                                       );
@@ -7650,7 +7650,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div>• Loại vi phạm: <span className="text-red-400 font-bold">{selectedAlertForEvidence.tamperType}</span></div>
                 <div>• Chi tiết hành vi: <span className="text-red-300">{selectedAlertForEvidence.tamperDetails}</span></div>
                 <div className="pt-2 text-slate-500 text-[11px] border-t border-slate-800 mt-2">
-                  Tác quyền phần mềm: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717 - Trường THCS Đồng Yên.
+                  Tác quyền phần mềm: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline/Zalo: 0915.213717 - Trường THCS Đồng Yên.
                 </div>
               </div>
 
@@ -7672,7 +7672,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
 • SĐT: ${selectedAlertForEvidence.phoneGuess || 'Chưa rõ'}
 • Loại vi phạm: ${selectedAlertForEvidence.tamperType}
 • Chi tiết hành vi: ${selectedAlertForEvidence.tamperDetails}
-Tác quyền: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717.`;
+Tác quyền: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline/Zalo: 0915.213717.`;
                     navigator.clipboard.writeText(text);
                     setCopiedEvidence(true);
                     setTimeout(() => setCopiedEvidence(false), 2000);

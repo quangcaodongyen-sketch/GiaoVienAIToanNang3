@@ -1,4 +1,4 @@
-# Robots.txt - Giáo Viên AI Toàn Năng (Thầy giáo Đinh Văn Thành)
+# Robots.txt - Giáo Viên AI Toàn Năng (Tác giả Đinh Thành - ĐT: 0915.213717)
 User-agent: *
 Allow: /
 

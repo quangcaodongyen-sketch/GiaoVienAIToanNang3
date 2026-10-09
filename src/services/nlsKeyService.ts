@@ -1,7 +1,7 @@
 /**
  * nlsKeyService.ts
  * Hệ thống sinh và xác thực bản quyền Ed25519 cho Công cụ Tích hợp NLS - AI THCS
- * Tác giả: Thầy giáo Đinh Văn Thành - Hotline / Zalo: 0915.213717
+ * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline / Zalo: 0915.213717
  */
 
 // Khóa công khai Ed25519 của Thầy Thành (lưu tại client)
@@ -108,7 +108,7 @@ async function signEd25519(payloadBytes: Uint8Array, privateKeyHex: string): Pro
 }
 
 /**
- * Sinh Key Ed25519 cho khách hàng (dành cho Admin Thầy Đinh Văn Thành)
+ * Sinh Key Ed25519 cho khách hàng (dành cho Admin Tác giả Đinh Thành)
  * Ràng buộc chặt chẽ với PRODUCT:NLS_AI_THCS và tiền tố KEY-NLS-...
  */
 export async function generateEd25519Key(
@@ -166,7 +166,7 @@ export async function generateEd25519Key(
     : PRODUCT_NAME;
 
   const zaloMessage = `Kính gửi Thầy/Cô,
-Thầy giáo Đinh Văn Thành xin gửi Mã kích hoạt bản quyền Pro chính thức:
+Tác giả Đinh Thành - ĐT: 0915.213717 xin gửi Mã kích hoạt bản quyền Pro chính thức:
 
 • Phần mềm: ${prodTitle}
 • Thời hạn bản quyền: ${planName}
@@ -180,7 +180,7 @@ Hướng dẫn kích hoạt:
 2. Dán mã kích hoạt ở trên vào ô và bấm 'Kích hoạt ngay'.
 
 Chúc Thầy/Cô công tác tốt và ứng dụng công nghệ hiệu quả trong giảng dạy!
-Mọi hỗ trợ xin liên hệ Thầy Đinh Văn Thành - Hotline / Zalo: 0915.213717.`;
+Mọi hỗ trợ xin liên hệ Tác giả Đinh Thành - Hotline / Zalo: 0915.213717.`;
 
   return {
     key,
@@ -202,11 +202,11 @@ export function verifyKeyFormat(key: string, machineCode: string): {
   const k = key.trim().toUpperCase();
   const mc = machineCode.trim().toUpperCase();
 
-  // 1. Kiểm tra Master Key đặc quyền của Thầy Đinh Văn Thành
+  // 1. Kiểm tra Master Key đặc quyền của Tác giả Đinh Thành
   if (k === 'DINHVANTHANH-VIP-0915213717-PRO' || k === 'DVT-MASTER-0915213717-VIP' || k.includes('DVT-MATH-LIFETIME-MASTER')) {
     return {
       isValid: true,
-      message: `👑 Kích hoạt đặc quyền Quản trị viên (Admin Thầy Đinh Văn Thành) – Mở khóa VIP Vĩnh Viễn!`,
+      message: `👑 Kích hoạt đặc quyền Quản trị viên (Admin Tác giả Đinh Thành) – Mở khóa VIP Vĩnh Viễn!`,
       expDate: '2099-12-31'
     };
   }

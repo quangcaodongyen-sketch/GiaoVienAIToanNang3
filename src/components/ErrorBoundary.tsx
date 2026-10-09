@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Đã xảy ra sự cố hiển thị tạm thời trên trình duyệt của Thầy/Cô.
               </p>
               <p className="text-xs text-slate-400">
-                Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên (Hotline/Zalo: <strong>0915.213717</strong>)
+                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên (Hotline/Zalo: <strong>0915.213717</strong>)
               </p>
               {this.state.error && (
                 <div className="mt-3 text-left bg-slate-950/90 p-3 rounded-xl border border-red-900/60 text-xs font-mono">

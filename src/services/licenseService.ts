@@ -12,7 +12,7 @@ export interface LicenseRecord {
   status: 'ACTIVE' | 'PENDING' | 'EXPIRED' | 'REVOKED';
   expiry_timestamp: number;
   activated_at?: string;
-  activated_by?: string; // 'Thầy Đinh Văn Thành' hoặc 'Mai Tình'
+  activated_by?: string; // 'Tác giả Đinh Thành' hoặc 'Mai Tình'
   last_online_at?: string;
   ip_address?: string;
   notes?: string;
@@ -179,7 +179,7 @@ class LicenseService {
   }
 
   // Admin bấm Duyệt ngay (1-Click)
-  public async approve(machine_id: string, activated_by: string = 'Thầy Đinh Văn Thành'): Promise<boolean> {
+  public async approve(machine_id: string, activated_by: string = 'Tác giả Đinh Thành'): Promise<boolean> {
     const mid = machine_id.trim().toUpperCase();
     const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
 
@@ -213,7 +213,7 @@ class LicenseService {
   }
 
   // Admin Gia hạn
-  public async extend(machine_id: string, packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME', activated_by: string = 'Thầy Đinh Văn Thành'): Promise<boolean> {
+  public async extend(machine_id: string, packageType: '1YEAR' | '2YEAR' | '3YEAR' | 'LIFETIME', activated_by: string = 'Tác giả Đinh Thành'): Promise<boolean> {
     const mid = machine_id.trim().toUpperCase();
     const nowTs = Math.floor(Date.now() / 1000);
     const expTs = packageType === 'LIFETIME' ? 9999999999 : nowTs + (packageType === '3YEAR' ? 1095 : packageType === '2YEAR' ? 730 : 365) * 86400;
@@ -316,7 +316,7 @@ class LicenseService {
   }
 
   // Thầy Thành tự tạo bản quyền trực tiếp
-  public async createDirect(record: LicenseRecord, activated_by: string = 'Thầy Đinh Văn Thành'): Promise<boolean> {
+  public async createDirect(record: LicenseRecord, activated_by: string = 'Tác giả Đinh Thành'): Promise<boolean> {
     record.machine_id = record.machine_id.trim().toUpperCase();
     record.status = 'ACTIVE';
     record.activated_at = new Date().toISOString().replace('T', ' ').substring(0, 19);

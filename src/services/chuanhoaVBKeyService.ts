@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 Hardware Binding & Anti-Tamper Trial Storage
 // ============================================================================
 
@@ -134,7 +134,7 @@ export function isCHVBVIPActivated(): boolean {
 }
 
 /**
- * Sinh mã bản quyền VIP theo thuật toán của Thầy Đinh Văn Thành
+ * Sinh mã bản quyền VIP theo thuật toán của Tác giả Đinh Thành
  */
 export async function generateCHVBLicenseKey(
   machineId: string,

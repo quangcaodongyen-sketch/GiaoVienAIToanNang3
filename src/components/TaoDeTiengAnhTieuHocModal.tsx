@@ -183,7 +183,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                 </h2>
               </div>
               <p className="text-xs text-amber-200/80 font-medium">
-                Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – Zalo: 0915.213717
+                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -826,7 +826,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-400 italic">
-                    Gửi mã máy này cho Thầy giáo Đinh Văn Thành qua Zalo để nhận Mã kích hoạt bản quyền Pro.
+                    Gửi mã máy này cho Tác giả Đinh Thành - ĐT: 0915.213717 qua Zalo để nhận Mã kích hoạt bản quyền Pro.
                   </p>
                 </div>
 
@@ -875,7 +875,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                     ĐĂNG KÝ TƯ VẤN & BÁO GIÁ ƯU ĐÃI SƯ PHẠM (RULE 4)
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
-                    Thầy/Cô vui lòng gửi thông tin để Thầy giáo Đinh Văn Thành gửi báo giá ưu đãi sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
+                    Thầy/Cô vui lòng gửi thông tin để Tác giả Đinh Thành - ĐT: 0915.213717 gửi báo giá ưu đãi sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
                   </p>
                 </div>
 
@@ -883,7 +883,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                   <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                     <span>
-                      Đã gửi thông tin thành công! Thầy Đinh Văn Thành sẽ liên hệ qua Zalo ({regPhone}) để tư vấn và cấp mã bản quyền Pro.
+                      Đã gửi thông tin thành công! Tác giả Đinh Thành sẽ liên hệ qua Zalo ({regPhone}) để tư vấn và cấp mã bản quyền Pro.
                     </span>
                   </div>
                 ) : (

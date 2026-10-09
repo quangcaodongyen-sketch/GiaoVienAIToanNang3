@@ -297,7 +297,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
   // Bấm tạo đề trực tuyến -> Hướng dẫn tải PC app
   const handleGenerateOnline = () => {
-    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font MathType/LaTeX và nhận đầy đủ các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn mực 100% không lỗi font MathType/LaTeX và nhận đầy đủ các bản vá lỗi mới nhất của Tác giả Đinh Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
     setActiveTab('download');
     return;
   };
@@ -436,7 +436,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả: Thầy giáo Đinh Văn Thành (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
+                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
               </p>
             </div>
           </div>
@@ -639,7 +639,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                     <img
                       src="/dinhvanthanh.jpg"
-                      alt="Thầy Đinh Văn Thành"
+                      alt="Tác giả Đinh Thành"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -694,7 +694,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       type="text"
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
-                      placeholder="Ví dụ: Thầy Đinh Văn Thành"
+                      placeholder="Ví dụ: Tác giả Đinh Thành"
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -813,7 +813,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 {regSent && (
                   <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <span>Đã tạo thông tin đăng ký môn {curSub.name}! Đang chuyển tiếp đến Zalo Thầy Đinh Văn Thành...</span>
+                    <span>Đã tạo thông tin đăng ký môn {curSub.name}! Đang chuyển tiếp đến Zalo Tác giả Đinh Thành...</span>
                   </div>
                 )}
               </div>

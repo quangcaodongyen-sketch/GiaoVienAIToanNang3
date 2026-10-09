@@ -408,7 +408,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Thầy Đinh Văn Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key kích hoạt Pro.
+                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Tác giả Đinh Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key kích hoạt Pro.
               </p>
             </div>
 

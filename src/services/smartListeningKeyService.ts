@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ SMART LISTENING PRO (CHUYỂN VB THÀNH BÀI NGHE)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Thuật toán: Chữ ký số Ed25519 bất đối xứng + Fallback HMAC SHA-256
 // Bảo mật: Tương thích 100% với Tao_Key_Ban_Quyen.py & Client Desktop Smart Listening Pro.exe
 // ============================================================================
@@ -221,7 +221,7 @@ export async function generateSmartListeningLicenseKey(
 
   const zaloMessage = `KÍNH GỬI QUÝ THẦY/CÔ - MÃ KÍCH HOẠT SMART LISTENING PRO (TẠO BÀI NGHE SGK)
 ----------------------------------------
-• Tác giả: Thầy giáo Đinh Văn Thành (0915.213717) - THCS Đồng Yên
+• Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) - THCS Đồng Yên
 • Phần mềm: Smart Listening Pro (Tạo bài nghe SGK tiếng Anh)
 • Mã máy nhận diện: ${cleanMid}
 • Gói bản quyền: ${packageName}

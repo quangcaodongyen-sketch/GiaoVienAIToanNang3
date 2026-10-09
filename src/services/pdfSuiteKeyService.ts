@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI)
-// Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 Hardware Binding & Anti-Tamper Trial Storage
 // ============================================================================
 
@@ -133,7 +133,7 @@ export function isPDFVIPActivated(): boolean {
 }
 
 /**
- * Sinh mã bản quyền VIP theo thuật toán của Thầy Đinh Văn Thành
+ * Sinh mã bản quyền VIP theo thuật toán của Tác giả Đinh Thành
  */
 export async function generatePDFLicenseKey(
   machineId: string,

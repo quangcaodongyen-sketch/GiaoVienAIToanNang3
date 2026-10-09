@@ -1,7 +1,7 @@
 /**
  * webSecurityGuard.ts
  * HỆ THỐNG GIÁM SÁT AN NINH, CẢNH BÁO XÂM NHẬP & CHỐNG PHÁ KHÓA TẤT CẢ CÁC APP TRÊN WEB
- * Tác giả: Thầy giáo Đinh Văn Thành – THCS Đồng Yên – Hotline/Zalo: 0915.213717
+ * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Hotline/Zalo: 0915.213717
  */
 
 import { cloudSyncService, SecurityAlertItem } from './cloudSyncService';
@@ -378,7 +378,7 @@ class WebSecurityGuard {
       alert(
         `⚠️ CẢNH BÁO AN NINH & BẢN QUYỀN HỆ THỐNG\n\n` +
         `Hệ thống vừa phát hiện hành vi can thiệp kỹ thuật trái phép vào ứng dụng "${this.activeAppName}".\n` +
-        `Địa chỉ IP (${tel.ipAddress}), Thiết bị (${tel.computerName}) và Dấu vết vi phạm đã được tự động ghi nhận và chuyển tiếp về Quản trị viên: Thầy giáo Đinh Văn Thành (THCS Đồng Yên - Hotline: 0915.213717).\n\n` +
+        `Địa chỉ IP (${tel.ipAddress}), Thiết bị (${tel.computerName}) và Dấu vết vi phạm đã được tự động ghi nhận và chuyển tiếp về Quản trị viên: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên - Hotline: 0915.213717).\n\n` +
         `Quý Thầy/Cô vui lòng tôn trọng bản quyền sở hữu trí tuệ để tiếp tục sử dụng phần mềm!`
       );
     }

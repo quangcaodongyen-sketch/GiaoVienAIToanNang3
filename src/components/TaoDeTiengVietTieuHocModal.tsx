@@ -190,7 +190,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                   PHẦN MỀM TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC PRO (DESKTOP PC)
                 </h3>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Bộ ứng dụng tạo đề kiểm tra môn Tiếng Việt Tiểu học (Lớp 1, 2, 3, 4, 5) chuẩn 100% Thông tư 27/2020/TT-BGDĐT. Tự động sinh Ma trận 3 mức độ, Bản đặc tả kỹ thuật, Đọc thành tiếng, Đọc hiểu, Chính tả, Tập làm văn và Bản Học sinh sạch rảnh tay in ngay!
+                  Bộ ứng dụng tạo đề kiểm tra môn Tiếng Việt Tiểu học (Lớp 1, 2, 3, 4, 5) tham khảo dành cho giáo viên Thông tư 27/2020/TT-BGDĐT. Tự động sinh Ma trận 3 mức độ, Bản đặc tả kỹ thuật, Đọc thành tiếng, Đọc hiểu, Chính tả, Tập làm văn và Bản Học sinh sạch rảnh tay in ngay!
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-4">

@@ -200,7 +200,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
   };
 
   const handleGenerateOnline = () => {
-    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word chuẩn 100% Bộ GD&ĐT không lỗi font MathType/LaTeX và nhận các bản vá lỗi mới nhất của Thầy Đinh Văn Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ ĐÃ CHUYỂN SANG PHẦN MỀM PC MÁY TÍNH\n\nĐể xuất file Word Công cụ hỗ trợ, tham khảo dành cho giáo viên không lỗi font MathType/LaTeX và nhận các bản vá lỗi mới nhất của Tác giả Đinh Thành, Quý Thầy/Cô vui lòng TẢI BỘ CÀI VỀ MÁY TÍNH (file .exe / .zip) tại Tab 1.`);
     setActiveTab('download');
     return;
   };
@@ -230,7 +230,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                 </h3>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Cấu trúc đề kiểm tra định dạng mới chuẩn Bộ GD&ĐT • Tác giả: Thầy Đinh Văn Thành
+                Cấu trúc đề kiểm tra định dạng mới chuẩn Bộ GD&ĐT • Tác giả: Tác giả Đinh Thành
               </p>
             </div>
           </div>
@@ -380,7 +380,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                     <img
                       src="/dinhvanthanh.jpg"
-                      alt="Thầy Đinh Văn Thành"
+                      alt="Tác giả Đinh Thành"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -497,7 +497,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                       type="text"
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
-                      placeholder="Ví dụ: Thầy Đinh Văn Thành"
+                      placeholder="Ví dụ: Tác giả Đinh Thành"
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
