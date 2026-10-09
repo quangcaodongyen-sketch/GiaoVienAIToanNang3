@@ -45,7 +45,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   onSwitchToStandardExam
 }) => {
   // Chuẩn hóa theo mô hình NLS-AI: Mặc định Tab Tải về máy tính
-  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -285,22 +285,6 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
             {isProActive && (
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-500/30">
                 ĐÃ KÍCH HOẠT
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => setActiveTab('preview')}
-            className={`px-4 py-3 text-xs sm:text-sm font-semibold transition border-b-2 flex items-center gap-2 whitespace-nowrap ${activeTab === 'preview'
-                ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-              }`}
-          >
-            <Eye className="w-4 h-4 text-emerald-400" />
-            <span>3. Xem Mẫu Đề Thi 15 Phút</span>
-            {!isProActive && (
-              <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">
-                {trialRemaining}/5 lượt thử
               </span>
             )}
           </button>
@@ -569,7 +553,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           {/* ========================================================================= */}
           {/* TAB 3: XEM MẪU ĐỀ THI 15 PHÚT (GLOBAL SUCCESS) */}
           {/* ========================================================================= */}
-          {activeTab === 'preview' && (
+          {activeTab === ('preview' as any) && (
             <div className="space-y-5">
 
               {/* Banner nhắc nhở tải bản máy tính chuẩn mực NLS-AI */}

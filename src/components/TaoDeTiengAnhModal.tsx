@@ -41,7 +41,7 @@ interface TaoDeTiengAnhModalProps {
 
 export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Chuẩn hóa theo phong cách NLS-AI: 'download' (Tải về) | 'register' (Bản quyền) | 'preview' (Xem mẫu)
-  const [activeTab, setActiveTab] = useState<'download' | 'register' | 'preview'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -274,18 +274,6 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
             <Crown className="w-4 h-4 text-amber-400" />
             <span>2. Bản Quyền & Kích Hoạt</span>
           </button>
-
-          <button
-            onClick={() => setActiveTab('preview')}
-            className={`flex items-center gap-2 py-3 px-4 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'preview'
-                ? 'border-blue-400 text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>3. Xem Mẫu Đề Thi (CV 7991)</span>
-          </button>
         </div>
 
         {/* CROSS PROMOTION BANNER QUẢNG CÁO CÁC APP TÍNH TIỀN PRO CỦA THẦY THÀNH */}
@@ -296,10 +284,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
         {/* MODAL BODY */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
-          {/* ========================================================================= */}
-          {/* TAB 3: XEM MẪU ĐỀ THI SƯ PHẠM (CV 7991)                                    */}
-          {/* ========================================================================= */}
-          {activeTab === 'preview' && (
+          {activeTab === ('preview' as any) && (
             <div className="space-y-4">
               <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2.5">

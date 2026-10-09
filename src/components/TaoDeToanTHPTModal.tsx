@@ -37,7 +37,7 @@ interface TaoDeToanTHPTModalProps {
 
 export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Modal 3 Tabs chuẩn quy định Rule 2
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // State Dùng thử 3 lần cố định trên máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(3);
@@ -216,23 +216,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
           appName="Tạo Đề Toán THPT (QĐ 764/BGDĐT)" 
         />
 
-        {/* 3 TABS ĐIỀU HƯỚNG */}
         <div className="flex border-b border-slate-800 bg-slate-950/40 px-6 shrink-0 gap-2">
-          <button
-            onClick={() => setActiveTab('online')}
-            className={`flex items-center gap-2 py-3 px-4 font-bold text-xs sm:text-sm border-b-2 transition-all ${
-              activeTab === 'online'
-                ? 'border-blue-500 text-blue-400 bg-blue-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            Trải Nghiệm Trực Tuyến
-            <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-blue-500/20 text-blue-300">
-              {isProActive ? 'PRO' : `${trialRemaining}/5`}
-            </span>
-          </button>
-
           <button
             onClick={() => setActiveTab('download')}
             className={`flex items-center gap-2 py-3 px-4 font-bold text-xs sm:text-sm border-b-2 transition-all ${
@@ -242,7 +226,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
             }`}
           >
             <Download className="w-4 h-4" />
-            Tải Về &amp; Cài Đặt (.EXE, .ZIP, .DOTM)
+            1. Tải Về &amp; Cài Đặt (.EXE, .ZIP Pass: 123, .DOTM)
           </button>
 
           <button
@@ -253,8 +237,8 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
             }`}
           >
-            <Crown className="w-4 h-4" />
-            Bản Quyền &amp; Kích Hoạt
+            <Crown className="w-4 h-4 text-amber-400" />
+            2. Bản Quyền &amp; Kích Hoạt Pro
           </button>
         </div>
 
@@ -262,7 +246,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-6">
               {/* THANH TRẠNG THÁI DÙNG THỬ 5 CHẤM BẮT BUỘC (RULE 2) */}
               <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">

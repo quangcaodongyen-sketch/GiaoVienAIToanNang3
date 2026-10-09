@@ -45,7 +45,7 @@ interface TaoDeTiengAnhTieuHocModalProps {
 
 export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Modal 3 Tabs chuẩn quy định Rule 2
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // State Dùng thử 5 lần cố định trên máy tính (Rule 2)
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
@@ -210,31 +210,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
           appName="Tạo Đề Tiếng Anh Tiểu Học (TT 27)" 
         />
 
-        {/* 3 TABS NAVIGATION (Rule 2) */}
         <div className="flex border-b border-slate-800 bg-slate-950/60 px-5 gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => setActiveTab('online')}
-            className={`py-3 px-4 font-bold text-xs sm:text-sm flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
-              activeTab === 'online'
-                ? 'border-amber-400 text-amber-300 bg-amber-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>Tab 1: Trải Nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/40">
-                {trialRemaining}/5 Lượt
-              </span>
-            )}
-            {isProActive && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
-                PRO VIP
-              </span>
-            )}
-          </button>
-
           <button
             type="button"
             onClick={() => setActiveTab('download')}
@@ -245,10 +221,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
             }`}
           >
             <Download className="w-4 h-4 text-sky-400" />
-            <span>Tab 2: Tải Về & Hướng Dẫn</span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/40">
-              Desktop .zip
-            </span>
+            <span>1. Tải Về &amp; Hướng Dẫn (.exe / .zip Pass: 123)</span>
           </button>
 
           <button
@@ -261,7 +234,9 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
             }`}
           >
             <Crown className="w-4 h-4 text-yellow-400" />
-            <span>Tab 3: Bản Quyền & Kích Hoạt</span>
+            <span>2. Bản Quyền &amp; Kích Hoạt</span>
+          </button>
+        </div>
             {isProActive ? (
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
                 Đã Kích Hoạt
@@ -280,7 +255,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
           {/* ========================================================================= */}
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LƯỢT DÙNG THỬ) */}
           {/* ========================================================================= */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-6">
               
               {/* THANH TIẾN TRÌNH 5 CHẤM DÙNG THỬ (Rule 2) */}

@@ -104,7 +104,7 @@ export const getOrCreateMathStudioHardwareCode = (): string => {
 };
 
 export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // State Tab 1: Trải nghiệm Trực Tuyến
   const [latexInput, setLatexInput] = useState<string>(MATH_PRESETS[0].latex);
@@ -497,25 +497,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           </div>
         ) : (
           <>
-            {/* 3 TABS NAVIGATION CHUẨN QUY TẮC GEMINI */}
-            <div className="bg-slate-950/90 px-4 sm:px-6 pt-3 border-b border-slate-800/90 flex gap-2 sm:gap-4 shrink-0 overflow-x-auto text-xs">
-          <button
-            onClick={() => setActiveTab('online')}
-            className={`pb-3 px-4 font-bold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap text-sm cursor-pointer ${
-              activeTab === 'online'
-                ? 'border-violet-400 text-violet-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-violet-300" />
-            <span>1. Trải Nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono">
-                {trialRemaining}/5 lượt
-              </span>
-            )}
-          </button>
-
+        <div className="bg-slate-950/90 px-4 sm:px-6 pt-3 border-b border-slate-800/90 flex gap-2 sm:gap-4 shrink-0 overflow-x-auto text-xs">
           <button
             onClick={() => setActiveTab('download')}
             className={`pb-3 px-4 font-bold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap text-sm cursor-pointer ${
@@ -525,7 +507,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
             }`}
           >
             <Download className="w-4 h-4 text-cyan-300" />
-            <span>2. Tải Bản Máy Tính & Add-in Word (.exe / .dotm)</span>
+            <span>1. Tải Bản Máy Tính &amp; Add-in Word (.exe / .dotm Pass: 123)</span>
           </button>
 
           <button
@@ -537,7 +519,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>3. Bản Quyền & Kích Hoạt</span>
+            <span>2. Bản Quyền &amp; Kích Hoạt</span>
           </button>
         </div>
 
@@ -552,7 +534,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           {/* ========================================================================= */}
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE LATEX MATHPIX TO WORD CONVERTER)     */}
           {/* ========================================================================= */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-4 max-w-4xl mx-auto">
               
               {/* THANH TIẾN TRÌNH DÙNG THỬ 5 CHẤM */}

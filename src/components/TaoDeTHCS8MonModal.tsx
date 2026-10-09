@@ -223,7 +223,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   };
 
   const [currentSubjectKey, setCurrentSubjectKey] = useState<string>(resolveSubKey);
-  const [activeTab, setActiveTab] = useState<'download' | 'preview' | 'register'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // Cấu hình tạo đề trực tuyến
   const [selectedGrade, setSelectedGrade] = useState<string>('7');
@@ -478,18 +478,6 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
             </button>
 
             <button
-              onClick={() => setActiveTab('preview')}
-              className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
-                activeTab === 'preview'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/40 ring-1 ring-blue-400'
-                  : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>2. XEM GIAO DIỆN & MÔ PHỎNG</span>
-            </button>
-
-            <button
               onClick={() => setActiveTab('register')}
               className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer ${
                 activeTab === 'register'
@@ -498,7 +486,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
-              <span>3. BẢN QUYỀN & KÍCH HOẠT</span>
+              <span>2. BẢN QUYỀN & KÍCH HOẠT</span>
             </button>
           </div>
 
@@ -525,7 +513,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           {/* ========================================================================= */}
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN - DÙNG THỬ 3 LẦN (KHÔNG CẤP ĐỀ MẪU CÓ SẴN)   */}
           {/* ========================================================================= */}
-          {activeTab === 'preview' && (
+          {activeTab === ('preview' as any) && (
             <div className="space-y-4 max-w-4xl mx-auto">
               {/* THANH THÔNG TIN GỌN NHẸ */}
               <div className="p-3 rounded-2xl bg-blue-950/40 border border-blue-500/30 text-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">

@@ -58,7 +58,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
 }) => {
   const subjectList = Object.entries(EXAM_THPT_RESOURCES.subjects);
   const [currentSubKey, setCurrentSubKey] = useState<string>(initialSubject || 'TOAN');
-  const [activeTab, setActiveTab] = useState<'download' | 'online' | 'register'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   const curSub = EXAM_THPT_RESOURCES.subjects[currentSubKey as keyof typeof EXAM_THPT_RESOURCES.subjects] || EXAM_THPT_RESOURCES.subjects.TOAN;
 
@@ -281,19 +281,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           })}
         </div>
 
-        {/* 3 TABS ĐIỀU HƯỚNG CHUẨN SƯ PHẠM: TRẢI NGHIỆM ONLINE - TẢI VỀ - BẢN QUYỀN */}
         <div className="px-5 pt-3 border-b border-slate-800 bg-slate-900/50 flex gap-2 shrink-0">
-          <button
-            onClick={() => setActiveTab('online')}
-            className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'online'
-                ? 'border-emerald-500 text-emerald-300 bg-emerald-950/40 font-black'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>1. Trải Nghiệm Trực Tuyến (Dùng thử 3 lần)</span>
-          </button>
           <button
             onClick={() => setActiveTab('download')}
             className={`py-2 px-4 rounded-t-xl text-xs font-bold border-b-2 transition cursor-pointer flex items-center gap-1.5 ${
@@ -303,7 +291,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
             }`}
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
-            <span>2. Tải Về Cài Đặt ({curSub.size})</span>
+            <span>1. Tải Về Cài Đặt ({curSub.size})</span>
           </button>
           <button
             onClick={() => setActiveTab('register')}
@@ -314,7 +302,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
             }`}
           >
             <Crown className="w-3.5 h-3.5 text-yellow-400" />
-            <span>3. Bản Quyền & Kích Hoạt Pro</span>
+            <span>2. Bản Quyền & Kích Hoạt Pro</span>
           </button>
         </div>
 
@@ -384,7 +372,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           {/* ========================================================================= */}
           {/* TAB 2: TRẢI NGHIỆM TRỰC TUYẾN */}
           {/* ========================================================================= */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-4 max-w-3xl mx-auto">
               {/* THANH TIẾN TRÌNH DÙNG THỬ 5 LẦN */}
               <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">

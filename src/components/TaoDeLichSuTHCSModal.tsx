@@ -57,7 +57,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'download' | 'trial' | 'license'>('download');
+  const [activeTab, setActiveTab] = useState<'download' | 'license'>('download');
   const [grade, setGrade] = useState<'6' | '7' | '8' | '9'>('8');
   const [termCode, setTermCode] = useState<'GK1' | 'CK1' | 'GK2' | 'CK2'>('GK1');
   const [examCode, setExamCode] = useState('801');
@@ -236,25 +236,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
           appName="Tạo Đề Lịch Sử THCS (CV 7991)" 
         />
 
-        {/* 3 TAB NAVIGATION */}
         <div className="flex border-b border-slate-800 bg-slate-900/90 px-6">
-          <button
-            onClick={() => setActiveTab('trial')}
-            className={`flex items-center gap-2 px-5 py-3.5 text-sm font-semibold border-b-2 transition-all ${
-              activeTab === 'trial'
-                ? 'border-amber-500 text-amber-400 bg-amber-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-            }`}
-          >
-            <Play className="w-4 h-4" />
-            Trải Nghiệm Trực Tuyến
-            {!isPro && (
-              <span className="ml-1.5 px-2 py-0.5 rounded-full text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
-                {trialsRemaining}/5 lượt
-              </span>
-            )}
-          </button>
-
           <button
             onClick={() => setActiveTab('download')}
             className={`flex items-center gap-2 px-5 py-3.5 text-sm font-semibold border-b-2 transition-all ${
@@ -264,7 +246,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
             }`}
           >
             <Download className="w-4 h-4" />
-            Tải Về & Hướng Dẫn
+            1. Tải Về & Hướng Dẫn (.exe / .zip Pass: 123)
           </button>
 
           <button
@@ -276,7 +258,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
             }`}
           >
             <Key className="w-4 h-4" />
-            Bản Quyền & Kích Hoạt
+            2. Bản Quyền & Kích Hoạt
             {isPro && (
               <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-bold">
                 PRO ACTIVE
@@ -307,7 +289,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6">
           
           {/* ===================== TAB 1: TRẢI NGHIỆM TRỰC TUYẾN ===================== */}
-          {activeTab === 'trial' && (
+          {activeTab === ('trial' as any) && (
             <div className="space-y-6">
               
               {/* THANH TIẾN TRÌNH DÙNG THỬ 3 CHẤM */}
