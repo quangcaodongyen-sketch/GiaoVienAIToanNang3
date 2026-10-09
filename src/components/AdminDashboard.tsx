@@ -2469,236 +2469,204 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                         {trackingSubTab === 'requests' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-3.5">
                 {/* ========================================================================= */}
-                {/* 1. BỘ THẺ KPI THỐNG KÊ TỔNG QUAN SIÊU NỔI BẬT (QUICK KPI OVERVIEW)          */}
+                {/* 1. THANH CHỈ SỐ MINI & CÔNG CỤ ĐIỀU KHIỂN TINH GỌN (SLIM MASTER TOOLBAR) */}
                 {/* ========================================================================= */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 shrink-0">
-                  {/* Card 1: Chờ Duyệt Cấp Key (NỔI BẬT NHẤT VỚI HIỆU ỨNG PULSE ĐỎ/HỒNG NEON) */}
-                  {(() => {
-                    const pendingList = registrationRequests.filter(r => r.status === 'PENDING');
-                    const pendingCount = pendingList.length;
-                    return (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setReqFilter('PENDING');
-                          setRegSearchTerm('');
-                        }}
-                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
-                          reqFilter === 'PENDING'
-                            ? 'bg-gradient-to-br from-rose-950 via-red-950 to-slate-900 border-red-500 shadow-xl shadow-red-500/30 ring-2 ring-red-400'
-                            : pendingCount > 0
-                            ? 'bg-gradient-to-br from-red-950/80 via-slate-900 to-slate-900 border-red-500/70 hover:border-red-400 hover:shadow-lg hover:shadow-red-500/20'
-                            : 'bg-slate-900/90 border-slate-800 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[11px] font-black uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
-                            <Clock className={`w-3.5 h-3.5 ${pendingCount > 0 ? 'text-rose-400 animate-spin' : 'text-slate-400'}`} />
-                            <span>1. CHỜ DUYỆT CẤP KEY</span>
+                {(() => {
+                  const pendingCount = registrationRequests.filter(r => r.status === 'PENDING').length;
+                  const approvedCount = registrationRequests.filter(r => r.status === 'APPROVED').length;
+                  const rejectedCount = registrationRequests.filter(r => r.status === 'REJECTED').length;
+                  const totalCount = registrationRequests.length;
+
+                  return (
+                    <div className="bg-slate-900/95 border border-slate-800 rounded-xl px-3 py-2 shrink-0 shadow-lg flex flex-wrap items-center justify-between gap-2">
+                      {/* Trái: Các nút Badge Lọc Trạng Thái & Chỉ Số Mỏng Gọn */}
+                      <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                        {/* Tất cả */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReqFilter('ALL');
+                            setRegSearchTerm('');
+                          }}
+                          className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                            reqFilter === 'ALL'
+                              ? 'bg-slate-700 text-white shadow-sm ring-1 ring-slate-500'
+                              : 'bg-slate-950/70 text-slate-400 hover:text-white hover:bg-slate-800'
+                          }`}
+                          title="Xem toàn bộ hồ sơ giáo viên"
+                        >
+                          <Users className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Tất Cả</span>
+                          <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-200 text-[10px] font-mono font-bold">
+                            {totalCount}
                           </span>
-                          {pendingCount > 0 && (
-                            <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] animate-pulse shadow-sm shadow-red-500/50">
-                              Cần Duyệt Gấp!
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-baseline gap-2">
-                          <span className={`text-2xl sm:text-3xl font-black tracking-tight ${pendingCount > 0 ? 'text-white' : 'text-slate-400'}`}>
+                        </button>
+
+                        {/* Chờ duyệt (NỔI BẬT NẾU CÓ ĐƠN MỚI) */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReqFilter('PENDING');
+                            setRegSearchTerm('');
+                          }}
+                          className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                            reqFilter === 'PENDING'
+                              ? 'bg-red-600 text-white shadow-md shadow-red-500/40 ring-1 ring-red-300'
+                              : pendingCount > 0
+                              ? 'bg-red-950/80 text-rose-300 border border-red-500/60 hover:bg-red-900 animate-pulse'
+                              : 'bg-slate-950/70 text-slate-400 hover:text-white hover:bg-slate-800'
+                          }`}
+                          title="Lọc các đơn giáo viên đang chờ duyệt cấp key"
+                        >
+                          <Clock className={`w-3.5 h-3.5 ${pendingCount > 0 ? 'text-red-300 animate-spin' : 'text-slate-400'}`} />
+                          <span>Chờ Duyệt</span>
+                          <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black ${
+                            pendingCount > 0 ? 'bg-white text-red-600' : 'bg-slate-800 text-slate-400'
+                          }`}>
                             {pendingCount}
                           </span>
-                          <span className="text-xs text-rose-200/90 font-bold">
-                            {pendingCount > 0 ? 'đơn giáo viên mới gửi' : 'đã duyệt hết'}
-                          </span>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
-                          <span>👉 Bấm lọc danh sách chờ duyệt</span>
-                        </div>
-                      </button>
-                    );
-                  })()}
+                        </button>
 
-                  {/* Card 2: Đã Kích Hoạt Pro */}
-                  {(() => {
-                    const approvedCount = registrationRequests.filter(r => r.status === 'APPROVED').length;
-                    return (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setReqFilter('APPROVED');
-                          setRegSearchTerm('');
-                        }}
-                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
-                          reqFilter === 'APPROVED'
-                            ? 'bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-900 border-emerald-500 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400'
-                            : 'bg-slate-900/90 border-emerald-500/40 hover:border-emerald-400'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>2. ĐÃ KÍCH HOẠT PRO</span>
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] border border-emerald-500/30">
-                            Đang hoạt động
-                          </span>
-                        </div>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-2xl sm:text-3xl font-black text-emerald-300 tracking-tight">
+                        {/* Đã duyệt */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReqFilter('APPROVED');
+                            setRegSearchTerm('');
+                          }}
+                          className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                            reqFilter === 'APPROVED'
+                              ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/30 ring-1 ring-emerald-300'
+                              : 'bg-slate-950/70 text-emerald-400 hover:text-white hover:bg-slate-800'
+                          }`}
+                          title="Lọc các máy giáo viên đã được cấp key Pro"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Đã Kích Hoạt Pro</span>
+                          <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-emerald-300 text-[10px] font-mono font-bold">
                             {approvedCount}
                           </span>
-                          <span className="text-xs text-emerald-400/80 font-bold">máy giáo viên</span>
+                        </button>
+
+                        {/* Từ chối (nếu có) */}
+                        {rejectedCount > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReqFilter('REJECTED');
+                              setRegSearchTerm('');
+                            }}
+                            className={`px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer ${
+                              reqFilter === 'REJECTED'
+                                ? 'bg-amber-600 text-white shadow-sm'
+                                : 'bg-slate-950/70 text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <span>Từ Chối:</span>
+                            <span className="font-mono text-[10px]">{rejectedCount}</span>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Phải: Trạng Thái Cloud + View Mode + Nút Cấp Key Thủ Công */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Đồng bộ Cloud Live Mini */}
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span>
+                          <span className="text-slate-400 text-[11px] hidden sm:inline">Cloud:</span>
+                          <span className="font-mono font-bold text-amber-300 text-[11px]">{lastSyncTime}</span>
+                          <button
+                            type="button"
+                            disabled={isCloudSyncing}
+                            onClick={loadTrackingData}
+                            className="p-1 rounded hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition cursor-pointer disabled:opacity-50 ml-0.5"
+                            title="Làm mới đồng bộ Cloud ngay"
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 ${isCloudSyncing ? 'animate-spin text-amber-400' : ''}`} />
+                          </button>
                         </div>
-                        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
-                          <span>👉 Bấm xem thành viên đã có key</span>
+
+                        {/* Chuyển View Mode Mini */}
+                        <div className="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-800">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleViewMode('table')}
+                            className={`px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
+                              regViewMode === 'table'
+                                ? 'bg-emerald-500 text-slate-950 shadow-sm font-black'
+                                : 'text-slate-400 hover:text-white'
+                            }`}
+                            title="Dạng Bảng Danh Sách Gọn Gàng (Khuyên Dùng)"
+                          >
+                            <TableIcon className="w-3.5 h-3.5" />
+                            <span>Bảng Excel</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleViewMode('cards')}
+                            className={`px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
+                              regViewMode === 'cards'
+                                ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                                : 'text-slate-400 hover:text-white'
+                            }`}
+                            title="Dạng Thẻ Trực Quan"
+                          >
+                            <LayoutGrid className="w-3.5 h-3.5" />
+                            <span>Thẻ</span>
+                          </button>
                         </div>
-                      </button>
-                    );
-                  })()}
 
-                  {/* Card 3: Tổng Đơn Đăng Ký */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setReqFilter('ALL');
-                      setRegSearchTerm('');
-                      setRegAppFilter('ALL');
-                    }}
-                    className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
-                      reqFilter === 'ALL' && regAppFilter === 'ALL'
-                        ? 'bg-gradient-to-br from-cyan-950 via-slate-900 to-slate-900 border-cyan-500 shadow-xl shadow-cyan-500/20 ring-2 ring-cyan-400'
-                        : 'bg-slate-900/90 border-cyan-500/40 hover:border-cyan-400'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[11px] font-black uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
-                        <Users className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>3. TỔNG THÀNH VIÊN</span>
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-[10px] border border-cyan-500/30">
-                        Toàn Quốc
-                      </span>
+                        {/* Nút Cấp Key Thủ Công */}
+                        <button
+                          type="button"
+                          onClick={() => setShowDirectForm(!showDirectForm)}
+                          className={`px-2.5 py-1 rounded-lg border text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
+                            showDirectForm
+                              ? 'bg-emerald-600 text-white border-emerald-400 shadow-sm'
+                              : 'bg-emerald-950/50 hover:bg-emerald-900/60 text-emerald-300 border-emerald-600/40'
+                          }`}
+                          title="Tự nhập mã máy (từ Zalo giáo viên gửi) để ký số cấp key Pro"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>{showDirectForm ? 'Thu Gọn Form ▲' : '➕ Nhập Mã Máy Trực Tiếp'}</span>
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                        {registrationRequests.length}
-                      </span>
-                      <span className="text-xs text-cyan-300/80 font-bold">hồ sơ đăng ký</span>
-                    </div>
-                    <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 font-semibold">
-                      <span>👉 Bấm để xem toàn bộ danh sách</span>
-                    </div>
-                  </button>
-
-                  {/* Card 4: Nút Đồng Bộ GitHub Cloud Live */}
-                  <div className="bg-slate-900/90 border border-amber-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-amber-950/20">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                        <Cloud className="w-3.5 h-3.5 text-amber-400" />
-                        <span>4. ĐỒNG BỘ CLOUD LIVE</span>
-                      </span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block animate-ping"></span>
-                    </div>
-                    <div className="text-[11px] text-slate-300 font-medium">
-                      <span>Cập nhật lúc: </span>
-                      <span className="font-bold text-amber-300 font-mono">{lastSyncTime}</span>
-                    </div>
-                    <button
-                      type="button"
-                      disabled={isCloudSyncing}
-                      onClick={loadTrackingData}
-                      className="mt-2 w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition cursor-pointer disabled:opacity-50"
-                    >
-                      <RefreshCw className={`w-3.5 h-3.5 text-slate-950 ${isCloudSyncing ? 'animate-spin' : ''}`} />
-                      <span>{isCloudSyncing ? 'Đang Tải Cloud...' : '🔄 Làm Mới Cloud Ngay'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* ========================================================================= */}
-                {/* 2. THANH CÔNG CỤ: CHUYỂN CHẾ ĐỘ XEM (THẺ VS BẢNG) & CẤP KEY THỦ CÔNG       */}
-                {/* ========================================================================= */}
-                <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-900/95 border border-slate-800 p-2.5 rounded-2xl shrink-0">
-                  {/* Trái: Chuyển đổi View Mode */}
-                  <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleViewMode('table')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
-                        regViewMode === 'table'
-                          ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-slate-950 shadow-md shadow-emerald-500/30 ring-1 ring-emerald-300'
-                          : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                      }`}
-                      title="Xem dạng bảng Excel: Dễ xem, hàng cột rõ ràng, đầy đủ nút kích hoạt 1, 2, 3 Năm, Trọn Đời, Khóa, Xóa"
-                    >
-                      <TableIcon className="w-3.5 h-3.5" />
-                      <span>📊 Dạng Bảng Excel (Khuyên Dùng)</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleToggleViewMode('cards')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
-                        regViewMode === 'cards'
-                          ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/20 ring-1 ring-amber-300'
-                          : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                      }`}
-                      title="Xem dạng thẻ trực quan: Thông tin to rõ, có nút Chat Zalo, Gọi, Duyệt nhanh 1 chạm"
-                    >
-                      <LayoutGrid className="w-3.5 h-3.5" />
-                      <span>🗂️ Dạng Thẻ Trực Quan</span>
-                    </button>
-                  </div>
-
-                  {/* Phải: Nút Accordion Cấp Key Thủ Công */}
-                  <button
-                    type="button"
-                    onClick={() => setShowDirectForm(!showDirectForm)}
-                    className={`px-3.5 py-1.5 rounded-xl border text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
-                      showDirectForm
-                        ? 'bg-emerald-600 text-white border-emerald-400 shadow-md shadow-emerald-600/30'
-                        : 'bg-slate-800 hover:bg-slate-700 text-emerald-300 border-emerald-500/40'
-                    }`}
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>{showDirectForm ? '▲ Thu Gọn Form Nhập Mã Máy' : '➕ Cấp Key Thủ Công (Dán Mã Máy Từ Zalo)'}</span>
-                  </button>
-                </div>
+                  );
+                })()}
 
                 {/* FORM NHẬP MÃ MÁY TRỰC TIẾP (ACCORDION - CHỈ MỞ KHI CẦN) */}
                 {showDirectForm && (
-                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border-2 border-emerald-500/60 rounded-2xl p-4 shadow-xl shadow-emerald-950/30 animate-in fade-in duration-150">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5 mb-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
-                          <UserCheck className="w-5 h-5" />
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/70 border border-emerald-500/50 rounded-xl p-3 shadow-xl shrink-0 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2 mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-md bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
+                          <UserCheck className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-black text-white flex items-center gap-2 flex-wrap">
-                            <span>➕ DUYỆT & CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY)</span>
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
-                              Cấp Key Ngay
+                          <h3 className="text-xs font-black text-white flex items-center gap-1.5">
+                            <span>➕ CẤP BẢN QUYỀN PRO TRỰC TIẾP (TỰ NHẬP MÃ MÁY TỪ ZALO)</span>
+                            <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-bold">
+                              Ký số Ed25519
                             </span>
                           </h3>
-                          <p className="text-[11px] text-slate-400">
-                            Thầy Thành dán mã máy của giáo viên (từ Zalo gửi sang) để Duyệt, Ký số Ed25519 độc lập & Đồng bộ Cloud tức thì
-                          </p>
                         </div>
                       </div>
                       <button
                         type="button"
                         onClick={() => setShowDirectForm(false)}
-                        className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 cursor-pointer font-bold transition hover:bg-slate-700"
+                        className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 cursor-pointer font-bold transition"
                       >
                         Thu gọn ▲
                       </button>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                    <div className="space-y-2.5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                         {/* Ô 1: Mã máy tính */}
                         <div>
-                          <label className="block text-[11px] font-bold text-amber-400 mb-1 flex items-center gap-1">
-                            <Laptop className="w-3.5 h-3.5" />
+                          <label className="block text-[10px] font-bold text-amber-400 mb-0.5 flex items-center gap-1">
+                            <Laptop className="w-3 h-3" />
                             <span>Mã Máy Tính (Bắt buộc) *:</span>
                           </label>
                           <input
@@ -2706,14 +2674,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             placeholder="VD: KHTN-DVT-... / DVT-ENGCS-... / MB-..."
                             value={directMid}
                             onChange={(e) => setDirectMid(e.target.value.toUpperCase())}
-                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-amber-500/50 text-cyan-300 font-mono text-xs font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-amber-500/50 text-cyan-300 font-mono text-xs font-bold placeholder-slate-600 focus:outline-none focus:border-amber-400"
                           />
                         </div>
 
                         {/* Ô 2: Họ và tên */}
                         <div>
-                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
-                            <Users className="w-3.5 h-3.5 text-blue-400" />
+                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
+                            <Users className="w-3 h-3 text-blue-400" />
                             <span>Họ và Tên Giáo Viên:</span>
                           </label>
                           <input
@@ -2721,14 +2689,14 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             placeholder="VD: Thầy / Cô..."
                             value={directName}
                             onChange={(e) => setDirectName(e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-blue-400"
                           />
                         </div>
 
                         {/* Ô 3: Số ĐT / Zalo */}
                         <div>
-                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
-                            <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
+                            <Phone className="w-3 h-3 text-emerald-400" />
                             <span>Số Điện Thoại / Zalo:</span>
                           </label>
                           <input
@@ -2736,37 +2704,37 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             placeholder="VD: 0915213717..."
                             value={directPhone}
                             onChange={(e) => setDirectPhone(e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-400"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-emerald-400"
                           />
                         </div>
 
                         {/* Ô 4: Trường / Đơn vị */}
                         <div>
-                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
-                            <Building2 className="w-3.5 h-3.5 text-purple-400" />
+                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
+                            <Building2 className="w-3 h-3 text-purple-400" />
                             <span>Trường / Đơn Vị Công Tác:</span>
                           </label>
                           <input
                             type="text"
-                            placeholder="VD: Trường THCS Đồng Yên..."
+                            placeholder="VD: Trường THCS..."
                             value={directSchool}
                             onChange={(e) => setDirectSchool(e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-semibold placeholder-slate-600 focus:outline-none focus:border-purple-400"
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 items-end">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
                         {/* Ô 5: Chọn Ứng Dụng */}
                         <div className="md:col-span-1">
-                          <label className="block text-[11px] font-bold text-cyan-300 mb-1 flex items-center gap-1">
-                            <Sparkles className="w-3.5 h-3.5" />
+                          <label className="block text-[10px] font-bold text-cyan-300 mb-0.5 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
                             <span>Ứng Dụng Cần Kích Hoạt (Độc lập):</span>
                           </label>
                           <select
                             value={directAppId}
                             onChange={(e) => setDirectAppId(e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-cyan-500/50 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
+                            className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-cyan-500/50 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
                           >
                             <optgroup label="🔬 HỆ THỐNG THCS (CV 7991 & KNTT)">
                               <option value="taode_khtn_thcs">🔬 Tạo Đề Khoa Học Tự Nhiên THCS (KHTN-DVT)</option>
@@ -2804,8 +2772,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
 
                         {/* Ô 6: Chọn Gói Bản Quyền */}
                         <div className="md:col-span-1">
-                          <label className="block text-[11px] font-bold text-slate-300 mb-1 flex items-center gap-1">
-                            <Crown className="w-3.5 h-3.5 text-yellow-400" />
+                          <label className="block text-[10px] font-bold text-slate-300 mb-0.5 flex items-center gap-1">
+                            <Crown className="w-3 h-3 text-yellow-400" />
                             <span>Thời Hạn Gói Bản Quyền:</span>
                           </label>
                           <div className="grid grid-cols-4 gap-1">
@@ -2814,15 +2782,15 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                 key={pkg}
                                 type="button"
                                 onClick={() => setDirectPkg(pkg)}
-                                className={`py-2 px-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer text-center ${
+                                className={`py-1.5 px-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer text-center ${
                                   directPkg === pkg
                                     ? pkg === 'LIFETIME'
-                                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
+                                      ? 'bg-purple-600 text-white shadow-sm'
                                       : pkg === '3YEAR'
-                                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                                      ? 'bg-indigo-600 text-white shadow-sm'
                                       : pkg === '2YEAR'
-                                      ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                                      : 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                                      ? 'bg-amber-600 text-white shadow-sm'
+                                      : 'bg-emerald-600 text-white shadow-sm'
                                     : 'bg-slate-800 text-slate-400 hover:text-white'
                                 }`}
                               >
@@ -2838,17 +2806,17 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                             type="button"
                             disabled={isDirectApproving || !directMid.trim()}
                             onClick={handleDirectApproveSubmit}
-                            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white font-black text-xs shadow-lg shadow-emerald-600/40 border border-emerald-400/60 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95"
+                            className="w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white font-black text-xs shadow-md shadow-emerald-600/30 border border-emerald-400/50 flex items-center justify-center gap-1.5 cursor-pointer transition transform active:scale-95"
                           >
                             {isDirectApproving ? (
                               <>
-                                <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                                <span>Đang xử lý & Ký số Ed25519...</span>
+                                <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+                                <span>Đang Ký số Ed25519...</span>
                               </>
                             ) : (
                               <>
-                                <CheckCircle2 className="w-4 h-4 text-white" />
-                                <span>✅ DUYỆT & CẤP BẢN QUYỀN PRO NGAY</span>
+                                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                                <span>DUYỆT & CẤP KEY NGAY</span>
                               </>
                             )}
                           </button>
@@ -2859,128 +2827,106 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                 )}
 
                 {/* ========================================================================= */}
-                {/* 3. THANH ĐIỀU KHIỂN BỘ LỌC, TÌM KIẾM & SẮP XẾP ĐA NĂNG                     */}
+                {/* 2. THANH TÌM KIẾM & BỘ LỌC GỘP 1 HÀNG DUY NHẤT (COMPACT FILTER ROW)       */}
                 {/* ========================================================================= */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 space-y-2.5 shrink-0">
-                  <div className="flex flex-wrap items-center justify-between gap-2.5">
-                    {/* 1. Lọc theo trạng thái */}
-                    <div className="flex items-center gap-1.5 text-xs flex-wrap">
-                      <span className="text-slate-400 font-semibold flex items-center gap-1">
-                        <Filter className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Trạng thái:</span>
-                      </span>
-                      {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map(st => {
-                        const count = registrationRequests.filter(r => st === 'ALL' ? true : r.status === st).length;
-                        return (
-                          <button
-                            key={st}
-                            type="button"
-                            onClick={() => setReqFilter(st)}
-                            className={`px-3 py-1 rounded-xl font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
-                              reqFilter === st
-                                ? st === 'PENDING'
-                                  ? 'bg-red-600 text-white shadow-md shadow-red-600/40 font-black ring-1 ring-red-300'
-                                  : st === 'APPROVED'
-                                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 font-black'
-                                  : 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                                : 'bg-slate-800 text-slate-400 hover:text-white'
-                            }`}
-                          >
-                            <span>{st === 'ALL' ? 'Tất Cả' : st === 'PENDING' ? '⏳ Chờ Duyệt' : st === 'APPROVED' ? '✅ Đã Duyệt' : '❌ Từ Chối'}</span>
-                            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                              st === 'PENDING' && count > 0 ? 'bg-white text-red-700 animate-pulse' : 'bg-slate-950/60 text-slate-300'
-                            }`}>
-                              {count}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* 2. Sắp xếp đa dạng */}
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-slate-400 font-semibold">Sắp xếp:</span>
-                      <select
-                        value={regSortBy}
-                        onChange={(e) => setRegSortBy(e.target.value as any)}
-                        className="px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-2 shrink-0 flex flex-wrap items-center justify-between gap-2">
+                  {/* Ô tìm kiếm trực tiếp siêu nhạy */}
+                  <div className="relative flex-1 min-w-[240px]">
+                    <input
+                      type="text"
+                      placeholder="🔍 Tìm nhanh Tên GV, Số ĐT, Trường, Mã máy..."
+                      value={regSearchTerm}
+                      onChange={(e) => setRegSearchTerm(e.target.value)}
+                      className="w-full pl-8 pr-7 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-medium"
+                    />
+                    <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                    {regSearchTerm && (
+                      <button
+                        type="button"
+                        onClick={() => setRegSearchTerm('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
+                        title="Xóa tìm kiếm"
                       >
-                        <option value="newest">⏰ Mới nhất (Thời gian gửi)</option>
-                        <option value="name_asc">👤 Tên Giáo viên (A - Z)</option>
-                        <option value="school">🏫 Theo Trường / Đơn vị</option>
-                      </select>
-                    </div>
+                        ✕
+                      </button>
+                    )}
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 border-t border-slate-800/80">
-                    {/* 3. Lọc theo Ứng dụng cụ thể (Đầy đủ mọi môn) */}
-                    <div className="flex items-center gap-2 text-xs flex-1 max-w-xl">
-                      <span className="text-slate-400 font-semibold shrink-0">Lọc Môn / App:</span>
-                      <select
-                        value={regAppFilter}
-                        onChange={(e) => setRegAppFilter(e.target.value)}
-                        className="w-full px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
-                      >
-                        <option value="ALL">📦 Tất Cả Môn Học & Ứng Dụng ({registrationRequests.length})</option>
-                        <optgroup label="🔬 HỆ THỐNG THCS (CÔNG VĂN 7991 & KẾT NỐI TRI THỨC)">
-                          <option value="khtn">🔬 Khoa Học Tự Nhiên THCS (KHTN)</option>
-                          <option value="eng">🇬🇧 Tiếng Anh Global Success THCS</option>
-                          <option value="nls">⚡ Tích Hợp NLS - AI THCS</option>
-                          <option value="taode">📝 Tạo Đề THCS 8 Môn Chuẩn CV 7991</option>
-                          <option value="lichsu">🏛️ Lịch Sử THCS Chuyên Sâu</option>
-                          <option value="toan">📐 Toán Học THCS</option>
-                          <option value="van">📖 Ngữ Văn THCS</option>
-                          <option value="15p">⏱️ Tạo Đề 15 Phút Tiếng Anh</option>
-                          <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
-                          <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
-                          <option value="mathstudio">📐 Đinh Thành MathStudio 2026+</option>
-                          <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
-                          <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
-                          <option value="pdfsuite">📄 PDF Suite Pro</option>
-                          <option value="record">🎥 Screen Record Pro V2</option>
-                        </optgroup>
-                        <optgroup label="📝 BỘ TẠO ĐỀ THPT 11 MÔN (2025+)">
-                          <option value="toan">🔢 Toán Học THPT</option>
-                          <option value="vatli">⚡ Vật Lí THPT</option>
-                          <option value="hoa">⚗️ Hóa Học THPT</option>
-                          <option value="sinh">🧬 Sinh Học THPT</option>
-                          <option value="tin">💻 Tin Học THPT</option>
-                          <option value="lichsu">🏛️ Lịch Sử THPT</option>
-                          <option value="diali">🌍 Địa Lí THPT</option>
-                          <option value="gdkt">⚖️ GDKT & PL THPT</option>
-                          <option value="congnghe">⚙️ Công Nghệ THPT</option>
-                          <option value="nguvan">📖 Ngữ Văn THPT</option>
-                          <option value="engpt">🇬🇧 Tiếng Anh THPT</option>
-                        </optgroup>
-                        <optgroup label="🎒 TIỂU HỌC">
-                          <option value="engpri">🎒 Tiếng Anh Tiểu Học (Thông tư 27)</option>
-                        </optgroup>
-                      </select>
-                    </div>
-
-                    {/* 4. Ô tìm kiếm trực tiếp siêu nhạy */}
-                    <div className="relative min-w-[280px] flex-1 max-w-md">
-                      <input
-                        type="text"
-                        placeholder="🔍 Tìm Tên GV / Số ĐT / Trường / Mã máy..."
-                        value={regSearchTerm}
-                        onChange={(e) => setRegSearchTerm(e.target.value)}
-                        className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-400 font-medium"
-                      />
-                      <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
-                      {regSearchTerm && (
-                        <button
-                          type="button"
-                          onClick={() => setRegSearchTerm('')}
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
+                  {/* Lọc theo Ứng dụng cụ thể */}
+                  <div className="flex items-center gap-1.5 text-xs min-w-[220px]">
+                    <Filter className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    <select
+                      value={regAppFilter}
+                      onChange={(e) => setRegAppFilter(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-cyan-300 font-bold text-xs focus:outline-none focus:border-cyan-400 cursor-pointer"
+                    >
+                      <option value="ALL">📦 Tất Cả Môn Học & App ({registrationRequests.length})</option>
+                      <optgroup label="🔬 HỆ THỐNG THCS (CÔNG VĂN 7991 & KẾT NỐI TRI THỨC)">
+                        <option value="khtn">🔬 Khoa Học Tự Nhiên THCS (KHTN)</option>
+                        <option value="eng">🇬🇧 Tiếng Anh Global Success THCS</option>
+                        <option value="nls">⚡ Tích Hợp NLS - AI THCS</option>
+                        <option value="taode">📝 Tạo Đề THCS 8 Môn Chuẩn CV 7991</option>
+                        <option value="lichsu">🏛️ Lịch Sử THCS Chuyên Sâu</option>
+                        <option value="toan">📐 Toán Học THCS</option>
+                        <option value="van">📖 Ngữ Văn THCS</option>
+                        <option value="15p">⏱️ Tạo Đề 15 Phút Tiếng Anh</option>
+                        <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
+                        <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
+                        <option value="mathstudio">📐 Đinh Thành MathStudio 2026+</option>
+                        <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
+                        <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
+                        <option value="pdfsuite">📄 PDF Suite Pro</option>
+                        <option value="record">🎥 Screen Record Pro V2</option>
+                      </optgroup>
+                      <optgroup label="📝 BỘ TẠO ĐỀ THPT 11 MÔN (2025+)">
+                        <option value="toan">🔢 Toán Học THPT</option>
+                        <option value="vatli">⚡ Vật Lí THPT</option>
+                        <option value="hoa">⚗️ Hóa Học THPT</option>
+                        <option value="sinh">🧬 Sinh Học THPT</option>
+                        <option value="tin">💻 Tin Học THPT</option>
+                        <option value="lichsu">🏛️ Lịch Sử THPT</option>
+                        <option value="diali">🌍 Địa Lí THPT</option>
+                        <option value="gdkt">⚖️ GDKT & PL THPT</option>
+                        <option value="congnghe">⚙️ Công Nghệ THPT</option>
+                        <option value="nguvan">📖 Ngữ Văn THPT</option>
+                        <option value="engpt">🇬🇧 Tiếng Anh THPT</option>
+                      </optgroup>
+                      <optgroup label="🎒 TIỂU HỌC">
+                        <option value="engpri">🎒 Tiếng Anh Tiểu Học (Thông tư 27)</option>
+                      </optgroup>
+                    </select>
                   </div>
+
+                  {/* Sắp xếp */}
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <span className="text-slate-400 text-[11px] hidden lg:inline">Sắp xếp:</span>
+                    <select
+                      value={regSortBy}
+                      onChange={(e) => setRegSortBy(e.target.value as any)}
+                      className="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-amber-400 cursor-pointer"
+                    >
+                      <option value="newest">⏰ Mới nhất</option>
+                      <option value="name_asc">👤 Tên GV (A-Z)</option>
+                      <option value="school">🏫 Trường / Đơn vị</option>
+                    </select>
+                  </div>
+
+                  {/* Nút reset nhanh nếu đang lọc */}
+                  {(regSearchTerm || regAppFilter !== 'ALL' || reqFilter !== 'ALL') && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegSearchTerm('');
+                        setRegAppFilter('ALL');
+                        setReqFilter('ALL');
+                      }}
+                      className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 text-[11px] font-bold transition cursor-pointer flex items-center gap-1"
+                      title="Xóa toàn bộ bộ lọc & tìm kiếm"
+                    >
+                      ✕ Bỏ lọc
+                    </button>
+                  )}
                 </div>
-
                 {/* ========================================================================= */}
                 {/* 4. VÙNG DANH SÁCH THÀNH VIÊN: DẠNG THẺ (CARD VIEW) HOẶC BẢNG (TABLE VIEW)  */}
                 {/* ========================================================================= */}
@@ -3515,72 +3461,34 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                   }
 
                   // -------------------------------------------------------------
-                  // B. CHẾ ĐỘ 2: XEM DẠNG BẢNG EXCEL ĐA NĂNG (SPREADSHEET PRO VIEW)
+                  // B. CHẾ ĐỘ 2: XEM DẠNG DANH SÁCH / BẢNG EXCEL GỌN GÀNG (COMPACT TABLE PRO)
                   // -------------------------------------------------------------
-                  const totalCount = filteredList.length;
-                  const pendingCount = filteredList.filter(r => r.status === 'PENDING').length;
-                  const approvedCount = filteredList.filter(r => r.status === 'APPROVED').length;
-                  const blockedCount = filteredList.filter(r => blockedMachines.some(b => b.machineId === r.machineId)).length;
-
                   return (
-                    <div className="flex-1 flex flex-col min-h-0 border border-emerald-500/40 rounded-2xl bg-slate-950/90 shadow-2xl overflow-hidden">
-                      {/* 1. DẢI HEADER THỐNG KÊ PHONG CÁCH EXCEL */}
-                      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 px-4 py-2.5 border-b border-emerald-500/30 flex items-center justify-between flex-wrap gap-2 text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                            <TableIcon className="w-4 h-4" />
-                          </span>
-                          <span className="font-black text-emerald-300 tracking-wide uppercase">
-                            BẢNG TÍNH QUẢN TRỊ & KÍCH HOẠT PRO (CHUẨN EXCEL)
-                          </span>
-                          <span className="text-slate-400 font-normal hidden lg:inline">
-                            | 1-Click Duyệt 1 Năm, 2 Năm, 3 Năm, Trọn Đời & Khóa/Mở Khóa
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 font-mono font-bold">
-                          <span className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
-                            Tổng: <strong className="text-white">{totalCount}</strong>
-                          </span>
-                          {pendingCount > 0 && (
-                            <span className="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse">
-                              ⏳ Chờ Duyệt: <strong className="text-red-200">{pendingCount}</strong>
-                            </span>
-                          )}
-                          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                            ✅ Đã Cấp Pro: <strong className="text-emerald-200">{approvedCount}</strong>
-                          </span>
-                          {blockedCount > 0 && (
-                            <span className="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                              🔒 Đang Khóa: <strong className="text-rose-200">{blockedCount}</strong>
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* 2. KHUNG BẢNG TÍNH EXCEL CUỘN NGANG VÀ DỌC MƯỢT MÀ */}
+                    <div className="flex-1 flex flex-col min-h-0 border border-slate-800 rounded-xl bg-slate-950/90 shadow-xl overflow-hidden">
+                      {/* KHUNG BẢNG TÍNH CUỘN NGANG VÀ DỌC MƯỢT MÀ */}
                       <div className="flex-1 overflow-auto">
                         <table className="w-full text-left text-xs border-collapse">
-                          <thead className="sticky top-0 bg-slate-900/98 backdrop-blur-md text-slate-300 font-bold uppercase tracking-wider border-b-2 border-emerald-500/50 z-10 shadow-md">
-                            <tr className="divide-x divide-slate-800 text-[11px]">
-                              <th className="py-3 px-2 text-center w-12 bg-slate-900">STT</th>
-                              <th className="py-3 px-3 bg-slate-900 min-w-[200px]">Giáo Viên & Đơn Vị</th>
-                              <th className="py-3 px-3 bg-slate-900 min-w-[170px]">Môn Học / Ứng Dụng</th>
-                              <th className="py-3 px-3 bg-slate-900 min-w-[140px]">Số ĐT & Zalo</th>
-                              <th className="py-3 px-3 bg-slate-900 min-w-[190px]">Mã Máy Tính (Hardware ID)</th>
-                              <th className="py-3 px-2.5 bg-slate-900 min-w-[130px]">Hạn Dùng / Ngày Gửi</th>
-                              <th className="py-3 px-2.5 bg-slate-900 text-center min-w-[110px]">Trạng Thái</th>
-                              <th className="py-3 px-3 bg-slate-900 text-center min-w-[290px]">Cấp Bản Quyền (1, 2, 3 Năm & Trọn Đời)</th>
-                              <th className="py-3 px-2.5 bg-slate-900 text-center min-w-[95px]">Quản Trị</th>
+                          <thead className="sticky top-0 bg-slate-900/98 backdrop-blur-md text-slate-300 font-bold uppercase tracking-wider border-b border-slate-700 z-10 shadow-sm">
+                            <tr className="divide-x divide-slate-800 text-[10px]">
+                              <th className="py-2 px-2 text-center w-10 bg-slate-900">STT</th>
+                              <th className="py-2 px-2.5 bg-slate-900 min-w-[180px]">Giáo Viên & Đơn Vị</th>
+                              <th className="py-2 px-2.5 bg-slate-900 min-w-[150px]">Môn Học / Ứng Dụng</th>
+                              <th className="py-2 px-2.5 bg-slate-900 min-w-[130px]">Số ĐT & Zalo</th>
+                              <th className="py-2 px-2.5 bg-slate-900 min-w-[170px]">Mã Máy (Hardware ID)</th>
+                              <th className="py-2 px-2 bg-slate-900 min-w-[120px]">Hạn Dùng / Ngày Gửi</th>
+                              <th className="py-2 px-2 bg-slate-900 text-center min-w-[100px]">Trạng Thái</th>
+                              <th className="py-2 px-2.5 bg-slate-900 text-center min-w-[260px]">Cấp Bản Quyền 1-Click</th>
+                              <th className="py-2 px-2 bg-slate-900 text-center min-w-[80px]">Quản Trị</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-800/80">
+                          <tbody className="divide-y divide-slate-800/70">
                             {filteredList.map((req, rIdx) => {
                               const isBlocked = blockedMachines.some(b => b.machineId === req.machineId);
                               const cleanPhone = (req.phoneNumber || '').replace(/[^0-9]/g, '');
                               const isPending = req.status === 'PENDING';
                               const isApproved = req.status === 'APPROVED';
 
-                              // Zebra striping style chuẩn Excel
+                              // Zebra striping style chuẩn Excel gọn nhẹ
                               const rowBgClass = isBlocked
                                 ? 'bg-rose-950/25 hover:bg-rose-950/40 text-slate-300'
                                 : isPending
@@ -3595,13 +3503,13 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   className={`transition-colors divide-x divide-slate-800/60 ${rowBgClass}`}
                                 >
                                   {/* Cột 1: STT */}
-                                  <td className="py-2.5 px-2 text-center font-mono font-bold text-slate-400">
+                                  <td className="py-1.5 px-2 text-center font-mono font-bold text-slate-400 text-xs">
                                     {rIdx + 1}
                                   </td>
 
                                   {/* Cột 2: Giáo Viên & Đơn Vị */}
-                                  <td className="py-2.5 px-3">
-                                    <div className="font-black text-amber-300 text-sm flex items-center gap-1.5">
+                                  <td className="py-1.5 px-2.5">
+                                    <div className="font-black text-amber-300 text-xs flex items-center gap-1.5">
                                       <span>{req.fullName || 'Thầy/Cô Giáo Viên'}</span>
                                       {isPending && (
                                         <span className="px-1.5 py-0.2 rounded bg-red-600 text-white text-[9px] font-black tracking-wider uppercase animate-pulse">
@@ -3609,36 +3517,36 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                         </span>
                                       )}
                                     </div>
-                                    <div className="text-slate-400 text-xs flex items-center gap-1 mt-0.5 font-medium">
+                                    <div className="text-slate-400 text-[11px] flex items-center gap-1 mt-0.5 font-medium">
                                       <Building2 className="w-3 h-3 text-purple-400 shrink-0" />
-                                      <span className="truncate max-w-[180px]">{req.schoolUnit || 'Trường THCS'}</span>
+                                      <span className="truncate max-w-[170px]">{req.schoolUnit || 'Trường THCS'}</span>
                                     </div>
                                   </td>
 
                                   {/* Cột 3: Môn Học / Ứng Dụng */}
-                                  <td className="py-2.5 px-3">
+                                  <td className="py-1.5 px-2.5">
                                     <div className="font-bold text-cyan-300 text-xs">
                                       {req.appName || 'Tạo Đề Kiểm Tra'}
                                     </div>
-                                    <div className="flex items-center gap-1 mt-1">
-                                      <span className="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold">
-                                        Đăng ký: {req.packageType === 'LIFETIME' ? 'Trọn Đời' : req.packageType === '3YEAR' ? '3 Năm' : req.packageType === '2YEAR' ? '2 Năm' : '1 Năm'}
+                                    <div className="flex items-center gap-1 mt-0.5">
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold">
+                                        {req.packageType === 'LIFETIME' ? 'Trọn Đời' : req.packageType === '3YEAR' ? '3 Năm' : req.packageType === '2YEAR' ? '2 Năm' : '1 Năm'}
                                       </span>
                                     </div>
                                   </td>
 
                                   {/* Cột 4: Số ĐT & Zalo */}
-                                  <td className="py-2.5 px-3">
-                                    <div className="font-mono font-black text-emerald-300 text-xs">
+                                  <td className="py-1.5 px-2.5">
+                                    <div className="font-mono font-bold text-emerald-300 text-xs">
                                       {req.phoneNumber || '---'}
                                     </div>
-                                    <div className="flex items-center gap-1.5 mt-1">
+                                    <div className="flex items-center gap-1 mt-0.5">
                                       {cleanPhone ? (
                                         <a
                                           href={`https://zalo.me/${cleanPhone}`}
                                           target="_blank"
                                           rel="noreferrer"
-                                          className="px-2 py-0.5 rounded-lg bg-[#0068FF] hover:bg-blue-600 text-white font-bold text-[10px] flex items-center gap-1 transition shadow-sm"
+                                          className="px-1.5 py-0.5 rounded bg-[#0068FF] hover:bg-blue-600 text-white font-bold text-[10px] flex items-center gap-1 transition shadow-sm"
                                           title="Nhắn tin Zalo trực tiếp"
                                         >
                                           <MessageCircle className="w-3 h-3" />
@@ -3648,7 +3556,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                       <button
                                         type="button"
                                         onClick={() => handleCopyTextWithNotice(req.phoneNumber || cleanPhone, 'Số ĐT')}
-                                        className="p-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
+                                        className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
                                         title="Chép SĐT"
                                       >
                                         <Copy className="w-3 h-3" />
@@ -3657,8 +3565,8 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   </td>
 
                                   {/* Cột 5: Mã Máy Tính */}
-                                  <td className="py-2.5 px-3">
-                                    <div className="flex items-center gap-1.5 bg-slate-900/80 px-2 py-1 rounded-lg border border-slate-700/60">
+                                  <td className="py-1.5 px-2.5">
+                                    <div className="flex items-center gap-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700/60">
                                       <span className="font-mono font-bold text-cyan-300 text-xs select-all break-all">
                                         {req.machineId}
                                       </span>
@@ -3674,47 +3582,47 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   </td>
 
                                   {/* Cột 6: Hạn Dùng / Ngày Gửi */}
-                                  <td className="py-2.5 px-2.5">
-                                   {isApproved ? (
-                                     <div>
-                                       <div className="text-emerald-400 font-bold text-xs flex items-center gap-1">
-                                         <span>🟢 Còn {req.daysRemaining ?? 365} ngày</span>
-                                       </div>
-                                       <div className="text-slate-400 text-[10px] font-mono mt-0.5">
-                                         Hạn: {req.expiryDateStr || 'Chuẩn'}
-                                       </div>
-                                     </div>
-                                   ) : (
-                                     <div className="text-slate-400 text-[11px] font-mono flex items-center gap-1">
-                                       <Clock className="w-3 h-3 text-slate-500 shrink-0" />
-                                       <span>{req.createdAt || 'Mới đây'}</span>
-                                     </div>
-                                   )}
+                                  <td className="py-1.5 px-2">
+                                    {isApproved ? (
+                                      <div>
+                                        <div className="text-emerald-400 font-bold text-xs flex items-center gap-1">
+                                          <span>🟢 Còn {req.daysRemaining ?? 365} ngày</span>
+                                        </div>
+                                        <div className="text-slate-400 text-[10px] font-mono mt-0.5">
+                                          Hạn: {req.expiryDateStr || 'Chuẩn'}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="text-slate-400 text-[11px] font-mono flex items-center gap-1">
+                                        <Clock className="w-3 h-3 text-slate-500 shrink-0" />
+                                        <span>{req.createdAt || 'Mới đây'}</span>
+                                      </div>
+                                    )}
                                   </td>
 
                                   {/* Cột 7: Trạng Thái */}
-                                  <td className="py-2.5 px-2.5 text-center">
+                                  <td className="py-1.5 px-2 text-center">
                                     {isBlocked ? (
-                                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-black">
-                                        🔒 ĐÃ KHÓA
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-black">
+                                        🔒 KHÓA
                                       </span>
                                     ) : isApproved ? (
-                                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-black">
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black">
                                         ✅ ĐÃ CẤP PRO
                                       </span>
                                     ) : req.status === 'REJECTED' ? (
-                                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[11px] font-bold">
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold">
                                         ❌ TỪ CHỐI
                                       </span>
                                     ) : (
-                                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 text-white font-black text-[11px] shadow-sm shadow-red-500/40 animate-pulse">
+                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] shadow-sm shadow-red-500/40 animate-pulse">
                                         ⏳ CHỜ DUYỆT
                                       </span>
                                     )}
                                   </td>
 
                                   {/* Cột 8: Cấp Bản Quyền (1, 2, 3 Năm & Trọn Đời) */}
-                                  <td className="py-2.5 px-3">
+                                  <td className="py-1.5 px-2">
                                     <div className="flex items-center justify-center gap-1 flex-wrap">
                                       {/* Nút 1 NĂM */}
                                       <button
@@ -3733,7 +3641,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
+                                        className="px-2 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
                                         title={isApproved ? "Gia hạn thêm 1 Năm" : "Duyệt & Cấp bản quyền 1 Năm"}
                                       >
                                         {approvingId === `${req.machineId}_1YEAR` ? (
@@ -3761,7 +3669,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
+                                        className="px-2 py-1 rounded-md bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
                                         title="Cấp bản quyền 2 Năm VIP"
                                       >
                                         <Crown className="w-3 h-3 text-yellow-200" />
@@ -3785,7 +3693,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-2.5 py-1 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-bold text-xs shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
+                                        className="px-2 py-1 rounded-md bg-cyan-700 hover:bg-cyan-600 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
                                         title="Cấp bản quyền 3 Năm Pro"
                                       >
                                         <Sparkles className="w-3 h-3 text-cyan-200" />
@@ -3809,7 +3717,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             reqId: req.id
                                           }
                                         )}
-                                        className="px-2.5 py-1 rounded-lg bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
+                                        className="px-2 py-1 rounded-md bg-purple-700 hover:bg-purple-600 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
                                         title="Cấp bản quyền Vĩnh Viễn Trọn Đời"
                                       >
                                         <span>Vô Hạn</span>
@@ -3827,7 +3735,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                             req.daysRemaining || 365,
                                             req.expiryDateStr || 'Chuẩn'
                                           )}
-                                          className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs flex items-center gap-1 shadow-sm transition cursor-pointer"
+                                          className="px-2 py-1 rounded-md bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-[11px] flex items-center gap-1 shadow-sm transition cursor-pointer"
                                           title="Xem lại mã Key Ed25519 & Sao chép tin Zalo"
                                         >
                                           <Key className="w-3 h-3 text-slate-950" />
@@ -3838,13 +3746,13 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                   </td>
 
                                   {/* Cột 9: Quản Trị (Khóa/Mở Khóa, Xóa Đơn) */}
-                                  <td className="py-2.5 px-2.5 text-center">
-                                    <div className="flex items-center justify-center gap-1.5">
+                                  <td className="py-1.5 px-2 text-center">
+                                    <div className="flex items-center justify-center gap-1">
                                       {/* Nút Khóa / Mở Khóa */}
                                       <button
                                         type="button"
                                         onClick={() => handleToggleLockMachine(req.machineId, isBlocked)}
-                                        className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                        className={`p-1 rounded border transition cursor-pointer ${
                                           isBlocked
                                             ? 'bg-emerald-900/70 hover:bg-emerald-800 text-emerald-300 border-emerald-600/60'
                                             : 'bg-slate-800 hover:bg-rose-900/70 text-rose-300 border-rose-800/50'
@@ -3858,7 +3766,7 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                                       <button
                                         type="button"
                                         onClick={() => handleDeleteRegistration(req.id, req.machineId, req.issueNumber)}
-                                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white border border-slate-700 transition cursor-pointer"
+                                        className="p-1 rounded bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white border border-slate-700 transition cursor-pointer"
                                         title="Xóa vĩnh viễn đơn đăng ký"
                                       >
                                         <Trash2 className="w-3.5 h-3.5" />
@@ -3874,7 +3782,6 @@ Kính chúc quý Thầy/Cô luôn dồi dào sức khỏe và có những tiết
                     </div>
                   );
                 })()}
-
                 {/* ========================================================================= */}
                 {/* 5. MODAL HỒ SƠ CHI TIẾT & KÍCH HOẠT NHANH (QUICK ACTION MODAL)              */}
                 {/* ========================================================================= */}
