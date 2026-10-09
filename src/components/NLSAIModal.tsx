@@ -788,12 +788,45 @@ ${exportDisabilityProc}
                     </div>
                     <a
                       href={NLS_RESOURCES.addinUrl}
-                      download="TichHop_NLS_AI.dotm"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
                     >
                       <FileCode className="w-4 h-4 text-amber-400" />
                       Tải File .dotm (50 KB)
                     </a>
+                  </div>
+
+                  {/* PHƯƠNG ÁN 4: CÔNG CỤ GỠ BỎ BẮT BUỘC TRIỆT ĐỂ (1-CLICK) */}
+                  <div className="p-3.5 rounded-xl bg-gradient-to-r from-red-950/50 via-rose-950/30 to-slate-950 border border-red-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black text-rose-400 uppercase tracking-wide">🛠️ CÔNG CỤ GỠ BỎ BẮT BUỘC ADD-IN NLS KHỎI WORD (1-CLICK)</span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                        Tự động làm sạch triệt để toàn bộ Add-in NLS-AI bị kẹt hoặc cài vĩnh viễn trên Microsoft Word.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <a
+                        href={NLS_RESOURCES.forceUninstallUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 sm:flex-initial py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-red-600/30 transition whitespace-nowrap cursor-pointer"
+                      >
+                        <Download className="w-4 h-4" />
+                        TẢI FILE GỠ (.EXE)
+                      </a>
+                      <a
+                        href={NLS_RESOURCES.forceUninstallZipUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 sm:flex-initial py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition whitespace-nowrap cursor-pointer"
+                      >
+                        <Download className="w-4 h-4 text-rose-400" />
+                        BẢN ZIP (PASS: 123)
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

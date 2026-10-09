@@ -36,6 +36,8 @@ export const NLS_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI.exe",
   addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TichHop_NLS_AI.dotm",
+  forceUninstallUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC.exe",
+  forceUninstallZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC_Pass_123.zip",
   videoDirectUrl: "/HD_tich_hop_NLS_AI.mp4",
   videoEmbedUrl: "",
   videoWatchUrl: "/HD_tich_hop_NLS_AI.mp4",
