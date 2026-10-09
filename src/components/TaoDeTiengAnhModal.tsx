@@ -823,6 +823,24 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                       Bao gồm cả <b>Bộ cài Word 1-Click</b> (Cai_Dat_TaoDe_TiengAnh_THCS.exe) và <b>Bản Desktop chạy độc lập</b> (Tao_De_Tieng_Anh_Desktop.exe). Đã nén an toàn với mật khẩu <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> giúp tải siêu tốc 100% không bị trình duyệt hay Windows Defender chặn.
                     </p>
                   </div>
+
+                  {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1">
+                    <div className="flex items-center justify-between flex-wrap gap-1">
+                      <div className="flex items-center gap-1.5 font-bold text-emerald-400 text-xs">
+                        <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                        <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB</span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        v3.8.2 (Mới nhất)
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-300 flex flex-wrap gap-3 font-mono pt-0.5">
+                      <span>🕒 Cập nhật: <strong className="text-amber-300">09/10/2026 (22:58:23)</strong></span>
+                      <span>📦 Bộ cài PC: <strong className="text-cyan-300">File .exe sạch mới 100%</strong></span>
+                    </div>
+                  </div>
+
                   <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <a
                       href={EXAM_RESOURCES.exeUrl}

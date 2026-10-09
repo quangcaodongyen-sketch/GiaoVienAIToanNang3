@@ -1598,6 +1598,10 @@ export default function App() {
                           }`}>
                             {app.badge}
                           </span>
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-cyan-100 text-cyan-900 dark:bg-cyan-950/80 dark:text-cyan-300 border border-cyan-300/50 dark:border-cyan-700/50 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            {app.version || 'v3.8.2'} • {app.updatedAt || '09/10/2026 22:58'}
+                          </span>
                         </div>
                         <h3 className={`text-sm sm:text-base font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors truncate`}>
                           {app.title}
@@ -1723,6 +1727,15 @@ export default function App() {
 
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div>
+                        <div className="flex items-center justify-between text-[11px] mb-2 font-mono">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            {app.version || 'v3.8.2'}
+                          </span>
+                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                            🕒 {app.updatedAt || '09/10/2026 22:58'}
+                          </span>
+                        </div>
                         <h3 className={`text-lg font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors line-clamp-1`}>
                           {app.title}
                         </h3>

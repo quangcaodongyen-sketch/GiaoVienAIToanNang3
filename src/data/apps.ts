@@ -10,6 +10,8 @@ export interface AppCard {
   active: boolean;
   featured: boolean;
   order: number;
+  version?: string;
+  updatedAt?: string;
 }
 
 export const apps: AppCard[] = [

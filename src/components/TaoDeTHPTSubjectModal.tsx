@@ -365,6 +365,24 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                   </div>
                 </div>
 
+                {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-950 to-cyan-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1.5 shadow-lg">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2 font-black text-emerald-400 text-xs uppercase tracking-wide">
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      Phiên bản v3.8.2 (Mới nhất)
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20">
+                    <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (22:58:23)</span></div>
+                    <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% ({curSub.size})</span></div>
+                    <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
+                  </div>
+                </div>
+
                 {/* 3 LỰA CHỌN TẢI VỀ: EXE, ZIP, DOTM */}
                 <div className="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* LỰA CHỌN 1: BỘ CÀI EXE TỰ ĐỘNG */}
