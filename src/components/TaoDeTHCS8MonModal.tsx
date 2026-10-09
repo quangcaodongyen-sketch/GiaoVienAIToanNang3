@@ -1061,17 +1061,35 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   ))}
                 </div>
 
-                {/* CỤM NÚT TẢI XUỐNG ĐẦY ĐỦ: .EXE + .ZIP PASS 123 + .DOCX HƯỚNG DẪN */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+                {/* THÔNG TIN XÁC NHẬN BẢN CẬP NHẬT MỚI NHẤT & THỜI GIAN ĐƯA LÊN WEB */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-950 to-cyan-950/80 border border-emerald-500/50 text-slate-200 text-xs space-y-1.5 shadow-lg">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2 font-black text-emerald-400 text-xs uppercase tracking-wide">
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      Phiên bản v3.8.2 (Mới nhất)
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20">
+                    <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (22:58:23)</span></div>
+                    <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% ({curSub.size})</span></div>
+                    <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
+                  </div>
+                </div>
+
+                {/* CỤM NÚT TẢI BỘ CÀI CHÍNH (.EXE VÀ .ZIP PASS 123) */}
+                <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
                   {/* Nút 1: Tải bộ cài .EXE */}
                   <a
                     href={curSub.exeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30 cursor-pointer hover:scale-[1.01]"
+                    className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />
-                    <span>🚀 TẢI BỘ CÀI (.EXE - CÀI ĐẶT NHANH)</span>
+                    <span>🚀 TẢI BỘ CÀI CHÍNH THỨC (.EXE - CÀI ĐẶT NHANH)</span>
                   </a>
 
                   {/* Nút 2: Tải bản nén .ZIP */}
@@ -1079,70 +1097,12 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     href={curSub.zipUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer hover:scale-[1.01]"
+                    className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer hover:scale-[1.01]"
                   >
                     <Download className="w-4 h-4" />
                     <span>📦 TẢI BẢN NÉN (.ZIP - MẬT KHẨU: 123)</span>
                   </a>
-
-                  {/* Nút 3: Tải tài liệu hướng dẫn Word */}
-                  <a
-                    href="/HUONG_DAN_TAO_DE_THCS_8_MON.docx"
-                    download="HUONG_DAN_TAO_DE_THCS_8_MON.docx"
-                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition cursor-pointer"
-                    title="Tải file tài liệu hướng dẫn chi tiết (.docx)"
-                  >
-                    <FileText className="w-4 h-4 text-amber-400" />
-                    <span>HƯỚNG DẪN (.DOCX)</span>
-                  </a>
                 </div>
-              </div>
-
-              {/* HƯỚNG DẪN CÀI ĐẶT 3 BƯỚC */}
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-                <h5 className="font-bold text-white text-xs flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG MÔN {curSub.name.toUpperCase()} (3 BƯỚC NHANH):
-                </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center">1</span>
-                    <h6 className="font-bold text-white text-xs">Tải file .ZIP về máy</h6>
-                    <p className="text-[11px] text-slate-400">Bấm nút tải ở trên. File lưu về dạng ZIP mật khẩu 123.</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
-                    <h6 className="font-bold text-white text-xs">Giải nén bằng Pass: 123</h6>
-                    <p className="text-[11px] text-slate-400">Nhấp chuột phải vào file ZIP ➔ Extract Here ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
-                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center">3</span>
-                    <h6 className="font-bold text-white text-xs">Chạy ứng dụng</h6>
-                    <p className="text-[11px] text-slate-400">Nhấp đúp chuột vào file để mở phần mềm tạo đề {curSub.name} ngay tức thì.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* VIDEO HƯỚNG DẪN */}
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <Play className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-white text-xs">Video Hướng Dẫn Ra Đề & Sử Dụng Phần Mềm</h5>
-                    <p className="text-[11px] text-slate-400">Xem quy trình ra đề kiểm tra định kỳ chuẩn mẫu Công văn 7991</p>
-                  </div>
-                </div>
-                <a
-                  href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
-                  download="Huong_Dan_Tao_De_THCS_CV7991.mp4"
-                  target="_blank"
-                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  Xem Video
-                </a>
               </div>
 
             </div>
