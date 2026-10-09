@@ -288,44 +288,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         {/* NỘI DUNG TỪNG TAB */}
         <div className="flex-1 overflow-y-auto p-6">
           
-          {/* ===================== TAB 1: TRẢI NGHIỆM TRỰC TUYẾN ===================== */}
-          {activeTab === ('trial' as any) && (
-            <div className="space-y-6">
-              
-              {/* THANH TIẾN TRÌNH DÙNG THỬ 3 CHẤM */}
-              {!isPro && (
-                <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">
-                      {trialsRemaining}
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold text-white">
-                        Hạn ngạch dùng thử sư phạm: Còn {trialsRemaining} / 3 lượt tạo đề
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        Mỗi thiết bị được trải nghiệm đúng 3 lần tạo đề (xem 1/2 đáp án, tạo 1 đề/lần). Kích hoạt Pro xem trọn vẹn.
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3 chấm tiến trình ● ● ● */}
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3].map(idx => (
-                      <span
-                        key={idx}
-                        className={`inline-block w-4 h-4 rounded-full transition-all ${
-                          idx <= trialsRemaining
-                            ? 'bg-amber-400 shadow-md shadow-amber-400/30'
-                            : 'bg-slate-700 border border-slate-600'
-                        }`}
-                        title={`Lượt ${idx}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
+          
               {/* BỘ LỌC CẤU HÌNH ĐỀ KIỂM TRA */}
               <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-5">
                 <div className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-4 flex items-center gap-2">

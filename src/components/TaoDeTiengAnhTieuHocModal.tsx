@@ -253,30 +253,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
         <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 bg-slate-900/90 text-slate-100">
           
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LƯỢT DÙNG THỬ) */}
-          {/* ========================================================================= */}
-          {activeTab === ('online' as any) && (
-            <div className="space-y-6">
-              
-              {/* THANH TIẾN TRÌNH 5 CHẤM DÙNG THỬ (Rule 2) */}
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
-                    <Award className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                      CHÍNH SÁCH DÙNG THỬ MIỄN PHÍ TRÊN MÁY TÍNH
-                      {isProActive ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500 text-white">
-                          ĐÃ KÍCH HOẠT BẢN QUYỀN PRO
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/30 text-amber-300 border border-amber-500/40">
-                          {trialRemaining} / 5 LƯỢT CÒN LẠI
-                        </span>
-                      )}
-                    </h4>
+                              </h4>
                     <p className="text-[11px] text-slate-400">
                       Mỗi máy tính được trải nghiệm đủ 5 lần tạo đề hoàn chỉnh kèm Ma trận 4 mức độ & Bản đặc tả theo Thông tư 27.
                     </p>

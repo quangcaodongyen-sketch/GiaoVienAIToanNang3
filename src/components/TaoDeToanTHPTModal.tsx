@@ -245,28 +245,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         {/* NỘI DUNG TỪNG TAB */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
-          {activeTab === ('online' as any) && (
-            <div className="space-y-6">
-              {/* THANH TRẠNG THÁI DÙNG THỬ 5 CHẤM BẮT BUỘC (RULE 2) */}
-              <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                      Trạng thái phiên bản:
-                      {isProActive ? (
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1">
-                          <Crown className="w-3.5 h-3.5 text-amber-400" /> BẢN QUYỀN PRO TOÁN THPT ĐÃ KÍCH HOẠT
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-xs font-bold">
-                          DÙNG THỬ TRẢI NGHIỆM ({trialRemaining}/5 LƯỢT)
-                        </span>
-                      )}
-                    </h4>
+                              </h4>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {isProActive
                         ? 'Thầy/Cô sở hữu quyền tạo đề không giới hạn trên máy tính này.'

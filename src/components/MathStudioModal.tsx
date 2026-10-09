@@ -532,45 +532,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 text-xs">
 
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE LATEX MATHPIX TO WORD CONVERTER)     */}
-          {/* ========================================================================= */}
-          {activeTab === ('online' as any) && (
-            <div className="space-y-4 max-w-4xl mx-auto">
-              
-              {/* THANH TIẾN TRÌNH DÙNG THỬ 5 CHẤM */}
-              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <Calculator className="w-5 h-5 text-violet-400" />
-                  <div>
-                    <div className="font-bold text-white text-xs">
-                      {isProActive ? 'Bản quyền Pro Đã Kích Hoạt' : 'Chính Sách Dùng Thử Trực Tuyến Sư Phạm'}
-                    </div>
-                    <p className="text-[11px] text-slate-400">
-                      {isProActive 
-                        ? '✨ Không giới hạn lượt chuyển đổi & tính năng MathStudio' 
-                        : 'Mỗi máy tính được trải nghiệm miễn phí 5 lượt trước khi kích hoạt'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  {!isProActive ? (
-                    <div className="flex items-center gap-1.5 font-mono text-base tracking-widest text-amber-400">
-                      {[1, 2, 3, 4, 5].map((dot) => (
-                        <span key={dot} className={dot <= trialRemaining ? 'text-amber-400' : 'text-slate-700'}>
-                          ●
-                        </span>
-                      ))}
-                      <span className="text-xs text-slate-400 font-sans ml-1">
-                        (Còn <strong>{trialRemaining}</strong>/5 lượt)
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> VIP PRO TRỌN ĐỜI
-                    </span>
-                  )}
-                </div>
+                          </div>
               </div>
 
               {/* KHU VỰC CHỌN MẪU VÀ NHẬP LATEX MATHPIX */}

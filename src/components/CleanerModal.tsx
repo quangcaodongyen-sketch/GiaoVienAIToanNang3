@@ -415,29 +415,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         {/* MODAL CONTENT BODY */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {/* ========================================================================= */}
-          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE STUDIO) */}
-          {/* ========================================================================= */}
-          {activeTab === 'online' && (
-            <div className="space-y-6">
-              {/* TRIAL STATUS & PEDAGOGICAL NOTICE */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/80 border border-slate-700/80">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Chế độ hoạt động</div>
-                    <div className="text-sm font-bold text-white flex items-center gap-2">
-                      {isVIP ? (
-                        <span className="text-emerald-400 flex items-center gap-1">
-                          👑 Bản Quyền VIP Trọn Đời (100% Công Suất Không Giới Hạn)
-                        </span>
-                      ) : (
-                        <span className="text-amber-300 flex items-center gap-1">
-                          ⚡ Bản Dùng Thử Trải Nghiệm (Tối Đa 5 Lần / Máy)
-                        </span>
-                      )}
-                    </div>
+                              </div>
                   </div>
                 </div>
 

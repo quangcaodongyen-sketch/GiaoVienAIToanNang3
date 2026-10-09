@@ -250,26 +250,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         </div>
 
         {/* ========================================================================= */}
-        {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LẦN DÙNG THỬ)                           */}
-        {/* ========================================================================= */}
-        {activeTab === ('online' as any) && (
-          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-            
-            {/* THANH DÙNG THỬ 5 CHẤM */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-950 border border-violet-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-bold text-lg">
-                  {isProActive ? '👑' : trialRemaining}
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                    Chính sách Dùng thử Trực tuyến Cấp THPT (5 Lần / Máy tính)
-                    {isProActive && (
-                      <span className="px-2 py-0.5 rounded text-[11px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40">
-                        ĐÃ KÍCH HOẠT PRO
-                      </span>
-                    )}
-                  </h4>
+                          </h4>
                   <p className="text-xs text-slate-300">
                     Mỗi lượt bấm sinh ra 01 Ma trận 16 cột + Bản đặc tả + Bộ {numVariants} mã đề hoán vị + Bảng đối chiếu đáp án song song N cột in đỏ.
                   </p>
