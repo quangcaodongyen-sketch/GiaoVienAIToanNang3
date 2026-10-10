@@ -395,7 +395,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
       console.log('Issue error:', e);
     }
 
-    const zaloMsg = `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN ${appName.toUpperCase()} (CV 7991)
+    const zaloMsg = `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN ${appName.toUpperCase()} (CV 7991)
 ----------------------------------------
 • Họ và tên: ${regName.trim()}
 • Điện thoại / Zalo: ${regPhone.trim()}
@@ -645,13 +645,16 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                      TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
                       • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TẠO ĐỀ KIỂM TRA {curSub.fullName.toUpperCase()} (CV 7991)</strong>
+                    </p>
+                    <p className="text-[10px] text-slate-400 italic mt-0.5">
+                      * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                     </p>
                   </div>
                 </div>
@@ -869,7 +872,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
         {/* FOOTER MODAL */}
         <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span>© 2026 Bản quyền thuộc Thầy giáo <strong>Đinh Văn Thành</strong></span>
+            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong></span>
             <span>•</span>
             <span className="text-emerald-400 font-bold">Hotline: 0915.213717</span>
           </div>

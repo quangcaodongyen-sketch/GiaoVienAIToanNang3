@@ -515,7 +515,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       setRegSuccess(true);
 
       // 3. Mở Zalo Thầy Thành gửi thông tin
-      const zaloMsg = `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN SMART LISTENING PRO (TẠO BÀI NGHE)
+      const zaloMsg = `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN SMART LISTENING PRO (TẠO BÀI NGHE)
 ----------------------------------------
 • Họ và tên: ${teacherName}
 • Điện thoại / Zalo: ${phoneZalo}
@@ -770,13 +770,16 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                    TÁC GIẢ & BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH
+                    TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                   </h4>
                   <p className="text-xs text-slate-200">
                     • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
                   </p>
                   <p className="text-[11px] text-slate-400">
                     • Phần mềm: <strong>SMART LISTENING PRO (TẠO BÀI NGHE SGK TIẾNG ANH)</strong>
+                  </p>
+                  <p className="text-[10px] text-slate-400 italic mt-0.5">
+                    * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                   </p>
                 </div>
               </div>

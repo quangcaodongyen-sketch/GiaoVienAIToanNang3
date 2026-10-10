@@ -844,13 +844,16 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   </div>
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                      TÁC GIẢ & BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH
+                      TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
                       • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
-                      • Phần mềm: <strong>ĐINH THÀNH MATHSTUDIO 2026+ PRO</strong> (Toán học, Mathpix & Word)
+                      • Phần mềm: <strong>ĐINH THÀNH MATHSTUDIO 2026+ PRO</strong>
+                    </p>
+                    <p className="text-[10px] text-slate-400 italic mt-0.5">
+                      * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                     </p>
                   </div>
                 </div>
@@ -935,7 +938,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   </p>
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN MATHSTUDIO
+                      `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN MATHSTUDIO
 • Họ tên: ${regName}
 • SĐT/Zalo: ${regPhone}
 • Trường: ${regSchool}

@@ -324,7 +324,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       let tenLoai = 'QUYẾT ĐỊNH';
       let trichYeu = 'Về việc chuẩn hóa văn bản theo Nghị định 30/2020/NĐ-CP';
       let chucVu = 'HIỆU TRƯỞNG';
-      let nguoiKy = 'Đinh Văn Thành';
+      let nguoiKy = 'Đinh Thành';
       const noiNhanList: string[] = [];
 
       // Nhận diện loại văn bản

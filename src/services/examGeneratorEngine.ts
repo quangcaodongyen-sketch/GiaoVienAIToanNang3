@@ -1,5 +1,5 @@
 // ==============================================================================
-// THẦY GIÁO ĐINH VĂN THÀNH - CÔNG CỤ TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS (CV 7991)
+// TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717 - CÔNG CỤ TẠO ĐỀ KIỂM TRA TIẾNG ANH THCS (CV 7991)
 // ENGINE SINH ĐỀ ĐỘNG NGẪU NHIÊN 100% CHUẨN MẪU DESKTOP VÀ WORD ADD-IN
 // ==============================================================================
 

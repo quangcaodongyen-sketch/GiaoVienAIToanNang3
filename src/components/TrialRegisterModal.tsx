@@ -207,7 +207,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
   };
 
   const zaloMessage = encodeURIComponent(
-    `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN PHẦN MỀM THCS\n` +
+    `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN PHẦN MỀM THCS\n` +
     `----------------------------------------\n` +
     `• Họ và tên Giáo viên: ${fullName}\n` +
     `• Số điện thoại / Zalo: ${phoneNumber}\n` +

@@ -185,7 +185,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       console.log('Cloud sync error (fallback local):', e);
     }
 
-    const zaloMsg = `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN TẠO ĐỀ TIẾNG ANH THCS (CV 7991)
+    const zaloMsg = `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN TẠO ĐỀ TIẾNG ANH THCS (CV 7991)
 ----------------------------------------
 • Họ và tên: ${regData.fullName}
 • Điện thoại / Zalo: ${regData.phoneNumber}
@@ -386,13 +386,16 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   </div>
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                      TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
                       • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
-                      • Phần mềm: <strong>TẠO ĐỀ TIẾNG ANH THCS (GLOBAL SUCCESS - CV 7991)</strong> (Chuẩn Khung NLS TT 02/2025, AI QĐ 2422 & CV 5512)
+                      • Phần mềm: <strong>TẠO ĐỀ TIẾNG ANH THCS (GLOBAL SUCCESS - CV 7991)</strong>
+                    </p>
+                    <p className="text-[10px] text-slate-400 italic mt-0.5">
+                      * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                     </p>
                   </div>
                 </div>

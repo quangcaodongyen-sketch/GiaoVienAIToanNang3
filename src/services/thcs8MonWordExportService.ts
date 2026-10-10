@@ -1475,7 +1475,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
               kính mời Thầy/Cô liên hệ tác giả để nhận tư vấn và kích hoạt bản quyền Pro ưu đãi sư phạm:
             </div>
             <div style="font-size: 12pt; font-weight: bold; color: #047857; margin-top: 6pt;">
-              📞 THẦY GIÁO ĐINH VĂN THÀNH — HOTLINE / ZALO: 0915.213717 (TRƯỜNG THCS ĐỒNG YÊN)
+              📞 TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717 (TRƯỜNG THCS ĐỒNG YÊN)
             </div>
             <div style="font-size: 10pt; color: #666666; margin-top: 2pt;">
               Website chính thức: <b>https://dekiemtraso.com/</b>

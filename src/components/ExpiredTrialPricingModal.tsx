@@ -105,7 +105,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
   };
 
   const zaloMessage = encodeURIComponent(
-    `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM\n` +
+    `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM\n` +
     `----------------------------------------\n` +
     `• Họ và tên: ${fullName}\n` +
     `• Số điện thoại / Zalo: ${phoneNumber}\n` +

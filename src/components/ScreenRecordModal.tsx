@@ -141,7 +141,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
     // Tiêu đề mẫu mở đầu
     ctx.fillStyle = "#F59E0B";
     ctx.font = "bold 24px 'Segoe UI', Tahoma, Arial";
-    ctx.fillText("✨ BÀI GIẢNG ĐIỆN TỬ - THẦY GIÁO ĐINH VĂN THÀNH (0915.213717)", 40, 50);
+    ctx.fillText("✨ BÀI GIẢNG ĐIỆN TỬ - TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717", 40, 50);
 
     ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
     ctx.font = "16px 'Segoe UI', Tahoma, Arial";

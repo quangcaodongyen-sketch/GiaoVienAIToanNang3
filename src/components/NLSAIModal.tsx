@@ -913,13 +913,16 @@ ${exportDisabilityProc}
                   </div>
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                      TÁC GIẢ & BẢN QUYỀN PHẦN MỀM: THẦY GIÁO ĐINH VĂN THÀNH
+                      TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
                       • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
-                      • Phần mềm: <strong>TÍCH HỢP NLS & AI (ADD-INS V3)</strong> (Chuẩn Khung NLS TT 02/2025, AI QĐ 2422 & CV 5512)
+                      • Phần mềm: <strong>TÍCH HỢP NLS & AI (ADD-INS V3)</strong>
+                    </p>
+                    <p className="text-[10px] text-slate-400 italic mt-0.5">
+                      * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                     </p>
                   </div>
                 </div>
@@ -1002,7 +1005,7 @@ ${exportDisabilityProc}
                   </p>
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM
+                      `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM
 • Họ tên: ${regName}
 • SĐT/Zalo: ${regPhone}
 • Trường: ${regSchool}
