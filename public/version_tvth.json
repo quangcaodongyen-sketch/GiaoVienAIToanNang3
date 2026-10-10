@@ -1,11 +1,11 @@
 {
-  "version": "4.2.1",
-  "latestVersion": "4.2.1",
-  "currentVersion": "4.2.1",
+  "version": "4.2.2",
+  "latestVersion": "4.2.2",
+  "currentVersion": "4.2.2",
   "updatedAt": "2026-10-11",
   "releaseDate": "11/10/2026",
   "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717)",
-  "changelog": "• [11/10/2026 - v4.2.1] Bỏ hoàn toàn footer trong file Word xuất ra theo yêu cầu giáo viên\n• Bỏ tên GV ra đề trong bảng chữ ký (để trống cho giáo viên tự ký tên/ghi nhận)\n• Chuẩn hóa tên đơn vị mặc định trên app và đề kiểm tra: UBND XÃ ........ / TRƯỜNG TIỂU HỌC ........\n• Chuẩn hóa tuyệt đối thuật ngữ sư phạm: Giám thị coi thi -> Giáo viên; Bài thi/đề thi/kỳ thi -> Bài kiểm tra/đề kiểm tra/kỳ kiểm tra\n• Xuất đầy đủ từ 1 đến 5 mã đề in có sẵn dòng kẻ 4 ô ly chuẩn đẹp ngay trong file mở xem và file học sinh độc lập\n• Ghi chú pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
+  "changelog": "• [11/10/2026 - v4.2.2] Tối ưu hóa toàn diện giao diện: Viết lại toàn bộ câu hướng dẫn ngắn gọn, xúc tích\n• Đưa cụm Nút Hành động Tạo đề lên ngay dưới phần chọn Khối lớp/Kỳ kiểm tra để giáo viên nhìn thấy ngay khi mở app\n• Thu gọn thẻ xem trước và tự động căn chỉnh kích thước cửa sổ vừa khít mọi độ phân giải màn hình máy tính\n• Loại bỏ hoàn toàn tình trạng chữ bị đè, nút bị che khuất hoặc ẩn dưới thanh tác vụ Windows\n• Giữ nguyên toàn vẹn tính năng xuất đề học sinh in có sẵn 4 ô ly và bảng đáp án chi tiết\n• Ghi chú pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
   "downloadUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip",
   "directExeUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe"
 }
