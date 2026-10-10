@@ -76,7 +76,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
             setErrorMessage('');
           }}
           className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-          title="Dành riêng cho Admin Đinh Văn Thành"
+          title="Dành riêng cho Admin Đinh Thành"
         >
           <Lock className="w-3.5 h-3.5 text-amber-400" />
           <span>{showAdminLogin ? 'Đóng Cổng Admin' : 'Cổng Admin'}</span>
@@ -145,7 +145,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
                 className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-teal-600/20 transition cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Zalo Thầy Thành: {BRAND.phone}</span>
+                <span>Zalo Đinh Thành: {BRAND.phone}</span>
               </a>
             </div>
           </div>

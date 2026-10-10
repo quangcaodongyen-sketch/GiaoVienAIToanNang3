@@ -1,12 +1,12 @@
 {
   "appId": "taode-cn-thcs",
   "appName": "Tạo Đề Kiểm Tra Công Nghệ THCS (CV 7991)",
-  "currentVersion": "3.9.0",
-  "latestVersion": "3.9.0",
-  "releaseDate": "09/10/2026 (Lúc 23:45:00)",
-  "changelog": "• [09/10/2026 (Lúc 23:45:00) - v3.9.0] Cập nhật bộ cài chuẩn mới nhất đưa lên web cho Tạo Đề Kiểm Tra Công Nghệ THCS (CV 7991)\n• Đã đồng bộ mã máy, ký số bản quyền & tích hợp giao diện điều khiển hiện đại\n• Bộ cài đặt PC sạch 100%, không bị diệt virus chặn, tương thích Microsoft Word 2016-2024",
+  "currentVersion": "4.0.0",
+  "latestVersion": "4.0.0",
+  "releaseDate": "11/10/2026",
+  "changelog": "• [11/10/2026 - v4.0.0] Cập nhật bộ cài chuẩn mới nhất đưa lên web\n• Tác giả & Bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA\n• Tối ưu định dạng văn bản đề thi và đáp án song song chuẩn Bộ GD&ĐT\n• Nâng cấp hệ thống bản quyền Ed25519 Pro và thanh công cụ Word Ribbon",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_CN_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên"
 }

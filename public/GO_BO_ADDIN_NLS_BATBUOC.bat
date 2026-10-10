@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
-title GO BO BAT BUOC ADD-IN TICH HOP NLS - AI KHOI WORD - THAY DINH VAN THANH (0915.213717)
+title GO BO BAT BUOC ADD-IN TICH HOP NLS - AI KHOI WORD - THAY DINH THANH (0915.213717)
 color 0A
 
 echo =========================================================================
 echo   CONG CU GO BO BAT BUOC TRIET DE ADD-IN TICH HOP NLS - AI KHOI WORD
-echo   Tac gia: Thay gia Dinh Van Thanh - Hotline/Zalo: 0915.213717
+echo   Tac gia: Thay gia Dinh Thanh - Hotline/Zalo: 0915.213717
 echo =========================================================================
 echo.
 
@@ -40,7 +40,7 @@ echo.
 echo =========================================================================
 echo   THANH CONG: DA GO BO BAT BUOC TRIET DE BAN NLS-AI KHOI WORD!
 echo   Bay gio Thay/Co mo lai Word se khong con thanh Tich hop NLS - AI nua.
-echo   Hotline/Zalo ho tro Thay Dinh Van Thanh: 0915.213717
+echo   Hotline/Zalo ho tro Thay Dinh Thanh: 0915.213717
 echo =========================================================================
 echo.
 pause

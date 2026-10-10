@@ -436,7 +436,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
+                Tác giả: Đinh Thành (Tel/zalo: 0915.213717) • THCS Đồng Yên (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
               </p>
             </div>
           </div>
@@ -633,7 +633,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto">
               
-              {/* THÔNG TIN TÁC GIẢ THẦY ĐINH VĂN THÀNH */}
+              {/* THÔNG TIN TÁC GIẢ ĐINH THÀNH */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
