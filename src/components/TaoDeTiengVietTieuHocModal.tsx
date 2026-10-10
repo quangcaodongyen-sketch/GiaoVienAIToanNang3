@@ -108,6 +108,8 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
   if (!isOpen) return null;
 
+  const [showCreatedNotice, setShowCreatedNotice] = useState(false);
+
   const handleGenerateExam = () => {
     if (!isProActive && trialCount <= 0) {
       alert('Thầy/Cô đã hết 5 lượt dùng thử trải nghiệm miễn phí! Vui lòng liên hệ Admin Thầy Thành Zalo 0915.213717 để nâng cấp bản quyền Pro.');
@@ -117,11 +119,43 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
     const entry = getWebTVTHEntry(selectedGrade, selectedTerm);
     setGeneratedExam(entry);
+    setShowCreatedNotice(true);
 
     if (!isProActive) {
       const nextCount = decrementExamTVTHTrial();
       setTrialCount(nextCount);
     }
+
+    alert(`Đã tạo xong đề kiểm tra lớp ${selectedGrade}. Thầy cô hãy kiểm tra kỹ nội dung trước khi sử dụng!`);
+  };
+
+  const handleExportDocx = () => {
+    if (!generatedExam) return;
+    const content = document.getElementById('tvth-preview-container');
+    if (!content) return;
+    const html = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>Đề kiểm tra Tiếng Việt</title>
+      <style>
+        body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.25; }
+        table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+        td, th { border: 1px solid black; padding: 5px; font-size: 11pt; }
+        .red-text { color: #FF0000; font-weight: bold; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+      </style>
+      </head>
+      <body>${content.innerHTML}</body></html>
+    `;
+    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `De_Kiem_Tra_Tieng_Viet_Lop_${selectedGrade}_${selectedTerm}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleCopyMid = () => {
@@ -356,6 +390,13 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
                   <div className="flex items-center gap-2">
                     <button
+                      onClick={handleExportDocx}
+                      className="py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-md shadow-blue-600/20"
+                    >
+                      <FileText className="w-4 h-4 text-white" />
+                      <span>Mở file Word (.doc)</span>
+                    </button>
+                    <button
                       onClick={() => setShowAnswers(!showAnswers)}
                       className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs flex items-center gap-1.5 transition"
                     >
@@ -373,9 +414,17 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                 </div>
               </div>
 
+              {/* THÔNG BÁO TẠO XONG SƯ PHẠM */}
+              {generatedExam && (
+                <div className="bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-3 flex items-center gap-3 text-emerald-200 text-xs sm:text-sm font-semibold">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <span>Đã tạo xong đề kiểm tra lớp {generatedExam.grade}. Thầy cô hãy kiểm tra kỹ nội dung trước khi sử dụng!</span>
+                </div>
+              )}
+
               {/* VÙNG XEM TRƯỚC SƯ PHẠM ĐỀ THI TIẾNG VIỆT TIỂU HỌC */}
               {generatedExam && (
-                <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-6 animate-fadeIn">
+                <div id="tvth-preview-container" className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-6 animate-fadeIn">
                   
                   {/* GHI CHÚ BẢO HỘ PHÁP LÝ CHỮ NHỎ */}
                   <div className="text-[10px] text-slate-500 italic font-sans text-right border-b border-slate-200 pb-1">
