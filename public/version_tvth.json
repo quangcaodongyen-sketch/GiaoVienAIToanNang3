@@ -1,11 +1,11 @@
 {
-  "version": "4.1.0",
-  "latestVersion": "4.1.0",
-  "currentVersion": "4.1.0",
+  "version": "4.2.0",
+  "latestVersion": "4.2.0",
+  "currentVersion": "4.2.0",
   "updatedAt": "2026-10-11",
   "releaseDate": "11/10/2026",
   "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên",
-  "changelog": "• [11/10/2026 - v4.1.0] Tích hợp khung dòng kẻ 4 ô ly chuẩn đẹp bám sát mẫu giấy ô ly tiểu học cho bài Chính tả & Tập làm văn\n• Hỗ trợ tùy chọn tạo từ 1 đến 5 mã đề thi riêng biệt (xáo trộn câu hỏi & đáp án trắc nghiệm đọc hiểu)\n• Tách bạch Bản Giáo viên Master (kèm đáp án, ma trận, bản đặc tả) và Bản Học Sinh sạch (có sẵn ô ly để in ngay cho học sinh làm bài)\n• Chuẩn hóa thông tin tác giả: Tác giả: Đinh Thành (Tel/zalo: 0915.213717)\n• Ghi chú quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA\n• Cập nhật Bộ cài đặt 1-Click tự động tích hợp Add-in Word Ribbon và Desktop",
+  "changelog": "• [11/10/2026 - v4.2.0] Tích hợp xuất cả đề để in cho học sinh làm cùng trong file mở xem, đề ngay bên dưới phần ma trận\n• Xuất đủ tất cả các mã đề theo lựa chọn của giáo viên (từ 1 đến 5 mã đề riêng biệt, xáo trộn câu hỏi & đáp án)\n• Mỗi mã đề có sẵn họ tên, bảng điểm, và khung dòng kẻ 4 ô ly chuẩn đẹp tiểu học (7 dòng Chính tả, 10-14 dòng Tập làm văn)\n• Kèm bảng đáp án trắc nghiệm đối chiếu tất cả các mã đề & hướng dẫn chấm, biểu điểm chi tiết ở cuối file\n• Tự động xuất file Học Sinh song song để rảnh tay in ngay cho cả lớp\n• Chuẩn hóa thông tin: Tác giả: Đinh Thành (Tel/zalo: 0915.213717)\n• Ghi chú pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
   "downloadUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip",
   "directExeUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe"
 }
