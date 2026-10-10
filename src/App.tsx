@@ -678,6 +678,11 @@ export default function App() {
       setShowTaoDeTieuHocModal(true);
       return;
     }
+    if (app.id === 'tao-de-tieng-viet-tieu-hoc' || app.url === '#taode-tiengviet-tieuhoc') {
+      e.preventDefault();
+      setShowTaoDeTiengVietTieuHocModal(true);
+      return;
+    }
     if (app.id === 'tao-de-tieng-anh-thcs' || app.url === '#tao-de-tieng-anh') {
       e.preventDefault();
       setShowTaoDeModal(true);
@@ -1990,11 +1995,15 @@ export default function App() {
           onClose={closeAllModals}
           onOpenAdmin={() => setShowAdminDashboard(true)}
         />
-      <TaoDeTiengVietTieuHocModal
-        isOpen={showTaoDeTiengVietTieuHocModal}
-        onClose={() => setShowTaoDeTiengVietTieuHocModal(false)}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
-      />
+      )}
+
+      {/* TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC (TT 27) MODAL (3 TABS) */}
+      {showTaoDeTiengVietTieuHocModal && (
+        <TaoDeTiengVietTieuHocModal
+          isOpen={showTaoDeTiengVietTieuHocModal}
+          onClose={closeAllModals}
+          onOpenAdmin={() => setShowAdminDashboard(true)}
+        />
       )}
 
       {/* TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS (CV 7991) MODAL (3 TABS) */}
