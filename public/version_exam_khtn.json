@@ -1,12 +1,12 @@
 {
   "appId": "taode-khtn-thcs",
   "appName": "Tạo Đề Kiểm Tra Khoa Học Tự Nhiên THCS (CV 7991)",
-  "currentVersion": "3.9.0",
-  "latestVersion": "3.9.0",
-  "releaseDate": "09/10/2026 (Lúc 23:45:00)",
-  "changelog": "• [09/10/2026 (Lúc 23:45:00) - v3.9.0] Cập nhật bộ cài chuẩn mới nhất đưa lên web cho Tạo Đề Kiểm Tra Khoa Học Tự Nhiên THCS (CV 7991)\n• Đã đồng bộ mã máy, ký số bản quyền & tích hợp giao diện điều khiển hiện đại\n• Bộ cài đặt PC sạch 100%, không bị diệt virus chặn, tương thích Microsoft Word 2016-2024",
+  "currentVersion": "4.0.0",
+  "latestVersion": "4.0.0",
+  "releaseDate": "11/10/2026 (00:20:32)",
+  "changelog": "• [v4.0.0 - Bản phát hành chính thức cho Giáo viên]\n• Cập nhật thông tin tác giả & bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Ghi chú chốt bảo vệ pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA\n• Tối ưu định dạng văn bản các bài toán thực nghiệm tự luận rõ ràng, khoa học, dễ hiểu\n• Tùy chọn linh hoạt tạo tối đa 5 mã đề ngẫu nhiên chính xác tuyệt đối\n• Tích hợp thanh công cụ Word Ribbon độc lập và bảo mật bản quyền Ed25519 Pro",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_KHTN_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline / Zalo: 0915.213717 - THCS Đồng Yên"
+  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên"
 }
