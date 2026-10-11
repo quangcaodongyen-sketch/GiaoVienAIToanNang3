@@ -1,6 +1,6 @@
 // ================================================================
 // data.js – Ngân hàng đề thi & câu hỏi mở rộng Tiếng Anh THCS Global Success
-// Tác giả & Bản quyền: Thầy Đinh Văn Thành – Trường THCS Đồng Yên (0915.213717)
+// Tác giả & Bản quyền: Tác giả Đinh Thành – Trường THCS (0915.213717)
 // Bám sát chương trình GDPT 2018 & CV 7991/BGDĐT-GDTrH
 // ================================================================
 

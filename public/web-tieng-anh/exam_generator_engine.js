@@ -1,6 +1,6 @@
 // ================================================================
 // exam_generator_engine.js – Động Cơ Tổ Hợp Sinh Hàng Tỷ Đề Thi Độc Bản
-// Tác giả & Bản quyền: Thầy Đinh Văn Thành – THCS Đồng Yên (0915.213717)
+// Tác giả & Bản quyền: Tác giả Đinh Thành – THCS (0915.213717)
 // Chuẩn Công văn 7991/BGDĐT & GDPT 2018 (SGK Global Success Lớp 6, 7, 8, 9)
 // Không gian tổ hợp: > 10^28 đề thi độc bản không bao giờ trùng lặp
 // ================================================================
@@ -521,8 +521,8 @@
         code2: code2,
         timeMinutes: baseSuite.timeMinutes || 60,
         examClass: g + 'A1',
-        schoolName: options.schoolName || (typeof localStorage !== 'undefined' ? localStorage.getItem('cfg_school_name') : null) || 'TRƯỜNG THCS ĐỒNG YÊN',
-        teacherName: options.teacherName || 'Thầy Đinh Văn Thành',
+        schoolName: options.schoolName || (typeof localStorage !== 'undefined' ? localStorage.getItem('cfg_school_name') : null) || 'TRƯỜNG THCS',
+        teacherName: options.teacherName || 'Tác giả Đinh Thành',
         audioTitle: `Audio Track Tiếng Anh ${g} (${baseSuite.termTitle})`,
         audioScript: baseSuite.fullAudioScript || '',
         hasSpeaking: baseSuite.hasSpeaking || false,

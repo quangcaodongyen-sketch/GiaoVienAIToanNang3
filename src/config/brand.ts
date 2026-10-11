@@ -1,33 +1,35 @@
 export const BRAND = {
   websiteTitle: "GIÁO VIÊN AI TOÀN NĂNG",
   shortTitle: "GV AI TOÀN NĂNG",
-  author: "Tác giả Đinh Thành - ĐT: 0915.213717",
-  job: "Giáo viên",
-  organization: "Trường THCS Đồng Yên",
-  address: "Xã Đồng Yên, tỉnh Tuyên Quang",
+  author: "Tác giả Đinh Thành, ĐT: 0915.213717",
+  authorShort: "Tác giả Đinh Thành",
+  job: "",
+  organization: "",
+  address: "",
   phone: "0915.213717",
   phoneRaw: "0915213717",
   zalo: "0915213717",
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
-  slogan: "Công cụ hỗ trợ, tham khảo dành cho giáo viên.",
-  description: "Hệ sinh thái công cụ hỗ trợ, tham khảo dành cho giáo viên trong giảng dạy, quản lý và hỗ trợ công việc chuyên môn.",
-  copyright: "© 2026 Tác giả Đinh Thành - ĐT: 0915.213717. Công cụ hỗ trợ, tham khảo dành cho giáo viên.",
+  slogan: "Chia sẻ các app ra đề kiểm tra & Tiện ích giáo dục tham khảo",
+  description: "Cộng đồng chia sẻ các app ra đề kiểm tra, tiện ích giáo dục tham khảo dành cho thầy cô giáo. Trải nghiệm dùng thử miễn phí, liên hệ trực tiếp Zalo 0915.213717 để hỗ trợ kích hoạt Pro.",
+  disclaimer: "SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY",
+  copyright: "© 2026 Tác giả Đinh Thành, ĐT: 0915.213717. SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.",
   
   hero: {
     title: "GIÁO VIÊN AI TOÀN NĂNG",
-    subtitle: "Công cụ hỗ trợ, tham khảo dành cho giáo viên",
-    description: "Khám phá hệ sinh thái công cụ hỗ trợ, tham khảo dành cho giáo viên soạn giảng, tạo đề kiểm tra, thiết kế học liệu và tối ưu thời gian giảng dạy."
+    subtitle: "Chia sẻ các app ra đề kiểm tra & Tiện ích giáo dục tham khảo",
+    description: "Kho chia sẻ miễn phí các app ra đề kiểm tra và tiện ích giáo dục hỗ trợ thầy cô giáo (Tiểu học, THCS, THPT). Kính mời quý Thầy/Cô tải về trải nghiệm dùng thử miễn phí; Thầy/Cô có nhu cầu hỗ trợ chuyên sâu và kích hoạt bản Pro không giới hạn vui lòng liên hệ trực tiếp Tác giả Đinh Thành qua Zalo: 0915.213717."
   },
   
   about: {
     title: "Về tác giả",
-    greeting: "Tôi là Đinh Thành – Tác giả phát triển công cụ hỗ trợ, tham khảo dành cho giáo viên.",
-    paragraph1: "Xuất phát từ thực tế giảng dạy, tôi xây dựng hệ thống phần mềm mang tính chất chia sẻ công cụ hỗ trợ, tham khảo dành cho giáo viên nhằm phục vụ công việc hàng ngày.",
-    paragraph2: "Hệ thống hỗ trợ 4 nhóm công việc chuyên môn chính: Tham khảo tích hợp Năng lực số (NLS) & AI vào Giáo án; Tham khảo tạo đề kiểm tra định kỳ các cấp; Hỗ trợ tạo bài nghe Tiếng Anh cùng các tiện ích hỗ trợ văn bản và máy tính.",
-    paragraph3: "Các công cụ được thiết kế đơn giản, chạy trực tiếp trên máy tính cá nhân để hỗ trợ đồng nghiệp tiết kiệm thời gian công việc chuyên môn.",
-    quote: "“Phần mềm là công cụ hỗ trợ, tham khảo dành cho giáo viên, thiết thực và tiện ích trong công việc chuyên môn hàng ngày.”",
-    photoAlt: "Tác giả Đinh Thành - ĐT: 0915.213717"
+    greeting: "Tôi là Đinh Thành – Chia sẻ các app ra đề kiểm tra & tiện ích giáo dục tham khảo.",
+    paragraph1: "Website được xây dựng nhằm mục đích chia sẻ các app ra đề kiểm tra, các tiện ích giáo dục giúp quý Thầy/Cô có thêm nguồn tài liệu tham khảo phong phú trong công tác giảng dạy và ra đề kiểm tra.",
+    paragraph2: "Các phần mềm được chia sẻ để Thầy/Cô tải về trải nghiệm dùng thử miễn phí. Sau quá trình dùng thử, quý Thầy/Cô có nhu cầu sử dụng lâu dài và kích hoạt bản Pro không giới hạn có thể liên hệ trực tiếp với tác giả để được hỗ trợ kích hoạt.",
+    paragraph3: "Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.",
+    quote: "“SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.”",
+    photoAlt: "Tác giả Đinh Thành, ĐT: 0915.213717"
   }
 };
 

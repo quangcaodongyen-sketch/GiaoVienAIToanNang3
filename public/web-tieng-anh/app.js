@@ -1,7 +1,7 @@
 // ================================================================
 // app.js – EnglishExam Pro: Nền tảng Học tập & Đánh giá Tiếng Anh THCS
 // Bám sát chương trình SGK Global Success (Lớp 6, 7, 8, 9)
-// Bản quyền & Phát triển: Thầy Đinh Văn Thành – Trường THCS Đồng Yên
+// Bản quyền & Phát triển: Tác giả Đinh Thành – Trường THCS
 // Điện thoại / Zalo: 0915.213717
 // ================================================================
 
@@ -255,8 +255,8 @@ const App = {
       examTime: 45,
       examSemester: 'Học kỳ I – 2024-2025',
       examType: 'Giữa kỳ',
-      schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
-      teacherName: 'Thầy Đinh Văn Thành',
+      schoolName: 'TRƯỜNG THCS',
+      teacherName: 'Tác giả Đinh Thành',
       audioTitle: 'Track 1: Listening Comprehension',
       audioScript: 'Narrator: Listen to a short conversation between Nick and his doctor. Choose the best answer A, B, or C.\n\nDoctor: Good morning Nick. How are you feeling today?\nNick: Good morning doctor. I feel very tired, and my eyes are hurting after studying on my computer.\nDoctor: How many hours a day do you spend in front of computer screens?\nNick: About five to six hours, especially in the evening.\nDoctor: That is too much. You should take a short break every thirty minutes. Do you play any outdoor sports?\nNick: Not really doctor. I usually play video games on weekends.\nDoctor: You should join an outdoor sports club, like badminton or football. And remember to drink plenty of fresh water every day.\nNick: Thank you very much, doctor. I will follow your advice.',
       audioUrl: '',
@@ -321,8 +321,8 @@ const App = {
       seed2: 99,
       previewFace: 1,
       previewCodeIndex: 1,
-      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-      parent: localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN',
+      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+      parent: localStorage.getItem('cfg_parent_agency') || 'UBND XÃ',
       year: localStorage.getItem('cfg_school_year') || '2025 - 2026'
     },
 
@@ -330,8 +330,8 @@ const App = {
     officialExams: {
       grade: '6',
       term: 'GK1',
-      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-      parent: localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN'
+      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+      parent: localStorage.getItem('cfg_parent_agency') || 'UBND XÃ'
     },
 
     // ── Student 15m Practice State (Luyện thi 15 phút trực tuyến) ──
@@ -357,7 +357,7 @@ const App = {
     writingSearchQuery: '',
     writingShowVi: {},
     answerSheetConfig: {
-      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
+      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
       examTitle: 'BÀI KIỂM TRA ĐỊNH KỲ TIẾNG ANH THCS',
       examCode: '701'
     },
@@ -512,7 +512,7 @@ const App = {
           <div class="sidebar-logo-icon">🇬🇧</div>
           <div class="sidebar-logo-text">
             <strong>EnglishExam Pro</strong>
-            <small>${isStudent ? 'Góc Học Sinh Global Success' : 'Global Success 6-9 · Đinh Văn Thành'}</small>
+            <small>${isStudent ? 'Góc Học Sinh Global Success' : 'Global Success 6-9 · Đinh Thành'}</small>
           </div>
         </div>
 
@@ -545,7 +545,7 @@ const App = {
             <div class="user-info">
               <strong>${esc(u.name)}</strong>
               <small>
-                ${isStudent ? `Lớp ${u.class || '7A1'} · ⭐ ${u.points || 100} điểm` : `GV · ${esc((u.school || 'THCS Đồng Yên').slice(0, 16))}`}
+                ${isStudent ? `Lớp ${u.class || '7A1'} · ⭐ ${u.points || 100} điểm` : `GV · ${esc((u.school || 'THCS').slice(0, 16))}`}
               </small>
             </div>
             <span class="user-more">›</span>
@@ -595,7 +595,7 @@ const App = {
       this.state.user = teacher;
       this.state.userRole = 'teacher';
       this.state.view = 'dashboard';
-      UI.toast('Đã chuyển về Cổng Giáo Viên Thầy Đinh Văn Thành!', 'success');
+      UI.toast('Đã chuyển về Cổng Giáo Viên Tác giả Đinh Thành!', 'success');
     }
     this.render();
   },
@@ -604,7 +604,7 @@ const App = {
     const el = document.getElementById('page-content');
     const titles = {
       'practice-arena': '🎮 Đấu Trường Luyện Tập 5 Dạng Bài Thực Hành – Global Success',
-      'quiz-15m': '⚡ Tạo Đề 15 Phút Chuẩn 2 Mã Đề (48 Units) – Thầy Đinh Văn Thành',
+      'quiz-15m': '⚡ Tạo Đề 15 Phút Chuẩn 2 Mã Đề (48 Units) – Tác giả Đinh Thành',
       'official-exams': '🏛️ Bộ Đề Thi Chuẩn Định Kỳ (GK, CK, KSCL) CV 7991',
       'student-15m-practice': '⚡ Luyện Đề 15 Phút (48 Units) Global Success',
       dashboard: '🏠 Bàn làm việc Giáo viên',
@@ -614,7 +614,7 @@ const App = {
       history: '🕐 Danh sách đề thi đã tạo',
       submissions: '📥 Thu bài & Đánh giá kết quả học sinh',
       admin: '⚙️ Quản trị hệ thống EnglishExam Pro',
-      settings: '🔧 Cài đặt & Bản quyền Thầy Đinh Văn Thành',
+      settings: '🔧 Cài đặt & Bản quyền Tác giả Đinh Thành',
       preview: '📄 Xem trước đề thi Tiếng Anh',
       'student-hub': '🌟 Góc học tập Tiếng Anh Global Success',
       'vocab-studio': '📖 Flashcard Học Từ vựng SGK Global Success',
@@ -667,7 +667,7 @@ const App = {
         <p style="font-size:16px;opacity:0.95;text-align:center;max-width:480px;line-height:1.7">
           Nền tảng Học tập & Đánh giá Tiếng Anh THCS<br/>
           <strong>Bám sát giáo trình Global Success (Lớp 6, 7, 8, 9)</strong><br/>
-          <span style="font-size:13.5px;color:#93c5fd;margin-top:6px;display:inline-block">Tác giả & Bản quyền: Thầy Đinh Văn Thành – THCS Đồng Yên (0915.213717)</span>
+          <span style="font-size:13.5px;color:#93c5fd;margin-top:6px;display:inline-block">Tác giả & Bản quyền: Tác giả Đinh Thành – THCS (0915.213717)</span>
         </p>
 
         <div style="margin-top:36px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:520px">
@@ -845,7 +845,7 @@ const App = {
         </div>
         <div class="field">
           <label class="label">Trường học</label>
-          <input id="reg-school" type="text" value="Trường THCS Đồng Yên" />
+          <input id="reg-school" type="text" value="Trường THCS" />
         </div>
         <div class="grid grid-2 gap-12">
           <div class="field">
@@ -870,7 +870,7 @@ const App = {
           const password = document.getElementById('reg-password')?.value;
           const grade = parseInt(document.getElementById('reg-grade')?.value) || 7;
           const cls = document.getElementById('reg-class')?.value?.trim() || '7A1';
-          const school = document.getElementById('reg-school')?.value?.trim() || 'Trường THCS Đồng Yên';
+          const school = document.getElementById('reg-school')?.value?.trim() || 'Trường THCS';
 
           if (!name || !username || !password) {
             alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
@@ -930,7 +930,7 @@ const App = {
       <div class="welcome-banner" style="background:linear-gradient(135deg,#065f46 0%,#059669 50%,#10b981 100%)">
         <div>
           <h2>Chào em, ${esc(st.name)}! 🌟</h2>
-          <p>Lớp: <b>${esc(st.class || '7A1')}</b> – ${esc(st.school || 'THCS Đồng Yên')} | Chương trình Tiếng Anh Global Success</p>
+          <p>Lớp: <b>${esc(st.class || '7A1')}</b> – ${esc(st.school || 'THCS')} | Chương trình Tiếng Anh Global Success</p>
           <div class="row gap-8 mt-12">
             <span style="background:rgba(255,255,255,0.22);color:#fff;padding:4px 14px;border-radius:999px;font-size:12.5px;font-weight:700">
               ⭐ Điểm thưởng: ${st.points || 100} XP
@@ -1296,7 +1296,7 @@ const App = {
               Thời gian: <b>${e.examTime} phút</b> · Số câu: <b>${e.sections?.reduce((s, sec) => s + sec.questions.length, 0) || 20} câu</b>
             </div>
             <div style="font-size:12px;color:#475569;margin-top:4px">
-              Giáo viên: <b>${esc(e.teacherName || 'Thầy Đinh Văn Thành')}</b>
+              Giáo viên: <b>${esc(e.teacherName || 'Tác giả Đinh Thành')}</b>
             </div>
           </div>
 
@@ -1333,7 +1333,7 @@ const App = {
           <div>
             <h2 style="font-size:22px;font-weight:900;color:#065f46">${esc(st.name)}</h2>
             <div style="font-size:13.5px;color:#047857">
-              Lớp: <b>${esc(st.class || '7A1')}</b> | Trường: <b>${esc(st.school || 'THCS Đồng Yên')}</b>
+              Lớp: <b>${esc(st.class || '7A1')}</b> | Trường: <b>${esc(st.school || 'THCS')}</b>
             </div>
             <div style="font-size:14px;font-weight:800;color:#059669;margin-top:6px">
               ⭐ Tổng điểm tích lũy: ${st.points || 100} XP · Đã làm ${subs.length} bài thi
@@ -1390,7 +1390,7 @@ const App = {
         <div>
           <div class="section-title">🏫 Quản lý Lớp học môn Tiếng Anh</div>
           <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">
-            Thầy Đinh Văn Thành – Trường THCS Đồng Yên (Tổng cộng: <b>${classes.length} lớp</b>)
+            Tác giả Đinh Thành – Trường THCS (Tổng cộng: <b>${classes.length} lớp</b>)
           </div>
         </div>
         <button class="btn btn-primary" onclick="App.showAddClassModal()">+ Thêm lớp học mới</button>
@@ -1449,7 +1449,7 @@ const App = {
                 <td><strong>${esc(st.name)}</strong></td>
                 <td><span class="tag tag-nb">${esc(st.class || '7A1')}</span></td>
                 <td>Lớp ${st.grade}</td>
-                <td>${esc(st.school || 'THCS Đồng Yên')}</td>
+                <td>${esc(st.school || 'THCS')}</td>
                 <td style="font-family:monospace;color:#2563eb">${esc(st.username)}</td>
                 <td><b>⭐ ${st.points || 100} XP</b></td>
                 <td>${st.createdAt ? new Date(st.createdAt).toLocaleDateString('vi-VN') : 'Mặc định'}</td>
@@ -1510,7 +1510,7 @@ const App = {
             return;
           }
 
-          Auth.addClass({ name, grade, code, studentCount: count, school: 'Trường THCS Đồng Yên' });
+          Auth.addClass({ name, grade, code, studentCount: count, school: 'Trường THCS' });
           UI.closeModal();
           this.renderPage();
           UI.toast('✅ Đã tạo lớp học mới thành công!', 'success');
@@ -1536,7 +1536,7 @@ const App = {
     }
     const exam = published[0];
     const url = `${window.location.origin}${window.location.pathname}?mode=student&examId=${exam.id}`;
-    const zaloMsg = `📢 THÔNG BÁO BÀI TẬP TIẾNG ANH - ${className}\nThầy Đinh Văn Thành giao bài kiểm tra: ${exam.title}\n👉 Các em bấm vào link sau để làm bài trực tiếp trên điện thoại:\n${url}\n* Chúc các em làm bài đạt kết quả tốt nhất!`;
+    const zaloMsg = `📢 THÔNG BÁO BÀI TẬP TIẾNG ANH - ${className}\nTác giả Đinh Thành giao bài kiểm tra: ${exam.title}\n👉 Các em bấm vào link sau để làm bài trực tiếp trên điện thoại:\n${url}\n* Chúc các em làm bài đạt kết quả tốt nhất!`;
 
     navigator.clipboard.writeText(zaloMsg);
     alert(`✅ ĐÃ SAO CHÉP MẪU TIN NHẮN ZALO GIAO BÀI CHO ${className}!\n\nThầy chỉ cần mở Zalo nhóm lớp và bấm Paste (Ctrl+V) để gửi cho học sinh.`);
@@ -1575,7 +1575,7 @@ const App = {
           const clsName = document.getElementById('as-class-select')?.value;
           const exam = published.find(e => e.id === examId) || published[0];
           const url = `${window.location.origin}${window.location.pathname}?mode=student&examId=${exam.id}`;
-          const msg = `📢 THÔNG BÁO BÀI THI TIẾNG ANH - ${clsName}\nThầy Đinh Văn Thành gửi đề: ${exam.title}\nThời gian làm bài: ${exam.examTime} phút (có phần nghe Audio).\n👉 Link làm bài: ${url}`;
+          const msg = `📢 THÔNG BÁO BÀI THI TIẾNG ANH - ${clsName}\nTác giả Đinh Thành gửi đề: ${exam.title}\nThời gian làm bài: ${exam.examTime} phút (có phần nghe Audio).\n👉 Link làm bài: ${url}`;
           navigator.clipboard.writeText(msg);
           UI.closeModal();
           alert(`✅ ĐÃ SAO CHÉP TIN NHẮN GIAO BÀI CHO ${clsName}!\n\nThầy chỉ cần dán (Ctrl+V) vào nhóm Zalo lớp để học sinh làm bài.`);
@@ -1600,10 +1600,10 @@ const App = {
       <div class="welcome-banner" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);box-shadow:var(--shadow-md)">
         <div>
           <h2>Kính chào ${esc(u.name)}! 👋</h2>
-          <p>Hệ thống Soạn đề, Đánh giá & Học tập Tiếng Anh THCS Global Success (Lớp 6, 7, 8, 9) – THCS Đồng Yên</p>
+          <p>Hệ thống Soạn đề, Đánh giá & Học tập Tiếng Anh THCS Global Success (Lớp 6, 7, 8, 9) – THCS</p>
           <div class="row gap-8 mt-12">
             <span style="background:rgba(255,255,255,0.22);color:#fff;padding:4px 14px;border-radius:999px;font-size:12.5px;font-weight:700">
-              👑 Bản quyền chính thức: Thầy Đinh Văn Thành
+              👑 Bản quyền chính thức: Tác giả Đinh Thành
             </span>
             <span style="background:rgba(255,255,255,0.22);color:#fff;padding:4px 14px;border-radius:999px;font-size:12.5px;font-weight:600">
               🏫 ${classes.length} Lớp học · ${students.length} Học sinh trực tuyến
@@ -1925,8 +1925,8 @@ const App = {
     wiz.examClass = curG + 'A1';
     wiz.examTime = suite.timeMinutes || 60;
     wiz.examSemester = 'Năm học 2026 - 2027';
-    wiz.schoolName = wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN';
-    wiz.teacherName = wiz.teacherName || 'Thầy Đinh Văn Thành';
+    wiz.schoolName = wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS';
+    wiz.teacherName = wiz.teacherName || 'Tác giả Đinh Thành';
     wiz.code1 = suite.code1;
     wiz.code2 = suite.code2;
     wiz.previewCodeIndex = 1;
@@ -1958,7 +1958,7 @@ const App = {
       try {
         newExam = ExamGeneratorEngine.generateUniqueExam(parseInt(curG), curT, {
           schoolName: wiz.schoolName || localStorage.getItem('cfg_school_name'),
-          teacherName: wiz.teacherName || 'Thầy Đinh Văn Thành'
+          teacherName: wiz.teacherName || 'Tác giả Đinh Thành'
         });
       } catch (err) {
         console.warn('ExamGeneratorEngine generation notice:', err);
@@ -2000,8 +2000,8 @@ const App = {
         examFormat: 'cv7991',
         examTime: wiz.examTime,
         examClass: wiz.examClass || (curG + 'A1'),
-        schoolName: wiz.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN',
-        teacherName: wiz.teacherName || 'Thầy Đinh Văn Thành',
+        schoolName: wiz.schoolName || 'TRƯỜNG THCS',
+        teacherName: wiz.teacherName || 'Tác giả Đinh Thành',
         audioTitle: wiz.audioTitle,
         audioScript: wiz.audioScript,
         sections: wiz.selectedSections,
@@ -2112,7 +2112,7 @@ const App = {
           <div style="display:flex;align-items:center;gap:12px">
             <span style="font-size:32px">🏛️</span>
             <div>
-              <div style="font-size:15px;font-weight:900;color:#1e3a8a">Chuẩn 100% Khảo Thí THCS Đồng Yên – Thầy Đinh Văn Thành</div>
+              <div style="font-size:15px;font-weight:900;color:#1e3a8a">Chuẩn 100% Khảo Thí THCS – Tác giả Đinh Thành</div>
               <div style="font-size:12px;color:#15803d;font-weight:700;margin-top:2px">
                 ✓ GDPT 2018 · Công văn 7991/BGDĐT · 36 câu TNKQ + 1 câu Tự luận = 37 câu (10.0đ) · 02 mã đề tương đương
               </div>
@@ -2179,16 +2179,16 @@ const App = {
             <div class="grid grid-2 gap-12">
               <div class="field">
                 <label class="label">Cơ quan cấp trên</label>
-                <input id="wiz-parent" type="text" value="${esc(localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN')}" onchange="localStorage.setItem('cfg_parent_agency', this.value.toUpperCase())" />
+                <input id="wiz-parent" type="text" value="${esc(localStorage.getItem('cfg_parent_agency') || 'UBND XÃ')}" onchange="localStorage.setItem('cfg_parent_agency', this.value.toUpperCase())" />
               </div>
               <div class="field">
                 <label class="label">Tên trường (Bản quyền)</label>
-                <input id="wiz-school" type="text" value="${esc(wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN')}" onchange="localStorage.setItem('cfg_school_name', this.value.toUpperCase())" />
+                <input id="wiz-school" type="text" value="${esc(wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS')}" onchange="localStorage.setItem('cfg_school_name', this.value.toUpperCase())" />
               </div>
             </div>
             <div class="field">
               <label class="label">Giáo viên ra đề / Tác giả</label>
-              <input id="wiz-teacher" type="text" value="${esc(wiz.teacherName || 'Thầy Đinh Văn Thành')}" />
+              <input id="wiz-teacher" type="text" value="${esc(wiz.teacherName || 'Tác giả Đinh Thành')}" />
             </div>
           </div>
         </div>
@@ -2457,8 +2457,8 @@ const App = {
       examFormat: 'cv7991',
       examTime: wiz.examTime || 60,
       examClass: wiz.examClass || `${curG}A1`,
-      schoolName: wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-      teacherName: wiz.teacherName || 'Thầy Đinh Văn Thành',
+      schoolName: wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+      teacherName: wiz.teacherName || 'Tác giả Đinh Thành',
       audioTitle: wiz.audioTitle || `Track 1: Listening Comprehension - Tiếng Anh ${curG}`,
       audioScript: wiz.audioScript || (suite ? suite.fullAudioScript : ''),
       audioUrl: wiz.audioUrl || (suite ? suite.audioUrl : `audio/listening_${curG}_${curT.toLowerCase()}.mp3`),
@@ -2505,7 +2505,7 @@ const App = {
     `, [{ label: 'Đóng', cls: 'btn-outline', action: () => UI.closeModal() }]);
   },
 
-  // ── Hệ thống Xuất File Word (.doc) Chuẩn 100% Theo App Thầy Đinh Văn Thành ──────────
+  // ── Hệ thống Xuất File Word (.doc) Chuẩn 100% Theo App Tác giả Đinh Thành ──────────
   wrapDocHtml(contentHtml, title = 'De thi Tieng Anh') {
     return `
 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -2531,8 +2531,8 @@ const App = {
 
   // 1. Trụ cột 1: MA TRẬN 15 CỘT CHUẨN CÔNG VĂN 7991/BGDĐT
   buildMatrixWordHtml(cfg) {
-    const parentAgency = (cfg.parentAgency || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (cfg.parentAgency || 'UBND XÃ').toUpperCase();
+    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS').toUpperCase();
     const titleUpper = (cfg.titleUpper || 'GIỮA HỌC KÌ I').toUpperCase();
     const schoolYear = cfg.schoolYear || '2026 - 2027';
     const grade = cfg.grade || '7';
@@ -2631,8 +2631,8 @@ const App = {
 
   // 3 & 4. Trụ cột 3 & 4: NỘI DUNG TỜ ĐỀ THI CHÍNH THỨC (Header 2x2, Marks box 4 cols, 8 Parts, 10 dòng chấm)
   buildExamWordContentHtml(cfg) {
-    const parentAgency = (cfg.parentAgency || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (cfg.parentAgency || 'UBND XÃ').toUpperCase();
+    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS').toUpperCase();
     const titleUpper = (cfg.titleUpper || 'GIỮA HỌC KÌ I').toUpperCase();
     const schoolYear = cfg.schoolYear || '2026 - 2027';
     const grade = cfg.grade || '7';
@@ -2801,8 +2801,8 @@ const App = {
 
   // 5. Trụ cột 5: HƯỚNG DẪN ĐÁP ÁN VÀ BIỂU ĐIỂM (Audio Scripts, Bảng TNKQ 4 cột 18 dòng so sánh 2 mã đề, Rubric tự luận, Kịch bản nói)
   buildAnswerKeyWordHtml(cfg) {
-    const parentAgency = (cfg.parentAgency || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (cfg.parentAgency || 'UBND XÃ').toUpperCase();
+    const schoolName = (cfg.schoolName || 'TRƯỜNG THCS').toUpperCase();
     const titleUpper = (cfg.titleUpper || 'GIỮA HỌC KÌ I').toUpperCase();
     const schoolYear = cfg.schoolYear || '2026 - 2027';
     const grade = cfg.grade || '7';
@@ -2921,19 +2921,19 @@ const App = {
     </div>
     <div style="margin-top:20pt;text-align:right;padding-right:20pt;font-size:11.5pt">
       <b>GIÁO VIÊN RA ĐỀ</b><br/><br/><br/>
-      <b>${esc(cfg.teacher || 'Thầy Đinh Văn Thành')}</b>
+      <b>${esc(cfg.teacher || 'Tác giả Đinh Thành')}</b>
     </div>`;
   },
 
-  // ── XUẤT TRỌN BỘ 5 PHẦN CHUẨN CÔNG VĂN 7991 (App Thầy Đinh Văn Thành) ──────────
+  // ── XUẤT TRỌN BỘ 5 PHẦN CHUẨN CÔNG VĂN 7991 (App Tác giả Đinh Thành) ──────────
   exportFullBundleWord() {
     const wiz = this.state.wizard;
     const curG = String(wiz.grade || '7');
     const curT = this.getWizardTermKey ? this.getWizardTermKey() : (wiz.term || 'GK1');
     const suite = this.getOfficialExamSuite(curG, curT);
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const schoolYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = (wiz.termTitle || (suite ? suite.termTitle : curT)).toUpperCase();
     const timeMinutes = wiz.examTime || (suite ? suite.timeMinutes : 60);
@@ -2989,7 +2989,7 @@ const App = {
       ans1, ans2, mcqTotalPts: hasSpeaking ? '7.2' : '8.5',
       part8Points: hasSpeaking ? '0.8 điểm' : '1.5 điểm',
       rubric, sampleWritingText, hasSpeaking, speakingScriptRows,
-      finalScoreSummary, teacher: wiz.teacherName || 'Thầy Đinh Văn Thành'
+      finalScoreSummary, teacher: wiz.teacherName || 'Tác giả Đinh Thành'
     });
 
     const pageBreak = '<br clear="all" style="page-break-before:always;mso-break-type:page-break"/>';
@@ -3010,8 +3010,8 @@ const App = {
     const curT = this.getWizardTermKey ? this.getWizardTermKey() : (wiz.term || 'GK1');
     const suite = this.getOfficialExamSuite(curG, curT);
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const schoolYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = (wiz.termTitle || (suite ? suite.termTitle : curT)).toUpperCase();
     const timeMinutes = wiz.examTime || (suite ? suite.timeMinutes : 60);
@@ -3049,8 +3049,8 @@ const App = {
     const curT = this.getWizardTermKey ? this.getWizardTermKey() : (wiz.term || 'GK1');
     const suite = this.getOfficialExamSuite(curG, curT);
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const schoolYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = (wiz.termTitle || (suite ? suite.termTitle : curT)).toUpperCase();
     const code1 = wiz.code1 || `${curG}01`;
@@ -3075,7 +3075,7 @@ const App = {
       ans1, ans2, mcqTotalPts: hasSpeaking ? '7.2' : '8.5',
       part8Points: hasSpeaking ? '0.8 điểm' : '1.5 điểm',
       rubric, sampleWritingText, hasSpeaking, speakingScriptRows,
-      finalScoreSummary, teacher: wiz.teacherName || 'Thầy Đinh Văn Thành'
+      finalScoreSummary, teacher: wiz.teacherName || 'Tác giả Đinh Thành'
     });
 
     const fullHtml = this.wrapDocHtml(ansHtml, `${curT} - Anh ${curG} Dap An va Huong Dan Cham`);
@@ -3092,8 +3092,8 @@ const App = {
     const curG = String(wiz.grade || '7');
     const curT = this.getWizardTermKey ? this.getWizardTermKey() : (wiz.term || 'GK1');
     const suite = this.getOfficialExamSuite(curG, curT);
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const examYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const isCode2 = (wiz.selectedPreviewCode === 2 || wiz.previewCodeIndex === 2);
     const curCode = isCode2 ? (wiz.code2 || `${curG}02`) : (wiz.code1 || `${curG}01`);
@@ -3161,7 +3161,7 @@ const App = {
         </div>` : ''}
       </div>` : ''}
 
-      <!-- Exam Sheet: Chuẩn 100% Mẫu Thầy Đinh Văn Thành (THCS Đồng Yên) -->
+      <!-- Exam Sheet: Chuẩn 100% Mẫu Tác giả Đinh Thành (THCS) -->
       ${wiz.previewMode === 'matrix' ? `
         <div class="card p-24" style="background:#fff">
           <div style="text-align:center;margin-bottom:14px">
@@ -3273,7 +3273,7 @@ const App = {
             <span><b style="color:#b91c1c;font-size:13pt">Mã đề: ${esc(curCode)}</b></span>
           </div>
 
-          <!-- 3. Bảng Điểm Marks Box (Auto fit to window - Chuẩn THCS Đồng Yên) -->
+          <!-- 3. Bảng Điểm Marks Box (Auto fit to window - Chuẩn THCS) -->
           <table style="width:100%;border-collapse:collapse;margin-bottom:12pt;font-family:'Times New Roman',serif;font-size:11.5pt">
             <tr style="text-align:center;font-weight:bold">
               <td colspan="2" style="border:1px solid #000;width:22%;padding:4px">Marks</td>
@@ -3344,7 +3344,7 @@ const App = {
                   return `
                   <div style="font-size:13pt;margin-bottom:12pt;line-height:1.3">
                     <div><b>${qNum}.</b> ${formatExamText(q.content).replace(/\n/g, '<br/>')}</div>
-                    <!-- 10 dòng kẻ chấm chuẩn bài thi viết Thầy Đinh Văn Thành -->
+                    <!-- 10 dòng kẻ chấm chuẩn bài thi viết Tác giả Đinh Thành -->
                     <div style="margin-top:8pt;color:#000;font-size:12pt;line-height:2.0;letter-spacing:1px">
                       ...................................................................................................................................................................<br/>
                       ...................................................................................................................................................................<br/>
@@ -3503,12 +3503,12 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
             <div style="margin-top:24pt;text-align:right;font-size:11pt">
               <b>GIÁO VIÊN RA ĐỀ</b><br/>
               <span style="font-style:italic;font-size:10pt;color:#64748b">(Ký và ghi rõ họ tên)</span><br/><br/><br/>
-              <b>${esc(wiz.teacherName || 'Thầy Đinh Văn Thành')}</b>
+              <b>${esc(wiz.teacherName || 'Tác giả Đinh Thành')}</b>
             </div>
           </div>` : ''}
 
           <div style="margin-top:20pt;border-top:1pt solid #000;padding-top:8pt;font-size:10.5pt;display:flex;justify-content:space-between;color:#475569">
-            <span>Bản quyền: <b>Thầy Đinh Văn Thành – Trường THCS Đồng Yên (0915.213717)</b></span>
+            <span>Bản quyền: <b>Tác giả Đinh Thành – Trường THCS (0915.213717)</b></span>
             <span>EnglishExam Pro • Chuẩn SGK Global Success</span>
           </div>
         </div>
@@ -3552,16 +3552,16 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
     }
   },
 
-  // ── Xuất Word (.doc) chuẩn 100% Mẫu Thầy Đinh Văn Thành (THCS Đồng Yên) ──────────
+  // ── Xuất Word (.doc) chuẩn 100% Mẫu Tác giả Đinh Thành (THCS) ──────────
   generateDocHtml(sections, title, examCode = '', showAnswer = false) {
     const wiz = this.state.wizard;
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const school = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const school = (wiz.schoolName || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const schoolYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const curGrade = wiz.grade || '6';
     const examClass = wiz.examClass || (curGrade + 'A___');
     const examTime = wiz.examTime || 60;
-    const teacher = wiz.teacherName || 'Thầy Đinh Văn Thành';
+    const teacher = wiz.teacherName || 'Tác giả Đinh Thành';
     const code = examCode || (curGrade + '01');
 
     return `
@@ -3894,7 +3894,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           <div class="card text-center" style="max-width:440px;padding:36px">
             <div style="font-size:54px;margin-bottom:12px">🔒</div>
             <h2>Đề thi không mở hoặc đã kết thúc</h2>
-            <p style="color:var(--ink-soft);margin-top:8px">Vui lòng liên hệ Thầy Đinh Văn Thành để được hỗ trợ.</p>
+            <p style="color:var(--ink-soft);margin-top:8px">Vui lòng liên hệ Tác giả Đinh Thành để được hỗ trợ.</p>
           </div>
         </div>`;
       return;
@@ -3926,7 +3926,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
         <div class="student-portal">
           <div class="student-topbar">
             <div class="brand" style="font-weight:800;font-size:16px;color:#2563eb">🇬🇧 EnglishExam Online</div>
-            <div style="font-size:13px;color:#64748b">${esc(exam.schoolName || 'THCS Đồng Yên')}</div>
+            <div style="font-size:13px;color:#64748b">${esc(exam.schoolName || 'THCS')}</div>
           </div>
           <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
             <div class="card fade-in" style="max-width:480px;width:100%;padding:28px;box-shadow:var(--shadow-lg)">
@@ -3934,7 +3934,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
                 <span class="tag tag-nb mb-8">Lớp ${exam.grade} Global Success</span>
                 <h2 style="font-size:18px;font-weight:800;color:#0f172a;margin-top:4px">${esc(exam.title)}</h2>
                 <div style="font-size:13px;color:#64748b;margin-top:4px">
-                  GV: <b>${esc(exam.teacherName || 'Thầy Đinh Văn Thành')}</b> · Thời gian: <b>${exam.examTime} phút</b>
+                  GV: <b>${esc(exam.teacherName || 'Tác giả Đinh Thành')}</b> · Thời gian: <b>${exam.examTime} phút</b>
                 </div>
               </div>
 
@@ -4024,7 +4024,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           <div>
             <div style="font-weight:800;font-size:15px;color:#1e293b">${esc(exam.title)}</div>
             <div style="font-size:12px;color:#64748b">
-              Thí sinh: <b>${esc(st.name)}</b> – Lớp: <b>${esc(st.class)}</b> | GV: ${esc(exam.teacherName || 'Thầy Đinh Văn Thành')}
+              Thí sinh: <b>${esc(st.name)}</b> – Lớp: <b>${esc(st.class)}</b> | GV: ${esc(exam.teacherName || 'Tác giả Đinh Thành')}
             </div>
           </div>
           <div class="student-timer-box">
@@ -4379,7 +4379,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
       <div class="student-portal">
         <header class="student-topbar">
           <div style="font-weight:800;font-size:16px;color:#2563eb">🇬🇧 Kết quả bài kiểm tra Tiếng Anh</div>
-          <div style="font-size:13px;color:#64748b">${esc(exam.schoolName || 'THCS Đồng Yên')}</div>
+          <div style="font-size:13px;color:#64748b">${esc(exam.schoolName || 'THCS')}</div>
         </header>
 
         <div style="max-width:600px;margin:32px auto;padding:0 16px">
@@ -4521,7 +4521,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           <div style="font-size:36px">👨‍🏫</div>
           <div>
             <h3 style="font-size:18px;font-weight:900;color:#1e3a8a">BẢN QUYỀN HỆ THỐNG: THẦY ĐINH VĂN THÀNH</h3>
-            <div style="font-size:13.5px;color:#1d4ed8;font-weight:600">Trường THCS Đồng Yên – Điện thoại / Zalo: 0915.213717</div>
+            <div style="font-size:13.5px;color:#1d4ed8;font-weight:600">Trường THCS – Điện thoại / Zalo: 0915.213717</div>
           </div>
         </div>
         <p style="font-size:13.5px;color:#1e40af;line-height:1.6">
@@ -4533,7 +4533,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
         <div class="section-title mb-16">Thông tin tài khoản</div>
         <div class="stack gap-12">
           <div class="field"><label class="label">Họ và tên</label><input type="text" value="${esc(u.name)}" id="set-name"/></div>
-          <div class="field"><label class="label">Đơn vị công tác</label><input type="text" value="${esc(u.school || 'Trường THCS Đồng Yên')}" id="set-school"/></div>
+          <div class="field"><label class="label">Đơn vị công tác</label><input type="text" value="${esc(u.school || 'Trường THCS')}" id="set-school"/></div>
           <button class="btn btn-primary" onclick="UI.toast('Đã lưu thông tin','success')">Lưu thay đổi</button>
         </div>
       </div>
@@ -4641,7 +4641,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
               <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff;font-weight:700">48 UNITS GLOBAL SUCCESS</span>
             </div>
             <p style="font-size:13px;opacity:0.9">
-              Bản quyền: <strong>Thầy Đinh Văn Thành – THCS Đồng Yên</strong> (0915.213717) • Quy chuẩn 5 trang in ấn A4 (Đề 1 - Phiếu - Đề 2 - Phiếu - Đáp án).
+              Bản quyền: <strong>Tác giả Đinh Thành – THCS</strong> (0915.213717) • Quy chuẩn 5 trang in ấn A4 (Đề 1 - Phiếu - Đề 2 - Phiếu - Đáp án).
             </p>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -4756,7 +4756,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           <table style="width:100%;border:none;margin-bottom:4px;font-family:'Times New Roman',serif;font-size:10.5pt">
             <tr>
               <td style="width:50%;vertical-align:top;border:none">
-                <div style="font-weight:bold;font-size:9.5pt">${esc((localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase())}</div>
+                <div style="font-weight:bold;font-size:9.5pt">${esc((localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase())}</div>
                 <div style="font-weight:bold;font-size:10.5pt;text-decoration:underline">${esc(qState.school.toUpperCase())}</div>
                 Họ và tên: ....................................................<br/>
                 Lớp: ${curGrade}A.....
@@ -4876,7 +4876,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
             <h3 style="color:#1e3a8a;font-size:14pt;font-weight:bold;margin-bottom:4px">HƯỚNG DẪN CHẤM & LỜI GIẢI CHI TIẾT (4 CỘT)</h3>
             <div style="font-style:italic;font-size:10.5pt">
               Môn: Tiếng Anh ${curGrade} • ${esc(model.title)} • Mã đề ${model.code} • Năm học ${esc(qState.year)}<br/>
-              (Thang điểm 10.0 • Mỗi câu đúng 0.5 điểm • Chuẩn mẫu THCS Đồng Yên)
+              (Thang điểm 10.0 • Mỗi câu đúng 0.5 điểm • Chuẩn mẫu THCS)
             </div>
           </div>
 
@@ -4944,8 +4944,8 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
   },
 
   save15mSchoolConfig() {
-    const p = document.getElementById('cfg15mParent')?.value.trim().toUpperCase() || 'UBND XÃ ĐỒNG YÊN';
-    const s = document.getElementById('cfg15mSchool')?.value.trim().toUpperCase() || 'TRƯỜNG THCS ĐỒNG YÊN';
+    const p = document.getElementById('cfg15mParent')?.value.trim().toUpperCase() || 'UBND XÃ';
+    const s = document.getElementById('cfg15mSchool')?.value.trim().toUpperCase() || 'TRƯỜNG THCS';
     const y = document.getElementById('cfg15mYear')?.value.trim() || '2025 - 2026';
 
     this.state.quiz15m.parent = p;
@@ -4965,7 +4965,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
     const curUnit = qState.unitNum;
     const school = qState.school;
     const year = qState.year;
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
 
     const m1 = this.build15mQuizModel(curGrade, curUnit, qState.code1, qState.seed1);
     const m2 = this.build15mQuizModel(curGrade, curUnit, qState.code2, qState.seed2);
@@ -5100,7 +5100,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
         <p style="text-align:center;font-weight:bold;font-size:13pt;color:#1e3a8a;margin:6pt 0 2pt 0;font-family:'Times New Roman'">HƯỚNG DẪN CHẤM & LỜI GIẢI CHI TIẾT</p>
         <p style="text-align:center;font-style:italic;font-size:10.5pt;margin:0 0 8pt 0;font-family:'Times New Roman'">
           Môn: Tiếng Anh ${m.grade} • ${m.title} • Mã đề ${m.code} • Năm học ${year}<br/>
-          (Thang điểm 10.0 • Mỗi câu đúng 0.5 điểm • Chuẩn mẫu THCS Đồng Yên)
+          (Thang điểm 10.0 • Mỗi câu đúng 0.5 điểm • Chuẩn mẫu THCS)
         </p>
         <table style="width:100%;border-collapse:collapse;margin-top:4pt;font-size:10.5pt;font-family:'Times New Roman'">
           <thead>
@@ -5204,7 +5204,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
   share15mZalo() {
     const q = this.state.quiz15m;
     const url = `${window.location.origin}${window.location.pathname}?mode=student15m&grade=${q.grade}&unit=${q.unitNum}`;
-    const text = `Kính gửi Quý Phụ huynh và các em Học sinh lớp ${q.grade}!\nThầy Đinh Văn Thành gửi link làm Bài Kiểm Tra 15 Phút Tiếng Anh (Unit ${q.unitNum}) trực tiếp trên điện thoại:\n👉 ${url}\nCác em làm xong nộp bài sẽ có điểm ngay!`;
+    const text = `Kính gửi Quý Phụ huynh và các em Học sinh lớp ${q.grade}!\nTác giả Đinh Thành gửi link làm Bài Kiểm Tra 15 Phút Tiếng Anh (Unit ${q.unitNum}) trực tiếp trên điện thoại:\n👉 ${url}\nCác em làm xong nộp bài sẽ có điểm ngay!`;
 
     navigator.clipboard?.writeText(text).then(() => {
       UI.toast(' Đã sao chép nội dung & link bài thi Zalo!', 'success');
@@ -5264,8 +5264,8 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
     const code2 = suite ? suite.code2 : (curG + '02');
     const hasSpk = suite ? suite.hasSpeaking : (curT.startsWith('CK'));
 
-    const parentAgency = oState.parent || localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN';
-    const schoolName = oState.school || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN';
+    const parentAgency = oState.parent || localStorage.getItem('cfg_parent_agency') || 'UBND XÃ';
+    const schoolName = oState.school || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS';
     const examYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
 
     return `
@@ -5303,8 +5303,8 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
               <button onclick="App.saveOfficialSchoolConfig()" class="btn btn-primary" style="padding:3px 10px;font-size:11px">Lưu</button>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <input type="text" id="cfgOfficialParent" value="${esc(parentAgency)}" class="input" style="font-size:12px;font-weight:600" placeholder="UBND XÃ ĐỒNG YÊN"/>
-              <input type="text" id="cfgOfficialSchool" value="${esc(schoolName)}" class="input" style="font-size:12px;font-weight:600" placeholder="TRƯỜNG THCS ĐỒNG YÊN"/>
+              <input type="text" id="cfgOfficialParent" value="${esc(parentAgency)}" class="input" style="font-size:12px;font-weight:600" placeholder="UBND XÃ"/>
+              <input type="text" id="cfgOfficialSchool" value="${esc(schoolName)}" class="input" style="font-size:12px;font-weight:600" placeholder="TRƯỜNG THCS"/>
             </div>
           </div>
 
@@ -5466,7 +5466,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
     if (!suite) {
       return `
       <div class="card p-24 text-center" style="color:#64748b">
-        Đang tải bộ dữ liệu chuẩn của Thầy Đinh Văn Thành...
+        Đang tải bộ dữ liệu chuẩn của Tác giả Đinh Thành...
       </div>`;
     }
 
@@ -5494,7 +5494,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           </table>
 
           <div style="background:#eff6ff;border:1.5px solid #3b82f6;border-radius:8px;padding:12px 16px;margin-bottom:16pt;font-size:11.5pt">
-            <b>📌 LƯU Ý DÀNH CHO HỌC SINH:</b> Đề cương gồm các phần trọng tâm bám sát ma trận và cấu trúc đề thi chính thức của Trường THCS Đồng Yên (Thầy Đinh Văn Thành). Học sinh cần ôn kỹ các quy tắc phát âm, từ vựng theo chủ điểm, các dạng bài đọc và viết lại câu.
+            <b>📌 LƯU Ý DÀNH CHO HỌC SINH:</b> Đề cương gồm các phần trọng tâm bám sát ma trận và cấu trúc đề thi chính thức của Trường THCS (Tác giả Đinh Thành). Học sinh cần ôn kỹ các quy tắc phát âm, từ vựng theo chủ điểm, các dạng bài đọc và viết lại câu.
           </div>
 
           <div style="font-size:13.5pt;font-weight:bold;color:#1e3a8a;margin-bottom:8pt;border-bottom:1.5px solid #1e3a8a;padding-bottom:4pt">
@@ -5540,7 +5540,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
             ------ CHÚC CÁC EM ÔN TẬP VÀ ĐẠT KẾT QUẢ XUẤT SẮC! ------
           </div>
           <div style="margin-top:20pt;border-top:1pt solid #000;padding-top:8pt;font-size:10.5pt;display:flex;justify-content:space-between;color:#475569">
-            <span>Tác giả: <b>Thầy Đinh Văn Thành – THCS Đồng Yên (0915.213717)</b></span>
+            <span>Tác giả: <b>Tác giả Đinh Thành – THCS (0915.213717)</b></span>
             <span>Tài liệu Đề cương Ôn tập Tiếng Anh ${grade} Global Success</span>
           </div>
         </div>
@@ -5694,7 +5694,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
           </div>
 
           <div style="margin-top:20pt;border-top:1pt solid #000;padding-top:8pt;font-size:10.5pt;display:flex;justify-content:space-between;color:#475569">
-            <span>Bản quyền: <b>Thầy Đinh Văn Thành – Trường THCS Đồng Yên (0915.213717)</b></span>
+            <span>Bản quyền: <b>Tác giả Đinh Thành – Trường THCS (0915.213717)</b></span>
             <span>EnglishExam Pro • Chuẩn SGK Global Success</span>
           </div>
         </div>
@@ -5978,8 +5978,8 @@ ${esc(suite.fullAudioScript)}
   },
 
   saveOfficialSchoolConfig() {
-    const p = document.getElementById('cfgOfficialParent')?.value.trim().toUpperCase() || 'UBND XÃ ĐỒNG YÊN';
-    const s = document.getElementById('cfgOfficialSchool')?.value.trim().toUpperCase() || 'TRƯỜNG THCS ĐỒNG YÊN';
+    const p = document.getElementById('cfgOfficialParent')?.value.trim().toUpperCase() || 'UBND XÃ';
+    const s = document.getElementById('cfgOfficialSchool')?.value.trim().toUpperCase() || 'TRƯỜNG THCS';
 
     this.state.officialExams.parent = p;
     this.state.officialExams.school = s;
@@ -6046,8 +6046,8 @@ ${esc(suite.fullAudioScript)}
     const suite = this.getOfficialExamSuite(curG, curT);
     if (!suite) return;
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const examYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = `BÀI KIỂM TRA ĐÁNH GIÁ ${suite.termTitle}`.toUpperCase();
 
@@ -6082,8 +6082,8 @@ ${esc(suite.fullAudioScript)}
     const suite = this.getOfficialExamSuite(curG, curT);
     if (!suite) return;
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const examYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = `BÀI KIỂM TRA ĐÁNH GIÁ ${suite.termTitle}`.toUpperCase();
 
@@ -6101,7 +6101,7 @@ ${esc(suite.fullAudioScript)}
       hasSpeaking: suite.hasSpeaking,
       speakingScriptRows: suite.speakingScriptRows || [],
       finalScoreSummary: suite.finalScoreSummary || '',
-      teacher: 'Thầy Đinh Văn Thành'
+      teacher: 'Tác giả Đinh Thành'
     });
 
     const fullHtml = this.wrapDocHtml(ansHtml, `${curT} - Anh ${curG} Dap An va Huong Dan Cham`);
@@ -6120,8 +6120,8 @@ ${esc(suite.fullAudioScript)}
     const suite = this.getOfficialExamSuite(curG, curT);
     if (!suite) return;
 
-    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ ĐỒNG YÊN').toUpperCase();
-    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN').toUpperCase();
+    const parentAgency = (localStorage.getItem('cfg_parent_agency') || 'UBND XÃ').toUpperCase();
+    const schoolName = (localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS').toUpperCase();
     const examYear = localStorage.getItem('cfg_school_year') || '2026 - 2027';
     const titleUpper = `BÀI KIỂM TRA ĐÁNH GIÁ ${suite.termTitle}`.toUpperCase();
 
@@ -6168,7 +6168,7 @@ ${esc(suite.fullAudioScript)}
       hasSpeaking: suite.hasSpeaking,
       speakingScriptRows: suite.speakingScriptRows || [],
       finalScoreSummary: suite.finalScoreSummary || '',
-      teacher: 'Thầy Đinh Văn Thành'
+      teacher: 'Tác giả Đinh Thành'
     });
 
     const pageBreak = '<br clear="all" style="page-break-before:always;mso-break-type:page-break"/>';
@@ -6213,8 +6213,8 @@ ${esc(suite.fullAudioScript)}
       examFormat: 'cv7991',
       examTime: suite.timeMinutes || 60,
       examClass: curG + 'A1',
-      schoolName: oState.school || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-      teacherName: 'Thầy Đinh Văn Thành',
+      schoolName: oState.school || localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+      teacherName: 'Tác giả Đinh Thành',
       audioTitle: `Audio Script Tiếng Anh ${curG} (${suite.termTitle})`,
       audioScript: suite.fullAudioScript,
       audioUrl: suite.audioUrl || `audio/listening_${curG}_${curT.toLowerCase()}.mp3`,
@@ -6274,7 +6274,7 @@ ${esc(suite.fullAudioScript)}
       <div class="stack gap-16">
         <div style="background:#eff6ff;padding:12px 16px;border-radius:10px;border-left:4px solid #2563eb">
           <div style="font-size:14px;font-weight:800;color:#1e40af">Học sinh làm trực tiếp trên điện thoại & Tự động chấm điểm</div>
-          <div style="font-size:12.5px;color:#334155;margin-top:3px">Bám sát chuẩn SGK Global Success 6 - 9 · Chuẩn CV 7991 Thầy Đinh Văn Thành</div>
+          <div style="font-size:12.5px;color:#334155;margin-top:3px">Bám sát chuẩn SGK Global Success 6 - 9 · Chuẩn CV 7991 Tác giả Đinh Thành</div>
         </div>
 
         <div style="background:#f0fdf4;padding:10px 14px;border-radius:10px;border:1px solid #86efac;font-size:12.5px;color:#166534;display:flex;align-items:center;gap:10px">
@@ -6339,8 +6339,8 @@ ${esc(suite.fullAudioScript)}
         <div class="field" style="background:#f8fafc;padding:12px;border-radius:10px;border:1.5px solid #cbd5e1">
           <label class="label" style="color:#1e3a8a;font-weight:800">5. 🎯 Chọn Mẫu Đề Thi Giao Cho Học Sinh</label>
           <select id="modal-assign-code" class="select" style="font-weight:700;background:#ffffff">
-            <option value="code1" selected>🎯 Đề Mã 1 (Đúng mẫu đề chuẩn 100% THCS Đồng Yên - Thầy Đinh Văn Thành)</option>
-            <option value="code2">🔀 Đề Mã 2 (Đúng mẫu đề chuẩn 100% THCS Đồng Yên - Thầy Đinh Văn Thành)</option>
+            <option value="code1" selected>🎯 Đề Mã 1 (Đúng mẫu đề chuẩn 100% THCS - Tác giả Đinh Thành)</option>
+            <option value="code2">🔀 Đề Mã 2 (Đúng mẫu đề chuẩn 100% THCS - Tác giả Đinh Thành)</option>
             <option value="random">🎲 Đề bốc ngẫu nhiên (Kho tổ hợp 10²⁸ biến thể độc bản)</option>
           </select>
           <div style="font-size:12px;color:#059669;font-weight:600;margin-top:4px">
@@ -6387,8 +6387,8 @@ ${esc(suite.fullAudioScript)}
       if (assignCode === 'random' && typeof ExamGeneratorEngine !== 'undefined') {
         try {
           const synthExam = ExamGeneratorEngine.generateUniqueExam(parseInt(grade), term, {
-            schoolName: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-            teacherName: 'Thầy Đinh Văn Thành'
+            schoolName: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+            teacherName: 'Tác giả Đinh Thành'
           });
           if (synthExam) {
             examId = synthExam.id;
@@ -6402,7 +6402,7 @@ ${esc(suite.fullAudioScript)}
         }
       }
 
-      // Default: Đúng 100% Mẫu đề chuẩn của trường THCS Đồng Yên
+      // Default: Đúng 100% Mẫu đề chuẩn của trường THCS
       if (!sections.length) {
         if (suite) {
           const isCode2 = (assignCode === 'code2');
@@ -6437,8 +6437,8 @@ ${esc(suite.fullAudioScript)}
       examFormat: 'cv7991',
       examTime: examTime,
       examClass: targetClass,
-      schoolName: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
-      teacherName: 'Thầy Đinh Văn Thành',
+      schoolName: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
+      teacherName: 'Tác giả Đinh Thành',
       audioTitle: `Audio Script Tiếng Anh ${grade}`,
       audioScript: audioScript,
       audioUrl: audioUrl || `audio/listening_${grade}_${(term || 'gk1').toLowerCase()}.mp3`,
@@ -7057,7 +7057,7 @@ ${esc(suite.fullAudioScript)}
       <div class="welcome-banner" style="background:linear-gradient(135deg,#047857 0%,#059669 50%,#10b981 100%)">
         <div>
           <h2>🎯 Bí Kíp Bất Bại: Ngữ Âm & Trọng Âm THCS</h2>
-          <p>Quy tắc chuẩn quốc tế, mẹo nhớ siêu nhanh độc quyền của Thầy Đinh Văn Thành. Bấm vào từ bất kỳ để AI đọc giọng bản ngữ!</p>
+          <p>Quy tắc chuẩn quốc tế, mẹo nhớ siêu nhanh độc quyền của Tác giả Đinh Thành. Bấm vào từ bất kỳ để AI đọc giọng bản ngữ!</p>
           <div class="row gap-8 mt-12">
             <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff">🔊 Tích hợp Web Speech AI</span>
             <span class="badge" style="background:rgba(255,255,255,0.25);color:#fff">💡 Thần chú thời phong kiến & tiền đô</span>
@@ -7124,7 +7124,7 @@ ${esc(suite.fullAudioScript)}
         <div class="section-header">
           <div>
             <div class="section-title">✍️ Đấu Trường Luyện Tập Ngữ Âm & Trọng Âm</div>
-            <div class="section-desc">Trích từ ngân hàng đề kiểm tra chuẩn CV 7991 của Thầy Đinh Văn Thành</div>
+            <div class="section-desc">Trích từ ngân hàng đề kiểm tra chuẩn CV 7991 của Tác giả Đinh Thành</div>
           </div>
           <span class="tag tag-vd">4 Câu Tiêu Biểu</span>
         </div>
@@ -7397,7 +7397,7 @@ ${esc(suite.fullAudioScript)}
   // ================================================================
   renderAnswerSheetView() {
     const cfg = this.state.answerSheetConfig || {
-      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS ĐỒNG YÊN',
+      school: localStorage.getItem('cfg_school_name') || 'TRƯỜNG THCS',
       examTitle: 'BÀI KIỂM TRA ĐỊNH KỲ TIẾNG ANH THCS',
       examCode: '701'
     };
@@ -7457,7 +7457,7 @@ ${esc(suite.fullAudioScript)}
   updateAnswerSheetField(field, val) {
     if (!this.state.answerSheetConfig) {
       this.state.answerSheetConfig = {
-        school: 'TRƯỜNG THCS ĐỒNG YÊN',
+        school: 'TRƯỜNG THCS',
         examTitle: 'BÀI KIỂM TRA ĐỊNH KỲ TIẾNG ANH THCS',
         examCode: '701'
       };
@@ -7472,7 +7472,7 @@ ${esc(suite.fullAudioScript)}
 
   // ================================================================
   // ĐẤU TRƯỜNG LUYỆN TẬP THỰC HÀNH 5 DẠNG BÀI (PRACTICE ARENA)
-  // Tác giả & Bản quyền: Thầy Đinh Văn Thành – THCS Đồng Yên
+  // Tác giả & Bản quyền: Tác giả Đinh Thành – THCS
   // ================================================================
   renderPracticeArena() {
     const pa = this.state.practiceArena;
@@ -7500,7 +7500,7 @@ ${esc(suite.fullAudioScript)}
           🎮 Đấu Trường Luyện Tập Tiếng Anh Thực Hành
         </h1>
         <p style="color:#e0e7ff;font-size:14px;max-width:720px;line-height:1.5;margin:0 0 18px">
-          Hệ sinh thái bài tập thực hành tương tác chuyên sâu của <b>Thầy Đinh Văn Thành</b> (THCS Đồng Yên). Bứt phá tư duy ngữ pháp, từ vựng và kỹ năng làm bài thi thông qua 5 dạng bài tập hiện đại nhất có âm thanh và pháo hoa khen thưởng.
+          Hệ sinh thái bài tập thực hành tương tác chuyên sâu của <b>Tác giả Đinh Thành</b> (THCS). Bứt phá tư duy ngữ pháp, từ vựng và kỹ năng làm bài thi thông qua 5 dạng bài tập hiện đại nhất có âm thanh và pháo hoa khen thưởng.
         </p>
 
         <!-- Grade Selection Bar -->

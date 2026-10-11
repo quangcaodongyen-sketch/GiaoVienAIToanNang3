@@ -1,6 +1,6 @@
 /**
  * BỘ TIỆN ÍCH SAO CHÉP & CHIA SẺ ĐƯỜNG DẪN TRỰC TIẾP
- * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline/Zalo: 0915.213717
+ * Tác giả Đinh Thành, ĐT: 0915.213717 - Hotline/Zalo: 0915.213717
  * Tên miền thương hiệu chính thức: dekiemtraso.com
  */
 

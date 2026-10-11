@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC PRO (LỚP 1-5)
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Hotline/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – Hotline/Zalo: 0915.213717
 // ============================================================================
 
 const SECRET_SALT = "THANH_DONG_YEN_0915213717_TVTH_PRO_2026";

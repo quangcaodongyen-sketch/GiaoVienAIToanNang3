@@ -51,7 +51,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
             Phần mềm <strong className="text-amber-300">{appName}</strong> {appDescription}
           </p>
           <p className="text-xs text-rose-300 font-semibold leading-relaxed">
-            Để đảm bảo chất lượng sư phạm và tác quyền, phần mềm <strong>KHÓA SỬ DỤNG VÀ TẢI VỀ CÔNG KHAI</strong> đối với người dùng đại trà. Chỉ Tác giả Đinh Thành - ĐT: 0915.213717 (Admin) được mở quyền truy cập.
+            Để đảm bảo chất lượng sư phạm và tác quyền, phần mềm <strong>KHÓA SỬ DỤNG VÀ TẢI VỀ CÔNG KHAI</strong> đối với người dùng đại trà. Chỉ Tác giả Đinh Thành, ĐT: 0915.213717 (Admin) được mở quyền truy cập.
           </p>
         </div>
 
@@ -62,7 +62,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
             Liên hệ Admin Thầy Thành để kích hoạt bản quyền & báo giá ưu đãi:
           </p>
           <div className="text-slate-300 space-y-1">
-            <p>• Tác giả & Quản trị: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> – THCS Đồng Yên</p>
+            <p>• Tác giả & Quản trị: <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong> </p>
             <p>• Hotline / Zalo chính thức: <strong className="text-emerald-400 font-mono text-sm">0915.213717</strong></p>
           </div>
           <div className="pt-1 flex gap-2">

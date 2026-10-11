@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN PDF SUITE PRO (TÁCH - GỘP - LỌC TRANG TRẮNG AI)
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 Hardware Binding & Anti-Tamper Trial Storage
 // ============================================================================
 
@@ -238,7 +238,7 @@ export function buildPDFZaloMessage(
   licenseKey: string,
   pkgName: string
 ): string {
-  return `Chào Thầy/Cô! Thầy Thành (THCS Đồng Yên - 0915.213717) xin gửi mã kích hoạt Phần mềm PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI):
+  return `Chào Thầy/Cô! Tác giả Đinh Thành (0915.213717) xin gửi mã kích hoạt Phần mềm PDF Suite Pro (Tách - Gộp - Lọc Trang Trắng AI):
 
 🔑 Mã máy tính: ${machineId}
 📦 Gói đăng ký: ${pkgName}

@@ -285,7 +285,7 @@ ${JSON.stringify(payloadData, null, 2)}
             id: `REG-${issue.id}`,
             machineId: issue.title.match(/GV-[A-Z0-9]{4}-[A-Z0-9]{4}/)?.[0] || 'GV-UNKNOWN',
             fullName: issue.user?.login || 'Giáo viên',
-            schoolUnit: 'Trường THCS Đồng Yên',
+            schoolUnit: 'Trường THCS',
             phoneNumber: '0915.213717',
             appId: 'tich-hop-nls-ai',
             appName: 'Tích Hợp NLS & AI Vào Giáo Án THCS',

@@ -180,7 +180,7 @@ class SystemMaintenanceService {
             headers: getHeaders(),
             body: JSON.stringify({
               title: `[HỆ THỐNG] KHÓA BẢO TRÌ NÂNG CẤP WEBSITE - ${now}`,
-              body: `### 🔒 CHẾ ĐỘ BẢO TRÌ NÂNG CẤP ĐANG KÍCH HOẠT\n\n- **Thời gian khóa:** ${now}\n- **Lý do / Ghi chú:** ${note}\n- **Người kích hoạt:** Tác giả Đinh Thành - ĐT: 0915.213717 (Admin)\n\nKhi issue này còn MỞ (OPEN), toàn bộ giáo viên vào web sẽ thấy thông báo: "Web đang nâng cấp, vui lòng ghé thăm sau!"`,
+              body: `### 🔒 CHẾ ĐỘ BẢO TRÌ NÂNG CẤP ĐANG KÍCH HOẠT\n\n- **Thời gian khóa:** ${now}\n- **Lý do / Ghi chú:** ${note}\n- **Người kích hoạt:** Tác giả Đinh Thành, ĐT: 0915.213717 (Admin)\n\nKhi issue này còn MỞ (OPEN), toàn bộ giáo viên vào web sẽ thấy thông báo: "Web đang nâng cấp, vui lòng ghé thăm sau!"`,
               labels: ['system:maintenance', 'status:locked']
             })
           });

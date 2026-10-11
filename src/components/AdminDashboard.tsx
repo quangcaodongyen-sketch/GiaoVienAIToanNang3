@@ -694,7 +694,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateSmartListeningLicenseKey(cleanMid, ttsPkg as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Smart Listening Pro:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Smart Listening Pro:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // B. Chuẩn Hóa Văn Bản AI
         else if (effectiveAppId.includes('chvb') || effectiveAppId.includes('chuan_hoa_vb') || cleanMidUpper.includes('CHVB')) {
@@ -718,7 +718,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const keyStr = await generateCleanerLicenseKey(cleanMid, pkgType as any);
           licenseKey = keyStr;
           expDateStr = targetExpDate;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Cleaner Pro v4.5:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Cleaner Pro v4.5:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // E. Screen Record Pro V2
         else if (effectiveAppId.includes('record') || cleanMidUpper.includes('RECORD')) {
@@ -726,7 +726,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateRecordLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Screen Record Pro V2:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Screen Record Pro V2:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // F. Sinh 3 Đề Biến Thể VIP
         else if (effectiveAppId.includes('bienthe') || cleanMidUpper.includes('BIENTHE')) {
@@ -734,7 +734,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateBientheLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Sinh 3 Đề Biến Thể VIP:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Sinh 3 Đề Biến Thể VIP:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // G. Tạo Đề 15 Phút Tiếng Anh
         else if (effectiveAppId.includes('15p') || cleanMidUpper.includes('ENG15')) {
@@ -742,7 +742,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const keyStr = await generateExam15PLicenseKey(cleanMid, pkgType as any);
           licenseKey = keyStr;
           expDateStr = targetExpDate;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Tạo Đề 15 Phút Tiếng Anh:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Tạo Đề 15 Phút Tiếng Anh:\n\n• Mã máy: ${cleanMid}\n• Gói: ${pkgLabel}\n• Hạn dùng: ${targetExpDate}\n• MÃ KÍCH HOẠT PRO:\n${keyStr}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // H. Tạo Đề Tiếng Anh THCS Global Success (SHA-256)
         else if (effectiveAppId === 'taode_tienganh_thcs' || cleanMidUpper.includes('ENGCS') || (cleanMidUpper.startsWith('DVT-ENG-') && !cleanMidUpper.includes('ENGPT') && !cleanMidUpper.includes('ENG15') && !cleanMidUpper.includes('ENGPRI'))) {
@@ -750,7 +750,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateExamLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành - ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Pro Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Pro Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // I. Tạo Đề THCS 8 Môn (CV 7991)
         else if (effectiveAppId.includes('thcs8m') || cleanMidUpper.includes('THCS8M')) {
@@ -1300,8 +1300,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         ? 'TẠO ĐỀ TIẾNG ANH TIỂU HỌC GLOBAL SUCCESS (THÔNG TƯ 27)'
         : isTHPT ? 'TẠO ĐỀ & ĐỀ CƯƠNG TIẾNG ANH THPT (GLOBAL SUCCESS 10-11-12)' : 'TẠO ĐỀ TIẾNG ANH THCS (CV 7991)';
       const authorTitle = isPrimary
-        ? 'Tác giả Đinh Thành - ĐT: 0915.213717 – Cổng Giáo Viên AI Toàn Năng'
-        : isTHPT ? 'Tác giả Đinh Thành - ĐT: 0915.213717 – THPT Đồng Yên' : 'Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên';
+        ? 'Tác giả Đinh Thành, ĐT: 0915.213717 – Cổng Giáo Viên AI Toàn Năng'
+        : isTHPT ? 'Tác giả Đinh Thành, ĐT: 0915.213717 ' : 'Tác giả Đinh Thành, ĐT: 0915.213717 ';
       const appNameGuide = isPrimary
         ? 'Tạo đề kiểm tra Tiếng Anh Global Success Tiểu Học (TT 27)'
         : isTHPT ? 'Tạo đề kiểm tra Tiếng Anh Global Success THPT' : 'Tạo đề kiểm tra Tiếng Anh Global Success THCS';
@@ -1368,7 +1368,7 @@ Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết ki�
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM SINH 3 ĐỀ BIẾN THỂ VIP (V1):
 ----------------------------------------------------------------------
-📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
+📌 Tác giả Đinh Thành, ĐT: 0915.213717 
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${res.packageName}
@@ -1428,7 +1428,7 @@ Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết k
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM SCREEN RECORD PRO V2 (QUAY MÀN HÌNH BTV):
 ----------------------------------------------------------------------
-📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
+📌 Tác giả Đinh Thành, ĐT: 0915.213717 
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${res.packageName}
@@ -1491,7 +1491,7 @@ Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm tha
 
       const msg = `KÍNH GỬI THẦY/CÔ BẢN QUYỀN PHẦN MỀM ĐINH THÀNH CLEANER PRO v4.5 VIP ULTRA:
 ----------------------------------------------------------------------
-📌 Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên
+📌 Tác giả Đinh Thành, ĐT: 0915.213717 
 📞 Hotline/Zalo hỗ trợ: 0915.213717
 💻 Mã máy (Hardware Code): ${cleanId}
 🎁 Gói bản quyền: ${pkgName}
@@ -2115,7 +2115,7 @@ Mọi hỗ trợ xin liên hệ: Tác giả Đinh Thành - Hotline / Zalo: 0915.
   const getMarketingPostContent = (topic: 'ALL' | 'ENG' | '8MON' | 'WORD' | 'BIENTHE' | 'PDF') => {
     const siteUrl = 'https://dekiemtraso.com/';
     const hotline = '0915.213717';
-    const author = 'Tác giả Đinh Thành - ĐT: 0915.213717 (Trường THCS Đồng Yên)';
+    const author = 'Tác giả Đinh Thành, ĐT: 0915.213717 ';
 
     switch (topic) {
       case 'ENG':
@@ -7650,7 +7650,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div>• Loại vi phạm: <span className="text-red-400 font-bold">{selectedAlertForEvidence.tamperType}</span></div>
                 <div>• Chi tiết hành vi: <span className="text-red-300">{selectedAlertForEvidence.tamperDetails}</span></div>
                 <div className="pt-2 text-slate-500 text-[11px] border-t border-slate-800 mt-2">
-                  Tác quyền phần mềm: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline/Zalo: 0915.213717 - Trường THCS Đồng Yên.
+                  Tác quyền phần mềm: Tác giả Đinh Thành, ĐT: 0915.213717 - Hotline/Zalo: 0915.213717 - Trường THCS.
                 </div>
               </div>
 
@@ -7672,7 +7672,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
 • SĐT: ${selectedAlertForEvidence.phoneGuess || 'Chưa rõ'}
 • Loại vi phạm: ${selectedAlertForEvidence.tamperType}
 • Chi tiết hành vi: ${selectedAlertForEvidence.tamperDetails}
-Tác quyền: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline/Zalo: 0915.213717.`;
+Tác quyền: Tác giả Đinh Thành, ĐT: 0915.213717 - Hotline/Zalo: 0915.213717.`;
                     navigator.clipboard.writeText(text);
                     setCopiedEvidence(true);
                     setTimeout(() => setCopiedEvidence(false), 2000);

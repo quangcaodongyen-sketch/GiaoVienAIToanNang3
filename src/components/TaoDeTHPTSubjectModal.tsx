@@ -374,7 +374,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto">
-              {/* THÔNG TIN TÁC GIẢ THẦY ĐINH VĂN THÀNH */}
+              {/* THÔNG TIN TÁC GIẢ THẦY Đinh Thành */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
@@ -389,7 +389,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                       TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TẠO ĐỀ {curSub.fullName.toUpperCase()} (2025+)</strong>
@@ -544,7 +544,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
         {/* FOOTER MODAL */}
         <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong></span>
+            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong></span>
             <span>•</span>
             <span className="text-emerald-400 font-bold">Hotline: 0915.213717</span>
           </div>

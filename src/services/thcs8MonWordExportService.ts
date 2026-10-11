@@ -1,7 +1,7 @@
 /**
  * THCS 8 Môn Word Export Service
  * Hệ thống sinh đề kiểm tra tham khảo dành cho giáo viên Công văn 7991/BGDĐT & Sách Kết Nối Tri Thức
- * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Trường THCS Đồng Yên (Zalo: 0915.213717)
+ * Tác giả Đinh Thành, ĐT: 0915.213717 - Trường THCS (Zalo: 0915.213717)
  */
 
 export interface THCS8MonExamData {
@@ -1169,7 +1169,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
     parts, matrix, specification, answerGuide
   } = data;
 
-  // Render bảng điểm chuẩn Trường THCS Đồng Yên (2 dòng kẻ giáo viên phê)
+  // Render bảng điểm chuẩn Trường THCS (2 dòng kẻ giáo viên phê)
   const renderMarksTable = () => `
     <table style="width: 100%; border-collapse: collapse; margin-top: 4pt; margin-bottom: 8pt; page-break-inside: avoid;">
       <tr>
@@ -1307,7 +1307,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
         </tr>
       </table>
 
-      <!-- Dòng Họ tên học sinh & Mã đề chuẩn THCS Đồng Yên -->
+      <!-- Dòng Họ tên học sinh & Mã đề chuẩn -->
       <div style="margin-top: 4pt; margin-bottom: 2pt; font-size: 12.5pt;">
         Họ và tên: __________________________, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lớp: ${grade}A___ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mã đề: ${examCode}</b>
       </div>
@@ -1475,7 +1475,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
               kính mời Thầy/Cô liên hệ tác giả để nhận tư vấn và kích hoạt bản quyền Pro ưu đãi sư phạm:
             </div>
             <div style="font-size: 12pt; font-weight: bold; color: #047857; margin-top: 6pt;">
-              📞 TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717 (TRƯỜNG THCS ĐỒNG YÊN)
+              📞 TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717 (TRƯỜNG THCS)
             </div>
             <div style="font-size: 10pt; color: #666666; margin-top: 2pt;">
               Website chính thức: <b>https://dekiemtraso.com/</b>
@@ -1497,8 +1497,8 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
             <i>.........., ngày ..... tháng ..... năm 2026</i><br/>
             <b>GIÁO VIÊN BIÊN SOẠN & PHẦN MỀM</b><br/>
             <i>(Đã kiểm duyệt tham khảo dành cho giáo viên CV 7991)</i><br/><br/><br/><br/>
-            <b>Tác giả Đinh Thành - ĐT: 0915.213717</b><br/>
-            <span style="font-size: 9.5pt; color: #444;">Trường THCS Đồng Yên – Hotline/Zalo: 0915.213717</span>
+            <b>Tác giả Đinh Thành, ĐT: 0915.213717</b><br/>
+            <span style="font-size: 9.5pt; color: #444;">Tác giả Đinh Thành, ĐT/Zalo: 0915.213717</span>
           </td>
         </tr>
       </table>

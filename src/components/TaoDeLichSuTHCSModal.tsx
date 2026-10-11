@@ -201,7 +201,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Bám sát SGK Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9) • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên)
+                Bám sát SGK Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9) • Tác giả Đinh Thành, ĐT: 0915.213717 
               </p>
             </div>
           </div>
@@ -908,7 +908,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
         {/* FOOTER MODAL */}
         <div className="px-6 py-3.5 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
           <div>
-            Tác giả: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> • Trường THCS Đồng Yên • Hotline/Zalo: <strong>0915.213717</strong>
+            Tác giả: <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong>  • Hotline/Zalo: <strong>0915.213717</strong>
           </div>
           <div className="flex items-center gap-3">
             <a

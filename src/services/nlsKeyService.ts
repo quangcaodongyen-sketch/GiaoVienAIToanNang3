@@ -1,7 +1,7 @@
 /**
  * nlsKeyService.ts
  * Hệ thống sinh và xác thực bản quyền Ed25519 cho Công cụ Tích hợp NLS - AI THCS
- * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline / Zalo: 0915.213717
+ * Tác giả Đinh Thành, ĐT: 0915.213717 - Hotline / Zalo: 0915.213717
  */
 
 // Khóa công khai Ed25519 của Thầy Thành (lưu tại client)
@@ -166,7 +166,7 @@ export async function generateEd25519Key(
     : PRODUCT_NAME;
 
   const zaloMessage = `Kính gửi Thầy/Cô,
-Tác giả Đinh Thành - ĐT: 0915.213717 xin gửi Mã kích hoạt bản quyền Pro chính thức:
+Tác giả Đinh Thành, ĐT: 0915.213717 xin gửi Mã kích hoạt bản quyền Pro chính thức:
 
 • Phần mềm: ${prodTitle}
 • Thời hạn bản quyền: ${planName}

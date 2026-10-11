@@ -825,7 +825,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                       Ứng Dụng Dọn Rác Máy Tính Cleaner Pro - Tặng Quý Thầy/Cô
                     </h4>
                     <p className="text-xs text-slate-300 mt-0.5">
-                      Thầy giáo <strong>{BRAND.author}</strong> (THCS Đồng Yên) phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
+                      Thầy giáo <strong>{BRAND.author}</strong>  phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
                     </p>
                   </div>
                 </div>
@@ -927,7 +927,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         {/* MODAL FOOTER */}
         <div className="px-5 py-3 bg-[#0F172A] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
           <div>
-            Tác giả: <span className="text-slate-200 font-semibold">Thầy {BRAND.author}</span> – Trường THCS Đồng Yên
+            Tác giả: <span className="text-slate-200 font-semibold">Thầy {BRAND.author}</span> 
           </div>
           <div className="flex items-center gap-3">
             <span>Hotline / Zalo: <strong className="text-amber-400">{BRAND.phone}</strong></span>

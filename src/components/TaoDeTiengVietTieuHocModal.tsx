@@ -223,7 +223,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                 )}
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Tác giả Đinh Thành - ĐT: 0915.213717 • Hotline/Zalo: 0915.213717
+                Tác giả Đinh Thành, ĐT: 0915.213717 • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -714,7 +714,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                       TÁC GIẢ &amp; BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC PRO (LỚP 1-5)</strong>
@@ -811,7 +811,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
         {/* FOOTER MODAL */}
         <div className="px-5 py-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong></span>
+            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong></span>
           </div>
           {onOpenAdmin && (
             <button

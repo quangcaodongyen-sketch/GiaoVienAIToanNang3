@@ -625,7 +625,7 @@ startxref
                 </div>
 
                 <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên)</span>
+                  <span>Tác giả Đinh Thành, ĐT: 0915.213717 </span>
                   <a
                     href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
@@ -719,7 +719,7 @@ startxref
                     Bộ Tiện Ích Tách - Gộp PDF Suite - Tặng Quý Thầy/Cô
                   </h4>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    Thầy giáo <strong>{BRAND.author}</strong> (THCS Đồng Yên) phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
+                    Thầy giáo <strong>{BRAND.author}</strong>  phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
                   </p>
                 </div>
               </div>

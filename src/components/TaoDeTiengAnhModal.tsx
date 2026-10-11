@@ -224,7 +224,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 )}
               </div>
               <p className="text-xs text-slate-400">
-                Tác giả Đinh Thành - ĐT: 0915.213717 • THCS Đồng Yên • Hotline/Zalo: 0915.213717
+                Tác giả Đinh Thành, ĐT: 0915.213717  • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -364,7 +364,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY ĐINH VĂN THÀNH)   */}
+          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY Đinh Thành)   */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-3xl mx-auto">
@@ -389,7 +389,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                       TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TẠO ĐỀ TIẾNG ANH THCS (GLOBAL SUCCESS - CV 7991)</strong>

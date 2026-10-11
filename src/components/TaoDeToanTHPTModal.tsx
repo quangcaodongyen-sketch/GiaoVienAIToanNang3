@@ -191,7 +191,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (0915.213717)
+                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả Đinh Thành, ĐT: 0915.213717 (0915.213717)
               </p>
             </div>
           </div>
@@ -419,7 +419,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
               {hasGeneratedExam && (
                 <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-4 animate-fade-in">
                   
-                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
+                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY Đinh Thành */}
                   {!isProActive && (
                     <div className="p-3.5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
                       <div className="flex items-center gap-2 text-amber-900 font-bold text-[13px] mb-1">
@@ -427,7 +427,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                         <span>BẢN DÙNG THỬ SƯ PHẠM TOÁN THPT (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
                       </div>
                       <p className="text-slate-700 leading-normal">
-                        • Tác quyền & Quản trị: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> – THCS Đồng Yên – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Tác giả: <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong> – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
                         • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để kiểm chứng ma trận chuẩn BGD. Để mở khóa toàn bộ đáp án, xuất file Word và ma trận đặc tả, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
                       </p>
                     </div>
@@ -929,7 +929,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         {/* FOOTER MODAL */}
         <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 border-t border-slate-800 bg-slate-950/80 text-xs text-slate-400 shrink-0 gap-2">
           <div className="flex items-center gap-3">
-            <span>Tác giả: <strong className="text-white">Tác giả Đinh Thành</strong> (THCS Đồng Yên)</span>
+            <span>Tác giả: <strong className="text-white">Tác giả Đinh Thành</strong> </span>
             <span>•</span>
             <span>Hotline / Zalo: <strong className="text-blue-400">0915.213717</strong></span>
           </div>

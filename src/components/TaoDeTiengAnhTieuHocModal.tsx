@@ -183,7 +183,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                 </h2>
               </div>
               <p className="text-xs text-amber-200/80 font-medium">
-                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Zalo: 0915.213717
+                Tác giả Đinh Thành, ĐT: 0915.213717  – Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -826,7 +826,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-400 italic">
-                    Gửi mã máy này cho Tác giả Đinh Thành - ĐT: 0915.213717 qua Zalo để nhận Mã kích hoạt bản quyền Pro.
+                    Gửi mã máy này cho Tác giả Đinh Thành, ĐT: 0915.213717 qua Zalo để nhận Mã kích hoạt bản quyền Pro.
                   </p>
                 </div>
 
@@ -875,7 +875,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                     ĐĂNG KÝ TƯ VẤN & BÁO GIÁ ƯU ĐÃI SƯ PHẠM (RULE 4)
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
-                    Thầy/Cô vui lòng gửi thông tin để Tác giả Đinh Thành - ĐT: 0915.213717 gửi báo giá ưu đãi sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
+                    Thầy/Cô vui lòng gửi thông tin để Tác giả Đinh Thành, ĐT: 0915.213717 gửi báo giá ưu đãi sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
                   </p>
                 </div>
 
@@ -918,7 +918,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                         <label className="block text-xs font-bold text-slate-300 mb-1">Trường Tiểu học công tác</label>
                         <input
                           type="text"
-                          placeholder="Ví dụ: Trường Tiểu học Đồng Yên"
+                          placeholder="Ví dụ: Trường Tiểu học"
                           value={regSchool}
                           onChange={(e) => setRegSchool(e.target.value)}
                           className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-400"

@@ -1,7 +1,7 @@
 // ================================================================
 // practice_arena_data.js – Đấu Trường Luyện Tập Thực Hành Đa Dạng
 // 5 Dạng Bài Tập Tương Tác Cốt Lõi THCS Global Success (Lớp 6, 7, 8, 9)
-// Tác giả & Bản quyền: Thầy Đinh Văn Thành – Trường THCS Đồng Yên
+// Tác giả & Bản quyền: Tác giả Đinh Thành – Trường THCS
 // ================================================================
 
 // ── 1. DẠNG 1: WORD SCRAMBLE / SENTENCE BUILDER (Ghép từ thành câu) ──

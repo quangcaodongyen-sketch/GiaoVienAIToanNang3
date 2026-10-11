@@ -57,7 +57,7 @@
             <h1 class="font-bold text-base sm:text-lg text-white">CÔNG CỤ TẠO ĐỀ KIỂM TRA 15 PHÚT TIẾNG ANH THCS</h1>
             <span class="text-[11px] bg-blue-500/20 text-blue-400 font-bold px-2 py-0.5 rounded-full border border-blue-500/30">GLOBAL SUCCESS</span>
           </div>
-          <p class="text-xs text-slate-400">Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 • THCS Đồng Yên • Hotline/Zalo: 0915.213717</p>
+          <p class="text-xs text-slate-400">Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 • THCS • Hotline/Zalo: 0915.213717</p>
         </div>
       </div>
       <div class="flex items-center space-x-2">
@@ -138,7 +138,7 @@
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="block text-slate-400 mb-1 font-medium">Tên trường</label>
-              <input type="text" id="cfgSchool" value="TRƯỜNG THCS ĐỒNG YÊN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
+              <input type="text" id="cfgSchool" value="TRƯỜNG THCS" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none focus:border-blue-500">
             </div>
             <div>
               <label class="block text-slate-400 mb-1 font-medium">Năm học</label>
@@ -241,7 +241,7 @@
           <!-- Header Table 2 Cột -->
           <div class="flex justify-between items-start border-b border-black pb-1.5 mb-2 text-[10.5pt]">
             <div class="w-1/2 pr-2">
-              <div class="font-bold text-[11pt]" id="paperSchoolName">TRƯỜNG THCS ĐỒNG YÊN</div>
+              <div class="font-bold text-[11pt]" id="paperSchoolName">TRƯỜNG THCS</div>
               <div>Họ và tên: ....................................................</div>
               <div>Lớp: <span id="paperClassLabel">6A.....</span></div>
             </div>
@@ -326,7 +326,7 @@
 
   <!-- Footer -->
   <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-400 no-print">
-    <p>Hệ thống Tạo đề kiểm tra 15 phút Tiếng Anh THCS (Global Success) • Phát triển bởi <b>Tác giả Đinh Thành - ĐT: 0915.213717</b> (0915.213717) • Trường THCS Đồng Yên</p>
+    <p>Hệ thống Tạo đề kiểm tra 15 phút Tiếng Anh THCS (Global Success) • Phát triển bởi <b>Tác giả Đinh Thành - ĐT: 0915.213717</b> (0915.213717) • Trường THCS</p>
   </footer>
 
   <script>
@@ -613,7 +613,7 @@
       const curSeed = currentPreviewCodeIndex === 1 ? seed1 : seed2;
       const model = buildQuizModel(currentGrade, currentUnitNum, curCode, curSeed);
 
-      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS";
       document.getElementById('paperSchoolName').innerText = school.toUpperCase();
       document.getElementById('paperSubjectTitle').innerText = `Môn: Tiếng Anh ${currentGrade} • ${model.title}`;
       document.getElementById('paperCurrentCodeLabel').innerText = model.code;
@@ -808,7 +808,7 @@
       const code = codeIndex === 1 ? examCode1 : examCode2;
       const seed = codeIndex === 1 ? seed1 : seed2;
       const model = buildQuizModel(currentGrade, currentUnitNum, code, seed);
-      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS";
       const year = document.getElementById('cfgYear').value || "2025 - 2026";
 
       const htmlContent = `
@@ -845,7 +845,7 @@
     function exportFullTwoCodesWord() {
       const m1 = buildQuizModel(currentGrade, currentUnitNum, examCode1, seed1);
       const m2 = buildQuizModel(currentGrade, currentUnitNum, examCode2, seed2);
-      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS";
       const year = document.getElementById('cfgYear').value || "2025 - 2026";
 
       const htmlContent = `
@@ -893,7 +893,7 @@
         alert("Vui lòng chọn ít nhất 1 Unit để xuất đề!");
         return;
       }
-      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS ĐỒNG YÊN";
+      const school = document.getElementById('cfgSchool').value || "TRƯỜNG THCS";
       const year = document.getElementById('cfgYear').value || "2025 - 2026";
 
       let bodyHtml = '';

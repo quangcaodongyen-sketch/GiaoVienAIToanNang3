@@ -915,7 +915,7 @@ export default function App() {
               <span>dekiemtraso.com</span>
             </a>
             <span className="hidden md:inline font-medium text-slate-300 truncate">
-              Nền tảng Trợ lý AI Sư Phạm & Tạo Đề Kiểm Tra Số Tham khảo dành cho giáo viên Bộ GD&ĐT 2026
+              Cộng đồng chia sẻ App Ra Đề Kiểm Tra & Tiện Ích Giáo Dục Tham Khảo 2026
             </span>
             <span className="md:hidden text-slate-300 font-medium truncate">
               Đề Kiểm Tra Số 2026
@@ -990,7 +990,7 @@ export default function App() {
               title="Nhắn tin Zalo trực tiếp hỗ trợ kỹ thuật"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="hidden sm:inline">Zalo Thầy Thành:</span>
+              <span className="hidden sm:inline">Zalo Tác Giả:</span>
               <strong className="text-emerald-400 font-bold">{BRAND.phone}</strong>
             </a>
 
@@ -1040,7 +1040,7 @@ export default function App() {
                   </p>
                   <span className="text-slate-300 hidden sm:inline">•</span>
                   <span className="text-[11px] text-teal-700 dark:text-teal-400 font-bold hidden sm:inline">
-                    Thầy {BRAND.author}
+                    {BRAND.author}
                   </span>
                 </div>
               </div>
@@ -1269,7 +1269,7 @@ export default function App() {
                   className="w-full text-center px-4 py-2.5 rounded-xl bg-[#0D9488] hover:bg-teal-700 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Zalo Thầy Thành: {BRAND.phone}
+                  Zalo: {BRAND.phone}
                 </a>
               </div>
             </div>
@@ -1288,13 +1288,16 @@ export default function App() {
                 <div className="space-y-2 max-w-3xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-cyan-200 text-xs font-bold uppercase tracking-wider border border-white/20 backdrop-blur-xs">
                     <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                    <span>Hệ Sinh Thái Sư Phạm THCS & THPT 2026 • Tham khảo dành cho giáo viên Bộ GD&ĐT</span>
+                    <span>🎁 CHIA SẺ TIỆN ÍCH GIÁO DỤC • TRẢI NGHIỆM DÙNG THỬ MIỄN PHÍ</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
-                    Nền Tảng Trợ Lý AI & Tạo Đề Kiểm Tra Số Chuẩn Mực
+                    Kho Ứng Dụng Ra Đề Kiểm Tra & Tiện Ích Giáo Dục Tham Khảo
                   </h1>
                   <p className="text-xs sm:text-sm text-blue-50/90 leading-relaxed font-normal">
-                    Tác giả: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> (Trường THCS Đồng Yên) • Hotline/Zalo: <strong>{BRAND.phone}</strong>. Tự động hóa tích hợp Năng lực số (CV 5512), sinh đề kiểm tra THCS (CV 7991) & THPT (2025+) trọn bộ 18+ môn học, chuyển đổi công thức Toán học Mathpix sang Word, căn lề chuẩn Nghị định 30/2020.
+                    Chia sẻ các app ra đề kiểm tra, tiện ích giáo dục hỗ trợ giáo viên (Tiểu học, THCS, THPT). Tác giả: <strong>Đinh Thành, ĐT/Zalo: 0915.213717</strong>. Kính mời quý Thầy/Cô tải về trải nghiệm dùng thử miễn phí; Thầy/Cô có nhu cầu hỗ trợ chuyên sâu và kích hoạt bản Pro không giới hạn vui lòng liên hệ trực tiếp Zalo: <strong>0915.213717</strong>.
+                    <span className="block mt-1 text-[11px] sm:text-xs text-amber-300 font-bold">
+                      📌 SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY
+                    </span>
                   </p>
                 </div>
 
@@ -1314,7 +1317,7 @@ export default function App() {
                     className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5"
                   >
                     <MessageCircle className="w-4 h-4 text-teal-300" />
-                    <span>Zalo Thầy Thành</span>
+                    <span>Zalo Tác Giả (0915.213717)</span>
                   </a>
                   <button
                     type="button"
@@ -1353,8 +1356,8 @@ export default function App() {
                 <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
                   <Award className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Bản Quyền Chính Hãng</div>
-                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Khóa theo mã máy, bảo mật chữ ký số cao cấp</div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Dùng Thử Miễn Phí</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Trải nghiệm dùng thử, liên hệ Zalo hỗ trợ Pro</div>
                   </div>
                 </div>
 
@@ -1819,7 +1822,7 @@ export default function App() {
               </div>
 
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
-                Bộ công cụ chuyên biệt hỗ trợ soạn giáo án tích hợp Năng lực số (CV 5512), sinh ma trận & đề kiểm tra 18+ môn THCS (CV 7991) & THPT (2025+), chuyển đổi công thức Toán học Mathpix sang Word, căn lề văn bản chuẩn Nghị định 30/2020 và các tiện ích sư phạm thiết thực.
+                Cộng đồng chia sẻ các app ra đề kiểm tra và tiện ích giáo dục tham khảo dành cho thầy cô giáo (Tiểu học, THCS, THPT). SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.
               </p>
 
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400">
@@ -1855,7 +1858,7 @@ export default function App() {
                   </div>
                   <div>
                     <div className="text-sm font-black text-white">{BRAND.author}</div>
-                    <div className="text-xs text-slate-300">{BRAND.job} – {BRAND.organization}</div>
+                    <div className="text-xs text-emerald-400 font-semibold">Chia sẻ tiện ích giáo dục • Hỗ trợ kích hoạt Pro qua Zalo</div>
                   </div>
                 </div>
 
@@ -2182,7 +2185,7 @@ export default function App() {
           <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-300"></span>
         </span>
         <MessageCircle className="w-5 h-5 text-white" />
-        <span className="hidden sm:inline font-semibold">Zalo Thầy Thành: {BRAND.phone}</span>
+        <span className="hidden sm:inline font-semibold">Zalo: {BRAND.phone}</span>
       </a>
     </div>
   );

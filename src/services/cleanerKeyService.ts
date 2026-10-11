@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ ĐINH THÀNH CLEANER PRO v4.5 VIP
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 Hardware Binding tương thích 100% với Tao_Key_Ban_Quyen.py
 // Bảo mật: Bảo vệ nhiều tầng lớp (Hardware Lock, Anti-Tamper Trial Storage, SHA-256 Signature)
 // ============================================================================

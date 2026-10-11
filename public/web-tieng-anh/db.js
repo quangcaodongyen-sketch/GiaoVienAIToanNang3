@@ -1,14 +1,14 @@
 // ================================================================
 // db.js – Database: EnglishExam Pro (Tiếng Anh THCS Global Success)
-// Bản quyền & Phát triển: Thầy Đinh Văn Thành – Trường THCS Đồng Yên
+// Bản quyền & Phát triển: Tác giả Đinh Thành – Trường THCS
 // ================================================================
 
 // ── Config ──────────────────────────────────────────────────────
 const APP_CONFIG = {
   name: 'EnglishExam Pro',
   title: 'Hệ thống Soạn đề & Đánh giá Tiếng Anh THCS Global Success',
-  author: 'Thầy Đinh Văn Thành',
-  school: 'Trường THCS Đồng Yên',
+  author: 'Tác giả Đinh Thành',
+  school: 'Trường THCS',
   department: 'Tổ Xã Hội – Nhóm Ngoại Ngữ',
   curriculum: 'Global Success (Bộ Giáo Dục và Đào Tạo)',
   version: '3.0.0',
@@ -104,7 +104,7 @@ const LICENSE_PLANS = [
   { id: 'trial', name: 'Dùng thử', price: 0, period: 'month', examLimit: 10, userLimit: 1, days: 14, features: ['10 đề/tháng', 'Lớp 6-9 Global Success', 'Đề 15 phút, Giữa kỳ', 'Xuất Word & In PDF'], disabled: ['Phát âm Audio AI không giới hạn', 'Tải file nghe Audio offline', 'Admin panel'] },
   { id: 'basic', name: 'Cơ bản', price: 99000, period: 'month', examLimit: 50, userLimit: 1, days: 30, features: ['50 đề/tháng', 'Đầy đủ Lớp 6, 7, 8, 9', 'Đề 15p, Giữa kỳ, Cuối kỳ', 'Audio Player & Script nghe', 'Xuất Word Nghị định 30'], disabled: ['Admin panel', 'Tạo license key'] },
   { id: 'pro', name: 'Pro (Khuyên dùng)', price: 199000, period: 'month', examLimit: -1, userLimit: 1, days: 30, featured: true, features: ['Không giới hạn đề thi', 'Audio AI Voice bản xứ chuẩn UK/US', 'Ma trận & Bảng đặc tả chuẩn Bộ GD&ĐT', 'Làm bài thi Online tự chấm điểm', 'Tự thêm câu hỏi & Audio script'], disabled: ['Nhiều giáo viên', 'Tạo license key'] },
-  { id: 'school', name: 'Nhóm trường THCS', price: 999000, period: 'month', examLimit: -1, userLimit: 15, days: 365, features: ['Không giới hạn toàn trường', 'Tối đa 15 Giáo viên Tiếng Anh', 'Đầy đủ tính năng Pro', 'Hỗ trợ kỹ thuật trực tiếp Thầy Đinh Văn Thành'], disabled: [] },
+  { id: 'school', name: 'Nhóm trường THCS', price: 999000, period: 'month', examLimit: -1, userLimit: 15, days: 365, features: ['Không giới hạn toàn trường', 'Tối đa 15 Giáo viên Tiếng Anh', 'Đầy đủ tính năng Pro', 'Hỗ trợ kỹ thuật trực tiếp Tác giả Đinh Thành'], disabled: [] },
 ];
 
 // ── Default Preset Exams for Global Success ──────────────────────
@@ -594,21 +594,21 @@ const QUESTION_BANK = [
 // ── Users & Auth ─────────────────────────────────────────────────
 const DEFAULT_USERS = [
   {
-    id: 'u001', username: 'dinhvanthanh', password: 'Admin@2024!', name: 'Thầy Đinh Văn Thành',
-    role: 'superadmin', email: 'dinhvanthanh@thcsdongyen.edu.vn', school: 'Trường THCS Đồng Yên',
+    id: 'u001', username: 'dinhvanthanh', password: 'Admin@2024!', name: 'Tác giả Đinh Thành',
+    role: 'superadmin', email: 'dinhvanthanh@thcsdongyen.edu.vn', school: 'Trường THCS',
     license: 'school', licenseExpiry: '2030-12-31', examCount: 28,
     avatar: '👨‍🏫', color: '#2563eb', createdAt: '2024-01-01',
-    bio: 'Giáo viên Tiếng Anh – Trường THCS Đồng Yên. Tác giả & Quản trị viên hệ thống EnglishExam Pro.'
+    bio: 'Giáo viên Tiếng Anh – Trường THCS. Tác giả & Quản trị viên hệ thống EnglishExam Pro.'
   },
   {
-    id: 'u002', username: 'admin', password: 'admin123', name: 'Thầy Đinh Văn Thành (Admin)',
-    role: 'admin', email: 'thanhdv@dongyen.edu.vn', school: 'Trường THCS Đồng Yên',
+    id: 'u002', username: 'admin', password: 'admin123', name: 'Tác giả Đinh Thành (Admin)',
+    role: 'admin', email: 'thanhdv@dongyen.edu.vn', school: 'Trường THCS',
     license: 'school', licenseExpiry: '2030-12-31', examCount: 15,
     avatar: '⭐', color: '#7c3aed', createdAt: '2024-01-01',
   },
   {
     id: 'u003', username: 'teacher_lan', password: 'giaovien123', name: 'Cô Mai Thị Lan',
-    role: 'teacher', email: 'lanmai@dongyen.edu.vn', school: 'Trường THCS Đồng Yên',
+    role: 'teacher', email: 'lanmai@dongyen.edu.vn', school: 'Trường THCS',
     license: 'pro', licenseExpiry: '2026-12-31', examCount: 8,
     avatar: '👩‍🏫', color: '#0ea5e9', createdAt: '2024-05-01',
   },
@@ -634,21 +634,21 @@ const DEFAULT_EXAM_RECORDS = [
   { id: 'e003', userId: 'u001', title: 'Đề kiểm tra Cuối Học kỳ I môn Tiếng Anh 9 chuẩn CV 7991', grade: 9, subject: 'english', questionCount: 40, examType: '60 phút', createdAt: '2026-09-25T14:20:00' },
 ];
 
-// ── Quản lý Lớp học của Thầy Đinh Văn Thành ────────────────────────
+// ── Quản lý Lớp học của Tác giả Đinh Thành ────────────────────────
 const DEFAULT_CLASSES = [
-  { id: 'cls-7a1', name: 'Lớp 7A1', grade: 7, teacherId: 'u001', school: 'Trường THCS Đồng Yên', code: 'DY7A1', studentCount: 38, year: '2024-2025' },
-  { id: 'cls-7a2', name: 'Lớp 7A2', grade: 7, teacherId: 'u001', school: 'Trường THCS Đồng Yên', code: 'DY7A2', studentCount: 36, year: '2024-2025' },
-  { id: 'cls-8b',  name: 'Lớp 8B',  grade: 8, teacherId: 'u001', school: 'Trường THCS Đồng Yên', code: 'DY8B',  studentCount: 35, year: '2024-2025' },
-  { id: 'cls-9a',  name: 'Lớp 9A',  grade: 9, teacherId: 'u001', school: 'Trường THCS Đồng Yên', code: 'DY9A',  studentCount: 40, year: '2024-2025' },
-  { id: 'cls-6a',  name: 'Lớp 6A',  grade: 6, teacherId: 'u001', school: 'Trường THCS Đồng Yên', code: 'DY6A',  studentCount: 34, year: '2024-2025' },
+  { id: 'cls-7a1', name: 'Lớp 7A1', grade: 7, teacherId: 'u001', school: 'Trường THCS', code: 'DY7A1', studentCount: 38, year: '2024-2025' },
+  { id: 'cls-7a2', name: 'Lớp 7A2', grade: 7, teacherId: 'u001', school: 'Trường THCS', code: 'DY7A2', studentCount: 36, year: '2024-2025' },
+  { id: 'cls-8b',  name: 'Lớp 8B',  grade: 8, teacherId: 'u001', school: 'Trường THCS', code: 'DY8B',  studentCount: 35, year: '2024-2025' },
+  { id: 'cls-9a',  name: 'Lớp 9A',  grade: 9, teacherId: 'u001', school: 'Trường THCS', code: 'DY9A',  studentCount: 40, year: '2024-2025' },
+  { id: 'cls-6a',  name: 'Lớp 6A',  grade: 6, teacherId: 'u001', school: 'Trường THCS', code: 'DY6A',  studentCount: 34, year: '2024-2025' },
 ];
 
 // ── Tài khoản Học sinh mẫu ─────────────────────────────────────────
 const DEFAULT_STUDENTS = [
-  { id: 'st-01', username: 'nguyenvanan', password: '123', name: 'Nguyễn Văn An', grade: 7, class: '7A1', classCode: 'DY7A1', role: 'student', school: 'THCS Đồng Yên', points: 420, completedExams: 6 },
-  { id: 'st-02', username: 'tranthimai', password: '123', name: 'Trần Thị Mai', grade: 7, class: '7A1', classCode: 'DY7A1', role: 'student', school: 'THCS Đồng Yên', points: 510, completedExams: 7 },
-  { id: 'st-03', username: 'lehongphuc', password: '123', name: 'Lê Hồng Phúc', grade: 8, class: '8B', classCode: 'DY8B', role: 'student', school: 'THCS Đồng Yên', points: 380, completedExams: 5 },
-  { id: 'st-04', username: 'hoangminhkhang', password: '123', name: 'Hoàng Minh Khang', grade: 9, class: '9A', classCode: 'DY9A', role: 'student', school: 'THCS Đồng Yên', points: 640, completedExams: 9 },
+  { id: 'st-01', username: 'nguyenvanan', password: '123', name: 'Nguyễn Văn An', grade: 7, class: '7A1', classCode: 'DY7A1', role: 'student', school: 'THCS', points: 420, completedExams: 6 },
+  { id: 'st-02', username: 'tranthimai', password: '123', name: 'Trần Thị Mai', grade: 7, class: '7A1', classCode: 'DY7A1', role: 'student', school: 'THCS', points: 510, completedExams: 7 },
+  { id: 'st-03', username: 'lehongphuc', password: '123', name: 'Lê Hồng Phúc', grade: 8, class: '8B', classCode: 'DY8B', role: 'student', school: 'THCS', points: 380, completedExams: 5 },
+  { id: 'st-04', username: 'hoangminhkhang', password: '123', name: 'Hoàng Minh Khang', grade: 9, class: '9A', classCode: 'DY9A', role: 'student', school: 'THCS', points: 640, completedExams: 9 },
 ];
 
 // ── Ngân hàng Từ vựng Flashcards chuẩn SGK Global Success ─────────

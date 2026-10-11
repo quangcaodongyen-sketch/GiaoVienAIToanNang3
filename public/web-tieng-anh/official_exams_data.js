@@ -1,6 +1,6 @@
 // ================================================================
-// official_exams_data.js – Trọn bộ 20 Đề kiểm tra chuẩn THCS Đồng Yên
-// Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành – Trường THCS Đồng Yên (0915.213717)
+// official_exams_data.js – Trọn bộ 20 Đề kiểm tra chuẩn THCS
+// Tác giả & Bản quyền: Thầy giáo Đinh Thành – Trường THCS (0915.213717)
 // Chuẩn Công văn 7991/BGDĐT & GDPT 2018 (Năm học 2026 - 2027)
 // ================================================================
 

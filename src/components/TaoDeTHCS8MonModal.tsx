@@ -436,7 +436,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả: Đinh Thành (Tel/zalo: 0915.213717) • THCS Đồng Yên (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) – THCS Đồng Yên
+                Tác giả: Đinh Thành (ĐT/Zalo: 0915.213717) (<span className="text-emerald-400 font-bold">Hotline / Zalo: 0915.213717</span>) 
               </p>
             </div>
           </div>
@@ -648,7 +648,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TẠO ĐỀ KIỂM TRA {curSub.fullName.toUpperCase()} (CV 7991)</strong>
@@ -872,7 +872,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
         {/* FOOTER MODAL */}
         <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong></span>
+            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong></span>
             <span>•</span>
             <span className="text-emerald-400 font-bold">Hotline: 0915.213717</span>
           </div>

@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ SCREEN RECORD PRO V2
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 HMAC Signature chuẩn thương hiệu Tác giả Đinh Thành
 // Bảo mật: Hệ thống bảo vệ nhiều tầng lớp (Hardware Lock, Anti-Tamper Trial Storage, SHA-256 Signature)
 // ============================================================================

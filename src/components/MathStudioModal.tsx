@@ -268,7 +268,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           <p style="font-size: 15pt; color: #b91c1c;">${latexInput}</p>
         </div>
         <div class="author-box">
-          Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – Hotline / Zalo: 0915.213717
+          Tác giả Đinh Thành, ĐT: 0915.213717  – Hotline / Zalo: 0915.213717
         </div>
       </body>
       </html>
@@ -386,7 +386,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – ĐT/Zalo: <strong>{BRAND.phone}</strong> – Trường THCS Đồng Yên
+                Tác giả Đinh Thành, ĐT: 0915.213717 – ĐT/Zalo: <strong>{BRAND.phone}</strong> 
               </p>
             </div>
           </div>
@@ -438,7 +438,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   Chỉ Dành Riêng Cho Quản Trị Viên (Admin)
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Tác giả Đinh Thành - ĐT: 0915.213717 kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
+                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Tác giả Đinh Thành, ĐT: 0915.213717 kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
                 </p>
                 <p className="text-xs text-rose-300 font-semibold">
                   Để đảm bảo chất lượng sư phạm cao nhất, phần mềm tạm thời <strong>KHÓA TẢI VỀ CÔNG KHAI</strong> và không mở cho người dùng đại trà.
@@ -832,7 +832,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto py-1">
               
-              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
+              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY Đinh Thành */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
@@ -847,7 +847,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                       TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>ĐINH THÀNH MATHSTUDIO 2026+ PRO</strong>
@@ -999,7 +999,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
                         required
                         value={regSchool}
                         onChange={(e) => setRegSchool(e.target.value)}
-                        placeholder="Ví dụ: THCS Đồng Yên"
+                        placeholder="Ví dụ: Trường THCS..."
                         className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-violet-500"
                       />
                     </div>
@@ -1067,7 +1067,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-violet-400"></span>
-            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Tác giả Đinh Thành - ĐT: 0915.213717</span>
+            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Tác giả Đinh Thành, ĐT: 0915.213717</span>
           </div>
           <div className="flex items-center gap-2">
             <button

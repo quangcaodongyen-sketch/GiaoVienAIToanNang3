@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN & MẬT MÃ TẠO ĐỀ TIẾNG ANH GLOBAL SUCCESS (CV 7991)
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 HMAC Signature chuẩn khớp 100% với Tool_Tao_Key_Ban_Quyen_Thanh.py
 // Bảo mật: Hệ thống bảo vệ nhiều tầng lớp (Hardware Lock, Anti-Tamper Trial Storage, SHA-256 Signature)
 // ============================================================================

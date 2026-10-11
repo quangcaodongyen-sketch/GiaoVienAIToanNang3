@@ -1,6 +1,6 @@
 // ============================================================================
 // DỊCH VỤ QUẢN LÝ BẢN QUYỀN CHUẨN HÓA VĂN BẢN HÀNH CHÍNH AI (NGHỊ ĐỊNH 30/2020)
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Thuật toán: SHA-256 Hardware Binding & Anti-Tamper Trial Storage
 // ============================================================================
 
@@ -239,7 +239,7 @@ export function buildCHVBZaloMessage(
   licenseKey: string,
   pkgName: string
 ): string {
-  return `Chào Thầy/Cô! Thầy Thành (THCS Đồng Yên - 0915.213717) xin gửi mã kích hoạt Phần mềm Chuẩn Hóa Văn Bản Hành Chính AI (Nghị định 30/2020/NĐ-CP):
+  return `Chào Thầy/Cô! Tác giả Đinh Thành (0915.213717) xin gửi mã kích hoạt Phần mềm Chuẩn Hóa Văn Bản Hành Chính AI (Nghị định 30/2020/NĐ-CP):
 
 🔑 Mã máy tính: ${machineId}
 📦 Gói đăng ký: ${pkgName}

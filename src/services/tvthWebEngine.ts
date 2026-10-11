@@ -1,7 +1,7 @@
 // ============================================================================
 // ĐỘNG CƠ TẠO ĐỀ TIẾNG VIỆT TIỂU HỌC WEB ENGINE (LỚP 1 - LỚP 5)
 // Bám sát 100% Sách Giáo Khoa KẾT NỐI TRI THỨC VỚI CUỘC SỐNG & TT 27/2020/TT-BGDĐT
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717
 // ============================================================================
 
 export interface TVTHEntry {
@@ -160,7 +160,7 @@ export const TVTH_DATA: TVTHEntry[] = [
         {
           num: 4,
           stem: 'Viết 1 câu giới thiệu về bản thân em:',
-          correctAnswer: 'Ví dụ: Em tên là Nguyễn Văn An, học sinh lớp 2A trường Tiểu học Đồng Yên.',
+          correctAnswer: 'Ví dụ: Em tên là Nguyễn Văn An, học sinh lớp 2A trường Tiểu học.',
           level: 'Mức 3'
         }
       ]

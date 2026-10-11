@@ -511,12 +511,12 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
       </head>
       <body>
         ${!isProActive ? `
-        <!-- BANNER QUẢNG CÁO TÁC GIẢ THẦY ĐINH VĂN THÀNH (BẢN DÙNG THỬ) -->
+        <!-- BANNER QUẢNG CÁO TÁC GIẢ THẦY Đinh Thành (BẢN DÙNG THỬ) -->
         <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; border: 2px dashed #D97706; background-color: #FEF3C7; margin-bottom: 14pt;">
           <tr>
             <td>
               <p style="color: #B45309; font-weight: bold; font-size: 11pt; margin: 0 0 4pt 0;">📢 BẢN DÙNG THỬ - PHẦN MỀM TÍCH HỢP NLS & AI VÀO GIÁO ÁN 12 MÔN (CV 5512)</p>
-              <p style="color: #78350F; font-size: 10.5pt; margin: 0 0 4pt 0;">• Tác giả & Quản trị: <b>Tác giả Đinh Thành - ĐT: 0915.213717</b> – Trường THCS Đồng Yên – Hotline / Zalo: <b>0915.213717</b></p>
+              <p style="color: #78350F; font-size: 10.5pt; margin: 0 0 4pt 0;">• Tác giả & Quản trị: <b>Tác giả Đinh Thành, ĐT: 0915.213717</b>  – Hotline / Zalo: <b>0915.213717</b></p>
               <p style="color: #78350F; font-size: 10pt; margin: 0;">• Để tích hợp trọn vẹn 100% toàn bộ giáo án dài và <b>gỡ bỏ hoàn toàn quảng cáo này</b>, Quý Thầy/Cô vui lòng liên hệ Zalo <b>0915.213717</b> để đăng ký bản quyền Pro chính hãng.</p>
             </td>
           </tr>
@@ -526,7 +526,7 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
         <h2>GIÁO ÁN TÍCH HỢP NLS & AI - CHUẨN CÔNG VĂN 5512 (PHIÊN BẢN V3)</h2>
         <p><b>Môn học:</b> ${selectedSubject} - <b>Lớp:</b> ${selectedGrade}</p>
         <p><b>Bài dạy:</b> ${lessonName}</p>
-        <p><b>Tác quyền:</b> Tác giả Đinh Thành - ĐT: 0915.213717 – Trường THCS Đồng Yên</p>
+        <p><b>Tác quyền:</b> Tác giả Đinh Thành, ĐT: 0915.213717 </p>
         <hr/>
         
         ${generatedPrimaryObjectives ? `
@@ -644,7 +644,7 @@ ${exportDisabilityProc}
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – ĐT/Zalo: <strong>{BRAND.phone}</strong> – Trường THCS Đồng Yên
+                Tác giả Đinh Thành, ĐT: 0915.213717 – ĐT/Zalo: <strong>{BRAND.phone}</strong> 
               </p>
             </div>
           </div>
@@ -901,7 +901,7 @@ ${exportDisabilityProc}
 
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto py-1">
-              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
+              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY Đinh Thành */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
@@ -916,7 +916,7 @@ ${exportDisabilityProc}
                       TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                     </h4>
                     <p className="text-xs text-slate-200">
-                      • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                       • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
                       • Phần mềm: <strong>TÍCH HỢP NLS & AI (ADD-INS V3)</strong>
@@ -1064,7 +1064,7 @@ Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
                       required
                       value={regSchool}
                       onChange={(e) => setRegSchool(e.target.value)}
-                      placeholder="Ví dụ: Trường THCS Đồng Yên"
+                      placeholder="Ví dụ: Trường THCS"
                       className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
@@ -1112,7 +1112,7 @@ Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Phần mềm Tích hợp NLS - AI V3 (Chuẩn CV 5512) – Bản quyền: Tác giả Đinh Thành - ĐT: 0915.213717</span>
+            <span>Phần mềm Tích hợp NLS - AI V3 (Chuẩn CV 5512) – Bản quyền: Tác giả Đinh Thành, ĐT: 0915.213717</span>
           </div>
           <div className="flex items-center gap-2">
             <button

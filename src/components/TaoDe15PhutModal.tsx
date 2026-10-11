@@ -236,7 +236,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 • THCS Đồng Yên • Hotline/Zalo: 0915.213717
+                Tác giả Đinh Thành, ĐT: 0915.213717  • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -480,7 +480,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                           type="text"
                           value={regProvince}
                           onChange={(e) => setRegProvince(e.target.value)}
-                          placeholder="Ví dụ: Hà Giang, Hà Nội..."
+                          placeholder="Ví dụ: Hà Nội, TP.HCM..."
                           className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
                         />
                       </div>

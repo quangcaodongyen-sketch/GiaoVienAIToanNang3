@@ -150,7 +150,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         machineId: detectedMid,
         fullName: regName,
         phoneNumber: regPhone,
-        schoolUnit: regSchool || 'Trường THPT Đồng Yên',
+        schoolUnit: regSchool || 'Trường THPT',
         appId: 'tao-de-tieng-anh-thpt',
         appName: 'Tạo Đề Tiếng Anh THPT Global Success',
         packageType: '1YEAR'
@@ -196,7 +196,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (0915.213717)
+                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả Đinh Thành, ĐT: 0915.213717 (0915.213717)
               </p>
             </div>
           </div>
@@ -1040,7 +1040,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         {/* FOOTER */}
         <div className="px-6 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 shrink-0">
           <div className="flex items-center gap-3">
-            <span>© 2026 Tác giả Đinh Thành - ĐT: 0915.213717 – THPT Đồng Yên</span>
+            <span>© 2026 Tác giả Đinh Thành, ĐT: 0915.213717 </span>
             <span className="hidden sm:inline">•</span>
             <span className="text-amber-400 font-medium">Hotline / Zalo: 0915.213717</span>
           </div>

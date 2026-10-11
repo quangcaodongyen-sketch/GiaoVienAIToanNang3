@@ -2,7 +2,7 @@
  * taodeLichSuTHCSKeyService.ts
  * Hệ thống sinh và xác thực bản quyền Ed25519 cho Phần Mềm Tạo Đề Lịch Sử THCS (CV 7991)
  * Bộ sách Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9)
- * Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 - Hotline / Zalo: 0915.213717
+ * Tác giả Đinh Thành, ĐT: 0915.213717 - Hotline / Zalo: 0915.213717
  * Tuân thủ Quy chuẩn Độc lập Bản quyền & Anti-Crack Pro 2026
  */
 
@@ -292,7 +292,7 @@ export function buildLSTHCSZaloMessage(
 ): string {
   return `Kính gửi Quý Thầy/Cô: ${teacherName} (${schoolUnit || 'Giáo viên THCS'})!
 
-Tác giả Tác giả Đinh Thành - ĐT: 0915.213717 (Trường THCS Đồng Yên) xin trân trọng gửi Quý Thầy/Cô thông tin kích hoạt bản quyền Phần Mềm Tạo Đề Lịch Sử THCS Kết nối tri thức (CV 7991):
+Tác giả Tác giả Đinh Thành, ĐT: 0915.213717  xin trân trọng gửi Quý Thầy/Cô thông tin kích hoạt bản quyền Phần Mềm Tạo Đề Lịch Sử THCS Kết nối tri thức (CV 7991):
 
 - Gói bản quyền: ${pkgLabel}
 - Mã máy tính (Hardware ID): ${machineId}

@@ -323,7 +323,7 @@ const Admin = (() => {
       </div>
 
       <div class="card mt-24">
-        <div class="section-title mb-16">🎯 Quản lý và cấp phát bản quyền (Thầy Đinh Văn Thành)</div>
+        <div class="section-title mb-16">🎯 Quản lý và cấp phát bản quyền (Tác giả Đinh Thành)</div>
         <div class="grid grid-2">
           <div>
             <h3 class="mb-8" style="font-size:15px">Quy trình cấp License:</h3>
@@ -337,11 +337,11 @@ const Admin = (() => {
           <div>
             <h3 class="mb-8" style="font-size:15px">Mẫu tin nhắn gửi giáo viên:</h3>
             <div class="key-code" style="font-size:13px;font-family:inherit;line-height:1.8" id="sample-msg">
-🇬🇧 EnglishExam Pro – Bản quyền Tiếng Anh Global Success (Thầy Đinh Văn Thành):<br/>
+🇬🇧 EnglishExam Pro – Bản quyền Tiếng Anh Global Success (Tác giả Đinh Thành):<br/>
 Mã kích hoạt: <strong>[KEY_HERE]</strong><br/>
 Thời hạn: 1 năm (Lớp 6, 7, 8, 9 có Audio & Ma trận đặc tả)<br/>
 Kích hoạt tại: Cài đặt → Kích hoạt License Key<br/>
-Hỗ trợ tác giả: Thầy Đinh Văn Thành – THCS Đồng Yên
+Hỗ trợ tác giả: Tác giả Đinh Thành – THCS
             </div>
             <button class="btn btn-sm btn-secondary mt-8" onclick="copySampleMsg()">📋 Copy mẫu</button>
           </div>

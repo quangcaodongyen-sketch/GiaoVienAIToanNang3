@@ -197,16 +197,16 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       wordsCount: number;
     };
   }>({
-    coQuanCapTren: 'UBND XÃ ĐỒNG YÊN',
-    coQuanBanHanh: 'TRƯỜNG THCS ĐỒNG YÊN',
+    coQuanCapTren: 'UBND XÃ',
+    coQuanBanHanh: 'TRƯỜNG THCS',
     soKyHieu: 'Số: 15/QĐ-THCSĐY',
     quocHieu: 'CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM',
     tieuNgu: 'Độc lập - Tự do - Hạnh phúc',
-    diaDanhNgayThang: 'Đồng Yên, ngày 15 tháng 9 năm 2026',
+    diaDanhNgayThang: 'Ngày 15 tháng 9 năm 2026',
     tenLoai: 'QUYẾT ĐỊNH',
     trichYeu: 'Về việc kiện toàn Ban Chỉ đạo Chuyển đổi số và Ứng dụng AI trong giáo dục năm học 2026 - 2027',
     noiDungHtml: '',
-    noiNhan: ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT, Ban CĐ.'],
+    noiNhan: ['Như Điều 3;', 'Lãnh đạo đơn vị (để b/c);', 'Lưu: VT, Ban CĐ.'],
     chucVu: 'HIỆU TRƯỞNG',
     nguoiKy: 'Nguyễn Văn A',
     stats: {
@@ -317,10 +317,10 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       await new Promise((r) => setTimeout(r, 450));
 
       const lines = inputText.split('\n').map(l => l.trim()).filter(Boolean);
-      let coQuanCapTren = 'UBND XÃ ĐỒNG YÊN';
-      let coQuanBanHanh = 'TRƯỜNG THCS ĐỒNG YÊN';
+      let coQuanCapTren = 'UBND XÃ';
+      let coQuanBanHanh = 'TRƯỜNG THCS';
       let soKyHieu = 'Số: .../QĐ-THCSĐY';
-      let diaDanhNgayThang = 'Đồng Yên, ngày ... tháng ... năm 2026';
+      let diaDanhNgayThang = '..., ngày ... tháng ... năm 2026';
       let tenLoai = 'QUYẾT ĐỊNH';
       let trichYeu = 'Về việc chuẩn hóa văn bản theo Nghị định 30/2020/NĐ-CP';
       let chucVu = 'HIỆU TRƯỞNG';
@@ -416,7 +416,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         tenLoai,
         trichYeu,
         noiDungHtml: generatedHtml,
-        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'UBND xã Đồng Yên (để b/c);', 'Lưu: VT.'],
+        noiNhan: noiNhanList.length > 0 ? noiNhanList : ['Như Điều 3;', 'Lãnh đạo đơn vị (để b/c);', 'Lưu: VT.'],
         chucVu,
         nguoiKy,
         stats: {
@@ -797,7 +797,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                 </div>
 
                 <div className="mt-2 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                  <span>Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 (THCS Đồng Yên)</span>
+                  <span>Tác giả Đinh Thành, ĐT: 0915.213717 </span>
                   <a
                     href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
@@ -929,7 +929,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                     Chuẩn Hóa Văn Bản Nghị Định 30 - Tiện Ích Tặng Quý Thầy/Cô
                   </h4>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    Thầy giáo <strong>{BRAND.author}</strong> (THCS Đồng Yên) phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
+                    Thầy giáo <strong>{BRAND.author}</strong>  phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
                   </p>
                 </div>
               </div>

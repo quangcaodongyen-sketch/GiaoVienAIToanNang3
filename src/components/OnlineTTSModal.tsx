@@ -6,10 +6,10 @@ Thầy Cô có thể chọn môn học, khối lớp, phân môn và xuất file
 
 export const SAMPLE_VIDEO_ND30 = `Xin chào các đồng chí cán bộ và giáo viên!
 Video hôm nay sẽ hướng dẫn quy trình chuẩn hóa văn bản hành chính theo đúng Nghị định 30 năm 2020 của Chính phủ.
-Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của Ủy ban nhân dân xã Đồng Yên, Trường Trung học cơ sở Đồng Yên, và khung chữ ký của Hiệu trưởng.
+Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của Ủy ban nhân dân, Trường Trung học cơ sở , và khung chữ ký của Hiệu trưởng.
 Chỉ trong chưa đầy một giây, văn bản của Thầy Cô sẽ đạt chuẩn khảo thí và thể thức văn bản quốc gia!`;
 
-export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Tác giả Đinh Thành, giáo viên Trường Trung học cơ sở Đồng Yên.
+export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Tác giả Đinh Thành (ĐT: 0915.213717).
 Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assistant tích hợp trực tiếp vào Microsoft Word.
 Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
 Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
@@ -750,7 +750,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY ĐINH VĂN THÀNH)   */}
+        {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY Đinh Thành)   */}
         {/* ========================================================================= */}
         {activeTab === 'register' && (
           <div className="space-y-4 max-w-3xl mx-auto flex-1 overflow-y-auto pr-1 text-xs">
@@ -773,7 +773,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                     TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
                   </h4>
                   <p className="text-xs text-slate-200">
-                    • Đơn vị: <strong>Trường THCS Đồng Yên</strong> &nbsp;|&nbsp; • Hotline / Zalo: <strong>0915.213717</strong>
+                     • Hotline / Zalo: <strong>0915.213717</strong>
                   </p>
                   <p className="text-[11px] text-slate-400">
                     • Phần mềm: <strong>SMART LISTENING PRO (TẠO BÀI NGHE SGK TIẾNG ANH)</strong>
@@ -1110,7 +1110,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                       </label>
                       <input
                         type="text"
-                        placeholder="Ví dụ: Trường THCS Đồng Yên"
+                        placeholder="Ví dụ: Trường THCS"
                         value={regSchool}
                         onChange={(e) => setRegSchool(e.target.value)}
                         className="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 focus:outline-none focus:border-blue-500"

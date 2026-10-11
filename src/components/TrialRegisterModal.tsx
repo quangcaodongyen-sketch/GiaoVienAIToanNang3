@@ -417,7 +417,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="Ví dụ: Trường THCS Đồng Yên"
+                  placeholder="Ví dụ: Trường THCS"
                   value={schoolUnit}
                   onChange={(e) => setSchoolUnit(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"

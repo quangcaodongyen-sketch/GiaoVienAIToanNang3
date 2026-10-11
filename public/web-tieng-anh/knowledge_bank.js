@@ -1,6 +1,6 @@
 // ================================================================
 // knowledge_bank.js – Tinh Hoa Tri Thức Tiếng Anh THCS Global Success (6 - 9)
-// Tác giả & Bản quyền: Thầy Đinh Văn Thành – Trường THCS Đồng Yên (0915.213717)
+// Tác giả & Bản quyền: Tác giả Đinh Thành – Trường THCS (0915.213717)
 // Tích hợp: Ngữ pháp Thần tốc, Bí kíp Ngữ âm & Trọng âm, Kho Đoạn văn mẫu điểm 9-10
 // ================================================================
 
@@ -404,7 +404,7 @@ const GLOBAL_WRITING_MASTER = [
     unit: 'Unit 1: My New School',
     topic: 'Write a paragraph (60-80 words) about your new school.',
     cues: 'Name of school, location, number of classes/students, facilities, teachers and classmates, your feelings.',
-    vietnameseTranslation: 'Tôi là học sinh lớp 6 tại trường THCS Đồng Yên. Trường của tôi rất khang trang và sạch đẹp với sân chơi rộng rãi rợp bóng cây xanh. Có 16 phòng học sáng sủa, một phòng thực hành Tin học hiện đại và một thư viện lớn với hàng nghìn cuốn sách bổ ích. Các thầy cô giáo đều vô cùng tận tụy, luôn giảng bài dễ hiểu và yêu thương học sinh. Bạn bè trong lớp em rất hòa đồng và sẵn sàng giúp đỡ nhau trong học tập. Em vô cùng tự hào và yêu quý mái trường thân yêu của mình.',
+    vietnameseTranslation: 'Tôi là học sinh lớp 6 tại trường THCS. Trường của tôi rất khang trang và sạch đẹp với sân chơi rộng rãi rợp bóng cây xanh. Có 16 phòng học sáng sủa, một phòng thực hành Tin học hiện đại và một thư viện lớn với hàng nghìn cuốn sách bổ ích. Các thầy cô giáo đều vô cùng tận tụy, luôn giảng bài dễ hiểu và yêu thương học sinh. Bạn bè trong lớp em rất hòa đồng và sẵn sàng giúp đỡ nhau trong học tập. Em vô cùng tự hào và yêu quý mái trường thân yêu của mình.',
     essay: `I am a grade 6 student at Dong Yen Secondary School. My school is large, modern, and beautiful with a green playground. There are sixteen bright classrooms, an advanced computer laboratory, and a library with thousands of fascinating books. All teachers are extremely dedicated and caring, while my classmates are friendly and helpful. I love my school very much because every school day is an exciting journey of discovery.`,
     collocations: ['advanced computer laboratory', 'fascinating books', 'extremely dedicated', 'friendly and helpful', 'journey of discovery'],
     tips: 'Bắt đầu bằng câu giới thiệu trường; sử dụng tính từ tích cực (large, modern, dedicated); kết đoạn bằng cảm nghĩ tự hào.'
@@ -453,12 +453,12 @@ const GLOBAL_WRITING_MASTER = [
 
 // ── 4. BẢNG PHIẾU TRẢ LỜI TRẮC NGHIỆM CHUẨN BGD&ĐT (PRINTABLE TEMPLATE) ──
 const ANSWER_SHEET_HELPER = {
-  renderAnswerSheetHtml(examCode = '701', schoolName = 'TRƯỜNG THCS ĐỒNG YÊN') {
+  renderAnswerSheetHtml(examCode = '701', schoolName = 'TRƯỜNG THCS') {
     return `
     <div style="font-family:'Times New Roman',serif;max-width:800px;margin:0 auto;padding:20px;border:1.5px solid #000;background:#fff;color:#000">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5pt solid #000;padding-bottom:10px;margin-bottom:14px">
         <div style="text-align:center;font-weight:bold;font-size:12pt;line-height:1.3">
-          UBND XÃ ĐỒNG YÊN<br/>
+          UBND XÃ<br/>
           <u>${schoolName.toUpperCase()}</u>
         </div>
         <div style="text-align:center;font-weight:bold;font-size:13pt;line-height:1.3">
@@ -511,7 +511,7 @@ const ANSWER_SHEET_HELPER = {
       </div>
 
       <div style="margin-top:16px;border-top:1pt solid #000;padding-top:8px;font-size:9.5pt;display:flex;justify-content:space-between;color:#666">
-        <span>Bản quyền: Thầy giáo Đinh Văn Thành – THCS Đồng Yên (0915.213717)</span>
+        <span>Bản quyền: Thầy giáo Đinh Thành – THCS (0915.213717)</span>
         <span>Mẫu phiếu thi chuẩn khảo thí Bộ GD&ĐT</span>
       </div>
     </div>`;

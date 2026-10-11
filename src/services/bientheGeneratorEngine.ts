@@ -1,6 +1,6 @@
 // ============================================================================
 // ĐỘNG CƠ SINH 3 ĐỀ BIẾN THỂ VIP & ĐÁP ÁN CHI TIẾT (V1)
-// Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – THCS Đồng Yên – ĐT/Zalo: 0915.213717
+// Tác giả Đinh Thành, ĐT: 0915.213717  – ĐT/Zalo: 0915.213717
 // Chức năng:
 // 1. Phân tích ma trận đề gốc (Lớp 6, 7, 8, 9, Kỹ năng, Số câu, Mức độ khó)
 // 2. Sinh 3 đề biến thể tương đương:
@@ -652,7 +652,7 @@ export function exportBientheToWordHtml(
               ⚠️ BẢN DÙNG THỬ HỆ THỐNG GIÁO VIÊN AI TOÀN NĂNG 3.0
             </div>
             <div style="font-size: 10pt; color: #7F1D1D; margin-top: 2pt;">
-              Bản quyền phát triển: <strong>Tác giả Đinh Thành - ĐT: 0915.213717 - Trường THCS Đồng Yên</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
+              Bản quyền phát triển: <strong>Tác giả Đinh Thành, ĐT: 0915.213717 - Trường THCS</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
             </div>
             <div style="font-size: 9.5pt; color: #991B1B; font-style: italic; margin-top: 2pt;">
               Kích hoạt bản quyền Pro để gỡ bỏ dòng này và mở khóa tính năng sinh ma trận đặc tả tự động không giới hạn!
