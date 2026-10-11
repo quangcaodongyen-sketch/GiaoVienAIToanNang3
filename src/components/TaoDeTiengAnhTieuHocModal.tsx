@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -992,12 +993,15 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
             </div>
           )}
 
-          {/* QUẢNG BÁ CHÉO CÁC CÔNG CỤ TRONG HỆ SINH THÁI */}
+                    {/* QUẢNG BÁ CHÉO CÁC CÔNG CỤ TRONG HỆ SINH THÁI */}
           <div className="pt-2 border-t border-slate-800">
             <CrossPromoBanner currentToolId="tao-de-tieng-anh-tieu-hoc" />
           </div>
 
         </div>
+
+        {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} />
 
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalSafeFooter } from './ModalSafeFooter';
 import {
   Key,
   X,
@@ -50,7 +51,7 @@ interface TaoDeTiengVietTieuHocModalProps {
 
 export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
   // Tab 1: Trải nghiệm Trực Tuyến | Tab 2: Tải Về & Hướng Dẫn | Tab 3: Mở Khóa & Kích Hoạt
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
   // Trial state
   const [trialCount, setTrialCount] = useState<number>(5);
@@ -131,32 +132,8 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
   };
 
   const handleExportDocx = () => {
-    if (!generatedExam) return;
-    const content = document.getElementById('tvth-preview-container');
-    if (!content) return;
-    const html = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><meta charset='utf-8'><title>Đề kiểm tra Tiếng Việt</title>
-      <style>
-        body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.25; }
-        table { border-collapse: collapse; width: 100%; margin: 8px 0; }
-        td, th { border: 1px solid black; padding: 5px; font-size: 11pt; }
-        .red-text { color: #FF0000; font-weight: bold; }
-        .text-center { text-align: center; }
-        .font-bold { font-weight: bold; }
-      </style>
-      </head>
-      <body>${content.innerHTML}</body></html>
-    `;
-    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `De_Kiem_Tra_Tieng_Viet_Lop_${selectedGrade}_${selectedTerm}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    alert("Tính năng tạo đề kiểm tra Tiếng Việt và xuất file Word chuẩn hoạt động trên phần mềm máy tính PC.\n\nThầy/Cô vui lòng tải bộ cài đặt máy tính (.exe / .zip) để dùng thử và liên hệ Zalo 0915.213717 để kích hoạt bản quyền Pro!");
+    setActiveTab('download');
   };
 
   const handleCopyMid = () => {
@@ -241,22 +218,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
         {/* 3 TABS CHUẨN KIẾN TRÚC MODAL */}
         <div className="flex items-center gap-1 sm:gap-2 px-4 pt-3 border-b border-slate-800 bg-slate-950/60 overflow-x-auto shrink-0">
-          <button
-            onClick={() => setActiveTab('online')}
-            className={`py-2.5 px-4 rounded-t-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer border-b-2 whitespace-nowrap ${
-              activeTab === 'online'
-                ? 'bg-rose-600/20 text-rose-300 border-rose-500'
-                : 'text-slate-400 hover:text-slate-200 border-transparent'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-rose-400 animate-pulse" />
-            <span>1. Trải Nghiệm Trực Tuyến</span>
-            {!isProActive && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-rose-500/30 text-rose-200 font-mono">
-                {trialCount}/5 lượt
-              </span>
-            )}
-          </button>
+          
 
           <button
             onClick={() => setActiveTab('download')}
@@ -267,7 +229,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
             }`}
           >
             <Download className="w-4 h-4 text-blue-400" />
-            <span>2. Tải Bản Máy Tính (.exe / .zip)</span>
+            <span>1. Tải Bản Máy Tính (.exe / .zip)</span>
           </button>
 
           <button
@@ -279,7 +241,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>3. Bản Quyền &amp; Kích Hoạt</span>
+            <span>2. Bản Quyền &amp; Kích Hoạt Pro</span>
           </button>
         </div>
 
@@ -289,7 +251,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
           {/* ========================================================================= */}
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
           {/* ========================================================================= */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-6">
               
               {/* THANH ĐIỀU KHIỂN TẠO ĐỀ */}
@@ -809,20 +771,8 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
         </div>
 
-        {/* FOOTER MODAL */}
-        <div className="px-5 py-3 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
-          <div className="flex items-center gap-2">
-            <span>© 2026 Bản quyền thuộc <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong></span>
-          </div>
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              className="text-[11px] text-slate-500 hover:text-slate-300 transition cursor-pointer"
-            >
-              Quản trị Admin ↗
-            </button>
-          )}
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM PHÁP LÝ */}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
 
       </div>
     </div>

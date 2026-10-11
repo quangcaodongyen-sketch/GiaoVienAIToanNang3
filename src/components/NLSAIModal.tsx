@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import { 
@@ -1109,20 +1110,8 @@ Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
         </div>
 
         {/* FOOTER MODAL */}
-        <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
-          <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Phần mềm Tích hợp NLS - AI V3 (Chuẩn CV 5512) – Bản quyền: Tác giả Đinh Thành, ĐT: 0915.213717</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onClose}
-              className="py-1.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition-colors"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
 
       </div>
       <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="nls-ai" initialAppName="Tích Hợp NLS - AI V3" />

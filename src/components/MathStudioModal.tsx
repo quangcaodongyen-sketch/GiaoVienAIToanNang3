@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -251,37 +252,8 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
 
   // Tải file Word mẫu chứa công thức toán (.doc format OpenXML)
   const handleDownloadWordDoc = () => {
-    const fullHtml = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><meta charset='utf-8'><title>MathStudio - Cong Thuc Toan</title>
-      <style>
-        body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.3; }
-        .math-box { background-color: #f8fafc; border: 1px solid #cbd5e1; padding: 12pt; margin: 10pt 0; font-family: 'Cambria Math', 'Times New Roman'; }
-        .author-box { color: #0070C0; font-size: 11pt; border-top: 1px solid #e2e8f0; margin-top: 16pt; padding-top: 8pt; }
-      </style>
-      </head>
-      <body>
-        <h2 style="color: #1e3a8a; font-family: 'Times New Roman';">ĐINH THÀNH MATHSTUDIO 2026+ PRO - CÔNG THỨC TOÁN HỌC WORD</h2>
-        <p><b>Công thức LaTeX gốc:</b> <code>${latexInput}</code></p>
-        <div class="math-box">
-          <p><b>Định dạng hiển thị:</b></p>
-          <p style="font-size: 15pt; color: #b91c1c;">${latexInput}</p>
-        </div>
-        <div class="author-box">
-          Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – Hotline / Zalo: 0915.213717
-        </div>
-      </body>
-      </html>
-    `;
-    const blob = new Blob(['\ufeff' + fullHtml], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `MathStudio_CongThuc_${Date.now()}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    alert(`⚠️ TÍNH NĂNG CHÈN CÔNG THỨC TOÁN WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH & ADD-IN WORD\n\nĐể đảm bảo công thức hiển thị dạng Office Math chuẩn xác và tự động chèn vào Word, tính năng này được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    setActiveTab('download');
   };
 
   // Kích hoạt Key Ed25519
@@ -1099,20 +1071,8 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
         )}
 
         {/* FOOTER MODAL */}
-        <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
-          <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-violet-400"></span>
-            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Tác giả Đinh Thành</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onClose}
-              className="py-1.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition-colors"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
 
       </div>
     </div>

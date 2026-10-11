@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import {
@@ -57,7 +58,7 @@ export const TachGopPDFModal: React.FC<TachGopPDFModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'license'>('download');
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-PDF-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
@@ -325,23 +326,6 @@ startxref
         <div className="flex items-center justify-between px-4 sm:px-6 bg-[#0E1726] border-b border-slate-800">
           <div className="flex gap-2">
             <button
-              onClick={() => setActiveTab('online')}
-              className={`flex items-center gap-2 py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
-                activeTab === 'online'
-                  ? 'border-pink-500 text-pink-400 bg-pink-500/10'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>1. Dùng Thử Trực Tuyến</span>
-              {!isVIP && (
-                <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-800 text-amber-300 font-mono border border-slate-700">
-                  {remainingTrials}/5 lượt
-                </span>
-              )}
-            </button>
-
-            <button
               onClick={() => setActiveTab('download')}
               className={`flex items-center gap-2 py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
                 activeTab === 'download'
@@ -350,7 +334,7 @@ startxref
               }`}
             >
               <Download className="w-4 h-4 text-blue-400" />
-              <span>2. Tải Bản Máy Tính (.exe)</span>
+              <span>1. Tải Bản Máy Tính Dùng Thử (.exe / .zip)</span>
             </button>
 
             <button
@@ -362,7 +346,7 @@ startxref
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-              <span>3. Tiện Ích Miễn Phí & App Pro</span>
+              <span>2. Tiện Ích Miễn Phí & Kích Hoạt Pro</span>
               <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700">
                 MIỄN PHÍ
               </span>
@@ -381,7 +365,7 @@ startxref
         </div>
 
         {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
-        {activeTab === 'online' && (
+        {activeTab === ('online' as any) && (
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
             {/* Thanh tiến trình dùng thử 5 lần */}
             <div className="bg-gradient-to-r from-purple-950/70 via-slate-900 to-indigo-950/70 p-3 sm:p-4 rounded-xl border border-purple-800/40 flex flex-wrap items-center justify-between gap-3">
@@ -826,24 +810,7 @@ startxref
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
                     </a>
 
-                    <a
-                      href="/HUONG_DAN_SU_DUNG.docx"
-                      download="SoTay_HuongDan_XuLyPDF_SuPham.docx"
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                          DOCX
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-white group-hover:text-emerald-300">
-                            Sổ Tay Xử Lý PDF Sư Phạm
-                          </p>
-                          <p className="text-[10px] text-slate-400">Mẹo scan và in ấn tài liệu chuẩn</p>
-                        </div>
-                      </div>
-                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
-                    </a>
+                    
                   </div>
                 </div>
 
@@ -978,6 +945,7 @@ startxref
             </div>
           </div>
         )}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
       </div>
       <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="tach-gop-pdf" initialAppName="PDF Suite Pro (Tách - Gộp PDF)" />
     </div>

@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -947,31 +948,8 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
           <CrossPromoBanner currentAppId="tao-de-toan-thpt" />
         </div>
 
-        {/* FOOTER MODAL */}
-        <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 border-t border-slate-800 bg-slate-950/80 text-xs text-slate-400 shrink-0 gap-2">
-          <div className="flex items-center gap-3">
-            <span>Tác giả: <strong className="text-white">Tác giả Đinh Thành</strong> </span>
-            <span>•</span>
-            <span>Hotline / Zalo: <strong className="text-blue-400">0915.213717</strong></span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {onOpenAdmin && (
-              <button
-                onClick={onOpenAdmin}
-                className="text-[11px] text-slate-500 hover:text-slate-300 font-mono underline"
-              >
-                Khu vực Quản trị Admin
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors"
-            >
-              Đóng lại
-            </button>
-          </div>
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
 
       </div>
     </div>

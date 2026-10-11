@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect } from 'react';
 import {
@@ -160,7 +161,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'license'>('download');
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DVT-CHVB-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
@@ -234,68 +235,8 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   // Bộ phân tích & Chuẩn hóa văn bản hành chính theo Nghị định 30/2020/NĐ-CP
     // Tải file Word (.doc) thể thức chuẩn Nghị định 30/2020/NĐ-CP
   const handleDownloadDocx = () => {
-    const htmlContent = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head><meta charset='utf-8'><title>${standardResult.tenLoai} - ${standardResult.soKyHieu}</title>
-    <style>
-      @page { size: A4; margin: 20mm 15mm 20mm 20mm; }
-      body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.35; color: #000; }
-      table { width: 100%; border-collapse: collapse; }
-      td { vertical-align: top; }
-    </style>
-    </head>
-    <body>
-      <table>
-        <tr>
-          <td style="width: 45%; text-align: center;">
-            <p style="font-size: 12pt; margin: 0;">${standardResult.coQuanCapTren}</p>
-            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.coQuanBanHanh}</p>
-            <hr style="width: 35%; margin: 4px auto; border-top: 1px solid black;" />
-            <p style="font-size: 13pt; margin: 4px 0 0 0;">${standardResult.soKyHieu}</p>
-          </td>
-          <td style="width: 55%; text-align: center;">
-            <p style="font-size: 12pt; font-weight: bold; margin: 0;">${standardResult.quocHieu}</p>
-            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.tieuNgu}</p>
-            <hr style="width: 50%; margin: 4px auto; border-top: 1px solid black;" />
-            <p style="font-size: 13pt; font-style: italic; margin: 4px 0 0 0;">${standardResult.diaDanhNgayThang}</p>
-          </td>
-        </tr>
-      </table>
-      <br/>
-      <div style="text-align: center;">
-        <h3 style="font-size: 14pt; font-weight: bold; margin: 0;">${standardResult.tenLoai}</h3>
-        <p style="font-size: 13pt; font-weight: bold; margin: 4px 0;">${standardResult.trichYeu}</p>
-        <hr style="width: 25%; margin: 4px auto; border-top: 1px solid black;" />
-      </div>
-      <br/>
-      <div style="text-align: justify; font-size: 13pt;">
-        ${standardResult.noiDungHtml}
-      </div>
-      <br/>
-      <table>
-        <tr>
-          <td style="width: 50%;">
-            <p style="font-size: 12pt; font-weight: bold; font-style: italic; margin: 0;">Nơi nhận:</p>
-            ${standardResult.noiNhan.map(n => `<p style="font-size: 11pt; margin: 2px 0;">- ${n}</p>`).join('')}
-          </td>
-          <td style="width: 50%; text-align: center;">
-            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.chucVu}</p>
-            <p style="font-size: 11pt; font-style: italic; margin: 30px 0;">(Ký, đóng dấu)</p>
-            <p style="font-size: 13pt; font-weight: bold; margin: 0;">${standardResult.nguoiKy}</p>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>`;
-    const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Van_Ban_Chuan_Hoa_ND30_${standardResult.soKyHieu.replace(/[^a-zA-Z0-9]/g, '_')}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    alert(`⚠️ TÍNH NĂNG CHUẨN HÓA & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng chuẩn hóa và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    setActiveTab('download');
   };
 
   const handleStandardize = async () => {
@@ -533,23 +474,6 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         <div className="flex items-center justify-between px-4 sm:px-6 bg-[#0E1726] border-b border-slate-800">
           <div className="flex gap-2">
             <button
-              onClick={() => setActiveTab('online')}
-              className={`flex items-center gap-2 py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
-                activeTab === 'online'
-                  ? 'border-red-500 text-red-400 bg-red-500/10'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>1. Dùng Thử Trực Tuyến</span>
-              {!isVIP && (
-                <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-800 text-amber-300 font-mono border border-slate-700">
-                  {remainingTrials}/5 lượt
-                </span>
-              )}
-            </button>
-
-            <button
               onClick={() => setActiveTab('download')}
               className={`flex items-center gap-2 py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
                 activeTab === 'download'
@@ -558,7 +482,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
               }`}
             >
               <Download className="w-4 h-4 text-blue-400" />
-              <span>2. Tải Bản Máy Tính (.exe)</span>
+              <span>1. Tải Bản Cài Đặt PC (.exe / .zip)</span>
             </button>
 
             <button
@@ -570,7 +494,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-              <span>3. Tiện Ích Miễn Phí & App Pro</span>
+              <span>2. Tiện Ích Miễn Phí & Kích Hoạt Pro</span>
               <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700">
                 MIỄN PHÍ
               </span>
@@ -589,7 +513,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
         </div>
 
         {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
-        {activeTab === 'online' && (
+        {activeTab === ('online' as any) && (
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
             {/* Thanh thông báo dùng thử 5 lần chuẩn quy tắc */}
             <div className="bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 p-3 sm:p-4 rounded-xl border border-blue-800/40 flex flex-wrap items-center justify-between gap-3">
@@ -1009,24 +933,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                       <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
                     </a>
 
-                    <a
-                      href="/HUONG_DAN_SU_DUNG.docx"
-                      download="TaiLieu_HuongDan_ChuanHoaVanBan_NghiDinh30_2020.docx"
-                      className="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                          DOCX
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-white group-hover:text-emerald-300">
-                            Tài Liệu Hướng Dẫn & Mẫu NĐ 30/2020
-                          </p>
-                          <p className="text-[10px] text-slate-400">Quy cách cỡ chữ, lề văn bản chuẩn</p>
-                        </div>
-                      </div>
-                      <Download className="w-4 h-4 text-slate-400 group-hover:text-white" />
-                    </a>
+                    
                   </div>
                 </div>
 
@@ -1162,6 +1069,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
             </div>
           </div>
         )}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
       </div>
       <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="chuan-hoa-nd30" initialAppName="Chuẩn Hóa Văn Bản NĐ 30 & Soạn 5512" />
     </div>

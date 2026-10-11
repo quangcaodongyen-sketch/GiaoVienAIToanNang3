@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -57,7 +58,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
   const [previewFace, setPreviewFace] = useState<1 | 2 | 3>(1);
   const [currentCode, setCurrentCode] = useState<1 | 2>(1);
 
-  const [schoolName] = useState<string>('TRƯỜNG THCS ....................');
+  const [schoolName] = useState<string>('TRƯỜNG: ....................');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [isProActive, setIsProActive] = useState<boolean>(false);
@@ -127,7 +128,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
         await cloudSyncService.submitRegistrationToCloud({
           machineId: detectedMid,
           fullName: regName || 'Giáo viên Tiếng Anh THCS',
-          schoolUnit: regSchool || 'Trường THCS',
+          schoolUnit: regSchool || 'Đơn vị công tác',
           phoneNumber: regPhone || 'Chưa cung cấp',
           appId: 'tao-de-15p-tienganh',
           appName: 'Tạo Đề 15 Phút Tiếng Anh (48 Units)',
@@ -465,12 +466,12 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Trường THCS công tác</label>
+                        <label className="block text-[11px] font-bold text-slate-400 mb-1">Trường / Đơn vị công tác</label>
                         <input
                           type="text"
                           value={regSchool}
                           onChange={(e) => setRegSchool(e.target.value)}
-                          placeholder="Ví dụ: THCS Chu Văn An..."
+                          placeholder="Ví dụ: Trường THCS..."
                           className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
                         />
                       </div>
@@ -933,20 +934,8 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           </>
         )}
 
-        {/* Footer Modal */}
-        <div className="px-5 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-          <div>
-            Hỗ trợ kỹ thuật: <b>Tác giả Đinh Thành</b> (Zalo: 0915.213717)
-          </div>
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition"
-          >
-            Đóng
-          </button>
-        </div>
-
-      </div>
+                <ModalSafeFooter onClose={onClose} />
+</div>
     </div>
   );
 };

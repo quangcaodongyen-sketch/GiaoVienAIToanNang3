@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -302,24 +303,10 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     return;
   };
 
-  // Xử lý tạo đề mới & Xuất file Word (Trải nghiệm trực tuyến)
+  // Xử lý tạo đề mới & Xuất file Word: Chuyển hướng sang tải bản máy tính
   const handleExportWordDoc = () => {
-    if (!hasGenerated || !examData) {
-      handleGenerateOnline();
-      return;
-    }
-    if (!isProActive && trialRemaining <= 0 && !hasGenerated) {
-      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro.`);
-      setActiveTab('register');
-      return;
-    }
-
-    try {
-      downloadTHCS8MonWordDoc(currentSubjectKey, selectedGrade, selectedTerm, selectedExamCode, isProActive);
-    } catch (err) {
-      console.error(err);
-      alert('Có lỗi xảy ra khi tải file Word. Vui lòng thử lại!');
-    }
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font và đầy đủ tính năng, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    setActiveTab('download');
   };
 
 
@@ -753,7 +740,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     <div className="grid grid-cols-2 gap-4 pb-3 border-b-2 border-slate-800 text-center">
                       <div>
                         <p className="font-bold text-xs uppercase">{examData.parentAgency || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO ....................'}</p>
-                        <p className="font-black text-sm uppercase text-[#123A63]">{examData.schoolName || 'TRƯỜNG THCS ....................'}</p>
+                        <p className="font-black text-sm uppercase text-[#123A63]">{examData.schoolName || 'TRƯỜNG: ....................'}</p>
                       </div>
                       <div>
                         <p className="font-black text-sm uppercase text-[#FF0000]">
@@ -1186,7 +1173,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                       type="text"
                       value={regSchool}
                       onChange={(e) => setRegSchool(e.target.value)}
-                      placeholder="Ví dụ: Trường THCS Chu Văn An..."
+                      placeholder="Ví dụ: Trường THCS..."
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -1335,22 +1322,8 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
 
         </div>
 
-        {/* FOOTER MODAL */}
-        <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
-          <div className="flex items-center gap-2">
-            <span>© 2026 Tác giả <strong>Đinh Thành</strong> (0915.213717)</span>
-            <span>•</span>
-            <span className="text-emerald-400 font-bold">Hotline: 0915.213717</span>
-          </div>
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              className="text-[11px] text-slate-500 hover:text-slate-300 transition cursor-pointer"
-            >
-              Quản trị Admin ↗
-            </button>
-          )}
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
 
       </div>
     </div>

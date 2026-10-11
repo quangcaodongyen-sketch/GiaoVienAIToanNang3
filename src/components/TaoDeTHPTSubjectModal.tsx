@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -664,23 +665,8 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
 
         </div>
 
-        {/* FOOTER MODAL */}
-        <div className="px-5 py-2.5 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
-          <div className="flex items-center gap-2">
-            <span>© 2026 Tác giả <strong>Đinh Thành</strong> (0915.213717)</span>
-            <span>•</span>
-            <span className="text-emerald-400 font-bold">Hotline: 0915.213717</span>
-          </div>
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              className="text-[11px] text-slate-500 hover:text-slate-300 transition cursor-pointer"
-            >
-              Quản trị Admin ↗
-            </button>
-          )}
-        </div>
-      </div>
+                <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
+</div>
     </div>
   );
 };

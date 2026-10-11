@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -110,32 +111,8 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   };
 
   const handleExportWord = async () => {
-    if (!examData) return;
-    if (!isPro && trialsRemaining <= 0) {
-      setShowExpiredNotice(true);
-      setActiveTab('license');
-      return;
-    }
-
-    setIsExporting(true);
-    try {
-      if (!isPro) {
-        const { success, remaining } = await consumeLSTHCSTrialTurn();
-        if (!success) {
-          setShowExpiredNotice(true);
-          setActiveTab('license');
-          setIsExporting(false);
-          return;
-        }
-        setTrialsRemaining(remaining);
-      }
-      downloadTHCS8MonWordDoc('SUDIA', String(grade), termCode, '701', isPro);
-    } catch (err) {
-      console.error(err);
-      alert('Không thể xuất file Word. Vui lòng thử lại!');
-    } finally {
-      setIsExporting(false);
-    }
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    setActiveTab('download');
   };
 
   const handleActivate = async () => {
@@ -942,26 +919,8 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
 
         </div>
 
-        {/* FOOTER MODAL */}
-        <div className="px-6 py-3.5 bg-slate-950 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
-          <div>
-            Tác giả: <strong>Tác giả Đinh Thành</strong>  • Hotline/Zalo: <strong>0915.213717</strong>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="https://zalo.me/0915213717"
-              target="_blank"
-              rel="noreferrer"
-              className="text-amber-400 hover:underline font-semibold"
-            >
-              Hỗ trợ Zalo 24/7
-            </a>
-            <span>•</span>
-            <button onClick={onClose} className="hover:text-white transition-colors">
-              Đóng cửa sổ
-            </button>
-          </div>
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} />
 
       </div>
     </div>

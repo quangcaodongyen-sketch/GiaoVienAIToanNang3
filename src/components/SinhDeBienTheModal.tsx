@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ModalSafeFooter } from "./ModalSafeFooter";
 import {
   Sparkles,
   Crown,
@@ -53,7 +54,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("download");
+  const [activeTab, setActiveTab] = useState<"download" | "license">("download");
   const [subTab, setSubTab] = useState<"var1" | "var2" | "var3" | "analysis">("var1");
   const [variantViewMode, setVariantViewMode] = useState<"exam" | "answers">("exam");
 
@@ -361,7 +362,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               }`}
             >
               <Download className="w-4 h-4 text-cyan-300" />
-              1. Tải Bản Máy Tính (.exe / .zip Pass: 123)
+              1. Tải Bản Máy Tính (.exe / .zip)
             </button>
 
             <button
@@ -373,20 +374,10 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               }`}
             >
               <Crown className="w-4 h-4 text-amber-400" />
-              2. Bản Quyền & Kích Hoạt
+              2. Bản Quyền & Kích Hoạt Pro
             </button>
 
-            <button
-              onClick={() => setActiveTab("demo")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
-                activeTab === "demo"
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md shadow-amber-500/20"
-                  : "bg-slate-800 text-slate-400 hover:text-white"
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              3. Xem Mẫu Đề Biến Thể & Trải Nghiệm
-            </button>
+            
           </div>
 
           {/* TRIAL PROGRESS BADGE (5 CHẤM ● ● ● ○ ○) */}
@@ -418,7 +409,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
         </div>
 
         {/* TAB TRẢI NGHIỆM / XEM MẪU ĐỀ BIẾN THỂ */}
-        {activeTab === "demo" && (
+        {(activeTab as any) === "demo" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
             
             {/* BANNER NHẮC NHỞ TẢI PHẦN MỀM CHUẨN NLS-AI */}
@@ -1220,21 +1211,8 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
           </div>
         )}
 
-        {/* MODAL FOOTER */}
-        <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
-          <div>
-            Hệ sinh thái Giáo viên AI Toàn Năng – Thầy giáo {BRAND.author}
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold"
-          >
-            Đóng Cửa Sổ
-          </button>
-        </div>
-
-      </div>
+                <ModalSafeFooter onClose={onClose} />
+</div>
     </div>
   );
 };

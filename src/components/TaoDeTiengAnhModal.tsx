@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -53,7 +54,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   const [selectedNumVariants, setSelectedNumVariants] = useState<number>(2);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Tiêu chuẩn (Phân hóa chung)');
   const [schoolAgency, setSchoolAgency] = useState<string>('PHÒNG GIÁO DỤC VÀ ĐÀO TẠO');
-  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG THCS ........................');
+  const [schoolName, setSchoolName] = useState<string>('TRƯỜNG / ĐƠN VỊ: ........................');
   const [schoolYear, setSchoolYear] = useState<string>('2026 - 2027');
 
   const [detectedMid, setDetectedMid] = useState<string>('');
@@ -136,23 +137,8 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   };
 
   const handleOnlineGenerate = () => {
-    if (!isProActive && trialRemaining <= 0) {
-      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử trực tuyến miễn phí!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để liên hệ Thầy Thành kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.');
-      setActiveTab('register');
-      return;
-    }
-
-    setIsGenerating(true);
-    setTimeout(() => {
-      setIsGenerating(false);
-      setExamGenerated(true);
-
-      if (!isProActive) {
-        const nextRem = Math.max(0, trialRemaining - 1);
-        setTrialRemaining(nextRem);
-        localStorage.setItem('gvai_taode_eng_trial_remaining', nextRem.toString());
-      }
-    }, 800);
+    alert('⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Hướng Dẫn" để tải bộ cài đặt về dùng thử trên máy tính.');
+    setActiveTab('download');
   };
 
   const handleSendRegistration = async () => {
@@ -1055,7 +1041,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                         type="text"
                         value={regSchool}
                         onChange={(e) => setRegSchool(e.target.value)}
-                        placeholder="Ví dụ: Trường THCS Chu Văn An"
+                        placeholder="Ví dụ: Trường THCS..."
                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
                       />
                     </div>
@@ -1123,29 +1109,8 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
 
         </div>
 
-        {/* FOOTER MODAL CHUẨN */}
-        <div className="px-6 py-3 border-t border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Hỗ trợ giáo viên 24/7 qua Zalo Tác giả Đinh Thành: <strong>0915.213717</strong></span>
-          </div>
-          <div className="flex items-center gap-2">
-            <a
-              href="https://zalo.me/0915213717"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 transition"
-            >
-              <MessageCircle className="w-3.5 h-3.5" /> Kết Nối Zalo
-            </a>
-            <button
-              onClick={onClose}
-              className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
+                {/* FOOTER MODAL & CAM KẾT MIỄN NHIỆM */}
+        <ModalSafeFooter onClose={onClose} />
 
       </div>
     </div>

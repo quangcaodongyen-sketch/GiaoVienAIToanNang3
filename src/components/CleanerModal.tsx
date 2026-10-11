@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect, useRef } from 'react';
 import {
@@ -59,7 +60,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'license'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'license'>('download');
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
   const [hwid, setHwid] = useState<string>('DT-XXXX-XXXX-XXXX');
   const [remainingTrials, setRemainingTrials] = useState<number>(5);
@@ -371,18 +372,6 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         {/* 3 TABS NAVIGATION */}
         <div className="flex border-b border-slate-800 bg-[#0F172A]/70 text-xs sm:text-sm font-semibold select-none">
           <button
-            onClick={() => setActiveTab('online')}
-            className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 border-b-2 transition ${
-              activeTab === 'online'
-                ? 'border-emerald-400 text-emerald-300 bg-emerald-500/10'
-                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-            }`}
-          >
-            <Activity className="w-4 h-4 text-emerald-400" />
-            <span>1. Dùng Thử Trực Tuyến</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab('download')}
             className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 border-b-2 transition ${
               activeTab === 'download'
@@ -391,7 +380,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
             }`}
           >
             <Download className="w-4 h-4 text-sky-400" />
-            <span>2. Tải Bản Máy Tính (.exe)</span>
+            <span>1. Tải Bản Máy Tính Dùng Thử (.exe / .zip)</span>
           </button>
 
           <button
@@ -403,7 +392,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
             }`}
           >
             <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-            <span>3. Tiện Ích Miễn Phí & App Pro</span>
+            <span>2. Kích Hoạt Bản Quyền Pro & Hỗ Trợ</span>
           </button>
         </div>
 
@@ -417,7 +406,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
           {/* ========================================================================= */}
           {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE STUDIO) */}
           {/* ========================================================================= */}
-          {activeTab === 'online' && (
+          {activeTab === ('online' as any) && (
             <div className="space-y-6">
               {/* TRIAL STATUS & PEDAGOGICAL NOTICE */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/80 border border-slate-700/80">
@@ -946,22 +935,8 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
           )}
         </div>
 
-        {/* MODAL FOOTER */}
-        <div className="px-5 py-3 bg-[#0F172A] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-          <div>
-            Tác giả: <span className="text-slate-200 font-semibold">{BRAND.author}</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span>Hotline / Zalo: <strong className="text-amber-400">{BRAND.phone}</strong></span>
-            <button
-              onClick={onClose}
-              className="py-1 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold"
-            >
-              Đóng
-            </button>
-          </div>
-        </div>
-      </div>
+                <ModalSafeFooter onClose={onClose} onOpenAdmin={onOpenAdmin} />
+</div>
           <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="cleaner" initialAppName="PC Cleaner Pro" />
 </div>
   );

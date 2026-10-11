@@ -1,3 +1,4 @@
+import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
 // Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Tác giả Đinh Thành & Nữ miền Bắc)
 export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
@@ -163,7 +164,7 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
 };
 
 export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // ID máy tính tự động
@@ -630,21 +631,6 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
           <button
             onClick={() => {
               stopPlayback();
-              setActiveTab('online');
-            }}
-            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'online'
-                ? 'border-blue-500 text-blue-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Zap className="w-4 h-4 text-amber-400" />
-            1. Dùng Thử Trực Tuyến
-          </button>
-
-          <button
-            onClick={() => {
-              stopPlayback();
               setActiveTab('download');
             }}
             className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
@@ -654,7 +640,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
             }`}
           >
             <Download className="w-4 h-4 text-emerald-400" />
-            2. Tải Bản Máy Tính (.exe)
+            1. Tải Bản Máy Tính Dùng Thử (.exe / .zip)
           </button>
 
           <button
@@ -669,14 +655,14 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            3. Bản Quyền & Kích Hoạt
+            2. Bản Quyền & Kích Hoạt Pro
           </button>
         </div>
 
         {/* ========================================================================= */}
         {/* TAB 1: STUDIO TẠO BÀI NGHE (ONLINE STUDIO THEME DESKTOP) */}
         {/* ========================================================================= */}
-        {activeTab === 'online' && (
+        {activeTab === ('online' as any) && (
           <div className="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
             
             {/* 1. STATUS CARD: TRIAL OR PRO BANNER (GIỐNG HỆT BẢN CÀI ĐẶT DESKTOP) */}
@@ -1629,27 +1615,8 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
         )}
 
         {/* FOOTER ACTIONS */}
-        <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row gap-2 mt-auto">
-          <a
-            href={BRAND.zaloUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-teal-600/20"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Liên Hệ Thầy Thành Hỗ Trợ (Zalo: {BRAND.phone})
-          </a>
-          <button
-            onClick={() => {
-              stopPlayback();
-              onClose();
-            }}
-            className="py-2.5 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors"
-          >
-            Đóng
-          </button>
-        </div>
-      </div>
+                <ModalSafeFooter onClose={() => { stopPlayback(); onClose(); }} />
+</div>
           <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="smart-listening" initialAppName="Smart Listening Pro" />
 </div>
   );

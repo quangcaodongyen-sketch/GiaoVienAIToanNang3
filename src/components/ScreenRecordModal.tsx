@@ -1,5 +1,6 @@
 import { TrialRegisterModal } from './TrialRegisterModal';
 import React, { useState, useEffect, useRef } from "react";
+import { ModalSafeFooter } from "./ModalSafeFooter";
 import {
   Video,
   Mic,
@@ -57,7 +58,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   onClose,
   onOpenAdmin
 }) => {
-  const [activeTab, setActiveTab] = useState<"demo" | "download" | "license">("demo");
+  const [activeTab, setActiveTab] = useState<"download" | "license">("download");
   const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // Recording mode: "screen" (Display Capture) | "whiteboard" (Studio Bảng Giảng Dạy Trực Tuyến)
@@ -161,7 +162,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (isOpen && activeTab === "demo" && recordMode === "whiteboard") {
+    if (isOpen && (activeTab as any) === "demo" && recordMode === "whiteboard") {
       setTimeout(initBoard, 100);
     }
   }, [isOpen, activeTab, recordMode, boardTheme]);
@@ -556,17 +557,6 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         <div className="flex items-center justify-between border-b border-slate-800 my-3 pb-2 gap-2 overflow-x-auto text-xs font-bold">
           <div className="flex gap-2">
             <button
-              onClick={() => setActiveTab("demo")}
-              className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${activeTab === "demo"
-                  ? "bg-gradient-to-r from-rose-600 to-red-500 text-white shadow-md shadow-rose-600/20"
-                  : "bg-slate-800 text-slate-400 hover:text-white"
-                }`}
-            >
-              <Video className="w-4 h-4" />
-              1. Dùng Thử Trực Tuyến
-            </button>
-
-            <button
               onClick={() => setActiveTab("download")}
               className={`py-2 px-4 rounded-xl flex items-center gap-2 transition-all shrink-0 cursor-pointer ${activeTab === "download"
                   ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20"
@@ -574,7 +564,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 }`}
             >
               <Play className="w-4 h-4" />
-              2. Tải Bản Máy Tính (.exe)
+              1. Tải Bản Máy Tính Dùng Thử (.exe / .zip)
             </button>
 
             <button
@@ -585,7 +575,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                 }`}
             >
               <Crown className="w-4 h-4" />
-              3. Bản Quyền & Kích Hoạt
+              2. Bản Quyền & Kích Hoạt Pro
             </button>
           </div>
 
@@ -618,7 +608,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         </div>
 
         {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (WEB SCREEN RECORDER STUDIO) */}
-        {activeTab === "demo" && (
+        {activeTab === ("demo" as any) && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
 
             {/* CHỌN CHẾ ĐỘ QUAY (SCREEN RECORDING SOURCE MODE) */}
@@ -1420,21 +1410,8 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
           </div>
         )}
 
-        {/* MODAL FOOTER */}
-        <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
-          <div>
-            Hệ sinh thái Giáo viên AI Toàn Năng – Thầy giáo {BRAND.author}
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold"
-          >
-            Đóng Cửa Sổ
-          </button>
-        </div>
-
-      </div>
+                <ModalSafeFooter onClose={onClose} />
+</div>
           <TrialRegisterModal isOpen={showTrialRegister} onClose={() => setShowTrialRegister(false)} initialAppId="screen-record" initialAppName="Quay Màn Hình Screen Record Pro" />
 </div>
   );

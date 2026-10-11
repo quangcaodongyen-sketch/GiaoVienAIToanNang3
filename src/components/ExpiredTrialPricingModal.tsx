@@ -268,6 +268,9 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
 
               <p className="text-[11px] text-slate-400 text-center pt-1">
                 Admin Tác giả Đinh Thành (Hotline / Zalo: 0915.213717).
+              <p className="text-[10px] text-slate-500 italic text-center pt-2 border-t border-slate-800/80 leading-relaxed">
+                * Cam kết miễn nhiệm: Toàn bộ ứng dụng và tài liệu mang tính chất tham khảo, hỗ trợ giáo viên trong công tác soạn giảng. Mọi nội dung do AI gợi ý cần được giáo viên rà soát, thẩm định trước khi áp dụng. Tác giả không chịu trách nhiệm đối với việc sử dụng nguyên văn vào thực tế giảng dạy.
+              </p>
               </p>
             </form>
           )}
