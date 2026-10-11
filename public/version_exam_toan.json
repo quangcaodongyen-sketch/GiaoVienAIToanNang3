@@ -1,10 +1,10 @@
 {
   "appId": "taode-toan-thcs",
   "appName": "Tạo Đề Kiểm Tra Toán THCS (CV 7991)",
-  "currentVersion": "4.2.0",
-  "latestVersion": "4.2.0",
+  "currentVersion": "4.2.1",
+  "latestVersion": "4.2.1",
   "releaseDate": "11/10/2026",
-  "changelog": "• [11/10/2026 - v4.2.0] Cập nhật toàn diện theo tập huấn RA ĐỀ TOÁN 9 NĂM 2026-2027\n• Tùy chọn linh hoạt từng bài theo tiến độ thực tế các trường (Đại số / Hình học)\n• Nâng cấp thuật toán xáo trộn đáp án ngẫu nhiên cân bằng 3A-3B-3C-3D (khắc phục triệt để lỗi trùng đáp án A)\n• Tích hợp bộ 10 đề Giữa kỳ 1 Lớp 9 chuẩn Bộ GD&ĐT (đủ đề GV + bản in HS + ma trận 16 cột + đặc tả 7 cột)\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717)\n• Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
+  "changelog": "• [11/10/2026 - v4.2.1] Sửa triệt để lỗi chính tả dính chữ giữa công thức toán và văn bản tiếng Việt (như 'phương trình (x - 3)', '= 0 là:', 'x = 3 hoặc x = -2')\n• Chuẩn hóa khoảng cách mọi phương án trắc nghiệm A, B, C, D và đề bài\n• Đã cập nhật trọn bộ 10 đề mẫu Giữa kỳ 1 Lớp 9 chuẩn đẹp 100% không lỗi dãn dòng\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717)\n• Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TOAN_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
