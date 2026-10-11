@@ -894,54 +894,10 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
           </div>
         )}
 
-        {/* TAB 2: TẢI VỀ & VIDEO HƯỚNG DẪN */}
+        {/* TAB 1: TẢI BỘ CÀI ĐẶT MÁY TÍNH */} 
         {activeTab === "download" && (
           <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
-            {/* 1. VIDEO PLAYER PRESENTATION */}
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                  <Play className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-                  Video giới thiệu & hướng dẫn quy trình sinh 3 đề biến thể chuẩn Sư phạm:
-                </span>
-                <span className="text-[11px] text-cyan-400 font-mono">Full HD 1080p</span>
-              </div>
-
-              {/* VIDEO CONTAINER */}
-              <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl">
-                <video
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster="/sinhdebientheVIP.png"
-                  className="w-full aspect-video max-h-[320px] object-contain bg-black"
-                >
-                  <source src="/HD_Sinh_3_De_Bien_The_VIP.mp4" type="video/mp4" />
-                  Trình duyệt không hỗ trợ xem video trực tiếp.
-                </video>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
-                <span>💡 Hướng dẫn chi tiết cách tải đề gốc, thiết lập mức độ biến thể và xuất file Word chuẩn A4.</span>
-                <div className="flex items-center gap-2">
-                  <a
-                    href="/HD_Sinh_3_De_Bien_The_VIP.mp4"
-                    download="HuongDan_Sinh3De_BienThe_VIP_TiengAnh.mp4"
-                    className="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Tải Video (.mp4)
-                  </a>
-                  <a
-                    href={BRAND.zaloUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyan-400 hover:underline font-semibold flex items-center gap-1"
-                  >
-                    Kết nối Zalo Thầy Thành ({BRAND.phone})
-                  </a>
-                </div>
-              </div>
-            </div>
+            
 
             {/* 2. BỘ TÀI LIỆU & FILE MẪU CHUẨN */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

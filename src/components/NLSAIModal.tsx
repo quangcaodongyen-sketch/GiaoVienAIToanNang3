@@ -876,27 +876,7 @@ ${exportDisabilityProc}
                 </div>
               </div>
 
-              {/* HƯỚNG DẪN VIDEO */}
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <Play className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-white text-xs">Video Hướng Dẫn Sử Dụng Chi Tiết</h5>
-                    <p className="text-[11px] text-slate-400">Xem cách tích hợp vào giáo án trong 3 phút</p>
-                  </div>
-                </div>
-                <a
-                  href="/HD_tich_hop_NLS_AI.mp4"
-                  download="Huong_Dan_Tich_Hop_NLS_AI_V3_CV5512.mp4"
-                  target="_blank"
-                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  Xem Video
-                </a>
-              </div>
+              
             </div>
           )}
 

@@ -1121,52 +1121,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
         {activeTab === 'download' && (
           <div className="space-y-4 flex-1 overflow-y-auto pr-1 text-xs">
             
-            {/* 1. VIDEO PLAYER (SỬ DỤNG FILE 200 OK TRÊN VERCEL, CÓ POSTER & NÚT MỞ TRỰC TIẾP) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                  <Play className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-                  Video hướng dẫn cài đặt & kích hoạt bản quyền Smart Listening Pro:
-                </span>
-                <span className="text-[11px] text-cyan-400 font-mono">Full HD 1080p</span>
-              </div>
-
-              <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl">
-                <video 
-                  controls 
-                  playsInline
-                  preload="auto"
-                  poster="/smart_listening_icon.png"
-                  className="w-full aspect-video max-h-[300px] object-contain bg-black"
-                >
-                  <source src="/tao-bai-nghe-listening.mp4" type="video/mp4" />
-                  <source src="/Video_Huong_Dan_Cai_Dat_Smart_Listening_Pro.mp4" type="video/mp4" />
-                  Trình duyệt không hỗ trợ thẻ video.
-                </video>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 px-1 gap-2">
-                <span>💡 Video hướng dẫn chi tiết các bước lấy ID máy tính và mở khóa vĩnh viễn.</span>
-                <div className="flex items-center gap-3 shrink-0">
-                  <a
-                    href="/tao-bai-nghe-listening.mp4"
-                    download="Huong_Dan_Smart_Listening_Pro.mp4"
-                    className="text-emerald-400 hover:underline font-semibold flex items-center gap-1"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Tải Video (.mp4)
-                  </a>
-                  <a
-                    href="/tao-bai-nghe-listening.mp4"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyan-400 hover:underline font-semibold"
-                  >
-                    ▶ Xem tab mới
-                  </a>
-                </div>
-              </div>
-            </div>
+            
 
             {/* 2. NÚT TẢI VỀ BẢN CÀI ĐẶT TRỰC TIẾP CHO GIÁO VIÊN (ZIP PASS 123 TRỰC TIẾP TỪ GITHUB RELEASES) */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-teal-950/90 border border-emerald-500/40 space-y-3 shadow-xl">

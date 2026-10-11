@@ -579,33 +579,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
           {activeTab === 'download' && (
             <div className="space-y-6">
               
-              {/* TRÌNH PHÁT VIDEO HƯỚNG DẪN trực tiếp */}
-              <div className="rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-xl">
-                <div className="relative aspect-video bg-slate-900 flex items-center justify-center">
-                  <video
-                    controls
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster="/taode_tiengviet_tieuhoc.jpg"
-                  >
-                    <source src="/HD_Tao_De_Tieng_Viet_Tieu_Hoc.mp4" type="video/mp4" />
-                    Trình duyệt không hỗ trợ xem video MP4.
-                  </video>
-                </div>
-                <div className="p-3 bg-slate-900 flex items-center justify-between text-xs text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Play className="w-4 h-4 text-rose-400" />
-                    <span>Video Hướng dẫn cài đặt &amp; sử dụng Phần mềm Tạo Đề Tiếng Việt Tiểu Học</span>
-                  </div>
-                  <a
-                    href="/HD_Tao_De_Tieng_Viet_Tieu_Hoc.mp4"
-                    download="Huong_Dan_Tao_De_Tieng_Viet_Tieu_Hoc.mp4"
-                    className="text-rose-400 hover:underline flex items-center gap-1 font-bold"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Tải video MP4
-                  </a>
-                </div>
-              </div>
+              
 
               {/* KHỐI TẢI BỘ CÀI ĐẶT DESKTOP .EXE VÀ .ZIP */}
               <div className="p-6 rounded-2xl bg-slate-900 border-2 border-rose-500/50 shadow-xl space-y-4">

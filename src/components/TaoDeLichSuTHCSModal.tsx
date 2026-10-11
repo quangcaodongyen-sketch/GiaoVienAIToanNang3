@@ -544,22 +544,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                 </div>
               </div>
 
-              {/* VIDEO HƯỚNG DẪN */}
-              <div className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5">
-                <div className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                  <Play className="w-4 h-4 text-amber-400" />
-                  Video Hướng Dẫn Sử Dụng & Tích Hợp Microsoft Word Ribbon
-                </div>
-                <div className="aspect-video w-full max-w-3xl mx-auto rounded-lg overflow-hidden bg-black/60 border border-slate-700 flex items-center justify-center">
-                  <video
-                    controls
-                    className="w-full h-full object-cover"
-                    src={EXAM_LICHSU_THCS_RESOURCES.videoDirectUrl}
-                  >
-                    Trình duyệt của bạn không hỗ trợ phát video.
-                  </video>
-                </div>
-              </div>
+              
 
               {/* CARD TẢI BỘ CÀI & TÀI NGUYÊN */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

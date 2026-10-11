@@ -40,10 +40,10 @@ export const NLS_RESOURCES = {
   addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TichHop_NLS_AI.dotm",
   forceUninstallUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC.exe",
   forceUninstallZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC_Pass_123.zip",
-  videoDirectUrl: "/HD_tich_hop_NLS_AI.mp4",
+  videoDirectUrl: "",
   videoEmbedUrl: "",
-  videoWatchUrl: "/HD_tich_hop_NLS_AI.mp4",
-  videoDownloadUrl: "/HD_tich_hop_NLS_AI.mp4"
+  videoWatchUrl: "",
+  videoDownloadUrl: ""
 };
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
@@ -53,15 +53,15 @@ export const EXAM_RESOURCES = {
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THCS.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: "",
+  videoWatchUrl: ""
 };
 
 // Cấu hình link tài nguyên Tạo Đề 15 Phút Tiếng Anh THCS
 export const EXAM_15P_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: ""
 };
 
 // Cấu hình link tài nguyên Tạo Đề Tiếng Anh Tiểu Học (Lớp 1-5 Global Success - TT 27)
@@ -71,15 +71,15 @@ export const EXAM_ENG_PRIMARY_RESOURCES = {
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THCS.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: "",
+  videoWatchUrl: ""
 };
 
 // Cấu hình link tài nguyên Smart Listening Pro (Audio Text To Speech)
 export const SMART_LISTENING_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Smart_Listening_Pro.exe",
-  videoDirectUrl: "/Video_Huong_Dan_Cai_Dat_Smart_Listening_Pro.mp4"
+  videoDirectUrl: ""
 };
 
 // Cấu hình link tài nguyên MathStudio
@@ -114,7 +114,7 @@ export const PDF_SUITE_RESOURCES = {
 // Cấu hình link tài nguyên Screen Record Pro
 export const SCREEN_RECORD_RESOURCES = {
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Screen_Record_Pro_V2.exe",
-  videoDirectUrl: "/screen_record_demo.mp4"
+  videoDirectUrl: ""
 };
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh THPT Global Success (Lớp 10, 11, 12)
@@ -124,8 +124,8 @@ export const EXAM_TIENG_ANH_THPT_RESOURCES = {
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THPT.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: "",
+  videoWatchUrl: ""
 };
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Toán THPT Kết Nối Tri Thức (QĐ 764/BGDĐT)
@@ -134,8 +134,8 @@ export const EXAM_TOAN_THPT_RESOURCES = {
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Toan_THPT.exe",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_Toan_THPT.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: "",
+  videoWatchUrl: ""
 };
 
 // Cấu hình link tài nguyên của 11 Môn Tạo Đề THPT (Định Dạng Mới BGD&ĐT từ 2025)
@@ -272,8 +272,8 @@ export const EXAM_7MON_RESOURCES = {
   // Link tải trọn bộ tổng hợp 7 môn Hub .zip (Pass: 123)
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS.exe",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
+  videoDirectUrl: "",
+  videoWatchUrl: "",
   
   // Link tải 7 Ứng dụng Độc lập theo từng bộ môn (.ZIP - Pass: 123):
   subjects: {
@@ -351,8 +351,8 @@ export const EXAM_LICHSU_THCS_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_LS_THCS.dotm",
-  videoDirectUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4",
-  videoWatchUrl: "/HD_Tao_De_Tieng_Anh_THCS.mp4"
+  videoDirectUrl: "",
+  videoWatchUrl: ""
 };
 
 

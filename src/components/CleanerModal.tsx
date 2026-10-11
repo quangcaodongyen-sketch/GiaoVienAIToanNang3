@@ -697,34 +697,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                 </div>
               </div>
               {/* VIDEO PLAYER SECTION */}
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Play className="w-4 h-4 text-sky-400" />
-                    Video Hướng Dẫn Sử Dụng & Dọn Rác Máy Tính Full HD:
-                  </h3>
-                  <a
-                    href="/cleaner_demo.mp4"
-                    download="HuongDan_DinhThanh_Cleaner_Pro_DonRacMayTinh.mp4"
-                    className="text-xs px-3 py-1.5 rounded-lg bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 border border-sky-500/40 font-semibold flex items-center gap-1.5 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Tải Video (.mp4)
-                  </a>
-                </div>
-
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
-                  <video
-                    src="/cleaner_demo.mp4"
-                    controls
-                    autoPlay
-                    loop
-                    muted
-                    className="w-full h-full object-cover"
-                  >
-                    Trình duyệt của bạn không hỗ trợ phát video thẻ video HTML5.
-                  </video>
-                </div>
-              </div>
+              
 
               {/* DOWNLOAD CARDS (.EXE & .ZIP) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -750,33 +750,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-5">
-              {/* Video Hướng dẫn phát trực tiếp */}
-              <div className="rounded-2xl overflow-hidden bg-slate-950 border border-slate-700/80 shadow-xl">
-                <div className="relative aspect-video bg-slate-900 flex items-center justify-center">
-                  <video
-                    controls
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster="/taodektcv7991.jpg"
-                  >
-                    <source src="/HD_Tao_De_Tieng_Anh_THCS.mp4" type="video/mp4" />
-                    Trình duyệt của bạn không hỗ trợ phát video MP4.
-                  </video>
-                </div>
-                <div className="p-3 bg-slate-900/90 flex items-center justify-between text-xs text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Play className="w-4 h-4 text-blue-400" />
-                    <span>Video Hướng dẫn cài đặt &amp; sử dụng công cụ Tạo Đề Tiếng Anh THCS</span>
-                  </div>
-                  <a
-                    href="/HD_Tao_De_Tieng_Anh_THCS.mp4"
-                    download="Huong_Dan_Tao_De_Tieng_Anh_THCS_CV7991.mp4"
-                    className="text-blue-400 hover:underline flex items-center gap-1 font-bold"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Tải video MP4
-                  </a>
-                </div>
-              </div>
+              
 
               {/* KHỐI TẢI BỘ CÀI ĐƠN GIẢN - ÍT NÚT, ÍT CHỮ, RÕ RÀNG BẢN CẬP NHẬT */}
               <div className="p-5 rounded-2xl bg-slate-900 border-2 border-emerald-500/60 shadow-2xl space-y-4">
