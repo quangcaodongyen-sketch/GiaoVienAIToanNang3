@@ -1,11 +1,11 @@
 {
-  "version": "4.2.2",
-  "latestVersion": "4.2.2",
-  "currentVersion": "4.2.2",
+  "version": "4.3.0",
+  "latestVersion": "4.3.0",
+  "currentVersion": "4.3.0",
   "updatedAt": "2026-10-11",
   "releaseDate": "11/10/2026",
   "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717)",
-  "changelog": "• [11/10/2026 - v4.2.2] Tối ưu hóa toàn diện giao diện: Viết lại toàn bộ câu hướng dẫn ngắn gọn, xúc tích\n• Đưa cụm Nút Hành động Tạo đề lên ngay dưới phần chọn Khối lớp/Kỳ kiểm tra để giáo viên nhìn thấy ngay khi mở app\n• Thu gọn thẻ xem trước và tự động căn chỉnh kích thước cửa sổ vừa khít mọi độ phân giải màn hình máy tính\n• Loại bỏ hoàn toàn tình trạng chữ bị đè, nút bị che khuất hoặc ẩn dưới thanh tác vụ Windows\n• Giữ nguyên toàn vẹn tính năng xuất đề học sinh in có sẵn 4 ô ly và bảng đáp án chi tiết\n• Ghi chú pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
+  "changelog": "• [11/10/2026 - v4.3.0] Đổi mới hoàn toàn bộ nhận diện giao diện theo đặc thù bộ môn Tiếng Việt Tiểu học\n• Áp dụng hệ màu Xanh Ngọc Bích Trầm & Ngọc Lam Sư Phạm (Academic Deep Teal & Emerald Slate) thanh lịch, trang nhã\n• Phân biệt rạch ròi với màu Xanh Dương Công nghệ của môn KHTN THCS, không trùng lặp giao diện\n• Tuyệt đối không dùng màu đồng bóng, không hồng, không đỏ đen; chuẩn mực giáo dục hiện đại và chuyên nghiệp\n• Bố cục khoa học, nút Tạo đề nổi bật ngay tầm mắt giáo viên, không bị che khuất\n• Ghi chú pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA",
   "downloadUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip",
   "directExeUrl": "https://giaovienai.online/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe"
 }
