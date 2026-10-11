@@ -2,9 +2,11 @@
 name: skill-app-pro-dinh-thanh
 description: >-
   Bộ kỹ năng & Quy chuẩn tối thượng toàn diện dành cho MỌI ứng dụng, phần mềm giáo viên, Add-in Office,
-  công cụ AI và nền tảng Web của Thầy giáo Đinh Thành. Tự động chuẩn hóa: Mẫu đề chuẩn BGD&ĐT, Font chữ,
+  công cụ AI và nền tảng Web của Thầy giáo Đinh Thành. Tự động chuẩn hóa: Mẫu đề chuẩn BGD&ĐT, Cơ quan quản lý
+  theo cấp học (UBND XÃ.../TRƯỜNG... với TH, THCS; SỞ GD&ĐT.../TRƯỜNG THPT... với THPT), Font chữ,
   định dạng Word không lỗi dãn dòng, thể thức văn bản Nghị định 30/2020, Công văn 7991, Quyết định 764,
-  Công văn 5512, Thông tư 02/2025, công thức MathType/LaTeX/OMML & Hóa học, bảo mật Ed25519 5 tầng,
+  Công văn 5512, Thông tư 02/2025, công thức MathType/LaTeX/OMML & Hóa học, màu sắc giao diện mỗi app KHÔNG GIỐNG NHAU,
+  tên app ngắn gọn tối đa nhưng đủ để hiểu, logo Ribbon Word phù hợp từng môn, bảo mật Ed25519 5 tầng,
   bản quyền máy tính DVT-XXXX-XXXX, chế độ dùng thử, liên hệ Zalo an toàn pháp lý & đóng gói 1-Click .exe.
 ---
 
@@ -43,35 +45,138 @@ Hệ thống ứng dụng và đề thi bắt buộc phải bám sát tuyệt đ
 
 ---
 
-### 🛡️ TRỤ CỘT 2: AN TOÀN PHÁP LÝ, LIÊN HỆ & CAM KẾT MIỄN NHIỆM
+### 🛡️ TRỤ CỘT 2: AN TOÀN PHÁP LÝ, LIÊN HỆ & MẪU CƠ QUAN QUẢN LÝ THEO CẤP HỌC
 
-1. **Danh xưng & Nhận diện tác giả**:
+1. **Quy chuẩn Cơ quan quản lý mặc định theo từng Cấp học**:
+   - **Với Cấp Tiểu học (TH) và Trung học cơ sở (THCS)**:
+     Bắt buộc ghi tiêu đề mặc định là:
+     ```text
+     UBND XÃ ........
+     TRƯỜNG ........  (hoặc TRƯỜNG THCS ........)
+     ```
+   - **Với Cấp Trung học phổ thông (THPT)**:
+     Bắt buộc ghi tiêu đề mặc định là:
+     ```text
+     SỞ GD&ĐT ........
+     TRƯỜNG THPT ........
+     ```
+   - **TUYỆT ĐỐI KHÔNG ghi tên trường học, xã, huyện cụ thể** (Không ghi Đồng Yên, Bắc Quang, Chu Văn An, v.v.) trong sản phẩm thương mại, chia sẻ cộng đồng hay giao diện web. Tránh mọi ràng buộc hành chính và rủi ro thanh kiểm tra pháp lý.
+
+2. **Danh xưng & Nhận diện tác giả**:
    - Tên hiển thị chuẩn mực: `Tác giả: Đinh Thành` (hoặc `Thầy giáo Đinh Văn Thành`).
    - Hotline / Kênh Zalo hỗ trợ kỹ thuật duy nhất: `0915.213717`.
-   - **TUYỆT ĐỐI KHÔNG ghi tên trường học, xã, huyện cụ thể** (Không ghi Đồng Yên, Bắc Quang, Chu Văn An, v.v.) trong sản phẩm thương mại, chia sẻ cộng đồng hay giao diện web. Tránh mọi ràng buộc hành chính và rủi ro thanh kiểm tra pháp lý.
-   - Đầu đề cơ quan trên đề thi / giáo án mẫu chỉ dùng dòng để trống trung tính:
-     ```text
-     UBND ....................                           KIỂM TRA [GIỮA KỲ / CUỐI KỲ]
-     TRƯỜNG: ....................                        NĂM HỌC 2026 - 2027
-     HỌ VÀ TÊN GIÁO VIÊN: ....................          MÔN: [TÊN MÔN] - KHỐI [LỚP]
-     ```
 
-2. **Cam kết miễn nhiệm bắt buộc (Legal Disclaimer)**:
+3. **Cam kết miễn nhiệm bắt buộc (Legal Disclaimer)**:
    Mọi ứng dụng (Desktop GUI, Add-in Ribbon, Web Modal, Form đăng ký) **bắt buộc** phải hiển thị cam kết miễn nhiệm nguyên văn:
    > *"Cam kết miễn nhiệm: Toàn bộ ứng dụng và tài liệu mang tính chất tham khảo, hỗ trợ giáo viên trong công tác soạn giảng. Mọi nội dung do AI gợi ý cần được giáo viên rà soát, thẩm định trước khi áp dụng. Tác giả không chịu trách nhiệm đối với việc sử dụng nguyên văn vào thực tế giảng dạy."*
 
-3. **Thông điệp tham khảo in ở chân đề thi**:
+4. **Thông điệp tham khảo in ở chân đề thi**:
    Dưới mỗi đề thi xuất ra file Word, bắt buộc có dòng lưu ý:
    > `(* Lưu ý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA)`
 
-4. **Lời nhắn liên hệ khéo léo, ngắn gọn, an toàn**:
+5. **Lời nhắn liên hệ khéo léo, ngắn gọn, an toàn**:
    - Khi tư vấn giáo viên:
      > *"Thầy/Cô vui lòng nhắn tin Zalo: 0915.213717 (Đinh Thành) để được hỗ trợ kỹ thuật và mở khóa tính năng Pro."*
    - Tuyệt đối không quảng cáo cam kết "chuẩn 100% Bộ Giáo Dục", "bao đỗ", "bao duyệt". Càng nói nhiều càng dễ sai lệch pháp lý.
 
 ---
 
-### 📑 TRỤ CỘT 3: CẤU TRÚC MẪU ĐỀ KIỂM TRA CHUẨN CÁC CẤP HỌC
+### 🏷️ TRỤ CỘT 3: TÊN APP NGẮN GỌN TỐI ĐA & ĐỦ HIỂU
+
+1. **Nguyên tắc đặt tên**:
+   - Cắt bỏ hoàn toàn các từ rườm rà như: *"Phần mềm hỗ trợ tạo đề kiểm tra đánh giá định kỳ..."*, *"Hệ thống AI..."*, *"Công cụ..."*.
+   - **Công thức vàng đặt tên hiển thị**:
+     ```text
+     Tạo Đề [Môn Học] [Cấp Học] Pro
+     ```
+   - **Công thức đặt tên File Executable (.exe)**:
+     ```text
+     TaoDe_[TAG]_[CAP].exe
+     ```
+   - **Công thức đặt tên File Cài Đặt (Installer)**:
+     ```text
+     Cai_Dat_TaoDe_[TAG]_[CAP].exe
+     ```
+
+2. **Bảng Danh mục Tên App chuẩn toàn hệ thống**:
+   | Bộ môn & Cấp học | Tên App hiển thị (GUI & Tiêu đề) | File thực thi (.exe) | Bộ cài đặt 1-Click (.exe) |
+   | :--- | :--- | :--- | :--- |
+   | **KHTN THCS** | `Tạo Đề KHTN THCS Pro` | `TaoDe_KHTN_THCS.exe` | `Cai_Dat_TaoDe_KHTN_THCS.exe` |
+   | **Toán THCS** | `Tạo Đề Toán THCS Pro` | `TaoDe_Toan_THCS.exe` | `Cai_Dat_TaoDe_Toan_THCS.exe` |
+   | **Toán THPT** | `Tạo Đề Toán THPT Pro` | `TaoDe_Toan_THPT.exe` | `Cai_Dat_TaoDe_Toan_THPT.exe` |
+   | **Tiếng Anh THCS** | `Tạo Đề Tiếng Anh THCS Pro` | `TaoDe_Anh_THCS.exe` | `Cai_Dat_TaoDe_Anh_THCS.exe` |
+   | **Tiếng Anh THPT** | `Tạo Đề Tiếng Anh THPT Pro` | `TaoDe_Anh_THPT.exe` | `Cai_Dat_TaoDe_Anh_THPT.exe` |
+   | **Ngữ văn THCS** | `Tạo Đề Ngữ Văn THCS Pro` | `TaoDe_Van_THCS.exe` | `Cai_Dat_TaoDe_Van_THCS.exe` |
+   | **Ngữ văn THPT** | `Tạo Đề Ngữ Văn THPT Pro` | `TaoDe_Van_THPT.exe` | `Cai_Dat_TaoDe_Van_THPT.exe` |
+   | **Vật lí THPT** | `Tạo Đề Vật Lí THPT Pro` | `TaoDe_VatLi_THPT.exe` | `Cai_Dat_TaoDe_VatLi_THPT.exe` |
+   | **Hóa học THPT** | `Tạo Đề Hóa Học THPT Pro` | `TaoDe_Hoa_THPT.exe` | `Cai_Dat_TaoDe_Hoa_THPT.exe` |
+   | **Sinh học THPT** | `Tạo Đề Sinh Học THPT Pro` | `TaoDe_Sinh_THPT.exe` | `Cai_Dat_TaoDe_Sinh_THPT.exe` |
+   | **Lịch sử THPT** | `Tạo Đề Lịch Sử THPT Pro` | `TaoDe_Su_THPT.exe` | `Cai_Dat_TaoDe_Su_THPT.exe` |
+   | **Địa lí THPT** | `Tạo Đề Địa Lí THPT Pro` | `TaoDe_Dia_THPT.exe` | `Cai_Dat_TaoDe_Dia_THPT.exe` |
+   | **Lịch sử & Địa lí THCS** | `Tạo Đề Sử Địa THCS Pro` | `TaoDe_SuDia_THCS.exe`| `Cai_Dat_TaoDe_SuDia_THCS.exe`|
+   | **Tin học THCS** | `Tạo Đề Tin Học THCS Pro` | `TaoDe_Tin_THCS.exe` | `Cai_Dat_TaoDe_Tin_THCS.exe` |
+   | **Tin học THPT** | `Tạo Đề Tin Học THPT Pro` | `TaoDe_Tin_THPT.exe` | `Cai_Dat_TaoDe_Tin_THPT.exe` |
+   | **Công nghệ THCS** | `Tạo Đề Công Nghệ THCS Pro` | `TaoDe_CN_THCS.exe` | `Cai_Dat_TaoDe_CN_THCS.exe` |
+   | **Công nghệ THPT** | `Tạo Đề Công Nghệ THPT Pro` | `TaoDe_CN_THPT.exe` | `Cai_Dat_TaoDe_CN_THPT.exe` |
+   | **GDCD THCS** | `Tạo Đề GDCD THCS Pro` | `TaoDe_GDCD_THCS.exe` | `Cai_Dat_TaoDe_GDCD_THCS.exe` |
+   | **GDKT&PL THPT** | `Tạo Đề GDKT&PL THPT Pro` | `TaoDe_KTPL_THPT.exe` | `Cai_Dat_TaoDe_KTPL_THPT.exe` |
+   | **Tiếng Việt Tiểu học** | `Tạo Đề Tiếng Việt TH Pro` | `TaoDe_TV_TH.exe` | `Cai_Dat_TaoDe_TV_TH.exe` |
+   | **Tiếng Anh Tiểu học** | `Tạo Đề Tiếng Anh TH Pro` | `TaoDe_Anh_TH.exe` | `Cai_Dat_TaoDe_Anh_TH.exe` |
+
+---
+
+### 🎨 TRỤ CỘT 4: MÀU SẮC GIAO DIỆN CỦA TẤT CẢ CÁC APP KHÔNG GIỐNG NHAU
+
+Để tạo nhận diện thương hiệu trực quan đặc trưng cho từng app, **MÀU SẮC CỦA TẤT CẢ CÁC APP TUYỆT ĐỐI KHÔNG ĐƯỢC GIỐNG NHAU**. Mỗi app sở hữu một mã màu HEX chủ đạo và màu Hover riêng biệt:
+
+| STT | Ứng dụng / Bộ môn | Tag Định Danh | Màu Chủ Đạo (Primary Hex) | Màu Hover (Hover Hex) | Tên Phối Màu | Biểu tượng |
+| :---: | :--- | :---: | :--- | :--- | :--- | :---: |
+| **1** | **Toán học THCS & THPT** | `TOAN` | `#0284C7` (Sky Blue) | `#0369A1` | Xanh Cyan Toán Học | 📐 |
+| **2** | **Khoa học tự nhiên THCS** | `KHTN` | `#E11D48` (Rose Red) | `#BE123C` | Đỏ Hoa Hồng Thực Nghiệm | 🔬 |
+| **3** | **Vật lí THPT** | `VATLI` | `#7C3AED` (Purple Violet) | `#6D28D9` | Tím Điện Quang Quang Học | ⚡ |
+| **4** | **Hóa học THPT** | `HOA` | `#06B6D4` (Teal Cyan Neon) | `#0891B2` | Xanh Ngọc Lam Phân Tử | ⚗️ |
+| **5** | **Sinh học THPT** | `SINH` | `#059669` (Emerald Green) | `#047857` | Lục Bảo Diệp Lục ADN | 🧬 |
+| **6** | **Tiếng Anh THCS & THPT** | `ENG` | `#0D9488` (Dark Teal) | `#0F766E` | Xanh Mòng Két Hội Nhập | 🇬🇧 |
+| **7** | **Ngữ văn THCS & THPT** | `VAN` | `#9F1239` (Deep Burgundy) | `#881337` | Đỏ Rượu Vang Thi Ca | 📖 |
+| **8** | **Lịch sử THPT** | `HIS` | `#D97706` (Amber Gold) | `#B45309` | Vàng Hổ Phách Cổ Kính | 🏛️ |
+| **9** | **Địa lí THPT** | `GEO` | `#65A30D` (Lime Olive) | `#4D7C0F` | Xanh Ô-liu Địa Lý Thổ Nhưỡng | 🌍 |
+| **10**| **Lịch sử & Địa lí THCS** | `SUDIA` | `#CA8A04` (Warm Ochre) | `#A16207` | Nâu Vàng Phù Sa Đất Nước | 🗺️ |
+| **11**| **GDCD & GDKT&PL** | `GDCD_KTPL` | `#EA580C` (Flame Orange) | `#C2410C` | Cam Rực Lửa Pháp Luật | ⚖️ |
+| **12**| **Tin học THCS & THPT** | `TIN` | `#4F46E5` (Electric Indigo) | `#4338CA` | Xanh Chàm Vi Xử Lý | 💻 |
+| **13**| **Công nghệ THCS & THPT**| `CN` | `#475569` (Titanium Steel) | `#334155` | Xám Thép Cơ Khí Chế Tạo | ⚙️ |
+| **14**| **Tiếng Việt Tiểu học** | `TV_TH` | `#DC2626` (Ruby Crimson) | `#B91C1C` | Đỏ Thắm Khăn Quàng Ruby | 🎒 |
+| **15**| **Tiếng Anh Tiểu học** | `ENG_TH` | `#14B8A6` (Mint Turquoise) | `#0D9488` | Xanh Bạc Hà Sinh Động | 🧸 |
+| **16**| **Tích hợp NLS - AI** | `NLS_AI` | `#8B5CF6` (Vivid Purple AI) | `#7C3AED` | Tím Neon Siêu Trí Tuệ | 🤖 |
+
+---
+
+### 🖼️ TRỤ CỘT 5: QUY CHUẨN LOGO & BIỂU TƯỢNG HIỂN THỊ TRÊN MICROSOFT WORD
+
+Khi tích hợp thanh Add-in Ribbon Word (`.dotm`), logo và biểu tượng phải hiển thị sắc nét, chuẩn mực:
+
+1. **Thông số kỹ thuật Icon Ribbon**:
+   - **Kích thước chuẩn**:
+     * Icon lớn trên Ribbon (Group Header): **`32x32 px`**.
+     * Icon nhỏ trên menu xổ xuống (Drop-down Menu): **`16x16 px`**.
+   - **Định dạng file**: `PNG 32-bit RGBA` với nền trong suốt (**Transparent Background**).
+   - **Khử răng cưa (Anti-Aliasing)**: Đảm bảo hiển thị sắc nét tuyệt đối, không bị viền trắng lem nhem trên cả giao diện Word nền sáng (White/Colorful Theme) và Word nền tối (Dark Gray/Black Theme).
+
+2. **Quy chuẩn Hình ảnh Biểu tượng phù hợp đặc thù từng môn**:
+   - **Môn Khoa học tự nhiên (KHTN)**: Biểu tượng Kính hiển vi quang học kết hợp liên kết phân tử vi sinh.
+   - **Môn Toán học**: Biểu tượng Thước compa, êke kết hợp dấu tích phân $\int$ hoặc đồ thị hàm số cách điệu.
+   - **Môn Tiếng Anh**: Biểu tượng Lá cờ UK/US kết hợp tai nghe đa phương tiện.
+   - **Môn Ngữ văn**: Biểu tượng Cuốn sách mở kết hợp đầu ngòi bút máy nghệ thuật.
+   - **Môn Vật lí**: Biểu tượng Mô hình quỹ đạo nguyên tử Bohr và tia chớp điện năng.
+   - **Môn Hóa học**: Biểu tượng Bình tam giác Erlenmeyer chứa dung dịch đổi màu và ống nghiệm.
+   - **Môn Sinh học**: Biểu tượng Chuỗi xoắn kép ADN kết hợp mầm cây xanh.
+   - **Môn Lịch sử**: Biểu tượng Trống đồng Đông Sơn hoặc Cột cờ cổ kính.
+   - **Môn Địa lí**: Biểu tượng Quả địa cầu kinh vĩ tuyến kết hợp kim la bàn.
+   - **Môn Tin học**: Biểu tượng Màn hình laptop công nghệ cao kết hợp chip bán dẫn.
+   - **Môn Công nghệ**: Biểu tượng Cặp bánh răng cơ khí lồng ghép bảng mạch in vi điện tử.
+
+---
+
+### 📑 TRỤ CỘT 6: CẤU TRÚC MẪU ĐỀ KIỂM TRA CHUẨN CÁC CẤP HỌC
 
 #### 1. Cấu trúc Đề Kiểm Tra THCS Chuẩn Công văn 7991 (KHTN, Toán, Ngữ văn, Tiếng Anh...):
 - **Thời gian làm bài**: 90 phút (Kiểm tra định kỳ Giữa kỳ / Cuối kỳ).
@@ -107,16 +212,31 @@ Hệ thống ứng dụng và đề thi bắt buộc phải bám sát tuyệt đ
 - **Quy chuẩn đề Tiếng Anh THPT**:
   - 35 câu MCQ + 4 câu True/False (cùng dòng) + Viết đoạn văn (1.0đ) + Bài nói Speaking (2.0đ).
 
-#### 3. Đầu đề, Khung thông tin học sinh & Bảng điểm 2 cột:
+#### 3. Bảng đầu đề & Bảng điểm 2 cột chuẩn:
+- **Cấp Tiểu học & THCS**:
 ```text
 ┌───────────────────────────────────────┬────────────────────────────────────────┐
-│ UBND ....................             │ ĐỀ KIỂM TRA, ĐÁNH GIÁ GIỮA HỌC KÌ I    │
-│ TRƯỜNG THCS ....................      │ Năm học 2026 - 2027                    │
+│ UBND XÃ ........                      │ ĐỀ KIỂM TRA, ĐÁNH GIÁ GIỮA HỌC KÌ I    │
+│ TRƯỜNG THCS ........                  │ Năm học 2026 - 2027                    │
 │ (Đề kiểm tra gồm 03 trang)            │ Môn: Khoa học tự nhiên - Lớp 7         │
 │                                       │ Thời gian: 90 phút (không kể phát đề)  │
 ├───────────────────────────────────────┴────────────────────────────────────────┤
 │ Họ và tên: ................................................ Lớp: ...... Mã đề: 701 │
 └────────────────────────────────────────────────────────────────────────────────┘
+```
+- **Cấp THPT**:
+```text
+┌───────────────────────────────────────┬────────────────────────────────────────┐
+│ SỞ GD&ĐT ........                     │ ĐỀ KIỂM TRA, ĐÁNH GIÁ CUỐI HỌC KÌ I    │
+│ TRƯỜNG THPT ........                  │ Năm học 2026 - 2027                    │
+│ (Đề kiểm tra gồm 04 trang)            │ Môn: Toán học - Khối 11                │
+│                                       │ Thời gian: 90 phút (không kể phát đề)  │
+├───────────────────────────────────────┴────────────────────────────────────────┤
+│ Họ và tên thí sinh: ....................................... Lớp: ...... Mã đề: 111 │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+- **Bảng điểm 2 cột**:
+```text
 ┌───────────────────────────────────┬────────────────────────────────────────────┐
 │              ĐIỂM                 │        LỜI NHẬN XÉT CỦA GIÁO VIÊN          │
 ├───────────────────────────────────┼────────────────────────────────────────────┤
@@ -125,13 +245,9 @@ Hệ thống ứng dụng và đề thi bắt buộc phải bám sát tuyệt đ
 └───────────────────────────────────┴────────────────────────────────────────────┘
 ```
 
-#### 4. Quy chuẩn Mã đề thi:
-- THCS: Khối 6: `601, 602...` | Khối 7: `701, 702...` | Khối 8: `801, 802...` | Khối 9: `901, 902...`
-- THPT: Khối 10: `101, 102...` | Khối 11: `111, 112...` | Khối 12: `121, 122...`
-
 ---
 
-### 📝 TRỤ CỘT 4: ĐỊNH DẠNG SƯ PHẠM WORD (.DOCX) KHÔNG LỖI DÃN DÒNG
+### 📝 TRỤ CỘT 7: ĐỊNH DẠNG SƯ PHẠM WORD (.DOCX) KHÔNG LỖI DÃN DÒNG
 
 Khi render file Word bằng thư viện `python-docx`, phải áp dụng bộ quy chuẩn vàng đã được tối ưu:
 
@@ -213,7 +329,7 @@ def set_cell_margins(cell, top=30, bottom=30, left=40, right=40):
 
 ---
 
-### 📐 TRỤ CỘT 5: QUY CHUẨN CÔNG THỨC MATHTYPE, LATEX & PHƯƠNG TRÌNH HÓA HỌC
+### 📐 TRỤ CỘT 8: QUY CHUẨN CÔNG THỨC MATHTYPE, LATEX & PHƯƠNG TRÌNH HÓA HỌC
 
 #### 1. Quy chuẩn Chuyển đổi Công thức Toán học LaTeX sang OMML Word Equation:
 Word hỗ trợ phương trình toán học dạng OpenXML Math (`<m:oMath>`). Kiến trúc chuyển đổi:
@@ -228,7 +344,6 @@ import lxml.etree as etree
 import latex2mathml.converter
 from docx.oxml import parse_xml
 
-# Đường dẫn file XSLT chuyển đổi MathML sang OMML của Microsoft Office
 XSL_PATH = r"C:\Program Files\Microsoft Office\root\Office16\MML2OMML.XSL"
 
 def latex_to_omml(latex_code: str, is_red: bool = False) -> str:
@@ -248,29 +363,6 @@ def latex_to_omml(latex_code: str, is_red: bool = False) -> str:
             omml_xml
         )
     return omml_xml
-
-def add_math_paragraph(doc, text: str, is_red: bool = False):
-    """Tách văn bản thường và công thức toán học $...$, chèn OMML trực tiếp vào paragraph."""
-    p = doc.add_paragraph()
-    parts = re.split(r'(\$[^\$]+\$)', text)
-    for part in parts:
-        if part.startswith('$') and part.endswith('$'):
-            latex_expr = part[1:-1]
-            try:
-                omml_xml = latex_to_omml(latex_expr, is_red=is_red)
-                p._p.append(parse_xml(omml_xml))
-            except Exception:
-                # Fallback nếu máy không có XSLT: Chèn dạng text in nghiêng
-                r = p.add_run(latex_expr)
-                r.italic = True
-                if is_red:
-                    r.font.color.rgb = RGBColor(255, 0, 0)
-        else:
-            if part:
-                r = p.add_run(part)
-                if is_red:
-                    r.font.color.rgb = RGBColor(255, 0, 0)
-    return p
 ```
 
 #### 2. Quy chuẩn Ký hiệu & Phương trình Hóa học:
@@ -318,98 +410,6 @@ def format_chem_and_math(text: str) -> str:
 
 ---
 
-### 📊 TRỤ CỘT 6: QUY CHUẨN MA TRẬN 16 CỘT & BẢN ĐẶC TẢ 7-8 CỘT
-
-#### 1. Bảng Khung Ma Trận 16 Cột (CV 7991 & QĐ 764):
-- Header 3 tầng gồm 16 cột:
-  * Cột 0: Mạch nội dung
-  * Cột 1: Nội dung / đơn vị kiến thức
-  * Cột 2: Số tiết
-  * Cột 3: % thời lượng
-  * Cột 4 - 6: TNKQ nhiều lựa chọn (Nhận biết, Thông hiểu, Vận dụng)
-  * Cột 7 - 9: TNKQ Đúng - Sai theo ý (Nhận biết, Thông hiểu, Vận dụng)
-  * Cột 10 - 12: TNKQ trả lời ngắn (Nhận biết, Thông hiểu, Vận dụng)
-  * Cột 13 - 15: Tự luận (Nhận biết, Thông hiểu, Vận dụng)
-- **3 dòng tổng kết bắt buộc ở cuối bảng**:
-  * Dòng 1: **Tổng số câu**
-  * Dòng 2: **Tổng điểm** (Quy đổi điểm chính xác theo từng dạng)
-  * Dòng 3: **Tỉ lệ %** (Ví dụ: 30% MCQ, 20% Đúng-Sai, 20% Trả lời ngắn, 30% Tự luận = 100%)
-
-#### 2. Bản Đặc Tả 7 hoặc 8 Cột có Dòng "TỔNG":
-- Các cột: `1. TT` | `2. Chủ đề / Đơn vị kiến thức` | `3. Yêu cầu cần đạt` | `4. Câu hỏi ở mức độ đánh giá` (chia 4 cột con: MCQ, Đúng-Sai, Trả lời ngắn, Tự luận).
-- **Hàng cuối cùng bắt buộc là dòng Tổng**: In đậm, nền xám nhạt `#E8EEF5` hoặc `#F0F4F8`:
-  `("Tổng", "", "", "12", "8", "4", "4")` kèm tổng số điểm và tỉ lệ %.
-
----
-
-### 🖥️ TRỤ CỘT 7: VÁ LỖI MÀN HÌNH TRẮNG KHI GỌI TỪ ADD-IN WORD RIBBON
-
-#### 1. Nguyên nhân gốc rễ:
-- Khi người dùng bấm nút trên thanh Ribbon Word, Macro VBA đọc đường dẫn file `.exe` từ tệp cấu hình `tool_config.ini`.
-- Do hàm `OpenTextFile` của VBA đọc theo bảng mã ANSI, nếu đường dẫn thư mục có dấu tiếng Việt (ví dụ `D:\0000 - tạo app Hoài Thanh\Web Chính thức...`), các ký tự tiếng Việt bị vỡ font $\rightarrow$ `fso.FileExists()` trả về `False` $\rightarrow$ Macro dừng ngầm không khởi chạy được phần mềm $\rightarrow$ Word đứng yên ở trang giấy trắng `Document1`.
-
-#### 2. Giải pháp kỹ thuật chuẩn hóa áp dụng cho 100% App:
-1. **Lưu file thực thi vào đường dẫn 100% ký tự chuẩn ASCII**:
-   - Bộ cài installer tự động sao chép file `.exe` chuẩn vào:  
-     `%APPDATA%\[TEN_TOOL_DVT]\bin\[TEN_TOOL].exe`
-2. **Nâng cấp mã nguồn VBA Macro trong Add-in (`.dotm`)**:
-```vba
-Private Function GetToolCommand(action As String, Optional extraArgs As String = "") As String
-    Dim fso As Object, appData As String, binExe As String, exePath As String
-    Set fso = CreateObject("Scripting.FileSystemObject")
-    appData = Environ("APPDATA")
-    
-    ' Ưu tiên số 1: Luôn kiểm tra file EXE chuẩn trong %APPDATA% (Không bao giờ lỗi font tiếng Việt)
-    binExe = appData & "\[TEN_TOOL_DVT]\bin\[TEN_TOOL].exe"
-    If fso.FileExists(binExe) Then
-        GetToolCommand = Chr(34) & binExe & Chr(34) & " --action " & action & " " & extraArgs
-        Exit Function
-    End If
-    
-    ' Ưu tiên số 2: Đọc cấu hình từ tool_config.ini
-    exePath = GetConfigValue("EXE_PATH")
-    If exePath <> "" And fso.FileExists(exePath) Then
-        GetToolCommand = Chr(34) & exePath & Chr(34) & " --action " & action & " " & extraArgs
-        Exit Function
-    End If
-    
-    ' Fallback mặc định
-    GetToolCommand = Chr(34) & binExe & Chr(34) & " --action " & action & " " & extraArgs
-End Function
-```
-3. Cấu hình Windows Registry `Trusted Locations` tự động để Word không bao giờ hiện thanh cảnh báo bảo mật màu vàng.
-
----
-
-### 🎨 TRỤ CỘT 8: GIAO DIỆN UI/UX DARK MODE & MÀU SẮC BỘ MÔN
-
-1. **Phong cách thiết kế chủ đạo**:
-   - **Dark Mode công nghệ cao**: Nền Slate/Zinc siêu tối (`#0F172A`, `#020617`), viền Slate nổi bật (`border-slate-800`), thẻ bo góc mềm mại (`rounded-2xl`), hiệu ứng đổ bóng mờ ảo (`shadow-2xl`).
-   - **Tối giản hóa thông tin**: Cắt bỏ các khối chữ rườm rà. Mỗi mô tả chỉ từ 1 - 2 dòng ngắn gọn, súc tích, đi thẳng vào giá trị thực tế.
-   - **Gọn nhẹ tối đa**: **Tuyệt đối không nhúng video `.mp4` nặng nề** trên web hay app để đảm bảo tốc độ mở tức thì dưới 0.5s.
-
-2. **Cơ cấu 2 Tab cố định trên giao diện**:
-   - Tab 1: **"1. Tải Bản Máy Tính (.exe / .zip)"** (Mặc định được chọn khi mở app).
-   - Tab 2: **"2. Bản Quyền & Kích Hoạt Pro"**.
-   - *Không để tab thứ 3 "Trải nghiệm online" hay "Dùng thử web" để tránh phân tán người dùng và rò rỉ đề mẫu.*
-
-3. **Bảng màu định danh thương hiệu theo bộ môn**:
-   | Bộ môn | Mã Tag | Màu chủ đạo (Primary Hex) | Màu phụ / Hover | Biểu tượng (Icon) |
-   | :--- | :--- | :--- | :--- | :--- |
-   | **Toán học** | `TOAN` | `#0284C7` (Cyan Blue) | `#0369A1` | 📐 / 🔢 |
-   | **Khoa học tự nhiên** | `KHTN` | `#E11D48` (Rose Red) | `#BE123C` | 🔬 / 🧬 |
-   | **Vật lí** | `VATLI` | `#7C3AED` (Purple Violet) | `#6D28D9` | ⚡ / 🧲 |
-   | **Hóa học** | `HOA` | `#0284C7` (Sky Blue) | `#0369A1` | ⚗️ / 🧪 |
-   | **Sinh học** | `SINH` | `#059669` (Emerald Green) | `#047857` | 🌿 / 🧬 |
-   | **Tiếng Anh** | `ENG` | `#0D9488` (Teal Green) | `#0F766E` | 🇬🇧 / 🎧 |
-   | **Ngữ văn** | `VAN` | `#BE123C` (Rose Crimson) | `#9F1239` | 📖 / ✍️ |
-   | **Lịch sử & Địa lí** | `SUDIA` | `#D97706` (Amber Gold) | `#B45309` | 🏛️ / 🌍 |
-   | **Tin học & Công nghệ**| `TIN_CN` | `#6366F1` (Indigo Blue) | `#4F46E5` | 💻 / ⚙️ |
-   | **Tích hợp NLS - AI** | `NLS_AI` | `#4F46E5` (Deep Indigo) | `#4338CA` | 🤖 / 🚀 |
-   | **Tiếng Việt Tiểu học** | `TV_TH` | `#E11D48` (Ruby Red) | `#BE123C` | 🎒 / 📚 |
-
----
-
 ### 🛡️ TRỤ CỘT 9: BẢO MẬT ĐA TẦNG, HARDWARE ID ED25519 & CHẾ ĐỘ DÙNG THỬ
 
 1. **Mật mã bất đối xứng Ed25519 tiêu chuẩn quân sự**:
@@ -448,15 +448,16 @@ End Function
 
 ---
 
-### 📦 TRỤ CỘT 10: ĐÓNG GÓI 1-CLICK DUY NHẤT 1 FILE .EXE & TÍCH HỢP WEB
+### 📦 TRỤ CỘT 10: ĐÓNG GÓI 1-CLICK DUY NHẤT 1 FILE .EXE & VÁ LỖI MÀN HÌNH TRẮNG
 
 1. **Quy chuẩn Đóng gói 1-Click All-in-One**:
-   - Khách hàng là giáo viên, không rành kỹ thuật máy tính -> **BẮT BUỘC toàn bộ ứng dụng phải đóng gói thành DUY NHẤT 1 file cài đặt `Cai_Dat_[TEN_APP]_Pro.exe`** (hoặc 1 file nén zip có Pass: 123).
+   - Khách hàng là giáo viên, không rành kỹ thuật máy tính -> **BẮT BUỘC toàn bộ ứng dụng phải đóng gói thành DUY NHẤT 1 file cài đặt `Cai_Dat_TaoDe_[TAG]_[CAP].exe`** (hoặc 1 file nén zip có Pass: 123).
    - Quy trình cài đặt: Bấm Chạy -> Next -> Next -> Hoàn thành.
 
-2. **Tự động hóa 100% môi trường máy tính giáo viên**:
-   - Tự động tạo Shortcut ngoài màn hình Desktop kèm Icon độ phân giải cao.
-   - Tự động copy file thực thi chuẩn vào `%APPDATA%\[TEN_TOOL_DVT]\bin\[TEN_TOOL].exe`.
+2. **Vá lỗi màn hình trắng Word Ribbon Add-in (Lưu vào %APPDATA%)**:
+   - Bộ cài installer tự động sao chép file `.exe` chuẩn vào đường dẫn 100% thuần ASCII:  
+     `%APPDATA%\[TEN_TOOL_DVT]\bin\[TEN_TOOL].exe`
+   - Cập nhật Add-in Macro VBA đọc trực tiếp từ `%APPDATA%`, khắc phục triệt để lỗi đường dẫn tiếng Việt có dấu.
    - Tự động copy Add-in Word vào thư mục `%APPDATA%\Microsoft\Word\STARTUP`.
    - Tự động cấu hình Windows Registry `Trusted Locations` để Word không hiện cảnh báo bảo mật màu vàng.
 
@@ -470,16 +471,16 @@ End Function
 ## III. CHECKLIST KIỂM THỬ 10 BƯỚC TRƯỚC KHI BÀN GIAO (QUALITY ASSURANCE)
 
 Trước khi bàn giao bất kỳ tính năng, app con hay bản cập nhật nào cho Thầy Đinh Thành, AI phải tự kiểm tra 10 tiêu chí:
-- [x] **1. An toàn pháp lý**: Không còn bất kỳ tên trường/xã/huyện cụ thể nào; Footer có đầy đủ Cam kết miễn nhiệm.
+- [x] **1. Cơ quan quản lý chuẩn**: Tiểu học & THCS là `UBND XÃ ........` / `TRƯỜNG ........`; THPT là `SỞ GD&ĐT ........` / `TRƯỜNG THPT ........`. Không ghi tên trường/huyện cụ thể.
 - [x] **2. Tác giả & Hotline**: Đảm bảo đúng `Đinh Thành` - Zalo `0915.213717`.
 - [x] **3. Năm học**: Toàn bộ văn bản, đề thi hiển thị đúng **NĂM HỌC 2026 - 2027**.
-- [x] **4. Không video thừa**: Không còn file `.mp4`, thẻ `<video>` hay link video nặng nề trên web và app.
-- [x] **5. Không xuất đề trên web**: Chặn toàn bộ hành vi tạo đề và tải file `.docx` trực tiếp trên web.
-- [x] **6. Đủ 2 tab chuẩn**: Mặc định hiển thị Tab 1 (Tải bản máy tính) và Tab 2 (Bản quyền & Kích hoạt Pro).
-- [x] **7. Bảo mật Ed25519**: Mã máy tính đúng chuẩn `DVT-XXXX-XXXX`, xác thực khóa công khai hợp lệ.
-- [x] **8. Khóa hạn mức dùng thử**: Đếm ngược 5 lượt chính xác, hết lượt khóa chặt và báo kích hoạt Pro.
+- [x] **4. Tên app ngắn gọn**: Đúng chuẩn `Tạo Đề [Môn] [Cấp] Pro`, không có từ ngữ thừa thãi.
+- [x] **5. Màu sắc riêng biệt**: Màu giao diện app KHÔNG TRÙNG LẶP với bất kỳ app nào khác trong hệ sinh thái.
+- [x] **6. Logo Ribbon Word chuẩn**: Kích thước 32x32 và 16x16 PNG trong suốt, mang tính biểu tượng đặc thù của bộ môn.
+- [x] **7. Không xuất đề trên web**: Chặn toàn bộ hành vi tạo đề và tải file `.docx` trực tiếp trên web.
+- [x] **8. Bảo mật Ed25519 & Khóa hạn mức**: Mã máy `DVT-XXXX-XXXX`, đếm ngược 5 lượt chính xác, hết lượt khóa chặt và báo kích hoạt Pro.
 - [x] **9. Chuẩn Word bấm in ngay**: A4, Margin 0.5-0.6", Times New Roman 13pt, Dãn dòng 1.15pt, không dãn chữ `split_lines()`, tab stops thay bảng không viền, đáp án đỏ in thường `bold=False`.
-- [x] **10. Đóng gói 1-Click**: File installer duy nhất chạy mượt mà, lưu vào `%APPDATA%` để Word Ribbon không bị màn hình trắng.
+- [x] **10. Đóng gói 1-Click**: File installer duy nhất chạy mượt mà, lưu vào `%APPDATA%` để Word Ribbon không bao giờ bị màn hình trắng.
 
 ---
 **TÀI LIỆU QUY CHUẨN ĐỘC QUYỀN - HỆ SINH THÁI GIÁO VIÊN AI TOÀN NĂNG - TÁC GIẢ ĐINH THÀNH**
