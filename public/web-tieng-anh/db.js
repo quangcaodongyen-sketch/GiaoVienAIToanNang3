@@ -311,7 +311,7 @@ const QUESTION_BANK = [
   {
     id: 'en7-006', grade: 7, subject: 'english', chapterId: 'en7u7', skill: 'language',
     topic: 'Grammar: It indicating distance', level: 'TH',
-    content: '________ is about 5 kilometres from my house to Dong Yen Secondary School.',
+    content: '________ is about 5 kilometres from my house to Secondary School.',
     options: ['A. There', 'B. This', 'C. It', 'D. That'],
     answer: 'C',
     solution: 'Giải thích: Chủ ngữ giả "It" được dùng để chỉ khoảng cách: It is about ... km from ... to ...'

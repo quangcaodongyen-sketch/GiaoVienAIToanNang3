@@ -141,7 +141,7 @@ BT
 0 -30 Td
 (Trang thai: Da xu ly hoan tat 100% - Tep an toan san sang su dung) Tj
 0 -30 Td
-(Tac gia: Thay giao Dinh Van Thanh - THCS Dong Yen - Hotline: 0915.213717) Tj
+(Tac gia: Tac gia Dinh Thanh - Hotline: 0915.213717) Tj
 ET
 endstream
 endobj
@@ -371,7 +371,7 @@ startxref
 
           <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
             <span>Tác giả:</span>
-            <strong className="text-white font-medium">Thầy Đinh Văn Thành (0915.213717)</strong>
+            <strong className="text-white font-medium">Tác giả Đinh Thành (0915.213717)</strong>
           </div>
         </div>
 

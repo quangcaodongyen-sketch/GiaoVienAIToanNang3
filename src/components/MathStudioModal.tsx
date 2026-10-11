@@ -183,7 +183,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
         setIsProActive(true);
         setVerifyResult({
           isValid: true,
-          message: '👑 Đặc quyền Quản trị viên (Admin Thầy Đinh Văn Thành) – Mở khóa vĩnh viễn'
+          message: '👑 Đặc quyền Quản trị viên (Admin Tác giả Đinh Thành) – Mở khóa vĩnh viễn'
         });
       } else {
         const savedKey = localStorage.getItem('gvai_mathstudio_active_key');
@@ -205,7 +205,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
       if (trialRemaining <= 0) {
         alert(
           'Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí MathStudio trên máy tính này!\n\n' +
-          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản quyền Pro hoặc liên hệ Thầy Đinh Văn Thành (0915.213717).'
+          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản quyền Pro hoặc liên hệ Tác giả Đinh Thành (0915.213717).'
         );
         setActiveTab('register');
         return;
@@ -438,7 +438,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   Chỉ Dành Riêng Cho Quản Trị Viên (Admin)
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Thầy giáo Đinh Văn Thành kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
+                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Tác giả Đinh Thành kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
                 </p>
                 <p className="text-xs text-rose-300 font-semibold">
                   Để đảm bảo chất lượng sư phạm cao nhất, phần mềm tạm thời <strong>KHÓA TẢI VỀ CÔNG KHAI</strong> và không mở cho người dùng đại trà.
@@ -467,7 +467,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
               <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-rose-500/40 space-y-3 shadow-2xl">
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
                   <ShieldCheck className="w-4 h-4 text-rose-400" />
-                  <span>Xác thực Quản trị viên (Thầy Đinh Văn Thành):</span>
+                  <span>Xác thực Quản trị viên (Tác giả Đinh Thành):</span>
                 </div>
                 <form onSubmit={handleVerifyAdminPin} className="space-y-2">
                   <div className="flex gap-2">
@@ -876,7 +876,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                     <img
                       src="/dinhvanthanh.jpg"
-                      alt="Thầy Đinh Văn Thành"
+                      alt="Tác giả Đinh Thành"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -1086,7 +1086,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
                   </div>
 
                   <p className="text-[11px] text-slate-400 text-center">
-                    Admin Thầy Đinh Văn Thành (Hotline / Zalo: 0915.213717).
+                    Admin Tác giả Đinh Thành (Hotline / Zalo: 0915.213717).
                   </p>
                 </form>
               )}
@@ -1102,7 +1102,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-violet-400"></span>
-            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Thầy giáo Đinh Văn Thành</span>
+            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Tác giả Đinh Thành</span>
           </div>
           <div className="flex items-center gap-2">
             <button

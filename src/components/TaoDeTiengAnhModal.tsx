@@ -225,7 +225,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                 )}
               </div>
               <p className="text-xs text-slate-400">
-                Thầy giáo Đinh Văn Thành  • Hotline/Zalo: 0915.213717
+                Tác giả Đinh Thành  • Hotline/Zalo: 0915.213717
               </p>
             </div>
           </div>
@@ -551,7 +551,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                         <span>BẢN DÙNG THỬ SƯ PHẠM (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
                       </div>
                       <p className="text-slate-700 leading-normal">
-                        • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong>  – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Tác quyền & Quản trị: <strong>Tác giả Đinh Thành</strong>  – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
                         • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để đánh giá chất lượng. Để mở khóa toàn bộ đáp án, xuất file Word và audio MP3, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
                       </p>
                     </div>
@@ -852,7 +852,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                     <img
                       src="/dinhvanthanh.jpg"
-                      alt="Thầy Đinh Văn Thành"
+                      alt="Tác giả Đinh Thành"
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         // fallback nếu ảnh lỗi
@@ -1033,7 +1033,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                           type="text"
                           value={regName}
                           onChange={(e) => setRegName(e.target.value)}
-                          placeholder="Ví dụ: Thầy Đinh Văn Thành"
+                          placeholder="Ví dụ: Tác giả Đinh Thành"
                           className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
                         />
                       </div>
@@ -1127,7 +1127,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
         <div className="px-6 py-3 border-t border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span>Hỗ trợ giáo viên 24/7 qua Zalo Thầy Đinh Văn Thành: <strong>0915.213717</strong></span>
+            <span>Hỗ trợ giáo viên 24/7 qua Zalo Tác giả Đinh Thành: <strong>0915.213717</strong></span>
           </div>
           <div className="flex items-center gap-2">
             <a
