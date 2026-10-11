@@ -468,6 +468,149 @@ def format_chem_and_math(text: str) -> str:
 
 ---
 
+## IV. QUY TRÌNH TOÀN DIỆN & BỘ KHUNG TỰ ĐỘNG XÂY DỰNG APP CON RA ĐỀ KIỂM TRA CHO BẤT KỲ MÔN NÀO TỪ TÀI LIỆU CUNG CẤP (MA TRẬN, ĐẶC TẢ, ĐỀ MẪU)
+
+Khi người dùng cung cấp bất kỳ bộ tài liệu nào (Tài liệu tập huấn ra đề, Ma trận mẫu, Bản đặc tả mẫu, Đề kiểm tra mẫu & Hướng dẫn chấm) của một môn học bất kỳ (Toán, Ngữ văn, Tiếng Anh, KHTN, Lịch sử, Địa lí, Tin học, Công nghệ, GDCD... cấp THCS hay THPT), AI sẽ thực thi quy trình chuẩn 7 bước tự động để xuất xưởng ngay một phần mềm hoàn chỉnh:
+
+### BƯỚC 1: TIẾP NHẬN & PHÂN TÍCH TÀI LIỆU CHUYÊN MÔN THEO ĐẶC THÙ BỘ MÔN
+AI đọc kỹ tài liệu người dùng cung cấp và bóc tách các thông số cốt lõi:
+1. **Cấp học & Bộ môn**: Xác định Môn (Toán, Văn, Anh, KHTN, Sử, Địa...), Cấp (THCS hay THPT), Bộ sách (Kết nối tri thức với cuộc sống, Chân trời sáng tạo, Cánh diều).
+2. **Khung thời gian & Cấu trúc điểm số**:
+   - Thời gian làm bài: 90 phút (KHTN, Toán, Ngữ văn...), 60 phút hoặc 45 phút (tiểu học hoặc kiểm tra chuyên biệt).
+   - Tỉ lệ mức độ nhận thức: 40% Nhận biết - 30% Thông hiểu - 20% Vận dụng - 10% Vận dụng cao (chuẩn Công văn 7991 hoặc QĐ 764).
+3. **Phân loại dạng thức câu hỏi đặc thù theo môn**:
+   - **Môn Ngữ văn**:
+     * Phần I. Đọc hiểu văn bản (6,0 điểm): Ngữ liệu (thơ, truyện, kí, văn bản nghị luận, văn bản thông tin). 8 câu trắc nghiệm (0,5đ/câu = 4,0đ) + 2 câu tự luận ngắn đọc hiểu (1,0đ/câu = 2,0đ).
+     * Phần II. Viết (4,0 điểm): 1 bài văn nghị luận xã hội hoặc nghị luận văn học. Hướng dẫn chấm Rubric 5 tiêu chí: a. Cấu trúc bài văn (0,25đ); b. Đúng yêu cầu đề (0,25đ); c. Hệ thống luận điểm & dẫn chứng (2,50đ); d. Chính tả ngữ pháp (0,50đ); e. Sáng tạo (0,50đ).
+   - **Môn Khoa học tự nhiên (THCS)**:
+     * 3 phân môn: Vật lí (30%) + Hóa học (35%) + Sinh học (35%).
+     * 16 câu trắc nghiệm khách quan (4,0 điểm) + 4 bài tự luận / bài tập thực nghiệm (6,0 điểm).
+   - **Môn Tiếng Anh (THCS & THPT)**:
+     * Trắc nghiệm 4 lựa chọn (Phonetics, Vocabulary & Grammar, Reading Cloze, Reading Comprehension).
+     * Tự luận / Viết: Sentence transformation, Rearrange sentences, Writing a paragraph.
+   - **Môn Toán (THCS & THPT)**:
+     * THCS: Trắc nghiệm 4 lựa chọn (3,0đ - 12 câu) + Tự luận Đại số & Hình học (7,0đ - 4 bài).
+     * THPT: Phần I MCQ 4 lựa chọn (12 câu - 3,0đ) + Phần II Đúng/Sai 4 ý (4 câu - 4,0đ) + Phần III Trả lời ngắn điền số (6 câu - 3,0đ).
+   - **Môn Lịch sử & Địa lí (THCS)**:
+     * Phân môn Lịch sử (50% = 5,0đ) + Phân môn Địa lí (50% = 5,0đ). Khai thác tư liệu lịch sử, biểu đồ, bảng số liệu địa lí.
+
+### BƯỚC 2: KHỞI TẠO BỘ KHUNG MÃ NGUỒN APP CON CHUẨN HOÁ
+Khởi tạo cấu trúc cây thư mục chuẩn mực bên trong thư mục chỉ định (hoặc thư mục Sandbox trên Desktop theo yêu cầu của người dùng):
+```text
+Phan_Mem_Tao_De_[TAG]_[CAP]_Pro/
+├── assets/
+│   ├── app_logo.ico                # Icon 256x256 đa kích thước chuẩn Windows
+│   ├── app_logo.png                # Logo PNG 512x512
+│   ├── thay_thanh_circle.png       # Ảnh đại diện Thầy giáo Đinh Thành
+│   └── ribbon_icons/               # Icon Ribbon Word 16x16 và 32x32 chuyên biệt theo môn
+├── core/
+│   ├── config_manager.py           # Quản lý cấu hình APPDATA & Local, cơ quan quản lý
+│   ├── license_manager.py          # Bảo mật Ed25519 5 tầng, mã máy DVT-XXXX-XXXX, dùng thử 5 lượt
+│   ├── security_guard.py           # Chống crack, phát hiện debug/tamper
+│   ├── single_instance.py          # Chặn mở trùng lặp tiến trình
+│   ├── update_manager.py           # Kiểm tra và tải cập nhật tự động từ Cloud
+│   ├── cli_handler.py              # Xử lý gọi ngầm từ Word Ribbon Add-in (JSON CLI)
+│   ├── annex_manager.py            # Quản lý phụ lục ma trận & đặc tả
+│   └── exam_engine/
+│       ├── master_exam_builder.py  # Động cơ Word tối thượng: 10 trụ cột, A4, 0.5-0.6", Times New Roman 13pt
+│       ├── dynamic_exam_engine.py  # Bộ sinh đề động N mã đề, hoán vị đáp án, sinh bản GV & HS
+│       ├── [tag]_curriculum.py     # Ngân hàng chương trình, bài học, ma trận, đặc tả môn học
+│       └── subject_knowledge_banks.py # Ngân hàng câu hỏi trắc nghiệm & tự luận đa dạng
+├── ui/
+│   ├── app_gui.py                  # Giao diện CustomTkinter sang trọng, chuẩn màu môn học
+│   ├── activation_dialog.py        # Hộp thoại kích hoạt Pro offline / online
+│   ├── author_dialog.py            # Thông tin tác giả Đinh Thành, Zalo 0915.213717, cam kết miễn nhiệm
+│   ├── update_dialog.py            # Hộp thoại thông báo cập nhật phiên bản mới
+│   └── report_dialog.py            # Hộp thoại đóng góp ý kiến & phản hồi giáo viên
+├── data/
+│   ├── app_config.json             # Cấu hình định danh môn học: Tên app, màu chủ đạo, tag môn
+│   └── config.json                 # Cấu hình lưu trữ tùy chọn đề mặc định
+├── word_addin/
+│   ├── TaoDe_[TAG]_[CAP].dotm      # File Add-in Word chứa Ribbon XML & Macro VBA
+│   └── builder.py                  # Kịch bản nạp Ribbon vào Word
+├── tools/
+│   ├── installer_app.py            # Bộ cài đặt All-in-One nhúng sẵn Tool & Add-in
+│   └── admin_key_tool.py           # Công cụ Admin tạo Key bản quyền Ed25519 cho Thầy Thành
+├── main.py                         # Điểm khởi chạy chính ứng dụng GUI / CLI
+├── build_exe.py                    # Kịch bản 1-Click tự động đóng gói PyInstaller
+└── [Mã_Đề_Specs]...                # Các file cấu hình PyInstaller .spec
+```
+
+### BƯỚC 3: XÂY DỰNG NGÂN HÀNG KIẾN THỨC & MA TRẬN ĐẶC TẢ ([TAG]_CURRICULUM.PY)
+Dựa trên tài liệu tập huấn và đề mẫu do giáo viên cung cấp, xây dựng file dữ liệu `[tag]_curriculum.py` với cấu trúc JSON đa tầng:
+1. `[TAG]_CURRICULUM_DATA`: Phân cấp theo Khối lớp (Lớp 6, 7, 8, 9 hoặc Lớp 10, 11, 12) -> Kỳ thi (GK1, CK1, GK2, CK2, KSCL, DECUONG, ALL) -> Phân môn / Chương / Bài học.
+2. `LESSON_KNOWLEDGE_BANK`: Từ điển bài học chi tiết chứa đầy đủ:
+   - `matrix_rows`: Dữ liệu bảng ma trận chuẩn CV 7991 (TT, Kĩ năng, Đơn vị kiến thức, Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao, Tổng điểm).
+   - `spec_rows`: Dữ liệu bản đặc tả chuẩn (TT, Kĩ năng, Đơn vị kiến thức, Mức độ đánh giá, Số câu hỏi theo mức độ nhận thức).
+   - `reading_passage` (nếu là môn Ngữ văn / Tiếng Anh): Đoạn trích văn bản chuẩn xác, tựa đề, tác giả, nguồn trích dẫn rõ ràng.
+   - `mcq`: Danh sách câu hỏi trắc nghiệm 4 lựa chọn (câu hỏi, 4 phương án A-B-C-D, đáp án đúng).
+   - `sa`: Danh sách câu hỏi tự luận ngắn / đọc hiểu kèm barem hướng dẫn chấm chi tiết.
+   - `essay`: Đề bài tự luận / viết bài văn hoàn chỉnh.
+   - `essay_guide`: Bảng tiêu chí chấm điểm chi tiết (Rubric) theo thang điểm 10.
+
+### BƯỚC 4: THIẾT KẾ ĐỘNG CƠ XUẤT WORD CHUYÊN BIỆT (MASTER_EXAM_BUILDER.PY)
+Đảm bảo 100% tài liệu xuất ra tuân thủ các quy tắc không bao giờ vi phạm:
+1. **Khổ giấy & Căn lề**: A4 (210 x 297 mm), lề Trên 0.5", Dưới 0.5", Trái 0.6", Phải 0.6" (tương đương Trên/Dưới 1.27 cm, Trái/Phải 1.52 cm).
+2. **Font chữ & Dãn dòng**: Times New Roman 13pt toàn bộ nội dung. Dãn dòng chuẩn `spacing=1.15`, cách đoạn `before=0, after=2`.
+3. **Thụt lề đoạn văn**: 1.27 cm (0.5 inch) cho đoạn văn bản xuôi; không thụt đầu dòng cho bảng biểu, tiêu đề, khung ngữ liệu.
+4. **Phòng chống dãn chữ Word**: Bắt buộc dùng hàm `split_lines()` để tách từng dòng thành các Paragraph độc lập trước khi thêm vào văn bản hoặc ô bảng khi căn đều hai bên (Justify).
+5. **Tiêu đề cơ quan**:
+   - Tiểu học & THCS: `UBND XÃ ........` / `TRƯỜNG ........` (hoặc `TRƯỜNG THCS ........`).
+   - THPT: `SỞ GD&ĐT ........` / `TRƯỜNG THPT ........`.
+   - Năm học: **NĂM HỌC 2026 - 2027**.
+   - **TUYỆT ĐỐI KHÔNG ghi tên bộ sách** trong đề thi học sinh.
+6. **Bảng điểm 2 cột**: Bắt buộc có bảng điểm gồm Cột Điểm (Bằng số, Bằng chữ) và Cột Lời nhận xét của giáo viên.
+7. **Đáp án Giáo viên**: Chữ cái đáp án đúng được tô màu đỏ `#FF0000` và để định dạng **in thường (`bold=False`)** để không bị lộ khi học sinh in photocopy trắng đen.
+8. **Định dạng 2 file riêng biệt**:
+   - `[TenDe]_GIAO_VIEN.docx`: Đầy đủ Ma trận, Bản đặc tả, Toàn bộ N Mã đề có đáp án đỏ `#FF0000`, Hướng dẫn chấm Rubric chi tiết, Bảng ký tên tổ chuyên môn và giáo viên giảng dạy.
+   - `[TenDe]_HOC_SINH.docx`: Toàn bộ N Mã đề phân trang rõ ràng, có khung bài làm và bảng điểm sạch, KHÔNG lộ đáp án hay hướng dẫn chấm.
+9. **Dòng lưu ý miễn nhiệm cuối đề**:
+   `(* Lưu ý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA)`.
+
+### BƯỚC 5: ĐỒNG BỘ GIAO DIỆN & MÀU SẮC CHỦ ĐẠO (APP_CONFIG.JSON & APP_GUI.PY)
+1. Cấu hình file `data/app_config.json`:
+   - `APP_NAME`: `[Icon] Tạo Đề [Môn] [Cấp] Pro` (ngắn gọn tối đa).
+   - `APP_TAG`: Viết hoa 3-4 ký tự (ví dụ: `VAN`, `TOAN`, `ANH`, `KHTN`, `SU`, `DIA`, `TIN`, `CN`).
+   - `LEVEL`: `THCS` hoặc `THPT`.
+   - `THEME_INFO`: Bảng màu riêng biệt cho từng môn, không môn nào trùng môn nào:
+     * **Ngữ văn**: Đỏ mận sang trọng (`color: #9F1239`, `hover: #881337`).
+     * **Khoa học tự nhiên**: Xanh ngọc lục bảo (`color: #059669`, `hover: #047857`).
+     * **Toán học**: Xanh dương đậm (`color: #1E3A8A`, `hover: #1D4ED8`).
+     * **Tiếng Anh**: Xanh chàm rực rỡ (`color: #4F46E5`, `hover: #4338CA`).
+     * **Vật lí**: Tím than công nghệ (`color: #4C1D95`, `hover: #3B0764`).
+     * **Hóa học**: Cam hổ phách (`color: #D97706`, `hover: #B45309`).
+     * **Sinh học**: Xanh nõn chuối sinh thái (`color: #16A34A`, `hover: #15803D`).
+     * **Lịch sử & Địa lí**: Nâu đất trầm ấm (`color: #9A3412`, `hover: #7C2D12`).
+     * **Tin học**: Xanh Cyan hiện đại (`color: #0891B2`, `hover: #0E7490`).
+     * **Công nghệ**: Xám than kỹ thuật (`color: #475569`, `hover: #334155`).
+2. Giao diện GUI hỗ trợ:
+   - Thanh chọn Khối lớp, Kỳ thi (GK1, CK1, GK2, CK2), Số lượng mã đề (1 đến 10 mã đề), Chế độ xáo trộn.
+   - Tùy biến Cơ quan quản lý, Tên trường, Năm học trực tiếp trên giao diện và ghi nhớ vĩnh viễn vào APPDATA.
+   - Nút **"Tạo Đề Kiểm Tra Ngay"** hiệu ứng chuyển màu rực rỡ, kèm thanh trạng thái chạy tiến trình.
+   - Tích hợp 1-Click mở file Word ngay sau khi xuất bản.
+
+### BƯỚC 6: BẢO MẬT BẢN QUYỀN ED25519 & CHẾ ĐỘ DÙNG THỬ AN TOÀN PHÁP LÝ
+1. Tự động liên kết mã máy phần cứng: `DVT-[TAG]-[4_HEX]-[4_HEX]`.
+2. Kiểm tra bản quyền Ed25519: Public Key nhúng sẵn xác thực chữ ký số không thể giả mạo.
+3. Cho phép dùng thử 5 lượt hoặc 3 ngày trên Desktop, tuyệt đối không cho dùng thử trên Web.
+4. Khi hết lượt: Khóa tính năng xuất Word, hiển thị hộp thoại đăng ký Pro thân thiện kèm lời nhắn hỗ trợ:
+   `"Thầy/Cô vui lòng nhắn tin Zalo: 0915.213717 (Đinh Thành) để được hỗ trợ kỹ thuật và mở khóa tính năng Pro."`
+5. Hiển thị Cam kết miễn nhiệm pháp lý tại mọi chân trang và hộp thoại.
+
+### BƯỚC 7: ĐÓNG GÓI 1-CLICK TẠO 2 FILE .EXE & QUY CHUẨN SANDBOX NGOÀI DESKTOP
+1. **Quy tắc Sandbox bảo vệ thư mục gốc**:
+   - Khi người dùng tạo một thư mục ngoài Desktop (ví dụ: `C:\Users\Admin\Desktop\Môn_Mới`), AI **PHẢI làm việc 100% trong thư mục Desktop này**.
+   - Toàn bộ mã nguồn, cấu hình, dữ liệu và các file sản phẩm xuất ra phải nằm trọn vẹn trong thư mục Desktop đó.
+   - **TUYỆT ĐỐI KHÔNG chạm vào thư mục gốc `D:\...`** để tránh xung đột mã nguồn dự án chính.
+2. **Kịch bản đóng gói `build_exe.py`**:
+   - Sử dụng PyInstaller với tham số `--onefile`, `--noconsole`, nhúng icon `assets/app_logo.ico`, thu thập đầy đủ các thư viện (`customtkinter`, `cryptography`, `docx`, `lxml`...).
+   - Tự động biên dịch ra 2 file thực thi:
+     * `TaoDe_[TAG]_[CAP].exe`: Phần mềm chạy ngay trực tiếp không cần cài đặt.
+     * `Cai_Dat_TaoDe_[TAG]_[CAP].exe`: Bộ cài đặt All-in-One tự động sao chép file vào `%APPDATA%\[TAG]_[CAP]_DVT\bin` và tích hợp Ribbon Add-in vào Word STARTUP.
+   - File kết quả được tự động sao chép ra ngay thư mục gốc của thư mục Sandbox Desktop để người dùng mở thư mục ra là nhìn thấy ngay 2 file `.exe` có thể sử dụng được liền!
+
+---
+
 ## III. CHECKLIST KIỂM THỬ 10 BƯỚC TRƯỚC KHI BÀN GIAO (QUALITY ASSURANCE)
 
 Trước khi bàn giao bất kỳ tính năng, app con hay bản cập nhật nào cho Thầy Đinh Thành, AI phải tự kiểm tra 10 tiêu chí:
