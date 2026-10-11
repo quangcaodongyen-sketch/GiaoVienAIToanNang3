@@ -1131,7 +1131,7 @@ export default function App() {
                 title="Đăng ký dùng thử 5 lần miễn phí"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                <span>DÙNG THỬ 5 LẦN</span>
+                <span>TRẢI NGHIỆM DÙNG THỬ</span>
               </button>
 
               <button
@@ -1288,13 +1288,13 @@ export default function App() {
                 <div className="space-y-2 max-w-3xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-cyan-200 text-xs font-bold uppercase tracking-wider border border-white/20 backdrop-blur-xs">
                     <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                    <span>🎁 CHIA SẺ TIỆN ÍCH GIÁO DỤC • TRẢI NGHIỆM DÙNG THỬ MIỄN PHÍ</span>
+                    <span>🌱 DỰ ÁN HỖ TRỢ GIÁO VIÊN • CHIA SẺ TIỆN ÍCH & TÀI LIỆU THAM KHẢO</span>
                   </div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
-                    Kho Ứng Dụng Ra Đề Kiểm Tra & Tiện Ích Giáo Dục Tham Khảo
+                    Kho Tiện Ích Giáo Dục & Tạo Đề Kiểm Tra Tham Khảo
                   </h1>
                   <p className="text-xs sm:text-sm text-blue-50/90 leading-relaxed font-normal">
-                    Chia sẻ các app ra đề kiểm tra, tiện ích giáo dục hỗ trợ giáo viên (Tiểu học, THCS, THPT). Tác giả: <strong>Đinh Thành, ĐT/Zalo: 0915.213717</strong>. Kính mời quý Thầy/Cô tải về trải nghiệm dùng thử miễn phí; Thầy/Cô có nhu cầu hỗ trợ chuyên sâu và kích hoạt bản Pro không giới hạn vui lòng liên hệ trực tiếp Zalo: <strong>0915.213717</strong>.
+                    Tác giả: <strong>Đinh Thành, ĐT/Zalo: 0915.213717</strong>. Dự án phi lợi nhuận nhằm chia sẻ các app ra đề kiểm tra, công cụ hỗ trợ giáo viên soạn bài và tham khảo cấu trúc đề theo định hướng của Bộ GD&ĐT. Kính mời quý Thầy/Cô tải về trải nghiệm dùng thử miễn phí; Thầy/Cô có nhu cầu hỗ trợ kỹ thuật và đồng hành kích hoạt bản đầy đủ vui lòng liên hệ trực tiếp Zalo: <strong>0915.213717</strong>.
                     <span className="block mt-1 text-[11px] sm:text-xs text-amber-300 font-bold">
                       📌 SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY
                     </span>
@@ -1308,7 +1308,7 @@ export default function App() {
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
                   >
                     <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>DÙNG THỬ 5 LẦN</span>
+                    <span>TRẢI NGHIỆM DÙNG THỬ</span>
                   </button>
                   <a
                     href={BRAND.zaloUrl}
@@ -1340,8 +1340,8 @@ export default function App() {
                 <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
                   <BookOpen className="w-4 h-4 text-cyan-300 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Chuẩn Quy Định BGD&ĐT</div>
-                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">CV 7991 • QĐ 764 • CV 5512 • TT 27</div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Tài Liệu Tham Khảo</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Cấu trúc CV 7991 • CV 5512 • TT 27 • 2025+</div>
                   </div>
                 </div>
 
@@ -1356,8 +1356,8 @@ export default function App() {
                 <div className="bg-white/10 rounded-2xl p-2.5 sm:p-3 border border-white/15 flex items-start gap-2.5">
                   <Award className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
                   <div>
-                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Dùng Thử Miễn Phí</div>
-                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Trải nghiệm dùng thử, liên hệ Zalo hỗ trợ Pro</div>
+                    <div className="font-extrabold text-white text-[11px] sm:text-xs">Hỗ Trợ & Đồng Hành</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Chia sẻ dùng thử, hỗ trợ kích hoạt bản đầy đủ</div>
                   </div>
                 </div>
 
@@ -1365,7 +1365,7 @@ export default function App() {
                   <Globe className="w-4 h-4 text-purple-300 shrink-0 mt-0.5" />
                   <div>
                     <div className="font-extrabold text-white text-[11px] sm:text-xs">Trực Tuyến & Cài Máy</div>
-                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Dùng trên Web & Add-in Office Word</div>
+                    <div className="text-[10px] sm:text-[11px] text-blue-100/80">Dùng trên Web & Ứng dụng máy tính cá nhân</div>
                   </div>
                 </div>
               </div>

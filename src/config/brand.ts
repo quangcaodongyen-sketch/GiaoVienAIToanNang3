@@ -12,7 +12,7 @@ export const BRAND = {
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
   slogan: "Chia sẻ các app ra đề kiểm tra & Tiện ích giáo dục tham khảo",
-  description: "Cộng đồng chia sẻ các app ra đề kiểm tra, tiện ích giáo dục tham khảo dành cho thầy cô giáo. Trải nghiệm dùng thử miễn phí, liên hệ trực tiếp Zalo 0915.213717 để hỗ trợ kích hoạt Pro.",
+  description: "Dự án phi lợi nhuận chia sẻ các app ra đề kiểm tra, tiện ích giáo dục tham khảo dành cho thầy cô giáo. Trải nghiệm dùng thử miễn phí, liên hệ trực tiếp Zalo 0915.213717 để được hỗ trợ kích hoạt bản đầy đủ.",
   disclaimer: "SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY",
   copyright: "© 2026 Tác giả Đinh Thành, ĐT: 0915.213717. SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.",
   

@@ -10,15 +10,15 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <script>
+        <script>
       // Tự động chuyển hướng tức thì từ tên miền cũ vercel.app sang tên miền chính thức dekiemtraso.com
       if (window.location.hostname === 'giao-vien-ai-toan-nang3.vercel.app') {
         window.location.replace('https://www.dekiemtraso.com' + window.location.pathname + window.location.search + window.location.hash);
       }
 
-      // Tự động xóa bộ nhớ đệm cache phiên bản cũ
+      // Tự động xóa bộ nhớ đệm cache phiên bản cũ và ép làm mới dữ liệu
       (function() {
-        var CURRENT_VER = "20261005_v5_thcs_thpt_separate";
+        var CURRENT_VER = "20261011_v7_legal_sharing_release";
         try {
           if (localStorage.getItem("app_build_version") !== CURRENT_VER) {
             localStorage.setItem("app_build_version", CURRENT_VER);
@@ -26,6 +26,16 @@
               caches.keys().then(function(keys) {
                 keys.forEach(function(k) { caches.delete(k); });
               });
+            }
+            if (window.navigator && navigator.serviceWorker) {
+              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
+              });
+            }
+            // Tự động reload để nạp bản mới nếu là lần đầu phát hiện phiên bản mới
+            if (sessionStorage.getItem("ver_reloaded") !== CURRENT_VER) {
+              sessionStorage.setItem("ver_reloaded", CURRENT_VER);
+              window.location.reload(true);
             }
           }
         } catch(e) {}
