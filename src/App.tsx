@@ -32,6 +32,7 @@ import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
 import { TrialRegisterModal } from './components/TrialRegisterModal';
+import { TeacherAIChatBox } from './components/TeacherAIChatBox';
 import { activityTrackingService, ADMIN_WHITELIST_MACHINES } from './services/activityTrackingService';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
@@ -655,6 +656,49 @@ export default function App() {
       setTimeout(() => {
         setCopyToast((prev) => ({ ...prev, visible: false }));
       }, 3500);
+    }
+  };
+
+  // Hàm điều hướng mở modal từ Chat Box Trợ Lý AI
+  const handleOpenAppFromChat = (appId: string, subjectKey?: string) => {
+    if (appId === 'tao-de-toan-thcs') {
+      setThcs8MonSelectedSubject('TOAN');
+      setShowTaoDeTHCS8MonModal(true);
+    } else if (appId === 'tao-de-van-thcs') {
+      setThcs8MonSelectedSubject('VAN');
+      setShowTaoDeTHCS8MonModal(true);
+    } else if (appId === 'tao-de-khtn-thcs') {
+      setThcs8MonSelectedSubject('KHTN');
+      setShowTaoDeTHCS8MonModal(true);
+    } else if (appId === 'tao-de-sudia-thcs') {
+      setThcs8MonSelectedSubject('SUDIA');
+      setShowTaoDeTHCS8MonModal(true);
+    } else if (appId === 'tao-de-thcs-8mon') {
+      setThcs8MonSelectedSubject(subjectKey || 'TOAN');
+      setShowTaoDeTHCS8MonModal(true);
+    } else if (appId === 'tao-de-lichsu-thcs') {
+      setShowTaoDeLichSuTHCSModal(true);
+    } else if (appId === 'tao-de-tieng-anh') {
+      setShowTaoDeModal(true);
+    } else if (appId === 'tao-de-tieng-anh-thpt') {
+      setShowTaoDeTHPTModal(true);
+    } else if (appId === 'tao-de-toan-thpt') {
+      setShowTaoDeToanTHPTModal(true);
+    } else if (appId === 'tao-de-thpt-subject') {
+      setThptSelectedSubject(subjectKey || 'TOAN');
+      setShowTaoDeTHPTSubjectModal(true);
+    } else if (appId === 'tich-hop-nls-ai') {
+      setShowNLSAIModal(true);
+    } else if (appId === 'text-to-speech') {
+      setShowListeningModal(true);
+    } else if (appId === 'math-studio') {
+      setShowMathStudioModal(true);
+    } else if (appId === 'cleaner') {
+      setShowCleanerModal(true);
+    } else if (appId === 'trial') {
+      setShowTrialModal(true);
+    } else {
+      window.location.hash = '#' + appId;
     }
   };
 
@@ -2090,21 +2134,8 @@ export default function App() {
         </div>
       )}
 
-      {/* FLOATING QUICK CONTACT (ZALO THẦY THÀNH) */}
-      <a
-        href={BRAND.zaloUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 p-3 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-[#0D9488] to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-2xl shadow-teal-900/40 flex items-center gap-2 hover:scale-105 transition-all border border-teal-400/30 group"
-        title="Chat Zalo Tác giả Đinh Thành (0915.213717)"
-      >
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-300"></span>
-        </span>
-        <MessageCircle className="w-5 h-5 text-white" />
-        <span className="hidden sm:inline font-semibold">Zalo: {BRAND.phone}</span>
-      </a>
+      {/* CHAT BOX TRỢ LÝ AI & THẦY ĐINH THÀNH (CÓ TIẾNG CHUÔNG CHÀO ĐÓN & HỖ TRỢ ĐA MÔN) */}
+      <TeacherAIChatBox onOpenApp={handleOpenAppFromChat} />
     </div>
   );
 }
