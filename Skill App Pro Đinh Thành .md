@@ -18,6 +18,39 @@ description: >-
 
 ---
 
+
+---
+
+## ⚡ MẪU CÂU LỆNH 1-CHẠM CHO ANTIGRAVITY (CHỈ CẦN COPY & PASTE ĐỂ TẠO APP MÔN MỚI)
+
+> **HƯỚNG DẪN DÀNH CHO THẦY ĐINH THÀNH:**
+> 1. Thầy tạo một thư mục ngoài Desktop (ví dụ: `C:\Users\Admin\Desktop\Lịch sử 8` hoặc `Toán 9 - Thầy Hải`).
+> 2. Thầy copy các file tài liệu vào thư mục đó: **Ma trận, Bản đặc tả, Đề kiểm tra mẫu & Hướng dẫn chấm/Đáp án**.
+> 3. Thầy **COPY NGUYÊN VĂN** mẫu câu lệnh bên dưới, dán vào khung chat Antigravity và bấm Gửi:
+
+### 📋 MẪU 1: CÂU LỆNH ĐẦY ĐỦ (KHUYÊN DÙNG ĐỂ CHUẨN XÁC 100%)
+```text
+Áp dụng toàn bộ quy chuẩn của "Skill App Pro Đinh Thành":
+Tôi đã tạo thư mục và cung cấp tài liệu (Ma trận, bản đặc tả, đề mẫu & đáp án) tại đường dẫn:
+[DÁN ĐƯỜNG DẪN THƯ MỤC CỦA THẦY VÀO ĐÂY, VÍ DỤ: C:\Users\Admin\Desktop\Toán 9]
+
+Hãy đọc kỹ toàn bộ tài liệu trong thư mục đó và tự động thực hiện:
+1. Phân tích ma trận, đặc tả, cấu trúc đề thi theo chuẩn Công văn 7991 (THCS) hoặc QĐ 764 (THPT).
+2. Xây dựng trọn bộ mã nguồn App Con hoàn chỉnh trong thư mục đó (Giao diện CustomTkinter phối màu riêng biệt của môn, Động cơ sinh đề N mã đề bản GV & bản HS, Word Add-in Ribbon, Bản quyền Ed25519 mã máy DVT-XXXX-XXXX dùng thử 5 lượt, Cơ quan quản lý mặc định: UBND XÃ ........ / TRƯỜNG ........, Năm học 2026 - 2027).
+3. Biên dịch và bàn giao trực tiếp tại thư mục đó 2 file thực thi:
+   - File chạy ngay: TaoDe_[TAG]_[CAP].exe
+   - Bộ cài đặt All-in-One: Cai_Dat_TaoDe_[TAG]_[CAP].exe
+4. Xuất 2 file Word đề mẫu kiểm thử: Bản Giáo viên (đáp án đỏ #FF0000 in thường bold=False, rubric chấm chi tiết) và Bản Học sinh.
+LƯU Ý: Làm việc 100% trong thư mục chỉ định, TUYỆT ĐỐI KHÔNG chạm vào thư mục gốc ở ổ D. Hãy thực hiện ngay!
+```
+
+### ⚡ MẪU 2: CÂU LỆNH SIÊU NGẮN GỌN (DÙNG KHI CẦN NHANH)
+```text
+Áp dụng "Skill App Pro Đinh Thành", đọc tài liệu trong thư mục [DÁN ĐƯỜNG DẪN THƯ MỤC VÀO ĐÂY] và tự động tạo trọn bộ mã nguồn + file chạy TaoDe.exe + bộ cài đặt Cai_Dat.exe hoàn chỉnh cho môn học này cho tôi.
+```
+
+---
+
 ## I. MỤC TIÊU VÀ SỨ MỆNH HỆ THỐNG
 Bộ kỹ năng **Skill App Pro Đinh Thành** là tài liệu quy chuẩn tối cao và bách khoa toàn thư công nghệ dành cho Antigravity IDE và toàn bộ trợ lý AI. Toàn bộ tri thức, kinh nghiệm tinh hoa đúc kết từ hàng chục ứng dụng tạo đề kiểm tra (THCS, THPT, Tiểu học), công cụ sư phạm AI và nền tảng web đã được chuẩn hóa vào đây.
 
