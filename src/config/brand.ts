@@ -281,7 +281,7 @@ export const EXAM_7MON_RESOURCES = {
       name: "Toán học",
       zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip",
       exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS.exe",
-      size: "134 MB",
+      size: "78 MB",
       icon: "📐",
       color: "from-blue-600 to-indigo-600"
     },

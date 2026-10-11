@@ -64,12 +64,12 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     name: 'Toán học',
     fullName: 'Môn Toán học THCS',
     icon: '📐',
-    size: '127 MB',
-    desc: 'Tự động tạo ma trận, bản đặc tả và đề kiểm tra kèm công thức MathType chuẩn đẹp 100% theo Công văn 7991.',
+    size: '78 MB',
+    desc: 'Tự động tạo ma trận 16 cột, bản đặc tả 7 cột và đề kiểm tra chuẩn tập huấn RA ĐỀ TOÁN 9 NĂM 2026-2027 theo Công văn 7991.',
     highlights: [
-      'Đầy đủ các dạng thức trắc nghiệm nhiều lựa chọn, đúng/sai, trả lời ngắn và tự luận Toán 6, 7, 8, 9',
-      'Tương thích hoàn hảo Microsoft Word 2016-2024 và MathType 6.x / 7.x không bao giờ bị lỗi font',
-      'Tự động xuất đáp án, lời giải chi tiết từng bước và thang điểm biểu điểm barem chuẩn'
+      'Đầy đủ tùy chọn theo từng bài học thực tế (Đại số & Hình học linh hoạt), kèm bộ 10 đề mẫu Giữa kì 1 Lớp 9 chuẩn Bộ GD&ĐT',
+      'Giải thuật đảo ngẫu nhiên cân bằng 3A - 3B - 3C - 3D cho 12 câu trắc nghiệm (triệt tiêu lỗi trùng toàn đáp án A)',
+      'Xuất đồng thời bản Giáo viên (kèm đáp án chi tiết & barem) và bản Học sinh chuẩn đẹp để in phát ngay'
     ],
     zipUrl: EXAM_7MON_RESOURCES.subjects.TOAN.zipUrl,
     exeUrl: EXAM_7MON_RESOURCES.subjects.TOAN.exeUrl,
