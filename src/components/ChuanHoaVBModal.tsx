@@ -324,7 +324,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       let tenLoai = 'QUYẾT ĐỊNH';
       let trichYeu = 'Về việc chuẩn hóa văn bản theo Nghị định 30/2020/NĐ-CP';
       let chucVu = 'HIỆU TRƯỞNG';
-      let nguoiKy = 'Đinh Văn Thành';
+      let nguoiKy = 'Nguyễn Văn A';
       const noiNhanList: string[] = [];
 
       // Nhận diện loại văn bản
@@ -579,7 +579,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
           <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
             <span>Tác giả:</span>
-            <strong className="text-white font-medium">Thầy Đinh Văn Thành (0915.213717)</strong>
+            <strong className="text-white font-medium">Tác giả Đinh Thành (0915.213717)</strong>
           </div>
         </div>
 

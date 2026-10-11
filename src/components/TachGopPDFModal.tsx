@@ -967,7 +967,7 @@ startxref
                     </p>
                   </div>
                   <button
-                    onClick={() => alert("Công cụ MathStudio hiện đang trong giai đoạn thử nghiệm nội bộ và sửa lỗi, chỉ dành riêng cho Admin (Thầy Đinh Văn Thành).")}
+                    onClick={() => alert("Công cụ MathStudio hiện đang trong giai đoạn thử nghiệm nội bộ và sửa lỗi, chỉ dành riêng cho Admin (Tác giả Đinh Thành).")}
                     className="w-full py-2 rounded-xl bg-slate-800 text-slate-400 font-bold text-xs text-center flex items-center justify-center gap-1.5 cursor-pointer border border-slate-700 hover:bg-slate-700 hover:text-slate-300 transition"
                   >
                     <Lock className="w-3.5 h-3.5 text-rose-400" />
