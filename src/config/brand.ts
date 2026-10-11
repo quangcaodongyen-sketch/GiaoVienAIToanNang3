@@ -28,7 +28,7 @@ export const BRAND = {
     paragraph1: "Chia sẻ các ứng dụng hỗ trợ ra đề kiểm tra và tiện ích giảng dạy tham khảo dành cho giáo viên.",
     paragraph2: "Tài liệu và câu hỏi do AI gợi ý mang tính chất tham khảo trong công tác chuyên môn.",
     paragraph3: "Liên hệ hỗ trợ kỹ thuật và bản quyền qua Zalo: 0915.213717.",
-    quote: "“SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.”",
+    quote: "“Ứng dụng hỗ trợ ra đề kiểm tra và tiện ích giáo dục tham khảo dành cho giáo viên.”",
     photoAlt: "Tác giả Đinh Thành, ĐT: 0915.213717"
   }
 };
