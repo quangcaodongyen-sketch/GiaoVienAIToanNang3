@@ -191,7 +191,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả Đinh Thành, ĐT: 0915.213717 (0915.213717)
+                Cấu trúc 3 phần (QĐ 764/BGDĐT) • Ma trận 16 cột 3 tầng • Tác giả: Thầy giáo Đinh Văn Thành (0915.213717)
               </p>
             </div>
           </div>
@@ -245,7 +245,28 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         {/* NỘI DUNG TỪNG TAB */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           
-                              </h4>
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN */}
+          {activeTab === ('online' as any) && (
+            <div className="space-y-6">
+              {/* THANH TRẠNG THÁI DÙNG THỬ 5 CHẤM BẮT BUỘC (RULE 2) */}
+              <div className="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                      Trạng thái phiên bản:
+                      {isProActive ? (
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1">
+                          <Crown className="w-3.5 h-3.5 text-amber-400" /> BẢN QUYỀN PRO TOÁN THPT ĐÃ KÍCH HOẠT
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-xs font-bold">
+                          DÙNG THỬ TRẢI NGHIỆM ({trialRemaining}/5 LƯỢT)
+                        </span>
+                      )}
+                    </h4>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {isProActive
                         ? 'Thầy/Cô sở hữu quyền tạo đề không giới hạn trên máy tính này.'
@@ -419,7 +440,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
               {hasGeneratedExam && (
                 <div className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-4 animate-fade-in">
                   
-                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY Đinh Thành */}
+                  {/* BANNER QUẢNG CÁO DÙNG THỬ CỦA THẦY ĐINH VĂN THÀNH */}
                   {!isProActive && (
                     <div className="p-3.5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 text-slate-800 text-xs font-sans">
                       <div className="flex items-center gap-2 text-amber-900 font-bold text-[13px] mb-1">
@@ -427,7 +448,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                         <span>BẢN DÙNG THỬ SƯ PHẠM TOÁN THPT (XEM 1/2 ĐÁP ÁN – 1 ĐỀ/LẦN)</span>
                       </div>
                       <p className="text-slate-700 leading-normal">
-                        • Tác giả: <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong> – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
+                        • Tác quyền & Quản trị: <strong>Thầy giáo Đinh Văn Thành</strong>  – Hotline/Zalo: <strong className="text-emerald-700">0915.213717</strong>.<br/>
                         • Ở bản dùng thử, quý Thầy/Cô được xem 1/2 đáp án câu hỏi để kiểm chứng ma trận chuẩn BGD. Để mở khóa toàn bộ đáp án, xuất file Word và ma trận đặc tả, vui lòng liên hệ Zalo <strong>0915.213717</strong> nâng cấp Pro!
                       </p>
                     </div>
@@ -695,7 +716,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
             </div>
           )}
 
-          {/* TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO */}
+          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT */}
           {activeTab === 'register' && (
             <div className="space-y-6">
               {/* PHẦN 1: MÃ MÁY TÍNH & Ô NHẬP KEY */}
@@ -728,7 +749,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                 {/* Ô NHẬP KEY KÍCH HOẠT */}
                 <div className="space-y-2">
                   <label className="block text-xs font-bold text-slate-300">
-                    Nhập mã bản quyền Pro (Do Tác giả Đinh Thành cấp):
+                    Nhập mã bản quyền Pro (Do Thầy Đinh Văn Thành cấp):
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -848,7 +869,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                     <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
                     <h6 className="font-bold text-white text-sm">Đã gửi thông tin đăng ký thành công!</h6>
                     <p className="text-xs text-slate-300">
-                      Hệ thống đã chuyển thông tin tới Tác giả Đinh Thành. Thầy Thành sẽ chủ động liên hệ qua Zalo của Thầy/Cô để tư vấn và cấp key bản quyền.
+                      Hệ thống đã chuyển thông tin tới Thầy Đinh Văn Thành. Thầy Thành sẽ chủ động liên hệ qua Zalo của Thầy/Cô để tư vấn và cấp key bản quyền.
                     </p>
                   </div>
                 ) : (
@@ -929,7 +950,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
         {/* FOOTER MODAL */}
         <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 border-t border-slate-800 bg-slate-950/80 text-xs text-slate-400 shrink-0 gap-2">
           <div className="flex items-center gap-3">
-            <span>Tác giả: <strong className="text-white">Tác giả Đinh Thành</strong> </span>
+            <span>Tác giả: <strong className="text-white">Thầy Đinh Văn Thành</strong> </span>
             <span>•</span>
             <span>Hotline / Zalo: <strong className="text-blue-400">0915.213717</strong></span>
           </div>

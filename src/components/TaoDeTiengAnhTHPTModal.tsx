@@ -150,7 +150,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         machineId: detectedMid,
         fullName: regName,
         phoneNumber: regPhone,
-        schoolUnit: regSchool || 'Trường THPT',
+        schoolUnit: regSchool || 'Trường Trường THPT',
         appId: 'tao-de-tieng-anh-thpt',
         appName: 'Tạo Đề Tiếng Anh THPT Global Success',
         packageType: '1YEAR'
@@ -196,7 +196,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả Đinh Thành, ĐT: 0915.213717 (0915.213717)
+                Chuẩn Ma trận 16 cột &amp; Bản đặc tả BGD&amp;ĐT • Tác giả: Thầy giáo Đinh Văn Thành (0915.213717)
               </p>
             </div>
           </div>
@@ -247,10 +247,30 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
           >
             <Crown className="w-4 h-4 text-amber-400" />
             <span>2. Bản Quyền &amp; Kích Hoạt Pro</span>
+          </button>
         </div>
 
         {/* ========================================================================= */}
-                          </h4>
+        {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (5 LẦN DÙNG THỬ)                           */}
+        {/* ========================================================================= */}
+        {activeTab === ('online' as any) && (
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
+            
+            {/* THANH DÙNG THỬ 5 CHẤM */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-950 border border-violet-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-400 font-bold text-lg">
+                  {isProActive ? '👑' : trialRemaining}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    Chính sách Dùng thử Trực tuyến Cấp THPT (5 Lần / Máy tính)
+                    {isProActive && (
+                      <span className="px-2 py-0.5 rounded text-[11px] bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40">
+                        ĐÃ KÍCH HOẠT PRO
+                      </span>
+                    )}
+                  </h4>
                   <p className="text-xs text-slate-300">
                     Mỗi lượt bấm sinh ra 01 Ma trận 16 cột + Bản đặc tả + Bộ {numVariants} mã đề hoán vị + Bảng đối chiếu đáp án song song N cột in đỏ.
                   </p>
@@ -953,7 +973,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
                     <h5 className="text-sm font-bold text-white">ĐÃ GỬI THÔNG TIN LÊN HỆ THỐNG CỦA ADMIN!</h5>
                     <p className="text-xs text-slate-300">
-                      Tác giả Đinh Thành đã nhận được thông tin đăng ký của Thầy/Cô. Để được duyệt và nhận mã key nhanh nhất, xin vui lòng nhắn tin trực tiếp qua Zalo.
+                      Thầy Đinh Văn Thành đã nhận được thông tin đăng ký của Thầy/Cô. Để được duyệt và nhận mã key nhanh nhất, xin vui lòng nhắn tin trực tiếp qua Zalo.
                     </p>
                     <a
                       href={BRAND.zaloUrl}
@@ -1040,7 +1060,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
         {/* FOOTER */}
         <div className="px-6 py-3 border-t border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 shrink-0">
           <div className="flex items-center gap-3">
-            <span>© 2026 Tác giả Đinh Thành, ĐT: 0915.213717 </span>
+            <span>© 2026 Thầy giáo Đinh Văn Thành – Trường THPT</span>
             <span className="hidden sm:inline">•</span>
             <span className="text-amber-400 font-medium">Hotline / Zalo: 0915.213717</span>
           </div>

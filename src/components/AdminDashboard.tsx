@@ -2205,7 +2205,94 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
 🌟 TOP CÔNG CỤ CẦN THIẾT NHẤT CHO NĂM HỌC MỚI:
 1️⃣ Tạo Đề Kiểm Tra 8 Môn THCS tham khảo dành cho giáo viên CV 7991 (Toán, Văn, Anh, KHTN, Sử-Địa, Tin, GDCD, Công nghệ).
 2️⃣ Tạo Đề Tiếng Anh Global Success xuất kèm Audio Script và file nghe MP3.
-3️⃣ Chuẩn hóa văn bản hành chính theo Ngh        {/* ========================================================================= */}
+3️⃣ Chuẩn hóa văn bản hành chính và các tiện ích sư phạm thiết thực.
+👉 Website: ${siteUrl}
+📞 Hotline/Zalo hỗ trợ: ${hotline} (${author})`;
+    }
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-slate-900 border border-slate-800 rounded-3xl max-w-7xl xl:max-w-[96vw] w-full p-4 sm:p-6 text-white shadow-2xl my-auto max-h-[96vh] flex flex-col cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* TOP HEADER */}
+        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md shadow-amber-500/20">
+              <Crown className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ KÍCH HOẠT PRO'}
+                </h2>
+                <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
+                  {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN PHÓ QUẢN TRỊ' : '👑 ADMIN'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">
+                {userRole === 'SUB_ADMIN' 
+                  ? 'Tài khoản phụ: Mọi thao tác kích hoạt được lưu vết tự động vào hệ thống' 
+                  : 'Tác giả Đinh Thành (ĐT: 0915.213717) – Quản lý danh sách và cấp bản quyền Pro'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* NÚT KHÓA / MỞ KHÓA WEB (NÂNG CẤP BẢO TRÌ) */}
+            <button
+              type="button"
+              onClick={handleToggleMaintenanceLock}
+              disabled={isTogglingMaintenance}
+              className={`px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 text-xs font-black shadow-lg cursor-pointer ${
+                isMaintenanceLocked
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 text-white border-2 border-emerald-300 hover:from-emerald-500 hover:to-teal-400 shadow-emerald-600/40 animate-pulse'
+                  : 'bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border-2 border-amber-500/80 hover:border-amber-400'
+              }`}
+              title={
+                isMaintenanceLocked 
+                  ? 'Website đang KHÓA NÂNG CẤP (Khách chỉ thấy thông báo). Bấm để MỞ LẠI cho toàn quốc.' 
+                  : 'Bấm để TẠM DỪNG NÂNG CẤP website (Khách chỉ xem thông báo nâng cấp).'
+              }
+            >
+              {isMaintenanceLocked ? (
+                <>
+                  <Unlock className="w-4 h-4 text-emerald-200 animate-spin" />
+                  <span>🔓 MỞ KHÓA WEB (ĐANG KHÓA)</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <span>🔒 KHÓA WEB (NÂNG CẤP)</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowConfigModal(true)}
+              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
+              title="Cấu hình Cloud Database"
+            >
+              <Cloud className="w-4 h-4 text-sky-400" />
+              <span className="hidden sm:inline">Kết nối Cloud</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
         {/* THANH ĐIỀU HƯỚNG QUẢN TRỊ ĐỒNG BỘ 3 TAB CHÍNH (ĐIỆN THOẠI & MÁY TÍNH)      */}
         {/* ========================================================================= */}
         <div className="flex flex-wrap items-center justify-between gap-2 my-2 border-b border-slate-800 pb-2.5 text-xs font-bold shrink-0">
@@ -2334,94 +2421,6 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
             >
               <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Làm mới</span>
-            </button>
-          </div>
-        </div>'bg-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <Crown className="w-4 h-4 text-amber-300" />
-                    <span>🛠️ Bộ Tạo Key Offline ({['nls', 'taode', 'bienthe', 'record', 'cleaner', 'chuanhoavb', 'pdfsuite', 'thcs8m', 'mathstudio', 'de15p', 'tts'].includes(adminTab) ? 'Đang Mở' : '11 Tool'}) ▼</span>
-                  </button>
-
-                  {showKeyGenDropdown && (
-                    <div className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
-                      <div className="text-[11px] font-bold text-slate-400 px-2 py-1 border-b border-slate-800 mb-1 flex justify-between items-center">
-                        <span>CHỌN TOOL SINH KEY ED25519:</span>
-                        <button onClick={() => setShowKeyGenDropdown(false)} className="text-slate-400 hover:text-white">✕</button>
-                      </div>
-                      <div className="max-h-80 overflow-y-auto space-y-1 text-xs">
-                        {[
-                          { id: 'nls', name: '⚡ Tích Hợp NLS - AI V3', desc: 'Ed25519 Word Add-in' },
-                          { id: 'taode', name: '🇬🇧 Đề Tiếng Anh (CV 7991)', desc: 'Global Success THCS' },
-                          { id: 'mathstudio', name: '📐 MathStudio 2026+', desc: 'Soạn Toán & Vẽ hình AI' },
-                          { id: 'thcs8m', name: '📝 Tạo Đề THCS 8 Môn', desc: 'Chuẩn CV 7991 đủ môn' },
-                          { id: 'de15p', name: '⏱️ Tạo Đề 15P Tiếng Anh', desc: 'Đề 15 phút 48 Units' },
-                          { id: 'bienthe', name: '🔀 Sinh 3 Đề Biến Thể VIP', desc: 'Trộn đề ma trận chuẩn' },
-                          { id: 'chuanhoavb', name: '📑 Chuẩn Hóa VB (NĐ 30)', desc: 'Chuẩn thể thức Nghị định 30' },
-                          { id: 'tts', name: '🎙️ Smart Listening Pro (TTS)', desc: 'Tạo bài nghe SGK' },
-                          { id: 'cleaner', name: '🧹 Dinh Thanh Cleaner Pro', desc: 'Dọn rác & Tối ưu máy' },
-                          { id: 'pdfsuite', name: '📄 PDF Suite Pro', desc: 'Tách & Gộp PDF chuẩn' },
-                          { id: 'record', name: '🎥 Screen Record Pro V2', desc: 'Ghi màn hình bài giảng' },
-                        ].map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => {
-                              setAdminTab(item.id as any);
-                              setShowKeyGenDropdown(false);
-                            }}
-                            className={`w-full text-left p-2 rounded-xl transition flex flex-col ${
-                              adminTab === item.id
-                                ? 'bg-purple-600 text-white font-bold'
-                                : 'hover:bg-slate-800 text-slate-300'
-                            }`}
-                          >
-                            <span className="font-bold text-xs">{item.name}</span>
-                            <span className="text-[10px] text-slate-400">{item.desc}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* 6. GIÁM SÁT AN NINH */}
-                <button
-                  onClick={() => {
-                    setAdminTab('security');
-                    loadTrackingData();
-                  }}
-                  className={`py-2 px-3 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
-                    adminTab === 'security'
-                      ? 'bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-black shadow-md shadow-rose-600/30'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <ShieldAlert className="w-4 h-4 text-rose-400" />
-                  <span>5. 🛡️ An Ninh</span>
-                  {securityAlerts.filter(a => a.status === 'UNRESOLVED').length > 0 && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black animate-pulse">
-                      {securityAlerts.filter(a => a.status === 'UNRESOLVED').length}
-                    </span>
-                  )}
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* THANH TRẠNG THÁI GỌN GÀNG GÓC PHẢI */}
-          <div className="flex items-center gap-2 text-xs">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-bold text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span>
-              <span>🟢 Tự động đồng bộ</span>
-            </div>
-            <button
-              type="button"
-              onClick={loadTrackingData}
-              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 text-xs cursor-pointer transition font-semibold"
-            >
-              <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
-              <span>Làm mới</span>
             </button>
           </div>
         </div>

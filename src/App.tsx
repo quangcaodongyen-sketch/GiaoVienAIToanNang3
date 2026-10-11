@@ -98,10 +98,10 @@ export interface ThemeConfig {
 const THEMES: Record<ThemeMode, ThemeConfig> = {
   'pedagogical': {
     id: 'pedagogical',
-    name: 'Sư Phạm Chuẩn Mực',
+    name: 'Giao Diện Sư Phạm',
     shortName: 'Sư Phạm',
     icon: '🎓',
-    description: 'Tông Xanh Lam & Trắng dịu mắt, trang nhã, chuẩn mực sư phạm Việt Nam',
+    description: 'Tông Xanh Lam & Trắng dịu mắt, trang nhã, hỗ trợ sư phạm Việt Nam',
     pageBg: 'bg-[#F4F7FB]',
     topbarBg: 'bg-[#091C36]',
     topbarText: 'text-slate-200',
@@ -283,7 +283,7 @@ export default function App() {
     localStorage.setItem('gvai_theme_mode', mode);
     setShowThemeMenu(false);
     const names: Record<ThemeMode, string> = {
-      'pedagogical': '🎓 Sư Phạm Chuẩn Mực',
+      'pedagogical': '🎓 Giao Diện Sư Phạm',
       'dark-cyber': '🌌 Đêm AI Chuyên Nghiệp',
       'emerald-sage': '🌿 Xanh Tri Thức Học Đường',
       'royal-purple': '🔮 Tím Sáng Tạo Số'

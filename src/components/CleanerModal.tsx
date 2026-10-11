@@ -415,7 +415,29 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         {/* MODAL CONTENT BODY */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {/* ========================================================================= */}
-                              </div>
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE STUDIO) */}
+          {/* ========================================================================= */}
+          {activeTab === 'online' && (
+            <div className="space-y-6">
+              {/* TRIAL STATUS & PEDAGOGICAL NOTICE */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/80 border border-slate-700/80">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Chế độ hoạt động</div>
+                    <div className="text-sm font-bold text-white flex items-center gap-2">
+                      {isVIP ? (
+                        <span className="text-emerald-400 flex items-center gap-1">
+                          👑 Bản Quyền VIP Trọn Đời (100% Công Suất Không Giới Hạn)
+                        </span>
+                      ) : (
+                        <span className="text-amber-300 flex items-center gap-1">
+                          ⚡ Bản Dùng Thử Trải Nghiệm (Tối Đa 5 Lần / Máy)
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -825,7 +847,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                       Ứng Dụng Dọn Rác Máy Tính Cleaner Pro - Tặng Quý Thầy/Cô
                     </h4>
                     <p className="text-xs text-slate-300 mt-0.5">
-                      Thầy giáo <strong>{BRAND.author}</strong>  phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
+                      Tác giả <strong>{BRAND.author}</strong> phát triển và chia sẻ miễn phí trọn đời cho toàn thể giáo viên Việt Nam.
                     </p>
                   </div>
                 </div>
@@ -864,7 +886,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                       </span>
                       <h5 className="text-sm font-bold text-white">Tích Hợp NLS - AI (CV 5512)</h5>
                       <p className="text-xs text-slate-400 leading-relaxed">
-                        Tự động chèn Năng lực số, STEM, AI vào giáo án 12 môn THCS với chữ màu đỏ chuẩn mực.
+                        Tự động chèn Năng lực số, STEM, AI vào giáo án 12 môn THCS với chữ màu đỏ nổi bật.
                       </p>
                     </div>
                     <a
@@ -927,7 +949,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
         {/* MODAL FOOTER */}
         <div className="px-5 py-3 bg-[#0F172A] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
           <div>
-            Tác giả: <span className="text-slate-200 font-semibold">Thầy {BRAND.author}</span> 
+            Tác giả: <span className="text-slate-200 font-semibold">{BRAND.author}</span>
           </div>
           <div className="flex items-center gap-3">
             <span>Hotline / Zalo: <strong className="text-amber-400">{BRAND.phone}</strong></span>

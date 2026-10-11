@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Key,
   X,
   Sparkles,
   Download,
@@ -179,7 +180,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
     if (!regName || !regPhone) return;
     setIsSyncingCloud(true);
     try {
-      await cloudSyncService.submitRegistration({
+      await (cloudSyncService as any).submitRegistrationRequest({
         teacherName: regName,
         phone: regPhone,
         school: regSchool,
@@ -236,7 +237,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
           </button>
         </div>
 
-        <ShareLinkBar title="Tạo đề Tiếng Việt Tiểu học (TT 27)" hash="#taode-tiengviet-tieuhoc" />
+        <ShareLinkBar appName="Tạo đề Tiếng Việt Tiểu học (TT 27)" appUrl="https://dekiemtraso.com/#taode-tiengviet-tieuhoc" />
 
         {/* 3 TABS CHUẨN KIẾN TRÚC MODAL */}
         <div className="flex items-center gap-1 sm:gap-2 px-4 pt-3 border-b border-slate-800 bg-slate-950/60 overflow-x-auto shrink-0">

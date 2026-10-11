@@ -481,7 +481,7 @@ Quy tắc nội dung đáp án (Answers):
 - Nếu đề thi có phần viết (Writing): BẮT BUỘC cung cấp đoạn văn mẫu hoàn chỉnh chi tiết (không ghi dàn ý chung chung).
 - Nếu đề thi có phần nói (Speaking): BẮT BUỘC cung cấp chi tiết cả câu hỏi gợi ý và câu trả lời mẫu đầy đủ cho học sinh.
 
-Quy tắc trình bày chuẩn mực sư phạm:
+Quy tắc trình bày hỗ trợ sư phạm:
 - KHÔNG tự ý thêm tên xã, tên trường cụ thể mà để trống sư phạm: TRƯỜNG THCS: ....................
 - Các phương án A, B, C, D ngắn xếp chung trên 1 dòng cách nhau 6-8 dấu cách.
 - Ngôn ngữ sư phạm trong sáng, phù hợp học sinh lớp 6, 7, 8, 9.

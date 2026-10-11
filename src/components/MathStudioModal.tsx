@@ -183,7 +183,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
         setIsProActive(true);
         setVerifyResult({
           isValid: true,
-          message: '👑 Đặc quyền Quản trị viên (Admin Tác giả Đinh Thành) – Mở khóa vĩnh viễn'
+          message: '👑 Đặc quyền Quản trị viên (Admin Thầy Đinh Văn Thành) – Mở khóa vĩnh viễn'
         });
       } else {
         const savedKey = localStorage.getItem('gvai_mathstudio_active_key');
@@ -205,7 +205,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
       if (trialRemaining <= 0) {
         alert(
           'Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí MathStudio trên máy tính này!\n\n' +
-          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản quyền Pro hoặc liên hệ Tác giả Đinh Thành (0915.213717).'
+          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản quyền Pro hoặc liên hệ Thầy Đinh Văn Thành (0915.213717).'
         );
         setActiveTab('register');
         return;
@@ -268,7 +268,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           <p style="font-size: 15pt; color: #b91c1c;">${latexInput}</p>
         </div>
         <div class="author-box">
-          Tác giả Đinh Thành, ĐT: 0915.213717  – Hotline / Zalo: 0915.213717
+          Tác giả: Tác giả Đinh Thành - ĐT: 0915.213717 – Hotline / Zalo: 0915.213717
         </div>
       </body>
       </html>
@@ -386,7 +386,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                 )}
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Tác giả Đinh Thành, ĐT: 0915.213717 – ĐT/Zalo: <strong>{BRAND.phone}</strong> 
+                Tác giả: Đinh Thành – ĐT/Zalo: <strong>{BRAND.phone}</strong>
               </p>
             </div>
           </div>
@@ -438,7 +438,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   Chỉ Dành Riêng Cho Quản Trị Viên (Admin)
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Tác giả Đinh Thành, ĐT: 0915.213717 kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
+                  Công cụ <strong className="text-violet-300">Đinh Thành MathStudio 2026+ (Mathpix Word)</strong> hiện đang được Thầy giáo Đinh Văn Thành kiểm thử chuyên sâu và vá lỗi thuật toán công thức.
                 </p>
                 <p className="text-xs text-rose-300 font-semibold">
                   Để đảm bảo chất lượng sư phạm cao nhất, phần mềm tạm thời <strong>KHÓA TẢI VỀ CÔNG KHAI</strong> và không mở cho người dùng đại trà.
@@ -467,7 +467,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
               <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-rose-500/40 space-y-3 shadow-2xl">
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
                   <ShieldCheck className="w-4 h-4 text-rose-400" />
-                  <span>Xác thực Quản trị viên (Tác giả Đinh Thành):</span>
+                  <span>Xác thực Quản trị viên (Thầy Đinh Văn Thành):</span>
                 </div>
                 <form onSubmit={handleVerifyAdminPin} className="space-y-2">
                   <div className="flex gap-2">
@@ -532,7 +532,45 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 text-xs">
 
           {/* ========================================================================= */}
-                          </div>
+          {/* TAB 1: TRẢI NGHIỆM TRỰC TUYẾN (ONLINE LATEX MATHPIX TO WORD CONVERTER)     */}
+          {/* ========================================================================= */}
+          {activeTab === ('online' as any) && (
+            <div className="space-y-4 max-w-4xl mx-auto">
+              
+              {/* THANH TIẾN TRÌNH DÙNG THỬ 5 CHẤM */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <Calculator className="w-5 h-5 text-violet-400" />
+                  <div>
+                    <div className="font-bold text-white text-xs">
+                      {isProActive ? 'Bản quyền Pro Đã Kích Hoạt' : 'Chính Sách Dùng Thử Trực Tuyến Sư Phạm'}
+                    </div>
+                    <p className="text-[11px] text-slate-400">
+                      {isProActive 
+                        ? '✨ Không giới hạn lượt chuyển đổi & tính năng MathStudio' 
+                        : 'Mỗi máy tính được trải nghiệm miễn phí 5 lượt trước khi kích hoạt'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {!isProActive ? (
+                    <div className="flex items-center gap-1.5 font-mono text-base tracking-widest text-amber-400">
+                      {[1, 2, 3, 4, 5].map((dot) => (
+                        <span key={dot} className={dot <= trialRemaining ? 'text-amber-400' : 'text-slate-700'}>
+                          ●
+                        </span>
+                      ))}
+                      <span className="text-xs text-slate-400 font-sans ml-1">
+                        (Còn <strong>{trialRemaining}</strong>/5 lượt)
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> VIP PRO TRỌN ĐỜI
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* KHU VỰC CHỌN MẪU VÀ NHẬP LATEX MATHPIX */}
@@ -832,28 +870,25 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto py-1">
               
-              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY Đinh Thành */}
+              {/* KHỐI TÁC GIẢ & BẢN QUYỀN THẦY ĐINH VĂN THÀNH */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3.5">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-indigo-950 flex items-center justify-center shadow-md">
                     <img
                       src="/dinhvanthanh.jpg"
-                      alt="Tác giả Đinh Thành"
+                      alt="Thầy Đinh Văn Thành"
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="space-y-0.5">
                     <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wide">
-                      TÁC GIẢ & BẢN QUYỀN: TÁC GIẢ ĐINH THÀNH - ĐT: 0915.213717
+                      TÁC GIẢ & BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH
                     </h4>
                     <p className="text-xs text-slate-200">
-                       • Hotline / Zalo: <strong>0915.213717</strong>
+                      • Hotline / Zalo: <strong>0915.213717</strong>
                     </p>
                     <p className="text-[11px] text-slate-400">
-                      • Phần mềm: <strong>ĐINH THÀNH MATHSTUDIO 2026+ PRO</strong>
-                    </p>
-                    <p className="text-[10px] text-slate-400 italic mt-0.5">
-                      * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
+                      • Phần mềm: <strong>ĐINH THÀNH MATHSTUDIO 2026+ PRO</strong> (Toán học, Mathpix & Word)
                     </p>
                   </div>
                 </div>
@@ -938,7 +973,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                   </p>
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN MATHSTUDIO
+                      `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN MATHSTUDIO
 • Họ tên: ${regName}
 • SĐT/Zalo: ${regPhone}
 • Trường: ${regSchool}
@@ -1051,7 +1086,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
                   </div>
 
                   <p className="text-[11px] text-slate-400 text-center">
-                    Admin Tác giả Đinh Thành (Hotline / Zalo: 0915.213717).
+                    Admin Thầy Đinh Văn Thành (Hotline / Zalo: 0915.213717).
                   </p>
                 </form>
               )}
@@ -1067,7 +1102,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em!`
         <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/90 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-violet-400"></span>
-            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Tác giả Đinh Thành, ĐT: 0915.213717</span>
+            <span>Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix) – Bản quyền: Thầy giáo Đinh Văn Thành</span>
           </div>
           <div className="flex items-center gap-2">
             <button
