@@ -82,7 +82,7 @@ QUYET DINH
 Ve viec kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong giao duc nam hoc 2026 - 2027
 HIEU TRUONG TRUONG THCS DONG YEN
 Can cu Dieu le truong trung hoc co so ban hanh kem theo Thong tu so 32/2020/TT-BGDDT;
-Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Truong THCS Dong Yen;
+Can cu Ke hoach thuc hien nhiem vu nam hoc 2026 - 2027 cua Truong THCS ........;
 Xet de nghi cua Pho Hieu truong phu trach chuyen mon va To truong chuyen mon.
 QUYET DINH:
 Dieu 1. Kien toan Ban Chi dao Chuyen doi so va Ung dung AI trong day hoc gom cac ong (ba) co ten sau:
@@ -93,7 +93,7 @@ Dieu 2. Ban Chi dao co trach nhiem xay dung ke hoach va trien khai ung dung he s
 Dieu 3. Cac to chuyen mon va cac ca nhan co ten tai Dieu 1 chiu trach nhiem thi hanh quyet dinh nay./.
 Noi nhan:
 - Nhu Dieu 3;
-- UBND xa Dong Yen (de b/c);
+- UBND xa ........ (de b/c);
 - Luu: VT, Ban CD.
 HIEU TRUONG
 (Ky, ghi ro ho ten va dong dau)
@@ -105,12 +105,12 @@ Nguyen Van A`
     raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 28/bc-thcsdy
-Dong Yen, ngay 20 thang 10 nam 2026
+Ngay 20 thang 10 nam 2026
 BAO CAO
 Ket qua trien khai he sinh thai Giao vien AI Toan nang trong hoc ky I
-Kinh gui: Ban Giam hieu Truong THCS Dong Yen.
+Kinh gui: Ban Giam hieu Truong THCS .........
 Thuc hien Huong dan so 102/HD-PGDDT ve viec day manh chuyen doi so trong truong hoc;
-Truong THCS Dong Yen bao cao ket qua trien khai nhu sau:
+Truong THCS ........ bao cao ket qua trien khai nhu sau:
 I. TINH HINH TRIEN KHAI
 1. Cong tac pho bien, tap huan
 - 100% can bo giao vien duoc tap huan su dung cac cong cu: Smart Listening Pro, Sinh de bien the VIP, Soan giao an NLS.
@@ -134,17 +134,17 @@ Nguyen Van A`
     raw: `UBND XA DONG YEN
 TRUONG THCS DONG YEN
 so: 08/kh-thcsdy
-Dong Yen, ngay 05 thang 11 nam 2026
+Ngay 05 thang 11 nam 2026
 KE HOACH
 To chuc Ngay hoi STEM va Giao vien So sang tao nam hoc 2026 - 2027
 Thuc hien Ke hoach giao duc nha truong nam hoc 2026 - 2027;
-Truong THCS Dong Yen ban hanh Ke hoach to chuc Ngay hoi STEM - AI voi cac noi dung cu the:
+Truong THCS ........ ban hanh Ke hoach to chuc Ngay hoi STEM - AI voi cac noi dung cu the:
 1. Muc dich, yeu cau
 - Tao san choi khoa hoc sang tao, giup hoc sinh va giao vien tiep can cong nghe AI va STEM thuc chien.
 - Chuan hoa nang luc so (NLS) cho giao vien theo tieu chuan moi.
 2. Thoi gian va dia diem
 - Thoi gian: 07h30 ngay 20/11/2026.
-- Dia diem: San truong THCS Dong Yen./.
+- Dia diem: San truong THCS ......../.
 Noi nhan:
 - BGH;
 - Toan the GV;
