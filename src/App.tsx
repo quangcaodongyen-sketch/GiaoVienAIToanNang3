@@ -1800,12 +1800,12 @@ export default function App() {
 
       </main>
 
-      {/* FOOTER & THÔNG TIN TÁC GIẢ TƯƠNG PHẢN CAO (#footer-info) */}
+            {/* FOOTER & THONG TIN TAC GIA THEO QUY CHUAN SKILL CHIA SE & MIEN TRU TRACH NHIEM (#footer-info) */}
       <footer id="footer-info" className={`${t.footerBg} text-white border-t-2 ${t.footerBorder} py-10 sm:py-12 transition-colors duration-300`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
             
-            {/* Cột 1: Thông tin thương hiệu & hệ thống */}
+            {/* Cot 1: Thong tin thuong hieu */}
             <div className="md:col-span-6 space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md">
@@ -1813,30 +1813,30 @@ export default function App() {
                 </div>
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                    {BRAND.websiteTitle}
+                    Dự án Hỗ trợ Giáo viên - Đề Kiểm Tra Số
                   </h2>
                   <p className="text-xs text-cyan-400 font-semibold">
-                    Cổng Đề Kiểm Tra Số & Hệ Sinh Thái Trợ Lý AI Giáo Viên THCS & THPT
+                    Cộng đồng chia sẻ tiện ích giáo dục tham khảo • dekiemtraso.com
                   </p>
                 </div>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
-                Cộng đồng chia sẻ các app ra đề kiểm tra và tiện ích giáo dục tham khảo dành cho thầy cô giáo (Tiểu học, THCS, THPT). SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.
+                Dự án xây dựng với mục đích phi lợi nhuận nhằm hỗ trợ đồng nghiệp giáo viên tối ưu hóa thời gian soạn bài, tạo khung đề kiểm tra tham khảo định kỳ các cấp (Tiểu học, THCS, THPT) và chuẩn hóa học liệu sư phạm.
               </p>
 
               <div className="pt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400">
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-emerald-400 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Kích hoạt độc lập từng app
+                  Mở khóa theo từng môn học
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-cyan-300 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Tiện ích miễn phí trọn đời
+                  Tiện ích trải nghiệm miễn phí
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-amber-300 border border-slate-700 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Bảo mật Ed25519 Offline
+                  Đồng hành cùng tác giả
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/80 text-purple-300 border border-slate-700 font-medium">
                   <Globe className="w-3.5 h-3.5" />
@@ -1845,10 +1845,10 @@ export default function App() {
               </div>
             </div>
 
-            {/* Cột 2: Thông tin tác giả & liên hệ */}
+            {/* Cot 2: Thong tin tac gia */}
             <div className="md:col-span-6 space-y-3 md:pl-6">
               <div className="text-xs font-bold uppercase tracking-wider text-cyan-400">
-                Tác Giả & Hỗ Trợ Kỹ Thuật
+                Tác Giả & Hỗ Trợ Đồng Nghiệp
               </div>
 
               <div className="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5">
@@ -1857,8 +1857,8 @@ export default function App() {
                     <GraduationCap className="w-6 h-6 text-cyan-300" />
                   </div>
                   <div>
-                    <div className="text-sm font-black text-white">{BRAND.author}</div>
-                    <div className="text-xs text-emerald-400 font-semibold">Chia sẻ tiện ích giáo dục • Hỗ trợ kích hoạt Pro qua Zalo</div>
+                    <div className="text-sm font-black text-white">Tác giả Đinh Thành</div>
+                    <div className="text-xs text-emerald-400 font-semibold">Điện thoại / Zalo hỗ trợ: 0915.213717</div>
                   </div>
                 </div>
 
@@ -1870,7 +1870,7 @@ export default function App() {
                     className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Zalo: {BRAND.phone}</span>
+                    <span>Zalo: 0915.213717</span>
                   </a>
 
                   <a
@@ -1878,7 +1878,7 @@ export default function App() {
                     className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-colors flex items-center gap-1.5"
                   >
                     <Phone className="w-3.5 h-3.5 text-teal-300" />
-                    <span>{BRAND.phone}</span>
+                    <span>0915.213717</span>
                   </a>
 
                   <a
@@ -1896,10 +1896,36 @@ export default function App() {
 
           </div>
 
-          {/* Dòng bản quyền & Cổng Admin */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          {/* BO DIEU KHOAN MIEN TRU TRACH NHIEM CHUAN SKILL MUC 3.1 */}
+          <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+              <div className="text-sm font-extrabold text-white flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+                <span>Dự án Hỗ trợ Giáo viên - Đề Kiểm Tra Số</span>
+                <span className="text-cyan-400 font-semibold">(dekiemtraso.com)</span>
+              </div>
+              <div className="text-xs text-slate-300">
+                <strong>Tác giả:</strong> Đinh Thành | <strong>Điện thoại/Zalo:</strong> 0915.213717
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <p className="font-bold text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>⚠️</span> Lưu ý quan trọng &amp; Miễn trừ trách nhiệm:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                <li>Website và các ứng dụng được xây dựng với mục đích phi lợi nhuận nhằm hỗ trợ đồng nghiệp giáo viên tối ưu hóa thời gian soạn bài.</li>
+                <li>Toàn bộ dữ liệu, ma trận, câu hỏi và đáp án do Trí tuệ Nhân tạo (AI) gợi ý chỉ mang tính chất <strong>tham khảo</strong>. Do giới hạn của công nghệ AI, nội dung có thể phát sinh sai sót học thuật hoặc chưa bám sát 100% chương trình riêng của từng địa phương.</li>
+                <li>Quý thầy/cô có trách nhiệm <strong>rà soát, thẩm định và hiệu chỉnh kỹ lưỡng</strong> nội dung trước khi áp dụng vào công tác giảng dạy, kiểm tra đánh giá học sinh thực tế.</li>
+                <li>Tác giả không chịu trách nhiệm đối với bất kỳ khiếu nại, điểm số hay hệ quả nào phát sinh do việc sử dụng nguyên văn nội dung AI tạo ra mà chưa qua khâu biên tập của giáo viên bộ môn.</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Dong ban quyen & Cong Admin */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
             <div>
-              {BRAND.copyright} • Chính thức trên <a href="https://dekiemtraso.com" className="text-cyan-400 hover:underline font-bold">dekiemtraso.com</a>
+              © 2026 Tác giả Đinh Thành (ĐT: 0915.213717). Dự án Hỗ trợ Giáo viên • <a href="https://dekiemtraso.com" className="text-cyan-400 hover:underline font-bold">dekiemtraso.com</a>
             </div>
 
             <div className="flex items-center gap-3">
@@ -1908,7 +1934,7 @@ export default function App() {
                 onClick={() => setShowTrialModal(true)}
                 className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors cursor-pointer"
               >
-                Dùng thử 5 lần
+                Trải nghiệm dùng thử
               </button>
               <span>•</span>
               <button
@@ -1917,10 +1943,11 @@ export default function App() {
                 className="text-amber-400 hover:text-amber-300 font-bold inline-flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <Crown className="w-3.5 h-3.5" />
-                Cổng Quản trị Admin Dashboard
+                Cổng Quản Trị Hệ Thống
               </button>
             </div>
           </div>
+
         </div>
       </footer>
 

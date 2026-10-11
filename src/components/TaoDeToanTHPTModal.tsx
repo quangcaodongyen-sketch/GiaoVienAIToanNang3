@@ -695,7 +695,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
             </div>
           )}
 
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT */}
+          {/* TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO */}
           {activeTab === 'register' && (
             <div className="space-y-6">
               {/* PHẦN 1: MÃ MÁY TÍNH & Ô NHẬP KEY */}

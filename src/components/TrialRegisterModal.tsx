@@ -234,12 +234,12 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
           <div className="flex items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1">
               <Crown className="w-3.5 h-3.5 text-amber-400" />
-              ĐĂNG KÝ BẢN QUYỀN THEO TỪNG ỨNG DỤNG
+              MỞ KHÓA BẢN ĐẦY ĐỦ THEO TỪNG ỨNG DỤNG
             </span>
           </div>
 
           <h3 className="text-lg font-bold text-white">
-            Kích Hoạt Bản Quyền Pro
+            Mở Khóa Phiên Bản Nâng Cao
           </h3>
           <p className="text-xs text-slate-300 mt-1">
             Thầy/Cô chọn ứng dụng cụ thể có nhu cầu sử dụng và gửi thông tin cho Admin Tác giả Đinh Thành để kích hoạt Pro trực tuyến.

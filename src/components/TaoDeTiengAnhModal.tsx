@@ -136,7 +136,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 
   const handleOnlineGenerate = () => {
     if (!isProActive && trialRemaining <= 0) {
-      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử trực tuyến miễn phí!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để liên hệ Thầy Thành kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.');
+      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử trực tuyến miễn phí!\n\nVui lòng chuyển sang Tab "Mở Khóa & Kích Hoạt" để liên hệ Thầy Thành kích hoạt bản Pro sử dụng vĩnh viễn không giới hạn.');
       setActiveTab('register');
       return;
     }
@@ -272,7 +272,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>2. Bản Quyền & Kích Hoạt</span>
+            <span>2. Mở Khóa & Kích Hoạt</span>
           </button>
         </div>
 
@@ -364,10 +364,24 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (CHUẨN FORM NHẬN DIỆN THẦY Đinh Thành)   */}
+          {/* TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO (CHUẨN FORM NHẬN DIỆN THẦY Đinh Thành)   */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-3xl mx-auto">
+              {/* CANH BAO QUY CHUAN SKILL MUC 4.2 (AI EXPORT CONFIRMATION) */}
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed space-y-1">
+                <div className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>⚠️</span> LƯU Ý DÀNH CHO THẦY/CÔ:
+                </div>
+                <p className="text-[11px] text-amber-100/90">
+                  Đề kiểm tra này được hỗ trợ tạo bởi Trí tuệ Nhân tạo (AI). Vui lòng kiểm tra lại tính chính xác của:
+                </p>
+                <ol className="list-decimal pl-5 text-[11px] text-amber-200/90 space-y-0.5">
+                  <li>Câu hỏi và dữ liệu đọc hiểu</li>
+                  <li>Đáp án trắc nghiệm và thang điểm tự luận</li>
+                  <li>Tính phù hợp với chuẩn kiến thức kỹ năng của lớp học</li>
+                </ol>
+              </div>
               
               {/* KHỐI 1: THÔNG TIN TÁC GIẢ & BẢN QUYỀN (CHUẨN HÌNH KHỐI SANG TRỌNG) */}
               <div className="p-4 rounded-2xl bg-[#17143A] border-2 border-indigo-500/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">

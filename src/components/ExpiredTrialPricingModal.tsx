@@ -105,7 +105,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
   };
 
   const zaloMessage = encodeURIComponent(
-    `KÍNH GỬI ADMIN THẦY THÀNH - ĐĂNG KÝ BẢN QUYỀN NĂM\n` +
+    `KÍNH GỬI ADMIN THẦY THÀNH - MỞ KHÓA BẢN ĐẦY ĐỦ\n` +
     `----------------------------------------\n` +
     `• Họ và tên: ${fullName}\n` +
     `• Số điện thoại / Zalo: ${phoneNumber}\n` +
@@ -113,7 +113,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
     `• ID Máy tính: ${machineId}\n` +
     `• Ứng dụng: ${appName}\n` +
     `----------------------------------------\n` +
-    `Kính nhờ Thầy kích hoạt bản quyền trực tuyến theo năm giúp em. Em xin cảm ơn!`
+    `Kính nhờ Thầy hỗ trợ mở khóa phiên bản đầy đủ giúp em. Em xin cảm ơn!`
   );
 
   return (
@@ -137,7 +137,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
         <div className="p-5 bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-b border-slate-800">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-bold mb-1.5">
             <Crown className="w-3.5 h-3.5 text-amber-400" />
-            KÍCH HOẠT BẢN QUYỀN THEO NĂM
+            MỞ KHÓA BẢN ĐẦY ĐỦ (ĐỒNG HÀNH CÙNG TÁC GIẢ)
           </div>
           <h3 className="text-lg font-bold text-white">
             {appName}

@@ -302,7 +302,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
             }`}
           >
             <Crown className="w-3.5 h-3.5 text-yellow-400" />
-            <span>2. Bản Quyền & Kích Hoạt Pro</span>
+            <span>2. Mở Khóa & Kích Hoạt Pro</span>
           </button>
         </div>
 
@@ -314,6 +314,20 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-4 max-w-3xl mx-auto">
+              {/* CANH BAO QUY CHUAN SKILL MUC 4.2 (AI EXPORT CONFIRMATION) */}
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed space-y-1">
+                <div className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>⚠️</span> LƯU Ý DÀNH CHO THẦY/CÔ:
+                </div>
+                <p className="text-[11px] text-amber-100/90">
+                  Đề kiểm tra này được hỗ trợ tạo bởi Trí tuệ Nhân tạo (AI). Vui lòng kiểm tra lại tính chính xác của:
+                </p>
+                <ol className="list-decimal pl-5 text-[11px] text-amber-200/90 space-y-0.5">
+                  <li>Câu hỏi và dữ liệu đọc hiểu</li>
+                  <li>Đáp án trắc nghiệm và thang điểm tự luận</li>
+                  <li>Tính phù hợp với chuẩn kiến thức kỹ năng của lớp học</li>
+                </ol>
+              </div>
               {/* KHỐI TẢI BỘ CÀI ĐƠN GIẢN - ÍT NÚT, ÍT CHỮ, RÕ RÀNG BẢN CẬP NHẬT */}
               <div className="p-5 rounded-2xl bg-slate-900 border-2 border-emerald-500/60 shadow-2xl space-y-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
@@ -370,7 +384,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 2: BẢN QUYỀN & KÍCH HOẠT PRO */}
+          {/* TAB 2: MỞ KHÓA & HỖ TRỢ NÂNG CAO PRO */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-4 max-w-2xl mx-auto">

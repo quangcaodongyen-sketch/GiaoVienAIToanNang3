@@ -361,16 +361,16 @@ export const PRICING = {
   // Gói 1 Năm cho từng app
   year1: {
     price: 0,
-    priceFormatted: 'Báo giá qua Zalo',
+    priceFormatted: 'Đồng hành cùng tác giả qua Zalo',
     duration: '1 năm học (12 tháng)',
     note: 'Sử dụng trọn vẹn 1 năm cho 1 ứng dụng chuyên môn'
   },
   // Gói 2 Năm cho từng app (Khuyến mại đặc biệt đến hết tháng 11/2026)
   year2: {
     promoPrice: 0,
-    promoPriceFormatted: 'Báo giá qua Zalo',
+    promoPriceFormatted: 'Đồng hành cùng tác giả qua Zalo',
     originalPrice: 0,
-    originalPriceFormatted: 'Báo giá qua Zalo',
+    originalPriceFormatted: 'Đồng hành cùng tác giả qua Zalo',
     duration: '2 năm học (24 tháng - ưu đãi sư phạm)',
     promoDeadline: 'Ưu đãi năm học 2026 - 2027',
     promoDeadlineShort: 'Ưu đãi 2026',
@@ -379,13 +379,13 @@ export const PRICING = {
   // Gói 3 Năm cho từng app
   year3: {
     price: 0,
-    priceFormatted: 'Báo giá qua Zalo',
+    priceFormatted: 'Đồng hành cùng tác giả qua Zalo',
     duration: '3 năm học (36 tháng)',
     note: 'Sử dụng trọn vẹn 3 năm học cho 1 ứng dụng chuyên môn'
   },
   // Số lượt dùng thử miễn phí
   trial: {
     count: 5,
-    description: 'Đăng ký thành viên được dùng thử ngay 5 lần miễn phí không cần chờ Admin xác nhận.'
+    description: 'Quý thầy/cô được trải nghiệm dùng thử ngay 5 lần miễn phí không cần chờ duyệt.'
   }
 };

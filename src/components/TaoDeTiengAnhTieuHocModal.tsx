@@ -779,7 +779,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT (Rule 1, 4, 5) */}
+          {/* TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO (Rule 1, 4, 5) */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-6">

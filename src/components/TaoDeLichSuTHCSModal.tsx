@@ -258,7 +258,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
             }`}
           >
             <Key className="w-4 h-4" />
-            2. Bản Quyền & Kích Hoạt
+            2. Mở Khóa & Kích Hoạt
             {isPro && (
               <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-bold">
                 PRO ACTIVE
@@ -658,7 +658,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
             </div>
           )}
 
-          {/* ===================== TAB 3: BẢN QUYỀN & KÍCH HOẠT ===================== */}
+          {/* ===================== TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO ===================== */}
           {activeTab === 'license' && (
             <div className="space-y-6">
               

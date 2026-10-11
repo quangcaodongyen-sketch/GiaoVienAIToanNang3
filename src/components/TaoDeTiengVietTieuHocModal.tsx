@@ -48,7 +48,7 @@ interface TaoDeTiengVietTieuHocModalProps {
 }
 
 export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProps> = ({ isOpen, onClose, onOpenAdmin }) => {
-  // Tab 1: Trải nghiệm Trực Tuyến | Tab 2: Tải Về & Hướng Dẫn | Tab 3: Bản Quyền & Kích Hoạt
+  // Tab 1: Trải nghiệm Trực Tuyến | Tab 2: Tải Về & Hướng Dẫn | Tab 3: Mở Khóa & Kích Hoạt
   const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
 
   // Trial state
@@ -692,7 +692,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: BẢN QUYỀN & KÍCH HOẠT */}
+          {/* TAB 3: MỞ KHÓA & HỖ TRỢ NÂNG CAO */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-6 max-w-3xl mx-auto">

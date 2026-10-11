@@ -309,7 +309,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
       return;
     }
     if (!isProActive && trialRemaining <= 0 && !hasGenerated) {
-      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản Pro.`);
+      alert(`⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn ${curSub.name}!\n\nVui lòng chuyển sang Tab "Mở Khóa & Kích Hoạt" để kích hoạt bản Pro.`);
       setActiveTab('register');
       return;
     }
@@ -486,7 +486,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
-              <span>2. BẢN QUYỀN & KÍCH HOẠT</span>
+              <span>2. MỞ KHÓA & HỖ TRỢ NÂNG CAO</span>
             </button>
           </div>
 
@@ -501,7 +501,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 font-bold hover:bg-amber-500/20 transition cursor-pointer text-[11px]"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Đăng ký bản quyền Pro</span>
+                <span>Mở khóa bản đầy đủ</span>
               </button>
             )}
           </div>
@@ -513,6 +513,20 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
           {/* ========================================================================= */}
           {activeTab === 'download' && (
             <div className="space-y-4 max-w-3xl mx-auto">
+              {/* CANH BAO QUY CHUAN SKILL MUC 4.2 (AI EXPORT CONFIRMATION) */}
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs leading-relaxed space-y-1">
+                <div className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>⚠️</span> LƯU Ý DÀNH CHO THẦY/CÔ:
+                </div>
+                <p className="text-[11px] text-amber-100/90">
+                  Đề kiểm tra này được hỗ trợ tạo bởi Trí tuệ Nhân tạo (AI). Vui lòng kiểm tra lại tính chính xác của:
+                </p>
+                <ol className="list-decimal pl-5 text-[11px] text-amber-200/90 space-y-0.5">
+                  <li>Câu hỏi và dữ liệu đọc hiểu</li>
+                  <li>Đáp án trắc nghiệm và thang điểm tự luận</li>
+                  <li>Tính phù hợp với chuẩn kiến thức kỹ năng của lớp học</li>
+                </ol>
+              </div>
               
               {/* THANH CHỌN BỘ MÔN CẦN TẢI CÀI ĐẶT */}
               <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">

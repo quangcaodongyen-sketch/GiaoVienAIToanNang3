@@ -307,7 +307,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
               }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            <span>2. Bản Quyền & Kích Hoạt</span>
+            <span>2. Mở Khóa & Kích Hoạt</span>
             {isProActive && (
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-500/30">
                 ĐÃ KÍCH HOẠT
@@ -373,7 +373,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 2: BẢN QUYỀN & KÍCH HOẠT */}
+          {/* TAB 2: MỞ KHÓA & HỖ TRỢ NÂNG CAO */}
           {/* ========================================================================= */}
           {activeTab === 'register' && (
             <div className="space-y-6">
