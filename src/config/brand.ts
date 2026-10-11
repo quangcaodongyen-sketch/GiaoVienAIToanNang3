@@ -12,22 +12,22 @@ export const BRAND = {
   zaloUrl: "https://zalo.me/0915213717",
   facebookUrl: "https://www.facebook.com/share/1FWUwF3jo7/?mibextid=wwXIfr",
   slogan: "Chia sẻ các app ra đề kiểm tra & Tiện ích giáo dục tham khảo",
-  description: "Dự án phi lợi nhuận chia sẻ các app ra đề kiểm tra, tiện ích giáo dục tham khảo dành cho thầy cô giáo. Trải nghiệm dùng thử miễn phí, liên hệ trực tiếp Zalo 0915.213717 để được hỗ trợ kích hoạt bản đầy đủ.",
-  disclaimer: "SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY",
-  copyright: "© 2026 Tác giả Đinh Thành, ĐT: 0915.213717. SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.",
+  description: "Chia sẻ các app hỗ trợ ra đề kiểm tra và tiện ích giáo dục tham khảo dành cho giáo viên.",
+  disclaimer: "Tài liệu mang tính chất tham khảo trong công tác giảng dạy.",
+  copyright: "© 2026 Tác giả Đinh Thành (0915.213717). Dự án Hỗ trợ Giáo viên • dekiemtraso.com",
   
   hero: {
     title: "GIÁO VIÊN AI TOÀN NĂNG",
     subtitle: "Chia sẻ các app ra đề kiểm tra & Tiện ích giáo dục tham khảo",
-    description: "Kho chia sẻ miễn phí các app ra đề kiểm tra và tiện ích giáo dục hỗ trợ thầy cô giáo (Tiểu học, THCS, THPT). Kính mời quý Thầy/Cô tải về trải nghiệm dùng thử miễn phí; Thầy/Cô có nhu cầu hỗ trợ chuyên sâu và kích hoạt bản Pro không giới hạn vui lòng liên hệ trực tiếp Tác giả Đinh Thành qua Zalo: 0915.213717."
+    description: "Chia sẻ các ứng dụng hỗ trợ tạo đề kiểm tra & tiện ích giảng dạy tham khảo dành cho giáo viên."
   },
   
   about: {
     title: "Về tác giả",
     greeting: "Tôi là Đinh Thành – Chia sẻ các app ra đề kiểm tra & tiện ích giáo dục tham khảo.",
-    paragraph1: "Website được xây dựng nhằm mục đích chia sẻ các app ra đề kiểm tra, các tiện ích giáo dục giúp quý Thầy/Cô có thêm nguồn tài liệu tham khảo phong phú trong công tác giảng dạy và ra đề kiểm tra.",
-    paragraph2: "Các phần mềm được chia sẻ để Thầy/Cô tải về trải nghiệm dùng thử miễn phí. Sau quá trình dùng thử, quý Thầy/Cô có nhu cầu sử dụng lâu dài và kích hoạt bản Pro không giới hạn có thể liên hệ trực tiếp với tác giả để được hỗ trợ kích hoạt.",
-    paragraph3: "Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.",
+    paragraph1: "Chia sẻ các ứng dụng hỗ trợ ra đề kiểm tra và tiện ích giảng dạy tham khảo dành cho giáo viên.",
+    paragraph2: "Tài liệu và câu hỏi do AI gợi ý mang tính chất tham khảo trong công tác chuyên môn.",
+    paragraph3: "Liên hệ hỗ trợ kỹ thuật và bản quyền qua Zalo: 0915.213717.",
     quote: "“SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA & GIẢNG DẠY.”",
     photoAlt: "Tác giả Đinh Thành, ĐT: 0915.213717"
   }
