@@ -1,13 +1,13 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "4.0.0",
-  "latestVersion": "4.0.0",
+  "currentVersion": "4.1.0",
+  "latestVersion": "4.1.0",
   "releaseDate": "12/10/2026",
-  "changelog": "• [12/10/2026 - v4.0.0] Chuẩn hóa chính xác 36 câu trắc nghiệm Giữa kỳ (GK1 & GK2) theo Công văn 7991/BGDĐT\n• Cố định Part 6 (Sentence Transformation) 2 câu (Q33-Q34), Part 7 (Rearrange) 2 câu (Q35-Q36)\n• Đề Cuối kỳ (CK) chuẩn 35 câu trắc nghiệm + 1 câu tự luận viết đoạn văn (1.25 điểm)\n• Tác giả & Bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Tối ưu định dạng văn bản đề thi và đáp án song song chuẩn Bộ GD&ĐT\n• Nâng cấp hệ thống bản quyền Ed25519 Pro và thanh công cụ Word Ribbon",
+  "changelog": "• [12/10/2026 - v4.1.0] Nạp thêm ngân hàng câu hỏi chuẩn SGK Global Success (nhiều bài đọc Cloze, Reading Comprehension & bài nghe song song)\n• Sinh các mã đề độc lập (tối đa 5 mã đề) thoải mái không lo trùng lặp đoạn văn\n• Bổ sung 3 tùy chọn cấu trúc đề: Chuẩn 7991 (GK 36 câu TN, CK 35 câu TN + 1 tự luận), Chuẩn đề của App, Tuỳ chỉnh tự do số lượng câu từng phần\n• Tác giả & Bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Tối ưu định dạng văn bản đề thi và đáp án song song chuẩn Bộ GD&ĐT",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
   "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS",
-  "version": "4.0.0"
+  "version": "4.1.0"
 }
