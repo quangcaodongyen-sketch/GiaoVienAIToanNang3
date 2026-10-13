@@ -214,7 +214,7 @@ export const EXAM_THPT_RESOURCES = {
       zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_TinHoc_THPT_Pass_123.zip",
       exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TinHoc_THPT.exe",
       dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TinHoc_THPT.dotm",
-      size: "113 MB",
+      size: "75 MB",
       icon: "💻",
       color: "from-sky-600 to-cyan-600"
     },
