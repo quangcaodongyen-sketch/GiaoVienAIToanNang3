@@ -1,0 +1,12 @@
+{
+  "appId": "taode-cn-thcs",
+  "appName": "Tạo Đề Kiểm Tra Công Nghệ THCS (CV 7991)",
+  "currentVersion": "4.1.0",
+  "latestVersion": "4.1.0",
+  "releaseDate": "13/10/2026",
+  "changelog": "  [13/10/2026 - v4.1.0] BẢN CẬP NHẬT SỬA LỖI & CHUẨN HÓA BỘ GD&ĐT QUAN TRỌNG:\n  ✓ Khắc phục triệt để lỗi khi Giáo viên chọn bài Nghề nghiệp bị ra đề liên quan đến Điện.\n  ✓ Nguyên tắc vàng: Đã chọn bài nào thì tạo đề đúng 100% theo lựa chọn của giáo viên!\n  ✓ Hoàn thiện đầy đủ ngân hàng câu hỏi 4 phần môn Công nghệ 9 KNTT (Định hướng nghề nghiệp, Mạng điện, Trồng cây ăn quả, Chế biến thực phẩm).\n  ✓ Chuẩn hóa định dạng Word .docx 13pt Times New Roman, dãn dòng 1.15pt, Năm học 2026 - 2027.",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_CN_THCS.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
+  "websiteUrl": "https://dekiemtraso.com/",
+  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - Trường THCS ........"
+}
