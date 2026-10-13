@@ -11,6 +11,10 @@ export const isAdminMachine = (mid?: string): boolean => {
 };
 
 export const ADMIN_WHITELIST_MACHINES = [
+  'KHTN-DVT-1DC7-7839-5808',
+  'DVT-1DC7-7839-5808',
+  '1DC7-7839-5808',
+  'CN-DVT-0B1D-A6A7-5A14',
   'GV-0DAD-F76C',
   'GV-33B3-4A70',
   'NLS-DVT-0B1D-A6A7-5A14'
