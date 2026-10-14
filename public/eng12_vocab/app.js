@@ -236,6 +236,10 @@ function selectUnit(unitNum) {
   initMatchGame();
   initListenGame();
   initScrambleGame();
+  initBlitzGame();
+  initSpellingGame();
+  initHangmanGame();
+  initContextGame();
   renderVocabularyHub();
 }
 
@@ -615,7 +619,6 @@ function renderListenQuestion() {
     SFX.playWin();
     alert(`🎉 Bạn đã hoàn thành bài luyện nghe với ${STATE.listen.score} điểm!`);
     initListenGame();
-  initScrambleGame();
     return;
   }
   
@@ -789,6 +792,16 @@ function setupEventListeners() {
       const targetPane = document.getElementById(btn.dataset.tab);
       if (targetPane) targetPane.classList.add('active');
       if (btn.dataset.tab !== 'tab-flashcard') stopAutoPlay();
+      if (btn.dataset.tab !== 'tab-blitz' && STATE.blitz && STATE.blitz.timerInterval) {
+        clearInterval(STATE.blitz.timerInterval);
+      }
+      if (btn.dataset.tab === 'tab-blitz') {
+        initBlitzGame();
+      }
+      if (btn.dataset.tab === 'tab-spelling') {
+        const inp = document.getElementById('spellingInput');
+        if (inp) setTimeout(() => inp.focus(), 200);
+      }
     });
   });
   
@@ -951,28 +964,6 @@ function setupEventListeners() {
     document.getElementById('themeToggleBtn').textContent = isLight ? '☀️' : '🌙';
   });
   
-  
-  // Scramble Game controls
-  const peekBtn = document.getElementById('scramblePeekBtn');
-  if (peekBtn) peekBtn.addEventListener('click', () => showPeekBanner(2500));
-  
-  const hearBtn = document.getElementById('scrambleHearBtn');
-  if (hearBtn) hearBtn.addEventListener('click', () => {
-    if (STATE.scramble.currentWordObj) SpeechEngine.speak(STATE.scramble.currentWordObj.word, 1.0);
-  });
-  
-  const resetBtn = document.getElementById('scrambleResetBtn');
-  if (resetBtn) resetBtn.addEventListener('click', resetScrambleCurrentWord);
-  
-  const hintBtn = document.getElementById('scrambleHintBtn');
-  if (hintBtn) hintBtn.addEventListener('click', giveScrambleHint);
-  
-  const nextScrambleBtn = document.getElementById('scrambleNextBtn');
-  if (nextScrambleBtn) nextScrambleBtn.addEventListener('click', () => {
-    STATE.scramble.currentIdx++;
-    loadScrambleWord();
-  });
-
   window.addEventListener('click', (e) => {
     if (e.target === qrModal) qrModal.classList.remove('open');
     if (e.target === statsModal) statsModal.classList.remove('open');
@@ -997,271 +988,715 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 // ==============================================================================
-// 7B. TAB: WORD SCRAMBLE GAME LOGIC (XẾP CHỮ CÁI ĐOÁN TỪ)
+// 10. EXTRA PRACTICE MODES
 // ==============================================================================
-STATE.scramble = {
-  words: [],
+
+// --- MODE A: SPEED BLITZ (TRUE / FALSE) ---
+STATE.blitz = {
+  questions: [],
   currentIdx: 0,
-  currentWordObj: null,
-  targetLetters: [],
-  slots: [], // [{ char: '', expectedChar: '', isSpace: bool, filledTileIdx: null }]
-  tiles: [], // [{ id: int, char: str, isUsed: bool }]
   score: 0,
-  peekTimer: null
+  streak: 0,
+  timerInterval: null,
+  timeLeft: 6,
+  maxTime: 6
 };
 
-function initScrambleGame() {
-  const words = [...STATE.activeWords];
-  if (words.length === 0) return;
+function initBlitzGame() {
+  if (!STATE.activeWords || STATE.activeWords.length === 0) return;
+  clearInterval(STATE.blitz.timerInterval);
   
-  STATE.scramble.words = words;
-  STATE.scramble.currentIdx = 0;
-  STATE.scramble.score = 0;
+  const shuffled = [...STATE.activeWords].sort(() => 0.5 - Math.random());
+  STATE.blitz.questions = shuffled.slice(0, 15).map(w => {
+    const isTrue = Math.random() >= 0.45;
+    let displayedMeaning = w.meaning;
+    if (!isTrue) {
+      const others = STATE.activeWords.filter(o => o.id !== w.id);
+      if (others.length > 0) {
+        displayedMeaning = others[Math.floor(Math.random() * others.length)].meaning;
+      }
+    }
+    return {
+      word: w.word,
+      ipa: w.ipa || '',
+      pos: w.pos || 'từ',
+      displayedMeaning: displayedMeaning,
+      isCorrect: isTrue,
+      actualWord: w
+    };
+  });
   
-  document.getElementById('scrambleScoreVal').textContent = '0';
-  document.getElementById('scrambleTotalWords').textContent = words.length;
+  STATE.blitz.currentIdx = 0;
+  STATE.blitz.score = 0;
+  STATE.blitz.streak = 0;
   
-  loadScrambleWord();
+  const scoreEl = document.getElementById('blitzScoreVal');
+  const streakEl = document.getElementById('blitzStreakVal');
+  const totalEl = document.getElementById('blitzTotalQ');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (streakEl) streakEl.textContent = '0';
+  if (totalEl) totalEl.textContent = STATE.blitz.questions.length;
+  
+  renderBlitzQuestion();
 }
 
-function loadScrambleWord() {
-  if (STATE.scramble.currentIdx >= STATE.scramble.words.length) {
-    showScrambleCompleted();
+function renderBlitzQuestion() {
+  clearInterval(STATE.blitz.timerInterval);
+  const q = STATE.blitz.questions[STATE.blitz.currentIdx];
+  if (!q) {
+    showBlitzFinished();
     return;
   }
   
-  const wordObj = STATE.scramble.words[STATE.scramble.currentIdx];
-  STATE.scramble.currentWordObj = wordObj;
+  const idxEl = document.getElementById('blitzQIdx');
+  if (idxEl) idxEl.textContent = STATE.blitz.currentIdx + 1;
   
-  // Progress
-  document.getElementById('scrambleWordIdx').textContent = STATE.scramble.currentIdx + 1;
-  const pct = ((STATE.scramble.currentIdx) / STATE.scramble.words.length) * 100;
-  document.getElementById('scrambleProgressFill').style.width = `${pct}%`;
+  const wordEl = document.getElementById('blitzWord');
+  const ipaEl = document.getElementById('blitzIpa');
+  const meaningEl = document.getElementById('blitzMeaning');
+  if (wordEl) wordEl.textContent = q.word;
+  if (ipaEl) ipaEl.textContent = q.ipa;
+  if (meaningEl) meaningEl.textContent = q.displayedMeaning;
   
-  // Info
-  document.getElementById('scrambleMeaning').textContent = wordObj.meaning;
-  document.getElementById('scramblePosBadge').textContent = wordObj.pos || 'từ';
-  document.getElementById('scrambleIpaSub').textContent = wordObj.ipa || '';
+  // Timer bar reset
+  STATE.blitz.timeLeft = STATE.blitz.maxTime;
+  const timerFill = document.getElementById('blitzTimerFill');
+  if (timerFill) timerFill.style.width = '100%';
   
-  // Hide success banner
-  document.getElementById('scrambleSuccessBanner').style.display = 'none';
-  
-  // Setup peek word
-  const cleanWord = wordObj.word.trim();
-  document.getElementById('scramblePeekWord').textContent = cleanWord;
-  document.getElementById('scramblePeekIpa').textContent = wordObj.ipa || '';
-  
-  // Setup Target Slots
-  const chars = cleanWord.split('');
-  STATE.scramble.targetLetters = chars;
-  STATE.scramble.slots = chars.map((c, i) => ({
-    idx: i,
-    expectedChar: c,
-    char: (c === ' ' || c === '-') ? c : '',
-    isSpace: (c === ' ' || c === '-'),
-    filledTileIdx: null
-  }));
-  
-  // Setup Scrambled Tiles
-  const usableChars = chars.filter(c => c !== ' ' && c !== '-');
-  // Shuffle letters
-  let shuffled = usableChars.map((c, idx) => ({ id: idx, char: c, isUsed: false }));
-  
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  
-  // Ensure it's not identical to original
-  if (shuffled.map(t => t.char).join('') === usableChars.join('') && shuffled.length > 2) {
-    shuffled.reverse();
-  }
-  STATE.scramble.tiles = shuffled;
-  
-  renderScrambleUI();
-  
-  // Show peek banner for 2.5 seconds first, then hide to start game!
-  showPeekBanner(2500);
-}
-
-function showPeekBanner(durationMs = 2500) {
-  const peek = document.getElementById('scramblePeekBanner');
-  const info = document.getElementById('scrambleInfoArea');
-  peek.style.display = 'block';
-  info.style.display = 'none';
-  
-  SpeechEngine.speak(STATE.scramble.currentWordObj.word, 1.0);
-  
-  if (STATE.scramble.peekTimer) clearTimeout(STATE.scramble.peekTimer);
-  STATE.scramble.peekTimer = setTimeout(() => {
-    peek.style.display = 'none';
-    info.style.display = 'block';
-  }, durationMs);
-}
-
-function renderScrambleUI() {
-  // 1. Render Slots
-  const slotsRow = document.getElementById('scrambleAnswerSlots');
-  slotsRow.innerHTML = '';
-  
-  STATE.scramble.slots.forEach((slot, sIdx) => {
-    const box = document.createElement('div');
-    if (slot.isSpace) {
-      box.className = 'slot-box space-slot';
-      box.textContent = slot.char;
-    } else {
-      box.className = `slot-box ${slot.char ? 'filled' : ''}`;
-      box.textContent = slot.char ? slot.char.toUpperCase() : '';
-      box.addEventListener('click', () => handleSlotClick(sIdx));
+  const intervalStep = 100;
+  STATE.blitz.timerInterval = setInterval(() => {
+    STATE.blitz.timeLeft -= (intervalStep / 1000);
+    const pct = Math.max(0, (STATE.blitz.timeLeft / STATE.blitz.maxTime) * 100);
+    if (timerFill) timerFill.style.width = pct + '%';
+    
+    if (STATE.blitz.timeLeft <= 0) {
+      clearInterval(STATE.blitz.timerInterval);
+      handleBlitzAnswer(null); // Time out
     }
-    slotsRow.appendChild(box);
-  });
-  
-  // 2. Render Letter Tiles Pool
-  const pool = document.getElementById('scrambleLettersPool');
-  pool.innerHTML = '';
-  
-  STATE.scramble.tiles.forEach((tile, tIdx) => {
-    const tileEl = document.createElement('div');
-    tileEl.className = `letter-tile ${tile.isUsed ? 'used' : ''}`;
-    tileEl.textContent = tile.char.toUpperCase();
-    tileEl.addEventListener('click', () => handleTileClick(tIdx));
-    pool.appendChild(tileEl);
-  });
+  }, intervalStep);
 }
 
-function handleTileClick(tileIdx) {
-  const tile = STATE.scramble.tiles[tileIdx];
-  if (!tile || tile.isUsed) return;
+function handleBlitzAnswer(userChoice) {
+  clearInterval(STATE.blitz.timerInterval);
+  const q = STATE.blitz.questions[STATE.blitz.currentIdx];
+  if (!q) return;
   
-  // Find first empty slot
-  const emptySlot = STATE.scramble.slots.find(s => !s.isSpace && !s.char);
-  if (!emptySlot) return;
+  const isRight = (userChoice === q.isCorrect);
+  const card = document.getElementById('blitzCard');
   
-  emptySlot.char = tile.char;
-  emptySlot.filledTileIdx = tileIdx;
-  tile.isUsed = true;
-  
-  SFX.playTone(550, 'sine', 0.08, 0.15);
-  renderScrambleUI();
-  
-  // Check if all filled
-  checkScrambleAnswer();
-}
-
-function handleSlotClick(slotIdx) {
-  const slot = STATE.scramble.slots[slotIdx];
-  if (!slot || slot.isSpace || !slot.char) return;
-  
-  // Return tile to pool
-  if (slot.filledTileIdx !== null) {
-    const tile = STATE.scramble.tiles[slot.filledTileIdx];
-    if (tile) tile.isUsed = false;
-  }
-  
-  slot.char = '';
-  slot.filledTileIdx = null;
-  
-  SFX.playTone(380, 'sine', 0.08, 0.12);
-  renderScrambleUI();
-}
-
-function resetScrambleCurrentWord() {
-  STATE.scramble.slots.forEach(s => {
-    if (!s.isSpace) {
-      s.char = '';
-      s.filledTileIdx = null;
+  if (isRight) {
+    SFX.playCorrect();
+    STATE.blitz.streak++;
+    const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
+    STATE.blitz.score += (10 + bonus);
+    if (card) {
+      card.style.borderColor = '#10b981';
+      card.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.4)';
     }
-  });
-  STATE.scramble.tiles.forEach(t => t.isUsed = false);
-  renderScrambleUI();
-  SFX.playTone(400, 'sawtooth', 0.1);
-}
-
-function giveScrambleHint() {
-  // Find first incorrect or empty slot
-  const slot = STATE.scramble.slots.find(s => !s.isSpace && s.char.toLowerCase() !== s.expectedChar.toLowerCase());
-  if (!slot) return;
-  
-  // If slot was filled with wrong letter, free it first
-  if (slot.filledTileIdx !== null) {
-    const prevTile = STATE.scramble.tiles[slot.filledTileIdx];
-    if (prevTile) prevTile.isUsed = false;
-  }
-  
-  // Find an unused tile with expected char
-  const matchingTileIdx = STATE.scramble.tiles.findIndex(t => !t.isUsed && t.char.toLowerCase() === slot.expectedChar.toLowerCase());
-  if (matchingTileIdx !== -1) {
-    slot.char = STATE.scramble.tiles[matchingTileIdx].char;
-    slot.filledTileIdx = matchingTileIdx;
-    STATE.scramble.tiles[matchingTileIdx].isUsed = true;
-    SFX.playCorrect();
-    renderScrambleUI();
-    checkScrambleAnswer();
-  }
-}
-
-function checkScrambleAnswer() {
-  const allFilled = STATE.scramble.slots.every(s => s.char);
-  if (!allFilled) return;
-  
-  const formedWord = STATE.scramble.slots.map(s => s.char).join('').toLowerCase();
-  const targetWord = STATE.scramble.targetLetters.join('').toLowerCase();
-  
-  if (formedWord === targetWord) {
-    // CORRECT!
-    SFX.playCorrect();
-    SFX.playWin();
-    
-    // Highlight all slots green
-    document.querySelectorAll('.slot-box').forEach(b => b.classList.add('correct'));
-    
-    STATE.scramble.score += 15;
-    document.getElementById('scrambleScoreVal').textContent = STATE.scramble.score;
-    
-    STATE.mastered.add(STATE.scramble.currentWordObj.id);
-    saveProgress();
-    
-    // Speak word
-    SpeechEngine.speak(STATE.scramble.currentWordObj.word, 1.0);
-    
-    // Show success banner
-    const banner = document.getElementById('scrambleSuccessBanner');
-    document.getElementById('scrambleSuccessExample').textContent = `"${STATE.scramble.currentWordObj.example}"\n(${STATE.scramble.currentWordObj.example_vi})`;
-    banner.style.display = 'block';
-    
-    setTimeout(() => {
-      STATE.scramble.currentIdx++;
-      loadScrambleWord();
-    }, 2800);
+    STATE.mastered.add(q.actualWord.id);
   } else {
-    // WRONG
     SFX.playWrong();
-    document.querySelectorAll('.slot-box').forEach(b => b.classList.add('shake'));
-    setTimeout(() => {
-      document.querySelectorAll('.slot-box').forEach(b => b.classList.remove('shake'));
-    }, 500);
+    STATE.blitz.streak = 0;
+    if (card) {
+      card.style.borderColor = '#ef4444';
+      card.style.boxShadow = '0 0 30px rgba(239, 68, 68, 0.4)';
+    }
+    STATE.review.add(q.actualWord.id);
   }
+  
+  const scoreEl = document.getElementById('blitzScoreVal');
+  const streakEl = document.getElementById('blitzStreakVal');
+  if (scoreEl) scoreEl.textContent = STATE.blitz.score;
+  if (streakEl) streakEl.textContent = STATE.blitz.streak;
+  saveProgress();
+  
+  setTimeout(() => {
+    if (card) {
+      card.style.borderColor = '';
+      card.style.boxShadow = '';
+    }
+    STATE.blitz.currentIdx++;
+    renderBlitzQuestion();
+  }, 600);
 }
 
-function showScrambleCompleted() {
-  const container = document.querySelector('#tab-scramble .game-container');
+function showBlitzFinished() {
+  const container = document.getElementById('blitzCard');
+  if (!container) return;
   SFX.playWin();
+  launchConfetti();
+  
   container.innerHTML = `
-    <div style="text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-      <div style="font-size: 4rem;">🏆</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(56,189,248,0.5);">XUẤT SẮC HOÀN THÀNH TOÀN BỘ UNIT!</h2>
-      <p style="font-size: 1.3rem; color: #fbbf24; font-weight: 800;">
-        Tổng điểm xếp chữ đạt được: ${STATE.scramble.score} điểm
-      </p>
-      <p style="color: var(--text-muted); font-size: 1rem; max-width: 440px;">
-        Các em học sinh đã xuất sắc ghi nhớ và ghép đúng toàn bộ từ vựng của bài học này!
-      </p>
-      <div style="display: flex; gap: 1rem; margin-top: 1.2rem;">
-        <button class="fc-nav-btn btn-next" onclick="initScrambleGame()" style="max-width: none; padding: 0.9rem 2rem; font-size: 1.05rem;">
-          🔄 Luyện tập ván mới
-        </button>
+    <div style="padding: 1.5rem 0; text-align: center;">
+      <div style="font-size: 3.5rem;">⚡</div>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH PHẢN XẠ NHANH!</h2>
+      <div style="font-size: 1.4rem; color: #fbbf24; font-weight: 800; margin-bottom: 1.5rem;">
+        Điểm số: ${STATE.blitz.score} điểm
       </div>
+      <button class="header-btn" onclick="initBlitzGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; border: none; cursor: pointer;">
+        🔄 Chơi Lại Ván Mới
+      </button>
     </div>
   `;
 }
+
+
+// --- MODE B: SPELLING & DICTATION ---
+STATE.spelling = {
+  questions: [],
+  currentIdx: 0,
+  score: 0
+};
+
+function initSpellingGame() {
+  if (!STATE.activeWords || STATE.activeWords.length === 0) return;
+  STATE.spelling.questions = [...STATE.activeWords].sort(() => 0.5 - Math.random()).slice(0, 15);
+  STATE.spelling.currentIdx = 0;
+  STATE.spelling.score = 0;
+  
+  const scoreEl = document.getElementById('spellingScoreVal');
+  const totalEl = document.getElementById('spellingTotalQ');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (totalEl) totalEl.textContent = STATE.spelling.questions.length;
+  
+  renderSpellingQuestion();
+}
+
+function renderSpellingQuestion() {
+  const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+  if (!q) {
+    showSpellingFinished();
+    return;
+  }
+  
+  const idxEl = document.getElementById('spellingQIdx');
+  if (idxEl) idxEl.textContent = STATE.spelling.currentIdx + 1;
+  
+  const meaningEl = document.getElementById('spellingMeaning');
+  const posEl = document.getElementById('spellingPos');
+  const ipaEl = document.getElementById('spellingIpa');
+  if (meaningEl) meaningEl.textContent = q.meaning;
+  if (posEl) posEl.textContent = q.pos || 'từ';
+  if (ipaEl) ipaEl.textContent = q.ipa || '';
+  
+  // Format context sentence with gap
+  const sentence = q.example || '';
+  const escapedWord = q.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp('\\b' + escapedWord + '\\b', 'gi');
+  let sentenceWithGap = sentence.replace(regex, '<span class="spelling-gap-highlight">__________</span>');
+  if (!sentenceWithGap.includes('spelling-gap-highlight')) {
+    sentenceWithGap = `"... <span class="spelling-gap-highlight">__________</span> ..."`
+  }
+  
+  const sentEl = document.getElementById('spellingSentence');
+  const sentViEl = document.getElementById('spellingSentenceVi');
+  if (sentEl) sentEl.innerHTML = sentenceWithGap;
+  if (sentViEl) sentViEl.textContent = q.example_vi ? `Dịch: ${q.example_vi}` : '';
+  
+  const input = document.getElementById('spellingInput');
+  if (input) {
+    input.value = '';
+    input.className = 'spelling-input';
+    input.placeholder = 'Gõ từ tiếng Anh vào đây...';
+    setTimeout(() => input.focus(), 150);
+  }
+  
+  // Speak word
+  SpeechEngine.speak(q.word, 0.95);
+}
+
+function checkSpellingAnswer() {
+  const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+  if (!q) return;
+  
+  const input = document.getElementById('spellingInput');
+  if (!input) return;
+  const userVal = input.value.trim().toLowerCase();
+  const targetVal = q.word.trim().toLowerCase();
+  
+  if (userVal === targetVal) {
+    input.className = 'spelling-input correct';
+    SFX.playCorrect();
+    STATE.spelling.score += 10;
+    const scoreEl = document.getElementById('spellingScoreVal');
+    if (scoreEl) scoreEl.textContent = STATE.spelling.score;
+    STATE.mastered.add(q.id);
+    saveProgress();
+    
+    setTimeout(() => {
+      STATE.spelling.currentIdx++;
+      renderSpellingQuestion();
+    }, 1000);
+  } else {
+    input.className = 'spelling-input wrong';
+    SFX.playWrong();
+    STATE.review.add(q.id);
+    saveProgress();
+    setTimeout(() => {
+      input.className = 'spelling-input';
+    }, 800);
+  }
+}
+
+function giveSpellingHint() {
+  const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+  if (!q) return;
+  const input = document.getElementById('spellingInput');
+  if (!input) return;
+  const hintLength = Math.max(1, Math.floor(q.word.length * 0.45));
+  input.value = q.word.slice(0, hintLength);
+  input.focus();
+}
+
+function revealSpellingAnswer() {
+  const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+  if (!q) return;
+  const input = document.getElementById('spellingInput');
+  if (input) input.value = q.word;
+  SpeechEngine.speak(q.word, 0.9);
+}
+
+function showSpellingFinished() {
+  const container = document.getElementById('spellingCard');
+  if (!container) return;
+  SFX.playWin();
+  launchConfetti();
+  
+  container.innerHTML = `
+    <div style="padding: 1.5rem 0; text-align: center;">
+      <div style="font-size: 3.5rem;">🏆</div>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">XUẤT SẮC! HOÀN THÀNH BÀI GÕ TỪ!</h2>
+      <div style="font-size: 1.4rem; color: #34d399; font-weight: 800; margin-bottom: 1.5rem;">
+        Điểm số: ${STATE.spelling.score} điểm
+      </div>
+      <button class="header-btn" onclick="initSpellingGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #38bdf8, #8b5cf6); color: #fff; border: none; cursor: pointer;">
+        🔄 Luyện Tập Tiếp
+      </button>
+    </div>
+  `;
+}
+
+
+// --- MODE C: HANGMAN / WORD DETECTIVE ---
+STATE.hangman = {
+  questions: [],
+  currentIdx: 0,
+  targetWord: '',
+  guessedLetters: new Set(),
+  lives: 5,
+  maxLives: 5,
+  score: 0
+};
+
+function initHangmanGame() {
+  if (!STATE.activeWords || STATE.activeWords.length === 0) return;
+  STATE.hangman.questions = [...STATE.activeWords].sort(() => 0.5 - Math.random());
+  STATE.hangman.currentIdx = 0;
+  STATE.hangman.score = 0;
+  
+  const scoreEl = document.getElementById('hangmanScoreVal');
+  if (scoreEl) scoreEl.textContent = '0';
+  
+  loadHangmanWord();
+}
+
+function loadHangmanWord() {
+  const q = STATE.hangman.questions[STATE.hangman.currentIdx];
+  if (!q) {
+    showHangmanFinished();
+    return;
+  }
+  
+  STATE.hangman.targetWord = q.word.toUpperCase();
+  STATE.hangman.guessedLetters = new Set();
+  STATE.hangman.lives = STATE.hangman.maxLives;
+  
+  const idxEl = document.getElementById('hangmanWordIdx');
+  const totalEl = document.getElementById('hangmanTotalWords');
+  const meaningEl = document.getElementById('hangmanMeaning');
+  const posEl = document.getElementById('hangmanPos');
+  if (idxEl) idxEl.textContent = STATE.hangman.currentIdx + 1;
+  if (totalEl) totalEl.textContent = STATE.hangman.questions.length;
+  if (meaningEl) meaningEl.textContent = q.meaning;
+  if (posEl) posEl.textContent = q.pos || 'từ';
+  
+  renderHangmanHearts();
+  renderHangmanSlots();
+  renderHangmanKeyboard();
+}
+
+function renderHangmanHearts() {
+  const container = document.getElementById('hangmanHearts');
+  if (!container) return;
+  let html = '';
+  for (let i = 0; i < STATE.hangman.maxLives; i++) {
+    html += (i < STATE.hangman.lives) ? '❤️ ' : '🖤 ';
+  }
+  container.textContent = html.trim();
+}
+
+function renderHangmanSlots() {
+  const row = document.getElementById('hangmanSlots');
+  if (!row) return;
+  row.innerHTML = '';
+  
+  const word = STATE.hangman.targetWord;
+  let allRevealed = true;
+  
+  for (let i = 0; i < word.length; i++) {
+    const ch = word[i];
+    const slot = document.createElement('div');
+    if (ch === ' ' || ch === '-') {
+      slot.className = 'hangman-slot space';
+      slot.textContent = ch;
+    } else if (STATE.hangman.guessedLetters.has(ch)) {
+      slot.className = 'hangman-slot revealed';
+      slot.textContent = ch;
+    } else {
+      slot.className = 'hangman-slot';
+      slot.textContent = '_';
+      allRevealed = false;
+    }
+    row.appendChild(slot);
+  }
+  
+  if (allRevealed) {
+    handleHangmanWin();
+  }
+}
+
+function renderHangmanKeyboard() {
+  const kb = document.getElementById('hangmanKeyboard');
+  if (!kb) return;
+  kb.innerHTML = '';
+  
+  const rows = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L'],
+    ['Z','X','C','V','B','N','M']
+  ];
+  
+  rows.forEach(r => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'hangman-key-row';
+    r.forEach(ch => {
+      const keyBtn = document.createElement('button');
+      keyBtn.className = 'hangman-key';
+      keyBtn.textContent = ch;
+      if (STATE.hangman.guessedLetters.has(ch)) {
+        keyBtn.disabled = true;
+        if (STATE.hangman.targetWord.includes(ch)) {
+          keyBtn.classList.add('hit');
+        } else {
+          keyBtn.classList.add('miss');
+        }
+      }
+      keyBtn.addEventListener('click', () => guessHangmanLetter(ch));
+      rowEl.appendChild(keyBtn);
+    });
+    kb.appendChild(rowEl);
+  });
+}
+
+function guessHangmanLetter(ch) {
+  if (STATE.hangman.lives <= 0) return;
+  if (STATE.hangman.guessedLetters.has(ch)) return;
+  
+  STATE.hangman.guessedLetters.add(ch);
+  
+  if (STATE.hangman.targetWord.includes(ch)) {
+    SFX.playTone(660, 'sine', 0.12);
+  } else {
+    STATE.hangman.lives--;
+    SFX.playTone(220, 'sawtooth', 0.15);
+    renderHangmanHearts();
+    
+    if (STATE.hangman.lives <= 0) {
+      handleHangmanLose();
+      return;
+    }
+  }
+  
+  renderHangmanSlots();
+  renderHangmanKeyboard();
+}
+
+function handleHangmanWin() {
+  SFX.playWin();
+  launchConfetti();
+  STATE.hangman.score += 20;
+  const scoreEl = document.getElementById('hangmanScoreVal');
+  if (scoreEl) scoreEl.textContent = STATE.hangman.score;
+  const q = STATE.hangman.questions[STATE.hangman.currentIdx];
+  if (q) {
+    STATE.mastered.add(q.id);
+    SpeechEngine.speak(q.word, 1.0);
+  }
+  saveProgress();
+  
+  setTimeout(() => {
+    STATE.hangman.currentIdx++;
+    loadHangmanWord();
+  }, 1600);
+}
+
+function handleHangmanLose() {
+  SFX.playWrong();
+  const q = STATE.hangman.questions[STATE.hangman.currentIdx];
+  if (q) {
+    STATE.review.add(q.id);
+    SpeechEngine.speak(q.word, 1.0);
+  }
+  saveProgress();
+  
+  // Reveal word
+  const row = document.getElementById('hangmanSlots');
+  if (row) {
+    row.innerHTML = '';
+    for (let i = 0; i < STATE.hangman.targetWord.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'hangman-slot revealed';
+      slot.style.color = '#f87171';
+      slot.textContent = STATE.hangman.targetWord[i];
+      row.appendChild(slot);
+    }
+  }
+  
+  setTimeout(() => {
+    STATE.hangman.currentIdx++;
+    loadHangmanWord();
+  }, 2200);
+}
+
+function giveHangmanHint() {
+  const word = STATE.hangman.targetWord;
+  for (let i = 0; i < word.length; i++) {
+    const ch = word[i];
+    if (ch >= 'A' && ch <= 'Z' && !STATE.hangman.guessedLetters.has(ch)) {
+      guessHangmanLetter(ch);
+      break;
+    }
+  }
+}
+
+function showHangmanFinished() {
+  const container = document.getElementById('hangmanContainer');
+  if (!container) return;
+  SFX.playWin();
+  launchConfetti();
+  
+  container.innerHTML = `
+    <div style="padding: 2rem 0; text-align: center;">
+      <div style="font-size: 3.5rem;">🕵️‍♂️</div>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">BẠN LÀ THÁM TỬ TỪ VỰNG TÀI BA!</h2>
+      <div style="font-size: 1.4rem; color: #38bdf8; font-weight: 800; margin-bottom: 1.5rem;">
+        Điểm phá án: ${STATE.hangman.score} điểm
+      </div>
+      <button class="header-btn" onclick="initHangmanGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #06b6d4, #ec4899); color: #fff; border: none; cursor: pointer;">
+        🔄 Phá Án Tiếp
+      </button>
+    </div>
+  `;
+}
+
+
+// --- MODE D: CONTEXT SENTENCE COMPLETION (THPT FORMAT) ---
+STATE.context = {
+  questions: [],
+  currentIdx: 0,
+  score: 0,
+  streak: 0
+};
+
+function initContextGame() {
+  if (!STATE.activeWords || STATE.activeWords.length === 0) return;
+  
+  const eligible = STATE.activeWords.filter(w => w.example && w.example.toLowerCase().includes(w.word.toLowerCase()));
+  const pool = eligible.length >= 4 ? eligible : STATE.activeWords;
+  
+  STATE.context.questions = [...pool].sort(() => 0.5 - Math.random()).slice(0, 15);
+  STATE.context.currentIdx = 0;
+  STATE.context.score = 0;
+  STATE.context.streak = 0;
+  
+  const scoreEl = document.getElementById('contextScoreVal');
+  const streakEl = document.getElementById('contextStreakVal');
+  const totalEl = document.getElementById('contextTotalQ');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (streakEl) streakEl.textContent = '0';
+  if (totalEl) totalEl.textContent = STATE.context.questions.length;
+  
+  renderContextQuestion();
+}
+
+function renderContextQuestion() {
+  const q = STATE.context.questions[STATE.context.currentIdx];
+  if (!q) {
+    showContextFinished();
+    return;
+  }
+  
+  const idxEl = document.getElementById('contextQIdx');
+  if (idxEl) idxEl.textContent = STATE.context.currentIdx + 1;
+  
+  const escapedWord = q.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp('\\b' + escapedWord + '\\b', 'gi');
+  let blankSentence = q.example ? q.example.replace(regex, '<span class="context-blank-token">__________</span>') : `______ (${q.meaning})`;
+  if (!blankSentence.includes('context-blank-token')) {
+    blankSentence = `"... <span class="context-blank-token">__________</span> ..."`
+  }
+  
+  const sentEl = document.getElementById('contextSentenceText');
+  const sentViEl = document.getElementById('contextSentenceVi');
+  if (sentEl) sentEl.innerHTML = blankSentence;
+  if (sentViEl) sentViEl.textContent = q.example_vi ? `Dịch: ${q.example_vi}` : '';
+  
+  const others = STATE.activeWords.filter(w => w.id !== q.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+  const options = [q, ...others].sort(() => 0.5 - Math.random());
+  
+  const grid = document.getElementById('contextOptionsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const prefixes = ['A', 'B', 'C', 'D'];
+  
+  options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option-btn';
+    btn.innerHTML = `<span class="opt-prefix">${prefixes[idx]}</span> <span><strong>${opt.word}</strong> <em style="font-size:0.85em; opacity:0.8;">(${opt.pos || ''})</em> - ${opt.meaning}</span>`;
+    btn.addEventListener('click', () => handleContextAnswer(opt.id === q.id, btn, q.id));
+    grid.appendChild(btn);
+  });
+}
+
+function handleContextAnswer(isCorrect, clickedBtn, correctId) {
+  const grid = document.getElementById('contextOptionsGrid');
+  if (!grid) return;
+  const allBtns = grid.querySelectorAll('.quiz-option-btn');
+  allBtns.forEach(b => b.disabled = true);
+  
+  if (isCorrect) {
+    clickedBtn.classList.add('correct');
+    SFX.playCorrect();
+    STATE.context.streak++;
+    const bonus = STATE.context.streak > 1 ? (STATE.context.streak - 1) * 5 : 0;
+    STATE.context.score += (10 + bonus);
+    document.getElementById('contextScoreVal').textContent = STATE.context.score;
+    document.getElementById('contextStreakVal').textContent = STATE.context.streak;
+    STATE.mastered.add(correctId);
+    saveProgress();
+  } else {
+    clickedBtn.classList.add('wrong');
+    SFX.playWrong();
+    STATE.context.streak = 0;
+    document.getElementById('contextStreakVal').textContent = '0';
+    STATE.review.add(correctId);
+    saveProgress();
+    
+    allBtns.forEach(b => {
+      const optWord = STATE.activeWords.find(w => w.id === correctId);
+      if (optWord && b.textContent.includes(optWord.word)) {
+        b.classList.add('correct');
+      }
+    });
+  }
+  
+  setTimeout(() => {
+    STATE.context.currentIdx++;
+    renderContextQuestion();
+  }, 1300);
+}
+
+function showContextFinished() {
+  const container = document.getElementById('contextContainer');
+  if (!container) return;
+  SFX.playWin();
+  launchConfetti();
+  
+  container.innerHTML = `
+    <div style="padding: 2rem 0; text-align: center;">
+      <div style="font-size: 3.5rem;">🎯</div>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH BÀI TẬP NGỮ CẢNH THPT!</h2>
+      <div style="font-size: 1.4rem; color: #fbbf24; font-weight: 800; margin-bottom: 1.5rem;">
+        Điểm số: ${STATE.context.score} điểm
+      </div>
+      <button class="header-btn" onclick="initContextGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #ec4899); color: #fff; border: none; cursor: pointer;">
+        🔄 Làm Thêm Bài Khác
+      </button>
+    </div>
+  `;
+}
+
+
+
+// Wire up new event listeners on load
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // Blitz Controls
+  const blitzFalseBtn = document.getElementById('blitzFalseBtn');
+  const blitzTrueBtn = document.getElementById('blitzTrueBtn');
+  const blitzAudioBtn = document.getElementById('blitzAudioBtn');
+  if (blitzFalseBtn) blitzFalseBtn.addEventListener('click', () => handleBlitzAnswer(false));
+  if (blitzTrueBtn) blitzTrueBtn.addEventListener('click', () => handleBlitzAnswer(true));
+  if (blitzAudioBtn) blitzAudioBtn.addEventListener('click', () => {
+    const q = STATE.blitz.questions[STATE.blitz.currentIdx];
+    if (q) SpeechEngine.speak(q.word, 1.0);
+  });
+
+  // Spelling Controls
+  const spellingSubmitBtn = document.getElementById('spellingSubmitBtn');
+  const spellingInput = document.getElementById('spellingInput');
+  const spellingHintBtn = document.getElementById('spellingHintBtn');
+  const spellingRevealBtn = document.getElementById('spellingRevealBtn');
+  const spellingAudioBigBtn = document.getElementById('spellingAudioBigBtn');
+  const spellingAudioSlowBtn = document.getElementById('spellingAudioSlowBtn');
+  if (spellingSubmitBtn) spellingSubmitBtn.addEventListener('click', checkSpellingAnswer);
+  if (spellingInput) {
+    spellingInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkSpellingAnswer();
+    });
+  }
+  if (spellingHintBtn) spellingHintBtn.addEventListener('click', giveSpellingHint);
+  if (spellingRevealBtn) spellingRevealBtn.addEventListener('click', revealSpellingAnswer);
+  if (spellingAudioBigBtn) spellingAudioBigBtn.addEventListener('click', () => {
+    const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+    if (q) SpeechEngine.speak(q.word, 1.0);
+  });
+  if (spellingAudioSlowBtn) spellingAudioSlowBtn.addEventListener('click', () => {
+    const q = STATE.spelling.questions[STATE.spelling.currentIdx];
+    if (q) SpeechEngine.speak(q.word, 0.8);
+  });
+
+  // Hangman Controls
+  const hangmanHintBtn = document.getElementById('hangmanHintBtn');
+  const hangmanAudioBtn = document.getElementById('hangmanAudioBtn');
+  if (hangmanHintBtn) hangmanHintBtn.addEventListener('click', giveHangmanHint);
+  if (hangmanAudioBtn) hangmanAudioBtn.addEventListener('click', () => {
+    const q = STATE.hangman.questions[STATE.hangman.currentIdx];
+    if (q) SpeechEngine.speak(q.word, 1.0);
+  });
+
+  
+  // Global keyboard shortcuts for extra modes
+  window.addEventListener('keydown', (e) => {
+    
+    // Extra keyboard shortcuts
+    const activeBlitz = document.getElementById('tab-blitz');
+    if (activeBlitz && activeBlitz.classList.contains('active')) {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === 'f' || e.key === 'F') {
+        handleBlitzAnswer(false);
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D' || e.key === 'j' || e.key === 'J') {
+        handleBlitzAnswer(true);
+      }
+    }
+    
+    const activeHangman = document.getElementById('tab-hangman');
+    if (activeHangman && activeHangman.classList.contains('active')) {
+      if (e.key >= 'a' && e.key <= 'z') {
+        guessHangmanLetter(e.key.toUpperCase());
+      } else if (e.key >= 'A' && e.key <= 'Z') {
+        guessHangmanLetter(e.key);
+      }
+    }
+
+  });
+});

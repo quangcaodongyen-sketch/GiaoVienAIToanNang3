@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Eng 12 Vocab Master - Học Từ Vựng Tiếng Anh Lớp 12 SGK Global Success</title>
-  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, dễ nhớ, phát âm chuẩn US/UK, flashcards 3D, game xếp chữ và luyện tập vui nhộn. Tác giả: Thầy Đinh Văn Thành.">
+  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, 10 chế độ luyện tập đa dạng, phát âm chuẩn US/UK, flashcards 3D, game xếp chữ, phản xạ nhanh và thám tử từ vựng. Tác giả: Thầy Đinh Văn Thành.">
   <meta name="theme-color" content="#080d1a">
   
-  <!-- Auto redirect /eng12_vocab -> /eng12_vocab/ for perfect relative base path -->
+  <!-- Auto redirect /eng12_vocab -> /eng12_vocab/ for relative path safety -->
   <script>
     if (!window.location.protocol.startsWith('file:') && window.location.pathname.endsWith('/eng12_vocab')) {
       window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
@@ -1367,6 +1367,452 @@ html, body {
   .scramble-meaning { font-size: 1.35rem; }
 }
 
+
+
+/* ==========================================================================
+   EXTRA PRACTICE MODES STYLING
+   ========================================================================== */
+
+/* --- 1. SPEED BLITZ (TRUE / FALSE) --- */
+.blitz-timer-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.blitz-timer-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+  transition: width 0.1s linear;
+}
+
+.blitz-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 2.2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+.blitz-word {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.blitz-ipa {
+  font-family: monospace;
+  font-size: 1.15rem;
+  color: #38bdf8;
+  margin-top: 0.35rem;
+}
+
+.blitz-relation-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 1.2rem 0 0.6rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.blitz-relation-label::before,
+.blitz-relation-label::after {
+  content: '';
+  height: 1px;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.blitz-meaning {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fbbf24;
+  line-height: 1.3;
+}
+
+.blitz-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.blitz-btn {
+  padding: 1.35rem 1rem;
+  font-size: 1.35rem;
+  font-weight: 900;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid transparent;
+}
+
+.blitz-btn-sub {
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.blitz-btn-false {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(225, 29, 72, 0.3));
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.blitz-btn-false:hover, .blitz-btn-false:active {
+  background: linear-gradient(135deg, #ef4444, #e11d48);
+  color: #ffffff;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.45);
+}
+
+.blitz-btn-true {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+}
+
+.blitz-btn-true:hover, .blitz-btn-true:active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+}
+
+/* --- 2. SPELLING & DICTATION --- */
+.spelling-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  margin-bottom: 1.5rem;
+}
+
+.spelling-audio-trigger {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin: 0 auto 1.25rem auto;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.spelling-audio-trigger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(236, 72, 153, 0.6);
+}
+
+.spelling-audio-trigger:active {
+  transform: scale(0.95);
+}
+
+.spelling-context-sentence {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  line-height: 1.6;
+  margin: 1.2rem 0;
+  padding: 1rem 1.2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  border-left: 4px solid #8b5cf6;
+}
+
+.spelling-gap-highlight {
+  color: #fbbf24;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.spelling-input-row {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 500px;
+  margin: 1.5rem auto 0 auto;
+}
+
+.spelling-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.spelling-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  background: rgba(15, 23, 42, 1);
+}
+
+.spelling-input.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.spelling-input.wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  animation: tileShake 0.4s ease-in-out;
+}
+
+.spelling-submit-btn {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.spelling-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.6);
+}
+
+/* --- 3. HANGMAN (MYSTERY WORD DETECTIVE) --- */
+.hangman-hearts-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.hangman-slots-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.hangman-slot {
+  width: 48px;
+  height: 58px;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hangman-slot.revealed {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+  border-color: #34d399;
+  color: #34d399;
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+
+.hangman-slot.space {
+  width: 24px;
+  border: none;
+  background: transparent;
+}
+
+.hangman-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 650px;
+  margin: 1.5rem auto 0 auto;
+}
+
+.hangman-key-row {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.hangman-key {
+  min-width: 38px;
+  height: 48px;
+  padding: 0 0.5rem;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hangman-key:hover:not(:disabled) {
+  background: #38bdf8;
+  color: #041226;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.hangman-key.hit {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.hangman-key.miss {
+  background: rgba(255, 255, 255, 0.05);
+  color: #475569;
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- 4. CONTEXT SENTENCE COMPLETION --- */
+.context-question-box {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 1.8rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+}
+
+.context-sentence-text {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+.context-blank-token {
+  display: inline-block;
+  padding: 0.1rem 1rem;
+  margin: 0 0.35rem;
+  background: rgba(245, 158, 11, 0.2);
+  border-bottom: 3px solid #fbbf24;
+  color: #fbbf24;
+  font-weight: 900;
+  border-radius: 6px;
+}
+
+.context-sentence-vi {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-top: 1rem;
+  font-style: italic;
+  line-height: 1.5;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-top: 0.85rem;
+}
+
+
+
+.modes-bar {
+  max-width: 1400px;
+  margin: 1rem auto 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.modes-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 0.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 0.35rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.modes-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mode-tab-btn {
+  padding: 0.55rem 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.mode-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mode-tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+}
+
   </style>
 </head>
 <body>
@@ -1407,26 +1853,38 @@ html, body {
       </div>
     </nav>
 
-    <!-- Learning Modes Navigation Bar -->
+    <!-- Learning Modes Navigation Bar (10 Chế Độ Ôn Luyện Đa Dạng) -->
     <div class="modes-bar">
       <div class="modes-tabs" role="tablist">
-        <button class="mode-tab-btn active" data-tab="tab-flashcard" role="tab" aria-selected="true">
+        <button class="mode-tab-btn active" data-tab="tab-flashcard" role="tab" aria-selected="true" title="Thẻ ghi nhớ 3D">
           🃏 <span>Thẻ 3D</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-scramble" role="tab">
+        <button class="mode-tab-btn" data-tab="tab-scramble" role="tab" title="Xếp chữ cái nhảy lung tung">
           🔤 <span>Xếp Chữ</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-quiz" role="tab">
+        <button class="mode-tab-btn" data-tab="tab-blitz" role="tab" title="Phản xạ nhanh Đúng hay Sai trong 6s">
+          ⚡ <span>Đúng/Sai</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-spelling" role="tab" title="Nghe và gõ từ siêu trí nhớ">
+          ✍️ <span>Luyện Gõ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-hangman" role="tab" title="Thám tử đoán ô chữ bí mật">
+          🕵️ <span>Đoán Chữ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-context" role="tab" title="Điền từ vào câu ngữ cảnh THPT">
+          📝 <span>Ngữ Cảnh</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-quiz" role="tab" title="Trắc nghiệm 4 lựa chọn">
           🎯 <span>Trắc Nghiệm</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-match" role="tab">
+        <button class="mode-tab-btn" data-tab="tab-match" role="tab" title="Nối cặp từ tốc độ">
           🧩 <span>Nối Từ</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-listen" role="tab">
+        <button class="mode-tab-btn" data-tab="tab-listen" role="tab" title="Lắng nghe & chọn từ chuẩn">
           🎧 <span>Luyện Nghe</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-hub" role="tab">
-          📖 <span>Sổ Tra Cứu</span>
+        <button class="mode-tab-btn" data-tab="tab-hub" role="tab" title="Sổ tay tra cứu 247 từ vựng">
+          📖 <span>Tra Cứu</span>
         </button>
       </div>
 
@@ -1443,7 +1901,6 @@ html, body {
       <!-- ========================================== -->
       <section class="tab-pane active" id="tab-flashcard">
         <div class="flashcard-view-wrapper">
-          <!-- Top bar: progress and mode buttons -->
           <div class="fc-top-bar">
             <div class="fc-counter">
               <span class="current" id="fcCurrentIdx">1</span> / <span id="fcTotalCount">33</span>
@@ -1457,7 +1914,6 @@ html, body {
             </div>
           </div>
 
-          <!-- Progress indicator -->
           <div class="fc-progress-container">
             <div class="fc-progress-fill" id="fcProgressFill"></div>
           </div>
@@ -1522,7 +1978,7 @@ html, body {
             </div>
           </div>
 
-          <!-- Bottom Navigation Controls -->
+          <!-- Controls -->
           <div class="fc-bottom-controls">
             <button class="fc-nav-btn btn-prev" id="fcPrevBtn" title="Phím mũi tên Trái">
               ⬅️ Trước
@@ -1535,7 +1991,7 @@ html, body {
             </button>
           </div>
 
-          <!-- Quick Mastery Actions -->
+          <!-- Mastery Buttons -->
           <div class="fc-mastery-actions">
             <button class="btn-mastery btn-review" id="btnMarkReview" title="Đánh dấu cần ôn tập lại">
               ⚠️ Cần ôn lại
@@ -1544,24 +2000,14 @@ html, body {
               ✅ Đã thuộc từ này
             </button>
           </div>
-
-          <!-- Shortcut Guide for PC -->
-          <div style="font-size: 0.8rem; color: #64748b; display: flex; gap: 1rem; align-items: center; justify-content: center; flex-wrap: wrap;">
-            <span>Phím tắt:</span>
-            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">Space</kbd> Lật thẻ</span>
-            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">←</kbd> <kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">→</kbd> Chuyển từ</span>
-            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">S</kbd> Phát âm</span>
-            <span><kbd style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">M</kbd> Đã thuộc</span>
-          </div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 2: WORD SCRAMBLE (XẾP CHỮ CÁI ĐOÁN TỪ) -->
+      <!-- TAB 2: WORD SCRAMBLE (XẾP CHỮ NHẢY LUNG TUNG) -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-scramble">
         <div class="game-container" style="max-width: 780px;">
-          <!-- Top bar -->
           <div class="scramble-header">
             <div class="quiz-score-badge">
               ⭐ Điểm: <span id="scrambleScoreVal">0</span>
@@ -1579,21 +2025,17 @@ html, body {
             </div>
           </div>
 
-          <!-- Progress Bar -->
           <div class="fc-progress-container">
             <div class="fc-progress-fill" id="scrambleProgressFill" style="background: linear-gradient(90deg, #ec4899, #8b5cf6, #38bdf8);"></div>
           </div>
 
-          <!-- Prompt Box -->
           <div class="scramble-prompt-box">
-            <!-- Peek Banner (shows first or on demand) -->
             <div class="scramble-peek-banner" id="scramblePeekBanner" style="display: none;">
               <span class="peek-label">TỪ GỐC MẪU (HÃY GHI NHỚ KỸ NHÉ!):</span>
               <div class="peek-word" id="scramblePeekWord">account</div>
               <div class="peek-ipa" id="scramblePeekIpa">/əˈkaʊnt/</div>
             </div>
 
-            <!-- Normal Info Area -->
             <div class="scramble-info-area" id="scrambleInfoArea">
               <span class="scramble-pos-badge" id="scramblePosBadge">noun</span>
               <h3 class="scramble-meaning" id="scrambleMeaning">câu chuyện, bản ghi chép</h3>
@@ -1601,22 +2043,15 @@ html, body {
             </div>
           </div>
 
-          <!-- Answer Slots (where letters land) -->
           <div class="scramble-slots-wrapper">
-            <div class="scramble-slots-row" id="scrambleAnswerSlots">
-              <!-- Injected by JS -->
-            </div>
+            <div class="scramble-slots-row" id="scrambleAnswerSlots"></div>
           </div>
 
-          <!-- Scrambled Letter Tiles Pool -->
           <div class="scramble-letters-wrapper">
             <div class="scramble-letters-hint">👇 Bấm vào từng chữ cái để xếp thành từ có nghĩa:</div>
-            <div class="scramble-letters-pool" id="scrambleLettersPool">
-              <!-- Injected by JS -->
-            </div>
+            <div class="scramble-letters-pool" id="scrambleLettersPool"></div>
           </div>
 
-          <!-- Bottom Actions -->
           <div class="scramble-bottom-actions">
             <button class="fc-nav-btn btn-prev" id="scrambleResetBtn" title="Xếp lại từ đầu" style="max-width: 140px;">
               🔄 Xóa làm lại
@@ -1629,18 +2064,192 @@ html, body {
             </button>
           </div>
 
-          <!-- Success Banner -->
           <div class="scramble-success-banner" id="scrambleSuccessBanner" style="display: none;">
             <div class="success-text">🎉 XUẤT SẮC! GHÉP ĐÚNG TỪ RỒI!</div>
-            <div class="success-example" id="scrambleSuccessExample">
-              "He gave a fascinating account of his journey across the world."
+            <div class="success-example" id="scrambleSuccessExample"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: SPEED BLITZ (PHẢN XẠ NHANH ĐÚNG/SAI) -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-blitz">
+        <div class="game-container" style="max-width: 720px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(16, 185, 129, 0.3);">
+              ⚡ Điểm: <span id="blitzScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 0.95rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              🔥 Chuỗi: <span id="blitzStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="blitzQIdx">1</span>/<span id="blitzTotalQ">15</span>
+            </div>
+          </div>
+
+          <!-- Speed Timer Bar -->
+          <div class="blitz-timer-container">
+            <div class="blitz-timer-fill" id="blitzTimerFill"></div>
+          </div>
+
+          <!-- Blitz Card -->
+          <div class="blitz-card" id="blitzCard">
+            <button class="fc-icon-btn" id="blitzAudioBtn" title="Nghe phát âm" style="position: absolute; right: 1.25rem; top: 1.25rem;">🔊</button>
+            <div class="blitz-word" id="blitzWord">biodiversity</div>
+            <div class="blitz-ipa" id="blitzIpa">/ˌbaɪəʊdaɪˈvɜːsəti/</div>
+            
+            <div class="blitz-relation-label">Có nghĩa là:</div>
+            <div class="blitz-meaning" id="blitzMeaning">đa dạng sinh học</div>
+          </div>
+
+          <!-- True / False Big Action Buttons -->
+          <div class="blitz-actions-grid">
+            <button class="blitz-btn blitz-btn-false" id="blitzFalseBtn">
+              <span>❌ SAI</span>
+              <span class="blitz-btn-sub">Phím [Trái] hoặc [F]</span>
+            </button>
+            <button class="blitz-btn blitz-btn-true" id="blitzTrueBtn">
+              <span>✅ ĐÚNG</span>
+              <span class="blitz-btn-sub">Phím [Phải] hoặc [J]</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: SPELLING & DICTATION (LUYỆN GÕ TỪ)   -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-spelling">
+        <div class="game-container" style="max-width: 760px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(56, 189, 248, 0.3);">
+              ✍️ Điểm gõ: <span id="spellingScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Từ <span id="spellingQIdx">1</span>/<span id="spellingTotalQ">15</span>
+            </div>
+          </div>
+
+          <div class="spelling-card" id="spellingCard">
+            <div style="display: flex; justify-content: center; gap: 0.75rem; align-items: center;">
+              <div class="spelling-audio-trigger" id="spellingAudioBigBtn" title="Bấm để nghe phát âm chuẩn">
+                🔊
+              </div>
+              <button class="btn-pronounce btn-slow" id="spellingAudioSlowBtn" title="Nghe chậm 0.8x" style="height: 42px;">
+                🐢 0.8x
+              </button>
+            </div>
+
+            <div style="margin-top: 0.75rem;">
+              <span class="scramble-pos-badge" id="spellingPos">noun</span>
+              <h3 style="font-size: 1.6rem; font-weight: 800; color: #fbbf24; margin-top: 0.35rem;" id="spellingMeaning">câu chuyện, bản ghi chép</h3>
+              <div style="font-family: monospace; color: #38bdf8; font-size: 1.05rem;" id="spellingIpa">/əˈkaʊnt/</div>
+            </div>
+
+            <div class="spelling-context-sentence">
+              <div id="spellingSentence">"He gave a fascinating <span class="spelling-gap-highlight">__________</span> of his journey."</div>
+              <div style="font-size: 0.9rem; color: #94a3b8; font-style: italic; margin-top: 0.5rem;" id="spellingSentenceVi"></div>
+            </div>
+
+            <div class="spelling-input-row">
+              <input type="text" class="spelling-input" id="spellingInput" placeholder="Gõ từ tiếng Anh vào đây..." autocomplete="off" spellcheck="false">
+              <button class="spelling-submit-btn" id="spellingSubmitBtn">Kiểm tra ↵</button>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.25rem;">
+              <button class="header-btn" id="spellingHintBtn" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
+                💡 Gợi ý chữ cái đầu
+              </button>
+              <button class="header-btn" id="spellingRevealBtn" style="color: #94a3b8;">
+                👁️ Hiện đáp án
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 3: SPEED QUIZ GAME                     -->
+      <!-- TAB 5: HANGMAN (THÁM TỬ Ô CHỮ BÍ MẬT)      -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-hangman">
+        <div class="game-container" style="max-width: 780px;" id="hangmanContainer">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #ec4899; background: rgba(236, 72, 153, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(236, 72, 153, 0.3);">
+              🕵️ Phá án: <span id="hangmanScoreVal">0</span>
+            </div>
+            <div class="hangman-hearts-row" id="hangmanHearts" style="margin: 0;">
+              ❤️ ❤️ ❤️ ❤️ ❤️
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Từ <span id="hangmanWordIdx">1</span>/<span id="hangmanTotalWords">33</span>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin: 1.5rem 0 0.5rem 0;">
+            <span class="scramble-pos-badge" id="hangmanPos">noun</span>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #38bdf8; margin-top: 0.4rem;" id="hangmanMeaning">câu chuyện, bản ghi chép</h3>
+          </div>
+
+          <!-- Mystery Slots -->
+          <div class="hangman-slots-row" id="hangmanSlots">
+            <!-- Dynamic Slots -->
+          </div>
+
+          <!-- Action buttons -->
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+            <button class="header-btn" id="hangmanHintBtn" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
+              💡 Mở 1 chữ cái
+            </button>
+            <button class="header-btn" id="hangmanAudioBtn">
+              🔊 Nghe phát âm
+            </button>
+          </div>
+
+          <!-- Virtual Keyboard -->
+          <div class="hangman-keyboard" id="hangmanKeyboard">
+            <!-- Dynamic A-Z keys -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 6: CONTEXT SENTENCE (BÀI TẬP NGỮ CẢNH) -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-context">
+        <div class="game-container" id="contextContainer" style="max-width: 820px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              📝 Điểm: <span id="contextScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.15); padding: 0.4rem 0.95rem; border-radius: 9999px; border: 1.5px solid rgba(16, 185, 129, 0.3);">
+              🔥 Chuỗi: <span id="contextStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="contextQIdx">1</span>/<span id="contextTotalQ">15</span>
+            </div>
+          </div>
+
+          <!-- Question Box -->
+          <div class="context-question-box">
+            <span style="font-size: 0.85rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.06em;">CHỌN TỪ THÍCH HỢP ĐIỀN VÀO CHỖ TRỐNG (CHUẨN ĐỀ THI THPT):</span>
+            <div class="context-sentence-text" id="contextSentenceText" style="margin-top: 0.85rem;">
+              "Preserving cultural heritage is of vital <span class="context-blank-token">__________</span> to modern society."
+            </div>
+            <div class="context-sentence-vi" id="contextSentenceVi">
+              Dịch: Bảo tồn di sản văn hóa có tầm quan trọng sống còn đối với xã hội hiện đại.
+            </div>
+          </div>
+
+          <!-- Options Grid -->
+          <div class="quiz-options-grid" id="contextOptionsGrid">
+            <!-- 4 options injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 7: SPEED QUIZ GAME                     -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-quiz">
         <div class="game-container" id="quizContainer">
@@ -1676,7 +2285,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 4: WORD MATCHING GAME                  -->
+      <!-- TAB 8: WORD MATCHING GAME                  -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-match">
         <div class="game-container" style="max-width: 820px;">
@@ -1703,7 +2312,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 5: LISTENING MASTER                    -->
+      <!-- TAB 9: LISTENING MASTER                    -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-listen">
         <div class="game-container">
@@ -1735,7 +2344,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 6: VOCABULARY HUB (SỔ TAY TRA CỨU)     -->
+      <!-- TAB 10: VOCABULARY HUB (SỔ TAY TRA CỨU)    -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-hub">
         <div style="display: flex; gap: 0.85rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
@@ -1841,7 +2450,7 @@ html, body {
           Biên soạn & Thiết kế Sư phạm: <span>Thầy giáo Đinh Văn Thành</span> (THCS Đồng Yên)
         </p>
         <p style="font-size: 0.82rem; color: #94a3b8;">
-          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • Hỗ trợ học tập đa nền tảng (PC & Điện thoại)
+          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • 10 Chế độ ôn tập vui nhộn, thoải mái, nhớ sâu
         </p>
       </div>
     </footer>
