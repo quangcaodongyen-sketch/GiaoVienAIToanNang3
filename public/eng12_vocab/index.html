@@ -2876,19 +2876,9 @@ html, body {
     </footer>
   </div>
 
-  <!-- Scripts -->
-  <script>
-    (function() {
-      const isOnlineWeb = !window.location.protocol.startsWith('file:') && window.location.pathname.includes('eng12_vocab');
-      const prefix = isOnlineWeb ? '/eng12_vocab/' : './';
-      
-      function injectScript(src) {
-        document.write('<script src="' + prefix + src + '"><\/script>');
-      }
-      injectScript('confetti.browser.min.js');
-      injectScript('vocabulary_data.js');
-      injectScript('app.js?v=20261014_v10_fast_60fps');
-    })();
-  </script>
+  <!-- Scripts: Direct Bulletproof Sequential Loading (NO document.write) -->
+  <script src="confetti.browser.min.js"></script>
+  <script src="vocabulary_data.js?v=20261014_v12_bulletproof"></script>
+  <script src="app.js?v=20261014_v12_bulletproof"></script>
 </body>
 </html>

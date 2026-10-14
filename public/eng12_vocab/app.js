@@ -49,6 +49,20 @@ const STATE = {
   }
 };
 
+// CHANT MODE GLOBAL STATE
+const STATE_CHANT = {
+  currentWordIdx: 0,
+  isPlaying: false,
+  timerTimeout: null,
+  speakVi: true,
+  speakExample: true,
+  loopAll: true,
+  style: 'pop_funk',
+  bpm: 110,
+  volume: 0.8
+};
+
+
 // Load saved progress from LocalStorage
 function loadProgress() {
   try {
@@ -324,17 +338,19 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
   stopAutoPlay();
   if (typeof pauseChant === 'function') pauseChant();
   
-  // Hủy ngay toàn bộ phát âm trước đó
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
+  // Hủy ngay toàn bộ phát âm trước đó nếu đang nói
+  if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
   }
   
   const unitObj = VOCABULARY_DATA.find(u => u.unit === unitNum);
   if (unitObj) {
     STATE.activeWords = [...unitObj.words];
     
-    document.getElementById('unitTitleDisplay').textContent = `Unit ${unitObj.unit}: ${unitObj.title}`;
-    document.getElementById('unitWordCountBadge').textContent = `${unitObj.word_count} từ`;
+    const titleEl = document.getElementById('unitTitleDisplay');
+    if (titleEl) titleEl.textContent = `Unit ${unitObj.unit}: ${unitObj.title}`;
+    const badgeEl = document.getElementById('unitWordCountBadge');
+    if (badgeEl) badgeEl.textContent = `${unitObj.word_count} từ`;
     
     document.querySelectorAll('.unit-pill').forEach((p, idx) => {
       p.classList.toggle('active', (idx + 1) === unitNum);
@@ -346,17 +362,18 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
     }
   }
   
-  renderFlashcard();
-  initQuiz();
-  initMatchGame();
-  initListenGame(false);
-  if (typeof initScrambleGame === 'function') initScrambleGame();
-  if (typeof initChantGame === 'function') initChantGame();
-  if (typeof initBlitzGame === 'function') initBlitzGame();
-  if (typeof initSpellingGame === 'function') initSpellingGame(false);
-  if (typeof initHangmanGame === 'function') initHangmanGame();
-  if (typeof initContextGame === 'function') initContextGame();
-  renderVocabularyHub();
+  // Khởi tạo giao diện các tab an toàn (try-catch từng tab)
+  try { renderFlashcard(); } catch (e) { console.error("renderFlashcard error:", e); }
+  try { initQuiz(); } catch (e) { console.error("initQuiz error:", e); }
+  try { initMatchGame(); } catch (e) { console.error("initMatchGame error:", e); }
+  try { initListenGame(false); } catch (e) { console.error("initListenGame error:", e); }
+  try { if (typeof initScrambleGame === 'function') initScrambleGame(false); } catch (e) { console.error("initScrambleGame error:", e); }
+  try { if (typeof initChantGame === 'function') initChantGame(); } catch (e) { console.error("initChantGame error:", e); }
+  try { if (typeof initBlitzGame === 'function') initBlitzGame(); } catch (e) { console.error("initBlitzGame error:", e); }
+  try { if (typeof initSpellingGame === 'function') initSpellingGame(false); } catch (e) { console.error("initSpellingGame error:", e); }
+  try { if (typeof initHangmanGame === 'function') initHangmanGame(); } catch (e) { console.error("initHangmanGame error:", e); }
+  try { if (typeof initContextGame === 'function') initContextGame(); } catch (e) { console.error("initContextGame error:", e); }
+  try { renderVocabularyHub(); } catch (e) { console.error("renderVocabularyHub error:", e); }
 }
 
 // ==============================================================================
@@ -1184,19 +1201,7 @@ function setupEventListeners() {
 }
 
 // ==============================================================================
-// 11. ENTRY POINT
-// ==============================================================================
-window.addEventListener('DOMContentLoaded', () => {
-  loadProgress();
-  SpeechEngine.init();
-  initUnitPills();
-  selectUnit(1, false);
-  setupEventListeners();
-  
-  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
-});
+// (startApp moved to bottom of file)
 
 
 
@@ -2176,15 +2181,6 @@ const ChantBeatEngine = {
 };
 
 // --- CHANT VOCABULARY CONTROLLER & SEQUENCER ---
-const STATE_CHANT = {
-  currentWordIdx: 0,
-  isPlaying: false,
-  timerTimeout: null,
-  speakVi: true,
-  speakExample: true,
-  loopUnit: true,
-  currentPhase: 'idle' // 'idle', 'call', 'response', 'cheer'
-};
 
 function initChantGame() {
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
@@ -2254,6 +2250,7 @@ function startChant() {
 }
 
 function pauseChant() {
+  if (typeof STATE_CHANT === 'undefined') return;
   STATE_CHANT.isPlaying = false;
   clearTimeout(STATE_CHANT.timerTimeout);
   window.speechSynthesis.cancel();
@@ -2505,7 +2502,7 @@ STATE.scramble = {
   peekTimer: null
 };
 
-function initScrambleGame() {
+function initScrambleGame(autoSpeak = false) {
   const words = [...STATE.activeWords];
   if (!words || words.length === 0) return;
   
@@ -2518,10 +2515,10 @@ function initScrambleGame() {
   if (scoreEl) scoreEl.textContent = '0';
   if (totalEl) totalEl.textContent = words.length;
   
-  loadScrambleWord();
+  loadScrambleWord(autoSpeak);
 }
 
-function loadScrambleWord() {
+function loadScrambleWord(autoSpeak = false) {
   if (STATE.scramble.currentIdx >= STATE.scramble.words.length) {
     showScrambleCompleted();
     return;
@@ -2597,16 +2594,17 @@ function loadScrambleWord() {
   STATE.scramble.tiles = shuffled;
   
   renderScrambleUI();
-  showPeekBanner(2500);
+  showPeekBanner(2500, autoSpeak);
 }
 
-function showPeekBanner(durationMs = 2500) {
+function showPeekBanner(durationMs = 2500, autoSpeak = false) {
   const peek = document.getElementById('scramblePeekBanner');
   const info = document.getElementById('scrambleInfoArea');
   if (peek) peek.style.display = 'block';
   if (info) info.style.display = 'none';
   
-  if (STATE.scramble.currentWordObj) {
+  // CHỈ PHÁT ÂM KHI autoSpeak == true, KHÔNG TỰ ĐỌC KHI CHUYỂN UNIT!
+  if (autoSpeak && STATE.scramble.currentWordObj) {
     SpeechEngine.speak(STATE.scramble.currentWordObj.word, 0.85);
   }
   
@@ -2780,4 +2778,23 @@ function showScrambleCompleted() {
       </div>
     `;
   }
+}
+
+// ==============================================================================
+// 12. FINAL ENTRY POINT - EXECUTES AFTER ALL FUNCTIONS & STATES ARE LOADED
+// ==============================================================================
+function startApp() {
+  console.log("Eng12 Vocab Master initializing...");
+  try { loadProgress(); } catch (e) { console.error("loadProgress error:", e); }
+  try { SpeechEngine.init(); } catch (e) { console.error("SpeechEngine.init error:", e); }
+  try { initUnitPills(); } catch (e) { console.error("initUnitPills error:", e); }
+  try { setupEventListeners(); } catch (e) { console.error("setupEventListeners error:", e); }
+  try { selectUnit(STATE.currentUnit || 1, false); } catch (e) { console.error("selectUnit error:", e); }
+  console.log("Eng12 Vocab Master ready!");
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startApp);
+} else {
+  startApp();
 }
