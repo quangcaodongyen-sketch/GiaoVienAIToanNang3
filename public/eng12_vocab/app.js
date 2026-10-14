@@ -378,7 +378,7 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
   }
   
   // Khởi tạo giao diện các tab an toàn (try-catch từng tab)
-  try { renderFlashcard(); } catch (e) { console.error("renderFlashcard error:", e); }
+  try { renderFlashcard(); renderFullVocabList(); renderChantWordChips(); } catch (e) { console.error("renderFlashcard error:", e); }
   try { initQuiz(); } catch (e) { console.error("initQuiz error:", e); }
   try { initMatchGame(); } catch (e) { console.error("initMatchGame error:", e); }
   try { initListenGame(false); } catch (e) { console.error("initListenGame error:", e); }
@@ -459,6 +459,7 @@ function nextWord() {
   }
   STATE.isFlipped = false;
   renderFlashcard();
+  if (typeof updateActiveVocabRow === 'function') updateActiveVocabRow();
 }
 
 function prevWord() {
@@ -469,6 +470,7 @@ function prevWord() {
   }
   STATE.isFlipped = false;
   renderFlashcard();
+  if (typeof updateActiveVocabRow === 'function') updateActiveVocabRow();
 }
 
 function toggleShuffle() {
@@ -1008,11 +1010,13 @@ function setupEventListeners() {
       const targetPane = document.getElementById(btn.dataset.tab);
       if (targetPane) targetPane.classList.add('active');
       if (btn.dataset.tab !== 'tab-flashcard') stopAutoPlay();
+      if (btn.dataset.tab === 'tab-flashcard' && typeof renderFullVocabList === 'function') { renderFullVocabList(); }
       if (btn.dataset.tab !== 'tab-chant' && typeof pauseChant === 'function') {
         pauseChant();
       }
-      if (btn.dataset.tab === 'tab-chant' && typeof initChantGame === 'function') {
-        initChantGame();
+      if (btn.dataset.tab === 'tab-chant') {
+        if (typeof initChantGame === 'function') initChantGame();
+        if (typeof renderChantWordChips === 'function') renderChantWordChips();
       }
       if (btn.dataset.tab !== 'tab-blitz' && STATE.blitz && STATE.blitz.timerInterval) {
         clearInterval(STATE.blitz.timerInterval);
@@ -2824,6 +2828,101 @@ function showScrambleCompleted() {
     `;
   }
 }
+
+
+// ==============================================================================
+// RENDER FULL VOCABULARY LIST (HIỂN THỊ ĐỦ TOÀN BỘ TỪ VỰNG TRÊN GIAO DIỆN)
+// ==============================================================================
+function renderFullVocabList() {
+  const container = document.getElementById('fullVocabGrid');
+  const titleText = document.getElementById('fullVocabSectionTitle');
+  if (!container || !STATE.activeWords) return;
+  
+  const curUnit = VOCABULARY_DATA.find(u => u.unit === STATE.currentUnit);
+  const unitTitle = curUnit ? curUnit.title : '';
+  if (titleText) {
+    titleText.textContent = `Toàn bộ ${STATE.activeWords.length} từ vựng Unit ${STATE.currentUnit}: ${unitTitle}`;
+  }
+  
+  container.innerHTML = '';
+  STATE.activeWords.forEach((w, idx) => {
+    const item = document.createElement('div');
+    item.className = `full-vocab-row ${idx === STATE.currentWordIdx ? 'active-row' : ''}`;
+    item.dataset.index = idx;
+    
+    item.innerHTML = `
+      <div class="fvr-num">${idx + 1}</div>
+      <div class="fvr-word-box">
+        <div class="fvr-word">${w.word}</div>
+        <div class="fvr-ipa">${w.ipa || ''} <span class="fvr-pos">${w.pos || 'từ'}</span></div>
+      </div>
+      <div class="fvr-meaning-box">
+        <div class="fvr-meaning">${w.meaning}</div>
+        <div class="fvr-example">"${w.example}"</div>
+      </div>
+      <div class="fvr-actions">
+        <button class="fvr-audio-btn" title="Nghe phát âm dõng dạc">🔊</button>
+      </div>
+    `;
+    
+    // Bấm vào từ nào: Nhảy thẻ Flashcard tới từ đó và phát âm dõng dạc ngay
+    item.addEventListener('click', (e) => {
+      STATE.currentWordIdx = idx;
+      STATE.isFlipped = false;
+      renderFlashcard();
+      SpeechEngine.speak(w.word, 0.80);
+      
+      document.querySelectorAll('.full-vocab-row').forEach(r => r.classList.remove('active-row'));
+      item.classList.add('active-row');
+      
+      // Cuộn mượt thẻ Flashcard vào tầm mắt nếu đang ở xa
+      const fcStage = document.getElementById('flashcardStage');
+      if (fcStage && window.scrollY > 400) {
+        fcStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+    
+    container.appendChild(item);
+  });
+}
+
+function updateActiveVocabRow() {
+  document.querySelectorAll('.full-vocab-row').forEach((r, idx) => {
+    r.classList.toggle('active-row', idx === STATE.currentWordIdx);
+  });
+}
+
+function renderChantWordChips() {
+  const container = document.getElementById('chantWordChips');
+  const countEl = document.getElementById('chantPlaylistCount');
+  if (!container || !STATE.activeWords) return;
+  
+  if (countEl) countEl.textContent = `${STATE.activeWords.length} từ`;
+  container.innerHTML = '';
+  
+  STATE.activeWords.forEach((w, idx) => {
+    const chip = document.createElement('div');
+    chip.className = `chant-chip ${idx === STATE_CHANT.currentWordIdx ? 'playing' : ''}`;
+    chip.textContent = `${idx + 1}. ${w.word}`;
+    chip.title = `${w.meaning} (Bấm để nhảy tới từ này trong điệu chant)`;
+    
+    chip.addEventListener('click', () => {
+      STATE_CHANT.currentWordIdx = idx;
+      renderChantWord();
+      SpeechEngine.speak(w.word, 0.80);
+      updateChantChips();
+    });
+    
+    container.appendChild(chip);
+  });
+}
+
+function updateChantChips() {
+  document.querySelectorAll('.chant-chip').forEach((c, idx) => {
+    c.classList.toggle('playing', idx === STATE_CHANT.currentWordIdx);
+  });
+}
+
 
 // ==============================================================================
 // 12. FINAL ENTRY POINT - EXECUTES AFTER ALL FUNCTIONS & STATES ARE LOADED

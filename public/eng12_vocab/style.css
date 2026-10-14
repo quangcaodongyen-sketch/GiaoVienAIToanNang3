@@ -2157,3 +2157,247 @@ body {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+
+
+/* ==============================================================================
+   FULL VISIBILITY & NO TRUNCATION (HIỂN THỊ ĐỦ 100% TRÊN GIAO DIỆN)
+   ============================================================================== */
+.unit-scroll-bar {
+  overflow-x: visible !important;
+  padding: 0.65rem 1rem !important;
+}
+
+.unit-pills-wrapper {
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important; /* HIỂN THỊ ĐỦ TOÀN BỘ CÁC UNIT KHÔNG BỊ CẮT */
+  justify-content: center !important;
+  gap: 0.45rem !important;
+}
+
+.unit-pill {
+  flex-shrink: 0 !important;
+  padding: 0.45rem 0.9rem !important;
+  font-size: 0.84rem !important;
+  white-space: nowrap !important;
+}
+
+.modes-bar {
+  max-width: 1400px !important;
+  margin: 0.6rem auto 0 auto !important;
+  padding: 0 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+}
+
+.modes-tabs {
+  display: flex !important;
+  flex-wrap: wrap !important; /* HIỂN THỊ ĐỦ TOÀN BỘ 11 TABS KHÔNG BỊ CẮT CHỮ */
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+  white-space: normal !important;
+  padding: 0.4rem 0.6rem !important;
+}
+
+.mode-tab-btn {
+  padding: 0.48rem 0.88rem !important;
+  font-size: 0.84rem !important;
+  white-space: nowrap !important;
+}
+
+/* UNIT FULL VOCABULARY LIST SECTION (HIỂN THỊ ĐỦ TOÀN BỘ TỪ TRONG BÀI HỌC) */
+.unit-full-vocab-section {
+  max-width: 1100px;
+  margin: 2.2rem auto 1.5rem auto;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.full-vocab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.full-vocab-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.vocab-title-icon {
+  font-size: 1.5rem;
+}
+
+.full-vocab-sub {
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+
+.full-vocab-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.full-vocab-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.full-vocab-row:hover {
+  background: rgba(49, 65, 102, 0.85);
+  border-color: rgba(99, 102, 241, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.full-vocab-row.active-row {
+  background: rgba(99, 102, 241, 0.22);
+  border-color: #6366f1;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+}
+
+.fvr-num {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #64748b;
+  min-width: 28px;
+  text-align: center;
+}
+
+.fvr-word-box {
+  min-width: 170px;
+}
+
+.fvr-word {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: -0.01em;
+}
+
+.fvr-ipa {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: #a5b4fc;
+  margin-top: 0.15rem;
+}
+
+.fvr-pos {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  margin-left: 0.35rem;
+}
+
+.fvr-meaning-box {
+  flex: 1;
+}
+
+.fvr-meaning {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.fvr-example {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+.fvr-actions {
+  display: flex;
+  align-items: center;
+}
+
+.fvr-audio-btn {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  font-size: 1.1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+.fvr-audio-btn:hover {
+  background: #6366f1;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* CHANT PLAYLIST SECTION */
+.chant-playlist-section {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+}
+
+.chant-word-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chant-chip {
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.chant-chip:hover {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: rgba(236, 72, 153, 0.5);
+  color: #f472b6;
+}
+
+.chant-chip.playing {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+  transform: scale(1.06);
+}
