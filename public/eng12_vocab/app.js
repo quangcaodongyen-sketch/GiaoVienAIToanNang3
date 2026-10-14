@@ -248,16 +248,22 @@ function initUnitPills() {
     pill.className = `unit-pill ${u.unit === STATE.currentUnit ? 'active' : ''}`;
     pill.innerHTML = `<span class="pill-num">${u.icon} U${u.unit}</span> <span>${u.title}</span>`;
     pill.title = `${u.title_vi} (${u.word_count} từ)`;
-    pill.addEventListener('click', () => selectUnit(u.unit));
+    pill.addEventListener('click', () => selectUnit(u.unit, true));
     container.appendChild(pill);
   });
 }
 
-function selectUnit(unitNum) {
+function selectUnit(unitNum, shouldSpeakTitle = true) {
   STATE.currentUnit = unitNum;
   STATE.currentWordIdx = 0;
   STATE.isFlipped = false;
   stopAutoPlay();
+  if (typeof pauseChant === 'function') pauseChant();
+  
+  // Hủy ngay toàn bộ phát âm trước đó
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
   
   const unitObj = VOCABULARY_DATA.find(u => u.unit === unitNum);
   if (unitObj) {
@@ -269,16 +275,24 @@ function selectUnit(unitNum) {
     document.querySelectorAll('.unit-pill').forEach((p, idx) => {
       p.classList.toggle('active', (idx + 1) === unitNum);
     });
+    
+    // BẤM CHỌN UNIT NÀO THÌ ĐỌC TÊN UNIT ĐÓ (BẰNG GIỌNG NỮ TRONG TRẺO):
+    if (shouldSpeakTitle) {
+      setTimeout(() => {
+        SpeechEngine.speak(`Unit ${unitObj.unit}: ${unitObj.title}`, 1.0);
+      }, 80);
+    }
   }
   
+  // Khởi tạo các chế độ nhưng TUYỆT ĐỐI KHÔNG tự ý phát âm từ vựng bên dưới
   renderFlashcard();
   initQuiz();
   initMatchGame();
-  initListenGame();
+  initListenGame(false);
   initScrambleGame();
   initChantGame();
   initBlitzGame();
-  initSpellingGame();
+  initSpellingGame(false);
   initHangmanGame();
   initContextGame();
   renderVocabularyHub();
@@ -656,7 +670,7 @@ function handleMatchTileClick(el, tile) {
 // ==============================================================================
 // 8. TAB 4: LISTENING MASTER GAME LOGIC
 // ==============================================================================
-function initListenGame() {
+function initListenGame(autoSpeak = false) {
   const words = [...STATE.activeWords];
   if (words.length < 4) return;
   
@@ -666,26 +680,33 @@ function initListenGame() {
   STATE.listen.score = 0;
   STATE.listen.total = STATE.listen.questions.length;
   
-  document.getElementById('listenScoreVal').textContent = '0';
-  document.getElementById('listenTotalQ').textContent = STATE.listen.total;
+  const scoreEl = document.getElementById('listenScoreVal');
+  const totalEl = document.getElementById('listenTotalQ');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (totalEl) totalEl.textContent = STATE.listen.total;
   
-  renderListenQuestion();
+  renderListenQuestion(autoSpeak);
 }
 
-function renderListenQuestion() {
+function renderListenQuestion(autoSpeak = false) {
   const q = STATE.listen.questions[STATE.listen.currentIdx];
   if (!q) {
     SFX.playWin();
     alert(`🎉 Bạn đã hoàn thành bài luyện nghe với ${STATE.listen.score} điểm!`);
-    initListenGame();
+    initListenGame(false);
     return;
   }
   
-  document.getElementById('listenQIdx').textContent = STATE.listen.currentIdx + 1;
+  const idxEl = document.getElementById('listenQIdx');
+  if (idxEl) idxEl.textContent = STATE.listen.currentIdx + 1;
   
-  setTimeout(() => {
-    SpeechEngine.speak(q.word, 0.95);
-  }, 400);
+  // CHỈ tự động phát âm khi học sinh ĐANG Ở TRONG tab Luyện Nghe và autoSpeak = true
+  const isListenActive = document.getElementById('tab-listen') && document.getElementById('tab-listen').classList.contains('active');
+  if (autoSpeak && isListenActive) {
+    setTimeout(() => {
+      SpeechEngine.speak(q.word, 0.95);
+    }, 300);
+  }
   
   const otherWords = STATE.activeWords.filter(w => w.id !== q.id);
   const distractors = otherWords.sort(() => 0.5 - Math.random()).slice(0, 3);
@@ -718,7 +739,7 @@ function renderListenQuestion() {
       
       setTimeout(() => {
         STATE.listen.currentIdx++;
-        renderListenQuestion();
+        renderListenQuestion(true);
       }, 1300);
     });
     grid.appendChild(btn);
@@ -1042,7 +1063,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadProgress();
   SpeechEngine.init();
   initUnitPills();
-  selectUnit(1);
+  selectUnit(1, false);
   setupEventListeners();
   
   if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
@@ -1213,7 +1234,7 @@ STATE.spelling = {
   score: 0
 };
 
-function initSpellingGame() {
+function initSpellingGame(autoSpeak = false) {
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   STATE.spelling.questions = [...STATE.activeWords].sort(() => 0.5 - Math.random()).slice(0, 15);
   STATE.spelling.currentIdx = 0;
@@ -1224,10 +1245,10 @@ function initSpellingGame() {
   if (scoreEl) scoreEl.textContent = '0';
   if (totalEl) totalEl.textContent = STATE.spelling.questions.length;
   
-  renderSpellingQuestion();
+  renderSpellingQuestion(autoSpeak);
 }
 
-function renderSpellingQuestion() {
+function renderSpellingQuestion(autoSpeak = false) {
   const q = STATE.spelling.questions[STATE.spelling.currentIdx];
   if (!q) {
     showSpellingFinished();
@@ -1266,8 +1287,11 @@ function renderSpellingQuestion() {
     setTimeout(() => input.focus(), 150);
   }
   
-  // Speak word
-  SpeechEngine.speak(q.word, 0.95);
+  // CHỈ phát âm khi học sinh ĐANG Ở tab Luyện Gõ và autoSpeak = true
+  const isSpellingActive = document.getElementById('tab-spelling') && document.getElementById('tab-spelling').classList.contains('active');
+  if (autoSpeak && isSpellingActive) {
+    SpeechEngine.speak(q.word, 0.95);
+  }
 }
 
 function checkSpellingAnswer() {
@@ -1290,7 +1314,7 @@ function checkSpellingAnswer() {
     
     setTimeout(() => {
       STATE.spelling.currentIdx++;
-      renderSpellingQuestion();
+      renderSpellingQuestion(true);
     }, 1000);
   } else {
     input.className = 'spelling-input wrong';
