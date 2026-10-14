@@ -173,23 +173,63 @@ const SpeechEngine = {
     }
   },
   
-  speak(text, rate = 1.0) {
+  getBestFemaleVoice(langCode = 'en-US') {
+    if (!this.voices || this.voices.length === 0) {
+      if ('speechSynthesis' in window) this.voices = window.speechSynthesis.getVoices();
+    }
+    const voices = this.voices || [];
+    
+    // Ưu tiên danh sách giọng nữ trong trẻo, tự nhiên, ngọt ngào nhất (Edge Neural, Google, Apple, Windows)
+    const femaleKeywords = [
+      'Jenny', 'Aria', 'Ana', 'Michelle', 'Sonia', 'Libby', 
+      'Emma', 'Clara', 'Samantha', 'Victoria', 'Karen', 'Zira', 
+      'Female', 'Nữ'
+    ];
+    
+    // 1. Tìm giọng nữ đúng chuẩn mã ngôn ngữ (en-US hoặc en-GB)
+    for (const name of femaleKeywords) {
+      const match = voices.find(v => 
+        (v.lang.startsWith(langCode) || v.lang.startsWith(langCode.slice(0, 2))) && 
+        v.name.toLowerCase().includes(name.toLowerCase())
+      );
+      if (match) return match;
+    }
+    
+    // 2. Tìm bất kỳ giọng nữ tiếng Anh nào
+    for (const name of femaleKeywords) {
+      const match = voices.find(v => 
+        v.lang.startsWith('en') && 
+        v.name.toLowerCase().includes(name.toLowerCase())
+      );
+      if (match) return match;
+    }
+    
+    // 3. Fallback: Chọn giọng tiếng Anh không chứa từ khóa giọng nam (loại trừ David, Guy, Male, George)
+    const nonMaleVoice = voices.find(v => 
+      v.lang.startsWith(langCode) && 
+      !v.name.toLowerCase().includes('david') && 
+      !v.name.toLowerCase().includes('guy') && 
+      !v.name.toLowerCase().includes('male') && 
+      !v.name.toLowerCase().includes('george')
+    );
+    if (nonMaleVoice) return nonMaleVoice;
+    
+    return voices.find(v => v.lang.startsWith(langCode)) || voices[0];
+  },
+  
+  speak(text, rate = 1.0, lang = null) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = rate;
-    utterance.pitch = 1.0;
+    utterance.pitch = 1.1; // Tăng nhẹ cao độ lên 1.1 để giọng trong vắt, sáng, ngọt ngào
     
-    const langCode = STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US';
-    utterance.lang = langCode;
+    const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
+    utterance.lang = targetLang;
     
-    if (this.voices.length > 0) {
-      const voice = this.voices.find(v => v.lang.startsWith(langCode) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('David') || v.name.includes('Jenny')))
-        || this.voices.find(v => v.lang.startsWith(langCode))
-        || this.voices.find(v => v.lang.startsWith('en'));
-      if (voice) utterance.voice = voice;
-    }
+    const voice = this.getBestFemaleVoice(targetLang);
+    if (voice) utterance.voice = voice;
     
     window.speechSynthesis.speak(utterance);
   }
@@ -505,17 +545,21 @@ function initMatchGame() {
   STATE.match.matchedPairs = 0;
   STATE.match.selectedCard = null;
   
-  document.getElementById('matchedCountVal').textContent = '0';
-  document.getElementById('totalMatchPairs').textContent = STATE.match.totalPairs;
+  const matchedCountEl = document.getElementById('matchedCountVal');
+  const totalMatchEl = document.getElementById('totalMatchPairs');
+  if (matchedCountEl) matchedCountEl.textContent = '0';
+  if (totalMatchEl) totalMatchEl.textContent = STATE.match.totalPairs;
   
   if (STATE.match.timerInterval) clearInterval(STATE.match.timerInterval);
   STATE.match.startTime = Date.now();
-  document.getElementById('matchTimerVal').textContent = '00:00';
+  const timerEl = document.getElementById('matchTimerVal');
+  if (timerEl) timerEl.textContent = '00:00';
+  
   STATE.match.timerInterval = setInterval(() => {
     const elapsed = Math.floor((Date.now() - STATE.match.startTime) / 1000);
     const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
     const s = String(elapsed % 60).padStart(2, '0');
-    document.getElementById('matchTimerVal').textContent = `${m}:${s}`;
+    if (timerEl) timerEl.textContent = `${m}:${s}`;
   }, 1000);
   
   const tiles = [];
@@ -527,6 +571,7 @@ function initMatchGame() {
   tiles.sort(() => 0.5 - Math.random());
   
   const board = document.getElementById('matchGameBoard');
+  if (!board) return;
   board.innerHTML = '';
   
   tiles.forEach((tile, index) => {
@@ -542,7 +587,16 @@ function initMatchGame() {
 }
 
 function handleMatchTileClick(el, tile) {
-  if (el.classList.contains('matched') || el.classList.contains('selected')) return;
+  // If card is already matched, ignore
+  if (el.classList.contains('matched')) return;
+  
+  // If user clicks the currently selected card, deselect it!
+  if (STATE.match.selectedCard && STATE.match.selectedCard.el === el) {
+    el.classList.remove('selected');
+    STATE.match.selectedCard = null;
+    SFX.playTone(420, 'sine', 0.08);
+    return;
+  }
   
   SFX.playFlip();
   if (tile.type === 'en') {
@@ -550,16 +604,17 @@ function handleMatchTileClick(el, tile) {
   }
   
   if (!STATE.match.selectedCard) {
+    // First card selected
     STATE.match.selectedCard = { el, tile };
     el.classList.add('selected');
   } else {
+    // Second card selected
     const prev = STATE.match.selectedCard;
-    if (prev.tile.index === tile.index) return;
-    
     el.classList.add('selected');
     
+    // Check match: Same word ID, but different types (one English and one Vietnamese)
     if (prev.tile.id === tile.id && prev.tile.type !== tile.type) {
-      // MATCH!
+      // MATCH SUCCESS!
       setTimeout(() => {
         prev.el.classList.remove('selected');
         el.classList.remove('selected');
@@ -568,28 +623,31 @@ function handleMatchTileClick(el, tile) {
         SFX.playMatchSuccess();
         
         STATE.match.matchedPairs++;
-        document.getElementById('matchedCountVal').textContent = STATE.match.matchedPairs;
+        const countEl = document.getElementById('matchedCountVal');
+        if (countEl) countEl.textContent = STATE.match.matchedPairs;
         STATE.mastered.add(tile.id);
         saveProgress();
         
         if (STATE.match.matchedPairs === STATE.match.totalPairs) {
           clearInterval(STATE.match.timerInterval);
           SFX.playWin();
+          launchConfetti();
           setTimeout(() => {
-            alert(`🎉 CHÚC MỪNG BẠN ĐÃ GHÉP HẾT 8 CẶP TỪ TRONG ${document.getElementById('matchTimerVal').textContent}!`);
-          }, 300);
+            const timeStr = document.getElementById('matchTimerVal') ? document.getElementById('matchTimerVal').textContent : '';
+            alert(`🎉 XUẤT SẮC! BẠN ĐÃ GHÉP HẾT ${STATE.match.totalPairs} CẶP TỪ TRONG ${timeStr}!`);
+          }, 400);
         }
-      }, 350);
+      }, 250);
       STATE.match.selectedCard = null;
     } else {
-      // NO MATCH - Shake effect
+      // NO MATCH -> Shake both cards and reset
       SFX.playWrong();
       prev.el.classList.add('shake');
       el.classList.add('shake');
       setTimeout(() => {
         prev.el.classList.remove('selected', 'shake');
         el.classList.remove('selected', 'shake');
-      }, 600);
+      }, 550);
       STATE.match.selectedCard = null;
     }
   }
