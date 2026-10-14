@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eng 12 Vocab Master - Học Từ Vựng Tiếng Anh Lớp 12 SGK Global Success</title>
+  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, dễ nhớ, phát âm chuẩn US/UK, flashcards 3D và game luyện tập vui nhộn. Tác giả: Thầy Đinh Văn Thành.">
+  <meta name="theme-color" content="#0a0f1d">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <!-- Ambient background lighting -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <a class="brand-wrapper" href="#" id="brandLogoBtn">
+          <div class="brand-logo">🇬🇧</div>
+          <div class="brand-info">
+            <h1>ENG 12 VOCAB MASTER</h1>
+            <span class="brand-badge">Global Success 2026</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+          <button class="header-btn btn-qr" id="openQrModalBtn" title="Mở trên điện thoại">
+            📱 <span>Mở ĐT</span>
+          </button>
+          <button class="header-btn" id="themeToggleBtn" title="Chuyển chế độ sáng/tối">
+            🌙
+          </button>
+          <button class="header-btn" id="statsModalBtn" title="Tiến độ học tập">
+            📊 <span>Tiến Độ</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Unit Selector Horizontal Scrollbar -->
+    <nav class="unit-scroll-bar" aria-label="Danh sách bài học">
+      <div class="unit-pills-wrapper" id="unitPillsContainer">
+        <!-- Dynamically injected by JavaScript -->
+      </div>
+    </nav>
+
+    <!-- Learning Modes Navigation Bar -->
+    <div class="modes-bar">
+      <div class="modes-tabs" role="tablist">
+        <button class="mode-tab-btn active" data-tab="tab-flashcard" role="tab" aria-selected="true">
+          🃏 <span>Thẻ 3D</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-quiz" role="tab">
+          🎯 <span>Trắc Nghiệm</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-match" role="tab">
+          🧩 <span>Nối Từ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-listen" role="tab">
+          🎧 <span>Luyện Nghe</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-hub" role="tab">
+          📖 <span>Sổ Tra Cứu</span>
+        </button>
+      </div>
+
+      <div class="unit-meta-badge" id="currentUnitMeta">
+        <span id="unitTitleDisplay">Unit 1: Life Stories We Admire</span>
+        <span class="meta-words" id="unitWordCountBadge">33 từ</span>
+      </div>
+    </div>
+
+    <!-- Main View Content Area -->
+    <main class="main-content">
+      <!-- ========================================== -->
+      <!-- TAB 1: 3D FLASHCARDS                       -->
+      <!-- ========================================== -->
+      <section class="tab-pane active" id="tab-flashcard">
+        <div class="flashcard-view-wrapper">
+          <!-- Top bar: progress and mode buttons -->
+          <div class="fc-top-bar">
+            <div class="fc-counter">
+              <span class="current" id="fcCurrentIdx">1</span> / <span id="fcTotalCount">33</span>
+              <span style="font-size: 0.8rem; margin-left: 0.5rem;" id="fcStatusBadge"></span>
+            </div>
+            
+            <div class="fc-top-actions">
+              <button class="fc-icon-btn" id="fcShuffleBtn" title="Xáo trộn thứ tự từ">🔀</button>
+              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)">▶️</button>
+              <button class="fc-icon-btn" id="fcVoiceSettingBtn" title="Đổi giọng đọc US / UK">🗣️</button>
+            </div>
+          </div>
+
+          <!-- Progress indicator -->
+          <div class="fc-progress-container">
+            <div class="fc-progress-fill" id="fcProgressFill"></div>
+          </div>
+
+          <!-- 3D Flashcard Stage -->
+          <div class="flashcard-stage" id="flashcardStage" title="Bấm vào thẻ hoặc nhấn Phím Cách (Space) để lật thẻ">
+            <div class="flashcard-inner">
+              <!-- FRONT FACE -->
+              <div class="card-face card-front">
+                <div class="card-face-header">
+                  <span class="card-pos-badge" id="cardPosBadge">noun</span>
+                  <button class="fc-icon-btn" id="cardStarBtn" title="Đánh dấu từ yêu thích / cần chú ý" style="width: 32px; height: 32px;">⭐</button>
+                </div>
+
+                <div class="card-face-center">
+                  <h2 class="card-word-title" id="cardWordTitle">account</h2>
+                  <div class="card-ipa-text" id="cardIpaText">/əˈkaʊnt/</div>
+
+                  <div class="card-audio-cluster">
+                    <button class="btn-pronounce" id="btnPronounceNormal" title="Phát âm chuẩn (Tốc độ thường)">
+                      🔊 Phát âm
+                    </button>
+                    <button class="btn-pronounce btn-slow" id="btnPronounceSlow" title="Phát âm chậm 0.8x để nghe rõ từng âm tiết">
+                      🐢 0.8x
+                    </button>
+                  </div>
+                </div>
+
+                <div class="card-face-footer">
+                  <span class="card-hint-click">👆 Nhấn vào thẻ để xem nghĩa & ví dụ</span>
+                  <span id="cardAccentTag">US Accent</span>
+                </div>
+              </div>
+
+              <!-- BACK FACE -->
+              <div class="card-face card-back">
+                <div class="card-face-header">
+                  <span class="card-pos-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+                    Nghĩa Tiếng Việt
+                  </span>
+                  <span style="font-size: 0.8rem; color: var(--text-muted);" id="cardUnitTag">Unit 1</span>
+                </div>
+
+                <div class="card-face-center" style="margin: 0.5rem 0;">
+                  <h3 class="card-meaning-title" id="cardMeaningTitle">câu chuyện, bản ghi chép</h3>
+
+                  <!-- Example Box -->
+                  <div class="card-example-box">
+                    <p class="card-example-en" id="cardExampleEn">"He gave a fascinating account of his journey across the world."</p>
+                    <p class="card-example-vi" id="cardExampleVi">"Anh ấy đã kể lại một câu chuyện hấp dẫn về hành trình của mình vòng quanh thế giới."</p>
+                    <button class="btn-speak-sentence" id="btnSpeakSentence">
+                      🔊 Nghe câu ví dụ
+                    </button>
+                  </div>
+                </div>
+
+                <div class="card-face-footer">
+                  <span class="card-hint-click">👆 Nhấn để lật lại từ vựng</span>
+                  <span style="color: #fbbf24;" id="cardHintText">💡 Mẹo ghi nhớ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Controls -->
+          <div class="fc-bottom-controls">
+            <button class="fc-nav-btn btn-prev" id="fcPrevBtn" title="Phím mũi tên Trái">
+              ⬅️ Trước
+            </button>
+            <button class="fc-nav-btn btn-flip" id="fcFlipBtn" title="Phím Cách (Space)">
+              🔄 Lật Thẻ
+            </button>
+            <button class="fc-nav-btn btn-next" id="fcNextBtn" title="Phím mũi tên Phải">
+              Tiếp ➡️
+            </button>
+          </div>
+
+          <!-- Quick Mastery Actions -->
+          <div class="fc-mastery-actions">
+            <button class="btn-mastery btn-review" id="btnMarkReview" title="Đánh dấu cần ôn tập lại">
+              ⚠️ Cần ôn lại
+            </button>
+            <button class="btn-mastery btn-mastered" id="btnMarkMastered" title="Đánh dấu đã thuộc từ này">
+              ✅ Đã thuộc từ này
+            </button>
+          </div>
+
+          <!-- Shortcut Guide for PC -->
+          <div class="fc-shortcuts-guide">
+            <span>Phím tắt:</span>
+            <span><kbd>Space</kbd> Lật thẻ</span>
+            <span><kbd>←</kbd> <kbd>→</kbd> Chuyển từ</span>
+            <span><kbd>S</kbd> Phát âm</span>
+            <span><kbd>M</kbd> Đã thuộc</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: SPEED QUIZ GAME                     -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-quiz">
+        <div class="game-container" id="quizContainer">
+          <div class="quiz-header">
+            <div class="quiz-score-badge">
+              🏆 Điểm: <span id="quizScoreVal">0</span>
+            </div>
+            <div class="quiz-streak-badge">
+              🔥 Chuỗi: <span id="quizStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">
+              Câu <span id="quizQIdx">1</span>/<span id="quizTotalQ">10</span>
+            </div>
+          </div>
+
+          <div class="fc-progress-container">
+            <div class="fc-progress-fill" id="quizProgressFill" style="background: linear-gradient(90deg, #f59e0b, #f43f5e);"></div>
+          </div>
+
+          <div class="quiz-prompt-card">
+            <span class="quiz-question-type" id="quizQTypeLabel">CHỌN NGHĨA TIẾNG VIỆT ĐÚNG</span>
+            <h2 class="quiz-question-word" id="quizPromptWord">achievement</h2>
+            <div class="quiz-question-ipa" id="quizPromptIpa">/əˈtʃiːvmənt/</div>
+            <button class="btn-pronounce btn-slow" id="quizAudioPromptBtn" style="margin-top: 0.5rem; padding: 0.4rem 1rem;">
+              🔊 Nghe phát âm
+            </button>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptionsGrid">
+            <!-- 4 Options injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: WORD MATCHING GAME                  -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-match">
+        <div class="game-container" style="max-width: 800px;">
+          <div class="quiz-header">
+            <div class="quiz-score-badge">
+              ⏱️ Thời gian: <span id="matchTimerVal">00:00</span>
+            </div>
+            <div class="quiz-streak-badge" style="color: var(--accent-cyan); background: rgba(6, 182, 212, 0.12); border-color: rgba(6, 182, 212, 0.25);">
+              ✨ Cặp đã ghép: <span id="matchedCountVal">0</span>/<span id="totalMatchPairs">8</span>
+            </div>
+            <button class="header-btn" id="restartMatchBtn" style="padding: 0.35rem 0.75rem;">
+              🔄 Ván mới
+            </button>
+          </div>
+
+          <p style="text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+            Lật và ghép đúng cặp từ tiếng Anh với nghĩa tiếng Việt tương ứng!
+          </p>
+
+          <div class="match-game-board" id="matchGameBoard">
+            <!-- 16 tiles injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: LISTENING MASTER                    -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-listen">
+        <div class="game-container">
+          <div class="quiz-header">
+            <div class="quiz-score-badge">
+              🎧 Điểm nghe: <span id="listenScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">
+              Câu <span id="listenQIdx">1</span>/<span id="listenTotalQ">10</span>
+            </div>
+          </div>
+
+          <div class="quiz-prompt-card">
+            <span class="quiz-question-type">LẮNG NGHE & CHỌN TỪ CHÍNH XÁC</span>
+            
+            <div class="listen-center-icon" id="listenPlayBigBtn" title="Bấm để nghe lại">
+              🔊
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.4rem;">
+              Bấm vào loa để nghe lại phát âm nếu cần
+            </p>
+          </div>
+
+          <div class="quiz-options-grid" id="listenOptionsGrid">
+            <!-- 4 word options injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: VOCABULARY HUB (SỔ TAY TRA CỨU)     -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-hub">
+        <div class="hub-search-bar">
+          <div class="hub-search-input-wrapper">
+            <span class="hub-search-icon">🔍</span>
+            <input type="text" id="hubSearchInput" placeholder="Tìm kiếm từ tiếng Anh hoặc nghĩa tiếng Việt...">
+          </div>
+
+          <select class="hub-filter-select" id="hubUnitFilter">
+            <option value="all">🌟 Toàn bộ 10 Unit (247 từ)</option>
+            <option value="1">Unit 1: Life Stories We Admire</option>
+            <option value="2">Unit 2: A Multicultural World</option>
+            <option value="3">Unit 3: Green Living</option>
+            <option value="4">Unit 4: Urbanisation</option>
+            <option value="5">Unit 5: The World of Work</option>
+            <option value="6">Unit 6: Artificial Intelligence</option>
+            <option value="7">Unit 7: The World of Mass Media</option>
+            <option value="8">Unit 8: Wildlife Conservation</option>
+            <option value="9">Unit 9: Career Paths</option>
+            <option value="10">Unit 10: Lifelong Learning</option>
+          </select>
+
+          <select class="hub-filter-select" id="hubStatusFilter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="starred">⭐ Từ yêu thích</option>
+            <option value="mastered">✅ Đã thuộc</option>
+            <option value="review">⚠️ Cần ôn lại</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1rem; font-size: 0.88rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+          <span id="hubFoundCountText">Hiển thị 247 từ vựng</span>
+          <button id="hubPrintBtn" class="header-btn" style="padding: 0.2rem 0.7rem; font-size: 0.8rem;">
+            🖨️ In / Xuất PDF
+          </button>
+        </div>
+
+        <div class="hub-words-grid" id="hubWordsGrid">
+          <!-- Dynamic word cards injected by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: QR Code to open on Mobile -->
+    <div class="modal-overlay" id="qrModalOverlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">📱 Mở Trên Điện Thoại</h3>
+          <button class="modal-close-btn" id="closeQrModalBtn">&times;</button>
+        </div>
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+            Dùng Camera hoặc Zalo trên điện thoại quét mã QR dưới đây để học tập ngay:
+          </p>
+          <div id="qrCodeContainer" style="background: #ffffff; padding: 1rem; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <!-- QR Image -->
+            <img id="qrImgElement" src="" alt="QR Code" style="width: 200px; height: 200px; display: block;">
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; width: 100%; word-break: break-all;" id="currentUrlDisplay">
+            http://localhost:8080
+          </div>
+          <p style="font-size: 0.8rem; color: var(--accent-emerald);">
+            💡 Mẹo: Khi mở trên điện thoại, bấm <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong> để dùng như ứng dụng app thật!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Progress & Statistics -->
+    <div class="modal-overlay" id="statsModalOverlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">📊 Tiến Độ Học Từ Vựng</h3>
+          <button class="modal-close-btn" id="closeStatsModalBtn">&times;</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 800; color: #34d399;" id="statsMasteredNum">0</div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Từ đã thuộc (Mastered)</div>
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 800; color: #fbbf24;" id="statsReviewNum">0</div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Từ cần ôn lại</div>
+            </div>
+          </div>
+
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin-top: 0.5rem;">Tiến độ từng Unit:</h4>
+          <div id="statsUnitsProgressList" style="display: flex; flex-direction: column; gap: 0.6rem; max-height: 250px; overflow-y: auto; padding-right: 0.4rem;">
+            <!-- Injected by JS -->
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+            <button class="header-btn" id="resetProgressBtn" style="color: var(--accent-rose); border-color: rgba(244, 63, 94, 0.3);">
+              🗑️ Xóa làm lại từ đầu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p class="footer-author">
+          Biên soạn & Thiết kế Sư phạm: <span>Thầy giáo Đinh Văn Thành</span> (THCS Đồng Yên)
+        </p>
+        <p style="font-size: 0.78rem;">
+          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • Hỗ trợ học tập đa nền tảng (PC & Điện thoại)
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="vocabulary_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

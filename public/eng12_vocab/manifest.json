@@ -1,0 +1,22 @@
+{
+  "name": "Eng 12 Vocab Master - Global Success",
+  "short_name": "Eng 12 Vocab",
+  "description": "Ứng dụng học từ vựng Tiếng Anh 12 Global Success bám sát SGK của Thầy Đinh Văn Thành",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
