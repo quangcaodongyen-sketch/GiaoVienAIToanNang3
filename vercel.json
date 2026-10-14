@@ -10,17 +10,19 @@
       ],
       "destination": "https://www.dekiemtraso.com/:path*",
       "permanent": true
-    }
-  ],
-  "rewrites": [
+    },
     {
       "source": "/eng12_vocab",
-      "destination": "/eng12_vocab/index.html"
+      "destination": "/eng12_vocab/",
+      "permanent": true
     },
     {
       "source": "/tienganh12",
-      "destination": "/eng12_vocab/index.html"
-    },
+      "destination": "/eng12_vocab/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
     {
       "source": "/((?!assets/|eng12_vocab/|.*\\..*).*)$",
       "destination": "/index.html"
