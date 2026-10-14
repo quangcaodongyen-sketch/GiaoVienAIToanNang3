@@ -1,5 +1,35 @@
 [
   {
+    "id": "REG-LIFETIME-MBE10DBE85",
+    "machineId": "MB-E10D-BE85",
+    "fullName": "Thầy giáo Đinh Văn Thành",
+    "schoolUnit": "THCS Đồng Yên",
+    "phoneNumber": "0915213717",
+    "appId": "smart-listening",
+    "appName": "Smart Listening Pro (Tạo Bài Nghe SGK)",
+    "packageType": "LIFETIME",
+    "price": "Bản quyền Vĩnh viễn (Trọn đời)",
+    "status": "APPROVED",
+    "reviewedBy": "Admin Thầy Thành (0915.213717)",
+    "reviewedAt": "2026-10-14 12:04:55",
+    "createdAt": "2026-10-14 12:04:55"
+  },
+  {
+    "id": "REG-LIFETIME-MB54A908D6",
+    "machineId": "MB-54A9-08D6",
+    "fullName": "Thầy giáo Đinh Văn Thành",
+    "schoolUnit": "THCS Đồng Yên",
+    "phoneNumber": "0915213717",
+    "appId": "smart-listening",
+    "appName": "Smart Listening Pro (Tạo Bài Nghe SGK)",
+    "packageType": "LIFETIME",
+    "price": "Bản quyền Vĩnh viễn (Trọn đời)",
+    "status": "APPROVED",
+    "reviewedBy": "Admin Thầy Thành (0915.213717)",
+    "reviewedAt": "2026-10-14 12:04:55",
+    "createdAt": "2026-10-14 12:04:55"
+  },
+  {
     "id": "REG-1791173514467",
     "machineId": "DVT-MATHPT-0B1D-A6A7",
     "fullName": "Đinh Thành - Test",
