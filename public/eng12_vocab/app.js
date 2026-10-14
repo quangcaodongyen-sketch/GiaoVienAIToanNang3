@@ -175,7 +175,7 @@ const SFX = new SoundEffects();
 // 3. WEB SPEECH SYNTHESIS ENGINE (PRONUNCIATION)
 // ==============================================================================
 // ==============================================================================
-// 3. SYNCHRONOUS WEB SPEECH SYNTHESIS ENGINE (MOBILE & PC OPTIMIZED)
+// 3. SYNCHRONOUS WEB SPEECH ENGINE - DÕNG DẠC, NGHE RÕ TỪNG ÂM TIẾT
 // ==============================================================================
 const SpeechEngine = {
   voices: [],
@@ -198,7 +198,7 @@ const SpeechEngine = {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
 
-    // Tự động unlock Audio & Speech ngay khi người dùng chạm vào màn hình (iOS / Android policy)
+    // Tự động unlock Audio & Speech ngay khi người dùng chạm vào màn hình (iOS / Android)
     const unlockAudio = () => {
       try {
         if (window.speechSynthesis.paused) {
@@ -214,6 +214,7 @@ const SpeechEngine = {
     window.addEventListener('click', unlockAudio, { passive: true });
   },
 
+  // TÌM GIỌNG ĐỌC THẬT DÕNG DẠC, UY LỰC, RÕ RÀNG TỪNG ÂM TIẾT IPA
   getBestVoice(langCode = 'en-US') {
     if (!this.voices || this.voices.length === 0) {
       if ('speechSynthesis' in window) {
@@ -222,17 +223,18 @@ const SpeechEngine = {
     }
     const voices = this.voices || [];
 
-    // Ưu tiên danh sách giọng nữ trong trẻo, tự nhiên, ngọt ngào nhất (Edge Neural, Google, Apple, Windows)
-    const femaleKeywords = [
-      'Jenny', 'Aria', 'Ana', 'Michelle', 'Sonia', 'Libby', 
-      'Emma', 'Clara', 'Samantha', 'Victoria', 'Karen', 'Zira', 
-      'Google US English', 'Google UK English Female', 'Natural', 'Female', 'Nữ'
+    // Ưu tiên danh sách giọng dõng dạc, phát âm tròn vành rõ chữ nhất (Guy, Christopher, Jenny, Aria, Google, Neural)
+    const resonantKeywords = [
+      'Guy Online (Natural)', 'Christopher Online (Natural)', 'Jenny Online (Natural)', 
+      'Aria Online (Natural)', 'Guy', 'Christopher', 'Jenny', 'Aria',
+      'Google US English', 'Google UK English Male', 'Natural', 'Neural', 
+      'Samantha (Enhanced)', 'Daniel', 'Alex'
     ];
 
     const langPrefix = langCode.toLowerCase().slice(0, 2);
 
-    // 1. Tìm giọng nữ đúng chuẩn mã ngôn ngữ (en-US hoặc en-GB)
-    for (const name of femaleKeywords) {
+    // 1. Tìm giọng dõng dạc chuẩn ngôn ngữ (en-US hoặc en-GB)
+    for (const name of resonantKeywords) {
       const match = voices.find(v => 
         v.lang.toLowerCase().startsWith(langPrefix) && 
         v.name.toLowerCase().includes(name.toLowerCase())
@@ -240,8 +242,8 @@ const SpeechEngine = {
       if (match) return match;
     }
 
-    // 2. Tìm bất kỳ giọng nữ tiếng Anh nào
-    for (const name of femaleKeywords) {
+    // 2. Tìm bất kỳ giọng dõng dạc tiếng Anh nào
+    for (const name of resonantKeywords) {
       const match = voices.find(v => 
         v.lang.toLowerCase().startsWith('en') && 
         v.name.toLowerCase().includes(name.toLowerCase())
@@ -249,41 +251,56 @@ const SpeechEngine = {
       if (match) return match;
     }
 
-    // 3. Fallback: Chọn giọng tiếng Anh không chứa từ khóa giọng nam (loại trừ David, Guy, Male, George, Mark)
-    const nonMaleVoice = voices.find(v => 
-      v.lang.toLowerCase().startsWith(langPrefix) && 
-      !v.name.toLowerCase().includes('david') && 
-      !v.name.toLowerCase().includes('guy') && 
-      !v.name.toLowerCase().includes('male') && 
-      !v.name.toLowerCase().includes('george') &&
-      !v.name.toLowerCase().includes('mark')
-    );
-    if (nonMaleVoice) return nonMaleVoice;
-
     return voices.find(v => v.lang.toLowerCase().startsWith(langPrefix)) || null;
   },
 
-  // PHÁT ÂM ĐỒNG BỘ (SYNCHRONOUS - KHÔNG DÙNG SETTIMEOUT) ĐỂ HOẠT ĐỘNG 100% TRÊN ĐIỆN THOẠI & MÁY TÍNH
-  speak(text, rate = 0.85, lang = null) {
+  // TÌM GIỌNG TIẾNG VIỆT CHUẨN HÀ NỘI (MIỀN BẮC)
+  getVietnameseHanoiVoice() {
+    if (!this.voices || this.voices.length === 0) {
+      if ('speechSynthesis' in window) {
+        this.voices = window.speechSynthesis.getVoices();
+      }
+    }
+    const voices = this.voices || [];
+
+    // Ưu tiên các giọng chuẩn Hà Nội miền Bắc: Hoài My, Nam Minh, Linh, Google tiếng Việt
+    const hanoiKeywords = [
+      'HoaiMy Online (Natural)', 'NamMinh Online (Natural)', 'HoaiMy', 'NamMinh', 
+      'Linh', 'Google tiếng Việt', 'vi-VN', 'Vietnamese'
+    ];
+
+    for (const kw of hanoiKeywords) {
+      const match = voices.find(v => 
+        v.lang.toLowerCase().startsWith('vi') && 
+        v.name.toLowerCase().includes(kw.toLowerCase())
+      );
+      if (match) return match;
+    }
+
+    return voices.find(v => v.lang.toLowerCase().startsWith('vi')) || null;
+  },
+
+  // PHÁT ÂM TIẾNG ANH: TỐC ĐỘ 0.80x CHẬM RÃI, DÕNG DẠC, NGHE RÕ TỪNG ÂM TIẾT
+  speak(text, rate = 0.80, lang = null) {
     if (!text || !text.trim()) return;
     if (!('speechSynthesis' in window)) return;
 
     try {
-      // Đảm bảo không bị pause bởi hệ điều hành
       if (window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
+        try { window.speechSynthesis.resume(); } catch (e) {}
       }
-      // Hủy âm thanh trước đó
-      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.speaking) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
 
-      // Âm thanh Click feedback siêu nhẹ tức thì để người học cảm nhận được ngay
       if (typeof SFX !== 'undefined' && SFX.playTone) {
-        SFX.playTone(560, 'sine', 0.04, 0.08);
+        try { SFX.playTone(560, 'sine', 0.04, 0.08); } catch (e) {}
       }
 
       const utterance = new SpeechSynthesisUtterance(text.trim());
-      utterance.rate = rate; // 0.85x: Chậm rãi, phát âm tròn vành rõ chữ, chuẩn sư phạm
-      utterance.pitch = 1.05; // Cao độ trong trẻo, tự nhiên
+      utterance.rate = rate; // 0.80x: Dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi
+      utterance.pitch = 1.0; // Cao độ tự nhiên, đĩnh đạc
+      utterance.volume = 1.0; // Âm lượng tối đa, to rõ
 
       const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
       utterance.lang = targetLang;
@@ -291,7 +308,6 @@ const SpeechEngine = {
       const voice = this.getBestVoice(targetLang);
       if (voice) utterance.voice = voice;
 
-      // Lưu tham chiếu toàn cục (chống V8 & iOS Garbage Collector dọn dẹp làm mất tiếng giữa chừng)
       window._activeSpeechUtterance = utterance;
       this.activeUtterance = utterance;
 
@@ -305,10 +321,9 @@ const SpeechEngine = {
         this.activeUtterance = null;
       };
 
-      // GỌI TRỰC TIẾP ĐỒNG BỘ TRONG GESTURE CỦA NGƯỜI DÙNG
       window.speechSynthesis.speak(utterance);
     } catch (e) {
-      console.error('SpeechEngine error:', e);
+      console.error('SpeechEngine speak error:', e);
     }
   }
 };
@@ -1224,16 +1239,33 @@ function initBlitzGame() {
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   clearInterval(STATE.blitz.timerInterval);
   
-  const shuffled = [...STATE.activeWords].sort(() => 0.5 - Math.random());
-  STATE.blitz.questions = shuffled.slice(0, 15).map(w => {
-    const isTrue = Math.random() >= 0.45;
+  // Lấy danh sách từ ngẫu nhiên (tối đa 12 từ)
+  const count = Math.min(12, STATE.activeWords.length);
+  const shuffledWords = [...STATE.activeWords].sort(() => 0.5 - Math.random()).slice(0, count);
+  
+  // BẢO ĐẢM TỶ LỆ 50% ĐÚNG VÀ 50% SAI NGẪU NHIÊN CÂN BẰNG (KHÔNG CÂU NÀO CŨNG ĐÚNG!)
+  // Tạo danh sách giá trị boolean xen kẽ và xáo trộn ngẫu nhiên:
+  const bools = [];
+  for (let i = 0; i < shuffledWords.length; i++) {
+    bools.push(i % 2 === 0); // Một nửa TRUE, một nửa FALSE
+  }
+  bools.sort(() => 0.5 - Math.random());
+  
+  STATE.blitz.questions = shuffledWords.map((w, idx) => {
+    const isTrue = bools[idx];
     let displayedMeaning = w.meaning;
+    
     if (!isTrue) {
-      const others = STATE.activeWords.filter(o => o.id !== w.id);
+      // Lấy nghĩa của một từ KHÁC trong bài học để tạo câu SAI
+      const others = STATE.activeWords.filter(o => o.id !== w.id && o.meaning !== w.meaning);
       if (others.length > 0) {
-        displayedMeaning = others[Math.floor(Math.random() * others.length)].meaning;
+        const wrongWord = others[Math.floor(Math.random() * others.length)];
+        displayedMeaning = wrongWord.meaning;
+      } else {
+        displayedMeaning = "Nghĩa không chính xác với từ này";
       }
     }
+    
     return {
       word: w.word,
       ipa: w.ipa || '',
@@ -1243,6 +1275,9 @@ function initBlitzGame() {
       actualWord: w
     };
   });
+  
+  // Xáo trộn lần cuối thứ tự các câu hỏi
+  STATE.blitz.questions.sort(() => 0.5 - Math.random());
   
   STATE.blitz.currentIdx = 0;
   STATE.blitz.score = 0;
@@ -1303,39 +1338,37 @@ function handleBlitzAnswer(userChoice) {
   const card = document.getElementById('blitzCard');
   
   if (isRight) {
-    SFX.playCorrect();
+    if (typeof SFX !== 'undefined') SFX.playCorrect();
     STATE.blitz.streak++;
     const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
     STATE.blitz.score += (10 + bonus);
     if (card) {
       card.style.borderColor = '#10b981';
-      card.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.4)';
+      card.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.45)';
     }
     STATE.mastered.add(q.actualWord.id);
   } else {
-    SFX.playWrong();
+    if (typeof SFX !== 'undefined') SFX.playWrong();
     STATE.blitz.streak = 0;
     if (card) {
       card.style.borderColor = '#ef4444';
-      card.style.boxShadow = '0 0 30px rgba(239, 68, 68, 0.4)';
+      card.style.boxShadow = '0 0 35px rgba(239, 68, 68, 0.45)';
     }
-    STATE.review.add(q.actualWord.id);
   }
   
   const scoreEl = document.getElementById('blitzScoreVal');
   const streakEl = document.getElementById('blitzStreakVal');
   if (scoreEl) scoreEl.textContent = STATE.blitz.score;
   if (streakEl) streakEl.textContent = STATE.blitz.streak;
-  saveProgress();
   
   setTimeout(() => {
     if (card) {
-      card.style.borderColor = '';
-      card.style.boxShadow = '';
+      card.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+      card.style.boxShadow = 'none';
     }
     STATE.blitz.currentIdx++;
     renderBlitzQuestion();
-  }, 600);
+  }, 700);
 }
 
 function showBlitzFinished() {
@@ -2365,17 +2398,29 @@ function runChantSequenceForCurrentWord() {
 
 function speakVietnameseResponse(wordEn, meaningVi) {
   if (!('speechSynthesis' in window)) return;
-  // Speak Vietnamese text with Vietnamese voice if present
-  const utt = new SpeechSynthesisUtterance(meaningVi);
-  utt.rate = 1.05;
-  utt.pitch = 1.1;
-  utt.lang = 'vi-VN';
   
-  const voices = window.speechSynthesis.getVoices();
-  const viVoice = voices.find(v => v.lang.startsWith('vi') || v.name.includes('Vietnamese') || v.name.includes('HoaiMy') || v.name.includes('NamMinh') || v.name.includes('Linh') || v.name.includes('An'));
-  if (viVoice) utt.voice = viVoice;
+  // Tìm giọng chuẩn Hà Nội miền Bắc
+  const viVoice = SpeechEngine.getVietnameseHanoiVoice();
   
-  window.speechSynthesis.speak(utt);
+  if (viVoice) {
+    // Có giọng tiếng Việt chuẩn Hà Nội -> Đọc nghĩa tiếng Việt truyền cảm, rõ ràng
+    const utt = new SpeechSynthesisUtterance(meaningVi);
+    utt.rate = 0.90; // Nhịp điệu vừa vặn, phát âm tròn vành rõ chữ chuẩn Hà Nội
+    utt.pitch = 1.0;
+    utt.lang = 'vi-VN';
+    utt.voice = viVoice;
+    
+    window._activeSpeechUtterance = utt;
+    utt.onend = () => { window._activeSpeechUtterance = null; };
+    utt.onerror = () => { window._activeSpeechUtterance = null; };
+    
+    window.speechSynthesis.speak(utt);
+  } else {
+    // Nếu máy tính/điện thoại không có giọng tiếng Việt:
+    // TUYỆT ĐỐI KHÔNG DÙNG GIỌNG TIẾNG ANH ĐỂ ĐỌC TIẾNG VIỆT (tránh đọc méo, đọc sai)!
+    // Thay vào đó: Phát âm lặp lại từ tiếng Anh theo phong cách Call & Response của Chant!
+    SpeechEngine.speak(wordEn, 1.0);
+  }
 }
 
 function nextChantWord() {
