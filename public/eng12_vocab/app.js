@@ -281,6 +281,7 @@ const SpeechEngine = {
   },
 
   // PHÁT ÂM TIẾNG ANH: TỐC ĐỘ 0.80x CHẬM RÃI, DÕNG DẠC, NGHE RÕ TỪNG ÂM TIẾT
+  // KHẮC PHỤC TRIỆT ĐỂ LỖI CHROMIUM/EDGE CANCEL LÀM MẤT GIỌNG ĐỌC KHI BẤM CHỌN BÀI
   speak(text, rate = 0.80, lang = null) {
     if (!text || !text.trim()) return;
     if (!('speechSynthesis' in window)) return;
@@ -289,39 +290,53 @@ const SpeechEngine = {
       if (window.speechSynthesis.paused) {
         try { window.speechSynthesis.resume(); } catch (e) {}
       }
-      if (window.speechSynthesis.speaking) {
+
+      const doSpeak = () => {
+        try {
+          if (typeof SFX !== 'undefined' && SFX.playTone) {
+            try { SFX.playTone(560, 'sine', 0.04, 0.08); } catch (e) {}
+          }
+
+          const utterance = new SpeechSynthesisUtterance(text.trim());
+          utterance.rate = rate; // 0.80x: Dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi
+          utterance.pitch = 1.0; // Cao độ tự nhiên, đĩnh đạc
+          utterance.volume = 1.0; // Âm lượng tối đa, to rõ
+
+          const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
+          utterance.lang = targetLang;
+
+          const voice = this.getBestVoice(targetLang);
+          if (voice) utterance.voice = voice;
+
+          window._activeSpeechUtterance = utterance;
+          this.activeUtterance = utterance;
+
+          utterance.onend = () => {
+            window._activeSpeechUtterance = null;
+            this.activeUtterance = null;
+          };
+
+          utterance.onerror = (err) => {
+            if (err.error !== 'canceled') {
+              console.warn('Speech utterance warning:', err.error);
+            }
+            window._activeSpeechUtterance = null;
+            this.activeUtterance = null;
+          };
+
+          window.speechSynthesis.speak(utterance);
+        } catch (errInner) {
+          console.error('SpeechEngine doSpeak error:', errInner);
+        }
+      };
+
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
         try { window.speechSynthesis.cancel(); } catch (e) {}
+        // Chờ 60ms để IPC cancel hoàn tất trước khi đưa utterance mới vào queue
+        setTimeout(doSpeak, 60);
+      } else {
+        doSpeak();
       }
-
-      if (typeof SFX !== 'undefined' && SFX.playTone) {
-        try { SFX.playTone(560, 'sine', 0.04, 0.08); } catch (e) {}
-      }
-
-      const utterance = new SpeechSynthesisUtterance(text.trim());
-      utterance.rate = rate; // 0.80x: Dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi
-      utterance.pitch = 1.0; // Cao độ tự nhiên, đĩnh đạc
-      utterance.volume = 1.0; // Âm lượng tối đa, to rõ
-
-      const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
-      utterance.lang = targetLang;
-
-      const voice = this.getBestVoice(targetLang);
-      if (voice) utterance.voice = voice;
-
-      window._activeSpeechUtterance = utterance;
-      this.activeUtterance = utterance;
-
-      utterance.onend = () => {
-        window._activeSpeechUtterance = null;
-        this.activeUtterance = null;
-      };
-
-      utterance.onerror = (err) => {
-        window._activeSpeechUtterance = null;
-        this.activeUtterance = null;
-      };
-
-      window.speechSynthesis.speak(utterance);
     } catch (e) {
       console.error('SpeechEngine speak error:', e);
     }
@@ -346,6 +361,29 @@ function initUnitPills() {
   });
 }
 
+
+// ĐỌC TÊN BÀI HỌC DÕNG DẠC KHI NGƯỜI DÙNG BẤM VÀO TÊN BÀI HOẶC BẤM UNIT PILL
+function speakUnitTitle(unitNum) {
+  const targetUnit = unitNum || STATE.currentUnit || 1;
+  const unitObj = VOCABULARY_DATA.find(u => u.unit === targetUnit);
+  if (!unitObj) return;
+
+  const titleText = `Unit ${unitObj.unit}: ${unitObj.title}`;
+  SpeechEngine.speak(titleText, 0.85);
+
+  // Hiệu ứng phát sáng viền khi đang đọc tên bài
+  const metaEl = document.getElementById('currentUnitMeta');
+  const titleEl = document.getElementById('unitTitleDisplay');
+  if (metaEl) {
+    metaEl.classList.add('meta-speaking-glow');
+    setTimeout(() => metaEl.classList.remove('meta-speaking-glow'), 1600);
+  }
+  if (titleEl) {
+    titleEl.classList.add('title-speaking-glow');
+    setTimeout(() => titleEl.classList.remove('title-speaking-glow'), 1600);
+  }
+}
+
 function selectUnit(unitNum, shouldSpeakTitle = true) {
   STATE.currentUnit = unitNum;
   STATE.currentWordIdx = 0;
@@ -353,17 +391,12 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
   stopAutoPlay();
   if (typeof pauseChant === 'function') pauseChant();
   
-  // Hủy ngay toàn bộ phát âm trước đó nếu đang nói
-  if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-    try { window.speechSynthesis.cancel(); } catch (e) {}
-  }
-  
   const unitObj = VOCABULARY_DATA.find(u => u.unit === unitNum);
   if (unitObj) {
     STATE.activeWords = [...unitObj.words];
     
     const titleEl = document.getElementById('unitTitleDisplay');
-    if (titleEl) titleEl.textContent = `Unit ${unitObj.unit}: ${unitObj.title}`;
+    if (titleEl) titleEl.innerHTML = `🔊 <span>Unit ${unitObj.unit}: ${unitObj.title}</span>`;
     const badgeEl = document.getElementById('unitWordCountBadge');
     if (badgeEl) badgeEl.textContent = `${unitObj.word_count} từ`;
     
@@ -371,9 +404,9 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
       p.classList.toggle('active', (idx + 1) === unitNum);
     });
     
-    // BẤM CHỌN UNIT NÀO THÌ CHỈ ĐỌC TÊN UNIT ĐÓ RỒI DỪNG, KHÔNG TỰ Ý ĐỌC VÀO TỪ BÊN DƯỚI:
+    // BẤM CHỌN UNIT NÀO THÌ ĐỌC TÊN BÀI HỌC DÕNG DẠC:
     if (shouldSpeakTitle) {
-      SpeechEngine.speak(`Unit ${unitObj.unit}: ${unitObj.title}`, 0.9);
+      speakUnitTitle(unitNum);
     }
   }
   
@@ -970,6 +1003,41 @@ function updateStatsModal() {
 }
 
 function setupEventListeners() {
+
+  // ==============================================================================
+  // BẤM VÀO TÊN BÀI HỌC Ở BẤT KỲ ĐÂU TRÊN MÀN HÌNH ĐỀU ĐỌC DÕNG DẠC TÊN BÀI:
+  // ==============================================================================
+  const currentUnitMeta = document.getElementById('currentUnitMeta');
+  if (currentUnitMeta) {
+    currentUnitMeta.style.cursor = 'pointer';
+    currentUnitMeta.title = 'Bấm để nghe đọc tên bài học';
+    currentUnitMeta.addEventListener('click', () => speakUnitTitle(STATE.currentUnit));
+  }
+  const unitTitleDisplay = document.getElementById('unitTitleDisplay');
+  if (unitTitleDisplay) {
+    unitTitleDisplay.style.cursor = 'pointer';
+    unitTitleDisplay.title = 'Bấm để nghe đọc tên bài học';
+    unitTitleDisplay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakUnitTitle(STATE.currentUnit);
+    });
+  }
+  const fullVocabSectionTitle = document.getElementById('fullVocabSectionTitle');
+  if (fullVocabSectionTitle) {
+    fullVocabSectionTitle.style.cursor = 'pointer';
+    fullVocabSectionTitle.title = 'Bấm để nghe đọc tên bài học';
+    fullVocabSectionTitle.addEventListener('click', () => speakUnitTitle(STATE.currentUnit));
+  }
+  const cardUnitTag = document.getElementById('cardUnitTag');
+  if (cardUnitTag) {
+    cardUnitTag.style.cursor = 'pointer';
+    cardUnitTag.title = 'Bấm để nghe đọc tên bài học';
+    cardUnitTag.addEventListener('click', (e) => {
+      e.stopPropagation();
+      speakUnitTitle(STATE.currentUnit);
+    });
+  }
+
 
   // Scramble game controls
   const scrambleResetBtn = document.getElementById('scrambleResetBtn');

@@ -2401,3 +2401,57 @@ body {
   box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
   transform: scale(1.06);
 }
+
+
+
+/* ==============================================================================
+   CLICKABLE LESSON TITLE (BẤM VÀO TÊN BÀI HỌC ĐỌC DÕNG DẠC & PHÁT SÁNG)
+   ============================================================================== */
+.unit-meta-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #f8fafc !important;
+  cursor: pointer !important;
+  padding: 0.45rem 1.1rem !important;
+  border-radius: var(--radius-full) !important;
+  background: rgba(30, 41, 59, 0.75) !important;
+  border: 1.5px solid rgba(99, 102, 241, 0.3) !important;
+  transition: all 0.22s ease !important;
+  user-select: none !important;
+}
+
+.unit-meta-badge:hover {
+  background: rgba(99, 102, 241, 0.35) !important;
+  border-color: #818cf8 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.45) !important;
+}
+
+.unit-meta-badge:active {
+  transform: scale(0.98) !important;
+}
+
+.meta-speaking-glow,
+.title-speaking-glow {
+  animation: titleGlowPulse 1.4s ease-in-out !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.75) !important;
+}
+
+@keyframes titleGlowPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+  40% { transform: scale(1.04); box-shadow: 0 0 30px rgba(56, 189, 248, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+}
+
+.unit-pill {
+  cursor: pointer !important;
+}
+
+.unit-pill.active {
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.5) !important;
+}
