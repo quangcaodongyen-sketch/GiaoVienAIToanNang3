@@ -1,5 +1,20 @@
 [
   {
+    "id": "REG-2YEAR-MB8BE0E45A",
+    "machineId": "MB-8BE0-E45A",
+    "fullName": "Quý Thầy/Cô",
+    "schoolUnit": "THCS",
+    "phoneNumber": "0915213717",
+    "appId": "smart-listening",
+    "appName": "Smart Listening Pro (Tạo Bài Nghe SGK)",
+    "packageType": "2YEAR",
+    "price": "Bản quyền 2 Năm (150.000đ)",
+    "status": "APPROVED",
+    "reviewedBy": "Admin Thầy Thành (0915.213717)",
+    "reviewedAt": "2026-10-14 12:36:59",
+    "createdAt": "2026-10-14 12:36:59"
+  },
+  {
     "id": "REG-LIFETIME-MBE10DBE85",
     "machineId": "MB-E10D-BE85",
     "fullName": "Thầy giáo Đinh Văn Thành",
