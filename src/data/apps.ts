@@ -141,7 +141,7 @@ export const apps: AppCard[] = [
   {
     id: "tao-de-lich-su-thcs",
     title: "TẠO ĐỀ LỊCH SỬ THCS (CV 7991)",
-    description: "Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả 7 cột và đề kiểm tra Lịch sử THCS (Lớp 6, 7, 8, 9 - KNTT) kèm hướng dẫn chấm chi tiết.",
+    description: "Tạo đề Lịch sử THCS chuẩn Bộ GD&ĐT 4 phần (12 MCQ + 2 Đúng/Sai bảng 3 cột + 4 Trả lời ngắn + 2 bài Tự luận), Ma trận 21 cột, Bản đặc tả 8 cột, phủ kín 78 bài SGK Kết nối tri thức.",
     image: "/taode_lichsu_thcs.png",
     url: "#tao-de-lichsu-thcs",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
