@@ -1,5 +1,6 @@
 import { ModalSafeFooter } from './ModalSafeFooter';
 import { TrialRegisterModal } from './TrialRegisterModal';
+
 // Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Tác giả Đinh Thành & Nữ miền Bắc)
 export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
 Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
@@ -15,30 +16,32 @@ Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assist
 Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
 Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Crown, 
   X, 
   Play, 
-  Pause,
+  Pause, 
   Square, 
   Volume2, 
-  VolumeX,
+  VolumeX, 
   Download, 
   Sparkles, 
   MessageCircle, 
   FileText, 
   CheckCircle2, 
-  Send,
-  Zap,
-  Bell,
-  Clock,
-  Copy,
-  Check,
-  Laptop,
-  Rewind,
-  FastForward,
-  RefreshCw
+  Send, 
+  Zap, 
+  Bell, 
+  Clock, 
+  Copy, 
+  Check, 
+  Laptop, 
+  Rewind, 
+  FastForward, 
+  RefreshCw,
+  Users,
+  User
 } from 'lucide-react';
 import { BRAND, SMART_LISTENING_RESOURCES } from '../config/brand';
 import { licenseService } from '../services/licenseService';
@@ -63,7 +66,6 @@ Mi: My favourite subjects are English and Computer Science. How about you?
 Nick: I enjoy Geography and Physical Education because I love doing outdoor sports with our classmates.`;
 
 const SAMPLE_PRIMARY = `Teacher: Look, listen and repeat.
-[CHIME_DING]
 Mai: Good morning, Tom. How are you today?
 Tom: Good morning, Mai. I am very well, thank you. And how are you?
 Mai: I am great! What are you doing in the classroom?
@@ -83,11 +85,180 @@ The four inner planets are Mercury, Venus, Earth, and Mars.
 The four outer planets are Jupiter, Saturn, Uranus, and Neptune.
 Earth is the only planet known to support life, thanks to its perfect distance from the Sun and its protective atmosphere.`;
 
+// ==============================================================================
+// SMART CHARACTER ROLE & GENDER RECOGNITION (CHUẨN SGK & BỘ GD&ĐT)
+// ==============================================================================
+const MALE_KEYWORDS = new Set([
+  'mr', 'mr.', 'mister', 'sir', 'lord', 'king', 'prince', 'boy', 'boys', 'man', 'men',
+  'gentleman', 'father', 'dad', 'daddy', 'grandpa', 'grandfather', 'son', 'brother',
+  'uncle', 'nephew', 'husband', 'waiter', 'actor', 'policeman', 'he', 'him', 'his',
+  'thầy', 'bố', 'cha', 'ba', 'ông', 'anh', 'chú', 'bác', 'nam', 'con trai', 'cháu trai',
+  'nick', 'tom', 'peter', 'tony', 'alex', 'john', 'david', 'mark', 'paul', 'jack',
+  'brian', 'james', 'lucas', 'daniel', 'robert', 'oliver', 'charlie', 'george', 'harry',
+  'william', 'michael', 'mike', 'ben', 'bill', 'sam', 'alfie', 'kevin', 'steven', 'steve',
+  'chris', 'eric', 'edward', 'henry', 'thomas', 'richard', 'charles', 'joseph', 'joshua',
+  'andrew', 'ryan', 'adam', 'roger', 'simon', 'tim', 'timmy', 'dan', 'danny', 'leo',
+  'max', 'luke', 'noah', 'liam', 'ethan', 'mason', 'logan', 'aidan', 'caden', 'jackson',
+  'owen', 'alan', 'dylan', 'roland', 'justin', 'brandon', 'jason', 'jake', 'sammy',
+  'phong', 'nam', 'duy', 'phuc', 'duong', 'minh', 'long', 'khoa', 'quan', 'binh',
+  'hung', 'tuan', 'dung', 'dat', 'duc', 'thanh', 'hoang', 'viet', 'trung', 'an',
+  'ba', 'kien', 'hai', 'huy', 'bac', 'lam',
+  'a', '1', 'speaker a', 'speaker 1', 'person a', 'person 1', 'student a', 'student 1'
+]);
+
+const FEMALE_KEYWORDS = new Set([
+  'mrs', 'mrs.', 'ms', 'ms.', 'miss', 'madam', 'lady', 'queen', 'princess', 'girl', 'girls',
+  'woman', 'women', 'mother', 'mom', 'mum', 'mummy', 'grandma', 'grandmother', 'daughter',
+  'sister', 'aunt', 'niece', 'wife', 'waitress', 'actress', 'policewoman', 'she', 'her', 'hers',
+  'cô', 'mẹ', 'má', 'bà', 'chị', 'dì', 'nữ', 'cô giáo', 'con gái', 'cháu gái',
+  'mi', 'mai', 'lan', 'linda', 'lucy', 'mary', 'sarah', 'anna', 'anne', 'emma',
+  'sophie', 'sophia', 'daisy', 'alice', 'susan', 'jessica', 'emily', 'laura', 'rachel',
+  'jennifer', 'lisa', 'jane', 'elena', 'matilda', 'ava', 'jenny', 'libby', 'kate',
+  'katie', 'claire', 'chloe', 'zoe', 'grace', 'lily', 'ella', 'olivia', 'mia',
+  'amelia', 'isabella', 'harper', 'evelyn', 'abigail', 'charlotte', 'victoria',
+  'helen', 'elizabeth', 'rose', 'fiona', 'julie', 'julia', 'amy', 'kelly', 'megan',
+  'wendy', 'clara', 'carol', 'hannah', 'samantha', 'vanessa', 'rebecca', 'natalie',
+  'hoa', 'linh', 'vy', 'chau', 'huong', 'nga', 'trang', 'chi', 'ha', 'tam',
+  'ngoc', 'thao', 'yen', 'quynh', 'van', 'loan', 'phuong', 'hang', 'thuy',
+  'bich', 'huyen', 'lien', 'diem', 'ngan', 'oanh', 'nhu', 'tram',
+  'b', '2', 'speaker b', 'speaker 2', 'person b', 'person 2', 'student b', 'student 2'
+]);
+
+const TEACHER_KEYWORDS = new Set([
+  'teacher', 'giáo viên', 'thầy giáo', 'cô giáo', 'narrator', 'examiner',
+  'instruction', 'guide', 'host', 'mc', 'announcer', 'direction'
+]);
+
+export const detectCharacterGender = (name: string): 'male' | 'female' | 'teacher' | 'unknown' => {
+  const clean = name.replace(/^(\d+[\.\)]|-)\s*/, '').replace(/[^\w\s\.]/g, ' ').toLowerCase().trim();
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return 'unknown';
+
+  for (const w of words) {
+    if (TEACHER_KEYWORDS.has(w) || clean.includes('giáo viên') || clean.includes('thầy giáo') || clean.includes('cô giáo')) {
+      if (words.some(m => ['mr', 'mr.', 'thầy'].includes(m))) return 'male';
+      if (words.some(f => ['ms', 'ms.', 'mrs', 'mrs.', 'miss', 'cô'].includes(f))) return 'female';
+      return 'teacher';
+    }
+  }
+
+  let mScore = MALE_KEYWORDS.has(clean) ? 15 : 0;
+  let fScore = FEMALE_KEYWORDS.has(clean) ? 15 : 0;
+
+  for (const w of words) {
+    const ws = w.replace(/\.$/, '');
+    if (MALE_KEYWORDS.has(w) || MALE_KEYWORDS.has(ws)) mScore += 10;
+    if (FEMALE_KEYWORDS.has(w) || FEMALE_KEYWORDS.has(ws)) fScore += 10;
+  }
+
+  if (mScore > fScore) return 'male';
+  if (fScore > mScore) return 'female';
+  return 'unknown';
+};
+
+export interface DialogueTurn {
+  speaker: string;
+  text: string;
+  gender: 'male' | 'female' | 'teacher' | 'unknown';
+  roleTag: string;
+}
+
+export const parseDialogueTurns = (scriptText: string): DialogueTurn[] => {
+  if (!scriptText || !scriptText.trim()) return [];
+  const lines = scriptText.replace(/\s*[/|]\s*(?=[A-Za-z0-9_À-ỹ\s]{1,25}:)/g, '\n').split('\n');
+  const rawTurns: { speaker: string; text: string }[] = [];
+
+  const patColon = /^\s*([^:\n]{1,30})\s*:\s*(.+)$/i;
+  const patBracket = /^\s*\[([^\]\n]{1,30})\]\s*:?\s*(.+)$/i;
+  const patDash = /^\s*-\s*([A-Za-z0-9_À-ỹ\s]{1,20})\s*:\s*(.+)$/i;
+
+  let curSpk = "Speaker A";
+  let curTxt = "";
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    const mDash = line.match(patDash);
+    const mColon = line.match(patColon);
+    const mBracket = line.match(patBracket);
+
+    let spk: string | null = null;
+    let cnt: string | null = null;
+
+    if (mDash) {
+      spk = mDash[1].trim();
+      cnt = mDash[2].trim();
+    } else if (mColon) {
+      spk = mColon[1].trim();
+      cnt = mColon[2].trim();
+    } else if (mBracket) {
+      spk = mBracket[1].trim();
+      cnt = mBracket[2].trim();
+    }
+
+    if (spk !== null && cnt !== null) {
+      const cleanSpk = spk.replace(/^(\d+[\.\)]|-)\s*/, '').trim() || spk;
+      if (curTxt) {
+        rawTurns.push({ speaker: curSpk, text: curTxt });
+      }
+      curSpk = cleanSpk;
+      curTxt = cnt;
+    } else {
+      curTxt = curTxt ? `${curTxt} ${line}` : line;
+    }
+  }
+
+  if (curTxt) {
+    rawTurns.push({ speaker: curSpk, text: curTxt });
+  }
+
+  const uniqueSpeakers: string[] = [];
+  for (const t of rawTurns) {
+    if (!uniqueSpeakers.includes(t.speaker)) {
+      uniqueSpeakers.push(t.speaker);
+    }
+  }
+
+  const spkGenders: Record<string, 'male' | 'female' | 'teacher' | 'unknown'> = {};
+  for (const spk of uniqueSpeakers) {
+    spkGenders[spk] = detectCharacterGender(spk);
+  }
+
+  if (uniqueSpeakers.length === 2) {
+    const s1 = uniqueSpeakers[0];
+    const s2 = uniqueSpeakers[1];
+    const g1 = spkGenders[s1];
+    const g2 = spkGenders[s2];
+    if (g1 === 'male' && g2 === 'unknown') spkGenders[s2] = 'female';
+    else if (g1 === 'female' && g2 === 'unknown') spkGenders[s2] = 'male';
+    else if (g2 === 'male' && g1 === 'unknown') spkGenders[s1] = 'female';
+    else if (g2 === 'female' && g1 === 'unknown') spkGenders[s1] = 'male';
+    else if (g1 === 'unknown' && g2 === 'unknown') {
+      spkGenders[s1] = 'male';
+      spkGenders[s2] = 'female';
+    }
+  }
+
+  return rawTurns.map(t => {
+    const g = spkGenders[t.speaker] || 'unknown';
+    let roleTag = `👤 ${t.speaker}`;
+    if (g === 'male') roleTag = `👨 ${t.speaker}`;
+    else if (g === 'female') roleTag = `👩 ${t.speaker}`;
+    else if (g === 'teacher') roleTag = `🎓 ${t.speaker}`;
+    return {
+      speaker: t.speaker,
+      text: t.text,
+      gender: g,
+      roleTag
+    };
+  });
+};
+
 // Hàm sinh hoặc đọc mã máy tính duy nhất cho từng trình duyệt/máy tính
 const getOrCreateMachineId = (): string => {
   let mid = localStorage.getItem('gvai_detected_machine_id');
   if (!mid || !mid.startsWith('MB-')) {
-    // Tạo mã định danh duy nhất dựa trên màn hình + trình duyệt + ngẫu nhiên
     try {
       const scr = `${window.screen?.width || 1920}x${window.screen?.height || 1080}_${window.screen?.colorDepth || 24}`;
       const nav = `${navigator.userAgent}_${navigator.language}_${navigator.hardwareConcurrency || 4}`;
@@ -98,19 +269,17 @@ const getOrCreateMachineId = (): string => {
         hash |= 0;
       }
       const part1 = Math.abs(hash).toString(16).padStart(4, '0').substring(0, 4).toUpperCase();
-      const part2 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
-      mid = `MB-${part1}-${part2}`;
-    } catch {
-      const p1 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
       const p2 = Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0').toUpperCase();
-      mid = `MB-${p1}-${p2}`;
+      mid = `MB-${part1}-${p2}`;
+    } catch {
+      mid = 'MB-E10D-BE85';
     }
     localStorage.setItem('gvai_detected_machine_id', mid);
   }
   return mid;
 };
 
-// Hàm phát chuông giả lập Web Audio API chất lượng cao (không cần file ngoài)
+// Hàm phát chuông giả lập Web Audio API chất lượng cao
 const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
   try {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -122,7 +291,7 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(1567.98, now); // G6 crystal ding
+      osc.frequency.setValueAtTime(1567.98, now);
       gain.gain.setValueAtTime(0.25, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
       osc.connect(gain);
@@ -143,7 +312,7 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
         osc.stop(now + 1.8);
       });
     } else if (type === 'jingle') {
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -164,8 +333,9 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
 };
 
 export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
-  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
+  // Tab chính: Mặc định mở Tab Online Studio (trực tuyến)
+  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
+  const [, setShowTrialRegister] = useState<boolean>(false);
 
   // ID máy tính tự động
   const [detectedMid, setDetectedMid] = useState<string>('');
@@ -175,17 +345,33 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
 
   // Online Studio States
-  const [studioMode, setStudioMode] = useState<'video_guide' | 'english_sgk'>('video_guide');
+  const [studioMode, setStudioMode] = useState<'english_sgk' | 'video_guide'>('english_sgk');
+  const [listeningMode, setListeningMode] = useState<'dialogue' | 'mono_male' | 'mono_female'>('dialogue');
   const [vietnameseVoiceType, setVietnameseVoiceType] = useState<'thay_thanh' | 'co_giao_bac'>('thay_thanh');
-  const [textInput, setTextInput] = useState(SAMPLE_VIDEO_TAO_DE);
+  const [textInput, setTextInput] = useState(SAMPLE_SECONDARY);
+  const [introText, setIntroText] = useState('Part 1. Listen to the conversation between Nick and Mi about their new school. Choose the best answer. You will hear the recording twice.');
+  const [enableIntro, setEnableIntro] = useState(true);
+
+  // Danh sách giọng đọc trình duyệt
   const [voiceList, setVoiceList] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoiceIndex, setSelectedVoiceIndex] = useState<number>(0);
+  const [selectedMaleVoiceIndex, setSelectedMaleVoiceIndex] = useState<number>(0);
+  const [selectedFemaleVoiceIndex, setSelectedFemaleVoiceIndex] = useState<number>(0);
+  const [selectedMonoVoiceIndex, setSelectedMonoVoiceIndex] = useState<number>(0);
+
+  // Cấu hình bài nghe
   const [rate, setRate] = useState<number>(1.0);
+  const [repeatCount, setRepeatCount] = useState<number>(2);
+  const [enableListenAgain, setEnableListenAgain] = useState<boolean>(true);
+  const [enableEndingSound, setEnableEndingSound] = useState<boolean>(true);
   const [volume, setVolume] = useState<number>(100);
   const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  // Trạng thái phát
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [, setCurrentLineIndex] = useState<number>(-1);
+  const [, setCurrentTurnIndex] = useState<number>(-1);
+  const [currentTurnRole, setCurrentTurnRole] = useState<string>('');
+  const [currentTurnText, setCurrentTurnText] = useState<string>('');
   const [playbackSeconds, setPlaybackSeconds] = useState<number>(0);
   const [totalEstimatedSeconds, setTotalEstimatedSeconds] = useState<number>(30);
 
@@ -202,17 +388,34 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [activeMidInput, setActiveMidInput] = useState('');
   const [isProActivated, setIsProActivated] = useState(false);
   const [proTeacherName, setProTeacherName] = useState('');
-  const [proMessage, setProMessage] = useState('');
-  const [checkLoading, setCheckLoading] = useState(false);
+  const [, setProMessage] = useState('');
+  const [, setCheckLoading] = useState(false);
 
   // Trạng thái kích hoạt bằng mã Key Ed25519 & Đồng bộ Cloud
   const [inputKey, setInputKey] = useState('');
-  const [verifyResult, setVerifyResult] = useState<SmartListeningVerifyResult | null>(null);
-  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
+  const [, setVerifyResult] = useState<SmartListeningVerifyResult | null>(null);
+  const [, setIsSyncingCloud] = useState(false);
 
   // Ref điều khiển playback
   const isPlayingRef = useRef(false);
   const timerIntervalRef = useRef<any>(null);
+
+  // Phân tích nhân vật thời gian thực từ nội dung kịch bản
+  const parsedTurns = useMemo(() => {
+    return parseDialogueTurns(textInput);
+  }, [textInput]);
+
+  const uniqueCharacters = useMemo(() => {
+    const seen = new Set<string>();
+    const list: { name: string; roleTag: string; gender: string }[] = [];
+    for (const t of parsedTurns) {
+      if (!seen.has(t.speaker)) {
+        seen.add(t.speaker);
+        list.push({ name: t.speaker, roleTag: t.roleTag, gender: t.gender });
+      }
+    }
+    return list;
+  }, [parsedTurns]);
 
   // Khởi tạo mã máy, lượt dùng thử và kiểm tra bản quyền Pro tự động
   useEffect(() => {
@@ -221,7 +424,6 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     setRegMid(mid);
     setActiveMidInput(mid);
 
-    // Đọc số lượt dùng thử còn lại trên máy (tối đa 5 lượt/máy tính)
     const savedTrials = localStorage.getItem('gvai_trial_remaining');
     if (savedTrials !== null) {
       const parsed = parseInt(savedTrials, 10);
@@ -231,13 +433,11 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       setTrialRemaining(5);
     }
 
-    // 1. Kiểm tra trạng thái VIP đã kích hoạt trước đó
     if (isSmartListeningVIPActivated()) {
       setIsProActivated(true);
       setProTeacherName('Quý Thầy/Cô');
     }
 
-    // 2. Tự động kiểm tra trạng thái phê duyệt trên Cloud GitHub
     cloudSyncService.checkCurrentMachineCloudStatus(mid, 'smart-listening').then(res => {
       if (res.isApproved) {
         setIsProActivated(true);
@@ -246,7 +446,6 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       }
     });
 
-    // 3. Fallback licenseService cũ
     licenseService.checkOnlineLicense(mid).then(res => {
       if (res.isValid && res.record) {
         setIsProActivated(true);
@@ -258,16 +457,30 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   // Tính toán số từ và ước tính thời lượng
   useEffect(() => {
     const words = textInput.trim().split(/\s+/).filter(Boolean).length;
-    const est = Math.max(10, Math.round((words / (130 * rate)) * 60));
+    const rep = listeningMode === 'dialogue' ? repeatCount : 1;
+    const est = Math.max(12, Math.round(((words * rep) / (130 * rate)) * 60) + (rep > 1 ? 5 : 0) + (enableEndingSound ? 4 : 0));
     setTotalEstimatedSeconds(est);
-  }, [textInput, rate]);
+  }, [textInput, rate, repeatCount, listeningMode, enableEndingSound]);
 
-  // Load danh sách giọng đọc của trình duyệt
+  // Load danh sách giọng đọc của trình duyệt và tự động chọn cặp Nam/Nữ tối ưu
   useEffect(() => {
     const updateVoices = () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         const voices = window.speechSynthesis.getVoices();
         setVoiceList(voices);
+
+        if (voices.length > 0) {
+          let mIdx = voices.findIndex(v => v.lang.startsWith('en') && (v.name.includes('David') || v.name.includes('Mark') || v.name.includes('Ryan') || v.name.includes('Guy') || v.name.includes('Male')));
+          if (mIdx === -1) mIdx = voices.findIndex(v => v.lang.startsWith('en'));
+          if (mIdx !== -1) setSelectedMaleVoiceIndex(mIdx);
+
+          let fIdx = voices.findIndex(v => v.lang.startsWith('en') && (v.name.includes('Zira') || v.name.includes('Jenny') || v.name.includes('Ava') || v.name.includes('Libby') || v.name.includes('Female')));
+          if (fIdx === -1) fIdx = voices.findIndex((v, i) => v.lang.startsWith('en') && i !== mIdx);
+          if (fIdx === -1) fIdx = mIdx;
+          if (fIdx !== -1) setSelectedFemaleVoiceIndex(fIdx);
+
+          setSelectedMonoVoiceIndex(mIdx !== -1 ? mIdx : 0);
+        }
       }
     };
 
@@ -300,14 +513,18 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       if (res.isValid && res.record) {
         setIsProActivated(true);
         setProTeacherName(res.record.teacher_name || 'Thầy/Cô');
-        localStorage.setItem('gvai_web_pro_mid', activeMidInput.trim().toUpperCase());
+        localStorage.setItem('gvai_web_pro_mid', activeMidInput);
+        alert(`🎉 Chúc mừng ${res.record.teacher_name}! Phần mềm Smart Listening Pro đã được kích hoạt thành công.`);
+      } else {
+        alert(res.message || 'Mã máy chưa được phê duyệt kích hoạt trên hệ thống.');
       }
+    } catch {
+      alert('Lỗi kết nối máy chủ. Vui lòng thử lại sau.');
     } finally {
       setCheckLoading(false);
     }
   };
 
-  // Chèn thẻ chuông hoặc thời gian nghỉ vào vị trí con trỏ
   const insertTagAtCursor = (tag: string) => {
     setTextInput(prev => prev + (prev.endsWith('\n') ? '' : '\n') + tag + '\n');
   };
@@ -324,11 +541,13 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     }
     setIsPlaying(false);
     setIsPaused(false);
-    setCurrentLineIndex(-1);
+    setCurrentTurnIndex(-1);
+    setCurrentTurnRole('');
+    setCurrentTurnText('');
     setPlaybackSeconds(0);
   };
 
-  // Phát toàn bộ bài nghe có hỗ trợ nhận diện Chuông & Thời gian nghỉ & Lượt dùng thử
+  // Hàm phát Studio thông minh: Nhận diện chuẩn vai Nam / Nữ, Lặp lại có câu nhắc, Chèn chuông
   const handlePlayStudio = async () => {
     if (!('speechSynthesis' in window)) {
       alert('Trình duyệt của bạn chưa hỗ trợ Web Speech API.');
@@ -342,7 +561,6 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
         setActiveTab('register');
         return;
       }
-      // Trừ 1 lượt dùng thử (tối thiểu 0)
       const nextRemaining = Math.max(0, trialRemaining - 1);
       setTrialRemaining(nextRemaining);
       localStorage.setItem('gvai_trial_remaining', String(nextRemaining));
@@ -354,71 +572,149 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     setIsPaused(false);
     setPlaybackSeconds(0);
 
-    // Đồng hồ đếm giây phát
     timerIntervalRef.current = setInterval(() => {
       setPlaybackSeconds(sec => sec + 1);
     }, 1000);
 
-    const lines = textInput.split('\n').map(l => l.trim()).filter(Boolean);
+    const maleVoice = voiceList[selectedMaleVoiceIndex];
+    const femaleVoice = voiceList[selectedFemaleVoiceIndex];
 
-    for (let i = 0; i < lines.length; i++) {
-      if (!isPlayingRef.current) break;
-      setCurrentLineIndex(i);
-      const line = lines[i];
-
-      // Xử lý chèn chuông
-      if (line.includes('[CHIME_DING]')) {
-        playAcousticChime('ding');
-        await new Promise(r => setTimeout(r, 1200));
-        continue;
-      }
-      if (line.includes('[CHIME_BELL]')) {
-        playAcousticChime('bell');
-        await new Promise(r => setTimeout(r, 1800));
-        continue;
-      }
-      if (line.includes('[CHIME_JINGLE]')) {
-        playAcousticChime('jingle');
-        await new Promise(r => setTimeout(r, 1800));
-        continue;
-      }
-
-      // Xử lý nghỉ
-      if (line.includes('[PAUSE_2S]')) {
-        await new Promise(r => setTimeout(r, 2000));
-        continue;
-      }
-      if (line.includes('[PAUSE_5S]')) {
-        await new Promise(r => setTimeout(r, 5000));
-        continue;
-      }
-
-      // Đọc lời thoại
-      await new Promise<void>((resolve) => {
+    const speakUtteranceAsync = (text: string, voice: SpeechSynthesisVoice | undefined, customPitch = 1.0, customRate = rate): Promise<void> => {
+      return new Promise((resolve) => {
         if (!isPlayingRef.current) {
           resolve();
           return;
         }
-
-        // Tách nhãn người nói để đọc tự nhiên
-        const colonIdx = line.indexOf(':');
-        const spokenText = colonIdx !== -1 ? line.substring(colonIdx + 1).trim() : line;
-
-        const utterance = new SpeechSynthesisUtterance(spokenText);
-        if (voiceList[selectedVoiceIndex]) {
-          utterance.voice = voiceList[selectedVoiceIndex];
-        }
-        utterance.rate = rate;
-        utterance.volume = isMuted ? 0 : volume / 100;
-
-        utterance.onend = () => resolve();
-        utterance.onerror = () => resolve();
-
-        window.speechSynthesis.speak(utterance);
+        const utt = new SpeechSynthesisUtterance(text);
+        if (voice) utt.voice = voice;
+        utt.rate = customRate;
+        utt.pitch = customPitch;
+        utt.volume = isMuted ? 0 : volume / 100;
+        utt.onend = () => resolve();
+        utt.onerror = () => resolve();
+        window.speechSynthesis.speak(utt);
       });
+    };
 
-      // Khoảng nghỉ nhỏ giữa các câu (0.4s)
-      await new Promise(r => setTimeout(r, 400));
+    // ── CHẾ ĐỘ 1: TIẾNG ANH SGK ──────────────────────────────────────────
+    if (studioMode === 'english_sgk') {
+      if (enableIntro && introText.trim()) {
+        setCurrentTurnRole('📢 Hướng Dẫn Mở Đầu (Intro)');
+        setCurrentTurnText(introText);
+        await speakUtteranceAsync(introText, femaleVoice || maleVoice, 1.0, Math.max(0.85, rate * 0.95));
+        await new Promise(r => setTimeout(r, 1500));
+      }
+
+      if (listeningMode === 'dialogue') {
+        const turns = parseDialogueTurns(textInput);
+        const actualRepeats = Math.max(1, repeatCount);
+
+        for (let rep = 1; rep <= actualRepeats; rep++) {
+          if (!isPlayingRef.current) break;
+
+          if (rep > 1) {
+            await new Promise(r => setTimeout(r, 1500));
+            if (enableListenAgain) {
+              setCurrentTurnRole('🗣️ Lời Nhắc');
+              setCurrentTurnText('Now listen again.');
+              await speakUtteranceAsync('Now listen again.', femaleVoice || maleVoice, 1.05, 0.9);
+              await new Promise(r => setTimeout(r, 1500));
+            }
+          }
+
+          for (let i = 0; i < turns.length; i++) {
+            if (!isPlayingRef.current) break;
+            const turn = turns[i];
+            setCurrentTurnIndex(i);
+            setCurrentTurnRole(turn.roleTag);
+            setCurrentTurnText(turn.text);
+
+            let chosenVoice: SpeechSynthesisVoice | undefined;
+            let pitch = 1.0;
+
+            if (turn.gender === 'male') {
+              chosenVoice = maleVoice;
+              pitch = 0.95;
+            } else if (turn.gender === 'female') {
+              chosenVoice = femaleVoice;
+              pitch = 1.15;
+            } else if (turn.gender === 'teacher') {
+              chosenVoice = femaleVoice || maleVoice;
+              pitch = 1.05;
+            } else {
+              chosenVoice = i % 2 === 0 ? maleVoice : femaleVoice;
+              pitch = i % 2 === 0 ? 0.95 : 1.15;
+            }
+
+            await speakUtteranceAsync(turn.text, chosenVoice, pitch, rate);
+            await new Promise(r => setTimeout(r, 600));
+          }
+        }
+      } else {
+        const lines = textInput.split('\n').map(l => l.trim()).filter(Boolean);
+        const voice = listeningMode === 'mono_male' ? maleVoice : femaleVoice;
+        const pitch = listeningMode === 'mono_male' ? 0.92 : 1.12;
+        const actualRepeats = Math.max(1, repeatCount);
+
+        for (let rep = 1; rep <= actualRepeats; rep++) {
+          if (!isPlayingRef.current) break;
+          if (rep > 1 && enableListenAgain) {
+            await new Promise(r => setTimeout(r, 1500));
+            setCurrentTurnRole('🗣️ Lời Nhắc');
+            setCurrentTurnText('Now listen again.');
+            await speakUtteranceAsync('Now listen again.', voice, 1.0, 0.9);
+            await new Promise(r => setTimeout(r, 1500));
+          }
+
+          for (let i = 0; i < lines.length; i++) {
+            if (!isPlayingRef.current) break;
+            const line = lines[i];
+            setCurrentTurnIndex(i);
+            setCurrentTurnRole(listeningMode === 'mono_male' ? '👨 Giọng Nam' : '👩 Giọng Nữ');
+            setCurrentTurnText(line);
+
+            if (line.includes('[CHIME_DING]')) {
+              playAcousticChime('ding');
+              await new Promise(r => setTimeout(r, 1200));
+              continue;
+            }
+            if (line.includes('[CHIME_BELL]')) {
+              playAcousticChime('bell');
+              await new Promise(r => setTimeout(r, 1800));
+              continue;
+            }
+
+            const colonIdx = line.indexOf(':');
+            const spokenText = colonIdx !== -1 ? line.substring(colonIdx + 1).trim() : line;
+            await speakUtteranceAsync(spokenText, voice, pitch, rate);
+            await new Promise(r => setTimeout(r, 500));
+          }
+        }
+      }
+
+      if (enableEndingSound && isPlayingRef.current) {
+        playAcousticChime('ding');
+        await new Promise(r => setTimeout(r, 1500));
+        setCurrentTurnRole('📢 Kết Thúc Bài Nghe');
+        setCurrentTurnText('That is the end of the listening section.');
+        await speakUtteranceAsync('That is the end of the listening section.', femaleVoice || maleVoice, 1.0, 0.9);
+      }
+    } 
+    // ── CHẾ ĐỘ 2: THUYẾT MINH VIDEO TIẾNG VIỆT ──────────────────────────
+    else {
+      const viVoice = voiceList.find(v => v.lang.startsWith('vi'));
+      const lines = textInput.split('\n').map(l => l.trim()).filter(Boolean);
+      for (let i = 0; i < lines.length; i++) {
+        if (!isPlayingRef.current) break;
+        const line = lines[i];
+        setCurrentTurnIndex(i);
+        setCurrentTurnRole(vietnameseVoiceType === 'thay_thanh' ? '👑 Tác Giả Đinh Thành' : '👩 Cô Giáo Miền Bắc');
+        setCurrentTurnText(line);
+
+        const pitch = vietnameseVoiceType === 'thay_thanh' ? 0.88 : 1.15;
+        await speakUtteranceAsync(line, viVoice, pitch, rate);
+        await new Promise(r => setTimeout(r, 400));
+      }
     }
 
     stopPlayback();
@@ -435,7 +731,6 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     }
   };
 
-  // Kích hoạt bản quyền trực tiếp bằng mã Key Ed25519 (TTS-Y1-... hoặc TTS-LT-...)
   const handleActivateKey = async () => {
     if (!inputKey.trim()) {
       alert('Vui lòng nhập hoặc dán mã kích hoạt bản quyền do Thầy Thành cấp!');
@@ -453,7 +748,6 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     }
   };
 
-  // Đồng bộ bản quyền trực tiếp từ GitHub Cloud
   const handleCloudSync = async () => {
     setIsSyncingCloud(true);
     try {
@@ -470,7 +764,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       } else {
         alert(`ℹ️ THÔNG BÁO TỪ CLOUD:\n\nĐơn đăng ký của máy [${detectedMid}] chưa được Admin phê duyệt hoặc đang chờ xử lý.\n\nQuý Thầy/Cô vui lòng nhắn tin Zalo Thầy Thành (0915.213717) để được duyệt kích hoạt nhanh trong 1 phút!`);
       }
-    } catch (e) {
+    } catch {
       alert('Lỗi kết nối kiểm tra Cloud. Vui lòng kiểm tra lại mạng internet.');
     } finally {
       setIsSyncingCloud(false);
@@ -491,47 +785,16 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
       const phoneZalo = regPhone.trim();
       const schoolUnit = regSchool.trim() || 'Trường THCS';
 
-      // 1. Gửi trực tiếp lên GitHub Cloud Issues
       await cloudSyncService.submitRegistrationToCloud({
         machineId: cleanMid,
         fullName: teacherName,
         phoneNumber: phoneZalo,
         schoolUnit: schoolUnit,
         appId: 'smart-listening',
-        appName: 'Smart Listening Pro (Tạo Bài Nghe Tiếng Anh)',
-        packageType: regPackage === 'LIFETIME' ? 'LIFETIME' : regPackage === '2YEAR' ? '2YEAR' : '1YEAR'
+        notes: `Gói: ${regPackage} | Đăng ký từ Web Pro`
       });
 
-      // 2. Đồng thời lưu local/supabase
-      try {
-        await licenseService.register({
-          machine_id: cleanMid,
-          teacher_name: teacherName,
-          phone_zalo: phoneZalo,
-          school_unit: schoolUnit,
-          package_type: regPackage
-        });
-      } catch {}
-
       setRegSuccess(true);
-
-      // 3. Mở Zalo Thầy Thành gửi thông tin
-      const zaloMsg = `KÍNH GỬI THẦY ĐINH VĂN THÀNH - ĐĂNG KÝ BẢN QUYỀN SMART LISTENING PRO (TẠO BÀI NGHE)
-----------------------------------------
-• Họ và tên: ${teacherName}
-• Điện thoại / Zalo: ${phoneZalo}
-• Đơn vị: ${schoolUnit}
-• Mã máy tính: ${cleanMid}
-• Gói đăng ký: ${regPackage === 'LIFETIME' ? 'VIP Trọn Đời' : regPackage === '2YEAR' ? 'Gói 2 Năm' : 'Gói 1 Năm'}
-----------------------------------------
-Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin trân trọng cảm ơn!`;
-
-      try {
-        navigator.clipboard.writeText(zaloMsg);
-      } catch {}
-
-      const zaloUrl = `https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(zaloMsg)}`;
-      window.open(zaloUrl, '_blank');
     } catch (err) {
       console.error('Lỗi gửi đăng ký:', err);
       setRegSuccess(true);
@@ -546,7 +809,18 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Lắng nghe phím Escape (Esc) để đóng modal ngay lập tức
+  // Tải file kịch bản dạng .txt
+  const handleDownloadScript = () => {
+    const blob = new Blob([textInput], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Listening_Script_${detectedMid}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Lắng nghe phím Escape (Esc) để đóng modal
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -626,8 +900,23 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
           </div>
         </div>
 
-        {/* 3 TABS SWITCHER */}
+        {/* 3 TABS SWITCHER - ĐẦY ĐỦ 3 TAB RÕ RÀNG */}
         <div className="flex border-b border-slate-800 mt-3 mb-3 gap-2 overflow-x-auto pb-1">
+          <button
+            onClick={() => {
+              stopPlayback();
+              setActiveTab('online');
+            }}
+            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'online'
+                ? 'border-blue-500 text-blue-400'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-sky-400" />
+            1. Studio Tạo Bài Nghe Trực Tuyến (Online)
+          </button>
+
           <button
             onClick={() => {
               stopPlayback();
@@ -640,7 +929,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
             }`}
           >
             <Download className="w-4 h-4 text-emerald-400" />
-            1. Tải Bản Máy Tính Dùng Thử (.exe / .zip)
+            2. Tải Bản Máy Tính Dùng Thử (.exe / .zip)
           </button>
 
           <button
@@ -655,17 +944,17 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            2. Bản Quyền & Kích Hoạt Pro
+            3. Bản Quyền & Kích Hoạt Pro
           </button>
         </div>
 
         {/* ========================================================================= */}
-        {/* TAB 1: STUDIO TẠO BÀI NGHE (ONLINE STUDIO THEME DESKTOP) */}
+        {/* TAB 1: STUDIO TẠO BÀI NGHE (ONLINE STUDIO CHUẨN SGK GLOBAL SUCCESS) */}
         {/* ========================================================================= */}
-        {activeTab === ('online' as any) && (
+        {activeTab === 'online' && (
           <div className="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
             
-            {/* 1. STATUS CARD: TRIAL OR PRO BANNER (GIỐNG HỆT BẢN CÀI ĐẶT DESKTOP) */}
+            {/* 1. STATUS CARD: TRIAL OR PRO BANNER */}
             {isProActivated ? (
               <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-blue-950/80 border border-emerald-500/40 flex items-center justify-between gap-3 shadow-md">
                 <div className="flex items-center gap-2.5">
@@ -738,8 +1027,24 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               </div>
             )}
 
-            {/* BỘ CHỌN CHẾ ĐỘ: 1. THUYẾT MINH VIDEO (TIẾNG VIỆT) | 2. SGK TIẾNG ANH */}
-            <div className="flex gap-2 p-1.5 bg-slate-900 border border-amber-500/30 rounded-2xl">
+            {/* BỘ CHỌN CHẾ ĐỘ 1: TIẾNG ANH SGK | 2. THUYẾT MINH VIDEO */}
+            <div className="flex gap-2 p-1.5 bg-slate-900 border border-sky-500/30 rounded-2xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setStudioMode('english_sgk');
+                  setTextInput(SAMPLE_SECONDARY);
+                  setIntroText('Part 1. Listen to the conversation between Nick and Mi about their new school. Choose the best answer. You will hear the recording twice.');
+                }}
+                className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                  studioMode === 'english_sgk'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/20'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                🎧 Luyện Nghe SGK Tiếng Anh (English Global Success Cấp 1-2-3)
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -753,33 +1058,228 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                 }`}
               >
                 <Crown className="w-4 h-4" />
-                🎙️ Tạo Giọng Thuyết Minh Video Hướng Dẫn (Tiếng Việt)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setStudioMode('english_sgk');
-                  setTextInput(SAMPLE_SECONDARY);
-                }}
-                className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                  studioMode === 'english_sgk'
-                    ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Sparkles className="w-4 h-4" />
-                🎧 Luyện Nghe SGK Tiếng Anh (English Global Success)
+                🎙️ Thuyết Minh Video Hướng Dẫn (Tiếng Việt)
               </button>
             </div>
 
-            {/* THANH CÔNG CỤ NHANH */}
-            <div className="bg-slate-800/80 rounded-2xl p-2.5 border border-slate-700 space-y-2">
-              {studioMode === 'video_guide' ? (
+            {/* CHỌN KIỂU BÀI NGHE (CHO SGK TIẾNG ANH): HỘI THOẠI 2 NHÂN VẬT / ĐỘC THOẠI */}
+            {studioMode === 'english_sgk' && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setListeningMode('dialogue')}
+                  className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all text-left ${
+                    listeningMode === 'dialogue'
+                      ? 'bg-blue-950/70 border-blue-500 text-blue-200 shadow-md'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Users className="w-4 h-4 text-blue-400 shrink-0" />
+                  <div>
+                    <div className="font-bold text-xs text-white">Hội thoại 2 nhân vật</div>
+                    <div className="text-[10px] text-slate-400">Tự động nhận diện Nam & Nữ</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setListeningMode('mono_male')}
+                  className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all text-left ${
+                    listeningMode === 'mono_male'
+                      ? 'bg-emerald-950/70 border-emerald-500 text-emerald-200 shadow-md'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <User className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="font-bold text-xs text-white">Độc thoại Giọng Nam</div>
+                    <div className="text-[10px] text-slate-400">Đọc bài 1 giọng Nam chuẩn</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setListeningMode('mono_female')}
+                  className={`p-2.5 rounded-xl border flex items-center gap-2.5 transition-all text-left ${
+                    listeningMode === 'mono_female'
+                      ? 'bg-pink-950/70 border-pink-500 text-pink-200 shadow-md'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <User className="w-4 h-4 text-pink-400 shrink-0" />
+                  <div>
+                    <div className="font-bold text-xs text-white">Độc thoại Giọng Nữ</div>
+                    <div className="text-[10px] text-slate-400">Đọc bài 1 giọng Nữ chuẩn</div>
+                  </div>
+                </button>
+              </div>
+            )}
+
+            {/* CẤU HÌNH GIỌNG ĐỌC & CẶP NHÂN VẬT */}
+            <div className="bg-slate-800/80 rounded-2xl p-3 border border-slate-700 space-y-2.5">
+              {studioMode === 'english_sgk' ? (
+                <>
+                  {listeningMode === 'dialogue' ? (
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center justify-between gap-1 text-[11px]">
+                        <span className="font-bold text-slate-300 flex items-center gap-1.5">
+                          ⚡ Cặp giọng mẫu SGK:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTextInput(SAMPLE_SECONDARY);
+                              setIntroText('Part 1. Listen to the conversation between Nick and Mi about their new school. Choose the best answer. You will hear the recording twice.');
+                            }}
+                            className="px-2 py-0.5 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 text-[11px] font-semibold"
+                          >
+                            🎓 Nick & Mi (Cấp 2)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTextInput(SAMPLE_PRIMARY);
+                              setIntroText('Look, listen and repeat. You will hear the conversation twice.');
+                            }}
+                            className="px-2 py-0.5 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 text-[11px] font-semibold"
+                          >
+                            🎒 Tom & Mai (Cấp 1)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTextInput(SAMPLE_DIALOGUE_AB);
+                              setIntroText('Listen to the conversation between person A and person B. Choose the correct answer.');
+                            }}
+                            className="px-2 py-0.5 rounded-lg bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-600/40 text-[11px] font-semibold"
+                          >
+                            💬 Giao tiếp (A & B)
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div className="p-2.5 rounded-xl bg-slate-900/90 border border-blue-500/30">
+                          <label className="block text-[11px] font-bold text-blue-300 mb-1 flex items-center gap-1.5">
+                            👨 Giọng Nam (Speaker A):
+                          </label>
+                          <select
+                            value={selectedMaleVoiceIndex}
+                            onChange={(e) => setSelectedMaleVoiceIndex(Number(e.target.value))}
+                            className="w-full p-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-blue-500"
+                          >
+                            {voiceList.map((v, i) => (
+                              <option key={i} value={i}>
+                                {v.name} ({v.lang})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="p-2.5 rounded-xl bg-slate-900/90 border border-pink-500/30">
+                          <label className="block text-[11px] font-bold text-pink-300 mb-1 flex items-center gap-1.5">
+                            👩 Giọng Nữ (Speaker B):
+                          </label>
+                          <select
+                            value={selectedFemaleVoiceIndex}
+                            onChange={(e) => setSelectedFemaleVoiceIndex(Number(e.target.value))}
+                            className="w-full p-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-pink-500"
+                          >
+                            {voiceList.map((v, i) => (
+                              <option key={i} value={i}>
+                                {v.name} ({v.lang})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                        {listeningMode === 'mono_male' ? '👨 Chọn Giọng Đọc Nam:' : '👩 Chọn Giọng Đọc Nữ:'}
+                      </label>
+                      <select
+                        value={selectedMonoVoiceIndex}
+                        onChange={(e) => setSelectedMonoVoiceIndex(Number(e.target.value))}
+                        className="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-blue-500"
+                      >
+                        {voiceList.map((v, i) => (
+                          <option key={i} value={i}>
+                            {v.name} ({v.lang})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* CẤU HÌNH BÀI THI: SỐ LẦN NGHE, LỜI NHẮC, CHUÔNG KẾT THÚC, TỐC ĐỘ */}
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-1 border-t border-slate-700/60">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 mb-0.5">
+                        Số lần nghe:
+                      </label>
+                      <select
+                        value={repeatCount}
+                        onChange={(e) => setRepeatCount(Number(e.target.value))}
+                        className="w-full p-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 text-xs"
+                      >
+                        <option value={1}>1 lần (Nghe 1 lượt)</option>
+                        <option value={2}>2 lần (Chuẩn THCS/THPT)</option>
+                        <option value={3}>3 lần (Chuẩn Tiểu học)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-0.5">
+                        <span>Tốc độ phát:</span>
+                        <span className="text-cyan-400 font-mono">{rate}x</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0.7"
+                        max="1.3"
+                        step="0.05"
+                        value={rate}
+                        onChange={(e) => setRate(parseFloat(e.target.value))}
+                        className="w-full h-1.5 bg-slate-950 rounded appearance-none cursor-pointer accent-blue-500 mt-2"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1.5 pt-4">
+                      <input
+                        type="checkbox"
+                        id="chk_listen_again"
+                        checked={enableListenAgain}
+                        onChange={(e) => setEnableListenAgain(e.target.checked)}
+                        className="rounded border-slate-700 text-blue-600 focus:ring-0"
+                      />
+                      <label htmlFor="chk_listen_again" className="text-[11px] text-slate-300 cursor-pointer">
+                        Chèn 'Now listen again'
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 pt-4">
+                      <input
+                        type="checkbox"
+                        id="chk_ending"
+                        checked={enableEndingSound}
+                        onChange={(e) => setEnableEndingSound(e.target.checked)}
+                        className="rounded border-slate-700 text-blue-600 focus:ring-0"
+                      />
+                      <label htmlFor="chk_ending" className="text-[11px] text-slate-300 cursor-pointer">
+                        Chuông & câu kết bài
+                      </label>
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
                       <Crown className="w-3.5 h-3.5 text-amber-400" />
-                      Chọn giọng đọc thuyết minh:
+                      Chọn giọng thuyết minh:
                     </span>
                     <div className="flex flex-wrap gap-2">
                       <button
@@ -798,85 +1298,22 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                         onClick={() => setVietnameseVoiceType('co_giao_bac')}
                         className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all ${
                           vietnameseVoiceType === 'co_giao_bac'
-                            ? 'bg-purple-500 text-white shadow-md'
+                            ? 'bg-amber-500 text-slate-950 shadow-md'
                             : 'bg-slate-900 text-slate-300 border border-slate-700 hover:text-white'
                         }`}
                       >
-                        🌸 Giọng Cô Giáo Miền Bắc (Nữ Miền Bắc - Truyền Cảm Phát Thanh)
+                        👩 Giọng Cô Giáo Miền Bắc (Trong Sáng & Truyền Cảm)
                       </button>
                     </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-700/60">
-                    <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                      Kịch bản video mẫu:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setTextInput(SAMPLE_VIDEO_TAO_DE)}
-                        className="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 text-xs font-semibold"
-                      >
-                        📜 Video 1: Tạo Đề 7991
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTextInput(SAMPLE_VIDEO_ND30)}
-                        className="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 text-xs font-semibold"
-                      >
-                        🏛️ Video 2: Chuẩn Hóa NĐ 30
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTextInput(SAMPLE_VIDEO_ADDIN_WORD)}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 text-xs font-semibold"
-                      >
-                        💻 Video 3: Add-in AI Word
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                    Nạp bài mẫu chuẩn SGK:
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    <button
-                      onClick={() => setTextInput(SAMPLE_SECONDARY)}
-                      className="px-2.5 py-1 rounded-lg bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-600/40 font-semibold transition-colors"
-                    >
-                      🏫 Cấp 2 (Nick & Mi)
-                    </button>
-                    <button
-                      onClick={() => setTextInput(SAMPLE_PRIMARY)}
-                      className="px-2.5 py-1 rounded-lg bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-600/40 font-semibold transition-colors"
-                    >
-                      🎒 Cấp 1 (Tom & Mai)
-                    </button>
-                    <button
-                      onClick={() => setTextInput(SAMPLE_DIALOGUE_AB)}
-                      className="px-2.5 py-1 rounded-lg bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-600/40 font-semibold transition-colors"
-                    >
-                      💬 Giao tiếp (A & B)
-                    </button>
-                    <button
-                      onClick={() => setTextInput(SAMPLE_MONOLOGUE)}
-                      className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 font-semibold transition-colors"
-                    >
-                      🎙️ Độc thoại (Monologue)
-                    </button>
                   </div>
                 </div>
               )}
 
-              {/* Chèn Chuông & Thời gian nghỉ */}
+              {/* CHÈN HIỆU LỆNH CHUÔNG & THỜI GIAN NGHỈ */}
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-700/60">
                 <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
                   <Bell className="w-3.5 h-3.5 text-amber-400" />
-                  Chèn hiệu lệnh phòng thi:
+                  Hiệu lệnh chuông & ngắt nhịp:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   <button
@@ -884,40 +1321,40 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                       insertTagAtCursor('[CHIME_DING]');
                       playAcousticChime('ding');
                     }}
-                    className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-semibold flex items-center gap-1"
-                    title="Phát chuông Ding trong trẻo"
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-semibold flex items-center gap-1"
+                    title="Chuông Ding pha lê"
                   >
-                    🔔 Chèn Ding
+                    🔔 Ding
                   </button>
                   <button
                     onClick={() => {
                       insertTagAtCursor('[CHIME_BELL]');
                       playAcousticChime('bell');
                     }}
-                    className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-semibold flex items-center gap-1"
-                    title="Phát chuông Bell ngân vang"
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-semibold flex items-center gap-1"
+                    title="Chuông Bell ngân vang"
                   >
-                    🔔 Chèn Bell
+                    🔔 Bell
                   </button>
                   <button
                     onClick={() => {
                       insertTagAtCursor('[CHIME_JINGLE]');
                       playAcousticChime('jingle');
                     }}
-                    className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-semibold flex items-center gap-1"
-                    title="Nhạc hiệu mở đầu / kết thúc"
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-[11px] font-semibold flex items-center gap-1"
+                    title="Nhạc hiệu mở đầu"
                   >
-                    🎵 Chèn Jingle
+                    🎵 Jingle
                   </button>
                   <button
                     onClick={() => insertTagAtCursor('[PAUSE_2S]')}
-                    className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold flex items-center gap-1"
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px] font-semibold"
                   >
                     ⏸️ Nghỉ 2s
                   </button>
                   <button
                     onClick={() => insertTagAtCursor('[PAUSE_5S]')}
-                    className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-600 font-semibold flex items-center gap-1"
+                    className="px-2 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px] font-semibold"
                   >
                     ⏸️ Nghỉ 5s
                   </button>
@@ -925,7 +1362,61 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               </div>
             </div>
 
-            {/* 3. KHUNG NHẬP KỊCH BẢN / SCRIPT EDITOR */}
+            {/* LỜI DẪN MỞ ĐẦU (INTRO) - DÀNH CHO TIẾNG ANH */}
+            {studioMode === 'english_sgk' && (
+              <div className="p-2.5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={enableIntro}
+                      onChange={(e) => setEnableIntro(e.target.checked)}
+                      className="rounded border-slate-700 text-blue-600 focus:ring-0"
+                    />
+                    📢 Lời Dẫn Đề Thi Mở Đầu (Intro / Instructions):
+                  </label>
+                  <span className="text-[10px] text-slate-400">Nghỉ 1.5s sau lời dẫn</span>
+                </div>
+                {enableIntro && (
+                  <input
+                    type="text"
+                    value={introText}
+                    onChange={(e) => setIntroText(e.target.value)}
+                    placeholder="Nhập lời mở đầu bài thi (Part 1. Listen to the conversation...)..."
+                    className="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-blue-500"
+                  />
+                )}
+              </div>
+            )}
+
+            {/* THANH NHẬN DIỆN NHÂN VẬT THỜI GIAN THỰC (LIVE CHARACTER RECOGNITION CHIPS) */}
+            {studioMode === 'english_sgk' && listeningMode === 'dialogue' && uniqueCharacters.length > 0 && (
+              <div className="p-2 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center gap-2 overflow-x-auto">
+                <span className="text-[10px] font-bold text-blue-300 uppercase shrink-0">
+                  ⚡ Nhân vật đã nhận diện:
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {uniqueCharacters.map((c, idx) => (
+                    <span
+                      key={idx}
+                      className={`px-2 py-0.5 rounded-md text-[11px] font-bold flex items-center gap-1 border ${
+                        c.gender === 'male'
+                          ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                          : c.gender === 'female'
+                          ? 'bg-pink-500/20 text-pink-300 border-pink-500/40'
+                          : c.gender === 'teacher'
+                          ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      }`}
+                    >
+                      {c.roleTag} ({c.gender === 'male' ? 'Nam' : c.gender === 'female' ? 'Nữ' : 'Giáo viên'})
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* KHUNG NHẬP KỊCH BẢN / SCRIPT EDITOR */}
             <div className="relative">
               <div className="flex items-center justify-between pb-1 text-slate-400">
                 <span className="font-semibold text-[11px] flex items-center gap-1 text-slate-300">
@@ -937,7 +1428,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                 </span>
               </div>
               <textarea
-                rows={6}
+                rows={5}
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 placeholder="Dán kịch bản tiếng Anh vào đây (Ví dụ: Nick: Hello... Mi: Hi...)..."
@@ -945,46 +1436,23 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
               />
             </div>
 
-            {/* 4. CẤU HÌNH GIỌNG ĐỌC & TỐC ĐỘ */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-300 mb-1">
-                  Giọng Đọc Tiếng Anh:
-                </label>
-                <select
-                  value={selectedVoiceIndex}
-                  onChange={(e) => setSelectedVoiceIndex(Number(e.target.value))}
-                  className="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-blue-500"
-                >
-                  {voiceList.map((v, i) => (
-                    <option key={i} value={i}>
-                      {v.name} ({v.lang})
-                    </option>
-                  ))}
-                </select>
+            {/* LIVE KARAOKE / PLAYBACK DISPLAY BAR (HIỂN THỊ NỔI BẬT LƯỢT ĐANG NÓI) */}
+            {isPlaying && currentTurnRole && (
+              <div className="p-2.5 rounded-2xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-cyan-500/50 shadow-lg animate-pulse flex items-start gap-2.5">
+                <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold text-xs shrink-0">
+                  {currentTurnRole}
+                </span>
+                <p className="text-xs text-white font-medium italic">
+                  "{currentTurnText}"
+                </p>
               </div>
+            )}
 
-              <div>
-                <div className="flex justify-between text-[11px] font-bold text-slate-300 mb-1">
-                  <span>Tốc Độ Phát Âm:</span>
-                  <span className="text-cyan-400 font-mono">{rate}x</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.6"
-                  max="1.4"
-                  step="0.1"
-                  value={rate}
-                  onChange={(e) => setRate(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500 mt-2"
-                />
-              </div>
-            </div>
-
-            {/* 5. STUDIO AUDIO PLAYER BAR (TÁI TẠO NGUYÊN BẢN CÀI ĐẶT DESKTOP AI_VOICE_PRO.PY) */}
-            <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5 shadow-xl">
+            {/* STUDIO AUDIO PLAYER CONTROLS (TÁI TẠO NGUYÊN BẢN DESKTOP AI_VOICE_PRO.PY) */}
+            <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                {/* Play / Pause / Stop Buttons */}
+                {/* Nút Play / Pause / Stop */}
+                <div className="flex items-center gap-2">
                   {!isPlaying ? (
                     !isProActivated && trialRemaining <= 0 ? (
                       <a
@@ -1005,7 +1473,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                       >
                         <Play className="w-4 h-4 fill-white" />
                         {isProActivated
-                          ? 'Phát Toàn Bộ Bài Nghe'
+                          ? 'Phát Toàn Bộ Bài Nghe MP3'
                           : `Phát Bài Nghe (Còn ${trialRemaining}/5 lượt)`}
                       </button>
                     )
@@ -1048,7 +1516,7 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                   </button>
                 </div>
 
-                {/* Digital Time Display (Consolas font) */}
+                {/* Đồng hồ số điện tử */}
                 <div className="bg-slate-900 border border-slate-800 px-3 py-1 rounded-xl flex items-center gap-2 self-start sm:self-auto">
                   <Clock className="w-3.5 h-3.5 text-cyan-400" />
                   <span className="font-mono font-bold text-cyan-300 text-xs">
@@ -1057,20 +1525,8 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
                 </div>
               </div>
 
-              {/* Seek Slider Bar */}
-              <div className="space-y-1">
-                <input
-                  type="range"
-                  min="0"
-                  max={totalEstimatedSeconds}
-                  value={Math.min(playbackSeconds, totalEstimatedSeconds)}
-                  onChange={(e) => setPlaybackSeconds(Number(e.target.value))}
-                  className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-                />
-              </div>
-
-              {/* Volume Row & Quick Actions */}
-              <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400">
+              {/* Volume & Tải kịch bản / Tải bản cài Desktop */}
+              <div className="flex flex-wrap items-center justify-between pt-1 text-[11px] text-slate-400 border-t border-slate-800">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsMuted(!isMuted)}
@@ -1098,21 +1554,23 @@ Kính nhờ Thầy kiểm tra và kích hoạt bản quyền giúp em. Em xin tr
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setTextInput('')}
-                    className="text-slate-500 hover:text-slate-300 underline"
+                    onClick={handleDownloadScript}
+                    className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 flex items-center gap-1 font-semibold"
                   >
-                    Xóa kịch bản
+                    <Download className="w-3 h-3 text-cyan-400" />
+                    Tải Kịch Bản (.txt)
                   </button>
                   <button
                     onClick={() => setActiveTab('download')}
-                    className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/40 flex items-center gap-1 font-bold"
                   >
                     <Download className="w-3 h-3" />
-                    Tải Bản Cài Desktop (.exe)
+                    Tải Bản Máy Tính (.exe)
                   </button>
                 </div>
               </div>
             </div>
+          </div>
         )}
 
         {/* ========================================================================= */}
