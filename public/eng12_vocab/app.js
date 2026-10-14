@@ -1,5 +1,5 @@
 /**
- * ENG 12 VOCABULARY MASTER - APPLICATION LOGIC
+ * ENG 12 VOCAB MASTER - APPLICATION LOGIC (ULTRA VIBRANT EDITION)
  * Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
  * Bám sát SGK Tiếng Anh 12 Global Success
  */
@@ -117,9 +117,8 @@ class SoundEffects {
   playCorrect() {
     this.init();
     if (!this.ctx) return;
-    const now = this.ctx.currentTime;
     [523.25, 659.25, 783.99].forEach((freq, idx) => {
-      setTimeout(() => this.playTone(freq, 'triangle', 0.18, 0.2), idx * 70);
+      setTimeout(() => this.playTone(freq, 'triangle', 0.18, 0.25), idx * 70);
     });
   }
   
@@ -127,12 +126,12 @@ class SoundEffects {
     this.init();
     if (!this.ctx) return;
     [220, 180].forEach((freq, idx) => {
-      setTimeout(() => this.playTone(freq, 'sawtooth', 0.2, 0.15), idx * 120);
+      setTimeout(() => this.playTone(freq, 'sawtooth', 0.2, 0.18), idx * 120);
     });
   }
   
   playFlip() {
-    this.playTone(420, 'sine', 0.08, 0.1);
+    this.playTone(420, 'sine', 0.08, 0.12);
   }
   
   playMatchSuccess() {
@@ -145,7 +144,7 @@ class SoundEffects {
   
   playWin() {
     if (window.confetti) {
-      window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      window.confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
     }
     this.init();
     if (!this.ctx) return;
@@ -175,22 +174,17 @@ const SpeechEngine = {
   },
   
   speak(text, rate = 1.0) {
-    if (!('speechSynthesis' in window)) {
-      alert('Trình duyệt không hỗ trợ Web Speech Synthesis API');
-      return;
-    }
-    window.speechSynthesis.cancel(); // Stop current speech
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = rate;
     utterance.pitch = 1.0;
     
-    // Select best English voice
     const langCode = STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US';
     utterance.lang = langCode;
     
     if (this.voices.length > 0) {
-      // Find natural or google voice first
       const voice = this.voices.find(v => v.lang.startsWith(langCode) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('David') || v.name.includes('Jenny')))
         || this.voices.find(v => v.lang.startsWith(langCode))
         || this.voices.find(v => v.lang.startsWith('en'));
@@ -229,17 +223,14 @@ function selectUnit(unitNum) {
   if (unitObj) {
     STATE.activeWords = [...unitObj.words];
     
-    // Update meta titles
     document.getElementById('unitTitleDisplay').textContent = `Unit ${unitObj.unit}: ${unitObj.title}`;
     document.getElementById('unitWordCountBadge').textContent = `${unitObj.word_count} từ`;
     
-    // Update active pill
     document.querySelectorAll('.unit-pill').forEach((p, idx) => {
       p.classList.toggle('active', (idx + 1) === unitNum);
     });
   }
   
-  // Render views
   renderFlashcard();
   initQuiz();
   initMatchGame();
@@ -292,9 +283,9 @@ function renderFlashcard() {
   // Status badge
   const statusBadge = document.getElementById('fcStatusBadge');
   if (STATE.mastered.has(word.id)) {
-    statusBadge.innerHTML = '<span style="color: #34d399; font-weight:700;">✅ Đã thuộc</span>';
+    statusBadge.innerHTML = '<span style="color: #34d399; font-weight:800; text-shadow: 0 0 10px rgba(52,211,153,0.5);">✅ ĐÃ THUỘC</span>';
   } else if (STATE.review.has(word.id)) {
-    statusBadge.innerHTML = '<span style="color: #fbbf24; font-weight:700;">⚠️ Cần ôn lại</span>';
+    statusBadge.innerHTML = '<span style="color: #fbbf24; font-weight:800; text-shadow: 0 0 10px rgba(251,191,36,0.5);">⚠️ CẦN ÔN LẠI</span>';
   } else {
     statusBadge.innerHTML = '';
   }
@@ -311,7 +302,7 @@ function nextWord() {
   if (STATE.currentWordIdx < STATE.activeWords.length - 1) {
     STATE.currentWordIdx++;
   } else {
-    STATE.currentWordIdx = 0; // Loop back
+    STATE.currentWordIdx = 0;
   }
   STATE.isFlipped = false;
   renderFlashcard();
@@ -365,20 +356,16 @@ function runAutoPlayStep() {
   const currentWord = STATE.activeWords[STATE.currentWordIdx];
   if (!currentWord) return;
   
-  // Step 1: Speak word
   SpeechEngine.speak(currentWord.word, 1.0);
   
-  // Step 2: Flip after 2 seconds
   STATE.autoPlayTimer = setTimeout(() => {
     if (!STATE.isAutoPlaying) return;
     flipCard();
     
-    // Step 3: Speak example after 1.5 seconds
     STATE.autoPlayTimer = setTimeout(() => {
       if (!STATE.isAutoPlaying) return;
       SpeechEngine.speak(currentWord.example, 1.0);
       
-      // Step 4: Next card after 3.5 seconds
       STATE.autoPlayTimer = setTimeout(() => {
         if (!STATE.isAutoPlaying) return;
         nextWord();
@@ -395,7 +382,6 @@ function initQuiz() {
   const words = [...STATE.activeWords];
   if (words.length < 4) return;
   
-  // Shuffle words to make questions
   const shuffled = words.sort(() => 0.5 - Math.random());
   STATE.quiz.questions = shuffled.slice(0, Math.min(10, shuffled.length));
   STATE.quiz.currentIdx = 0;
@@ -413,7 +399,6 @@ function initQuiz() {
 function renderQuizQuestion() {
   const q = STATE.quiz.questions[STATE.quiz.currentIdx];
   if (!q) {
-    // Quiz finished!
     showQuizFinished();
     return;
   }
@@ -425,7 +410,6 @@ function renderQuizQuestion() {
   document.getElementById('quizPromptWord').textContent = q.word;
   document.getElementById('quizPromptIpa').textContent = q.ipa;
   
-  // Generate 4 options (1 correct, 3 distractors)
   const allOtherWords = STATE.activeWords.filter(w => w.id !== q.id);
   const distractors = allOtherWords.sort(() => 0.5 - Math.random()).slice(0, 3);
   const options = [q, ...distractors].sort(() => 0.5 - Math.random());
@@ -467,7 +451,6 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
     STATE.review.add(correctId);
     saveProgress();
     
-    // Highlight correct button
     allBtns.forEach(b => {
       const optWord = STATE.activeWords.find(w => w.id === correctId);
       if (optWord && b.textContent.includes(optWord.meaning)) {
@@ -486,18 +469,18 @@ function showQuizFinished() {
   const container = document.getElementById('quizContainer');
   SFX.playWin();
   container.innerHTML = `
-    <div style="text-align: center; padding: 2rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-      <div style="font-size: 3.5rem;">🎉</div>
-      <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff;">XUẤT SẮC HOÀN THÀNH BÀI QUIZ!</h2>
-      <p style="font-size: 1.1rem; color: #fbbf24; font-weight: 700;">
+    <div style="text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+      <div style="font-size: 4rem;">🎉</div>
+      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(56,189,248,0.5);">XUẤT SẮC HOÀN THÀNH BÀI QUIZ!</h2>
+      <p style="font-size: 1.3rem; color: #fbbf24; font-weight: 800;">
         Tổng điểm đạt được: ${STATE.quiz.score} điểm
       </p>
-      <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 400px;">
-        Thầy/Cô và các em học sinh có thể tiếp tục với ván mới hoặc chuyển sang các chế độ Nối từ và Luyện nghe!
+      <p style="color: var(--text-muted); font-size: 1rem; max-width: 440px;">
+        Các em học sinh đã ghi nhớ xuất sắc các từ vựng của bài học này!
       </p>
-      <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <button class="fc-nav-btn btn-next" onclick="initQuiz()" style="max-width: none; padding: 0.8rem 1.8rem;">
-          🔄 Luyện tập lại
+      <div style="display: flex; gap: 1rem; margin-top: 1.2rem;">
+        <button class="fc-nav-btn btn-next" onclick="initQuiz()" style="max-width: none; padding: 0.9rem 2rem; font-size: 1.05rem;">
+          🔄 Luyện tập ván mới
         </button>
       </div>
     </div>
@@ -505,7 +488,7 @@ function showQuizFinished() {
 }
 
 // ==============================================================================
-// 7. TAB 3: WORD MATCHING MEMORY GAME LOGIC
+// 7. TAB 3: WORD MATCHING MEMORY GAME LOGIC (ULTRA VIBRANT)
 // ==============================================================================
 function initMatchGame() {
   const words = [...STATE.activeWords];
@@ -519,7 +502,6 @@ function initMatchGame() {
   document.getElementById('matchedCountVal').textContent = '0';
   document.getElementById('totalMatchPairs').textContent = STATE.match.totalPairs;
   
-  // Timer setup
   if (STATE.match.timerInterval) clearInterval(STATE.match.timerInterval);
   STATE.match.startTime = Date.now();
   document.getElementById('matchTimerVal').textContent = '00:00';
@@ -530,14 +512,12 @@ function initMatchGame() {
     document.getElementById('matchTimerVal').textContent = `${m}:${s}`;
   }, 1000);
   
-  // Generate 16 tiles (8 English, 8 Vietnamese)
   const tiles = [];
   chosenWords.forEach(w => {
     tiles.push({ id: w.id, text: w.word, type: 'en', wordObj: w });
     tiles.push({ id: w.id, text: w.meaning, type: 'vi', wordObj: w });
   });
   
-  // Shuffle tiles
   tiles.sort(() => 0.5 - Math.random());
   
   const board = document.getElementById('matchGameBoard');
@@ -564,17 +544,14 @@ function handleMatchTileClick(el, tile) {
   }
   
   if (!STATE.match.selectedCard) {
-    // First card selected
     STATE.match.selectedCard = { el, tile };
     el.classList.add('selected');
   } else {
-    // Second card selected
     const prev = STATE.match.selectedCard;
-    if (prev.tile.index === tile.index) return; // Clicked same tile
+    if (prev.tile.index === tile.index) return;
     
     el.classList.add('selected');
     
-    // Check if match
     if (prev.tile.id === tile.id && prev.tile.type !== tile.type) {
       // MATCH!
       setTimeout(() => {
@@ -599,12 +576,14 @@ function handleMatchTileClick(el, tile) {
       }, 350);
       STATE.match.selectedCard = null;
     } else {
-      // NO MATCH
+      // NO MATCH - Shake effect
       SFX.playWrong();
+      prev.el.classList.add('shake');
+      el.classList.add('shake');
       setTimeout(() => {
-        prev.el.classList.remove('selected');
-        el.classList.remove('selected');
-      }, 700);
+        prev.el.classList.remove('selected', 'shake');
+        el.classList.remove('selected', 'shake');
+      }, 600);
       STATE.match.selectedCard = null;
     }
   }
@@ -640,12 +619,10 @@ function renderListenQuestion() {
   
   document.getElementById('listenQIdx').textContent = STATE.listen.currentIdx + 1;
   
-  // Play sound after small delay
   setTimeout(() => {
     SpeechEngine.speak(q.word, 0.95);
   }, 400);
   
-  // Distractors
   const otherWords = STATE.activeWords.filter(w => w.id !== q.id);
   const distractors = otherWords.sort(() => 0.5 - Math.random()).slice(0, 3);
   const options = [q, ...distractors].sort(() => 0.5 - Math.random());
@@ -657,7 +634,7 @@ function renderListenQuestion() {
   options.forEach((opt, idx) => {
     const btn = document.createElement('button');
     btn.className = 'quiz-option-btn';
-    btn.innerHTML = `<span class="opt-prefix">${prefixes[idx]}</span> <span style="font-size: 1.1rem; font-weight:700;">${opt.word}</span> <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: auto;">${opt.pos}</span>`;
+    btn.innerHTML = `<span class="opt-prefix">${prefixes[idx]}</span> <span style="font-size: 1.15rem; font-weight:800;">${opt.word}</span> <span style="font-size: 0.85rem; color: #a5b4fc; margin-left: auto;">${opt.pos}</span>`;
     btn.addEventListener('click', () => {
       const allBtns = grid.querySelectorAll('.quiz-option-btn');
       allBtns.forEach(b => b.disabled = true);
@@ -702,7 +679,6 @@ function renderVocabularyHub() {
     }
   });
   
-  // Filter by search & status
   const filtered = allWords.filter(w => {
     const matchSearch = !searchTerm || w.word.toLowerCase().includes(searchTerm) || w.meaning.toLowerCase().includes(searchTerm) || w.example.toLowerCase().includes(searchTerm);
     let matchStatus = true;
@@ -724,29 +700,28 @@ function renderVocabularyHub() {
     const card = document.createElement('div');
     card.className = 'hub-word-card';
     const isStarred = STATE.starred.has(w.id);
-    const isMastered = STATE.mastered.has(w.id);
     
     card.innerHTML = `
       <div class="hub-card-header">
         <div>
-          <div class="hub-word-main">${w.word} <span class="card-pos-badge" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">${w.pos}</span></div>
+          <div class="hub-word-main">${w.word} <span class="card-pos-badge" style="font-size: 0.72rem; padding: 0.15rem 0.55rem;">${w.pos}</span></div>
           <div class="hub-word-ipa">${w.ipa}</div>
         </div>
-        <button class="fc-icon-btn star-hub-btn" style="width: 32px; height: 32px; color: ${isStarred ? '#fbbf24' : 'var(--text-muted)'};" data-id="${w.id}">
+        <button class="fc-icon-btn star-hub-btn" style="width: 34px; height: 34px; color: ${isStarred ? '#fbbf24' : 'var(--text-muted)'};" data-id="${w.id}">
           ⭐
         </button>
       </div>
-      <div class="hub-card-body">
+      <div class="hub-card-body" style="font-size: 1.05rem; color: #34d399; font-weight: 800;">
         ${w.meaning}
       </div>
-      <div class="hub-card-example">
-        <div>${w.example}</div>
-        <div style="font-style: italic; color: var(--text-sub); margin-top: 0.2rem;">${w.example_vi}</div>
+      <div class="hub-card-example" style="background: rgba(0,0,0,0.3); border-left: 3px solid #38bdf8; padding: 0.75rem 0.9rem; border-radius: 8px;">
+        <div style="color: #fff; font-weight: 600;">${w.example}</div>
+        <div style="font-style: italic; color: #94a3b8; margin-top: 0.25rem;">${w.example_vi}</div>
       </div>
-      <div class="hub-card-footer">
-        <span style="font-size: 0.75rem; color: var(--text-sub);">Unit ${w.unit}</span>
-        <button class="btn-pronounce btn-slow speak-hub-btn" data-word="${w.word}" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
-          🔊 Nghe
+      <div class="hub-card-footer" style="display: flex; align-items: center; justify-content: space-between; padding-top: 0.7rem; border-top: 1px solid rgba(255,255,255,0.08);">
+        <span style="font-size: 0.8rem; font-weight: 700; color: #a5b4fc;">Unit ${w.unit}</span>
+        <button class="btn-pronounce btn-slow speak-hub-btn" data-word="${w.word}" style="padding: 0.35rem 0.9rem; font-size: 0.82rem;">
+          🔊 Nghe đọc
         </button>
       </div>
     `;
@@ -786,16 +761,16 @@ function updateStatsModal() {
     const pct = Math.round((masteredCount / u.words.length) * 100);
     
     const row = document.createElement('div');
-    row.style.background = 'rgba(255,255,255,0.04)';
-    row.style.padding = '0.6rem 0.8rem';
-    row.style.borderRadius = '8px';
+    row.style.background = 'rgba(255,255,255,0.06)';
+    row.style.padding = '0.7rem 0.9rem';
+    row.style.borderRadius = '10px';
     row.innerHTML = `
-      <div style="display: flex; justify-content: space-between; font-size: 0.86rem; font-weight: 600; margin-bottom: 0.3rem;">
+      <div style="display: flex; justify-content: space-between; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.35rem;">
         <span>Unit ${u.unit}: ${u.title}</span>
-        <span style="color: var(--accent-cyan);">${masteredCount}/${u.words.length} (${pct}%)</span>
+        <span style="color: #38bdf8;">${masteredCount}/${u.words.length} (${pct}%)</span>
       </div>
-      <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
-        <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #6366f1, #10b981);"></div>
+      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+        <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #ec4899, #38bdf8, #10b981);"></div>
       </div>
     `;
     list.appendChild(row);
@@ -811,8 +786,6 @@ function setupEventListeners() {
       btn.classList.add('active');
       const targetPane = document.getElementById(btn.dataset.tab);
       if (targetPane) targetPane.classList.add('active');
-      
-      // Stop autoplay if leaving flashcard tab
       if (btn.dataset.tab !== 'tab-flashcard') stopAutoPlay();
     });
   });
@@ -941,9 +914,10 @@ function setupEventListeners() {
   const statsModal = document.getElementById('statsModalOverlay');
   
   document.getElementById('openQrModalBtn').addEventListener('click', () => {
-    const curUrl = window.location.href;
+    const curUrl = window.location.href.startsWith('file:') 
+      ? 'https://www.dekiemtraso.com/eng12_vocab/index.html' 
+      : window.location.href;
     document.getElementById('currentUrlDisplay').textContent = curUrl;
-    // Generate QR using public free QR API
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(curUrl)}`;
     document.getElementById('qrImgElement').src = qrUrl;
     qrModal.classList.add('open');
@@ -975,7 +949,6 @@ function setupEventListeners() {
     document.getElementById('themeToggleBtn').textContent = isLight ? '☀️' : '🌙';
   });
   
-  // Close modals when clicking outside
   window.addEventListener('click', (e) => {
     if (e.target === qrModal) qrModal.classList.remove('open');
     if (e.target === statsModal) statsModal.classList.remove('open');
@@ -992,8 +965,7 @@ window.addEventListener('DOMContentLoaded', () => {
   selectUnit(1);
   setupEventListeners();
   
-  // Register Service Worker for PWA
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 });

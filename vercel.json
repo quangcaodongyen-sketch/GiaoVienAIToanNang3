@@ -14,7 +14,15 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|.*\\..*).*)$",
+      "source": "/eng12_vocab",
+      "destination": "/eng12_vocab/index.html"
+    },
+    {
+      "source": "/tienganh12",
+      "destination": "/eng12_vocab/index.html"
+    },
+    {
+      "source": "/((?!assets/|eng12_vocab/|.*\\..*).*)$",
       "destination": "/index.html"
     }
   ]
