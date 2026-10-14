@@ -160,42 +160,72 @@ const SFX = new SoundEffects();
 // ==============================================================================
 // 3. WEB SPEECH SYNTHESIS ENGINE (PRONUNCIATION)
 // ==============================================================================
+// ==============================================================================
+// 3. SYNCHRONOUS WEB SPEECH SYNTHESIS ENGINE (MOBILE & PC OPTIMIZED)
+// ==============================================================================
 const SpeechEngine = {
   voices: [],
-  activeUtterances: [],
-  
+  isReady: false,
+  activeUtterance: null,
+
   init() {
-    if ('speechSynthesis' in window) {
-      const loadVoices = () => {
-        this.voices = window.speechSynthesis.getVoices();
-      };
-      loadVoices();
+    if (!('speechSynthesis' in window)) {
+      console.warn('SpeechSynthesis not supported');
+      return;
+    }
+    const loadVoices = () => {
+      this.voices = window.speechSynthesis.getVoices();
+      if (this.voices && this.voices.length > 0) {
+        this.isReady = true;
+      }
+    };
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
     }
+
+    // Tự động unlock Audio & Speech ngay khi người dùng chạm vào màn hình (iOS / Android policy)
+    const unlockAudio = () => {
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        if (typeof SFX !== 'undefined' && SFX.ctx && SFX.ctx.state === 'suspended') {
+          SFX.ctx.resume();
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('touchstart', unlockAudio, { passive: true });
+    window.addEventListener('touchend', unlockAudio, { passive: true });
+    window.addEventListener('click', unlockAudio, { passive: true });
   },
-  
+
   getBestVoice(langCode = 'en-US') {
     if (!this.voices || this.voices.length === 0) {
-      if ('speechSynthesis' in window) this.voices = window.speechSynthesis.getVoices();
+      if ('speechSynthesis' in window) {
+        this.voices = window.speechSynthesis.getVoices();
+      }
     }
     const voices = this.voices || [];
-    
+
     // Ưu tiên danh sách giọng nữ trong trẻo, tự nhiên, ngọt ngào nhất (Edge Neural, Google, Apple, Windows)
     const femaleKeywords = [
       'Jenny', 'Aria', 'Ana', 'Michelle', 'Sonia', 'Libby', 
       'Emma', 'Clara', 'Samantha', 'Victoria', 'Karen', 'Zira', 
-      'Natural', 'Female', 'Nữ'
+      'Google US English', 'Google UK English Female', 'Natural', 'Female', 'Nữ'
     ];
-    
+
+    const langPrefix = langCode.toLowerCase().slice(0, 2);
+
     // 1. Tìm giọng nữ đúng chuẩn mã ngôn ngữ (en-US hoặc en-GB)
     for (const name of femaleKeywords) {
       const match = voices.find(v => 
-        (v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2))) && 
+        v.lang.toLowerCase().startsWith(langPrefix) && 
         v.name.toLowerCase().includes(name.toLowerCase())
       );
       if (match) return match;
     }
-    
+
     // 2. Tìm bất kỳ giọng nữ tiếng Anh nào
     for (const name of femaleKeywords) {
       const match = voices.find(v => 
@@ -204,80 +234,68 @@ const SpeechEngine = {
       );
       if (match) return match;
     }
-    
-    // 3. Fallback: Chọn giọng tiếng Anh không chứa từ khóa giọng nam (loại trừ David, Guy, Male, George)
+
+    // 3. Fallback: Chọn giọng tiếng Anh không chứa từ khóa giọng nam (loại trừ David, Guy, Male, George, Mark)
     const nonMaleVoice = voices.find(v => 
-      v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2)) && 
+      v.lang.toLowerCase().startsWith(langPrefix) && 
       !v.name.toLowerCase().includes('david') && 
       !v.name.toLowerCase().includes('guy') && 
       !v.name.toLowerCase().includes('male') && 
-      !v.name.toLowerCase().includes('george')
+      !v.name.toLowerCase().includes('george') &&
+      !v.name.toLowerCase().includes('mark')
     );
     if (nonMaleVoice) return nonMaleVoice;
-    
-    return voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2))) || null;
+
+    return voices.find(v => v.lang.toLowerCase().startsWith(langPrefix)) || null;
   },
-  
-  // Phát âm chuẩn, chậm rãi (mặc định 0.85x), rõ từng âm tiết IPA
+
+  // PHÁT ÂM ĐỒNG BỘ (SYNCHRONOUS - KHÔNG DÙNG SETTIMEOUT) ĐỂ HOẠT ĐỘNG 100% TRÊN ĐIỆN THOẠI & MÁY TÍNH
   speak(text, rate = 0.85, lang = null) {
-    if (!text) return;
-    if (!('speechSynthesis' in window)) {
-      console.warn('SpeechSynthesis is not supported on this browser');
-      return;
-    }
-    
-    // Giải phóng trạng thái tạm dừng của trình duyệt nếu có
+    if (!text || !text.trim()) return;
+    if (!('speechSynthesis' in window)) return;
+
     try {
+      // Đảm bảo không bị pause bởi hệ điều hành
       if (window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
       }
+      // Hủy âm thanh trước đó
       window.speechSynthesis.cancel();
-    } catch (e) {}
-    
-    // Âm thanh Click feedback siêu nhẹ tức thì để người học biết máy đã nhận lệnh bấm
-    try {
+
+      // Âm thanh Click feedback siêu nhẹ tức thì để người học cảm nhận được ngay
       if (typeof SFX !== 'undefined' && SFX.playTone) {
-        SFX.playTone(560, 'sine', 0.04);
+        SFX.playTone(560, 'sine', 0.04, 0.08);
       }
-    } catch (e) {}
-    
-    // Trì hoãn 35ms để Chromium hoàn tất cancel, tránh lỗi nuốt âm hoặc đóng băng
-    setTimeout(() => {
-      try {
-        if (window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
-        }
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = rate; // 0.85: Chuẩn sư phạm, chậm rãi, dễ nghe
-        utterance.pitch = 1.05; // Giọng nữ trong trẻo, thanh thoát
-        
-        const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
-        utterance.lang = targetLang;
-        
-        const voice = this.getBestVoice(targetLang);
-        if (voice) utterance.voice = voice;
-        
-        // Lưu tham chiếu toàn cục để tránh bị V8 Garbage Collector thu hồi làm mất tiếng
-        window._currentUtterance = utterance;
-        this.activeUtterances.push(utterance);
-        
-        utterance.onend = () => {
-          const idx = this.activeUtterances.indexOf(utterance);
-          if (idx !== -1) this.activeUtterances.splice(idx, 1);
-        };
-        
-        utterance.onerror = (err) => {
-          console.warn('SpeechSynthesis error:', err);
-          const idx = this.activeUtterances.indexOf(utterance);
-          if (idx !== -1) this.activeUtterances.splice(idx, 1);
-        };
-        
-        window.speechSynthesis.speak(utterance);
-      } catch (err) {
-        console.error('SpeechEngine error:', err);
-      }
-    }, 35);
+
+      const utterance = new SpeechSynthesisUtterance(text.trim());
+      utterance.rate = rate; // 0.85x: Chậm rãi, phát âm tròn vành rõ chữ, chuẩn sư phạm
+      utterance.pitch = 1.05; // Cao độ trong trẻo, tự nhiên
+
+      const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
+      utterance.lang = targetLang;
+
+      const voice = this.getBestVoice(targetLang);
+      if (voice) utterance.voice = voice;
+
+      // Lưu tham chiếu toàn cục (chống V8 & iOS Garbage Collector dọn dẹp làm mất tiếng giữa chừng)
+      window._activeSpeechUtterance = utterance;
+      this.activeUtterance = utterance;
+
+      utterance.onend = () => {
+        window._activeSpeechUtterance = null;
+        this.activeUtterance = null;
+      };
+
+      utterance.onerror = (err) => {
+        window._activeSpeechUtterance = null;
+        this.activeUtterance = null;
+      };
+
+      // GỌI TRỰC TIẾP ĐỒNG BỘ TRONG GESTURE CỦA NGƯỜI DÙNG
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.error('SpeechEngine error:', e);
+    }
   }
 };
 
@@ -322,25 +340,22 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
       p.classList.toggle('active', (idx + 1) === unitNum);
     });
     
-    // BẤM CHỌN UNIT NÀO THÌ ĐỌC TÊN UNIT ĐÓ (BẰNG GIỌNG NỮ TRONG TRẺO):
+    // BẤM CHỌN UNIT NÀO THÌ CHỈ ĐỌC TÊN UNIT ĐÓ RỒI DỪNG, KHÔNG TỰ Ý ĐỌC VÀO TỪ BÊN DƯỚI:
     if (shouldSpeakTitle) {
-      setTimeout(() => {
-        SpeechEngine.speak(`Unit ${unitObj.unit}: ${unitObj.title}`, 1.0);
-      }, 80);
+      SpeechEngine.speak(`Unit ${unitObj.unit}: ${unitObj.title}`, 0.9);
     }
   }
   
-  // Khởi tạo các chế độ nhưng TUYỆT ĐỐI KHÔNG tự ý phát âm từ vựng bên dưới
   renderFlashcard();
   initQuiz();
   initMatchGame();
   initListenGame(false);
-  initScrambleGame();
-  initChantGame();
-  initBlitzGame();
-  initSpellingGame(false);
-  initHangmanGame();
-  initContextGame();
+  if (typeof initScrambleGame === 'function') initScrambleGame();
+  if (typeof initChantGame === 'function') initChantGame();
+  if (typeof initBlitzGame === 'function') initBlitzGame();
+  if (typeof initSpellingGame === 'function') initSpellingGame(false);
+  if (typeof initHangmanGame === 'function') initHangmanGame();
+  if (typeof initContextGame === 'function') initContextGame();
   renderVocabularyHub();
 }
 
@@ -921,6 +936,37 @@ function updateStatsModal() {
 }
 
 function setupEventListeners() {
+
+  // Scramble game controls
+  const scrambleResetBtn = document.getElementById('scrambleResetBtn');
+  if (scrambleResetBtn) scrambleResetBtn.addEventListener('click', resetScrambleCurrentWord);
+  const scrambleHintBtn = document.getElementById('scrambleHintBtn');
+  if (scrambleHintBtn) scrambleHintBtn.addEventListener('click', giveScrambleHint);
+  const restartScrambleBtn = document.getElementById('restartScrambleBtn');
+  if (restartScrambleBtn) restartScrambleBtn.addEventListener('click', initScrambleGame);
+
+  // Click-to-speak on Flashcard English Word & IPA directly
+  const cardWordTitle = document.getElementById('cardWordTitle');
+  if (cardWordTitle) {
+    cardWordTitle.style.cursor = 'pointer';
+    cardWordTitle.title = 'Bấm để nghe phát âm chuẩn của từ này';
+    cardWordTitle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const w = STATE.activeWords[STATE.currentWordIdx];
+      if (w) SpeechEngine.speak(w.word, 0.85);
+    });
+  }
+  const cardIpaText = document.getElementById('cardIpaText');
+  if (cardIpaText) {
+    cardIpaText.style.cursor = 'pointer';
+    cardIpaText.title = 'Bấm để nghe phát âm chuẩn của từ này';
+    cardIpaText.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const w = STATE.activeWords[STATE.currentWordIdx];
+      if (w) SpeechEngine.speak(w.word, 0.85);
+    });
+  }
+
   // Tabs switching
   document.querySelectorAll('.mode-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -2442,3 +2488,296 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+
+
+// ==============================================================================
+// SCRAMBLE LETTERS GAME LOGIC (LUYỆN TỪ THEO UNIT - XẾP CHỮ TỰ DO)
+// ==============================================================================
+STATE.scramble = {
+  words: [],
+  currentIdx: 0,
+  currentWordObj: null,
+  targetLetters: [],
+  slots: [],
+  tiles: [],
+  score: 0,
+  peekTimer: null
+};
+
+function initScrambleGame() {
+  const words = [...STATE.activeWords];
+  if (!words || words.length === 0) return;
+  
+  STATE.scramble.words = words;
+  STATE.scramble.currentIdx = 0;
+  STATE.scramble.score = 0;
+  
+  const scoreEl = document.getElementById('scrambleScoreVal');
+  const totalEl = document.getElementById('scrambleTotalWords');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (totalEl) totalEl.textContent = words.length;
+  
+  loadScrambleWord();
+}
+
+function loadScrambleWord() {
+  if (STATE.scramble.currentIdx >= STATE.scramble.words.length) {
+    showScrambleCompleted();
+    return;
+  }
+  
+  const wordObj = STATE.scramble.words[STATE.scramble.currentIdx];
+  STATE.scramble.currentWordObj = wordObj;
+  
+  // Progress
+  const idxEl = document.getElementById('scrambleWordIdx');
+  if (idxEl) idxEl.textContent = STATE.scramble.currentIdx + 1;
+  const pct = ((STATE.scramble.currentIdx) / STATE.scramble.words.length) * 100;
+  const fillEl = document.getElementById('scrambleProgressFill');
+  if (fillEl) fillEl.style.width = `${pct}%`;
+  
+  // Info
+  const meanEl = document.getElementById('scrambleMeaning');
+  if (meanEl) {
+    meanEl.textContent = wordObj.meaning;
+    meanEl.style.cursor = 'pointer';
+    meanEl.title = 'Bấm để nghe phát âm từ này';
+    meanEl.onclick = () => SpeechEngine.speak(wordObj.word, 0.85);
+  }
+  const posEl = document.getElementById('scramblePosBadge');
+  if (posEl) posEl.textContent = wordObj.pos || 'từ';
+  const ipaEl = document.getElementById('scrambleIpaSub');
+  if (ipaEl) {
+    ipaEl.textContent = wordObj.ipa || '';
+    ipaEl.style.cursor = 'pointer';
+    ipaEl.title = 'Bấm để nghe phát âm từ này';
+    ipaEl.onclick = () => SpeechEngine.speak(wordObj.word, 0.85);
+  }
+  
+  // Hide success banner
+  const banner = document.getElementById('scrambleSuccessBanner');
+  if (banner) banner.style.display = 'none';
+  
+  // Setup peek word
+  const cleanWord = wordObj.word.trim();
+  const peekWordEl = document.getElementById('scramblePeekWord');
+  if (peekWordEl) {
+    peekWordEl.textContent = cleanWord;
+    peekWordEl.style.cursor = 'pointer';
+    peekWordEl.title = 'Bấm để nghe phát âm từ này';
+    peekWordEl.onclick = () => SpeechEngine.speak(wordObj.word, 0.85);
+  }
+  const peekIpaEl = document.getElementById('scramblePeekIpa');
+  if (peekIpaEl) peekIpaEl.textContent = wordObj.ipa || '';
+  
+  // Setup Target Slots
+  const chars = cleanWord.split('');
+  STATE.scramble.targetLetters = chars;
+  STATE.scramble.slots = chars.map((c, i) => ({
+    idx: i,
+    expectedChar: c,
+    char: (c === ' ' || c === '-') ? c : '',
+    isSpace: (c === ' ' || c === '-'),
+    filledTileIdx: null
+  }));
+  
+  // Setup Scrambled Tiles
+  const usableChars = chars.filter(c => c !== ' ' && c !== '-');
+  let shuffled = usableChars.map((c, idx) => ({ id: idx, char: c, isUsed: false }));
+  
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
+  if (shuffled.map(t => t.char).join('') === usableChars.join('') && shuffled.length > 2) {
+    shuffled.reverse();
+  }
+  STATE.scramble.tiles = shuffled;
+  
+  renderScrambleUI();
+  showPeekBanner(2500);
+}
+
+function showPeekBanner(durationMs = 2500) {
+  const peek = document.getElementById('scramblePeekBanner');
+  const info = document.getElementById('scrambleInfoArea');
+  if (peek) peek.style.display = 'block';
+  if (info) info.style.display = 'none';
+  
+  if (STATE.scramble.currentWordObj) {
+    SpeechEngine.speak(STATE.scramble.currentWordObj.word, 0.85);
+  }
+  
+  if (STATE.scramble.peekTimer) clearTimeout(STATE.scramble.peekTimer);
+  STATE.scramble.peekTimer = setTimeout(() => {
+    if (peek) peek.style.display = 'none';
+    if (info) info.style.display = 'block';
+  }, durationMs);
+}
+
+function renderScrambleUI() {
+  const slotsRow = document.getElementById('scrambleAnswerSlots');
+  if (slotsRow) {
+    slotsRow.innerHTML = '';
+    STATE.scramble.slots.forEach((slot, sIdx) => {
+      const box = document.createElement('div');
+      if (slot.isSpace) {
+        box.className = 'slot-box space-slot';
+        box.textContent = slot.char;
+      } else {
+        box.className = `slot-box ${slot.char ? 'filled' : ''}`;
+        box.textContent = slot.char ? slot.char.toUpperCase() : '';
+        box.addEventListener('click', () => handleSlotClick(sIdx));
+      }
+      slotsRow.appendChild(box);
+    });
+  }
+  
+  const pool = document.getElementById('scrambleLettersPool');
+  if (pool) {
+    pool.innerHTML = '';
+    STATE.scramble.tiles.forEach((tile, tIdx) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `letter-tile ${tile.isUsed ? 'used' : ''}`;
+      tileEl.textContent = tile.char.toUpperCase();
+      tileEl.addEventListener('click', () => handleTileClick(tIdx));
+      pool.appendChild(tileEl);
+    });
+  }
+}
+
+function handleTileClick(tileIdx) {
+  const tile = STATE.scramble.tiles[tileIdx];
+  if (!tile || tile.isUsed) return;
+  
+  const emptySlot = STATE.scramble.slots.find(s => !s.isSpace && !s.char);
+  if (!emptySlot) return;
+  
+  emptySlot.char = tile.char;
+  emptySlot.filledTileIdx = tileIdx;
+  tile.isUsed = true;
+  
+  if (typeof SFX !== 'undefined') SFX.playTone(550, 'sine', 0.08, 0.15);
+  renderScrambleUI();
+  checkScrambleAnswer();
+}
+
+function handleSlotClick(slotIdx) {
+  const slot = STATE.scramble.slots[slotIdx];
+  if (!slot || slot.isSpace || !slot.char) return;
+  
+  if (slot.filledTileIdx !== null) {
+    const tile = STATE.scramble.tiles[slot.filledTileIdx];
+    if (tile) tile.isUsed = false;
+  }
+  
+  slot.char = '';
+  slot.filledTileIdx = null;
+  
+  if (typeof SFX !== 'undefined') SFX.playTone(380, 'sine', 0.08, 0.12);
+  renderScrambleUI();
+}
+
+function resetScrambleCurrentWord() {
+  STATE.scramble.slots.forEach(s => {
+    if (!s.isSpace) {
+      s.char = '';
+      s.filledTileIdx = null;
+    }
+  });
+  STATE.scramble.tiles.forEach(t => t.isUsed = false);
+  renderScrambleUI();
+  if (typeof SFX !== 'undefined') SFX.playTone(400, 'sawtooth', 0.1);
+}
+
+function giveScrambleHint() {
+  const slot = STATE.scramble.slots.find(s => !s.isSpace && s.char.toLowerCase() !== s.expectedChar.toLowerCase());
+  if (!slot) return;
+  
+  if (slot.filledTileIdx !== null) {
+    const prevTile = STATE.scramble.tiles[slot.filledTileIdx];
+    if (prevTile) prevTile.isUsed = false;
+  }
+  
+  const matchingTileIdx = STATE.scramble.tiles.findIndex(t => !t.isUsed && t.char.toLowerCase() === slot.expectedChar.toLowerCase());
+  if (matchingTileIdx !== -1) {
+    slot.char = STATE.scramble.tiles[matchingTileIdx].char;
+    slot.filledTileIdx = matchingTileIdx;
+    STATE.scramble.tiles[matchingTileIdx].isUsed = true;
+    if (typeof SFX !== 'undefined') SFX.playCorrect();
+    renderScrambleUI();
+    checkScrambleAnswer();
+  }
+}
+
+function checkScrambleAnswer() {
+  const allFilled = STATE.scramble.slots.every(s => s.char);
+  if (!allFilled) return;
+  
+  const formedWord = STATE.scramble.slots.map(s => s.char).join('').toLowerCase();
+  const targetWord = STATE.scramble.targetLetters.join('').toLowerCase();
+  
+  if (formedWord === targetWord) {
+    if (typeof SFX !== 'undefined') {
+      SFX.playCorrect();
+      SFX.playWin();
+    }
+    
+    document.querySelectorAll('.slot-box').forEach(b => b.classList.add('correct'));
+    
+    STATE.scramble.score += 15;
+    const scoreEl = document.getElementById('scrambleScoreVal');
+    if (scoreEl) scoreEl.textContent = STATE.scramble.score;
+    
+    if (STATE.scramble.currentWordObj) {
+      STATE.mastered.add(STATE.scramble.currentWordObj.id);
+      saveProgress();
+      SpeechEngine.speak(STATE.scramble.currentWordObj.word, 0.85);
+    }
+    
+    const banner = document.getElementById('scrambleSuccessBanner');
+    const exEl = document.getElementById('scrambleSuccessExample');
+    if (exEl && STATE.scramble.currentWordObj) {
+      exEl.textContent = `"${STATE.scramble.currentWordObj.example}"\n(${STATE.scramble.currentWordObj.example_vi})`;
+    }
+    if (banner) banner.style.display = 'block';
+    
+    setTimeout(() => {
+      STATE.scramble.currentIdx++;
+      loadScrambleWord();
+    }, 2800);
+  } else {
+    if (typeof SFX !== 'undefined') SFX.playWrong();
+    document.querySelectorAll('.slot-box').forEach(b => b.classList.add('shake'));
+    setTimeout(() => {
+      document.querySelectorAll('.slot-box').forEach(b => b.classList.remove('shake'));
+    }, 500);
+  }
+}
+
+function showScrambleCompleted() {
+  const container = document.querySelector('#tab-scramble .game-container');
+  if (typeof SFX !== 'undefined') SFX.playWin();
+  if (typeof launchConfetti === 'function') launchConfetti();
+  if (container) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1.5rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+        <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 0.8rem;">XUẤT SẮC HOÀN THÀNH TOÀN BỘ UNIT!</h2>
+        <p style="font-size: 1.3rem; color: #fbbf24; font-weight: 800; margin-bottom: 1rem;">
+          Tổng điểm xếp chữ đạt được: ${STATE.scramble.score} điểm
+        </p>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 440px; margin: 0 auto 1.5rem;">
+          Các em học sinh đã xuất sắc ghi nhớ và sắp xếp chính xác toàn bộ từ vựng của bài học này!
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <button class="fc-nav-btn btn-next" onclick="initScrambleGame()" style="max-width: none; padding: 0.9rem 2rem; font-size: 1.05rem;">
+            🔄 Luyện tập ván mới
+          </button>
+        </div>
+      </div>
+    `;
+  }
+}

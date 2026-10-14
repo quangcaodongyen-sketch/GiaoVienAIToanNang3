@@ -1,21 +1,16 @@
-const CACHE_NAME = 'eng12-vocab-v1';
-const ASSETS = [
-  './',
-  './index.html',
-  './style.css',
-  './vocabulary_data.js',
-  './app.js',
-  './manifest.json'
-];
-
+// ENG12 VOCAB - AUTO PURGE & NETWORK FIRST
 self.addEventListener('install', e => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
-  );
+  // Direct network first
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });

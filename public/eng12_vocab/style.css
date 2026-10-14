@@ -2125,3 +2125,35 @@ html, body {
     padding: 1.5rem 1rem;
   }
 }
+
+
+
+/* ==============================================================================
+   ULTRA HIGH PERFORMANCE (60-120 FPS) ZERO-LAG OPTIMIZATION
+   Eliminate heavy 130px animated Gaussian blurs and replace with GPU-efficient body background
+   ============================================================================== */
+.ambient-glow {
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+body {
+  background-color: #080d1a !important;
+  background-image: 
+    radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(6, 182, 212, 0.12) 0%, transparent 45%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Lighten heavy backdrop blurs so mobile GPUs scroll at 60-120 FPS */
+.flashcard-3d-scene, .chant-card, .game-container, .vocab-card {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Hardware accelerated transitions */
+.btn-3d, .unit-pill, .match-tile, .letter-tile, .slot-box {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

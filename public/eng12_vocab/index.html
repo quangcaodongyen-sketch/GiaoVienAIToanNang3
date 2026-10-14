@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <!-- FORCE PURGE OLD SERVICE WORKERS & STALE CACHE FOR PC & MOBILE -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) {
+          reg.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Eng 12 Vocab Master - Học Từ Vựng Tiếng Anh Lớp 12 SGK Global Success</title>
@@ -100,13 +120,9 @@ html, body {
 
 /* Dynamic Animated Background Mesh */
 .ambient-glow {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(130px);
+  display: none !important;
+  opacity: 0 !important;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0.55;
-  animation: floatOrb 14s infinite alternate ease-in-out;
 }
 
 .glow-1 {
@@ -2152,8 +2168,8 @@ html, body {
 </head>
 <body>
   <!-- Ambient background lighting -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
+  <!-- ambient-glow-1 disabled for 60fps -->
+  <!-- ambient-glow-2 disabled for 60fps -->
 
   <div class="app-container">
     <!-- Top Header -->
@@ -2871,7 +2887,7 @@ html, body {
       }
       injectScript('confetti.browser.min.js');
       injectScript('vocabulary_data.js');
-      injectScript('app.js?v=20261014_crystal_clear_audio_v4');
+      injectScript('app.js?v=20261014_v10_fast_60fps');
     })();
   </script>
 </body>
