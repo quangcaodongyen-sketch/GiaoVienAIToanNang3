@@ -79,6 +79,7 @@ export const EXAM_ENG_PRIMARY_RESOURCES = {
 export const SMART_LISTENING_RESOURCES = {
   fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Smart_Listening_Pro.exe",
+  standardZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro.zip",
   videoDirectUrl: ""
 };
 

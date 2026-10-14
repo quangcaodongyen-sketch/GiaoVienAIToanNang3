@@ -1,21 +1,3 @@
-import { ModalSafeFooter } from './ModalSafeFooter';
-import { TrialRegisterModal } from './TrialRegisterModal';
-
-// Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Tác giả Đinh Thành & Nữ miền Bắc)
-export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
-Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
-Thầy Cô có thể chọn môn học, khối lớp, phân môn và xuất file Microsoft Word đầy đủ để sử dụng ngay trong công tác giảng dạy. Chúc quý Thầy Cô thực hiện thành công!`;
-
-export const SAMPLE_VIDEO_ND30 = `Xin chào các đồng chí cán bộ và giáo viên!
-Video hôm nay sẽ hướng dẫn quy trình chuẩn hóa văn bản hành chính theo đúng Nghị định 30 năm 2020 của Chính phủ.
-Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của đơn vị cơ quan chủ quản và nhà trường, và khung chữ ký của Hiệu trưởng.
-Chỉ trong chưa đầy một giây, văn bản của Thầy Cô sẽ đạt chuẩn khảo thí và thể thức văn bản quốc gia!`;
-
-export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Tác giả Đinh Thành (ĐT/Zalo: 0915.213717).
-Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assistant tích hợp trực tiếp vào Microsoft Word.
-Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
-Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
-
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Crown, 
@@ -41,8 +23,13 @@ import {
   FastForward, 
   RefreshCw,
   Users,
-  User
+  User,
+  ShieldCheck,
+  FolderArchive,
+  ArrowRight
 } from 'lucide-react';
+import { ModalSafeFooter } from './ModalSafeFooter';
+import { TrialRegisterModal } from './TrialRegisterModal';
 import { BRAND, SMART_LISTENING_RESOURCES } from '../config/brand';
 import { licenseService } from '../services/licenseService';
 import { cloudSyncService } from '../services/cloudSyncService';
@@ -53,12 +40,26 @@ import {
   SmartListeningVerifyResult
 } from '../services/smartListeningKeyService';
 
+// Các mẫu kịch bản thuyết minh video hướng dẫn (Giọng Tác giả Đinh Thành & Nữ miền Bắc)
+export const SAMPLE_VIDEO_TAO_DE = `Kính chào quý Thầy Cô! Hôm nay, tôi xin hướng dẫn quý Thầy Cô cách sử dụng phần mềm Tạo Đề Kiểm Tra THCS chuẩn Công văn 7991 của Bộ Giáo dục và Đào tạo.
+Chỉ với một cú nhấp chuột, hệ thống sẽ tự động khởi tạo trọn bộ Ma trận đề, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 chuẩn mực, kèm theo hướng dẫn đáp án chi tiết.
+Thầy Cô có thể chọn môn học, khối lớp, phân môn và xuất file Microsoft Word đầy đủ để sử dụng ngay trong công tác giảng dạy. Chúc quý Thầy Cô thực hiện thành công!`;
+
+export const SAMPLE_VIDEO_ND30 = `Xin chào các đồng chí cán bộ và giáo viên!
+Video hôm nay sẽ hướng dẫn quy trình chuẩn hóa văn bản hành chính theo đúng Nghị định 30 năm 2020 của Chính phủ.
+Hệ thống sẽ tự động căn chỉnh lề giấy A4 chuẩn xác, tạo khung Quốc hiệu tiêu ngữ của đơn vị cơ quan chủ quản và nhà trường, và khung chữ ký của Hiệu trưởng.
+Chỉ trong chưa đầy một giây, văn bản của Thầy Cô sẽ đạt chuẩn khảo thí và thể thức văn bản quốc gia!`;
+
+export const SAMPLE_VIDEO_ADDIN_WORD = `Xin chào quý Thầy Cô! Tôi là Tác giả Đinh Thành (ĐT/Zalo: 0915.213717).
+Hôm nay tôi rất vui mừng được chia sẻ bộ công cụ AI Word Assistant tích hợp trực tiếp vào Microsoft Word.
+Phần mềm hoạt động hoàn toàn độc lập, không cần bất kỳ API key nào.
+Thầy Cô có thể bấm một phát là có ngay giáo án 5512, sửa nhanh lỗi chính tả tiếng Việt và chèn các công thức, ký hiệu toán học đẹp mắt hơn cả MathType. Xin trân trọng cảm ơn!`;
+
 interface OnlineTTSModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Các mẫu lời thoại chuẩn SGK (giống hệt bản desktop AI_Voice_Pro.py)
 const SAMPLE_SECONDARY = `Nick: Hi, Mi! Are you excited about your first week at the new secondary school?
 Mi: Yes, Nick! The school is very big and modern. I really love the science lab and the large library.
 Nick: That sounds awesome! What is your favourite subject this semester?
@@ -334,8 +335,8 @@ const playAcousticChime = (type: 'ding' | 'bell' | 'jingle') => {
 
 export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose }) => {
   // Tab chính: Mặc định mở Tab Online Studio (trực tuyến)
-  const [activeTab, setActiveTab] = useState<'online' | 'download' | 'register'>('online');
-  const [, setShowTrialRegister] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<'download' | 'online' | 'register'>('download');
+  const [showTrialRegister, setShowTrialRegister] = useState<boolean>(false);
 
   // ID máy tính tự động
   const [detectedMid, setDetectedMid] = useState<string>('');
@@ -905,31 +906,31 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
           <button
             onClick={() => {
               stopPlayback();
+              setActiveTab('download');
+            }}
+            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              activeTab === 'download'
+                ? 'border-emerald-500 text-emerald-400'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Download className="w-4 h-4 text-emerald-400" />
+            1. Tải Bản Cài Đặt Desktop & Hướng Dẫn (.exe & .zip)
+          </button>
+
+          <button
+            onClick={() => {
+              stopPlayback();
               setActiveTab('online');
             }}
-            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
+            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'online'
                 ? 'border-blue-500 text-blue-400'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
             <Sparkles className="w-4 h-4 text-sky-400" />
-            1. Studio Tạo Bài Nghe Trực Tuyến (Online)
-          </button>
-
-          <button
-            onClick={() => {
-              stopPlayback();
-              setActiveTab('download');
-            }}
-            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'download'
-                ? 'border-blue-500 text-blue-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Download className="w-4 h-4 text-emerald-400" />
-            2. Tải Bản Máy Tính Dùng Thử (.exe / .zip)
+            2. Trải Nghiệm Studio Trực Tuyến (Online Web)
           </button>
 
           <button
@@ -937,14 +938,14 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
               stopPlayback();
               setActiveTab('register');
             }}
-            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${
+            className={`pb-2 px-3 text-xs sm:text-sm font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'register'
-                ? 'border-blue-500 text-blue-400'
+                ? 'border-amber-500 text-amber-400'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
             <Crown className="w-4 h-4 text-amber-400" />
-            3. Bản Quyền & Kích Hoạt Pro
+            3. Bản Quyền & Kích Hoạt VIP
           </button>
         </div>
 
@@ -1578,70 +1579,158 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
         {/* ========================================================================= */}
         {activeTab === 'download' && (
           <div className="space-y-4 flex-1 overflow-y-auto pr-1 text-xs">
-            
-            
-
-            {/* 2. NÚT TẢI VỀ BẢN CÀI ĐẶT TRỰC TIẾP CHO GIÁO VIÊN (ZIP PASS 123 TRỰC TIẾP TỪ GITHUB RELEASES) */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-teal-950/90 border border-emerald-500/40 space-y-3 shadow-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* THÔNG BÁO BẢN CẬP NHẬT MỚI NHẤT 14/10/2026 */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/80 via-slate-900 to-indigo-950/80 border border-blue-500/40 flex items-center justify-between gap-3 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 shrink-0">
+                  <Sparkles className="w-5 h-5 text-cyan-300" />
+                </div>
                 <div>
-                  <h4 className="text-sm font-bold text-emerald-300 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    Phần Mềm Smart Listening Pro (Bản 1-Click Chạy Ngay)
-                  </h4>
-                  <p className="text-[11px] text-slate-300 mt-1">
-                    Dung lượng: <b>22.8 MB</b> – Đã nén mật khẩu bảo vệ <code className="text-amber-300 font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">123</code> (giúp tải 100% tốc độ cao không bị trình duyệt hay Antivirus chặn).
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider">
+                      Đã Cập Nhật Mới Nhất
+                    </span>
+                    <span className="text-xs font-bold text-white">Smart Listening Pro v4.1.0 (14/10/2026)</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    Đã nâng cấp Engine Edge-TTS 7.3.1 sửa lỗi tạo âm thanh 0/8 parts, nhận diện nhân vật SGK (Nick & Mi, Tom & Mai...) chuẩn 100%.
                   </p>
                 </div>
+              </div>
+              <div className="text-right shrink-0 hidden sm:block">
+                <span className="text-[10px] text-slate-400 block">Tác giả & Bản quyền:</span>
+                <span className="text-xs font-bold text-cyan-300">Thầy giáo Đinh Văn Thành</span>
+              </div>
+            </div>
 
-                {/* NÚT TẢI CHÍNH TRỌN BỘ CÀI PRO */}
-                <div className="flex items-center gap-2 shrink-0">
+            {/* DANH SÁCH 3 PHƯƠNG ÁN TẢI VỀ */}
+            <div className="space-y-3">
+              {/* PHƯƠNG ÁN 1: BẢN NÉN ZIP PASS 123 (KHUYÊN DÙNG SỐ 1) */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-teal-950/90 border border-emerald-500/50 space-y-2 shadow-xl hover:border-emerald-400/80 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-black text-[10px] uppercase tracking-wider">
+                        ⭐ Khuyên Dùng Số 1
+                      </span>
+                      <h4 className="text-sm font-bold text-emerald-300 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        Bản ZIP An Toàn Trọn Gói (Mật Khẩu Giải Nén: 123)
+                      </h4>
+                    </div>
+                    <p className="text-[11px] text-slate-300 mt-1">
+                      Dung lượng: <b>16.2 MB</b> – Chống trình duyệt (Chrome, Edge, Cốc Cốc, Zalo) và Antivirus chặn quét nhầm 100%. Tải siêu tốc từ máy chủ GitHub Releases.
+                    </p>
+                  </div>
+
                   <a
                     href={SMART_LISTENING_RESOURCES.fullZipUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     download="Smart_Listening_Pro_Pass_123.zip"
-                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105"
-                    title="Tải bản nén zip trọn gói có mật khẩu 123 - Tránh chặn tải trên mọi trình duyệt"
+                    className="py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 shrink-0 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    🚀 TẢI BỘ CÀI ĐẶT PRO (.ZIP - PASS: 123)
+                    🚀 TẢI BẢN ZIP (PASS: 123)
                   </a>
                 </div>
               </div>
 
-              {/* Hướng Dẫn Nhanh 3 Bước */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-emerald-500/20 text-[11px]">
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 1: Tải về máy</span>
-                  <span className="text-slate-300">Bấm nút <strong>"🚀 Tải Bộ Cài Đặt Pro"</strong> ở trên để tải file nén .ZIP siêu tốc từ GitHub Releases.</span>
+              {/* PHƯƠNG ÁN 2: BỘ CÀI ĐẶT 1-CLICK TỰ ĐỘNG (.EXE) */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950/80 via-slate-900 to-cyan-950/80 border border-blue-500/40 space-y-2 shadow-lg hover:border-blue-400/70 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold text-[10px] uppercase tracking-wider">
+                        Tự Động 1-Click
+                      </span>
+                      <h4 className="text-sm font-bold text-blue-300 flex items-center gap-1.5">
+                        <Laptop className="w-4 h-4 text-blue-400" />
+                        Bộ Cài Đặt Tự Động (Cai_Dat_Smart_Listening_Pro.exe)
+                      </h4>
+                    </div>
+                    <p className="text-[11px] text-slate-300 mt-1">
+                      Dung lượng: <b>33.8 MB</b> – Bản All-In-One: Chỉ cần nhấp chuột là tự động cài đặt vĩnh viễn, tạo biểu tượng (Icon) đẹp mắt trên Màn hình Desktop và Windows Start Menu.
+                    </p>
+                  </div>
+
+                  <a
+                    href={SMART_LISTENING_RESOURCES.exeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download="Cai_Dat_Smart_Listening_Pro.exe"
+                    className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-600/20 transition-all hover:scale-105 shrink-0 cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                    Tải File .EXE (33.8 MB)
+                  </a>
                 </div>
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 2: Giải nén bằng mật khẩu 123</span>
-                  <span className="text-slate-300">Nhấp chuột phải vào file ZIP ➔ Chọn <em>Extract Here</em> ➔ Nhập mật khẩu: <strong className="text-amber-300">123</strong>.</span>
-                </div>
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                  <span className="font-bold text-emerald-400 block mb-0.5">Bước 3: Chạy ứng dụng</span>
-                  <span className="text-slate-300">Nhấp đúp mở file <code>Smart Listening Pro.exe</code> để bắt đầu tạo bài nghe Tiếng Anh ngay!</span>
+              </div>
+
+              {/* PHƯƠNG ÁN 3: BẢN ZIP TIÊU CHUẨN (KHÔNG MẬT KHẨU) */}
+              <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 hover:border-slate-700 transition-all">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 font-bold text-[10px] uppercase tracking-wider">
+                        Bản Chuẩn
+                      </span>
+                      <h4 className="text-xs font-bold text-slate-200">
+                        Bản ZIP Tiêu Chuẩn (Smart_Listening_Pro.zip)
+                      </h4>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Dung lượng: <b>27.0 MB</b> – Dành cho máy tính không bị chặn tải zip. Giải nén dùng ngay không cần nhập pass.
+                    </p>
+                  </div>
+
+                  <a
+                    href={SMART_LISTENING_RESOURCES.standardZipUrl || SMART_LISTENING_RESOURCES.fullZipUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download="Smart_Listening_Pro.zip"
+                    className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition shrink-0 cursor-pointer border border-slate-700"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Tải ZIP Thường (27 MB)
+                  </a>
                 </div>
               </div>
             </div>
 
-            {/* 3. ĐẶC QUYỀN BẢN PRO CÀI ĐẶT TRÊN MÁY */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="font-bold text-slate-200 block">🎙️ Giọng Bản Ngữ</span>
-                <span className="text-[11px] text-slate-400">Edge-TTS chuẩn Anh - Mỹ, Anh - Anh</span>
+            {/* HƯỚNG DẪN 3 BƯỚC SỬ DỤNG NHANH */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-800 text-[11px]">
+              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span className="font-bold text-emerald-400 block mb-1">Bước 1: Tải về máy tính</span>
+                <span className="text-slate-300">Bấm nút <strong>"🚀 TẢI BẢN ZIP (PASS: 123)"</strong> ở trên để tải file nén tốc độ cao từ GitHub Releases.</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="font-bold text-slate-200 block">👥 Đa Nhân Vật</span>
-                <span className="text-[11px] text-slate-400">Phân vai Teacher & Students mượt mà</span>
+              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span className="font-bold text-amber-400 block mb-1">Bước 2: Giải nén mật khẩu 123</span>
+                <span className="text-slate-300">Nhấp chuột phải vào file ZIP ➔ Chọn <em>Extract Here</em> (hoặc Giải nén tại đây) ➔ Nhập mật khẩu: <strong className="text-amber-300 font-bold">123</strong>.</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <span className="font-bold text-cyan-400 block mb-1">Bước 3: Mở phần mềm</span>
+                <span className="text-slate-300">Chạy file <code>Cai_Dat_Smart_Listening_Pro.exe</code> để cài tự động, hoặc mở trực tiếp <code>Smart Listening Pro.exe</code> để bắt đầu dùng ngay!</span>
+              </div>
+            </div>
+
+            {/* 4 ĐẶC QUYỀN NỔI BẬT */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
+              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                <span className="font-bold text-slate-200 block">🎙️ Giọng Bản Ngữ Chuẩn</span>
+                <span className="text-[11px] text-slate-400">Edge-TTS Anh - Mỹ, Anh - Anh</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                <span className="font-bold text-slate-200 block">👥 Đa Nhân Vật SGK</span>
+                <span className="text-[11px] text-slate-400">Phân vai Nick & Mi, Tom & Mai</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
                 <span className="font-bold text-slate-200 block">🔔 Chuông Phòng Thi</span>
-                <span className="text-[11px] text-slate-400">Chèn chuông Ding, Bell chuẩn Bộ GD&ĐT</span>
+                <span className="text-[11px] text-slate-400">Chèn chuông Ding, Bell chuẩn BGD</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="font-bold text-slate-200 block">⚡ Chạy Offline</span>
-                <span className="text-[11px] text-slate-400">Không lo mất mạng internet trên lớp</span>
+              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                <span className="font-bold text-slate-200 block">⚡ Dùng Thử Miễn Phí</span>
+                <span className="text-[11px] text-slate-400">5 lượt tạo bài nghe đầy đủ tính năng</span>
               </div>
             </div>
           </div>
