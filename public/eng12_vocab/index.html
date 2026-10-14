@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Eng 12 Vocab Master - Học Từ Vựng Tiếng Anh Lớp 12 SGK Global Success</title>
-  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, 10 chế độ luyện tập đa dạng, phát âm chuẩn US/UK, flashcards 3D, game xếp chữ, phản xạ nhanh và thám tử từ vựng. Tác giả: Thầy Đinh Văn Thành.">
+  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, chế độ Nhạc Chant vui tươi Call & Response, 10 chế độ luyện tập đa dạng, phát âm chuẩn US/UK. Tác giả: Thầy Đinh Văn Thành.">
   <meta name="theme-color" content="#080d1a">
   
   <!-- Auto redirect /eng12_vocab -> /eng12_vocab/ for relative path safety -->
@@ -1813,6 +1813,341 @@ html, body {
   box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
 }
 
+
+
+/* ==========================================================================
+   VOCABULARY CHANT & KARAOKE PLAYER STYLES
+   ========================================================================== */
+.chant-stage-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chant-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s, box-shadow 0.25s;
+}
+
+.chant-card.beat-pulse {
+  transform: scale(1.02);
+  border-color: #38bdf8;
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+}
+
+.chant-card.call-active {
+  border-color: #fbbf24;
+  box-shadow: 0 0 45px rgba(251, 191, 36, 0.45);
+}
+
+.chant-card.response-active {
+  border-color: #34d399;
+  box-shadow: 0 0 45px rgba(52, 211, 153, 0.45);
+}
+
+.chant-stage-glow {
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
+  filter: blur(35px);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.chant-call-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.chant-call-badge.call {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.response {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.cheer {
+  background: rgba(236, 72, 153, 0.25);
+  color: #f472b6;
+  border-color: rgba(236, 72, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-word-main {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  transition: all 0.2s;
+}
+
+.chant-word-main.highlight {
+  color: #fbbf24;
+  text-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
+  transform: scale(1.05);
+}
+
+.chant-ipa-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.chant-ipa {
+  font-family: monospace;
+  font-size: 1.35rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.chant-pos {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.chant-meaning-main {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin-top: 1.25rem;
+  line-height: 1.3;
+  transition: all 0.2s;
+}
+
+.chant-meaning-main.highlight {
+  color: #34d399;
+  text-shadow: 0 0 25px rgba(52, 211, 153, 0.7);
+  transform: scale(1.04);
+}
+
+.chant-example-box {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  border-left: 5px solid #8b5cf6;
+  text-align: left;
+}
+
+.chant-example-en {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.5;
+}
+
+.chant-example-vi {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* Audio Visualizer Waves */
+.chant-visualizer-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  height: 52px;
+  margin: 1rem 0 0.5rem 0;
+  padding: 0 1rem;
+}
+
+.visualizer-bar {
+  flex: 1;
+  max-width: 14px;
+  height: 8px;
+  background: linear-gradient(180deg, #ec4899, #8b5cf6, #38bdf8);
+  border-radius: 6px;
+  transition: height 0.1s ease;
+}
+
+/* Control Panel */
+.chant-console {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1.4rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.chant-playback-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.btn-chant-play {
+  padding: 0.95rem 2.2rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-chant-play:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+}
+
+.btn-chant-play.playing {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
+}
+
+.chant-nav-circle-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 41, 59, 0.8);
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.chant-nav-circle-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: scale(1.08);
+}
+
+.chant-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+}
+
+.chant-setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.chant-setting-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chant-select {
+  padding: 0.55rem 0.85rem;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+
+.chant-toggles-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chant-toggle-pill {
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chant-toggle-pill.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .chant-word-main {
+    font-size: 2.5rem;
+  }
+  .chant-meaning-main {
+    font-size: 1.45rem;
+  }
+  .chant-card {
+    padding: 1.5rem 1rem;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -1853,11 +2188,14 @@ html, body {
       </div>
     </nav>
 
-    <!-- Learning Modes Navigation Bar (10 Chế Độ Ôn Luyện Đa Dạng) -->
+    <!-- Learning Modes Navigation Bar -->
     <div class="modes-bar">
       <div class="modes-tabs" role="tablist">
         <button class="mode-tab-btn active" data-tab="tab-flashcard" role="tab" aria-selected="true" title="Thẻ ghi nhớ 3D">
           🃏 <span>Thẻ 3D</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-chant" role="tab" style="background: linear-gradient(135deg, rgba(236,72,153,0.25), rgba(139,92,246,0.25)); border-color: rgba(236,72,153,0.5); color: #f472b6; font-weight: 800;" title="Chạy tự động các từ theo nhịp nhạc Chant Call & Response">
+          🎵 <span>Nhạc Chant</span>
         </button>
         <button class="mode-tab-btn" data-tab="tab-scramble" role="tab" title="Xếp chữ cái nhảy lung tung">
           🔤 <span>Xếp Chữ</span>
@@ -1918,7 +2256,6 @@ html, body {
             <div class="fc-progress-fill" id="fcProgressFill"></div>
           </div>
 
-          <!-- 3D Flashcard Stage -->
           <div class="flashcard-stage" id="flashcardStage" title="Bấm vào thẻ hoặc nhấn Phím Cách (Space) để lật thẻ">
             <div class="flashcard-inner">
               <!-- FRONT FACE -->
@@ -1960,7 +2297,6 @@ html, body {
                 <div class="card-face-center" style="margin: 0.5rem 0; text-align: center;">
                   <h3 class="card-meaning-title" id="cardMeaningTitle">câu chuyện, bản ghi chép</h3>
 
-                  <!-- Example Box -->
                   <div class="card-example-box">
                     <p class="card-example-en" id="cardExampleEn">"He gave a fascinating account of his journey across the world."</p>
                     <p class="card-example-vi" id="cardExampleVi">"Anh ấy đã kể lại một câu chuyện hấp dẫn về hành trình của mình vòng quanh thế giới."</p>
@@ -1978,7 +2314,6 @@ html, body {
             </div>
           </div>
 
-          <!-- Controls -->
           <div class="fc-bottom-controls">
             <button class="fc-nav-btn btn-prev" id="fcPrevBtn" title="Phím mũi tên Trái">
               ⬅️ Trước
@@ -1991,7 +2326,6 @@ html, body {
             </button>
           </div>
 
-          <!-- Mastery Buttons -->
           <div class="fc-mastery-actions">
             <button class="btn-mastery btn-review" id="btnMarkReview" title="Đánh dấu cần ôn tập lại">
               ⚠️ Cần ôn lại
@@ -2004,7 +2338,101 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 2: WORD SCRAMBLE (XẾP CHỮ NHẢY LUNG TUNG) -->
+      <!-- TAB 2: VOCABULARY CHANT & KARAOKE PLAYER   -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-chant">
+        <div class="chant-stage-wrapper">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="font-size: 1.1rem; font-weight: 800; color: #ec4899; background: rgba(236, 72, 153, 0.15); padding: 0.4rem 1.1rem; border-radius: 9999px; border: 1.5px solid rgba(236, 72, 153, 0.3);">
+              🎵 Nhạc Chant Vui Nhộn (Call & Response)
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8;" id="chantCounter">
+              Từ 1/33
+            </div>
+          </div>
+
+          <!-- Main Chant Card Stage -->
+          <div class="chant-card" id="chantCard">
+            <div class="chant-stage-glow"></div>
+            
+            <div class="chant-call-badge" id="chantCallBadge">
+              🎵 BẤM PHÁT ĐỂ BẮT ĐẦU CHANT
+            </div>
+
+            <h2 class="chant-word-main" id="chantWordMain">account</h2>
+
+            <div class="chant-ipa-row">
+              <span class="chant-ipa" id="chantIpa">/əˈkaʊnt/</span>
+              <span class="chant-pos" id="chantPos">noun</span>
+            </div>
+
+            <div class="chant-meaning-main" id="chantMeaningMain">
+              câu chuyện, bản ghi chép
+            </div>
+
+            <div class="chant-example-box" id="chantExampleBox">
+              <div class="chant-example-en" id="chantExampleEn">"He gave a fascinating account of his journey across the world."</div>
+              <div class="chant-example-vi" id="chantExampleVi">Dịch: Anh ấy đã kể lại một câu chuyện hấp dẫn về hành trình của mình vòng quanh thế giới.</div>
+            </div>
+
+            <!-- Visualizer Wave Bars -->
+            <div class="chant-visualizer-container" id="chantVisualizer"></div>
+          </div>
+
+          <!-- Console & Beat Controls -->
+          <div class="chant-console">
+            <div class="chant-playback-row">
+              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước">⏮️</button>
+              <button class="btn-chant-play" id="chantPlayBtn">
+                <span>▶️ BẮT ĐẦU CHANT</span>
+              </button>
+              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo">⏭️</button>
+            </div>
+
+            <div class="chant-settings-grid">
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Giai Điệu Beat (Nhạc Trẻ):</label>
+                <select class="chant-select" id="chantStyleSelect">
+                  <option value="popfunk">🕺 Dance / Pop Funk (112 BPM - Vui tươi)</option>
+                  <option value="edm">⚡ TikTok Trend EDM (126 BPM - Sôi động)</option>
+                  <option value="lofi">🎧 Lo-fi Chill Hop (85 BPM - Thư giãn)</option>
+                  <option value="trap">🎤 Hip-Hop Trap (96 BPM - Bắt tai)</option>
+                  <option value="tropical">🌴 Tropical Summer (115 BPM - Rộn rã)</option>
+                </select>
+              </div>
+
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Tốc Độ Nhịp Điệu (BPM):</label>
+                <select class="chant-select" id="chantBpmSelect">
+                  <option value="90">🐢 90 BPM (Thong thả dễ theo)</option>
+                  <option value="112" selected>⭐ 112 BPM (Chuẩn sư phạm)</option>
+                  <option value="128">🚀 128 BPM (Tăng tốc hào hứng)</option>
+                </select>
+              </div>
+
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Âm Lượng Beat Nhạc:</label>
+                <input type="range" id="chantVolSlider" min="0" max="1" step="0.05" value="0.4" style="accent-color: #38bdf8; cursor: pointer; margin-top: 0.4rem;">
+              </div>
+            </div>
+
+            <div class="chant-toggles-row">
+              <button class="chant-toggle-pill active" id="chantToggleVi">
+                <span>🇻🇳 Đọc Nghĩa Tiếng Việt</span>
+              </button>
+              <button class="chant-toggle-pill active" id="chantToggleEx">
+                <span>📖 Đọc Câu Ví Dụ</span>
+              </button>
+              <button class="chant-toggle-pill active" id="chantToggleLoop">
+                <span>🔁 Lặp Lại Toàn Unit</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: WORD SCRAMBLE (XẾP CHỮ NHẢY LUNG TUNG) -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-scramble">
         <div class="game-container" style="max-width: 780px;">
@@ -2072,7 +2500,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 3: SPEED BLITZ (PHẢN XẠ NHANH ĐÚNG/SAI) -->
+      <!-- TAB 4: SPEED BLITZ (PHẢN XẠ NHANH ĐÚNG/SAI) -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-blitz">
         <div class="game-container" style="max-width: 720px;">
@@ -2088,12 +2516,10 @@ html, body {
             </div>
           </div>
 
-          <!-- Speed Timer Bar -->
           <div class="blitz-timer-container">
             <div class="blitz-timer-fill" id="blitzTimerFill"></div>
           </div>
 
-          <!-- Blitz Card -->
           <div class="blitz-card" id="blitzCard">
             <button class="fc-icon-btn" id="blitzAudioBtn" title="Nghe phát âm" style="position: absolute; right: 1.25rem; top: 1.25rem;">🔊</button>
             <div class="blitz-word" id="blitzWord">biodiversity</div>
@@ -2103,7 +2529,6 @@ html, body {
             <div class="blitz-meaning" id="blitzMeaning">đa dạng sinh học</div>
           </div>
 
-          <!-- True / False Big Action Buttons -->
           <div class="blitz-actions-grid">
             <button class="blitz-btn blitz-btn-false" id="blitzFalseBtn">
               <span>❌ SAI</span>
@@ -2118,7 +2543,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 4: SPELLING & DICTATION (LUYỆN GÕ TỪ)   -->
+      <!-- TAB 5: SPELLING & DICTATION (LUYỆN GÕ TỪ)   -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-spelling">
         <div class="game-container" style="max-width: 760px;">
@@ -2170,7 +2595,7 @@ html, body {
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 5: HANGMAN (THÁM TỬ Ô CHỮ BÍ MẬT)      -->
+      <!-- TAB 6: HANGMAN (THÁM TỬ Ô CHỮ BÍ MẬT)      -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-hangman">
         <div class="game-container" style="max-width: 780px;" id="hangmanContainer">
@@ -2191,12 +2616,8 @@ html, body {
             <h3 style="font-size: 1.6rem; font-weight: 800; color: #38bdf8; margin-top: 0.4rem;" id="hangmanMeaning">câu chuyện, bản ghi chép</h3>
           </div>
 
-          <!-- Mystery Slots -->
-          <div class="hangman-slots-row" id="hangmanSlots">
-            <!-- Dynamic Slots -->
-          </div>
+          <div class="hangman-slots-row" id="hangmanSlots"></div>
 
-          <!-- Action buttons -->
           <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
             <button class="header-btn" id="hangmanHintBtn" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
               💡 Mở 1 chữ cái
@@ -2206,15 +2627,12 @@ html, body {
             </button>
           </div>
 
-          <!-- Virtual Keyboard -->
-          <div class="hangman-keyboard" id="hangmanKeyboard">
-            <!-- Dynamic A-Z keys -->
-          </div>
+          <div class="hangman-keyboard" id="hangmanKeyboard"></div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 6: CONTEXT SENTENCE (BÀI TẬP NGỮ CẢNH) -->
+      <!-- TAB 7: CONTEXT SENTENCE (BÀI TẬP NGỮ CẢNH) -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-context">
         <div class="game-container" id="contextContainer" style="max-width: 820px;">
@@ -2230,7 +2648,6 @@ html, body {
             </div>
           </div>
 
-          <!-- Question Box -->
           <div class="context-question-box">
             <span style="font-size: 0.85rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.06em;">CHỌN TỪ THÍCH HỢP ĐIỀN VÀO CHỖ TRỐNG (CHUẨN ĐỀ THI THPT):</span>
             <div class="context-sentence-text" id="contextSentenceText" style="margin-top: 0.85rem;">
@@ -2241,15 +2658,12 @@ html, body {
             </div>
           </div>
 
-          <!-- Options Grid -->
-          <div class="quiz-options-grid" id="contextOptionsGrid">
-            <!-- 4 options injected by JS -->
-          </div>
+          <div class="quiz-options-grid" id="contextOptionsGrid"></div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 7: SPEED QUIZ GAME                     -->
+      <!-- TAB 8: SPEED QUIZ GAME                     -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-quiz">
         <div class="game-container" id="quizContainer">
@@ -2278,14 +2692,12 @@ html, body {
             </button>
           </div>
 
-          <div class="quiz-options-grid" id="quizOptionsGrid">
-            <!-- 4 Options injected by JS -->
-          </div>
+          <div class="quiz-options-grid" id="quizOptionsGrid"></div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 8: WORD MATCHING GAME                  -->
+      <!-- TAB 9: WORD MATCHING GAME                  -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-match">
         <div class="game-container" style="max-width: 820px;">
@@ -2305,14 +2717,12 @@ html, body {
             Lật và ghép đúng cặp <span style="color: #38bdf8;">🇬🇧 Từ Tiếng Anh</span> với <span style="color: #fbbf24;">🇻🇳 Nghĩa Tiếng Việt</span> tương ứng!
           </p>
 
-          <div class="match-game-board" id="matchGameBoard">
-            <!-- 16 tiles injected by JS -->
-          </div>
+          <div class="match-game-board" id="matchGameBoard"></div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 9: LISTENING MASTER                    -->
+      <!-- TAB 10: LISTENING MASTER                   -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-listen">
         <div class="game-container">
@@ -2337,14 +2747,12 @@ html, body {
             </p>
           </div>
 
-          <div class="quiz-options-grid" id="listenOptionsGrid">
-            <!-- 4 word options injected by JS -->
-          </div>
+          <div class="quiz-options-grid" id="listenOptionsGrid"></div>
         </div>
       </section>
 
       <!-- ========================================== -->
-      <!-- TAB 10: VOCABULARY HUB (SỔ TAY TRA CỨU)    -->
+      <!-- TAB 11: VOCABULARY HUB (SỔ TAY TRA CỨU)    -->
       <!-- ========================================== -->
       <section class="tab-pane" id="tab-hub">
         <div style="display: flex; gap: 0.85rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
@@ -2383,9 +2791,7 @@ html, body {
           </button>
         </div>
 
-        <div class="match-game-board" id="hubWordsGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem;">
-          <!-- Dynamic word cards injected by JS -->
-        </div>
+        <div class="match-game-board" id="hubWordsGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem;"></div>
       </section>
     </main>
 
@@ -2430,9 +2836,7 @@ html, body {
           </div>
 
           <h4 style="font-size: 1rem; font-weight: 800; margin-top: 0.5rem; color: #fff;">Tiến độ từng Unit:</h4>
-          <div id="statsUnitsProgressList" style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 250px; overflow-y: auto; padding-right: 0.4rem;">
-            <!-- Injected by JS -->
-          </div>
+          <div id="statsUnitsProgressList" style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 250px; overflow-y: auto; padding-right: 0.4rem;"></div>
 
           <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
             <button class="header-btn" id="resetProgressBtn" style="color: #f43f5e; border-color: rgba(244, 63, 94, 0.4);">
@@ -2450,13 +2854,13 @@ html, body {
           Biên soạn & Thiết kế Sư phạm: <span>Thầy giáo Đinh Văn Thành</span> (THCS Đồng Yên)
         </p>
         <p style="font-size: 0.82rem; color: #94a3b8;">
-          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • 10 Chế độ ôn tập vui nhộn, thoải mái, nhớ sâu
+          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • Nhạc Chant vui tươi Call & Response • Học là thuộc
         </p>
       </div>
     </footer>
   </div>
 
-  <!-- Scripts: Smart Dual-Loading for both Online and Offline Local paths -->
+  <!-- Scripts -->
   <script>
     (function() {
       const isOnlineWeb = !window.location.protocol.startsWith('file:') && window.location.pathname.includes('eng12_vocab');

@@ -1790,3 +1790,338 @@ html, body {
   border-color: rgba(255, 255, 255, 0.25);
   box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
 }
+
+
+
+/* ==========================================================================
+   VOCABULARY CHANT & KARAOKE PLAYER STYLES
+   ========================================================================== */
+.chant-stage-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chant-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s, box-shadow 0.25s;
+}
+
+.chant-card.beat-pulse {
+  transform: scale(1.02);
+  border-color: #38bdf8;
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+}
+
+.chant-card.call-active {
+  border-color: #fbbf24;
+  box-shadow: 0 0 45px rgba(251, 191, 36, 0.45);
+}
+
+.chant-card.response-active {
+  border-color: #34d399;
+  box-shadow: 0 0 45px rgba(52, 211, 153, 0.45);
+}
+
+.chant-stage-glow {
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
+  filter: blur(35px);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.chant-call-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.chant-call-badge.call {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.response {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.cheer {
+  background: rgba(236, 72, 153, 0.25);
+  color: #f472b6;
+  border-color: rgba(236, 72, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-word-main {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  transition: all 0.2s;
+}
+
+.chant-word-main.highlight {
+  color: #fbbf24;
+  text-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
+  transform: scale(1.05);
+}
+
+.chant-ipa-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.chant-ipa {
+  font-family: monospace;
+  font-size: 1.35rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.chant-pos {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.chant-meaning-main {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin-top: 1.25rem;
+  line-height: 1.3;
+  transition: all 0.2s;
+}
+
+.chant-meaning-main.highlight {
+  color: #34d399;
+  text-shadow: 0 0 25px rgba(52, 211, 153, 0.7);
+  transform: scale(1.04);
+}
+
+.chant-example-box {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  border-left: 5px solid #8b5cf6;
+  text-align: left;
+}
+
+.chant-example-en {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.5;
+}
+
+.chant-example-vi {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* Audio Visualizer Waves */
+.chant-visualizer-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  height: 52px;
+  margin: 1rem 0 0.5rem 0;
+  padding: 0 1rem;
+}
+
+.visualizer-bar {
+  flex: 1;
+  max-width: 14px;
+  height: 8px;
+  background: linear-gradient(180deg, #ec4899, #8b5cf6, #38bdf8);
+  border-radius: 6px;
+  transition: height 0.1s ease;
+}
+
+/* Control Panel */
+.chant-console {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1.4rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.chant-playback-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.btn-chant-play {
+  padding: 0.95rem 2.2rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-chant-play:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+}
+
+.btn-chant-play.playing {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
+}
+
+.chant-nav-circle-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 41, 59, 0.8);
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.chant-nav-circle-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: scale(1.08);
+}
+
+.chant-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+}
+
+.chant-setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.chant-setting-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chant-select {
+  padding: 0.55rem 0.85rem;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+
+.chant-toggles-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chant-toggle-pill {
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chant-toggle-pill.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .chant-word-main {
+    font-size: 2.5rem;
+  }
+  .chant-meaning-main {
+    font-size: 1.45rem;
+  }
+  .chant-card {
+    padding: 1.5rem 1rem;
+  }
+}
