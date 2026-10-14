@@ -162,18 +162,19 @@ const SFX = new SoundEffects();
 // ==============================================================================
 const SpeechEngine = {
   voices: [],
+  activeUtterances: [],
   
   init() {
     if ('speechSynthesis' in window) {
-      const updateVoices = () => {
+      const loadVoices = () => {
         this.voices = window.speechSynthesis.getVoices();
       };
-      updateVoices();
-      window.speechSynthesis.onvoiceschanged = updateVoices;
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
     }
   },
   
-  getBestFemaleVoice(langCode = 'en-US') {
+  getBestVoice(langCode = 'en-US') {
     if (!this.voices || this.voices.length === 0) {
       if ('speechSynthesis' in window) this.voices = window.speechSynthesis.getVoices();
     }
@@ -183,13 +184,13 @@ const SpeechEngine = {
     const femaleKeywords = [
       'Jenny', 'Aria', 'Ana', 'Michelle', 'Sonia', 'Libby', 
       'Emma', 'Clara', 'Samantha', 'Victoria', 'Karen', 'Zira', 
-      'Female', 'Nữ'
+      'Natural', 'Female', 'Nữ'
     ];
     
     // 1. Tìm giọng nữ đúng chuẩn mã ngôn ngữ (en-US hoặc en-GB)
     for (const name of femaleKeywords) {
       const match = voices.find(v => 
-        (v.lang.startsWith(langCode) || v.lang.startsWith(langCode.slice(0, 2))) && 
+        (v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2))) && 
         v.name.toLowerCase().includes(name.toLowerCase())
       );
       if (match) return match;
@@ -198,7 +199,7 @@ const SpeechEngine = {
     // 2. Tìm bất kỳ giọng nữ tiếng Anh nào
     for (const name of femaleKeywords) {
       const match = voices.find(v => 
-        v.lang.startsWith('en') && 
+        v.lang.toLowerCase().startsWith('en') && 
         v.name.toLowerCase().includes(name.toLowerCase())
       );
       if (match) return match;
@@ -206,7 +207,7 @@ const SpeechEngine = {
     
     // 3. Fallback: Chọn giọng tiếng Anh không chứa từ khóa giọng nam (loại trừ David, Guy, Male, George)
     const nonMaleVoice = voices.find(v => 
-      v.lang.startsWith(langCode) && 
+      v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2)) && 
       !v.name.toLowerCase().includes('david') && 
       !v.name.toLowerCase().includes('guy') && 
       !v.name.toLowerCase().includes('male') && 
@@ -214,24 +215,69 @@ const SpeechEngine = {
     );
     if (nonMaleVoice) return nonMaleVoice;
     
-    return voices.find(v => v.lang.startsWith(langCode)) || voices[0];
+    return voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0, 2))) || null;
   },
   
-  speak(text, rate = 1.0, lang = null) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+  // Phát âm chuẩn, chậm rãi (mặc định 0.85x), rõ từng âm tiết IPA
+  speak(text, rate = 0.85, lang = null) {
+    if (!text) return;
+    if (!('speechSynthesis' in window)) {
+      console.warn('SpeechSynthesis is not supported on this browser');
+      return;
+    }
     
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = rate;
-    utterance.pitch = 1.1; // Tăng nhẹ cao độ lên 1.1 để giọng trong vắt, sáng, ngọt ngào
+    // Giải phóng trạng thái tạm dừng của trình duyệt nếu có
+    try {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      window.speechSynthesis.cancel();
+    } catch (e) {}
     
-    const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
-    utterance.lang = targetLang;
+    // Âm thanh Click feedback siêu nhẹ tức thì để người học biết máy đã nhận lệnh bấm
+    try {
+      if (typeof SFX !== 'undefined' && SFX.playTone) {
+        SFX.playTone(560, 'sine', 0.04);
+      }
+    } catch (e) {}
     
-    const voice = this.getBestFemaleVoice(targetLang);
-    if (voice) utterance.voice = voice;
-    
-    window.speechSynthesis.speak(utterance);
+    // Trì hoãn 35ms để Chromium hoàn tất cancel, tránh lỗi nuốt âm hoặc đóng băng
+    setTimeout(() => {
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = rate; // 0.85: Chuẩn sư phạm, chậm rãi, dễ nghe
+        utterance.pitch = 1.05; // Giọng nữ trong trẻo, thanh thoát
+        
+        const targetLang = lang || (STATE.preferredVoiceAccent === 'UK' ? 'en-GB' : 'en-US');
+        utterance.lang = targetLang;
+        
+        const voice = this.getBestVoice(targetLang);
+        if (voice) utterance.voice = voice;
+        
+        // Lưu tham chiếu toàn cục để tránh bị V8 Garbage Collector thu hồi làm mất tiếng
+        window._currentUtterance = utterance;
+        this.activeUtterances.push(utterance);
+        
+        utterance.onend = () => {
+          const idx = this.activeUtterances.indexOf(utterance);
+          if (idx !== -1) this.activeUtterances.splice(idx, 1);
+        };
+        
+        utterance.onerror = (err) => {
+          console.warn('SpeechSynthesis error:', err);
+          const idx = this.activeUtterances.indexOf(utterance);
+          if (idx !== -1) this.activeUtterances.splice(idx, 1);
+        };
+        
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        console.error('SpeechEngine error:', err);
+      }
+    }, 35);
   }
 };
 
@@ -601,10 +647,9 @@ function initMatchGame() {
 }
 
 function handleMatchTileClick(el, tile) {
-  // If card is already matched, ignore
   if (el.classList.contains('matched')) return;
   
-  // If user clicks the currently selected card, deselect it!
+  // Hủy chọn nếu bấm lại chính thẻ đang chọn
   if (STATE.match.selectedCard && STATE.match.selectedCard.el === el) {
     el.classList.remove('selected');
     STATE.match.selectedCard = null;
@@ -612,29 +657,35 @@ function handleMatchTileClick(el, tile) {
     return;
   }
   
-  SFX.playFlip();
-  if (tile.type === 'en') {
-    SpeechEngine.speak(tile.text, 1.0);
+  // BẤM VÀO BẤT KỲ THẺ NÀO PHẢI PHÁT ÂM NGAY TỨC THÌ (CHẬM RÃI, RÕ RÀNG):
+  const wordToSpeak = (tile.wordObj && tile.wordObj.word) ? tile.wordObj.word : (tile.type === 'en' ? tile.text : '');
+  if (wordToSpeak) {
+    SpeechEngine.speak(wordToSpeak, 0.85);
   }
   
+  SFX.playFlip();
+  
   if (!STATE.match.selectedCard) {
-    // First card selected
     STATE.match.selectedCard = { el, tile };
     el.classList.add('selected');
   } else {
-    // Second card selected
     const prev = STATE.match.selectedCard;
     el.classList.add('selected');
     
-    // Check match: Same word ID, but different types (one English and one Vietnamese)
+    // Kiểm tra ghép đúng cặp từ
     if (prev.tile.id === tile.id && prev.tile.type !== tile.type) {
-      // MATCH SUCCESS!
+      // GHÉP ĐÚNG!
       setTimeout(() => {
         prev.el.classList.remove('selected');
         el.classList.remove('selected');
         prev.el.classList.add('matched');
         el.classList.add('matched');
         SFX.playMatchSuccess();
+        
+        // Đọc lại từ vựng một lần nữa để học sinh ghi nhớ sâu
+        if (tile.wordObj && tile.wordObj.word) {
+          setTimeout(() => SpeechEngine.speak(tile.wordObj.word, 0.85), 250);
+        }
         
         STATE.match.matchedPairs++;
         const countEl = document.getElementById('matchedCountVal');
@@ -654,7 +705,7 @@ function handleMatchTileClick(el, tile) {
       }, 250);
       STATE.match.selectedCard = null;
     } else {
-      // NO MATCH -> Shake both cards and reset
+      // GHÉP SAI -> Rung lắc và trả về
       SFX.playWrong();
       prev.el.classList.add('shake');
       el.classList.add('shake');
@@ -811,8 +862,15 @@ function renderVocabularyHub() {
       </div>
     `;
     
-    card.querySelector('.speak-hub-btn').addEventListener('click', () => {
-      SpeechEngine.speak(w.word, 1.0);
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.star-hub-btn')) return;
+      SpeechEngine.speak(w.word, 0.85);
+    });
+    
+    card.querySelector('.speak-hub-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      SpeechEngine.speak(w.word, 0.85);
     });
     
     card.querySelector('.star-hub-btn').addEventListener('click', (e) => {
@@ -893,6 +951,29 @@ function setupEventListeners() {
   
   // Flashcard controls
   document.getElementById('flashcardStage').addEventListener('click', flipCard);
+  
+  // Bấm trực tiếp vào chữ tiếng Anh hoặc phiên âm trên thẻ để đọc thành tiếng ngay:
+  const wordTitleEl = document.getElementById('cardWordTitle');
+  if (wordTitleEl) {
+    wordTitleEl.style.cursor = 'pointer';
+    wordTitleEl.title = 'Bấm để nghe phát âm từ này';
+    wordTitleEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const w = STATE.activeWords[STATE.currentWordIdx];
+      if (w) SpeechEngine.speak(w.word, 0.85);
+    });
+  }
+  
+  const ipaEl = document.getElementById('cardIpaText');
+  if (ipaEl) {
+    ipaEl.style.cursor = 'pointer';
+    ipaEl.title = 'Bấm để nghe phát âm từ này';
+    ipaEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const w = STATE.activeWords[STATE.currentWordIdx];
+      if (w) SpeechEngine.speak(w.word, 0.85);
+    });
+  }
   document.getElementById('fcFlipBtn').addEventListener('click', flipCard);
   document.getElementById('fcNextBtn').addEventListener('click', nextWord);
   document.getElementById('fcPrevBtn').addEventListener('click', prevWord);
