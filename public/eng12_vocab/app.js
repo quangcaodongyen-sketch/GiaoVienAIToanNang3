@@ -403,20 +403,6 @@ const SpeechEngine = {
 // ==============================================================================
 // 4. UI INITIALIZATION & UNIT SELECTION
 // ==============================================================================
-function initUnitPills() {
-  const container = document.getElementById('unitPillsContainer');
-  if (!container || typeof VOCABULARY_DATA === 'undefined') return;
-  
-  container.innerHTML = '';
-  VOCABULARY_DATA.forEach(u => {
-    const pill = document.createElement('button');
-    pill.className = `unit-pill ${u.unit === STATE.currentUnit ? 'active' : ''}`;
-    pill.innerHTML = `<span class="pill-num">${u.icon} U${u.unit}</span> <span>${u.title}</span>`;
-    pill.title = `${u.title_vi} (${u.word_count} từ)`;
-    pill.addEventListener('click', () => selectUnit(u.unit, true));
-    container.appendChild(pill);
-  });
-}
 
 
 // ĐỌC TÊN BÀI HỌC DÕNG DẠC KHI NGƯỜI DÙNG BẤM VÀO TÊN BÀI HOẶC BẤM UNIT PILL
@@ -2178,153 +2164,82 @@ const ChantBeatEngine = {
   beatGain: null,
   isPlaying: false,
   bpm: 112,
-  style: 'popfunk', // popfunk, edm, lofi, trap, tropical
+  style: 'popfunk',
   currentStep: 0,
-  nextNoteTime: 0.0,
-  scheduleAheadTime: 0.1,
-  lookahead: 25.0, // ms
   timerId: null,
-  volume: 0.4,
+  volume: 0.3,
   
   initContext() {
     if (!this.ctx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      /* AudioContext muted */ if (false) this.ctx = new AudioContext();
-      this.masterGain = this.ctx.createGain();
-      this.beatGain = this.ctx.createGain();
-      this.beatGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
-      this.beatGain.connect(this.masterGain);
-      this.masterGain.connect(this.ctx.destination);
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          this.ctx = new AudioCtx();
+          this.masterGain = this.ctx.createGain();
+          this.beatGain = this.ctx.createGain();
+          this.beatGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+          this.beatGain.connect(this.masterGain);
+          this.masterGain.connect(this.ctx.destination);
+        }
+      } catch (e) {
+        console.warn("AudioContext init error:", e);
+      }
     }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      try { this.ctx.resume(); } catch(e){}
     }
   },
   
   setVolume(val) {
     this.volume = val;
     if (this.beatGain && this.ctx) {
-      this.beatGain.gain.setValueAtTime(val, this.ctx.currentTime);
+      try { this.beatGain.gain.setValueAtTime(val, this.ctx.currentTime); } catch(e){}
     }
   },
   
   setBpm(newBpm) {
-    this.bpm = newBpm;
+    this.bpm = newBpm || 112;
   },
   
   setStyle(newStyle) {
-    this.style = newStyle;
-    if (newStyle === 'edm') this.bpm = 126;
+    this.style = newStyle || 'popfunk';
+    if (newStyle === 'edm') this.bpm = 124;
     else if (newStyle === 'lofi') this.bpm = 85;
-    else if (newStyle === 'trap') this.bpm = 96;
-    else if (newStyle === 'tropical') this.bpm = 115;
-    else this.bpm = 112; // popfunk
+    else if (newStyle === 'trap') this.bpm = 95;
+    else if (newStyle === 'tropical') this.bpm = 110;
+    else this.bpm = 112;
   },
   
-    // Instrument synthesizers - ĐÃ TẮT BỎ HOÀN TOÀN TIẾNG NHẠC BEAT KÊU TÚT TỤT
-  // Tập trung 100% vào giọng đọc Call & Response phát âm chuẩn của Thầy giáo
-  playKick(time) {
-    return;
-  },
-  
-  playSnare(time) {
-    return;
-  },
-  
-  playHiHat(time, isOpen = false) {
-    return;
-  },
-  
-  playBass(time, freq, dur = 0.22) {
-    return;
-  },
-  
-  // Lookahead scheduler
-  nextNote() {
-    const secondsPerBeat = 60.0 / this.bpm;
-    const secondsPer16th = secondsPerBeat / 4;
-    this.nextNoteTime += secondsPer16th;
-    this.currentStep = (this.currentStep + 1) % 16;
-  },
-  
-  scheduleNote(stepNumber, time) {
-    // Visualizer pulse trigger
-    setTimeout(() => {
-      pulseVisualizer(stepNumber);
-    }, Math.max(0, (time - this.ctx.currentTime) * 1000));
-    
-    // Drum patterns (16 steps = 1 bar of 4/4)
-    if (this.style === 'popfunk') {
-      // Funk beat: Kick on 0, 6, 10; Snare on 4, 12; Hihats on all evens
-      if (stepNumber === 0 || stepNumber === 6 || stepNumber === 10) this.playKick(time);
-      if (stepNumber === 4 || stepNumber === 12) this.playSnare(time);
-      if (stepNumber % 2 === 0) this.playHiHat(time, stepNumber === 14);
-      
-      // Funky bassline: C2 (65.41Hz), Eb2 (77.78Hz), F2 (87.31Hz), G2 (98.00Hz)
-      if (stepNumber === 0) this.playBass(time, 65.41, 0.2);
-      if (stepNumber === 3) this.playBass(time, 77.78, 0.15);
-      if (stepNumber === 6) this.playBass(time, 87.31, 0.2);
-      if (stepNumber === 10) this.playBass(time, 98.00, 0.25);
-    } 
-    else if (this.style === 'edm') {
-      // Four on the floor EDM: Kick on 0, 4, 8, 12
-      if (stepNumber % 4 === 0) this.playKick(time);
-      if (stepNumber === 4 || stepNumber === 12) this.playSnare(time);
-      if (stepNumber % 2 === 1) this.playHiHat(time, true); // Offbeat open hi-hat
-      
-      if (stepNumber % 2 === 0) {
-        const bassNotes = [65.41, 65.41, 77.78, 87.31];
-        this.playBass(time, bassNotes[Math.floor(stepNumber / 4)], 0.18);
-      }
-    }
-    else if (this.style === 'lofi') {
-      // Chill Lofi: Kick on 0, 7; Snare on 4, 12; gentle hihats
-      if (stepNumber === 0 || stepNumber === 7) this.playKick(time);
-      if (stepNumber === 4 || stepNumber === 12) this.playSnare(time);
-      if (stepNumber % 2 === 0) this.playHiHat(time, false);
-      if (stepNumber === 0) this.playBass(time, 58.27, 0.35); // Bb1
-      if (stepNumber === 8) this.playBass(time, 65.41, 0.35); // C2
-    }
-    else if (this.style === 'trap') {
-      // Trap: 808 Kick on 0, 10; Clap on 8; rapid hihats
-      if (stepNumber === 0 || stepNumber === 10) this.playKick(time);
-      if (stepNumber === 8) this.playSnare(time);
-      this.playHiHat(time, stepNumber % 4 === 2);
-      if (stepNumber === 0) this.playBass(time, 43.65, 0.4); // F1 808
-      if (stepNumber === 10) this.playBass(time, 49.00, 0.35); // G1 808
-    }
-    else { // tropical
-      if (stepNumber === 0 || stepNumber === 6 || stepNumber === 10) this.playKick(time);
-      if (stepNumber === 4 || stepNumber === 12) this.playSnare(time);
-      if (stepNumber % 2 === 0) this.playHiHat(time, stepNumber === 6);
-      if (stepNumber === 0) this.playBass(time, 73.42, 0.2); // D2
-      if (stepNumber === 6) this.playBass(time, 87.31, 0.2); // F2
-      if (stepNumber === 10) this.playBass(time, 98.00, 0.2); // G2
-    }
-  },
-  
-  scheduler() {
-    while (this.nextNoteTime < this.ctx.currentTime + this.scheduleAheadTime) {
-      this.scheduleNote(this.currentStep, this.nextNoteTime);
-      this.nextNote();
-    }
-    if (this.isPlaying) {
-      this.timerId = setTimeout(() => this.scheduler(), this.lookahead);
-    }
-  },
+  // Synthesizers: Hoàn toàn êm ái, KHÔNG CÓ TIẾNG KÊU TÚT TỤT CHÓI TAI
+  playKick(time) {},
+  playSnare(time) {},
+  playHiHat(time, isOpen = false) {},
+  playBass(time, freq, dur = 0.22) {},
   
   start() {
     this.initContext();
     if (this.isPlaying) return;
     this.isPlaying = true;
     this.currentStep = 0;
-    this.nextNoteTime = this.ctx.currentTime + 0.05;
-    this.scheduler();
+    this.runBeatLoop();
+  },
+  
+  runBeatLoop() {
+    if (!this.isPlaying) return;
+    try {
+      pulseVisualizer(this.currentStep);
+    } catch(e){}
+    this.currentStep = (this.currentStep + 1) % 16;
+    const intervalMs = Math.max(30, Math.round((60000 / this.bpm) / 4));
+    this.timerId = setTimeout(() => this.runBeatLoop(), intervalMs);
   },
   
   stop() {
     this.isPlaying = false;
-    clearTimeout(this.timerId);
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
   }
 };
 
@@ -3067,29 +2982,190 @@ function loadCustomVocab() {
 // ==========================================
 // 1. MULTI-GRADE MANAGEMENT
 // ==========================================
+// ==============================================================================
+// 1. SCIENTIFIC GRADE & UNIT SYSTEM (CHUẨN BỘ GD&ĐT: THCS & THPT)
+// ==============================================================================
+let CURRENT_SEMESTER_FILTER = 'all';
+
 function initGradePills() {
   const container = document.getElementById('gradePillsContainer');
   if (!container) return;
 
   container.innerHTML = '';
-  const grades = ["6", "7", "8", "9", "10", "11", "12"];
 
-  grades.forEach(g => {
-    const meta = GRADE_METADATA[g] || { name: `Lớp ${g}`, icon: "📘" };
+  // Nhóm 1: CẤP THCS (Lớp 6, 7, 8, 9)
+  const thcsWrapper = document.createElement('div');
+  thcsWrapper.className = 'grade-group-block';
+  thcsWrapper.innerHTML = '<span class="grade-group-label">🏫 THCS:</span>';
+
+  const thcsGrades = ["6", "7", "8", "9"];
+  thcsGrades.forEach(g => {
+    const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[g]) || { name: `Lớp ${g}`, icon: "📘" };
     const btn = document.createElement('button');
     btn.className = `grade-pill ${g === CURRENT_GRADE ? 'active' : ''}`;
     btn.dataset.grade = g;
-    btn.innerHTML = `${meta.icon} <span>${meta.name}</span> <span class="grade-badge-tag">${meta.badge || ''}</span>`;
-    
-    btn.addEventListener('click', () => {
-      switchGrade(g, true);
-    });
-
-    container.appendChild(btn);
+    btn.innerHTML = `<span>${meta.name}</span>`;
+    btn.title = `Chương trình Tiếng Anh ${meta.name} - Sách Kết nối tri thức & Global Success`;
+    btn.addEventListener('click', () => switchGrade(g, true));
+    thcsWrapper.appendChild(btn);
   });
+  container.appendChild(thcsWrapper);
+
+  // Divider
+  const divider = document.createElement('div');
+  divider.className = 'grade-group-divider';
+  container.appendChild(divider);
+
+  // Nhóm 2: CẤP THPT (Lớp 10, 11, 12)
+  const thptWrapper = document.createElement('div');
+  thptWrapper.className = 'grade-group-block';
+  thptWrapper.innerHTML = '<span class="grade-group-label">🎓 THPT:</span>';
+
+  const thptGrades = ["10", "11", "12"];
+  thptGrades.forEach(g => {
+    const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[g]) || { name: `Lớp ${g}`, icon: "🎓" };
+    const btn = document.createElement('button');
+    btn.className = `grade-pill ${g === CURRENT_GRADE ? 'active' : ''}`;
+    btn.dataset.grade = g;
+    btn.innerHTML = `<span>${meta.name}</span>`;
+    btn.title = `Chương trình Tiếng Anh ${meta.name} - Sách Global Success`;
+    btn.addEventListener('click', () => switchGrade(g, true));
+    thptWrapper.appendChild(btn);
+  });
+  container.appendChild(thptWrapper);
 
   updateGradeUI();
 }
+
+function filterUnitsBySemester(sem) {
+  CURRENT_SEMESTER_FILTER = sem;
+  document.querySelectorAll('.sem-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `semBtn-${sem}`);
+  });
+  initUnitPills();
+}
+
+function initUnitPills() {
+  const container = document.getElementById('unitPillsContainer');
+  if (!container || typeof VOCABULARY_DATA === 'undefined') return;
+  
+  container.innerHTML = '';
+  
+  // Filter units based on semester
+  let unitsToRender = [...VOCABULARY_DATA];
+  if (typeof CURRENT_SEMESTER_FILTER !== 'undefined') {
+    if (CURRENT_SEMESTER_FILTER === '1') {
+      unitsToRender = unitsToRender.filter(u => u.unit <= 5);
+    } else if (CURRENT_SEMESTER_FILTER === '2') {
+      unitsToRender = unitsToRender.filter(u => u.unit > 5);
+    }
+  }
+
+  if (unitsToRender.length === 0) {
+    unitsToRender = [...VOCABULARY_DATA];
+  }
+
+  unitsToRender.forEach(u => {
+    const pill = document.createElement('button');
+    pill.className = `unit-pill ${u.unit === STATE.currentUnit ? 'active' : ''}`;
+    pill.dataset.unit = u.unit;
+    pill.innerHTML = `
+      <div class="unit-pill-top">
+        <span class="pill-u-num">${u.icon || '📖'} Unit ${u.unit}</span>
+        <span class="pill-word-badge">${u.word_count || (u.words ? u.words.length : 0)} từ</span>
+      </div>
+      <div class="unit-pill-title-en" title="${u.title}">${u.title}</div>
+      <div class="unit-pill-title-vi" title="${u.title_vi || ''}">${u.title_vi || ''}</div>
+    `;
+    pill.title = `Unit ${u.unit}: ${u.title} - ${u.title_vi || ''} (${u.word_count || (u.words ? u.words.length : 0)} từ vựng)`;
+    pill.addEventListener('click', () => selectUnit(u.unit, true));
+    container.appendChild(pill);
+  });
+}
+
+
+
+function openAllUnitsCatalogModal() {
+  const overlay = document.getElementById('allUnitsCatalogModalOverlay');
+  const body = document.getElementById('catalogModalBody');
+  const title = document.getElementById('catalogModalTitle');
+  if (!overlay || !body) return;
+
+  const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[CURRENT_GRADE]) || { name: `Lớp ${CURRENT_GRADE}` };
+  if (title) title.innerHTML = `📑 Mục Lục Toàn Bộ Bài Học - Tiếng Anh ${meta.name}`;
+
+  const allUnits = typeof VOCABULARY_DATA !== 'undefined' ? VOCABULARY_DATA : [];
+  const sem1 = allUnits.filter(u => u.unit <= 5);
+  const sem2 = allUnits.filter(u => u.unit > 5);
+
+  let html = `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+      <!-- HỌC KỲ I -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(56,189,248,0.25); border-radius: 16px; padding: 1.25rem;">
+        <h3 style="color: #38bdf8; font-size: 1.05rem; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          📘 HỌC KỲ I (Unit 1 → Unit 5)
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+  `;
+
+  sem1.forEach(u => {
+    const isAct = u.unit === STATE.currentUnit;
+    html += `
+      <div onclick="selectUnitAndCloseCatalog(${u.unit})" style="cursor: pointer; padding: 0.75rem 1rem; border-radius: 12px; background: ${isAct ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.04)'}; border: 1px solid ${isAct ? '#38bdf8' : 'rgba(255,255,255,0.08)'}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.15)'" onmouseout="this.style.background='${isAct ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.04)'}'">
+        <div>
+          <div style="font-weight: 800; font-size: 0.88rem; color: #fff;">${u.icon || '📖'} Unit ${u.unit}: ${u.title}</div>
+          <div style="font-size: 0.76rem; color: #94a3b8; margin-top: 2px;">${u.title_vi || ''}</div>
+        </div>
+        <span style="font-size: 0.75rem; font-weight: 700; color: #38bdf8; background: rgba(56,189,248,0.1); padding: 3px 8px; border-radius: 8px;">${u.word_count || 0} từ</span>
+      </div>
+    `;
+  });
+
+  html += `
+        </div>
+      </div>
+
+      <!-- HỌC KỲ II -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(245,158,11,0.25); border-radius: 16px; padding: 1.25rem;">
+        <h3 style="color: #fbbf24; font-size: 1.05rem; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          📙 HỌC KỲ II (Unit 6 → Unit 10+)
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+  `;
+
+  sem2.forEach(u => {
+    const isAct = u.unit === STATE.currentUnit;
+    html += `
+      <div onclick="selectUnitAndCloseCatalog(${u.unit})" style="cursor: pointer; padding: 0.75rem 1rem; border-radius: 12px; background: ${isAct ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.04)'}; border: 1px solid ${isAct ? '#f59e0b' : 'rgba(255,255,255,0.08)'}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.15)'" onmouseout="this.style.background='${isAct ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.04)'}'">
+        <div>
+          <div style="font-weight: 800; font-size: 0.88rem; color: #fff;">${u.icon || '📖'} Unit ${u.unit}: ${u.title}</div>
+          <div style="font-size: 0.76rem; color: #94a3b8; margin-top: 2px;">${u.title_vi || ''}</div>
+        </div>
+        <span style="font-size: 0.75rem; font-weight: 700; color: #fbbf24; background: rgba(245,158,11,0.1); padding: 3px 8px; border-radius: 8px;">${u.word_count || 0} từ</span>
+      </div>
+    `;
+  });
+
+  html += `
+        </div>
+      </div>
+    </div>
+  `;
+
+  body.innerHTML = html;
+  overlay.classList.add('active');
+}
+
+function closeAllUnitsCatalogModal() {
+  const overlay = document.getElementById('allUnitsCatalogModalOverlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+function selectUnitAndCloseCatalog(unitNum) {
+  closeAllUnitsCatalogModal();
+  selectUnit(unitNum, true);
+}
+
 
 function updateGradeUI() {
   // Update Grade pills active class

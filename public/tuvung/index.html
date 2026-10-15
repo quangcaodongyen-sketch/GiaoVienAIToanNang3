@@ -3707,6 +3707,483 @@ body {
   transform: scale(1.12);
 }
 
+
+/* ==============================================================================
+   SCIENTIFIC GRADE & UNIT STYLES (CHUẨN GIÁO DỤC BỘ GD&ĐT)
+   ============================================================================== */
+.grade-scroll-bar {
+  background: rgba(10, 16, 30, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  backdrop-filter: blur(14px);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+}
+
+.grade-pills-wrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.grade-pills-wrapper::-webkit-scrollbar { display: none; }
+
+.grade-group-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.grade-group-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  padding: 0 0.35rem;
+  white-space: nowrap;
+}
+
+.grade-group-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0.2rem;
+}
+
+.grade-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.grade-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* UNIT NAVIGATION WITH SEMESTERS */
+.unit-scroll-bar {
+  background: rgba(8, 14, 26, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.6rem 1rem;
+  backdrop-filter: blur(12px);
+}
+
+.unit-nav-header-row {
+  max-width: 1400px;
+  margin: 0 auto 0.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.semester-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.2rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sem-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.sem-btn:hover {
+  color: #ffffff;
+}
+
+.sem-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.all-units-catalog-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.all-units-catalog-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.unit-pills-wrapper {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.unit-pills-wrapper::-webkit-scrollbar { height: 4px; }
+.unit-pills-wrapper::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+
+.unit-pill {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.45rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  min-width: 150px;
+  max-width: 220px;
+}
+
+.unit-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.unit-pill-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.pill-u-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #38bdf8;
+}
+
+.pill-word-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1px 5px;
+  border-radius: 6px;
+  color: #94a3b8;
+}
+
+.unit-pill-title-en {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.unit-pill-title-vi {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* ==============================================================================
+   5 COMPREHENSIVE HIGH-CONTRAST THEMES (FLASHCARD + TABS + PILLS + BUTTONS)
+   ============================================================================== */
+
+/* 1. OCEAN BLUE (Mặc định) */
+[data-theme="ocean"] .card-front {
+  background: linear-gradient(145deg, rgba(20, 48, 88, 0.95) 0%, rgba(8, 22, 44, 0.98) 100%) !important;
+  border: 2px solid rgba(56, 189, 248, 0.5) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 30px rgba(56, 189, 248, 0.3) !important;
+}
+[data-theme="ocean"] .card-back {
+  background: linear-gradient(145deg, rgba(14, 38, 72, 0.95) 0%, rgba(6, 18, 36, 0.98) 100%) !important;
+  border: 2px solid rgba(14, 165, 233, 0.5) !important;
+}
+[data-theme="ocean"] .unit-pill.active {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  border-color: #7dd3fc !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(14, 165, 233, 0.6) !important;
+}
+[data-theme="ocean"] .unit-pill.active .pill-u-num { color: #ffffff !important; }
+[data-theme="ocean"] .unit-pill.active .unit-pill-title-vi { color: #bae6fd !important; }
+[data-theme="ocean"] .grade-pill.active {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5) !important;
+}
+[data-theme="ocean"] .mode-tab-btn.active {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.5) !important;
+}
+[data-theme="ocean"] .card-meaning-title { color: #38bdf8 !important; }
+[data-theme="ocean"] .fc-counter span.current { color: #38bdf8 !important; }
+
+/* 2. SAKURA PINK */
+[data-theme="pink"] body, body[data-theme="pink"] {
+  background: radial-gradient(circle at 20% 15%, #3d1434 0%, #190a16 55%, #0d040b 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="pink"] header {
+  background: rgba(25, 10, 22, 0.92) !important;
+  border-bottom-color: rgba(244, 114, 182, 0.3) !important;
+}
+[data-theme="pink"] .card-front {
+  background: linear-gradient(145deg, rgba(82, 22, 64, 0.95) 0%, rgba(38, 10, 30, 0.98) 100%) !important;
+  border: 2px solid rgba(244, 114, 182, 0.55) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 35px rgba(236, 72, 153, 0.4) !important;
+}
+[data-theme="pink"] .card-back {
+  background: linear-gradient(145deg, rgba(65, 16, 50, 0.95) 0%, rgba(30, 8, 24, 0.98) 100%) !important;
+  border: 2px solid rgba(251, 113, 133, 0.55) !important;
+}
+[data-theme="pink"] .chant-card {
+  background: linear-gradient(145deg, rgba(82, 22, 64, 0.95) 0%, rgba(38, 10, 30, 0.98) 100%) !important;
+  border-color: rgba(244, 114, 182, 0.5) !important;
+}
+[data-theme="pink"] .unit-pill.active {
+  background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
+  border-color: #fbcfe8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(236, 72, 153, 0.6) !important;
+}
+[data-theme="pink"] .unit-pill.active .pill-u-num { color: #ffffff !important; }
+[data-theme="pink"] .unit-pill.active .unit-pill-title-vi { color: #ffe4e6 !important; }
+[data-theme="pink"] .grade-pill.active {
+  background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
+  border-color: #fbcfe8 !important;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.5) !important;
+}
+[data-theme="pink"] .mode-tab-btn.active {
+  background: linear-gradient(135deg, #ec4899, #be185d) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.5) !important;
+}
+[data-theme="pink"] .card-meaning-title { color: #fda4af !important; }
+[data-theme="pink"] .fc-counter span.current { color: #f472b6 !important; }
+[data-theme="pink"] .btn-flip {
+  background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
+  box-shadow: 0 5px 20px rgba(236, 72, 153, 0.5) !important;
+}
+[data-theme="pink"] .sem-btn.active {
+  background: rgba(236, 72, 153, 0.2) !important;
+  color: #f472b6 !important;
+  border-color: rgba(236, 72, 153, 0.4) !important;
+}
+
+/* 3. ROYAL PURPLE */
+[data-theme="purple"] body, body[data-theme="purple"] {
+  background: radial-gradient(circle at 20% 15%, #2c1656 0%, #0f0a21 55%, #060310 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="purple"] header {
+  background: rgba(15, 10, 33, 0.92) !important;
+  border-bottom-color: rgba(168, 85, 247, 0.3) !important;
+}
+[data-theme="purple"] .card-front {
+  background: linear-gradient(145deg, rgba(55, 26, 98, 0.95) 0%, rgba(22, 10, 44, 0.98) 100%) !important;
+  border: 2px solid rgba(168, 85, 247, 0.55) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 35px rgba(139, 92, 246, 0.4) !important;
+}
+[data-theme="purple"] .card-back {
+  background: linear-gradient(145deg, rgba(45, 18, 80, 0.95) 0%, rgba(18, 8, 36, 0.98) 100%) !important;
+  border: 2px solid rgba(192, 132, 252, 0.55) !important;
+}
+[data-theme="purple"] .chant-card {
+  background: linear-gradient(145deg, rgba(55, 26, 98, 0.95) 0%, rgba(22, 10, 44, 0.98) 100%) !important;
+  border-color: rgba(168, 85, 247, 0.5) !important;
+}
+[data-theme="purple"] .unit-pill.active {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7) !important;
+  border-color: #e9d5ff !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.6) !important;
+}
+[data-theme="purple"] .unit-pill.active .pill-u-num { color: #ffffff !important; }
+[data-theme="purple"] .unit-pill.active .unit-pill-title-vi { color: #f3e8ff !important; }
+[data-theme="purple"] .grade-pill.active {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7) !important;
+  border-color: #e9d5ff !important;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.5) !important;
+}
+[data-theme="purple"] .mode-tab-btn.active {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5) !important;
+}
+[data-theme="purple"] .card-meaning-title { color: #d8b4fe !important; }
+[data-theme="purple"] .fc-counter span.current { color: #c084fc !important; }
+[data-theme="purple"] .btn-flip {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7) !important;
+  box-shadow: 0 5px 20px rgba(139, 92, 246, 0.5) !important;
+}
+[data-theme="purple"] .sem-btn.active {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #c084fc !important;
+  border-color: rgba(139, 92, 246, 0.4) !important;
+}
+
+/* 4. EMERALD GREEN */
+[data-theme="emerald"] body, body[data-theme="emerald"] {
+  background: radial-gradient(circle at 20% 15%, #123e30 0%, #051812 55%, #020a07 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="emerald"] header {
+  background: rgba(5, 24, 18, 0.92) !important;
+  border-bottom-color: rgba(52, 211, 153, 0.3) !important;
+}
+[data-theme="emerald"] .card-front {
+  background: linear-gradient(145deg, rgba(18, 62, 48, 0.95) 0%, rgba(8, 28, 22, 0.98) 100%) !important;
+  border: 2px solid rgba(52, 211, 153, 0.55) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 35px rgba(16, 185, 129, 0.4) !important;
+}
+[data-theme="emerald"] .card-back {
+  background: linear-gradient(145deg, rgba(14, 50, 38, 0.95) 0%, rgba(6, 22, 16, 0.98) 100%) !important;
+  border: 2px solid rgba(16, 185, 129, 0.55) !important;
+}
+[data-theme="emerald"] .chant-card {
+  background: linear-gradient(145deg, rgba(18, 62, 48, 0.95) 0%, rgba(8, 28, 22, 0.98) 100%) !important;
+  border-color: rgba(52, 211, 153, 0.5) !important;
+}
+[data-theme="emerald"] .unit-pill.active {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border-color: #a7f3d0 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.6) !important;
+}
+[data-theme="emerald"] .unit-pill.active .pill-u-num { color: #ffffff !important; }
+[data-theme="emerald"] .unit-pill.active .unit-pill-title-vi { color: #d1fae5 !important; }
+[data-theme="emerald"] .grade-pill.active {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border-color: #a7f3d0 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5) !important;
+}
+[data-theme="emerald"] .mode-tab-btn.active {
+  background: linear-gradient(135deg, #10b981, #047857) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5) !important;
+}
+[data-theme="emerald"] .card-meaning-title { color: #6ee7b7 !important; }
+[data-theme="emerald"] .fc-counter span.current { color: #34d399 !important; }
+[data-theme="emerald"] .btn-flip {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 5px 20px rgba(16, 185, 129, 0.5) !important;
+}
+[data-theme="emerald"] .sem-btn.active {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+/* 5. AMBER ENERGY */
+[data-theme="amber"] body, body[data-theme="amber"] {
+  background: radial-gradient(circle at 20% 15%, #442a10 0%, #190f05 55%, #0a0602 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="amber"] header {
+  background: rgba(25, 15, 5, 0.92) !important;
+  border-bottom-color: rgba(251, 191, 36, 0.3) !important;
+}
+[data-theme="amber"] .card-front {
+  background: linear-gradient(145deg, rgba(74, 40, 12, 0.95) 0%, rgba(32, 16, 4, 0.98) 100%) !important;
+  border: 2px solid rgba(251, 191, 36, 0.55) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 35px rgba(245, 158, 11, 0.4) !important;
+}
+[data-theme="amber"] .card-back {
+  background: linear-gradient(145deg, rgba(58, 30, 8, 0.95) 0%, rgba(24, 12, 2, 0.98) 100%) !important;
+  border: 2px solid rgba(245, 158, 11, 0.55) !important;
+}
+[data-theme="amber"] .chant-card {
+  background: linear-gradient(145deg, rgba(74, 40, 12, 0.95) 0%, rgba(32, 16, 4, 0.98) 100%) !important;
+  border-color: rgba(251, 191, 36, 0.5) !important;
+}
+[data-theme="amber"] .unit-pill.active {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border-color: #fde68a !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.6) !important;
+}
+[data-theme="amber"] .unit-pill.active .pill-u-num { color: #ffffff !important; }
+[data-theme="amber"] .unit-pill.active .unit-pill-title-vi { color: #fef3c7 !important; }
+[data-theme="amber"] .grade-pill.active {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border-color: #fde68a !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.5) !important;
+}
+[data-theme="amber"] .mode-tab-btn.active {
+  background: linear-gradient(135deg, #f59e0b, #b45309) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5) !important;
+}
+[data-theme="amber"] .card-meaning-title { color: #fde047 !important; }
+[data-theme="amber"] .fc-counter span.current { color: #fbbf24 !important; }
+[data-theme="amber"] .btn-flip {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  box-shadow: 0 5px 20px rgba(245, 158, 11, 0.5) !important;
+}
+[data-theme="amber"] .sem-btn.active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+/* OPTIMIZED VIETNAMESE TYPOGRAPHY */
+.card-meaning-title, .chant-meaning-main, .scramble-meaning, .blitz-meaning, .vocab-item .meaning {
+  font-family: 'Be Vietnam Pro', 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  letter-spacing: -0.2px !important;
+}
+
 </style>
   <!-- Instant Theme Initializer (Zero FOUT / No Flickering) -->
   <script>
@@ -3818,18 +4295,27 @@ body {
         </div>
       </div>
     </header>
-    <!-- Grade Selector Bar (Lớp 6 đến Lớp 12) -->
-    <nav class="grade-scroll-bar" aria-label="Chọn khối lớp học">
+    <!-- SCIENTIFIC GRADE SELECTOR: PHÂN ĐỊNH RÕ CẤP THCS & CẤP THPT -->
+    <nav class="grade-scroll-bar" aria-label="Chọn khối lớp học chuẩn Bộ GD&ĐT">
       <div class="grade-pills-wrapper" id="gradePillsContainer">
         <!-- Dynamically injected by JavaScript initGradePills() -->
       </div>
     </nav>
 
-
-    <!-- Unit Selector Horizontal Scrollbar -->
-    <nav class="unit-scroll-bar" aria-label="Danh sách bài học">
+    <!-- SCIENTIFIC UNIT SELECTOR WITH SEMESTER TABS & UNIT CARDS -->
+    <nav class="unit-scroll-bar" aria-label="Danh sách bài học theo chương trình">
+      <div class="unit-nav-header-row">
+        <div class="semester-filter-group" id="semesterFilterGroup">
+          <button class="sem-btn active" id="semBtn-all" onclick="filterUnitsBySemester('all')">🌟 Tất Cả Bài</button>
+          <button class="sem-btn" id="semBtn-1" onclick="filterUnitsBySemester('1')">📘 Học Kỳ I (U1 - U5)</button>
+          <button class="sem-btn" id="semBtn-2" onclick="filterUnitsBySemester('2')">📙 Học Kỳ II (U6 - U10+)</button>
+        </div>
+        <button class="all-units-catalog-btn" onclick="openAllUnitsCatalogModal()" title="Xem toàn bộ mục lục bài học">
+          📑 Mục Lục Toàn Bộ Bài
+        </button>
+      </div>
       <div class="unit-pills-wrapper" id="unitPillsContainer">
-        <!-- Dynamically injected by JavaScript -->
+        <!-- Dynamically injected with rich bilingual info -->
       </div>
     </nav>
 
@@ -5256,6 +5742,20 @@ body {
       <div class="chat-input-footer">
         <input type="text" id="chatStudentInput" placeholder="Nhập tin nhắn gửi Thầy Thành..." onkeydown="if(event.key==='Enter') TEACHER_CHAT.sendMessage(); event.stopPropagation();">
         <button id="chatSendBtn" onclick="TEACHER_CHAT.sendMessage()" title="Gửi tin nhắn">🚀</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ALL UNITS CATALOG MODAL -->
+  <div class="custom-modal-overlay" id="allUnitsCatalogModalOverlay">
+    <div class="custom-modal-card large" style="max-width: 960px; max-height: 85vh;">
+      <div class="custom-modal-header">
+        <h2 id="catalogModalTitle">📑 Mục Lục Chương Trình Tiếng Anh</h2>
+        <button class="custom-modal-close" onclick="closeAllUnitsCatalogModal()">✕</button>
+      </div>
+      <div class="custom-modal-body" id="catalogModalBody" style="padding: 1.5rem;">
+        <!-- Injected by JavaScript -->
       </div>
     </div>
   </div>
