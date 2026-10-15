@@ -1,13 +1,13 @@
 {
   "appId": "exam-eng",
   "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "4.2.0",
-  "latestVersion": "4.2.0",
+  "currentVersion": "4.3.0",
+  "latestVersion": "4.3.0",
   "releaseDate": "15/10/2026",
-  "changelog": "• [15/10/2026 - v4.2.0] Tự động tạo thư mục 'Đề KT Tiếng Anh' lưu tại Desktop của máy tính khách giúp tìm kiếm nhanh chóng\n• Bổ sung ngân hàng câu hỏi kiểm tra Giữa kỳ, Cuối kỳ đồ sộ cho các khối lớp 6, 7, 8, 9 bám sát SGK Global Success\n• Phân bổ kiến thức chuẩn theo Phân phối chương trình và Phụ lục III:\n  - Giữa kỳ 1: Lấy 100% kiến thức từ Unit 1 - Unit 3\n  - Cuối kỳ 1: Lấy 80% kiến thức từ Unit 4 - Unit 6 + 20% kiến thức ôn tập Unit 1 - Unit 3\n  - Giữa kỳ 2: Lấy 100% kiến thức từ Unit 7 - Unit 9\n  - Cuối kỳ 2: Lấy 80% kiến thức từ Unit 10 - Unit 12 + 20% kiến thức tổng hợp Unit 1 - Unit 9\n• Tránh tuyệt đối lấy nhầm kiến thức chưa học, đảm bảo tính sư phạm chuẩn mực Bộ GD&ĐT\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717)",
+  "changelog": "🔥 [15/10/2026 - v4.3.0] NÂNG CẤP LỚN TOÀN DIỆN:\n• 100% Từ vựng chuẩn trong SGK Tiếng Anh THCS Global Success (Lớp 6, 7, 8, 9), loại bỏ triệt để từ khó ngoài chương trình\n• Bổ sung tính năng tuỳ chọn xuất Bản đặc tả ma trận bằng Tiếng Việt hoặc Tiếng Anh chuẩn khảo thí GDPT (CV 7991)\n• Tự động tạo thư mục Đề KT Tiếng Anh lưu tại Desktop của máy tính khách giúp tìm đề nhanh chóng\n• Phân bổ kiến thức chuẩn theo Phân phối chương trình & Phụ lục III:\n  - Giữa kỳ 1: Lấy 100% kiến thức từ Unit 1 - Unit 3\n  - Cuối kỳ 1: Lấy 80% kiến thức từ Unit 4 - Unit 6 + 20% kiến thức ôn tập Unit 1 - Unit 3\n  - Giữa kỳ 2: Lấy 100% kiến thức từ Unit 7 - Unit 9\n  - Cuối kỳ 2: Lấy 80% kiến thức từ Unit 10 - Unit 12 + 20% kiến thức tổng hợp Unit 1 - Unit 9\n• Cập nhật đồng bộ cả bộ cài vào Word và bộ chạy trực tiếp Desktop đầy đủ\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717)",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
   "author": "Tác giả: Thầy giáo Đinh Văn Thành (Tel/zalo: 0915.213717) - THCS",
-  "version": "4.2.0"
+  "version": "4.3.0"
 }
