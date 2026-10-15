@@ -3380,10 +3380,14 @@ html, body {
         </a>
 
         <div class="header-actions">
-          <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Thông tin học sinh">
+          <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Thông tin tài khoản học sinh">
             <span>👤 <span id="studentHeaderName">Em</span></span>
-            <button id="editStudentInfoBtn" title="Chỉnh sửa thông tin">✏️</button>
+            <button id="editStudentInfoBtn" title="Chỉnh sửa thông tin" style="background:none; border:none; cursor:pointer; font-size:0.85rem; padding:2px 4px;">✏️</button>
+            <button id="logoutStudentBtn" onclick="STUDENT_SYSTEM.logout()" title="Đổi tài khoản / Đăng xuất" style="background:none; border:none; cursor:pointer; font-size:0.85rem; padding:2px 4px; color:#f87171;">🚪</button>
           </div>
+          <button class="header-btn" id="headerLoginBtn" onclick="STUDENT_SYSTEM.openRegisterModal(true, 'login')" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700; display: inline-flex;" title="Đăng nhập tài khoản học sinh">
+            🔑 <span>Đăng Nhập</span>
+          </button>
           <button class="header-btn" id="openShareModalBtn" title="Đường link ngắn dekiemtraso.com/tuvung">
             🔗 <span>Link Ngắn</span>
           </button>
@@ -4180,18 +4184,51 @@ html, body {
   <script src="vocabulary_data.js?v=20261015_multigrade_v4"></script></script>
   <script src="app.js?v=20261015_multigrade_v4"></script></script>
 
-  <!-- MODAL 1: ĐĂNG KÝ HỌC SINH BẮT BUỘC MIỄN PHÍ -->
+    <!-- MODAL 1: ĐĂNG NHẬP & ĐĂNG KÝ HỌC SINH -->
   <div class="custom-modal-overlay" id="studentRegisterModalOverlay">
-    <div class="custom-modal-card">
+    <div class="custom-modal-card" style="max-width: 520px;">
       <div class="custom-modal-header">
-        <h2>🌟 Đăng Ký Học Tập Miễn Phí</h2>
+        <h2 id="authModalTitle">🔑 Đăng Nhập / Đăng Ký Tài Khoản</h2>
         <button class="custom-modal-close" id="regModalCloseBtn" onclick="STUDENT_SYSTEM.closeRegisterModal()">✕</button>
       </div>
+
       <div class="custom-modal-body">
-        <p style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem;">
-          Chào mừng em đến với <strong>Hệ Thống Luyện Siêu Trí Nhớ Từ Vựng Tiếng Anh 6 - 12 (Global Success)</strong> của Thầy Đinh Văn Thành! Vui lòng nhập thông tin để lưu giữ tiến độ học tập và cấp Giấy Khen vinh danh.
-        </p>
-        <form onsubmit="STUDENT_SYSTEM.submitRegistration(event)" onkeydown="event.stopPropagation()">
+        <!-- Tab Switcher -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          <button type="button" id="tabAuthLoginBtn" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.92rem; font-weight: 800; background: #6366f1; color: white;">
+            🔑 ĐĂNG NHẬP
+          </button>
+          <button type="button" id="tabAuthRegBtn" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.92rem; font-weight: 600; background: rgba(255,255,255,0.06); color: #94a3b8;">
+            📝 ĐĂNG KÝ MỚI
+          </button>
+        </div>
+
+        <!-- FORM 1: ĐĂNG NHẬP -->
+        <form id="authLoginForm" onsubmit="STUDENT_SYSTEM.submitLogin(event)" onkeydown="event.stopPropagation()">
+          <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">
+            Em hãy nhập <strong>Tên đăng nhập</strong> (hoặc <strong>Số điện thoại</strong>) và <strong>Mật khẩu</strong> để vào học tiếp nhé!
+          </p>
+          <div class="form-group">
+            <label for="loginUsername">👤 Tên Đăng Nhập hoặc Số Điện Thoại (*)</label>
+            <input type="text" id="loginUsername" class="form-control" placeholder="Ví dụ: thanh8a1 hoặc 0915213717" onkeydown="event.stopPropagation()" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">🔒 Mật Khẩu (*)</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu (ví dụ: 123456 hoặc 123)" onkeydown="event.stopPropagation()" required>
+          </div>
+          <button type="submit" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(99,102,241,0.4);">
+            🔓 ĐĂNG NHẬP VÀO HỌC NGAY
+          </button>
+          <div style="text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #94a3b8;">
+            Chưa có tài khoản? <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">👉 Đăng Ký Tài Khoản Mới Ngay (Miễn Phí)</a>
+          </div>
+        </form>
+
+        <!-- FORM 2: ĐĂNG KÝ TÀI KHOẢN MỚI -->
+        <form id="authRegisterForm" onsubmit="STUDENT_SYSTEM.submitRegistration(event)" onkeydown="event.stopPropagation()" style="display: none;">
+          <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">
+            Học sinh đăng ký tài khoản mới để lưu giữ tiến độ, nhận Giấy Khen điện tử và tích lũy điểm thưởng XP của Thầy Đinh Văn Thành.
+          </p>
           <div class="form-group">
             <label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
             <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Đinh Văn Thành" onkeydown="event.stopPropagation()" required>
@@ -4219,12 +4256,25 @@ html, body {
             <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: Trường THCS Đồng Yên" onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group">
-            <label for="regPhone">📱 Số Điện Thoại Phụ Huynh / Học Sinh (*)</label>
-            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0915213717 (10 chữ số)" onkeydown="event.stopPropagation()" required>
+            <label for="regPhone">📱 Số Điện Thoại (*)</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0915213717" onkeydown="event.stopPropagation()" required>
           </div>
-          <button type="submit" id="submitRegBtn" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
-            🚀 Bắt Đầu Học Ngay (Miễn Phí 100%)
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label for="regUsername">🔑 Tên Đăng Nhập (*)</label>
+              <input type="text" id="regUsername" class="form-control" placeholder="Ví dụ: thanh8a1" onkeydown="event.stopPropagation()" required>
+            </div>
+            <div>
+              <label for="regPassword">🔒 Mật Khẩu Đơn Giản (*)</label>
+              <input type="text" id="regPassword" class="form-control" placeholder="Ví dụ: 123456 hoặc 123" onkeydown="event.stopPropagation()" required>
+            </div>
+          </div>
+          <button type="submit" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+            ✨ TẠO TÀI KHOẢN & VÀO HỌC NGAY
           </button>
+          <div style="text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #94a3b8;">
+            Đã có tài khoản? <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">👉 Bấm vào đây để Đăng Nhập</a>
+          </div>
         </form>
       </div>
     </div>
@@ -4332,9 +4382,12 @@ html, body {
                 </select>
               </div>
 
-              <div style="display: flex; gap: 0.5rem;">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button class="header-btn" onclick="ADMIN_SYSTEM.exportToExcel()" style="background: linear-gradient(135deg, #10b981, #059669); padding: 0.45rem 1rem; font-size: 0.85rem; font-weight: 700;">
                   📊 Xuất File Excel (CSV)
+                </button>
+                <button class="header-btn" onclick="ADMIN_SYSTEM.resetAllOldData()" style="background: rgba(244,63,94,0.18); border: 1px solid rgba(244,63,94,0.4); color: #f43f5e; padding: 0.45rem 0.9rem; font-size: 0.85rem; font-weight: 700;" title="Xóa toàn bộ tài khoản cũ, bắt đầu tính từ 12h trưa nay">
+                  🧹 Reset Tài Khoản Cũ (Từ 12h Trưa Nay)
                 </button>
               </div>
             </div>
@@ -4346,6 +4399,7 @@ html, body {
                 <tr>
                   <th>STT</th>
                   <th>Họ và Tên</th>
+                  <th>🔑 Tên Đăng Nhập / MK</th>
                   <th>Lớp & Khối</th>
                   <th>Trường Học</th>
                   <th>Số Điện Thoại</th>

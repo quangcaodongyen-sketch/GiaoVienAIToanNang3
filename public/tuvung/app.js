@@ -3326,7 +3326,22 @@ const TEACHER_CHAT = {
 const STUDENT_SYSTEM = {
   currentStudent: null,
 
+  purgeOldDataCutoff() {
+    // Thời điểm mốc: 12h00 trưa ngày 15/10/2026
+    // Mọi tài khoản cũ tạo trước 12h trưa nay đều bị thanh lọc xóa sạch theo lệnh của Thầy Thành.
+    const PURGE_MARKER = 'ENG_PURGE_EPOCH_2026_10_15_12H_FINAL';
+    if (!localStorage.getItem(PURGE_MARKER)) {
+      console.log('🔄 Đang thanh lọc dữ liệu: Xóa sạch toàn bộ tài khoản cũ trước 12h trưa 15/10/2026...');
+      localStorage.removeItem('ALL_STUDENTS_LIST');
+      localStorage.removeItem('ENG_STUDENT_PROFILE');
+      localStorage.removeItem('ENG_GLOBAL_CHAT_INBOX');
+      this.currentStudent = null;
+      localStorage.setItem(PURGE_MARKER, 'CLEARED_AT_12H_' + new Date().toISOString());
+    }
+  },
+
   init() {
+    this.purgeOldDataCutoff();
     this.loadStudent();
     this.renderHeaderBadge();
     
@@ -3335,14 +3350,14 @@ const STUDENT_SYSTEM = {
     if (editBtn) {
       editBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        this.openRegisterModal(true);
+        this.openRegisterModal(true, 'register');
       });
     }
 
-    // Auto check if registered
+    // Auto check if registered or logged in
     if (!this.currentStudent) {
       setTimeout(() => {
-        this.openRegisterModal(false);
+        this.openRegisterModal(false, 'login');
       }, 600);
     }
   },
@@ -3372,7 +3387,7 @@ const STUDENT_SYSTEM = {
       const savedList = localStorage.getItem('ALL_STUDENTS_LIST');
       if (savedList) allList = JSON.parse(savedList);
 
-      const existingIdx = allList.findIndex(s => s.id === this.currentStudent.id || (s.phone && s.phone === this.currentStudent.phone));
+      const existingIdx = allList.findIndex(s => s.id === this.currentStudent.id || (s.username && s.username === this.currentStudent.username) || (s.phone && s.phone === this.currentStudent.phone));
       if (existingIdx !== -1) {
         allList[existingIdx] = this.currentStudent;
       } else {
@@ -3398,12 +3413,14 @@ const STUDENT_SYSTEM = {
     }
   },
 
-  openRegisterModal(canClose = true) {
+  openRegisterModal(canClose = true, defaultTab = 'login') {
     const overlay = document.getElementById('studentRegisterModalOverlay');
     if (!overlay) return;
 
     const closeBtn = overlay.querySelector('.custom-modal-close');
     if (closeBtn) closeBtn.style.display = canClose ? 'flex' : 'none';
+
+    this.switchAuthTab(defaultTab);
 
     if (this.currentStudent) {
       const nameInput = document.getElementById('regFullName');
@@ -3411,12 +3428,16 @@ const STUDENT_SYSTEM = {
       const gradeSelect = document.getElementById('regGrade');
       const schoolInput = document.getElementById('regSchool');
       const phoneInput = document.getElementById('regPhone');
+      const userInput = document.getElementById('regUsername');
+      const passInput = document.getElementById('regPassword');
 
       if (nameInput) nameInput.value = this.currentStudent.fullName || '';
       if (classInput) classInput.value = this.currentStudent.className || '';
       if (gradeSelect) gradeSelect.value = this.currentStudent.grade || CURRENT_GRADE;
       if (schoolInput) schoolInput.value = this.currentStudent.school || '';
       if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
+      if (userInput) userInput.value = this.currentStudent.username || this.currentStudent.phone || '';
+      if (passInput) passInput.value = this.currentStudent.password || '123';
     }
 
     overlay.classList.add('active');
@@ -3427,6 +3448,99 @@ const STUDENT_SYSTEM = {
     if (overlay) overlay.classList.remove('active');
   },
 
+  switchAuthTab(tab) {
+    const loginForm = document.getElementById('authLoginForm');
+    const registerForm = document.getElementById('authRegisterForm');
+    const tabLoginBtn = document.getElementById('tabAuthLoginBtn');
+    const tabRegBtn = document.getElementById('tabAuthRegBtn');
+    const modalTitle = document.getElementById('authModalTitle');
+
+    if (tab === 'login') {
+      if (loginForm) loginForm.style.display = 'block';
+      if (registerForm) registerForm.style.display = 'none';
+      if (tabLoginBtn) {
+        tabLoginBtn.style.background = '#6366f1';
+        tabLoginBtn.style.color = '#ffffff';
+        tabLoginBtn.style.fontWeight = '800';
+      }
+      if (tabRegBtn) {
+        tabRegBtn.style.background = 'rgba(255,255,255,0.06)';
+        tabRegBtn.style.color = '#94a3b8';
+        tabRegBtn.style.fontWeight = '600';
+      }
+      if (modalTitle) modalTitle.textContent = '🔑 Đăng Nhập Tài Khoản Học Sinh';
+    } else {
+      if (loginForm) loginForm.style.display = 'none';
+      if (registerForm) registerForm.style.display = 'block';
+      if (tabRegBtn) {
+        tabRegBtn.style.background = '#10b981';
+        tabRegBtn.style.color = '#ffffff';
+        tabRegBtn.style.fontWeight = '800';
+      }
+      if (tabLoginBtn) {
+        tabLoginBtn.style.background = 'rgba(255,255,255,0.06)';
+        tabLoginBtn.style.color = '#94a3b8';
+        tabLoginBtn.style.fontWeight = '600';
+      }
+      if (modalTitle) modalTitle.textContent = '📝 Đăng Ký Tài Khoản Học Sinh Mới';
+    }
+  },
+
+  submitLogin(e) {
+    if (e) e.preventDefault();
+    const loginUser = (document.getElementById('loginUsername')?.value || '').trim().toLowerCase();
+    const loginPass = (document.getElementById('loginPassword')?.value || '').trim();
+
+    if (!loginUser) {
+      alert('Vui lòng nhập Tên đăng nhập hoặc Số điện thoại!');
+      document.getElementById('loginUsername')?.focus();
+      return;
+    }
+    if (!loginPass) {
+      alert('Vui lòng nhập Mật khẩu!');
+      document.getElementById('loginPassword')?.focus();
+      return;
+    }
+
+    const students = ADMIN_SYSTEM.getAllStudents();
+    const cleanLogin = loginUser.replace(/[^0-9]/g, '');
+
+    // Search by username or phone
+    const found = students.find(s => {
+      const u = (s.username || '').trim().toLowerCase();
+      const p = (s.phone || '').trim();
+      return u === loginUser || (cleanLogin.length >= 9 && p === cleanLogin);
+    });
+
+    if (!found) {
+      alert(`❌ Không tìm thấy tài khoản "${loginUser}"!\nVui lòng kiểm tra lại Tên đăng nhập / Số điện thoại hoặc bấm sang tab "ĐĂNG KÝ MỚI" để tạo tài khoản.`);
+      return;
+    }
+
+    // Verify password (support universal teacher override PIN 123 / 6868)
+    if (found.password && found.password !== loginPass && loginPass !== '123' && loginPass !== '6868') {
+      alert('❌ Mật khẩu chưa chính xác! Vui lòng thử lại hoặc liên hệ Thầy Đinh Thành để được cấp lại mật khẩu.');
+      document.getElementById('loginPassword')?.focus();
+      return;
+    }
+
+    // Login successful
+    this.currentStudent = found;
+    this.currentStudent.lastActiveAt = new Date().toLocaleString('vi-VN');
+    this.saveStudent();
+    this.closeRegisterModal();
+
+    if (this.currentStudent.grade && this.currentStudent.grade !== CURRENT_GRADE) {
+      switchGrade(this.currentStudent.grade, true);
+    }
+
+    const classStr = this.currentStudent.className ? 
+      (this.currentStudent.className.toLowerCase().includes('lớp') ? this.currentStudent.className : `Lớp ${this.currentStudent.className}`) : 
+      `Lớp ${this.currentStudent.grade || CURRENT_GRADE}`;
+
+    alert(`🎉 Chúc mừng ${this.currentStudent.fullName} (${classStr}) đã đăng nhập thành công!\nChào mừng em quay trở lại học tập!`);
+  },
+
   submitRegistration(e) {
     if (e) e.preventDefault();
 
@@ -3435,12 +3549,16 @@ const STUDENT_SYSTEM = {
     const gradeSelect = document.getElementById('regGrade');
     const schoolInput = document.getElementById('regSchool');
     const phoneInput = document.getElementById('regPhone');
+    const usernameInput = document.getElementById('regUsername');
+    const passwordInput = document.getElementById('regPassword');
 
     const fullName = (nameInput?.value || '').trim();
     let className = (classInput?.value || '').trim();
     let grade = gradeSelect?.value || '12';
     const school = (schoolInput?.value || '').trim();
     const phone = (phoneInput?.value || '').trim();
+    let username = (usernameInput?.value || '').trim().toLowerCase();
+    let password = (passwordInput?.value || '').trim();
 
     if (!fullName || fullName.length < 2) {
       alert('Vui lòng nhập đầy đủ Họ và tên học sinh (ví dụ: Đinh Văn Thành)!');
@@ -3454,7 +3572,6 @@ const STUDENT_SYSTEM = {
       return;
     }
 
-    // Auto detect grade if found in className
     const gradeMatch = className.match(/(?:lớp\s*)?(6|7|8|9|10|11|12)/i);
     if (gradeMatch) {
       grade = gradeMatch[1];
@@ -3467,7 +3584,6 @@ const STUDENT_SYSTEM = {
       return;
     }
 
-    // Phone validation
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     if (!cleanPhone || cleanPhone.length < 9 || cleanPhone.length > 11) {
       alert('Vui lòng nhập Số điện thoại hợp lệ (ví dụ: 0915213717)!');
@@ -3475,17 +3591,46 @@ const STUDENT_SYSTEM = {
       return;
     }
 
+    if (!username) {
+      username = cleanPhone;
+    }
+    username = username.replace(/[^a-z0-9_]/g, '');
+    if (username.length < 3) {
+      username = cleanPhone;
+    }
+
+    if (!password) {
+      password = '123';
+    }
+
+    // Check duplicate username
+    const allStudents = ADMIN_SYSTEM.getAllStudents();
+    const existing = allStudents.find(s => (s.username || '').toLowerCase() === username && s.id !== this.currentStudent?.id);
+    if (existing) {
+      alert(`⚠️ Tên đăng nhập "${username}" đã có bạn đăng ký rồi!\nEm vui lòng chọn tên đăng nhập khác (ví dụ: ${username + '1'}, ${cleanPhone}) hoặc chuyển sang tab "ĐĂNG NHẬP" nhé!`);
+      usernameInput?.focus();
+      return;
+    }
+
     const studentId = this.currentStudent?.id || ('STD_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
     
     this.currentStudent = {
       id: studentId,
+      username: username,
+      password: password,
       fullName: fullName,
       className: className,
       grade: grade,
       school: school,
       phone: cleanPhone,
       registeredAt: this.currentStudent?.registeredAt || new Date().toLocaleString('vi-VN'),
+      registeredTimestamp: Date.now(),
       lastActiveAt: new Date().toLocaleString('vi-VN'),
+      minitestHistory: this.currentStudent?.minitestHistory || [],
+      minitestCount: this.currentStudent?.minitestCount || 0,
+      minitestBestScore: this.currentStudent?.minitestBestScore || 0,
+      certificates: this.currentStudent?.certificates || [],
+      practiceCount: this.currentStudent?.practiceCount || 0,
       masteredCount: this.currentStudent?.masteredCount || 0,
       xp: this.currentStudent?.xp || 50,
       streakDays: this.currentStudent?.streakDays || 1,
@@ -3500,29 +3645,44 @@ const STUDENT_SYSTEM = {
     }
 
     if (typeof confetti === 'function') {
-      confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+      try { confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } }); } catch(e){}
     }
 
     const displayClass = className.toLowerCase().includes('lớp') ? className : `Lớp ${className}`;
-    alert(`🎉 Chúc mừng em ${fullName} (${displayClass} - ${school})!\nĐăng ký học tập thành công! Chúc em luôn chăm ngoan và đạt điểm cao môn Tiếng Anh!`);
+    alert(`🎉 Chúc mừng em ${fullName} (${displayClass} - ${school})!\nĐăng ký tài khoản thành công!\n🔑 Tên đăng nhập: ${username}\n🔒 Mật khẩu: ${password}\n(Em nhớ lưu lại Tên đăng nhập & Mật khẩu để đăng nhập lần sau nhé!)`);
+  },
+
+  logout() {
+    if (!confirm('Em có chắc chắn muốn đăng xuất tài khoản hiện tại để chuyển sang tài khoản khác không?')) return;
+    this.currentStudent = null;
+    localStorage.removeItem('ENG_STUDENT_PROFILE');
+    this.renderHeaderBadge();
+    this.openRegisterModal(false, 'login');
   },
 
   renderHeaderBadge() {
     const badge = document.getElementById('studentHeaderTag');
     const nameSpan = document.getElementById('studentHeaderName');
+    const loginBtn = document.getElementById('headerLoginBtn');
     if (!badge || !nameSpan) return;
 
     if (this.currentStudent) {
       badge.style.display = 'inline-flex';
       badge.style.cursor = 'pointer';
+      if (loginBtn) loginBtn.style.display = 'none';
+
       const classStr = this.currentStudent.className ? 
         (this.currentStudent.className.toLowerCase().includes('lớp') ? this.currentStudent.className : `Lớp ${this.currentStudent.className}`) : 
         `Lớp ${this.currentStudent.grade || CURRENT_GRADE}`;
       nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
-      badge.title = `${this.currentStudent.fullName} • ${classStr} • ${this.currentStudent.school || ''} • SĐT: ${this.currentStudent.phone || ''} (Nhấp để sửa thông tin)`;
-      badge.onclick = () => this.openRegisterModal(true);
+      badge.title = `${this.currentStudent.fullName} • ${classStr} • User: ${this.currentStudent.username || this.currentStudent.phone} • SĐT: ${this.currentStudent.phone || ''} (Bấm ✏️ sửa, 🚪 đổi TK)`;
+      badge.onclick = (e) => {
+        if (e.target && (e.target.id === 'logoutStudentBtn' || e.target.id === 'editStudentInfoBtn')) return;
+        this.openRegisterModal(true, 'register');
+      };
     } else {
       badge.style.display = 'none';
+      if (loginBtn) loginBtn.style.display = 'inline-flex';
     }
   },
 
@@ -4075,6 +4235,17 @@ const ADMIN_SYSTEM = {
     this.renderStudentTable(students);
   },
 
+    resetAllOldData() {
+    if (!confirm('Thầy có chắc chắn muốn xóa hết tất cả thành viên cũ để chỉ tính tài khoản mới từ 12h trưa nay không?')) return;
+    localStorage.removeItem('ALL_STUDENTS_LIST');
+    localStorage.removeItem('ENG_STUDENT_PROFILE');
+    localStorage.removeItem('ENG_GLOBAL_CHAT_INBOX');
+    STUDENT_SYSTEM.currentStudent = null;
+    STUDENT_SYSTEM.renderHeaderBadge();
+    this.renderAdminView();
+    alert('✓ Đã xóa sạch toàn bộ thành viên cũ! Hệ thống sẵn sàng nhận các tài khoản mới từ 12h trưa nay.');
+  },
+
   renderStudentTable(studentsList) {
     const tbody = document.getElementById('adminStudentTableBody');
     if (!tbody) return;
@@ -4090,6 +4261,7 @@ const ADMIN_SYSTEM = {
     let filtered = studentsList.filter(s => {
       const matchSearch = !searchTerm || 
         (s.fullName || '').toLowerCase().includes(searchTerm) ||
+        (s.username || '').toLowerCase().includes(searchTerm) ||
         (s.className || '').toLowerCase().includes(searchTerm) ||
         (s.school || '').toLowerCase().includes(searchTerm) ||
         (s.phone || '').includes(searchTerm);
@@ -4130,7 +4302,7 @@ const ADMIN_SYSTEM = {
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8; padding: 2.5rem;">Không tìm thấy học sinh nào phù hợp tiêu chí lọc.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #94a3b8; padding: 2.5rem;">Không tìm thấy học sinh nào phù hợp tiêu chí lọc.</td></tr>`;
       return;
     }
 
@@ -4162,6 +4334,10 @@ const ADMIN_SYSTEM = {
           <td>
             <div style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">${s.fullName}</div>
             <div style="font-size: 0.75rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
+          </td>
+          <td>
+            <div style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">User: ${s.username || s.phone || 'Chưa đặt'}</div>
+            <div style="font-size: 0.75rem; color: #facc15; font-family: monospace; margin-top: 2px;">MK: ${s.password || '123'}</div>
           </td>
           <td>
             <span class="grade-badge-tag" style="background: rgba(99,102,241,0.25); color: #a5b4fc; font-weight: 700; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">
@@ -5667,8 +5843,10 @@ function startApp() {
   console.log("Vocab Master Pro 6-12 ready!");
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', startApp);
-} else {
-  startApp();
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startApp);
+  } else {
+    startApp();
+  }
 }
