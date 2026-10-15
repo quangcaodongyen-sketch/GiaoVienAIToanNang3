@@ -1202,6 +1202,15 @@ function setupEventListeners() {
   
   // Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
+    // NEVER intercept keys when typing in input, textarea, select or contenteditable
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable)) {
+      return;
+    }
+    // NEVER intercept keys when any modal or dialog is open
+    if (document.querySelector('.custom-modal-overlay.active, .modal.show, #studentRegisterModalOverlay.active, #adminModalOverlay.active, #certificateCenterModalOverlay.active, #certificateModalOverlay.active, #smartImportModalOverlay.active, #weakWordsModalOverlay.active')) {
+      return;
+    }
+
     const activeTab = document.querySelector('.tab-pane.active');
     if (activeTab && activeTab.id === 'tab-flashcard') {
       if (e.code === 'Space') {
@@ -2010,6 +2019,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Global keyboard shortcuts for extra modes
   window.addEventListener('keydown', (e) => {
+    // NEVER intercept keys when typing in input, textarea, select or contenteditable
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable)) {
+      return;
+    }
+    // NEVER intercept keys when any modal or dialog is open
+    if (document.querySelector('.custom-modal-overlay.active, .modal.show, #studentRegisterModalOverlay.active, #adminModalOverlay.active, #certificateCenterModalOverlay.active, #certificateModalOverlay.active, #smartImportModalOverlay.active, #weakWordsModalOverlay.active')) {
+      return;
+    }
     
     // Extra keyboard shortcuts
     const activeBlitz = document.getElementById('tab-blitz');
@@ -3121,6 +3138,15 @@ const STUDENT_SYSTEM = {
     this.loadStudent();
     this.renderHeaderBadge();
     
+    // Wire edit button
+    const editBtn = document.getElementById('editStudentInfoBtn');
+    if (editBtn) {
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openRegisterModal(true);
+      });
+    }
+
     // Auto check if registered
     if (!this.currentStudent) {
       setTimeout(() => {
@@ -3168,6 +3194,18 @@ const STUDENT_SYSTEM = {
     }
   },
 
+  onClassInput(val) {
+    if (!val) return;
+    const match = val.match(/(?:lớp\s*)?(6|7|8|9|10|11|12)/i);
+    if (match) {
+      const g = match[1];
+      const gradeSel = document.getElementById('regGrade');
+      if (gradeSel && gradeSel.value !== g) {
+        gradeSel.value = g;
+      }
+    }
+  },
+
   openRegisterModal(canClose = true) {
     const overlay = document.getElementById('studentRegisterModalOverlay');
     if (!overlay) return;
@@ -3177,11 +3215,13 @@ const STUDENT_SYSTEM = {
 
     if (this.currentStudent) {
       const nameInput = document.getElementById('regFullName');
+      const classInput = document.getElementById('regClassName');
       const gradeSelect = document.getElementById('regGrade');
       const schoolInput = document.getElementById('regSchool');
       const phoneInput = document.getElementById('regPhone');
 
       if (nameInput) nameInput.value = this.currentStudent.fullName || '';
+      if (classInput) classInput.value = this.currentStudent.className || '';
       if (gradeSelect) gradeSelect.value = this.currentStudent.grade || CURRENT_GRADE;
       if (schoolInput) schoolInput.value = this.currentStudent.school || '';
       if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
@@ -3199,23 +3239,38 @@ const STUDENT_SYSTEM = {
     if (e) e.preventDefault();
 
     const nameInput = document.getElementById('regFullName');
+    const classInput = document.getElementById('regClassName');
     const gradeSelect = document.getElementById('regGrade');
     const schoolInput = document.getElementById('regSchool');
     const phoneInput = document.getElementById('regPhone');
 
     const fullName = (nameInput?.value || '').trim();
-    const grade = gradeSelect?.value || '12';
+    let className = (classInput?.value || '').trim();
+    let grade = gradeSelect?.value || '12';
     const school = (schoolInput?.value || '').trim();
     const phone = (phoneInput?.value || '').trim();
 
     if (!fullName || fullName.length < 2) {
-      alert('Vui lòng nhập đầy đủ Họ và tên học sinh!');
+      alert('Vui lòng nhập đầy đủ Họ và tên học sinh (ví dụ: Đinh Văn Thành)!');
       nameInput?.focus();
       return;
     }
 
+    if (!className || className.length < 2) {
+      alert('Vui lòng nhập Lớp học của em (ví dụ: 8A1 hoặc Lớp 8A1)!');
+      classInput?.focus();
+      return;
+    }
+
+    // Auto detect grade if found in className
+    const gradeMatch = className.match(/(?:lớp\s*)?(6|7|8|9|10|11|12)/i);
+    if (gradeMatch) {
+      grade = gradeMatch[1];
+      if (gradeSelect) gradeSelect.value = grade;
+    }
+
     if (!school || school.length < 2) {
-      alert('Vui lòng nhập tên Trường đang theo học!');
+      alert('Vui lòng nhập tên Trường đang theo học (ví dụ: Trường THCS Đồng Yên)!');
       schoolInput?.focus();
       return;
     }
@@ -3223,7 +3278,7 @@ const STUDENT_SYSTEM = {
     // Phone validation
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     if (!cleanPhone || cleanPhone.length < 9 || cleanPhone.length > 11) {
-      alert('Vui lòng nhập Số điện thoại hợp lệ (10 chữ số) để lưu kết quả học tập!');
+      alert('Vui lòng nhập Số điện thoại hợp lệ (ví dụ: 0915213717)!');
       phoneInput?.focus();
       return;
     }
@@ -3233,6 +3288,7 @@ const STUDENT_SYSTEM = {
     this.currentStudent = {
       id: studentId,
       fullName: fullName,
+      className: className,
       grade: grade,
       school: school,
       phone: cleanPhone,
@@ -3255,7 +3311,8 @@ const STUDENT_SYSTEM = {
       confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
     }
 
-    alert(`🎉 Chào mừng em ${fullName}!\nChúc em học tập thật tốt và chinh phục điểm 10 môn Tiếng Anh!`);
+    const displayClass = className.toLowerCase().includes('lớp') ? className : `Lớp ${className}`;
+    alert(`🎉 Chúc mừng em ${fullName} (${displayClass} - ${school})!\nĐăng ký học tập thành công! Chúc em luôn chăm ngoan và đạt điểm cao môn Tiếng Anh!`);
   },
 
   renderHeaderBadge() {
@@ -3265,7 +3322,13 @@ const STUDENT_SYSTEM = {
 
     if (this.currentStudent) {
       badge.style.display = 'inline-flex';
-      nameSpan.textContent = `${this.currentStudent.fullName} (${this.currentStudent.grade})`;
+      badge.style.cursor = 'pointer';
+      const classStr = this.currentStudent.className ? 
+        (this.currentStudent.className.toLowerCase().includes('lớp') ? this.currentStudent.className : `Lớp ${this.currentStudent.className}`) : 
+        `Lớp ${this.currentStudent.grade || CURRENT_GRADE}`;
+      nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
+      badge.title = `${this.currentStudent.fullName} • ${classStr} • ${this.currentStudent.school || ''} • SĐT: ${this.currentStudent.phone || ''} (Nhấp để sửa thông tin)`;
+      badge.onclick = () => this.openRegisterModal(true);
     } else {
       badge.style.display = 'none';
     }
@@ -3397,7 +3460,7 @@ const ADMIN_SYSTEM = {
             <div style="font-weight: 700; color: #ffffff;">${s.fullName}</div>
             <div style="font-size: 0.75rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
           </td>
-          <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.3); color: #a5b4fc;">Lớp ${s.grade || '12'}</span></td>
+          <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.3); color: #a5b4fc; font-weight: 700;">${s.className ? (s.className.toLowerCase().includes('lớp') ? s.className : 'Lớp ' + s.className) : 'Lớp ' + (s.grade || '12')}</span></td>
           <td>${s.school || 'THCS/THPT'}</td>
           <td>
             <a href="tel:${s.phone}" style="color: #38bdf8; text-decoration: none; font-weight: 700;">📞 ${s.phone}</a>
@@ -3433,7 +3496,7 @@ const ADMIN_SYSTEM = {
 
     // Generate CSV with UTF-8 BOM (\uFEFF) so Excel opens Vietnamese characters perfectly
     let csvContent = '\uFEFF';
-    csvContent += 'STT,Họ và Tên,Khối Lớp,Trường Học,Số Điện Thoại,Ngày Đăng Ký,Hoạt Động Cuối,Tổng Điểm XP,Từ Đã Thuộc,Bài Test Gần Nhất\r\n';
+    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Ngày Đăng Ký,Hoạt Động Cuối,Tổng Điểm XP,Từ Đã Thuộc,Bài Test Gần Nhất\r\n';
 
     students.forEach((s, i) => {
       const lastQuiz = s.quizHistory && s.quizHistory[0];
@@ -3442,7 +3505,8 @@ const ADMIN_SYSTEM = {
       const cleanSchool = `"${(s.school || '').replace(/"/g, '""')}"`;
       const cleanPhone = `"${s.phone || ''}"`;
 
-      csvContent += `${i + 1},${cleanName},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${s.registeredAt || ''}","${s.lastActiveAt || ''}",${s.xp || 50},${s.masteredCount || 0},"${quizTxt}"\r\n`;
+      const cleanClass = `"${(s.className || ('Lớp ' + (s.grade || '12'))).replace(/"/g, '""')}"`;
+      csvContent += `${i + 1},${cleanName},${cleanClass},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${s.registeredAt || ''}","${s.lastActiveAt || ''}",${s.xp || 50},${s.masteredCount || 0},"${quizTxt}"\r\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -3857,7 +3921,10 @@ const MINITEST_SYSTEM = {
 
     if (certName) certName.textContent = student.fullName;
     if (certDetails) {
-      certDetails.innerHTML = `Đã hoàn thành xuất sắc bài kiểm tra từ vựng <strong>Tiếng Anh Lớp ${student.grade || CURRENT_GRADE}</strong> - <strong>Unit ${STATE.currentUnit}</strong> với điểm số ấn tượng: <strong style="color: #eab308; font-size: 1.2rem;">${score} / 10.0 điểm</strong> tại trường <strong>${student.school || ''}</strong>.`;
+      const classStr = student.className ? 
+        (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
+        `Lớp ${student.grade || CURRENT_GRADE}`;
+      certDetails.innerHTML = `Đã hoàn thành xuất sắc bài kiểm tra từ vựng <strong>Tiếng Anh ${classStr}</strong> - <strong>Unit ${STATE.currentUnit}</strong> với điểm số ấn tượng: <strong style="color: #eab308; font-size: 1.2rem;">${score} / 10.0 điểm</strong> tại <strong>${student.school || 'Trường THCS / THPT'}</strong>.`;
     }
 
     if (overlay) overlay.classList.add('active');
@@ -4421,7 +4488,10 @@ const CERTIFICATE_CENTER = {
     // Student Grade & School
     ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(`Học sinh Lớp ${student.grade || CURRENT_GRADE} • ${student.school || 'Trường THCS / THPT'}`, 600, 420);
+    const classStr = student.className ? 
+      (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
+      `Lớp ${student.grade || CURRENT_GRADE}`;
+    ctx.fillText(`Học sinh ${classStr} • ${student.school || 'Trường THCS / THPT'}`, 600, 420);
 
     // Highlight metric box
     ctx.fillStyle = 'rgba(234, 179, 8, 0.1)';

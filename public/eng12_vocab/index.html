@@ -3871,30 +3871,36 @@ html, body {
         <p style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem;">
           Chào mừng em đến với <strong>Hệ Thống Luyện Siêu Trí Nhớ Từ Vựng Tiếng Anh 6 - 12 (Global Success)</strong> của Thầy Đinh Văn Thành! Vui lòng nhập thông tin để lưu giữ tiến độ học tập và cấp Giấy Khen vinh danh.
         </p>
-        <form onsubmit="STUDENT_SYSTEM.submitRegistration(event)">
+        <form onsubmit="STUDENT_SYSTEM.submitRegistration(event)" onkeydown="event.stopPropagation()">
           <div class="form-group">
             <label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
-            <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required>
+            <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Đinh Văn Thành" onkeydown="event.stopPropagation()" required>
+          </div>
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label for="regClassName">🏫 Lớp Học Cụ Thể (*)</label>
+              <input type="text" id="regClassName" class="form-control" placeholder="Ví dụ: 8A1 (hoặc Lớp 8A1, 9B...)" oninput="STUDENT_SYSTEM.onClassInput(this.value)" onkeydown="event.stopPropagation()" required>
+            </div>
+            <div>
+              <label for="regGrade">🎓 Khối Chương Trình (*)</label>
+              <select id="regGrade" class="form-control" style="background: #1e293b; color: white;" onkeydown="event.stopPropagation()">
+                <option value="6">🎒 Tiếng Anh Lớp 6 (THCS)</option>
+                <option value="7">📘 Tiếng Anh Lớp 7 (THCS)</option>
+                <option value="8">📗 Tiếng Anh Lớp 8 (THCS)</option>
+                <option value="9">📙 Tiếng Anh Lớp 9 (Thi Vào 10)</option>
+                <option value="10">📕 Tiếng Anh Lớp 10 (THPT)</option>
+                <option value="11">🎓 Tiếng Anh Lớp 11 (THPT)</option>
+                <option value="12" selected>⭐ Tiếng Anh Lớp 12 (Tốt Nghiệp QG)</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label for="regGrade">🎓 Khối Lớp Học (*)</label>
-            <select id="regGrade" class="form-control" style="background: #1e293b; color: white;">
-              <option value="6">🎒 Tiếng Anh Lớp 6 (THCS)</option>
-              <option value="7">📘 Tiếng Anh Lớp 7 (THCS)</option>
-              <option value="8">📗 Tiếng Anh Lớp 8 (THCS)</option>
-              <option value="9">📙 Tiếng Anh Lớp 9 (Thi Vào 10)</option>
-              <option value="10">📕 Tiếng Anh Lớp 10 (THPT)</option>
-              <option value="11">🎓 Tiếng Anh Lớp 11 (THPT)</option>
-              <option value="12" selected>⭐ Tiếng Anh Lớp 12 (Tốt Nghiệp QG)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="regSchool">🏫 Trường Đang Theo Học (*)</label>
-            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: THCS Đồng Yên" required>
+            <label for="regSchool">🏢 Trường Đang Theo Học (*)</label>
+            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: Trường THCS Đồng Yên" onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group">
             <label for="regPhone">📱 Số Điện Thoại Phụ Huynh / Học Sinh (*)</label>
-            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0987654321 (10 chữ số)" required>
+            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0915213717 (10 chữ số)" onkeydown="event.stopPropagation()" required>
           </div>
           <button type="submit" id="submitRegBtn" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
             🚀 Bắt Đầu Học Ngay (Miễn Phí 100%)
