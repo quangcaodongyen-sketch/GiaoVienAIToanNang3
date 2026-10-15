@@ -362,7 +362,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-700/50">
                   <div className="text-xs text-slate-400">
-                    Cấu trúc chuẩn Bộ GD&ĐT (4 phần): <strong>12 câu TN (3.0đ)</strong> + <strong>2 câu Đúng/Sai (2.0đ)</strong> + <strong>4 câu TL ngắn (2.0đ)</strong> + <strong>2 bài Tự luận (3.0đ)</strong> = 10,0 điểm
+                    Cấu trúc chuẩn CV 7991: <strong>12 câu TN (3.0đ)</strong> + <strong>4 câu Đúng/Sai tư liệu (4.0đ)</strong> + <strong>2 bài Tự luận (3.0đ)</strong> = 10,0 điểm
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -534,11 +534,11 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                     <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    Phiên bản v4.2.0 PRO (Mới nhất)
+                    Phiên bản v5.0.0 PRO (Mới nhất)
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20 font-mono">
-                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">14/10/2026 (Lúc 22:50:00)</span></div>
+                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">15/10/2026 (Lúc 12:45:00)</span></div>
                   <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% (91 MB)</span></div>
                   <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
                 </div>
@@ -550,7 +550,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
               <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-amber-950/70 border border-amber-500/50 text-xs text-slate-200 space-y-2 shadow-lg">
                 <div className="flex items-center gap-2 font-bold text-amber-400 text-sm">
                   <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-                  <span>ĐÃ NÂNG CẤP TOÀN DIỆN v4.2.0: CẤU TRÚC ĐỀ 4 PHẦN CHUẨN BỘ GD&ĐT & 78 BÀI HỌC SGK</span>
+                  <span>ĐÃ NÂNG CẤP TOÀN DIỆN v5.0.0 PRO: CẤU TRÚC ĐỀ 4 PHẦN CHUẨN BỘ GD&ĐT & 78 BÀI HỌC SGK</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300">
                   <div className="flex items-start gap-1.5">
