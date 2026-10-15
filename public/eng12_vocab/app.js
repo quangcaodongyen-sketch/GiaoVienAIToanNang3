@@ -476,15 +476,12 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
   try { if (typeof initContextGame === 'function') initContextGame(); } catch (e) { console.error("initContextGame error:", e); }
   try { renderVocabularyHub(); } catch (e) { console.error("renderVocabularyHub error:", e); }
 
-  // Auto reload active tab game smoothly when switching units
+  // Auto reload whichever tab is currently active immediately with fresh unit words
   try {
     const curActivePane = document.querySelector('.tab-pane.active');
-    if (curActivePane) {
-      if (curActivePane.id === 'tab-minitest' && typeof MINITEST_SYSTEM !== 'undefined') {
-        MINITEST_SYSTEM.init();
-      } else if (curActivePane.id === 'tab-blitz' && typeof initBlitzGame === 'function') {
-        initBlitzGame();
-      }
+    const curTabId = curActivePane ? curActivePane.id : 'tab-flashcard';
+    if (typeof window.activateTab === 'function') {
+      window.activateTab(curTabId);
     }
   } catch(e) {}
 }
@@ -632,8 +629,17 @@ function runAutoPlayStep() {
 // 6. TAB 2: SPEED QUIZ GAME LOGIC
 // ==============================================================================
 function initQuiz() {
-  const words = [...STATE.activeWords];
-  if (words.length < 4) return;
+  const playArea = document.getElementById('quizPlayArea');
+  const finishedView = document.getElementById('quizFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
+  let words = [...STATE.activeWords];
+  if (words.length < 4) {
+    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
+    words = words.concat(extra);
+  }
+  if (!words || words.length === 0) return;
   
   const shuffled = fisherYatesShuffle(words);
   STATE.quiz.questions = shuffled.slice(0, Math.min(10, shuffled.length));
@@ -642,9 +648,12 @@ function initQuiz() {
   STATE.quiz.streak = 0;
   STATE.quiz.total = STATE.quiz.questions.length;
   
-  document.getElementById('quizScoreVal').textContent = '0';
-  document.getElementById('quizStreakVal').textContent = '0';
-  document.getElementById('quizTotalQ').textContent = STATE.quiz.total;
+  const scoreEl = document.getElementById('quizScoreVal');
+  const streakEl = document.getElementById('quizStreakVal');
+  const totalEl = document.getElementById('quizTotalQ');
+  if (scoreEl) scoreEl.textContent = '0';
+  if (streakEl) streakEl.textContent = '0';
+  if (totalEl) totalEl.textContent = String(STATE.quiz.total);
   
   renderQuizQuestion();
 }
@@ -719,39 +728,38 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
 }
 
 function showQuizFinished() {
-  const container = document.getElementById('quizContainer');
+  const playArea = document.getElementById('quizPlayArea');
+  const finishedView = document.getElementById('quizFinishedView');
+  const scoreText = document.getElementById('quizFinishedScoreText');
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Tổng điểm đạt được: ${STATE.quiz.score} điểm`;
+
   SFX.playWin();
+  launchConfetti();
   
   const totalQ = STATE.quiz.total || 10;
   const correctCount = Math.min(totalQ, Math.round(STATE.quiz.score / 10));
   if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
     STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Trắc Nghiệm (4 Lựa Chọn)', correctCount, totalQ, STATE.quiz.score);
   }
-  container.innerHTML = `
-    <div style="text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-      <div style="font-size: 4rem;">🎉</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(56,189,248,0.5);">XUẤT SẮC HOÀN THÀNH BÀI QUIZ!</h2>
-      <p style="font-size: 1.3rem; color: #fbbf24; font-weight: 800;">
-        Tổng điểm đạt được: ${STATE.quiz.score} điểm
-      </p>
-      <p style="color: var(--text-muted); font-size: 1rem; max-width: 440px;">
-        Các em học sinh đã ghi nhớ xuất sắc các từ vựng của bài học này!
-      </p>
-      <div style="display: flex; gap: 1rem; margin-top: 1.2rem;">
-        <button class="fc-nav-btn btn-next" onclick="initQuiz()" style="max-width: none; padding: 0.9rem 2rem; font-size: 1.05rem;">
-          🔄 Luyện tập ván mới
-        </button>
-      </div>
-    </div>
-  `;
 }
 
 // ==============================================================================
 // 7. TAB 3: WORD MATCHING MEMORY GAME LOGIC (ULTRA VIBRANT)
 // ==============================================================================
 function initMatchGame() {
-  const words = [...STATE.activeWords];
-  if (words.length < 8) return;
+  const board = document.getElementById('matchGameBoard');
+  const banner = document.getElementById('matchFinishedBanner');
+  if (board) board.style.display = 'grid';
+  if (banner) banner.style.display = 'none';
+
+  let words = [...STATE.activeWords];
+  if (words.length < 4) {
+    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
+    words = words.concat(extra);
+  }
+  if (!words || words.length === 0) return;
   
   const chosenWords = words.sort(() => 0.5 - Math.random()).slice(0, 8);
   STATE.match.totalPairs = chosenWords.length;
@@ -783,7 +791,6 @@ function initMatchGame() {
   
   tiles.sort(() => 0.5 - Math.random());
   
-  const board = document.getElementById('matchGameBoard');
   if (!board) return;
   board.innerHTML = '';
   
@@ -852,7 +859,15 @@ function handleMatchTileClick(el, tile) {
           launchConfetti();
           setTimeout(() => {
             const timeStr = document.getElementById('matchTimerVal') ? document.getElementById('matchTimerVal').textContent : '';
-            alert(`🎉 XUẤT SẮC! BẠN ĐÃ GHÉP HẾT ${STATE.match.totalPairs} CẶP TỪ TRONG ${timeStr}!`);
+            const board = document.getElementById('matchGameBoard');
+            const banner = document.getElementById('matchFinishedBanner');
+            const timeText = document.getElementById('matchFinishedTimeText');
+            if (board) board.style.display = 'none';
+            if (banner) banner.style.display = 'block';
+            if (timeText) timeText.textContent = `Thời gian hoàn thành: ${timeStr} • Ghép chính xác ${STATE.match.totalPairs}/${STATE.match.totalPairs} cặp từ`;
+            if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+              STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Nối Từ (Word Matching)', STATE.match.totalPairs, STATE.match.totalPairs, 100);
+            }
           }, 400);
         }
       }, 250);
@@ -875,8 +890,17 @@ function handleMatchTileClick(el, tile) {
 // 8. TAB 4: LISTENING MASTER GAME LOGIC
 // ==============================================================================
 function initListenGame(autoSpeak = false) {
-  const words = [...STATE.activeWords];
-  if (words.length < 4) return;
+  const grid = document.getElementById('listenOptionsGrid');
+  const banner = document.getElementById('listenFinishedBanner');
+  if (grid) grid.style.display = 'grid';
+  if (banner) banner.style.display = 'none';
+
+  let words = [...STATE.activeWords];
+  if (words.length < 4) {
+    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
+    words = words.concat(extra);
+  }
+  if (!words || words.length === 0) return;
   
   const shuffled = words.sort(() => 0.5 - Math.random());
   STATE.listen.questions = shuffled.slice(0, Math.min(10, shuffled.length));
@@ -896,8 +920,16 @@ function renderListenQuestion(autoSpeak = false) {
   const q = STATE.listen.questions[STATE.listen.currentIdx];
   if (!q) {
     SFX.playWin();
-    alert(`🎉 Bạn đã hoàn thành bài luyện nghe với ${STATE.listen.score} điểm!`);
-    initListenGame(false);
+    launchConfetti();
+    const grid = document.getElementById('listenOptionsGrid');
+    const banner = document.getElementById('listenFinishedBanner');
+    const scoreText = document.getElementById('listenFinishedScoreText');
+    if (grid) grid.style.display = 'none';
+    if (banner) banner.style.display = 'block';
+    if (scoreText) scoreText.textContent = `Điểm số đạt được: ${STATE.listen.score} điểm (${STATE.listen.total}/${STATE.listen.total} câu)`;
+    if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+      STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Luyện Nghe (Listening Master)', STATE.listen.total, STATE.listen.total, STATE.listen.score);
+    }
     return;
   }
   
@@ -1116,13 +1148,45 @@ function setupEventListeners() {
   }
 
 
-  // Scramble game controls
+  // Scramble game controls (ALL BUTTONS 100% ACTIVE & RESPONSIVE)
   const scrambleResetBtn = document.getElementById('scrambleResetBtn');
   if (scrambleResetBtn) scrambleResetBtn.addEventListener('click', resetScrambleCurrentWord);
   const scrambleHintBtn = document.getElementById('scrambleHintBtn');
   if (scrambleHintBtn) scrambleHintBtn.addEventListener('click', giveScrambleHint);
   const restartScrambleBtn = document.getElementById('restartScrambleBtn');
-  if (restartScrambleBtn) restartScrambleBtn.addEventListener('click', initScrambleGame);
+  if (restartScrambleBtn) restartScrambleBtn.addEventListener('click', () => initScrambleGame(false));
+
+  const scramblePeekBtn = document.getElementById('scramblePeekBtn');
+  if (scramblePeekBtn) {
+    scramblePeekBtn.addEventListener('click', () => {
+      const banner = document.getElementById('scramblePeekBanner');
+      if (banner) {
+        const isHidden = banner.style.display === 'none' || !banner.style.display;
+        banner.style.display = isHidden ? 'block' : 'none';
+        scramblePeekBtn.classList.toggle('active', isHidden);
+      }
+    });
+  }
+
+  const scrambleHearBtn = document.getElementById('scrambleHearBtn');
+  if (scrambleHearBtn) {
+    scrambleHearBtn.addEventListener('click', () => {
+      const w = STATE.scramble.currentWordObj;
+      if (w) SpeechEngine.speak(w.word, 0.85);
+    });
+  }
+
+  const scrambleNextBtn = document.getElementById('scrambleNextBtn');
+  if (scrambleNextBtn) {
+    scrambleNextBtn.addEventListener('click', () => {
+      if (STATE.scramble.currentIdx < STATE.scramble.words.length - 1) {
+        STATE.scramble.currentIdx++;
+        loadScrambleWord(false);
+      } else {
+        showScrambleCompleted();
+      }
+    });
+  }
 
   // Click-to-speak on Flashcard English Word & IPA directly
   const cardWordTitle = document.getElementById('cardWordTitle');
@@ -1146,39 +1210,83 @@ function setupEventListeners() {
     });
   }
 
-  // Tabs switching
+  // Universal Responsive Fast Tab Switcher
+  window.activateTab = function(tabId) {
+    if (!tabId) tabId = 'tab-flashcard';
+    
+    // 1. Update Buttons & Panes active state
+    document.querySelectorAll('.mode-tab-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tabId);
+    });
+    document.querySelectorAll('.tab-pane').forEach(p => {
+      p.classList.toggle('active', p.id === tabId);
+    });
+
+    // 2. Cancel timers / pause speech of background tabs
+    if (tabId !== 'tab-flashcard') stopAutoPlay();
+    if (tabId !== 'tab-chant' && typeof pauseChant === 'function') pauseChant();
+    if (tabId !== 'tab-blitz' && STATE.blitz && STATE.blitz.timerInterval) {
+      clearInterval(STATE.blitz.timerInterval);
+    }
+    if (tabId !== 'tab-match' && STATE.match && STATE.match.timerInterval) {
+      clearInterval(STATE.match.timerInterval);
+    }
+
+    // 3. Immediately launch and refresh the selected tab's functionality
+    try {
+      switch(tabId) {
+        case 'tab-flashcard':
+          renderFlashcard();
+          if (typeof renderFullVocabList === 'function') renderFullVocabList();
+          break;
+        case 'tab-chant':
+          if (typeof initChantGame === 'function') initChantGame();
+          if (typeof renderChantWordChips === 'function') renderChantWordChips();
+          break;
+        case 'tab-scramble':
+          if (typeof initScrambleGame === 'function') initScrambleGame(false);
+          break;
+        case 'tab-blitz':
+          if (typeof initBlitzGame === 'function') initBlitzGame();
+          break;
+        case 'tab-spelling':
+          if (typeof initSpellingGame === 'function') initSpellingGame(false);
+          const spInp = document.getElementById('spellingInput');
+          if (spInp) setTimeout(() => spInp.focus(), 150);
+          break;
+        case 'tab-hangman':
+          if (typeof initHangmanGame === 'function') initHangmanGame();
+          break;
+        case 'tab-context':
+          if (typeof initContextGame === 'function') initContextGame();
+          break;
+        case 'tab-quiz':
+          if (typeof initQuiz === 'function') initQuiz();
+          break;
+        case 'tab-match':
+          if (typeof initMatchGame === 'function') initMatchGame();
+          break;
+        case 'tab-listen':
+          if (typeof initListenGame === 'function') initListenGame(false);
+          break;
+        case 'tab-hub':
+          if (typeof renderVocabularyHub === 'function') renderVocabularyHub();
+          break;
+        case 'tab-minitest':
+          if (typeof MINITEST_SYSTEM !== 'undefined') MINITEST_SYSTEM.init();
+          break;
+        case 'tab-weakwords':
+          if (typeof WEAKWORDS_SYSTEM !== 'undefined') WEAKWORDS_SYSTEM.renderTab();
+          break;
+      }
+    } catch(err) {
+      console.error(`Error activating tab ${tabId}:`, err);
+    }
+  };
+
   document.querySelectorAll('.mode-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      const targetPane = document.getElementById(btn.dataset.tab);
-      if (targetPane) targetPane.classList.add('active');
-      if (btn.dataset.tab !== 'tab-flashcard') stopAutoPlay();
-      if (btn.dataset.tab === 'tab-flashcard' && typeof renderFullVocabList === 'function') { renderFullVocabList(); }
-      if (btn.dataset.tab !== 'tab-chant' && typeof pauseChant === 'function') {
-        pauseChant();
-      }
-      if (btn.dataset.tab === 'tab-chant') {
-        if (typeof initChantGame === 'function') initChantGame();
-        if (typeof renderChantWordChips === 'function') renderChantWordChips();
-      }
-      if (btn.dataset.tab !== 'tab-blitz' && STATE.blitz && STATE.blitz.timerInterval) {
-        clearInterval(STATE.blitz.timerInterval);
-      }
-      if (btn.dataset.tab === 'tab-blitz') {
-        initBlitzGame();
-      }
-      if (btn.dataset.tab === 'tab-spelling') {
-        const inp = document.getElementById('spellingInput');
-        if (inp) setTimeout(() => inp.focus(), 200);
-      }
-      if (btn.dataset.tab === 'tab-minitest') {
-        if (typeof MINITEST_SYSTEM !== 'undefined') MINITEST_SYSTEM.init();
-      }
-      if (btn.dataset.tab === 'tab-weakwords') {
-        if (typeof WEAKWORDS_SYSTEM !== 'undefined') WEAKWORDS_SYSTEM.renderTab();
-      }
+      window.activateTab(btn.dataset.tab);
     });
   });
   
@@ -1399,6 +1507,11 @@ STATE.blitz = {
 };
 
 function initBlitzGame() {
+  const playArea = document.getElementById('blitzPlayArea');
+  const finishedView = document.getElementById('blitzFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   clearInterval(STATE.blitz.timerInterval);
   
@@ -1568,35 +1681,24 @@ function handleBlitzAnswer(userChoice) {
 }
 
 function showBlitzFinished() {
-  const container = document.getElementById('blitzCard');
-  if (!container) return;
-  SFX.playWin();
-  launchConfetti();
+  const playArea = document.getElementById('blitzPlayArea');
+  const finishedView = document.getElementById('blitzFinishedView');
+  const scoreText = document.getElementById('blitzFinishedScoreText');
   
-  const totalQ = STATE.blitz.totalQuestions || 10;
+  const totalQ = STATE.blitz.totalQuestions || 20;
   const correctCount = STATE.blitz.correctCount || 0;
   const pct = Math.round((correctCount / totalQ) * 100);
 
-  // Ghi nhận bài tập vào hồ sơ học sinh
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Đạt ${STATE.blitz.score} điểm (${correctCount}/${totalQ} câu đúng • ${pct}%)`;
+
+  SFX.playWin();
+  launchConfetti();
+
   if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
     STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Đúng/Sai (Speed Blitz)', correctCount, totalQ, STATE.blitz.score);
   }
-  
-  container.innerHTML = `
-    <div style="padding: 1.5rem 0; text-align: center;">
-      <div style="font-size: 3.5rem;">⚡</div>
-      <h2 style="font-size: 1.85rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH PHẢN XẠ ĐÚNG / SAI!</h2>
-      <div style="font-size: 1.25rem; color: #34d399; font-weight: 800; margin-bottom: 0.4rem;">
-        Kết quả: ${correctCount} / ${totalQ} câu (${pct}%)
-      </div>
-      <div style="font-size: 1.1rem; color: #fbbf24; font-weight: 700; margin-bottom: 1.5rem;">
-        Điểm thưởng: +${STATE.blitz.score} XP chuyên cần
-      </div>
-      <button class="header-btn" onclick="initBlitzGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; border: none; cursor: pointer; border-radius: 12px; font-weight: 800;">
-        🔄 Luyện Lại Ván Mới (Đảo Câu Hỏi & Đáp Án)
-      </button>
-    </div>
-  `;
 }
 
 // --- MODE B: SPELLING & DICTATION ---
@@ -1607,6 +1709,11 @@ STATE.spelling = {
 };
 
 function initSpellingGame(autoSpeak = false) {
+  const playArea = document.getElementById('spellingPlayArea');
+  const finishedView = document.getElementById('spellingFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   STATE.spelling.questions = [...STATE.activeWords].sort(() => 0.5 - Math.random()).slice(0, 15);
   STATE.spelling.currentIdx = 0;
@@ -1718,23 +1825,21 @@ function revealSpellingAnswer() {
 }
 
 function showSpellingFinished() {
-  const container = document.getElementById('spellingCard');
-  if (!container) return;
+  const playArea = document.getElementById('spellingPlayArea');
+  const finishedView = document.getElementById('spellingFinishedView');
+  const scoreText = document.getElementById('spellingFinishedScoreText');
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Điểm số đạt được: ${STATE.spelling.score} điểm`;
+
   SFX.playWin();
   launchConfetti();
-  
-  container.innerHTML = `
-    <div style="padding: 1.5rem 0; text-align: center;">
-      <div style="font-size: 3.5rem;">🏆</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">XUẤT SẮC! HOÀN THÀNH BÀI GÕ TỪ!</h2>
-      <div style="font-size: 1.4rem; color: #34d399; font-weight: 800; margin-bottom: 1.5rem;">
-        Điểm số: ${STATE.spelling.score} điểm
-      </div>
-      <button class="header-btn" onclick="initSpellingGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #38bdf8, #8b5cf6); color: #fff; border: none; cursor: pointer;">
-        🔄 Luyện Tập Tiếp
-      </button>
-    </div>
-  `;
+
+  const totalQ = (STATE.spelling.questions && STATE.spelling.questions.length) || 15;
+  const correctCount = Math.min(totalQ, Math.round(STATE.spelling.score / 10));
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Luyện Gõ Từ (Spelling)', correctCount, totalQ, STATE.spelling.score);
+  }
 }
 
 
@@ -1750,6 +1855,11 @@ STATE.hangman = {
 };
 
 function initHangmanGame() {
+  const playArea = document.getElementById('hangmanPlayArea');
+  const finishedView = document.getElementById('hangmanFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   STATE.hangman.questions = [...STATE.activeWords].sort(() => 0.5 - Math.random());
   STATE.hangman.currentIdx = 0;
@@ -1941,23 +2051,21 @@ function giveHangmanHint() {
 }
 
 function showHangmanFinished() {
-  const container = document.getElementById('hangmanContainer');
-  if (!container) return;
+  const playArea = document.getElementById('hangmanPlayArea');
+  const finishedView = document.getElementById('hangmanFinishedView');
+  const scoreText = document.getElementById('hangmanFinishedScoreText');
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Điểm phá án đạt được: ${STATE.hangman.score} điểm`;
+
   SFX.playWin();
   launchConfetti();
-  
-  container.innerHTML = `
-    <div style="padding: 2rem 0; text-align: center;">
-      <div style="font-size: 3.5rem;">🕵️‍♂️</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">BẠN LÀ THÁM TỬ TỪ VỰNG TÀI BA!</h2>
-      <div style="font-size: 1.4rem; color: #38bdf8; font-weight: 800; margin-bottom: 1.5rem;">
-        Điểm phá án: ${STATE.hangman.score} điểm
-      </div>
-      <button class="header-btn" onclick="initHangmanGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #06b6d4, #ec4899); color: #fff; border: none; cursor: pointer;">
-        🔄 Phá Án Tiếp
-      </button>
-    </div>
-  `;
+
+  const totalQ = (STATE.hangman.questions && STATE.hangman.questions.length) || 10;
+  const correctCount = Math.min(totalQ, Math.round(STATE.hangman.score / 15));
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Đoán Chữ (Hangman)', correctCount, totalQ, STATE.hangman.score);
+  }
 }
 
 
@@ -1970,6 +2078,11 @@ STATE.context = {
 };
 
 function initContextGame() {
+  const playArea = document.getElementById('contextPlayArea');
+  const finishedView = document.getElementById('contextFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   
   const eligible = STATE.activeWords.filter(w => w.example && w.example.toLowerCase().includes(w.word.toLowerCase()));
@@ -2068,23 +2181,21 @@ function handleContextAnswer(isCorrect, clickedBtn, correctId) {
 }
 
 function showContextFinished() {
-  const container = document.getElementById('contextContainer');
-  if (!container) return;
+  const playArea = document.getElementById('contextPlayArea');
+  const finishedView = document.getElementById('contextFinishedView');
+  const scoreText = document.getElementById('contextFinishedScoreText');
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Điểm số đạt được: ${STATE.context.score} điểm`;
+
   SFX.playWin();
   launchConfetti();
-  
-  container.innerHTML = `
-    <div style="padding: 2rem 0; text-align: center;">
-      <div style="font-size: 3.5rem;">🎯</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH BÀI TẬP NGỮ CẢNH THPT!</h2>
-      <div style="font-size: 1.4rem; color: #fbbf24; font-weight: 800; margin-bottom: 1.5rem;">
-        Điểm số: ${STATE.context.score} điểm
-      </div>
-      <button class="header-btn" onclick="initContextGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #ec4899); color: #fff; border: none; cursor: pointer;">
-        🔄 Làm Thêm Bài Khác
-      </button>
-    </div>
-  `;
+
+  const totalQ = (STATE.context.questions && STATE.context.questions.length) || 15;
+  const correctCount = Math.min(totalQ, Math.round(STATE.context.score / 10));
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Ngữ Cảnh (Context Sentence)', correctCount, totalQ, STATE.context.score);
+  }
 }
 
 
@@ -2909,6 +3020,11 @@ STATE.scramble = {
 };
 
 function initScrambleGame(autoSpeak = false) {
+  const playArea = document.getElementById('scramblePlayArea');
+  const finishedView = document.getElementById('scrambleFinishedView');
+  if (playArea) playArea.style.display = 'block';
+  if (finishedView) finishedView.style.display = 'none';
+
   const words = [...STATE.activeWords];
   if (!words || words.length === 0) return;
   
@@ -3162,27 +3278,20 @@ function checkScrambleAnswer() {
 }
 
 function showScrambleCompleted() {
-  const container = document.querySelector('#tab-scramble .game-container');
+  const playArea = document.getElementById('scramblePlayArea');
+  const finishedView = document.getElementById('scrambleFinishedView');
+  const scoreText = document.getElementById('scrambleFinishedScoreText');
+  if (playArea) playArea.style.display = 'none';
+  if (finishedView) finishedView.style.display = 'block';
+  if (scoreText) scoreText.textContent = `Tổng điểm xếp chữ: ${STATE.scramble.score} điểm`;
+
   if (typeof SFX !== 'undefined') SFX.playWin();
   if (typeof launchConfetti === 'function') launchConfetti();
-  if (container) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 3rem 1.5rem;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-        <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 0.8rem;">XUẤT SẮC HOÀN THÀNH TOÀN BỘ UNIT!</h2>
-        <p style="font-size: 1.3rem; color: #fbbf24; font-weight: 800; margin-bottom: 1rem;">
-          Tổng điểm xếp chữ đạt được: ${STATE.scramble.score} điểm
-        </p>
-        <p style="color: var(--text-muted); font-size: 1rem; max-width: 440px; margin: 0 auto 1.5rem;">
-          Các em học sinh đã xuất sắc ghi nhớ và sắp xếp chính xác toàn bộ từ vựng của bài học này!
-        </p>
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="fc-nav-btn btn-next" onclick="initScrambleGame()" style="max-width: none; padding: 0.9rem 2rem; font-size: 1.05rem;">
-            🔄 Luyện tập ván mới
-          </button>
-        </div>
-      </div>
-    `;
+
+  const totalQ = (STATE.scramble.words && STATE.scramble.words.length) || 10;
+  const correctCount = Math.min(totalQ, Math.round(STATE.scramble.score / 10));
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Xếp Chữ (Word Scramble)', correctCount, totalQ, STATE.scramble.score);
   }
 }
 
