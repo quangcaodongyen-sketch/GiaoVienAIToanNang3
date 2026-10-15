@@ -3360,7 +3360,313 @@ html, body {
   transform: scale(1.06);
 }
 
+
+/* ==============================================================================
+   5 GIAO DIỆN HỌC TẬP CHUẨN SƯ PHẠM & ĐỘ TƯƠNG PHẢN CAO (WCAG AAA HIGH CONTRAST)
+   Tác giả: Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên)
+   ============================================================================== */
+
+/* 1. THEME 1: XANH DƯƠNG TRI THỨC (OCEAN BLUE) - MẶC ĐỊNH */
+:root, [data-theme="ocean"] {
+  --theme-name: 'ocean';
+  --bg-dark: #071326;
+  --bg-surface: #0c2140;
+  --bg-card: rgba(18, 45, 84, 0.72);
+  --bg-card-hover: rgba(28, 65, 118, 0.88);
+  --primary: #0284c7;
+  --primary-glow: rgba(14, 165, 233, 0.5);
+  --accent-theme: #38bdf8;
+  --border-subtle: rgba(56, 189, 248, 0.2);
+  --border-glow: rgba(56, 189, 248, 0.45);
+  --text-pure: #ffffff;
+  --text-main: #f0f9ff;
+  --text-muted: #bae6fd;
+  --text-sub: #7dd3fc;
+  --shadow-glow: 0 0 25px rgba(14, 165, 233, 0.45);
+  --theme-gradient: linear-gradient(135deg, #0284c7, #0369a1);
+}
+
+/* 2. THEME 2: HỒNG ANH ĐÀO NGỌT NGÀO (SAKURA PINK) */
+[data-theme="pink"] {
+  --theme-name: 'pink';
+  --bg-dark: #190a16;
+  --bg-surface: #2b1126;
+  --bg-card: rgba(64, 23, 56, 0.75);
+  --bg-card-hover: rgba(90, 32, 79, 0.88);
+  --primary: #ec4899;
+  --primary-glow: rgba(236, 72, 153, 0.5);
+  --accent-theme: #f472b6;
+  --border-subtle: rgba(244, 114, 182, 0.22);
+  --border-glow: rgba(244, 114, 182, 0.5);
+  --text-pure: #ffffff;
+  --text-main: #fdf2f8;
+  --text-muted: #fbcfe8;
+  --text-sub: #f472b6;
+  --shadow-glow: 0 0 25px rgba(236, 72, 153, 0.45);
+  --theme-gradient: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+/* 3. THEME 3: TÍM HOÀNG GIA SÁNG TẠO (ROYAL PURPLE) */
+[data-theme="purple"] {
+  --theme-name: 'purple';
+  --bg-dark: #0f0a21;
+  --bg-surface: #1e1342;
+  --bg-card: rgba(48, 28, 98, 0.75);
+  --bg-card-hover: rgba(72, 42, 140, 0.88);
+  --primary: #8b5cf6;
+  --primary-glow: rgba(139, 92, 246, 0.5);
+  --accent-theme: #c084fc;
+  --border-subtle: rgba(168, 85, 247, 0.22);
+  --border-glow: rgba(168, 85, 247, 0.5);
+  --text-pure: #ffffff;
+  --text-main: #faf5ff;
+  --text-muted: #e9d5ff;
+  --text-sub: #c084fc;
+  --shadow-glow: 0 0 25px rgba(139, 92, 246, 0.45);
+  --theme-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+/* 4. THEME 4: XANH NGỌC DỊU MẮT (EMERALD MINT) */
+[data-theme="emerald"] {
+  --theme-name: 'emerald';
+  --bg-dark: #051812;
+  --bg-surface: #0c2b21;
+  --bg-card: rgba(16, 61, 47, 0.75);
+  --bg-card-hover: rgba(24, 89, 68, 0.88);
+  --primary: #10b981;
+  --primary-glow: rgba(16, 185, 129, 0.5);
+  --accent-theme: #34d399;
+  --border-subtle: rgba(52, 211, 153, 0.22);
+  --border-glow: rgba(52, 211, 153, 0.5);
+  --text-pure: #ffffff;
+  --text-main: #ecfdf5;
+  --text-muted: #a7f3d0;
+  --text-sub: #6ee7b7;
+  --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.45);
+  --theme-gradient: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* 5. THEME 5: CAM HỔ PHÁCH NĂNG LƯỢNG (SUNSET AMBER) */
+[data-theme="amber"] {
+  --theme-name: 'amber';
+  --bg-dark: #190f05;
+  --bg-surface: #2b1a0a;
+  --bg-card: rgba(66, 40, 16, 0.75);
+  --bg-card-hover: rgba(94, 57, 23, 0.88);
+  --primary: #f59e0b;
+  --primary-glow: rgba(245, 158, 11, 0.5);
+  --accent-theme: #fbbf24;
+  --border-subtle: rgba(251, 191, 36, 0.22);
+  --border-glow: rgba(251, 191, 36, 0.5);
+  --text-pure: #ffffff;
+  --text-main: #fffbeb;
+  --text-muted: #fde68a;
+  --text-sub: #fcd34d;
+  --shadow-glow: 0 0 25px rgba(245, 158, 11, 0.45);
+  --theme-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* Smooth Body Radial Gradients for Educational Ambience */
+body {
+  transition: background 0.35s ease, background-color 0.35s ease, color 0.35s ease !important;
+}
+
+[data-theme="ocean"] body, body[data-theme="ocean"] {
+  background: radial-gradient(circle at 20% 15%, #0f2d57 0%, #071326 55%, #020812 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="pink"] body, body[data-theme="pink"] {
+  background: radial-gradient(circle at 20% 15%, #3d1434 0%, #190a16 55%, #0d040b 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="purple"] body, body[data-theme="purple"] {
+  background: radial-gradient(circle at 20% 15%, #2c1656 0%, #0f0a21 55%, #060310 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="emerald"] body, body[data-theme="emerald"] {
+  background: radial-gradient(circle at 20% 15%, #123e30 0%, #051812 55%, #020a07 100%) !important;
+  background-attachment: fixed !important;
+}
+[data-theme="amber"] body, body[data-theme="amber"] {
+  background: radial-gradient(circle at 20% 15%, #442a10 0%, #190f05 55%, #0a0602 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Dynamic Component Adaptations */
+[data-theme="ocean"] header { background: rgba(7, 19, 38, 0.88); border-bottom-color: rgba(56, 189, 248, 0.25); }
+[data-theme="pink"] header { background: rgba(25, 10, 22, 0.88); border-bottom-color: rgba(244, 114, 182, 0.25); }
+[data-theme="purple"] header { background: rgba(15, 10, 33, 0.88); border-bottom-color: rgba(168, 85, 247, 0.25); }
+[data-theme="emerald"] header { background: rgba(5, 24, 18, 0.88); border-bottom-color: rgba(52, 211, 153, 0.25); }
+[data-theme="amber"] header { background: rgba(25, 15, 5, 0.88); border-bottom-color: rgba(251, 191, 36, 0.25); }
+
+[data-theme="ocean"] .custom-modal-card { background: #0c2140 !important; border-color: rgba(56, 189, 248, 0.35) !important; }
+[data-theme="pink"] .custom-modal-card { background: #2b1126 !important; border-color: rgba(244, 114, 182, 0.35) !important; }
+[data-theme="purple"] .custom-modal-card { background: #1e1342 !important; border-color: rgba(168, 85, 247, 0.35) !important; }
+[data-theme="emerald"] .custom-modal-card { background: #0c2b21 !important; border-color: rgba(52, 211, 153, 0.35) !important; }
+[data-theme="amber"] .custom-modal-card { background: #2b1a0a !important; border-color: rgba(251, 191, 36, 0.35) !important; }
+
+/* Theme Selector UI Styling */
+.theme-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-theme-palette {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-glow, rgba(255, 255, 255, 0.25));
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.btn-theme-palette:hover {
+  background: var(--primary-glow);
+  border-color: var(--accent-theme);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.theme-palette-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 295px;
+  background: var(--bg-surface, #0f172a);
+  border: 1px solid var(--border-glow, rgba(255, 255, 255, 0.2));
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), var(--shadow-glow);
+  border-radius: 16px;
+  padding: 0.75rem;
+  z-index: 1000;
+  display: none;
+  animation: themeMenuPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@keyframes themeMenuPop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.theme-palette-menu.show {
+  display: block !important;
+}
+
+.theme-palette-header {
+  padding: 0.35rem 0.5rem 0.65rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.theme-palette-header span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.theme-palette-header small {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--text-sub, #94a3b8);
+  margin-top: 2px;
+}
+
+.theme-palette-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.theme-option-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.16s ease;
+}
+
+.theme-option-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(3px);
+}
+
+.theme-option-item.active {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--accent-theme);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.theme-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.swatch-ocean { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+.swatch-pink { background: linear-gradient(135deg, #ec4899, #f472b6); }
+.swatch-purple { background: linear-gradient(135deg, #8b5cf6, #c084fc); }
+.swatch-emerald { background: linear-gradient(135deg, #10b981, #34d399); }
+.swatch-amber { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+
+.theme-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-info strong {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.theme-info span {
+  font-size: 0.72rem;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 1px;
+}
+
+.theme-check {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent-theme);
+  display: none;
+}
+
+.theme-option-item.active .theme-check {
+  display: inline-block;
+}
+
 </style>
+  <!-- Instant Theme Initializer (Zero FOUT / No Flickering) -->
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('ENG_CHOSEN_THEME') || 'ocean';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } catch(e){}
+  </script>
+
 </head>
 <body>
   <!-- Ambient background lighting -->
@@ -3400,9 +3706,60 @@ html, body {
           <button class="header-btn btn-qr" id="openQrModalBtn" title="Mở trên điện thoại">
             📱 <span>Mở ĐT</span>
           </button>
-          <button class="header-btn" id="themeToggleBtn" title="Chuyển chế độ sáng/tối">
-            🌙
-          </button>
+                    <!-- 5-Theme Customization Dropdown -->
+          <div class="theme-dropdown-wrapper">
+            <button class="header-btn btn-theme-palette" id="themePaletteBtn" onclick="THEME_SYSTEM.togglePalette(event)" title="Chọn giao diện màu sắc học tập (Xanh dương, Hồng, Tím, Xanh ngọc, Cam)">
+              🎨 <span id="currentThemeLabel">Giao Diện</span>
+            </button>
+            <div class="theme-palette-menu" id="themePaletteMenu">
+              <div class="theme-palette-header">
+                <span>🎨 Giao Diện Học Tập</span>
+                <small>5 Phong cách chuẩn Sư phạm & Tương phản cao</small>
+              </div>
+              <div class="theme-palette-list">
+                <button class="theme-option-item" id="themeOpt-ocean" onclick="THEME_SYSTEM.setTheme('ocean')">
+                  <span class="theme-swatch swatch-ocean"></span>
+                  <div class="theme-info">
+                    <strong>🌊 Xanh Dương Tri Thức</strong>
+                    <span>Tập trung sâu, tĩnh lặng, chuẩn Cambridge</span>
+                  </div>
+                  <span class="theme-check">✓</span>
+                </button>
+                <button class="theme-option-item" id="themeOpt-pink" onclick="THEME_SYSTEM.setTheme('pink')">
+                  <span class="theme-swatch swatch-pink"></span>
+                  <div class="theme-info">
+                    <strong>🌸 Hồng Anh Đào Ngọt Ngào</strong>
+                    <span>Thư giãn, ngọt ngào, tạo cảm hứng học</span>
+                  </div>
+                  <span class="theme-check">✓</span>
+                </button>
+                <button class="theme-option-item" id="themeOpt-purple" onclick="THEME_SYSTEM.setTheme('purple')">
+                  <span class="theme-swatch swatch-purple"></span>
+                  <div class="theme-info">
+                    <strong>🔮 Tím Hoàng Gia Sáng Tạo</strong>
+                    <span>Kích thích trí nhớ liên tưởng não bộ</span>
+                  </div>
+                  <span class="theme-check">✓</span>
+                </button>
+                <button class="theme-option-item" id="themeOpt-emerald" onclick="THEME_SYSTEM.setTheme('emerald')">
+                  <span class="theme-swatch swatch-emerald"></span>
+                  <div class="theme-info">
+                    <strong>🍃 Xanh Ngọc Dịu Mắt</strong>
+                    <span>Bảo vệ thị lực, chống mỏi mắt khi học lâu</span>
+                  </div>
+                  <span class="theme-check">✓</span>
+                </button>
+                <button class="theme-option-item" id="themeOpt-amber" onclick="THEME_SYSTEM.setTheme('amber')">
+                  <span class="theme-swatch swatch-amber"></span>
+                  <div class="theme-info">
+                    <strong>🌅 Cam Hổ Phách Năng Lượng</strong>
+                    <span>Nhiệt huyết, bứt phá phản xạ tốc độ cao</span>
+                  </div>
+                  <span class="theme-check">✓</span>
+                </button>
+              </div>
+            </div>
+          </div>
           <button class="header-btn" id="statsModalBtn" title="Tiến độ học tập">
             📊 <span>Tiến Độ</span>
           </button>

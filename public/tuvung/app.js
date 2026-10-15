@@ -1322,12 +1322,9 @@ function setupEventListeners() {
     }
   });
   
-  // Theme toggle
-  document.getElementById('themeToggleBtn').addEventListener('click', () => {
-    document.body.classList.toggle('theme-light');
-    const isLight = document.body.classList.contains('theme-light');
-    document.getElementById('themeToggleBtn').textContent = isLight ? '☀️' : '🌙';
-  });
+  // Theme toggle handled by THEME_SYSTEM
+  const themeBtn = document.getElementById('themePaletteBtn');
+  if (themeBtn) themeBtn.addEventListener('click', (e) => THEME_SYSTEM.togglePalette(e));
   
   window.addEventListener('click', (e) => {
     if (e.target === qrModal) qrModal.classList.remove('open');
@@ -3323,6 +3320,114 @@ const TEACHER_CHAT = {
 };
 
 
+// ==============================================================================
+// THEME_SYSTEM - QUẢN LÝ 5 GIAO DIỆN HỌC TẬP CHUẨN SƯ PHẠM & TƯƠNG PHẢN CAO
+// ==============================================================================
+const THEME_SYSTEM = {
+  themes: {
+    ocean: { key: 'ocean', name: 'Xanh Dương Tri Thức', icon: '🌊', label: '🌊 Xanh Dương' },
+    pink: { key: 'pink', name: 'Hồng Anh Đào Ngọt Ngào', icon: '🌸', label: '🌸 Màu Hồng' },
+    purple: { key: 'purple', name: 'Tím Hoàng Gia Sáng Tạo', icon: '🔮', label: '🔮 Màu Tím' },
+    emerald: { key: 'emerald', name: 'Xanh Ngọc Dịu Mắt', icon: '🍃', label: '🍃 Xanh Ngọc' },
+    amber: { key: 'amber', name: 'Cam Hổ Phách Năng Lượng', icon: '🌅', label: '🌅 Màu Cam' }
+  },
+  currentTheme: 'ocean',
+
+  init() {
+    let saved = 'ocean';
+    try {
+      saved = localStorage.getItem('ENG_CHOSEN_THEME') || 'ocean';
+    } catch(e){}
+    this.setTheme(saved, false);
+
+    // Click outside to dismiss palette dropdown
+    document.addEventListener('click', (e) => {
+      const wrapper = document.querySelector('.theme-dropdown-wrapper');
+      const menu = document.getElementById('themePaletteMenu');
+      if (menu && menu.classList.contains('show')) {
+        if (!wrapper || !wrapper.contains(e.target)) {
+          menu.classList.remove('show');
+        }
+      }
+    });
+
+    // Also close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const menu = document.getElementById('themePaletteMenu');
+        if (menu) menu.classList.remove('show');
+      }
+    });
+  },
+
+  togglePalette(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const menu = document.getElementById('themePaletteMenu');
+    if (menu) {
+      menu.classList.toggle('show');
+    }
+  },
+
+  setTheme(themeKey, notify = true) {
+    if (!this.themes[themeKey]) themeKey = 'ocean';
+    this.currentTheme = themeKey;
+
+    // Apply attribute to html and body
+    document.documentElement.setAttribute('data-theme', themeKey);
+    document.body.setAttribute('data-theme', themeKey);
+
+    // Save to localStorage
+    try {
+      localStorage.setItem('ENG_CHOSEN_THEME', themeKey);
+    } catch(e){}
+
+    // Update header button label
+    const labelSpan = document.getElementById('currentThemeLabel');
+    if (labelSpan) {
+      labelSpan.textContent = this.themes[themeKey].label;
+    }
+
+    // Update active highlight in menu
+    document.querySelectorAll('.theme-option-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    const activeItem = document.getElementById(`themeOpt-${themeKey}`);
+    if (activeItem) activeItem.classList.add('active');
+
+    // Close menu
+    const menu = document.getElementById('themePaletteMenu');
+    if (menu) menu.classList.remove('show');
+
+    // Update theme-color meta tag for mobile browsers (Chrome / Safari status bar)
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      const colors = {
+        ocean: '#071326',
+        pink: '#190a16',
+        purple: '#0f0a21',
+        emerald: '#051812',
+        amber: '#190f05'
+      };
+      metaTheme.setAttribute('content', colors[themeKey] || '#071326');
+    }
+
+    // Fun confetti burst for Sakura Pink
+    if (notify && typeof confetti === 'function' && themeKey === 'pink') {
+      try { confetti({ particleCount: 30, spread: 50, origin: { y: 0.1, x: 0.85 } }); } catch(e){}
+    }
+  },
+
+  cycleNext() {
+    const keys = Object.keys(this.themes);
+    const curIdx = keys.indexOf(this.currentTheme);
+    const nextKey = keys[(curIdx + 1) % keys.length];
+    this.setTheme(nextKey, true);
+  }
+};
+
 const STUDENT_SYSTEM = {
   currentStudent: null,
 
@@ -3341,6 +3446,7 @@ const STUDENT_SYSTEM = {
   },
 
   init() {
+    THEME_SYSTEM.init();
     this.purgeOldDataCutoff();
     this.loadStudent();
     this.renderHeaderBadge();
