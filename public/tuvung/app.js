@@ -7,6 +7,54 @@
 // ==============================================================================
 // 1. STATE & STORAGE MANAGEMENT
 // ==============================================================================
+
+// ==============================================================================
+// 0. CORE ALGORITHMS: FISHER-YATES SHUFFLE & VIETNAMESE ABC PEDAGOGICAL SORTING
+// ==============================================================================
+function fisherYatesShuffle(array) {
+  if (!array || !Array.isArray(array)) return [];
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getVietnameseLastName(fullName) {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  return parts.length > 0 ? parts[parts.length - 1] : '';
+}
+
+function compareVietnameseNames(nameA, nameB, ascending = true) {
+  const lastA = getVietnameseLastName(nameA);
+  const lastB = getVietnameseLastName(nameB);
+  
+  let cmp = lastA.localeCompare(lastB, 'vi', { sensitivity: 'base' });
+  if (cmp === 0) {
+    cmp = (nameA || '').localeCompare(nameB || '', 'vi', { sensitivity: 'base' });
+  }
+  return ascending ? cmp : -cmp;
+}
+
+function getStudentDiligence(student) {
+  if (!student) return { stars: '⭐', label: 'Khởi động', color: '#94a3b8', bg: 'rgba(148,163,184,0.15)', border: 'rgba(148,163,184,0.3)', totalAttempts: 0, streak: 1 };
+  
+  const attempts = (student.quizHistory || []).length;
+  const streak = student.streakDays || 1;
+  const xp = student.xp || 50;
+  
+  if (attempts >= 10 || streak >= 5 || xp >= 600) {
+    return { stars: '⭐⭐⭐', label: 'Rất chuyên cần', color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', border: 'rgba(251,191,36,0.4)', totalAttempts: attempts, streak: streak };
+  } else if (attempts >= 4 || streak >= 2 || xp >= 200) {
+    return { stars: '⭐⭐', label: 'Chăm chỉ', color: '#38bdf8', bg: 'rgba(56,189,248,0.15)', border: 'rgba(56,189,248,0.4)', totalAttempts: attempts, streak: streak };
+  } else {
+    return { stars: '⭐', label: 'Khởi động', color: '#94a3b8', bg: 'rgba(148,163,184,0.15)', border: 'rgba(148,163,184,0.3)', totalAttempts: attempts, streak: streak };
+  }
+}
+
+
 const STATE = {
   currentUnit: 1,
   currentWordIdx: 0,
@@ -570,7 +618,7 @@ function initQuiz() {
   const words = [...STATE.activeWords];
   if (words.length < 4) return;
   
-  const shuffled = words.sort(() => 0.5 - Math.random());
+  const shuffled = fisherYatesShuffle(words);
   STATE.quiz.questions = shuffled.slice(0, Math.min(10, shuffled.length));
   STATE.quiz.currentIdx = 0;
   STATE.quiz.score = 0;
@@ -599,8 +647,8 @@ function renderQuizQuestion() {
   document.getElementById('quizPromptIpa').textContent = q.ipa;
   
   const allOtherWords = STATE.activeWords.filter(w => w.id !== q.id);
-  const distractors = allOtherWords.sort(() => 0.5 - Math.random()).slice(0, 3);
-  const options = [q, ...distractors].sort(() => 0.5 - Math.random());
+  const distractors = fisherYatesShuffle(allOtherWords).slice(0, 3);
+  const options = fisherYatesShuffle([q, ...distractors]);
   
   const grid = document.getElementById('quizOptionsGrid');
   grid.innerHTML = '';
@@ -656,6 +704,12 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
 function showQuizFinished() {
   const container = document.getElementById('quizContainer');
   SFX.playWin();
+  
+  const totalQ = STATE.quiz.total || 10;
+  const correctCount = Math.min(totalQ, Math.round(STATE.quiz.score / 10));
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Trắc Nghiệm (4 Lựa Chọn)', correctCount, totalQ, STATE.quiz.score);
+  }
   container.innerHTML = `
     <div style="text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
       <div style="font-size: 4rem;">🎉</div>
@@ -1317,6 +1371,8 @@ STATE.blitz = {
   currentIdx: 0,
   score: 0,
   streak: 0,
+  correctCount: 0,
+  totalQuestions: 0,
   timerInterval: null,
   timeLeft: 6,
   maxTime: 6
@@ -1326,30 +1382,53 @@ function initBlitzGame() {
   if (!STATE.activeWords || STATE.activeWords.length === 0) return;
   clearInterval(STATE.blitz.timerInterval);
   
-  // Lấy danh sách từ ngẫu nhiên (tối đa 12 từ)
-  const count = Math.min(12, STATE.activeWords.length);
-  const shuffledWords = [...STATE.activeWords].sort(() => 0.5 - Math.random()).slice(0, count);
+  // Tối đa 12 từ, tối thiểu 4 từ
+  const totalCount = Math.min(12, Math.max(4, STATE.activeWords.length));
   
-  // BẢO ĐẢM TỶ LỆ 50% ĐÚNG VÀ 50% SAI NGẪU NHIÊN CÂN BẰNG (KHÔNG CÂU NÀO CŨNG ĐÚNG!)
-  // Tạo danh sách giá trị boolean xen kẽ và xáo trộn ngẫu nhiên:
+  // 1. Dùng thuật toán Fisher-Yates để đảo từ ngẫu nhiên tuyệt đối mỗi lần làm
+  const shuffledWords = fisherYatesShuffle(STATE.activeWords).slice(0, totalCount);
+  
+  // 2. Tạo tập đáp án boolean cân bằng 50% TRUE - 50% FALSE ngẫu nhiên
+  const half = Math.floor(shuffledWords.length / 2);
   const bools = [];
   for (let i = 0; i < shuffledWords.length; i++) {
-    bools.push(i % 2 === 0); // Một nửa TRUE, một nửa FALSE
+    bools.push(i < half);
   }
-  bools.sort(() => 0.5 - Math.random());
   
-  STATE.blitz.questions = shuffledWords.map((w, idx) => {
-    const isTrue = bools[idx];
+  // Xáo trộn đáp án boolean bằng Fisher-Yates, khống chế không để chuỗi 3 câu giống nhau liên tiếp
+  let randomizedBools = fisherYatesShuffle(bools);
+  for (let attempts = 0; attempts < 15; attempts++) {
+    let hasStreakOf3 = false;
+    for (let i = 0; i < randomizedBools.length - 2; i++) {
+      if (randomizedBools[i] === randomizedBools[i+1] && randomizedBools[i+1] === randomizedBools[i+2]) {
+        hasStreakOf3 = true;
+        break;
+      }
+    }
+    if (!hasStreakOf3) break;
+    randomizedBools = fisherYatesShuffle(bools);
+  }
+
+  // 3. Nguồn từ để gán nghĩa sai: lấy từ bài học hiện tại + toàn khối sách nếu bài ít từ
+  let distractorPool = STATE.activeWords;
+  if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
+    const allGradeWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []);
+    if (allGradeWords.length >= 10) distractorPool = allGradeWords;
+  }
+  
+  // 4. Sinh bộ câu hỏi với nghĩa đảo ngẫu nhiên mỗi lần chơi
+  const questions = shuffledWords.map((w, idx) => {
+    const isTrue = randomizedBools[idx];
     let displayedMeaning = w.meaning;
     
     if (!isTrue) {
-      // Lấy nghĩa của một từ KHÁC trong bài học để tạo câu SAI
-      const others = STATE.activeWords.filter(o => o.id !== w.id && o.meaning !== w.meaning);
+      // Lấy ngẫu nhiên nghĩa của từ khác biệt hoàn toàn
+      const others = distractorPool.filter(o => o.word.toLowerCase() !== w.word.toLowerCase() && o.meaning !== w.meaning);
       if (others.length > 0) {
         const wrongWord = others[Math.floor(Math.random() * others.length)];
         displayedMeaning = wrongWord.meaning;
       } else {
-        displayedMeaning = "Nghĩa không chính xác với từ này";
+        displayedMeaning = "Nghĩa tiếng Việt không chính xác";
       }
     }
     
@@ -1363,12 +1442,13 @@ function initBlitzGame() {
     };
   });
   
-  // Xáo trộn lần cuối thứ tự các câu hỏi
-  STATE.blitz.questions.sort(() => 0.5 - Math.random());
-  
+  // 5. Đảo toàn bộ thứ tự câu hỏi bằng Fisher-Yates
+  STATE.blitz.questions = fisherYatesShuffle(questions);
   STATE.blitz.currentIdx = 0;
   STATE.blitz.score = 0;
   STATE.blitz.streak = 0;
+  STATE.blitz.correctCount = 0;
+  STATE.blitz.totalQuestions = STATE.blitz.questions.length;
   
   const scoreEl = document.getElementById('blitzScoreVal');
   const streakEl = document.getElementById('blitzStreakVal');
@@ -1427,6 +1507,7 @@ function handleBlitzAnswer(userChoice) {
   if (isRight) {
     if (typeof SFX !== 'undefined') SFX.playCorrect();
     STATE.blitz.streak++;
+    STATE.blitz.correctCount++;
     const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
     STATE.blitz.score += (10 + bonus);
     if (card) {
@@ -1464,20 +1545,31 @@ function showBlitzFinished() {
   SFX.playWin();
   launchConfetti();
   
+  const totalQ = STATE.blitz.totalQuestions || 10;
+  const correctCount = STATE.blitz.correctCount || 0;
+  const pct = Math.round((correctCount / totalQ) * 100);
+
+  // Ghi nhận bài tập vào hồ sơ học sinh
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.recordExerciseResult) {
+    STUDENT_SYSTEM.recordExerciseResult(STATE.currentUnit, 'Đúng/Sai (Speed Blitz)', correctCount, totalQ, STATE.blitz.score);
+  }
+  
   container.innerHTML = `
     <div style="padding: 1.5rem 0; text-align: center;">
       <div style="font-size: 3.5rem;">⚡</div>
-      <h2 style="font-size: 2rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH PHẢN XẠ NHANH!</h2>
-      <div style="font-size: 1.4rem; color: #fbbf24; font-weight: 800; margin-bottom: 1.5rem;">
-        Điểm số: ${STATE.blitz.score} điểm
+      <h2 style="font-size: 1.85rem; font-weight: 900; color: #fff; margin: 0.5rem 0;">HOÀN THÀNH PHẢN XẠ ĐÚNG / SAI!</h2>
+      <div style="font-size: 1.25rem; color: #34d399; font-weight: 800; margin-bottom: 0.4rem;">
+        Kết quả: ${correctCount} / ${totalQ} câu (${pct}%)
       </div>
-      <button class="header-btn" onclick="initBlitzGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; border: none; cursor: pointer;">
-        🔄 Chơi Lại Ván Mới
+      <div style="font-size: 1.1rem; color: #fbbf24; font-weight: 700; margin-bottom: 1.5rem;">
+        Điểm thưởng: +${STATE.blitz.score} XP chuyên cần
+      </div>
+      <button class="header-btn" onclick="initBlitzGame()" style="margin: 0 auto; padding: 0.85rem 1.8rem; font-size: 1.05rem; background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; border: none; cursor: pointer; border-radius: 12px; font-weight: 800;">
+        🔄 Luyện Lại Ván Mới (Đảo Câu Hỏi & Đáp Án)
       </button>
     </div>
   `;
 }
-
 
 // --- MODE B: SPELLING & DICTATION ---
 STATE.spelling = {
@@ -3340,26 +3432,61 @@ const STUDENT_SYSTEM = {
     this.saveStudent();
   },
 
-  recordQuizResult(unit, mode, score, total) {
+  recordExerciseResult(unit, exerciseType, score, total, xp = 10) {
     if (!this.currentStudent) return;
     if (!this.currentStudent.quizHistory) this.currentStudent.quizHistory = [];
-    
+    if (!this.currentStudent.exerciseStats) this.currentStudent.exerciseStats = {};
+
+    const attemptDate = new Date().toLocaleString('vi-VN');
+    const exerciseKey = `Unit ${unit} - ${exerciseType}`;
+
+    // 1. Thêm vào nhật ký bài tập
     this.currentStudent.quizHistory.unshift({
-      date: new Date().toLocaleString('vi-VN'),
+      id: 'EX_' + Date.now(),
+      date: attemptDate,
       grade: CURRENT_GRADE,
       unit: unit,
-      mode: mode,
+      mode: exerciseType,
       score: score,
-      total: total
+      total: total,
+      scoreDisplay: total > 0 ? `${score}/${total} câu (${Math.round((score/total)*100)}%)` : `${score}đ`,
+      xp: xp
     });
-    
-    // Bonus XP
-    const pct = score / total;
-    if (pct >= 0.8) this.addXP(50);
-    else if (pct >= 0.5) this.addXP(25);
-    else this.addXP(10);
-    
+
+    if (this.currentStudent.quizHistory.length > 60) {
+      this.currentStudent.quizHistory = this.currentStudent.quizHistory.slice(0, 60);
+    }
+
+    // 2. Thống kê số lần tham gia cho từng bài tập
+    if (!this.currentStudent.exerciseStats[exerciseKey]) {
+      this.currentStudent.exerciseStats[exerciseKey] = {
+        name: exerciseKey,
+        unit: unit,
+        type: exerciseType,
+        attempts: 0,
+        bestScore: 0,
+        bestTotal: total,
+        lastScore: score,
+        lastDate: attemptDate
+      };
+    }
+
+    const stat = this.currentStudent.exerciseStats[exerciseKey];
+    stat.attempts = (stat.attempts || 0) + 1;
+    stat.lastScore = score;
+    stat.lastDate = attemptDate;
+    if (score > stat.bestScore) {
+      stat.bestScore = score;
+      stat.bestTotal = total;
+    }
+
+    // 3. Tăng điểm XP và lưu
+    this.addXP(xp);
     this.saveStudent();
+  },
+
+  recordQuizResult(unit, mode, score, total) {
+    this.recordExerciseResult(unit, mode, score, total, (score/total >= 0.8) ? 50 : 25);
   }
 };
 
@@ -3367,7 +3494,7 @@ const STUDENT_SYSTEM = {
 // 3. ADMIN MANAGEMENT & LEARNING TRACKER
 // ==========================================
 const ADMIN_SYSTEM = {
-  adminPin: '123', // Mật khẩu mặc định
+  adminPin: '123', // Mật khẩu quản trị mặc định
 
   openAdminModal() {
     const pin = prompt('👑 Vui lòng nhập Mã PIN Quản Trị Viên (Mặc định: 123):');
@@ -3381,6 +3508,7 @@ const ADMIN_SYSTEM = {
     if (!overlay) return;
 
     overlay.classList.add('active');
+    this.populateFilterDropdowns();
     this.renderAdminView();
   },
 
@@ -3394,11 +3522,37 @@ const ADMIN_SYSTEM = {
       const saved = localStorage.getItem('ALL_STUDENTS_LIST');
       if (saved) return JSON.parse(saved);
     } catch (e) {}
-    // If empty but current student exists
     if (STUDENT_SYSTEM.currentStudent) {
       return [STUDENT_SYSTEM.currentStudent];
     }
     return [];
+  },
+
+  populateFilterDropdowns() {
+    const students = this.getAllStudents();
+    
+    // 1. Trường học filter
+    const schoolSel = document.getElementById('adminSchoolFilter');
+    if (schoolSel) {
+      const currentVal = schoolSel.value || 'all';
+      const uniqueSchools = [...new Set(students.map(s => (s.school || '').trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'vi'));
+      schoolSel.innerHTML = '<option value="all">🏫 Tất cả các trường</option>' + 
+        uniqueSchools.map(sch => `<option value="${sch}">${sch}</option>`).join('');
+      schoolSel.value = currentVal;
+    }
+
+    // 2. Lớp học filter
+    const classSel = document.getElementById('adminClassFilter');
+    if (classSel) {
+      const currentVal = classSel.value || 'all';
+      const uniqueClasses = [...new Set(students.map(s => {
+        let c = (s.className || '').trim();
+        return c;
+      }).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'vi', { numeric: true }));
+      classSel.innerHTML = '<option value="all">🏫 Tất cả các lớp</option>' + 
+        uniqueClasses.map(cls => `<option value="${cls}">${cls.toLowerCase().includes('lớp') ? cls : 'Lớp ' + cls}</option>`).join('');
+      classSel.value = currentVal;
+    }
   },
 
   renderAdminView() {
@@ -3424,7 +3578,7 @@ const ADMIN_SYSTEM = {
     if (totalXpEl) totalXpEl.textContent = totalXp.toLocaleString();
     if (activeTodayEl) activeTodayEl.textContent = totalStudents > 0 ? totalStudents : 0;
 
-    // 2. Render student table
+    // 2. Filter & Sort students
     this.renderStudentTable(students);
   },
 
@@ -3433,50 +3587,258 @@ const ADMIN_SYSTEM = {
     if (!tbody) return;
 
     const searchTerm = (document.getElementById('adminSearchInput')?.value || '').toLowerCase().trim();
+    const filterSchool = document.getElementById('adminSchoolFilter')?.value || 'all';
+    const filterClass = document.getElementById('adminClassFilter')?.value || 'all';
     const filterGrade = document.getElementById('adminGradeFilter')?.value || 'all';
+    const sortOrder = document.getElementById('adminSortOrder')?.value || 'name_az';
 
+    // A. Lọc theo các tiêu chí (Search, Trường, Lớp, Khối)
     let filtered = studentsList.filter(s => {
       const matchSearch = !searchTerm || 
         (s.fullName || '').toLowerCase().includes(searchTerm) ||
+        (s.className || '').toLowerCase().includes(searchTerm) ||
         (s.school || '').toLowerCase().includes(searchTerm) ||
         (s.phone || '').includes(searchTerm);
-      const matchGrade = filterGrade === 'all' || String(s.grade) === filterGrade;
-      return matchSearch && matchGrade;
+      
+      const matchSchool = (filterSchool === 'all') || (s.school || '').trim().toLowerCase() === filterSchool.toLowerCase();
+      const matchClass = (filterClass === 'all') || (s.className || '').trim().toLowerCase() === filterClass.toLowerCase();
+      const matchGrade = (filterGrade === 'all') || String(s.grade) === filterGrade;
+
+      return matchSearch && matchSchool && matchClass && matchGrade;
+    });
+
+    // B. Sắp xếp danh sách (Tự động ABC theo tên tiếng Việt hoặc theo chuyên cần / XP)
+    filtered.sort((a, b) => {
+      if (sortOrder === 'name_az') {
+        return compareVietnameseNames(a.fullName, b.fullName, true);
+      } else if (sortOrder === 'name_za') {
+        return compareVietnameseNames(a.fullName, b.fullName, false);
+      } else if (sortOrder === 'diligence') {
+        const da = (a.quizHistory || []).length * 20 + (a.streakDays || 1) * 30 + (a.xp || 0);
+        const db = (b.quizHistory || []).length * 20 + (b.streakDays || 1) * 30 + (b.xp || 0);
+        return db - da;
+      } else if (sortOrder === 'attempts') {
+        return (b.quizHistory || []).length - (a.quizHistory || []).length;
+      } else if (sortOrder === 'xp') {
+        return (b.xp || 0) - (a.xp || 0);
+      } else if (sortOrder === 'date') {
+        return (b.registeredAt || '').localeCompare(a.registeredAt || '');
+      }
+      return 0;
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 2rem;">Chưa có học sinh nào phù hợp tiêu chí tìm kiếm.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 2.5rem;">Không tìm thấy học sinh nào phù hợp tiêu chí lọc.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered.map((s, idx) => {
+      const attemptsCount = (s.quizHistory || []).length;
       const lastQuiz = s.quizHistory && s.quizHistory[0];
-      const quizBadge = lastQuiz ? `<span style="font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 2px 6px; border-radius: 4px; color: #818cf8;">${lastQuiz.mode}: ${lastQuiz.score}/${lastQuiz.total}</span>` : '<span style="color: #64748b;">Chưa thi</span>';
+      const quizBadge = lastQuiz ? 
+        `<span style="font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 2px 7px; border-radius: 4px; color: #818cf8; font-weight: 600;">${lastQuiz.mode}: ${lastQuiz.score}/${lastQuiz.total}</span>` : 
+        '<span style="color: #64748b; font-size: 0.78rem;">Chưa làm bài</span>';
+
+      const classDisplay = s.className ? 
+        (s.className.toLowerCase().includes('lớp') ? s.className : `Lớp ${s.className}`) : 
+        `Lớp ${s.grade || '12'}`;
+
+      const diligence = getStudentDiligence(s);
 
       return `
         <tr>
           <td><strong>#${idx + 1}</strong></td>
           <td>
-            <div style="font-weight: 700; color: #ffffff;">${s.fullName}</div>
+            <div style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">${s.fullName}</div>
             <div style="font-size: 0.75rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
           </td>
-          <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.3); color: #a5b4fc; font-weight: 700;">${s.className ? (s.className.toLowerCase().includes('lớp') ? s.className : 'Lớp ' + s.className) : 'Lớp ' + (s.grade || '12')}</span></td>
-          <td>${s.school || 'THCS/THPT'}</td>
           <td>
-            <a href="tel:${s.phone}" style="color: #38bdf8; text-decoration: none; font-weight: 700;">📞 ${s.phone}</a>
-            <a href="https://zalo.me/${s.phone}" target="_blank" style="margin-left: 0.4rem; font-size: 0.78rem; background: #0068ff; color: white; padding: 1px 5px; border-radius: 3px; text-decoration: none;">Zalo</a>
+            <span class="grade-badge-tag" style="background: rgba(99,102,241,0.25); color: #a5b4fc; font-weight: 700; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">
+              ${classDisplay}
+            </span>
+            <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 2px;">Khối ${s.grade || '12'}</div>
+          </td>
+          <td style="color: #cbd5e1; font-weight: 500;">${s.school || 'THCS/THPT'}</td>
+          <td>
+            <div><a href="tel:${s.phone}" style="color: #38bdf8; text-decoration: none; font-weight: 700; font-size: 0.85rem;">📞 ${s.phone}</a></div>
+            <div style="margin-top: 3px;">
+              <a href="https://zalo.me/${s.phone}" target="_blank" style="font-size: 0.75rem; background: #0068ff; color: white; padding: 2px 7px; border-radius: 4px; text-decoration: none; font-weight: 600; display: inline-block;">Nhắn Zalo</a>
+            </div>
           </td>
           <td>
-            <div style="color: #34d399; font-weight: 700;">${s.xp || 50} XP</div>
-            <div style="font-size: 0.75rem; color: #94a3b8;">${s.masteredCount || 0} từ thuộc</div>
+            <div style="display: inline-flex; align-items: center; gap: 4px; background: ${diligence.bg}; border: 1px solid ${diligence.border}; color: ${diligence.color}; padding: 3px 8px; border-radius: 8px; font-weight: 700; font-size: 0.78rem;">
+              ${diligence.stars} ${diligence.label}
+            </div>
+            <div style="font-size: 0.73rem; color: #94a3b8; margin-top: 2px;">Chuỗi: ${s.streakDays || 1} ngày • ${s.xp || 50} XP</div>
           </td>
-          <td>${quizBadge}</td>
           <td>
-            <button onclick="ADMIN_SYSTEM.deleteStudent('${s.id}')" style="background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); color: #f43f5e; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">Xóa</button>
+            <div style="color: #34d399; font-weight: 800; font-size: 0.88rem;">📊 ${attemptsCount} lượt làm</div>
+            <div style="margin-top: 2px;">${quizBadge}</div>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.35rem; align-items: center;">
+              <button onclick="ADMIN_SYSTEM.openStudentDetail('${s.id}')" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none; color: white; padding: 4px 9px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 700; box-shadow: 0 2px 6px rgba(14,165,233,0.3);">
+                👁️ Chi Tiết
+              </button>
+              <button onclick="ADMIN_SYSTEM.deleteStudent('${s.id}')" title="Xóa học sinh" style="background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); color: #f43f5e; padding: 4px 7px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">
+                🗑️
+              </button>
+            </div>
           </td>
         </tr>
       `;
     }).join('');
+  },
+
+  openStudentDetail(studentId) {
+    const students = this.getAllStudents();
+    const student = students.find(s => s.id === studentId);
+    if (!student) {
+      alert('Không tìm thấy thông tin học sinh!');
+      return;
+    }
+
+    const overlay = document.getElementById('studentDetailModalOverlay');
+    const body = document.getElementById('detailStudentModalBody');
+    const title = document.getElementById('detailStudentModalTitle');
+    if (!overlay || !body) return;
+
+    const classDisplay = student.className ? 
+      (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
+      `Lớp ${student.grade || '12'}`;
+    const diligence = getStudentDiligence(student);
+    const history = student.quizHistory || [];
+    const stats = student.exerciseStats || {};
+    const statsKeys = Object.keys(stats);
+
+    if (title) title.innerHTML = `📊 Hồ Sơ Học Tập: <strong>${student.fullName}</strong> (${classDisplay})`;
+
+    body.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Card 1: Student Information & Diligence Badge -->
+        <div style="background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.9)); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="font-size: 1.35rem; font-weight: 900; color: #ffffff;">👤 ${student.fullName}</div>
+            <div style="color: #94a3b8; font-size: 0.92rem; margin-top: 0.25rem;">
+              🏫 <strong>${classDisplay}</strong> (Khối ${student.grade || '12'}) • Trường: <strong>${student.school || 'THCS/THPT'}</strong>
+            </div>
+            <div style="color: #94a3b8; font-size: 0.88rem; margin-top: 0.25rem;">
+              📱 Điện thoại: <a href="tel:${student.phone}" style="color: #38bdf8; font-weight: 700;">${student.phone}</a>
+              <a href="https://zalo.me/${student.phone}" target="_blank" style="margin-left: 0.5rem; background: #0068ff; color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.78rem; text-decoration: none;">Chat Zalo</a>
+              • Đăng ký lúc: ${student.registeredAt || 'Mới'}
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: ${diligence.bg}; border: 1px solid ${diligence.border}; color: ${diligence.color}; padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 1rem;">
+              ${diligence.stars} ${diligence.label}
+            </div>
+            <div style="color: #34d399; font-size: 0.85rem; font-weight: 700; margin-top: 0.4rem;">
+              Hoạt động gần nhất: ${student.lastActiveAt || 'Hôm nay'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: 4 KPI Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Tổng Lượt Làm Bài</div>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #34d399; margin-top: 0.25rem;">${history.length} lượt</div>
+          </div>
+          <div style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Chuỗi Ngày Streak</div>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #38bdf8; margin-top: 0.25rem;">🔥 ${student.streakDays || 1} ngày</div>
+          </div>
+          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Tổng Điểm Thưởng XP</div>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #fbbf24; margin-top: 0.25rem;">⚡ ${student.xp || 50} XP</div>
+          </div>
+          <div style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Từ Đã Thuộc Làu</div>
+            <div style="font-size: 1.8rem; font-weight: 900; color: #c084fc; margin-top: 0.25rem;">📘 ${student.masteredCount || 0} từ</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Thống Kê Theo Từng Dạng Bài Tập Đã Làm -->
+        <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem;">
+          <h3 style="color: #ffffff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>📋 Thống Kê Các Bài Tập Đã Tham Gia & Số Lần</span>
+          </h3>
+          ${statsKeys.length === 0 ? `
+            <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.75rem 0;">Học sinh chưa hoàn thành bài tập nào. Hãy nhắc em vào luyện tập Đúng/Sai hoặc Trắc nghiệm!</div>
+          ` : `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.65rem;">
+              ${statsKeys.map(k => {
+                const item = stats[k];
+                return `
+                  <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0.9rem; border-radius: 10px;">
+                    <div style="font-weight: 700; color: #38bdf8; font-size: 0.92rem;">${item.name}</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #cbd5e1; margin-top: 0.35rem;">
+                      <span>Số lần làm: <strong style="color: #34d399;">${item.attempts} lần</strong></span>
+                      <span>Điểm cao nhất: <strong style="color: #fbbf24;">${item.bestScore}/${item.bestTotal}</strong></span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">Lần gần nhất: ${item.lastDate}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </div>
+
+        <!-- Card 4: Bảng Nhật Ký Lịch Sử Làm Bài Từng Lần -->
+        <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem;">
+          <h3 style="color: #ffffff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.75rem;">
+            📜 Nhật Ký Chi Tiết Từng Lượt Làm Bài (${history.length} lượt)
+          </h3>
+          ${history.length === 0 ? `
+            <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.5rem 0;">Chưa có dữ liệu làm bài.</div>
+          ` : `
+            <div style="max-height: 280px; overflow-y: auto;">
+              <table class="admin-table" style="font-size: 0.85rem;">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Thời Gian</th>
+                    <th>Khối & Bài Học</th>
+                    <th>Dạng Bài Tập</th>
+                    <th>Kết Quả Đạt Được</th>
+                    <th>Thưởng XP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${history.map((h, i) => `
+                    <tr>
+                      <td>#${i + 1}</td>
+                      <td style="color: #94a3b8;">${h.date}</td>
+                      <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.25); color: #a5b4fc;">Lớp ${h.grade || CURRENT_GRADE} - Unit ${h.unit || '1'}</span></td>
+                      <td style="color: #ffffff; font-weight: 600;">${h.mode}</td>
+                      <td style="color: #34d399; font-weight: 700;">${h.scoreDisplay || `${h.score}/${h.total}`}</td>
+                      <td style="color: #fbbf24; font-weight: 700;">+${h.xp || 10} XP</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
+          <button class="header-btn" onclick="window.print()" style="background: #6366f1; padding: 0.6rem 1.25rem; font-weight: 700;">
+            🖨️ In Báo Cáo Học Tập
+          </button>
+          <button class="header-btn" onclick="ADMIN_SYSTEM.closeDetailModal()" style="background: rgba(255,255,255,0.1); padding: 0.6rem 1.25rem;">
+            ✕ Đóng Cửa Sổ
+          </button>
+        </div>
+      </div>
+    `;
+
+    overlay.classList.add('active');
+  },
+
+  closeDetailModal() {
+    const overlay = document.getElementById('studentDetailModalOverlay');
+    if (overlay) overlay.classList.remove('active');
   },
 
   deleteStudent(studentId) {
@@ -3494,32 +3856,36 @@ const ADMIN_SYSTEM = {
       return;
     }
 
-    // Generate CSV with UTF-8 BOM (\uFEFF) so Excel opens Vietnamese characters perfectly
+    // Generate CSV with UTF-8 BOM (﻿) so Excel opens Vietnamese characters perfectly
     let csvContent = '\uFEFF';
-    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Ngày Đăng Ký,Hoạt Động Cuối,Tổng Điểm XP,Từ Đã Thuộc,Bài Test Gần Nhất\r\n';
+    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Mức Độ Chuyên Cần,Số Lượt Làm Bài,Chuỗi Ngày Streak,Tổng Điểm XP,Từ Đã Thuộc,Bài Tập Gần Nhất,Ngày Đăng Ký,Hoạt Động Cuối\r\n';
 
-    students.forEach((s, i) => {
+    // Sort by Vietnamese name ABC before exporting
+    const sorted = [...students].sort((a,b) => compareVietnameseNames(a.fullName, b.fullName, true));
+
+    sorted.forEach((s, i) => {
+      const diligence = getStudentDiligence(s);
+      const attemptsCount = (s.quizHistory || []).length;
       const lastQuiz = s.quizHistory && s.quizHistory[0];
-      const quizTxt = lastQuiz ? `${lastQuiz.mode} (${lastQuiz.score}/${lastQuiz.total}đ)` : 'Chưa thi';
+      const quizTxt = lastQuiz ? `${lastQuiz.mode} (${lastQuiz.score}/${lastQuiz.total}đ)` : 'Chưa làm bài';
       const cleanName = `"${(s.fullName || '').replace(/"/g, '""')}"`;
+      const cleanClass = `"${(s.className || ('Lớp ' + (s.grade || '12'))).replace(/"/g, '""')}"`;
       const cleanSchool = `"${(s.school || '').replace(/"/g, '""')}"`;
       const cleanPhone = `"${s.phone || ''}"`;
 
-      const cleanClass = `"${(s.className || ('Lớp ' + (s.grade || '12'))).replace(/"/g, '""')}"`;
-      csvContent += `${i + 1},${cleanName},${cleanClass},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${s.registeredAt || ''}","${s.lastActiveAt || ''}",${s.xp || 50},${s.masteredCount || 0},"${quizTxt}"\r\n`;
+      csvContent += `${i + 1},${cleanName},${cleanClass},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${diligence.label}",${attemptsCount},${s.streakDays || 1},${s.xp || 50},${s.masteredCount || 0},"${quizTxt}","${s.registeredAt || ''}","${s.lastActiveAt || ''}"\r\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Danh_Sach_Hoc_Sinh_Tu_Vung_Global_Success_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Danh_Sach_Hoc_Sinh_Tu_Vung_Chuyen_Can_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
 };
-
 // ==========================================
 // 4. SMART VOCABULARY IMPORTER (TỰ PHÂN BIỆT LỚP 6-12)
 // ==========================================
