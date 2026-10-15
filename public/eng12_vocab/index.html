@@ -4253,22 +4253,30 @@ html, body {
 
         <!-- Section 1: Students Tracking -->
         <div id="adminSectionStudents">
-          <div class="admin-kpi-grid">
+          <div class="admin-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
             <div class="admin-kpi-card">
               <span class="admin-kpi-label">Tổng Học Sinh</span>
               <span class="admin-kpi-val" id="adminTotalStudents">0</span>
             </div>
             <div class="admin-kpi-card">
-              <span class="admin-kpi-label">Từ Đã Thuộc Làu</span>
-              <span class="admin-kpi-val" style="color: #34d399;" id="adminTotalWordsLearned">0</span>
+              <span class="admin-kpi-label">🏆 Lượt Test 15P</span>
+              <span class="admin-kpi-val" style="color: #facc15;" id="adminTotalMinitests">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">📜 Giấy Khen Đã Cấp</span>
+              <span class="admin-kpi-val" style="color: #34d399;" id="adminTotalCertificates">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">📚 Lượt Ôn Tập</span>
+              <span class="admin-kpi-val" style="color: #38bdf8;" id="adminTotalPractice">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Từ Đã Thuộc</span>
+              <span class="admin-kpi-val" style="color: #c084fc;" id="adminTotalWordsLearned">0</span>
             </div>
             <div class="admin-kpi-card">
               <span class="admin-kpi-label">Tổng Điểm XP</span>
-              <span class="admin-kpi-val" style="color: #38bdf8;" id="adminTotalXP">0</span>
-            </div>
-            <div class="admin-kpi-card">
-              <span class="admin-kpi-label">Hoạt Động Hôm Nay</span>
-              <span class="admin-kpi-val" style="color: #f59e0b;" id="adminActiveToday">0</span>
+              <span class="admin-kpi-val" style="color: #fb923c;" id="adminTotalXP">0</span>
             </div>
           </div>
 
@@ -4298,6 +4306,15 @@ html, body {
                   <option value="10">Khối 10</option>
                   <option value="11">Khối 11</option>
                   <option value="12">Khối 12</option>
+                </select>
+              </div>
+              <div style="min-width: 155px;">
+                <select id="adminMinitestFilter" class="form-control" style="background: #1e293b; color: #facc15; font-weight: 700; padding: 0.55rem 0.6rem; font-size: 0.88rem;" onchange="ADMIN_SYSTEM.renderAdminView()">
+                  <option value="all">🏆 Tất cả bài 15P</option>
+                  <option value="done">✅ Đã làm bài 15 phút</option>
+                  <option value="not_done">⏳ Chưa làm bài 15 phút</option>
+                  <option value="perfect">⭐ Đạt 10.0 tuyệt đối</option>
+                  <option value="good">🎖️ Đạt loại Giỏi / Xuất sắc</option>
                 </select>
               </div>
             </div>
@@ -4333,7 +4350,8 @@ html, body {
                   <th>Trường Học</th>
                   <th>Số Điện Thoại</th>
                   <th>Mức Độ Chuyên Cần</th>
-                  <th>Bài Tập Đã Tham Gia</th>
+                  <th>🏆 Bài 15P & Giấy Khen</th>
+                  <th>📚 Lượt Ôn Tập</th>
                   <th>Hành Động</th>
                 </tr>
               </thead>
@@ -4529,11 +4547,17 @@ html, body {
         <!-- Download & Share Actions -->
         <div id="certDownloadActions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.25rem;">
           <button class="header-btn" onclick="CERTIFICATE_CENTER.downloadPNG()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
-            📸 Tải Ảnh Chứng Chỉ (Lưu Về Máy)
+            📥 Tải Giấy Khen Về Máy (.PNG Cực Nét)
+          </button>
+          <button class="header-btn" onclick="CERTIFICATE_CENTER.sendToTeacherChat()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800; font-size: 1rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(99,102,241,0.4);">
+            👨‍🏫 Gửi Cho Thầy Thành Qua Chatbox
           </button>
           <button class="header-btn" onclick="CERTIFICATE_CENTER.shareZalo()" style="background: #0068ff; color: white; font-weight: 800; font-size: 1rem; padding: 0.75rem 1.6rem; border-radius: 12px;">
             📲 Gửi Khoe Bố Mẹ Qua Zalo
           </button>
+        </div>
+        <div style="font-size: 0.88rem; color: #facc15; margin-top: 0.85rem; font-style: italic; background: rgba(234,179,8,0.1); border: 1px dashed rgba(234,179,8,0.4); padding: 0.6rem 1rem; border-radius: 8px; text-align: center;">
+          💡 Em có thể bấm <strong>"Tải Giấy Khen Về Máy"</strong> để lưu ảnh hoặc chụp ảnh màn hình giấy khen này gửi cho Thầy Thành và giáo viên bộ môn kiểm tra nhé!
         </div>
       </div>
     </div>

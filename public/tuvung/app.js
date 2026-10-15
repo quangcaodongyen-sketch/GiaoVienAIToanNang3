@@ -3532,10 +3532,65 @@ const STUDENT_SYSTEM = {
     this.saveStudent();
   },
 
+    recordMinitestResult(unit, score, total, finalScore) {
+    if (!this.currentStudent) return;
+    if (!this.currentStudent.minitestHistory) this.currentStudent.minitestHistory = [];
+    if (!this.currentStudent.certificates) this.currentStudent.certificates = [];
+
+    const numScore = parseFloat(finalScore);
+    const certCode = 'DVT-' + (new Date().getFullYear()) + '-' + Math.floor(Math.random() * 89999 + 10000);
+    let rank = "XUẤT SẮC";
+    if (numScore < 5.0) rank = "HOÀN THÀNH";
+    else if (numScore < 6.5) rank = "TRUNG BÌNH KHÁ";
+    else if (numScore < 8.0) rank = "KHÁ";
+    else if (numScore < 9.0) rank = "GIỎI";
+    else rank = "XUẤT SẮC";
+
+    const attemptDate = new Date().toLocaleString('vi-VN');
+
+    const testItem = {
+      id: 'TEST15_' + Date.now(),
+      date: attemptDate,
+      grade: CURRENT_GRADE,
+      unit: unit,
+      score: finalScore,
+      rawScore: score,
+      total: total,
+      rank: rank,
+      certId: certCode,
+      teacherName: 'Thầy giáo Đinh Văn Thành',
+      school: this.currentStudent.school || 'Trường THCS Đồng Yên'
+    };
+
+    this.currentStudent.minitestHistory.unshift(testItem);
+    this.currentStudent.minitestCount = (this.currentStudent.minitestCount || 0) + 1;
+    this.currentStudent.minitestBestScore = Math.max(this.currentStudent.minitestBestScore || 0, numScore);
+
+    // Cấp Giấy Khen Điện Tử
+    this.currentStudent.certificates.unshift({
+      id: certCode,
+      date: attemptDate,
+      type: 'exam',
+      title: 'GIẤY KHEN BÀI KIỂM TRA 15 PHÚT',
+      score: finalScore,
+      unit: unit,
+      rank: rank,
+      grade: CURRENT_GRADE
+    });
+
+    // Thưởng 100 XP cho bài kiểm tra 15 phút
+    this.recordExerciseResult(unit, 'MiniTest 15p', score, total, 100);
+  },
+
   recordExerciseResult(unit, exerciseType, score, total, xp = 10) {
     if (!this.currentStudent) return;
     if (!this.currentStudent.quizHistory) this.currentStudent.quizHistory = [];
     if (!this.currentStudent.exerciseStats) this.currentStudent.exerciseStats = {};
+
+    // Ghi nhận lượt ôn tập nếu không phải bài 15 phút
+    if (exerciseType !== 'MiniTest 15p') {
+      this.currentStudent.practiceCount = (this.currentStudent.practiceCount || 0) + 1;
+    }
 
     const attemptDate = new Date().toLocaleString('vi-VN');
     const exerciseKey = `Unit ${unit} - ${exerciseType}`;
@@ -3553,8 +3608,8 @@ const STUDENT_SYSTEM = {
       xp: xp
     });
 
-    if (this.currentStudent.quizHistory.length > 60) {
-      this.currentStudent.quizHistory = this.currentStudent.quizHistory.slice(0, 60);
+    if (this.currentStudent.quizHistory.length > 80) {
+      this.currentStudent.quizHistory = this.currentStudent.quizHistory.slice(0, 80);
     }
 
     // 2. Thống kê số lần tham gia cho từng bài tập
@@ -3978,11 +4033,14 @@ const ADMIN_SYSTEM = {
     }
   },
 
-  renderAdminView() {
+    renderAdminView() {
     const students = this.getAllStudents();
     
     // 1. Update KPI metrics
     const totalEl = document.getElementById('adminTotalStudents');
+    const totalMinitestEl = document.getElementById('adminTotalMinitests');
+    const totalCertEl = document.getElementById('adminTotalCertificates');
+    const totalPracticeEl = document.getElementById('adminTotalPractice');
     const totalWordsEl = document.getElementById('adminTotalWordsLearned');
     const totalXpEl = document.getElementById('adminTotalXP');
     const activeTodayEl = document.getElementById('adminActiveToday');
@@ -3990,13 +4048,25 @@ const ADMIN_SYSTEM = {
     const totalStudents = students.length;
     let totalXp = 0;
     let totalMastered = 0;
+    let totalMinitests = 0;
+    let totalCertificates = 0;
+    let totalPractice = 0;
     
     students.forEach(s => {
       totalXp += (s.xp || 0);
       totalMastered += (s.masteredCount || 0);
+      const mCount = (s.minitestHistory || []).length || (s.minitestCount || 0);
+      const cCount = (s.certificates || []).length || mCount;
+      const pCount = (s.practiceCount || 0) || (s.quizHistory || []).filter(h => h.mode !== 'MiniTest 15p').length;
+      totalMinitests += mCount;
+      totalCertificates += cCount;
+      totalPractice += pCount;
     });
 
     if (totalEl) totalEl.textContent = totalStudents;
+    if (totalMinitestEl) totalMinitestEl.textContent = totalMinitests;
+    if (totalCertEl) totalCertEl.textContent = totalCertificates;
+    if (totalPracticeEl) totalPracticeEl.textContent = totalPractice;
     if (totalWordsEl) totalWordsEl.textContent = totalMastered;
     if (totalXpEl) totalXpEl.textContent = totalXp.toLocaleString();
     if (activeTodayEl) activeTodayEl.textContent = totalStudents > 0 ? totalStudents : 0;
@@ -4013,9 +4083,10 @@ const ADMIN_SYSTEM = {
     const filterSchool = document.getElementById('adminSchoolFilter')?.value || 'all';
     const filterClass = document.getElementById('adminClassFilter')?.value || 'all';
     const filterGrade = document.getElementById('adminGradeFilter')?.value || 'all';
+    const filterMinitest = document.getElementById('adminMinitestFilter')?.value || 'all';
     const sortOrder = document.getElementById('adminSortOrder')?.value || 'name_az';
 
-    // A. Lọc theo các tiêu chí (Search, Trường, Lớp, Khối)
+    // A. Lọc theo các tiêu chí (Search, Trường, Lớp, Khối, Bài 15P)
     let filtered = studentsList.filter(s => {
       const matchSearch = !searchTerm || 
         (s.fullName || '').toLowerCase().includes(searchTerm) ||
@@ -4027,10 +4098,18 @@ const ADMIN_SYSTEM = {
       const matchClass = (filterClass === 'all') || (s.className || '').trim().toLowerCase() === filterClass.toLowerCase();
       const matchGrade = (filterGrade === 'all') || String(s.grade) === filterGrade;
 
-      return matchSearch && matchSchool && matchClass && matchGrade;
+      const mCount = (s.minitestHistory || []).length || (s.minitestCount || 0);
+      const bScore = s.minitestBestScore || 0;
+      let matchMinitest = true;
+      if (filterMinitest === 'done') matchMinitest = mCount > 0;
+      else if (filterMinitest === 'not_done') matchMinitest = mCount === 0;
+      else if (filterMinitest === 'perfect') matchMinitest = bScore >= 10.0;
+      else if (filterMinitest === 'good') matchMinitest = bScore >= 8.0;
+
+      return matchSearch && matchSchool && matchClass && matchGrade && matchMinitest;
     });
 
-    // B. Sắp xếp danh sách (Tự động ABC theo tên tiếng Việt hoặc theo chuyên cần / XP)
+    // B. Sắp xếp danh sách (Tự động ABC theo tên tiếng Việt hoặc theo tiêu chí)
     filtered.sort((a, b) => {
       if (sortOrder === 'name_az') {
         return compareVietnameseNames(a.fullName, b.fullName, true);
@@ -4051,16 +4130,25 @@ const ADMIN_SYSTEM = {
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 2.5rem;">Không tìm thấy học sinh nào phù hợp tiêu chí lọc.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8; padding: 2.5rem;">Không tìm thấy học sinh nào phù hợp tiêu chí lọc.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered.map((s, idx) => {
-      const attemptsCount = (s.quizHistory || []).length;
-      const lastQuiz = s.quizHistory && s.quizHistory[0];
+      const minitestCount = (s.minitestHistory || []).length || (s.minitestCount || 0);
+      const bestMinitest = s.minitestBestScore ? s.minitestBestScore.toFixed(1) : (minitestCount > 0 ? "10.0" : null);
+      const certCount = (s.certificates || []).length || minitestCount;
+      const practiceCount = (s.practiceCount || 0) || (s.quizHistory || []).filter(h => h.mode !== 'MiniTest 15p').length;
+
+      const minitestBadge = minitestCount > 0 ? 
+        `<div style="color: #facc15; font-weight: 800; font-size: 0.88rem;">🏆 ${minitestCount} lần (${bestMinitest}đ)</div>
+         <div style="font-size: 0.75rem; color: #34d399; font-weight: 700; margin-top: 2px;">📜 ${certCount} Giấy khen</div>` : 
+        `<span style="color: #64748b; font-size: 0.78rem;">Chưa làm test 15p</span>`;
+
+      const lastQuiz = (s.quizHistory || []).find(h => h.mode !== 'MiniTest 15p') || (s.quizHistory && s.quizHistory[0]);
       const quizBadge = lastQuiz ? 
-        `<span style="font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 2px 7px; border-radius: 4px; color: #818cf8; font-weight: 600;">${lastQuiz.mode}: ${lastQuiz.score}/${lastQuiz.total}</span>` : 
-        '<span style="color: #64748b; font-size: 0.78rem;">Chưa làm bài</span>';
+        `<span style="font-size: 0.73rem; background: rgba(99,102,241,0.2); padding: 2px 6px; border-radius: 4px; color: #818cf8; font-weight: 600;">${lastQuiz.mode}: ${lastQuiz.score}/${lastQuiz.total}</span>` : 
+        '<span style="color: #64748b; font-size: 0.73rem;">Chưa ôn tập</span>';
 
       const classDisplay = s.className ? 
         (s.className.toLowerCase().includes('lớp') ? s.className : `Lớp ${s.className}`) : 
@@ -4095,7 +4183,10 @@ const ADMIN_SYSTEM = {
             <div style="font-size: 0.73rem; color: #94a3b8; margin-top: 2px;">Chuỗi: ${s.streakDays || 1} ngày • ${s.xp || 50} XP</div>
           </td>
           <td>
-            <div style="color: #34d399; font-weight: 800; font-size: 0.88rem;">📊 ${attemptsCount} lượt làm</div>
+            ${minitestBadge}
+          </td>
+          <td>
+            <div style="color: #38bdf8; font-weight: 800; font-size: 0.88rem;">📚 ${practiceCount} lượt ôn</div>
             <div style="margin-top: 2px;">${quizBadge}</div>
           </td>
           <td>
@@ -4131,8 +4222,13 @@ const ADMIN_SYSTEM = {
       `Lớp ${student.grade || '12'}`;
     const diligence = getStudentDiligence(student);
     const history = student.quizHistory || [];
+    const minitests = student.minitestHistory || [];
     const stats = student.exerciseStats || {};
-    const statsKeys = Object.keys(stats);
+    const statsKeys = Object.keys(stats).filter(k => !k.includes('MiniTest 15p'));
+
+    const minitestCount = minitests.length || (student.minitestCount || 0);
+    const certCount = (student.certificates || []).length || minitestCount;
+    const practiceCount = (student.practiceCount || 0) || history.filter(h => h.mode !== 'MiniTest 15p').length;
 
     if (title) title.innerHTML = `📊 Hồ Sơ Học Tập: <strong>${student.fullName}</strong> (${classDisplay})`;
 
@@ -4161,45 +4257,97 @@ const ADMIN_SYSTEM = {
           </div>
         </div>
 
-        <!-- Card 2: 4 KPI Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
-          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
-            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Tổng Lượt Làm Bài</div>
-            <div style="font-size: 1.8rem; font-weight: 900; color: #34d399; margin-top: 0.25rem;">${history.length} lượt</div>
+        <!-- Card 2: 5 KPI Metrics -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem;">
+          <div style="background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.3); padding: 0.85rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Bài Test 15 Phút</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: #facc15; margin-top: 0.25rem;">${minitestCount} lần</div>
           </div>
-          <div style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
-            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Chuỗi Ngày Streak</div>
-            <div style="font-size: 1.8rem; font-weight: 900; color: #38bdf8; margin-top: 0.25rem;">🔥 ${student.streakDays || 1} ngày</div>
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 0.85rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Giấy Khen Đã Cấp</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: #34d399; margin-top: 0.25rem;">${certCount} cái</div>
           </div>
-          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
-            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Tổng Điểm Thưởng XP</div>
-            <div style="font-size: 1.8rem; font-weight: 900; color: #fbbf24; margin-top: 0.25rem;">⚡ ${student.xp || 50} XP</div>
+          <div style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); padding: 0.85rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Lượt Ôn Tập Các Bài</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: #38bdf8; margin-top: 0.25rem;">${practiceCount} lượt</div>
           </div>
-          <div style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); padding: 1rem; border-radius: 12px; text-align: center;">
-            <div style="font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Từ Đã Thuộc Làu</div>
-            <div style="font-size: 1.8rem; font-weight: 900; color: #c084fc; margin-top: 0.25rem;">📘 ${student.masteredCount || 0} từ</div>
+          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 0.85rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Tổng Điểm XP</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: #fbbf24; margin-top: 0.25rem;">⚡ ${student.xp || 50}</div>
+          </div>
+          <div style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); padding: 0.85rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Chuỗi Ngày Streak</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: #c084fc; margin-top: 0.25rem;">🔥 ${student.streakDays || 1} ngày</div>
           </div>
         </div>
 
-        <!-- Card 3: Thống Kê Theo Từng Dạng Bài Tập Đã Làm -->
+        <!-- Card 3: 🏆 Lịch Sử Bài Kiểm Tra 15 Phút & Giấy Khen Đã Cấp -->
+        <div style="background: rgba(15,23,42,0.7); border: 1.5px solid rgba(234,179,8,0.35); border-radius: 12px; padding: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <h3 style="color: #facc15; font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🏆 Bài Kiểm Tra 15 Phút & Giấy Khen Đã Cấp (${minitests.length} lần)</span>
+            </h3>
+            <span style="font-size: 0.85rem; color: #34d399; font-weight: 700; background: rgba(16,185,129,0.15); padding: 3px 10px; border-radius: 6px;">
+              Điểm cao nhất: ${student.minitestBestScore ? student.minitestBestScore + '/10.0đ' : 'Chưa có'}
+            </span>
+          </div>
+          ${minitests.length === 0 ? `
+            <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.6rem 0;">Học sinh chưa tham gia làm bài kiểm tra 15 phút nào.</div>
+          ` : `
+            <div style="max-height: 240px; overflow-y: auto;">
+              <table class="admin-table" style="font-size: 0.85rem;">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Thời Gian</th>
+                    <th>Bài Học (Unit)</th>
+                    <th>Điểm Số (10.0)</th>
+                    <th>Xếp Loại</th>
+                    <th>Mã Xác Thực</th>
+                    <th>Giấy Khen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${minitests.map((t, idx) => `
+                    <tr>
+                      <td>#${idx + 1}</td>
+                      <td style="color: #94a3b8;">${t.date}</td>
+                      <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.25); color: #a5b4fc;">Lớp ${t.grade || CURRENT_GRADE} - Unit ${t.unit}</span></td>
+                      <td style="color: ${parseFloat(t.score) >= 8.0 ? '#34d399' : '#facc15'}; font-weight: 800; font-size: 0.95rem;">${t.score} / 10.0đ</td>
+                      <td><span style="font-weight: 700; color: #facc15;">${t.rank || 'Xuất Sắc'}</span></td>
+                      <td style="font-family: monospace; color: #38bdf8;">${t.certId || 'DVT-2026'}</td>
+                      <td>
+                        <button onclick="CERTIFICATE_CENTER.openModalForStudent('${student.id}', 'exam', '${t.score}', '${t.unit}', '${t.certId}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); border: none; color: #000; font-weight: 800; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">
+                          📜 Xem Giấy Khen
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </div>
+
+        <!-- Card 4: 📋 Thống Kê Các Bài Tập Ôn Tập Đã Làm -->
         <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem;">
           <h3 style="color: #ffffff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span>📋 Thống Kê Các Bài Tập Đã Tham Gia & Số Lần</span>
+            <span>📚 Thống Kê Các Dạng Bài Ôn Tập & Rèn Luyện (${practiceCount} lượt)</span>
           </h3>
           ${statsKeys.length === 0 ? `
-            <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.75rem 0;">Học sinh chưa hoàn thành bài tập nào. Hãy nhắc em vào luyện tập Đúng/Sai hoặc Trắc nghiệm!</div>
+            <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.6rem 0;">Chưa có dữ liệu ôn tập các bài học khác.</div>
           ` : `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.65rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.65rem;">
               ${statsKeys.map(k => {
                 const item = stats[k];
                 return `
                   <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 0.75rem 0.9rem; border-radius: 10px;">
                     <div style="font-weight: 700; color: #38bdf8; font-size: 0.92rem;">${item.name}</div>
                     <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #cbd5e1; margin-top: 0.35rem;">
-                      <span>Số lần làm: <strong style="color: #34d399;">${item.attempts} lần</strong></span>
-                      <span>Điểm cao nhất: <strong style="color: #fbbf24;">${item.bestScore}/${item.bestTotal}</strong></span>
+                      <span>Số lần ôn: <strong style="color: #34d399;">${item.attempts} lần</strong></span>
+                      <span>Điểm cao: <strong style="color: #fbbf24;">${item.bestScore}/${item.bestTotal}</strong></span>
                     </div>
-                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">Lần gần nhất: ${item.lastDate}</div>
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">Lần cuối: ${item.lastDate}</div>
                   </div>
                 `;
               }).join('')}
@@ -4207,15 +4355,15 @@ const ADMIN_SYSTEM = {
           `}
         </div>
 
-        <!-- Card 4: Bảng Nhật Ký Lịch Sử Làm Bài Từng Lần -->
+        <!-- Card 5: Bảng Nhật Ký Lịch Sử Làm Bài Từng Lần -->
         <div style="background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.1rem;">
           <h3 style="color: #ffffff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.75rem;">
-            📜 Nhật Ký Chi Tiết Từng Lượt Làm Bài (${history.length} lượt)
+            📜 Nhật Ký Chi Tiết Toàn Bộ Lượt Học (${history.length} lượt)
           </h3>
           ${history.length === 0 ? `
             <div style="color: #94a3b8; font-size: 0.9rem; padding: 0.5rem 0;">Chưa có dữ liệu làm bài.</div>
           ` : `
-            <div style="max-height: 280px; overflow-y: auto;">
+            <div style="max-height: 250px; overflow-y: auto;">
               <table class="admin-table" style="font-size: 0.85rem;">
                 <thead>
                   <tr>
@@ -4279,16 +4427,22 @@ const ADMIN_SYSTEM = {
       return;
     }
 
-    // Generate CSV with UTF-8 BOM (﻿) so Excel opens Vietnamese characters perfectly
-    let csvContent = '\uFEFF';
-    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Mức Độ Chuyên Cần,Số Lượt Làm Bài,Chuỗi Ngày Streak,Tổng Điểm XP,Từ Đã Thuộc,Bài Tập Gần Nhất,Ngày Đăng Ký,Hoạt Động Cuối\r\n';
+    // Generate CSV with UTF-8 BOM so Excel opens Vietnamese characters perfectly
+    let csvContent = '﻿';
+    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Mức Độ Chuyên Cần,Số Lần Test 15P,Điểm 15P Cao Nhất,Số Giấy Khen,Số Lần Ôn Tập Các Bài,Tổng Lượt Làm Bài,Chuỗi Ngày Streak,Tổng Điểm XP,Từ Đã Thuộc,Bài Tập Gần Nhất,Ngày Đăng Ký,Hoạt Động Cuối
 
-    // Sort by Vietnamese name ABC before exporting
+';
+
     const sorted = [...students].sort((a,b) => compareVietnameseNames(a.fullName, b.fullName, true));
 
     sorted.forEach((s, i) => {
       const diligence = getStudentDiligence(s);
-      const attemptsCount = (s.quizHistory || []).length;
+      const minitestCount = (s.minitestHistory || []).length || (s.minitestCount || 0);
+      const bestMinitest = s.minitestBestScore ? s.minitestBestScore.toFixed(1) : (minitestCount > 0 ? "10.0" : "0.0");
+      const certCount = (s.certificates || []).length || minitestCount;
+      const practiceCount = (s.practiceCount || 0) || (s.quizHistory || []).filter(h => h.mode !== 'MiniTest 15p').length;
+      const totalAttempts = (s.quizHistory || []).length;
+
       const lastQuiz = s.quizHistory && s.quizHistory[0];
       const quizTxt = lastQuiz ? `${lastQuiz.mode} (${lastQuiz.score}/${lastQuiz.total}đ)` : 'Chưa làm bài';
       const cleanName = `"${(s.fullName || '').replace(/"/g, '""')}"`;
@@ -4296,7 +4450,7 @@ const ADMIN_SYSTEM = {
       const cleanSchool = `"${(s.school || '').replace(/"/g, '""')}"`;
       const cleanPhone = `"${s.phone || ''}"`;
 
-      csvContent += `${i + 1},${cleanName},${cleanClass},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${diligence.label}",${attemptsCount},${s.streakDays || 1},${s.xp || 50},${s.masteredCount || 0},"${quizTxt}","${s.registeredAt || ''}","${s.lastActiveAt || ''}"\r\n`;
+      csvContent += `${i + 1},${cleanName},${cleanClass},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${diligence.label}",${minitestCount},${bestMinitest},${certCount},${practiceCount},${totalAttempts},${s.streakDays || 1},${s.xp || 50},${s.masteredCount || 0},"${quizTxt}","${s.registeredAt || ''}","${s.lastActiveAt || ''}\r\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -4656,35 +4810,43 @@ const MINITEST_SYSTEM = {
     }
   },
 
-  finishTest() {
+    finishTest() {
     if (this.timerInterval) clearInterval(this.timerInterval);
     const total = this.questions.length;
     const finalScore = total > 0 ? ((this.score / total) * 10).toFixed(1) : "0.0";
 
-    STUDENT_SYSTEM.recordQuizResult(STATE.currentUnit, 'MiniTest 15p', this.score, total);
+    // Ghi nhận kết quả và cấp Giấy Khen Điện Tử chính thức
+    STUDENT_SYSTEM.recordMinitestResult(STATE.currentUnit, this.score, total, finalScore);
 
     const container = document.getElementById('minitestQuestionContainer');
     if (container) {
-      const isPassed = parseFloat(finalScore) >= 8.0;
+      const numScore = parseFloat(finalScore);
+      let rank = "XUẤT SẮC";
+      if (numScore < 5.0) rank = "HOÀN THÀNH";
+      else if (numScore < 6.5) rank = "TRUNG BÌNH KHÁ";
+      else if (numScore < 8.0) rank = "KHÁ";
+      else if (numScore < 9.0) rank = "GIỎI";
+      else rank = "XUẤT SẮC";
+
       container.innerHTML = `
-        <div style="text-align: center; padding: 2rem 1rem;">
-          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">${isPassed ? '🏆' : '💪'}</div>
-          <h2 style="font-size: 1.6rem; color: #ffffff; margin-bottom: 0.5rem;">Kết Quả Bài Kiểm Tra 15 Phút</h2>
-          <div style="font-size: 2.5rem; font-weight: 900; color: ${isPassed ? '#34d399' : '#f59e0b'}; margin-bottom: 1rem;">
+        <div style="text-align: center; padding: 2.2rem 1rem;">
+          <div style="font-size: 3.6rem; margin-bottom: 0.5rem;">${numScore >= 8.0 ? '🏆' : '⭐'}</div>
+          <h2 style="font-size: 1.65rem; color: #ffffff; margin-bottom: 0.35rem;">Kết Quả Bài Kiểm Tra 15 Phút</h2>
+          <div style="font-size: 2.7rem; font-weight: 900; color: ${numScore >= 8.0 ? '#34d399' : (numScore >= 6.5 ? '#38bdf8' : '#f59e0b')}; margin-bottom: 0.25rem;">
             ${finalScore} / 10.0 Điểm
           </div>
-          <p style="color: #cbd5e1; max-width: 450px; margin: 0 auto 1.5rem;">
-            ${isPassed 
-              ? 'Xuất sắc! Em đã hoàn thành xuất sắc bài kiểm tra từ vựng và nhận được GIẤY KHEN ĐIỆN TỬ vinh danh!' 
-              : 'Em đã rất cố gắng! Hãy tiếp tục rèn luyện thêm các từ khó và thử lại để đạt Giấy Khen nhé!'}
+          <div style="font-size: 1.15rem; font-weight: 800; color: #facc15; margin-bottom: 1rem;">
+            Xếp loại: ${rank}
+          </div>
+          <p style="color: #cbd5e1; max-width: 520px; margin: 0 auto 1.5rem; line-height: 1.6; font-size: 0.95rem;">
+            Chúc mừng em đã hoàn thành bài kiểm tra 15 phút từ vựng Tiếng Anh! 
+            Hệ thống đã tự động cấp <strong>GIẤY KHEN ĐIỆN TỬ CHÍNH THỨC</strong> có con dấu và chữ ký của <strong>Thầy giáo Đinh Văn Thành</strong> cho em!
           </p>
-          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-            ${isPassed ? `
-              <button class="header-btn" onclick="MINITEST_SYSTEM.showCertificate('${finalScore}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 800; padding: 0.65rem 1.25rem;">
-                📜 Nhận Giấy Khen Điện Tử
-              </button>
-            ` : ''}
-            <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="padding: 0.65rem 1.25rem;">
+          <div style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap;">
+            <button class="header-btn" onclick="MINITEST_SYSTEM.showCertificate('${finalScore}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 900; font-size: 1.05rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(234,179,8,0.5);">
+              📜 Xem & Tải Giấy Khen Điện Tử
+            </button>
+            <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="padding: 0.75rem 1.4rem; font-weight: 700; border-radius: 12px;">
               🔄 Làm Lại Đề Khác
             </button>
           </div>
@@ -4692,36 +4854,21 @@ const MINITEST_SYSTEM = {
       `;
     }
 
-    if (parseFloat(finalScore) >= 8.0 && typeof confetti === 'function') {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    if (typeof confetti === 'function') {
+      try { confetti({ particleCount: 130, spread: 80, origin: { y: 0.6 } }); } catch(e){}
     }
   },
 
   showCertificate(score) {
-    const student = STUDENT_SYSTEM.currentStudent || {
-      fullName: "Học Sinh Xuất Sắc",
-      grade: CURRENT_GRADE,
-      school: "Trường THCS / THPT"
-    };
-
-    const certName = document.getElementById('certStudentName');
-    const certDetails = document.getElementById('certDetailsText');
-    const overlay = document.getElementById('certificateModalOverlay');
-
-    if (certName) certName.textContent = student.fullName;
-    if (certDetails) {
-      const classStr = student.className ? 
-        (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
-        `Lớp ${student.grade || CURRENT_GRADE}`;
-      certDetails.innerHTML = `Đã hoàn thành xuất sắc bài kiểm tra từ vựng <strong>Tiếng Anh ${classStr}</strong> - <strong>Unit ${STATE.currentUnit}</strong> với điểm số ấn tượng: <strong style="color: #eab308; font-size: 1.2rem;">${score} / 10.0 điểm</strong> tại <strong>${student.school || 'Trường THCS / THPT'}</strong>.`;
+    if (typeof CERTIFICATE_CENTER !== 'undefined') {
+      CERTIFICATE_CENTER.openModal('exam', score);
     }
-
-    if (overlay) overlay.classList.add('active');
   },
 
   closeCertificate() {
-    const overlay = document.getElementById('certificateModalOverlay');
-    if (overlay) overlay.classList.remove('active');
+    if (typeof CERTIFICATE_CENTER !== 'undefined') {
+      CERTIFICATE_CENTER.closeModal();
+    }
   }
 };
 
@@ -5089,13 +5236,44 @@ const GAMIFICATION = {
 };
 
 // ==========================================
-// TRUNG TÂM CHỨNG CHỈ & KHEN THƯỞNG
+// TRUNG TÂM CHỨNG CHỈ & GIẤY KHEN ĐIỆN TỬ
 // ==========================================
 const CERTIFICATE_CENTER = {
   currentType: 'diligence', // 'diligence' | 'mastery' | 'exam'
+  targetStudent: null,
+  customScore: null,
+  customUnit: null,
+  customCertId: null,
 
-  openModal(type = 'diligence') {
+  openModal(type = 'diligence', customScore = null) {
     this.currentType = type;
+    this.targetStudent = null;
+    this.customScore = customScore;
+    this.customUnit = null;
+    this.customCertId = null;
+
+    const overlay = document.getElementById('certificateCenterModalOverlay');
+    if (!overlay) return;
+
+    overlay.classList.add('active');
+    this.renderTabs();
+    this.renderCertificate();
+  },
+
+  openModalForStudent(studentId, type = 'exam', score = null, unit = null, certId = null) {
+    const students = ADMIN_SYSTEM.getAllStudents();
+    const student = students.find(s => s.id === studentId);
+    if (!student) {
+      alert('Không tìm thấy học sinh!');
+      return;
+    }
+
+    this.currentType = type;
+    this.targetStudent = student;
+    this.customScore = score;
+    this.customUnit = unit;
+    this.customCertId = certId;
+
     const overlay = document.getElementById('certificateCenterModalOverlay');
     if (!overlay) return;
 
@@ -5107,6 +5285,10 @@ const CERTIFICATE_CENTER = {
   closeModal() {
     const overlay = document.getElementById('certificateCenterModalOverlay');
     if (overlay) overlay.classList.remove('active');
+    this.targetStudent = null;
+    this.customScore = null;
+    this.customUnit = null;
+    this.customCertId = null;
   },
 
   switchType(type) {
@@ -5117,9 +5299,9 @@ const CERTIFICATE_CENTER = {
 
   renderTabs() {
     const tabs = [
+      { id: 'exam', label: '🏆 Giấy Khen Điểm Thi 15P' },
       { id: 'diligence', label: '📜 Chứng Chỉ Chuyên Cần' },
       { id: 'mastery', label: '🎖️ Chứng Nhận % Hoàn Thành' },
-      { id: 'exam', label: '🏆 Giấy Khen Điểm Thi' },
       { id: 'badges', label: '🏅 Bảng Vàng Huy Hiệu' }
     ];
 
@@ -5157,7 +5339,7 @@ const CERTIFICATE_CENTER = {
   },
 
   renderBadges(container) {
-    const student = STUDENT_SYSTEM.currentStudent || {};
+    const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || {};
     container.innerHTML = BADGES_LIST.map(b => {
       const isUnlocked = b.check(student);
       return `
@@ -5175,198 +5357,261 @@ const CERTIFICATE_CENTER = {
 
   drawCertificateOnCanvas(canvas) {
     const ctx = canvas.getContext('2d');
-    canvas.width = 1200;
-    canvas.height = 820;
+    canvas.width = 1600;
+    canvas.height = 1100;
 
-    const student = STUDENT_SYSTEM.currentStudent || {
-      fullName: "Học Sinh Chăm Chỉ",
-      grade: CURRENT_GRADE,
-      school: "Trường THCS / THPT",
-      streakDays: 3,
-      xp: 350
+    const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || {
+      fullName: "Đinh Văn Thành",
+      className: "8A1",
+      grade: CURRENT_GRADE || "8",
+      school: "Trường THCS Đồng Yên"
     };
 
-    const { percent } = GAMIFICATION.getUnitMastery();
-
-    // 1. Background gradient (Royal Pedagogy Dark Blue / Burgundy)
-    const bgGrad = ctx.createLinearGradient(0, 0, 1200, 820);
-    bgGrad.addColorStop(0, '#0a1128');
-    bgGrad.addColorStop(0.5, '#1c1954');
-    bgGrad.addColorStop(1, '#080d1a');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 1200, 820);
-
-    // 2. Double Gold Border
-    ctx.lineWidth = 14;
-    ctx.strokeStyle = '#eab308';
-    ctx.strokeRect(25, 25, 1150, 770);
-
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#fef08a';
-    ctx.strokeRect(40, 40, 1120, 740);
-
-    // Corner Ornaments
-    ctx.fillStyle = '#eab308';
-    const corners = [[40, 40], [1160, 40], [40, 780], [1160, 780]];
-    corners.forEach(([cx, cy]) => {
-      ctx.beginPath();
-      ctx.arc(cx, cy, 12, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    // 3. Header Texts
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 20px "Outfit", "Segoe UI", sans-serif';
-    ctx.fillStyle = '#facc15';
-    ctx.fillText('BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỌC TẬP THÔNG MINH 2026', 600, 95);
-
-    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('HỆ THỐNG LUYỆN SIÊU TRÍ NHỚ TỪ VỰNG TIẾNG ANH 6 - 12 (GLOBAL SUCCESS)', 600, 125);
-
-    // 4. Certificate Main Title
-    let mainTitle = 'CHỨNG CHỈ CHUYÊN CẦN HỌC TẬP';
-    let subTitle = 'XÁC NHẬN CHUYÊN CẦN VÀ Ý CHÍ BỨC PHÁ VƯỢT TRỘI';
-    let detailText = `Đã hoàn thành xuất sắc chuỗi ${student.streakDays || 1} ngày học tập chuyên cần liên tục, tích lũy ${student.xp || 50} điểm kinh nghiệm XP, đạt tỷ lệ chuyên cần 100% môn Tiếng Anh.`;
-
-    if (this.currentType === 'mastery') {
-      mainTitle = 'CHỨNG NHẬN CHINH PHỤC TỪ VỰNG';
-      subTitle = 'HOÀN THÀNH XUẤT SẮC TỶ LỆ GHI NHỚ TỪ VỰNG BÀI HỌC';
-      detailText = `Đã xuất sắc làm chủ và ghi nhớ ${percent}% số từ vựng trọng tâm trong bài học Unit ${STATE.currentUnit} - Bộ sách Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} Global Success.`;
-    } else if (this.currentType === 'exam') {
-      mainTitle = 'GIẤY KHEN THÀNH TÍCH XUẤT SẮC';
-      subTitle = 'ĐẠT ĐIỂM SỐ XUẤT SẮC TRONG BÀI THI TỪ VỰNG 15 PHÚT';
-      detailText = `Đạt kết quả xuất sắc trong bài kiểm tra đánh giá năng lực từ vựng Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} - Unit ${STATE.currentUnit}.`;
-    }
-
-    // Title gradient
-    ctx.font = 'bold 44px "Outfit", "Segoe UI", sans-serif';
-    ctx.fillStyle = '#fef08a';
-    ctx.fillText(mainTitle, 600, 200);
-
-    ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#eab308';
-    ctx.fillText(subTitle, 600, 235);
-
-    // Ribbon decor line
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#eab308';
-    ctx.beginPath();
-    ctx.moveTo(350, 255);
-    ctx.lineTo(850, 255);
-    ctx.stroke();
-
-    // 5. Awarded to
-    ctx.font = 'italic 18px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#cbd5e1';
-    ctx.fillText('Chứng chỉ danh dự được trân trọng trao tặng cho:', 600, 295);
-
-    // Student Full Name
-    ctx.font = 'bold 48px "Outfit", "Segoe UI", sans-serif';
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillText(student.fullName.toUpperCase(), 600, 360);
-
-    // Underline
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#38bdf8';
-    ctx.beginPath();
-    ctx.moveTo(400, 375);
-    ctx.lineTo(800, 375);
-    ctx.stroke();
-
-    // Student Grade & School
-    ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#ffffff';
     const classStr = student.className ? 
       (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
       `Lớp ${student.grade || CURRENT_GRADE}`;
-    ctx.fillText(`Học sinh ${classStr} • ${student.school || 'Trường THCS / THPT'}`, 600, 420);
 
-    // Highlight metric box
-    ctx.fillStyle = 'rgba(234, 179, 8, 0.1)';
-    ctx.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+    const currentUnit = this.customUnit || STATE.currentUnit || 1;
+    const score = this.customScore || (student.minitestBestScore ? student.minitestBestScore.toFixed(1) : "10.0");
+    const numScore = parseFloat(score);
+    let rank = "XUẤT SẮC";
+    if (numScore < 5.0) rank = "HOÀN THÀNH";
+    else if (numScore < 6.5) rank = "TRUNG BÌNH KHÁ";
+    else if (numScore < 8.0) rank = "KHÁ";
+    else if (numScore < 9.0) rank = "GIỎI";
+    else rank = "XUẤT SẮC";
+
+    const certCode = this.customCertId || ('DVT-' + (new Date().getFullYear()) + '-' + Math.floor(Math.random() * 89999 + 10000));
+    const { percent } = (typeof GAMIFICATION !== 'undefined' && GAMIFICATION.getUnitMastery) ? GAMIFICATION.getUnitMastery() : { percent: 85 };
+
+    // 1. Background Paper (Warm Cream Pedagogy Certificate)
+    const bgGrad = ctx.createLinearGradient(0, 0, 1600, 1100);
+    bgGrad.addColorStop(0, '#fffef8');
+    bgGrad.addColorStop(0.5, '#fefbf0');
+    bgGrad.addColorStop(1, '#fff9e6');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1600, 1100);
+
+    // Subtle guilloche mesh lines for security
+    ctx.fillStyle = 'rgba(217, 119, 6, 0.035)';
+    for (let i = 40; i < 1560; i += 32) {
+      ctx.fillRect(i, 40, 2, 1020);
+    }
+    for (let j = 40; j < 1060; j += 32) {
+      ctx.fillRect(40, j, 1520, 2);
+    }
+
+    // 2. Royal Ornate Dual Borders
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = '#b45309'; // Rich Amber/Bronze Gold
+    ctx.strokeRect(36, 36, 1528, 1028);
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeRect(52, 52, 1496, 996);
+
     ctx.lineWidth = 2;
-    ctx.roundRect ? ctx.roundRect(300, 450, 600, 65, 14) : ctx.rect(300, 450, 600, 65);
+    ctx.strokeStyle = '#d97706';
+    ctx.strokeRect(62, 62, 1476, 976);
+
+    // Corner decorative fleurons
+    const corners = [[62, 62], [1538, 62], [62, 1038], [1538, 1038]];
+    corners.forEach(([cx, cy]) => {
+      ctx.fillStyle = '#b45309';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#b45309';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 3. Top National Header (Quốc hiệu & Tiêu ngữ)
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 22px "Times New Roman", serif';
+    ctx.fillStyle = '#1e293b';
+    ctx.fillText('CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM', 800, 110);
+
+    ctx.font = 'bold 19px "Times New Roman", serif';
+    ctx.fillStyle = '#334155';
+    ctx.fillText('Độc lập - Tự do - Hạnh phúc', 800, 140);
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#b45309';
+    ctx.beginPath();
+    ctx.moveTo(710, 152);
+    ctx.lineTo(890, 152);
+    ctx.stroke();
+
+    // Institution Header
+    ctx.font = 'bold 18px "Times New Roman", serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỆ THỐNG LUYỆN TỪ VỰNG TIẾNG ANH GLOBAL SUCCESS (6 - 12)', 800, 185);
+
+    // Main Certificate Title
+    let mainTitle = 'GIẤY KHEN';
+    let subTitle = 'CHỨNG NHẬN THÀNH TÍCH BÀI KIỂM TRA 15 PHÚT MÔN TIẾNG ANH';
+    let detailText = `Đã xuất sắc hoàn thành Bài kiểm tra đánh giá 15 phút - Từ vựng Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} (Unit ${currentUnit})`;
+    let highlightMetric = `🏆 KẾT QUẢ: ${score} / 10.0 ĐIỂM  •  XẾP LOẠI: ${rank}`;
+
+    if (this.currentType === 'diligence') {
+      mainTitle = 'CHỨNG CHỈ CHUYÊN CẦN';
+      subTitle = 'XÁC NHẬN CHUYÊN CẦN VÀ Ý CHÍ BỨC PHÁ VƯỢT TRỘI';
+      detailText = `Đã hoàn thành xuất sắc chuỗi ${student.streakDays || 1} ngày học tập chuyên cần liên tục, tích lũy ${student.xp || 50} điểm XP`;
+      highlightMetric = `🔥 CHUỖI CHUYÊN CẦN: ${student.streakDays || 1} NGÀY LIÊN TIẾP (100%)`;
+    } else if (this.currentType === 'mastery') {
+      mainTitle = 'CHỨNG NHẬN TỪ VỰNG';
+      subTitle = 'HOÀN THÀNH XUẤT SẮC TỶ LỆ GHI NHỚ TỪ VỰNG BÀI HỌC';
+      detailText = `Đã xuất sắc làm chủ và ghi nhớ ${percent}% số từ vựng trọng tâm trong bài học Unit ${currentUnit} - Tiếng Anh ${classStr}`;
+      highlightMetric = `🎯 TỶ LỆ HOÀN THÀNH: ${percent}% ĐẠT CHUẨN XUẤT SẮC`;
+    }
+
+    ctx.font = 'bold 64px "Times New Roman", serif';
+    ctx.fillStyle = '#b91c1c'; // Vietnamese Certificate Red
+    ctx.fillText(mainTitle, 800, 270);
+
+    ctx.font = 'bold 20px "Times New Roman", serif';
+    ctx.fillStyle = '#b45309';
+    ctx.fillText(subTitle, 800, 310);
+
+    // Gold Ribbon Line
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.moveTo(450, 330);
+    ctx.lineTo(1150, 330);
+    ctx.stroke();
+
+    // Awarded to
+    ctx.font = 'italic 23px "Times New Roman", serif';
+    ctx.fillStyle = '#475569';
+    ctx.fillText('Trân trọng vinh danh và trao tặng cho học sinh:', 800, 385);
+
+    // Student Full Name
+    ctx.font = 'bold 54px "Times New Roman", serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText((student.fullName || 'HỌC SINH').toUpperCase(), 800, 460);
+
+    // Underline
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#0284c7';
+    ctx.beginPath();
+    ctx.moveTo(520, 480);
+    ctx.lineTo(1080, 480);
+    ctx.stroke();
+
+    // Student Class & School
+    ctx.font = 'bold 26px "Times New Roman", serif';
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillText(`Học sinh: ${classStr} • ${student.school || 'Trường THCS Đồng Yên'}`, 800, 530);
+
+    // Main citation
+    ctx.font = '22px "Times New Roman", serif';
+    ctx.fillStyle = '#334155';
+    ctx.fillText(detailText, 800, 580);
+
+    // Highlight Score Card Box
+    ctx.fillStyle = '#fffbeb';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2.5;
+    if (ctx.roundRect) ctx.roundRect(420, 620, 760, 90, 16);
+    else ctx.rect(420, 620, 760, 90);
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = 'bold 22px "Outfit", sans-serif';
-    if (this.currentType === 'mastery') {
-      ctx.fillStyle = '#34d399';
-      ctx.fillText(`🎯 TỶ LỆ HOÀN THÀNH: ${percent}% ĐẠT CHUẨN XUẤT SẮC`, 600, 492);
-    } else if (this.currentType === 'exam') {
-      ctx.fillStyle = '#facc15';
-      ctx.fillText(`🏆 KẾT QUẢ BÀI THI: 10.0 / 10.0 ĐIỂM TUYỆT ĐỐI`, 600, 492);
-    } else {
-      ctx.fillStyle = '#fb923c';
-      ctx.fillText(`🔥 CHUỖI CHUYÊN CẦN: ${student.streakDays || 1} NGÀY LIÊN TIẾP (100%)`, 600, 492);
-    }
+    ctx.font = 'bold 32px "Times New Roman", serif';
+    ctx.fillStyle = '#b45309';
+    ctx.fillText(highlightMetric, 800, 675);
 
-    // Details text
-    ctx.font = '18px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillText(detailText, 600, 560);
+    // Praise quote
+    ctx.font = 'italic 20px "Times New Roman", serif';
+    ctx.fillStyle = '#059669';
+    ctx.fillText('Biểu dương tinh thần tự giác, ý chí rèn luyện và thành tích học tập vượt trội.', 800, 750);
 
-    // 6. Signatures and Official Red Seal
-    // Left: Issue Date
+    // 4. Footer Section
+    // Left: Date & Verification
     ctx.textAlign = 'left';
-    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Ngày cấp chứng nhận:', 120, 660);
-    ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(new Date().toLocaleDateString('vi-VN'), 120, 690);
-    ctx.font = 'italic 15px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#34d399';
-    ctx.fillText('Mã số: DVT-' + Math.floor(Math.random() * 89999 + 10000), 120, 720);
+    ctx.font = '19px "Times New Roman", serif';
+    ctx.fillStyle = '#475569';
+    const now = new Date();
+    ctx.fillText(`Ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`, 150, 830);
 
-    // Center: Official Red Seal
-    ctx.textAlign = 'center';
+    ctx.font = 'bold 18px "Times New Roman", serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText('MÃ SỐ XÁC THỰC:', 150, 865);
+    ctx.font = 'bold 20px monospace';
+    ctx.fillStyle = '#0284c7';
+    ctx.fillText(certCode, 150, 895);
+
+    ctx.font = 'italic 16px "Times New Roman", serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('Hệ thống kiểm tra số THCS', 150, 925);
+    ctx.fillText('Website: dekiemtraso.com/tuvung', 150, 950);
+
+    // Center: Official Red Seal Stamp
     ctx.save();
-    ctx.translate(600, 690);
+    ctx.translate(800, 900);
     ctx.strokeStyle = '#dc2626';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(0, 0, 52, 0, Math.PI * 2);
+    ctx.arc(0, 0, 70, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = '#dc2626';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(0, 0, 46, 0, Math.PI * 2);
+    ctx.arc(0, 0, 62, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
     ctx.fillStyle = '#dc2626';
-    ctx.fillText('TRƯỜNG THCS ĐỒNG YÊN', 0, -22);
-    ctx.font = 'bold 14px sans-serif';
-    ctx.fillText('★ CHUYÊN CẦN ★', 0, 2);
-    ctx.font = 'bold 10px sans-serif';
-    ctx.fillText('XÁC NHẬN BỘ GD&ĐT', 0, 24);
+    ctx.font = 'bold 13px "Times New Roman", serif';
+    ctx.fillText('TRƯỜNG THCS ĐỒNG YÊN', 0, -32);
+
+    ctx.font = 'bold 22px "Times New Roman", serif';
+    ctx.fillText('★ ★ ★', 0, -6);
+
+    ctx.font = 'bold 14px "Times New Roman", serif';
+    ctx.fillText('THẦY GIÁO', 0, 16);
+    ctx.font = 'bold 15px "Times New Roman", serif';
+    ctx.fillText('ĐINH VĂN THÀNH', 0, 36);
     ctx.restore();
 
-    // Right: Teacher signature
-    ctx.textAlign = 'right';
-    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('BIÊN SOẠN & GIẢNG DẠY', 1080, 650);
+    // Right: Signature of Teacher Đinh Văn Thành
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 21px "Times New Roman", serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText('GIÁO VIÊN BỘ MÔN TIẾNG ANH', 1320, 825);
 
-    ctx.font = 'italic 26px "Brush Script MT", "Segoe Script", cursive, sans-serif';
-    ctx.fillStyle = '#facc15';
-    ctx.fillText('Dinh Van Thanh', 1080, 705);
+    ctx.font = 'italic 17px "Times New Roman", serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('(Ký tên và đóng dấu)', 1320, 852);
 
-    ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('Thầy giáo Đinh Văn Thành', 1080, 740);
+    // Handwritten Signature
+    ctx.font = 'italic bold 38px "Brush Script MT", "Segoe Script", "Dancing Script", cursive, sans-serif';
+    ctx.fillStyle = '#1e3a8a'; // Blue ink signature
+    ctx.fillText('Dinh Van Thanh', 1320, 920);
+
+    // Full Name under signature
+    ctx.font = 'bold 23px "Times New Roman", serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText('Thầy giáo Đinh Văn Thành', 1320, 975);
   },
 
   downloadPNG() {
     const canvas = document.getElementById('certDisplayCanvas');
     if (!canvas) return;
 
-    const student = STUDENT_SYSTEM.currentStudent || { fullName: "HocSinh" };
+    const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || { fullName: "HocSinh" };
     const cleanName = (student.fullName || 'HocSinh').replace(/[^a-zA-Z0-9]/g, '_');
-    const filename = `Chung_Chi_${this.currentType}_${cleanName}.png`;
+    const classStr = (student.className || ('Lop_' + (student.grade || '8'))).replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Giay_Khen_15Phut_${cleanName}_${classStr}.png`;
 
     const link = document.createElement('a');
     link.download = filename;
@@ -5376,9 +5621,30 @@ const CERTIFICATE_CENTER = {
     document.body.removeChild(link);
   },
 
+  sendToTeacherChat() {
+    const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || { fullName: "Học sinh" };
+    const classStr = student.className ? 
+      (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : 
+      `Lớp ${student.grade || CURRENT_GRADE}`;
+    const score = this.customScore || (student.minitestBestScore ? student.minitestBestScore.toFixed(1) : "10.0");
+    const unit = this.customUnit || STATE.currentUnit || 1;
+    const certCode = this.customCertId || ('DVT-' + (new Date().getFullYear()) + '-' + Math.floor(Math.random() * 89999 + 10000));
+    
+    const msgText = `Thầy Thành ơi, em ${student.fullName} (${classStr} - ${student.school || 'Trường THCS Đồng Yên'}) vừa hoàn thành bài kiểm tra 15 phút Unit ${unit} đạt ${score}/10 điểm và đã được cấp Giấy khen điện tử (Mã số: ${certCode}). Em gửi Thầy xem và ghi nhận thành tích ạ!`;
+
+    if (typeof TEACHER_CHAT !== 'undefined') {
+      TEACHER_CHAT.sendMessage(msgText);
+      const win = document.getElementById('teacherChatWindow');
+      if (win && win.style.display === 'none') {
+        TEACHER_CHAT.toggleChat();
+      }
+      alert('✓ Đã gửi thông báo thành tích và Giấy khen đến Thầy Đinh Thành trong khung Chatbox!');
+    }
+  },
+
   shareZalo() {
-    const student = STUDENT_SYSTEM.currentStudent || { fullName: "Em" };
-    const text = `🎉 Con đã hoàn thành xuất sắc chứng chỉ học từ vựng Tiếng Anh tại https://dekiemtraso.com/tuvung!`;
+    const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || { fullName: "Em" };
+    const text = `🎉 Em đã hoàn thành xuất sắc bài kiểm tra 15 phút và nhận Giấy khen điện tử môn Tiếng Anh tại https://dekiemtraso.com/tuvung!`;
     const url = `https://zalo.me/share?url=${encodeURIComponent('https://dekiemtraso.com/tuvung')}&title=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   }
