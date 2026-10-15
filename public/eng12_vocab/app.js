@@ -339,9 +339,21 @@ const SpeechEngine = {
 
   // PHÁT ÂM TIẾNG ANH: TỐC ĐỘ 0.80x CHẬM RÃI, DÕNG DẠC, NGHE RÕ TỪNG ÂM TIẾT
   // KHẮC PHỤC TRIỆT ĐỂ LỖI CHROMIUM/EDGE CANCEL LÀM MẤT GIỌNG ĐỌC KHI BẤM CHỌN BÀI
-  speak(text, rate = 0.80, lang = null) {
+  // PHÁT ÂM TIẾNG ANH: TỐC ĐỘ 0.78x CHẬM RÃI, TRÒN VÀNH RÕ CHỮ, KHÔNG NUỐT ÂM
+  // PHÙ HỢP TUYỆT ĐỐI VỚI HỌC SINH THCS & THPT HỌC TIẾNG ANH
+  speak(text, rate = 0.78, lang = null) {
     if (!text || !text.trim()) return;
     if (!('speechSynthesis' in window)) return;
+
+    // Chuẩn hóa tốc độ đọc: Tuyệt đối không đọc vội vàng, nuốt âm
+    // Mọi tốc độ > 0.80 được tự động điều chỉnh về 0.78x để đảm bảo người học nghe rõ từng âm tiết và ending sounds
+    let effectiveRate = parseFloat(rate) || 0.78;
+    if (effectiveRate > 0.80) {
+      effectiveRate = 0.78;
+    }
+    if (effectiveRate < 0.55) {
+      effectiveRate = 0.55;
+    }
 
     try {
       if (window.speechSynthesis.paused) {
@@ -351,11 +363,11 @@ const SpeechEngine = {
       const doSpeak = () => {
         try {
           if (typeof SFX !== 'undefined' && SFX.playTone) {
-            try { SFX.playTone(560, 'sine', 0.04, 0.08); } catch (e) {}
+            try { SFX.playTone(560, 'sine', 0.04, 0.06); } catch (e) {}
           }
 
           const utterance = new SpeechSynthesisUtterance(text.trim());
-          utterance.rate = rate; // 0.80x: Dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi
+          utterance.rate = effectiveRate; // 0.78x: Chậm rãi, dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi // 0.80x: Dõng dạc, tách bạch rõ ràng từng âm tiết và phụ âm đuôi
           utterance.pitch = 1.0; // Cao độ tự nhiên, đĩnh đạc
           utterance.volume = 1.0; // Âm lượng tối đa, to rõ
 
@@ -606,7 +618,7 @@ function runAutoPlayStep() {
   const currentWord = STATE.activeWords[STATE.currentWordIdx];
   if (!currentWord) return;
   
-  SpeechEngine.speak(currentWord.word, 1.0);
+  SpeechEngine.speak(currentWord.word, 0.78);
   
   STATE.autoPlayTimer = setTimeout(() => {
     if (!STATE.isAutoPlaying) return;
@@ -614,7 +626,7 @@ function runAutoPlayStep() {
     
     STATE.autoPlayTimer = setTimeout(() => {
       if (!STATE.isAutoPlaying) return;
-      SpeechEngine.speak(currentWord.example, 1.0);
+      SpeechEngine.speak(currentWord.example, 0.75);
       
       STATE.autoPlayTimer = setTimeout(() => {
         if (!STATE.isAutoPlaying) return;
@@ -820,7 +832,7 @@ function handleMatchTileClick(el, tile) {
   // BẤM VÀO BẤT KỲ THẺ NÀO PHẢI PHÁT ÂM NGAY TỨC THÌ (CHẬM RÃI, RÕ RÀNG):
   const wordToSpeak = (tile.wordObj && tile.wordObj.word) ? tile.wordObj.word : (tile.type === 'en' ? tile.text : '');
   if (wordToSpeak) {
-    SpeechEngine.speak(wordToSpeak, 0.85);
+    SpeechEngine.speak(wordToSpeak, 0.78);
   }
   
   SFX.playFlip();
@@ -844,7 +856,7 @@ function handleMatchTileClick(el, tile) {
         
         // Đọc lại từ vựng một lần nữa để học sinh ghi nhớ sâu
         if (tile.wordObj && tile.wordObj.word) {
-          setTimeout(() => SpeechEngine.speak(tile.wordObj.word, 0.85), 250);
+          setTimeout(() => SpeechEngine.speak(tile.wordObj.word, 0.78), 250);
         }
         
         STATE.match.matchedPairs++;
@@ -940,7 +952,7 @@ function renderListenQuestion(autoSpeak = false) {
   const isListenActive = document.getElementById('tab-listen') && document.getElementById('tab-listen').classList.contains('active');
   if (autoSpeak && isListenActive) {
     setTimeout(() => {
-      SpeechEngine.speak(q.word, 0.95);
+      SpeechEngine.speak(q.word, 0.78);
     }, 300);
   }
   
@@ -1050,12 +1062,12 @@ function renderVocabularyHub() {
     card.style.cursor = 'pointer';
     card.addEventListener('click', (e) => {
       if (e.target.closest('.star-hub-btn')) return;
-      SpeechEngine.speak(w.word, 0.85);
+      SpeechEngine.speak(w.word, 0.78);
     });
     
     card.querySelector('.speak-hub-btn').addEventListener('click', (e) => {
       e.stopPropagation();
-      SpeechEngine.speak(w.word, 0.85);
+      SpeechEngine.speak(w.word, 0.78);
     });
     
     card.querySelector('.star-hub-btn').addEventListener('click', (e) => {
@@ -1172,7 +1184,7 @@ function setupEventListeners() {
   if (scrambleHearBtn) {
     scrambleHearBtn.addEventListener('click', () => {
       const w = STATE.scramble.currentWordObj;
-      if (w) SpeechEngine.speak(w.word, 0.85);
+      if (w) SpeechEngine.speak(w.word, 0.78);
     });
   }
 
@@ -1196,7 +1208,7 @@ function setupEventListeners() {
     cardWordTitle.addEventListener('click', (e) => {
       e.stopPropagation();
       const w = STATE.activeWords[STATE.currentWordIdx];
-      if (w) SpeechEngine.speak(w.word, 0.85);
+      if (w) SpeechEngine.speak(w.word, 0.78);
     });
   }
   const cardIpaText = document.getElementById('cardIpaText');
@@ -1206,12 +1218,16 @@ function setupEventListeners() {
     cardIpaText.addEventListener('click', (e) => {
       e.stopPropagation();
       const w = STATE.activeWords[STATE.currentWordIdx];
-      if (w) SpeechEngine.speak(w.word, 0.85);
+      if (w) SpeechEngine.speak(w.word, 0.78);
     });
   }
 
   // Universal Responsive Fast Tab Switcher
   window.activateTab = function(tabId) {
+    if (typeof STUDENT_SYSTEM !== 'undefined' && !STUDENT_SYSTEM.currentStudent) {
+      STUDENT_SYSTEM.enforceAuthGate();
+      return;
+    }
     if (!tabId) tabId = 'tab-flashcard';
     
     // 1. Update Buttons & Panes active state
@@ -1301,7 +1317,7 @@ function setupEventListeners() {
     wordTitleEl.addEventListener('click', (e) => {
       e.stopPropagation();
       const w = STATE.activeWords[STATE.currentWordIdx];
-      if (w) SpeechEngine.speak(w.word, 0.85);
+      if (w) SpeechEngine.speak(w.word, 0.78);
     });
   }
   
@@ -1312,7 +1328,7 @@ function setupEventListeners() {
     ipaEl.addEventListener('click', (e) => {
       e.stopPropagation();
       const w = STATE.activeWords[STATE.currentWordIdx];
-      if (w) SpeechEngine.speak(w.word, 0.85);
+      if (w) SpeechEngine.speak(w.word, 0.78);
     });
   }
   document.getElementById('fcFlipBtn').addEventListener('click', flipCard);
@@ -1325,17 +1341,17 @@ function setupEventListeners() {
   document.getElementById('btnPronounceNormal').addEventListener('click', (e) => {
     e.stopPropagation();
     const w = STATE.activeWords[STATE.currentWordIdx];
-    if (w) SpeechEngine.speak(w.word, 1.0);
+    if (w) SpeechEngine.speak(w.word, 0.78);
   });
   document.getElementById('btnPronounceSlow').addEventListener('click', (e) => {
     e.stopPropagation();
     const w = STATE.activeWords[STATE.currentWordIdx];
-    if (w) SpeechEngine.speak(w.word, 0.8);
+    if (w) SpeechEngine.speak(w.word, 0.65);
   });
   document.getElementById('btnSpeakSentence').addEventListener('click', (e) => {
     e.stopPropagation();
     const w = STATE.activeWords[STATE.currentWordIdx];
-    if (w) SpeechEngine.speak(w.example, 0.95);
+    if (w) SpeechEngine.speak(w.example, 0.75);
   });
   
   // Voice toggle US / UK
@@ -1345,7 +1361,7 @@ function setupEventListeners() {
     document.getElementById('cardAccentTag').textContent = `${STATE.preferredVoiceAccent} Accent`;
     SFX.playTone(700, 'sine', 0.1);
     const w = STATE.activeWords[STATE.currentWordIdx];
-    if (w) SpeechEngine.speak(w.word, 1.0);
+    if (w) SpeechEngine.speak(w.word, 0.78);
   });
   
   // Star current word
@@ -1407,7 +1423,7 @@ function setupEventListeners() {
         prevWord();
       } else if (e.key === 's' || e.key === 'S') {
         const w = STATE.activeWords[STATE.currentWordIdx];
-        if (w) SpeechEngine.speak(w.word, 1.0);
+        if (w) SpeechEngine.speak(w.word, 0.78);
       } else if (e.key === 'm' || e.key === 'M') {
         document.getElementById('btnMarkMastered').click();
       }
@@ -1417,7 +1433,7 @@ function setupEventListeners() {
   // Quiz prompt audio button
   document.getElementById('quizAudioPromptBtn').addEventListener('click', () => {
     const q = STATE.quiz.questions[STATE.quiz.currentIdx];
-    if (q) SpeechEngine.speak(q.word, 1.0);
+    if (q) SpeechEngine.speak(q.word, 0.78);
   });
   
   // Match game restart
@@ -1428,7 +1444,7 @@ function setupEventListeners() {
     const q = STATE.listen.questions[STATE.listen.currentIdx];
     if (q) {
       document.getElementById('listenPlayBigBtn').classList.add('speaking');
-      SpeechEngine.speak(q.word, 1.0);
+      SpeechEngine.speak(q.word, 0.78);
       setTimeout(() => {
         document.getElementById('listenPlayBigBtn').classList.remove('speaking');
       }, 1000);
@@ -1769,7 +1785,7 @@ function renderSpellingQuestion(autoSpeak = false) {
   // CHỈ phát âm khi học sinh ĐANG Ở tab Luyện Gõ và autoSpeak = true
   const isSpellingActive = document.getElementById('tab-spelling') && document.getElementById('tab-spelling').classList.contains('active');
   if (autoSpeak && isSpellingActive) {
-    SpeechEngine.speak(q.word, 0.95);
+    SpeechEngine.speak(q.word, 0.78);
   }
 }
 
@@ -1821,7 +1837,7 @@ function revealSpellingAnswer() {
   if (!q) return;
   const input = document.getElementById('spellingInput');
   if (input) input.value = q.word;
-  SpeechEngine.speak(q.word, 0.9);
+  SpeechEngine.speak(q.word, 0.78);
 }
 
 function showSpellingFinished() {
@@ -2001,14 +2017,14 @@ function handleHangmanWin() {
   const q = STATE.hangman.questions[STATE.hangman.currentIdx];
   if (q) {
     STATE.mastered.add(q.id);
-    SpeechEngine.speak(q.word, 1.0);
+    SpeechEngine.speak(q.word, 0.78);
   }
   saveProgress();
   
   setTimeout(() => {
     STATE.hangman.currentIdx++;
     loadHangmanWord();
-  }, 1600);
+  }, 1900);
 }
 
 function handleHangmanLose() {
@@ -2016,7 +2032,7 @@ function handleHangmanLose() {
   const q = STATE.hangman.questions[STATE.hangman.currentIdx];
   if (q) {
     STATE.review.add(q.id);
-    SpeechEngine.speak(q.word, 1.0);
+    SpeechEngine.speak(q.word, 0.78);
   }
   saveProgress();
   
@@ -2211,7 +2227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (blitzTrueBtn) blitzTrueBtn.addEventListener('click', () => handleBlitzAnswer(true));
   if (blitzAudioBtn) blitzAudioBtn.addEventListener('click', () => {
     const q = STATE.blitz.questions[STATE.blitz.currentIdx];
-    if (q) SpeechEngine.speak(q.word, 1.0);
+    if (q) SpeechEngine.speak(q.word, 0.78);
   });
 
   // Spelling Controls
@@ -2231,11 +2247,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (spellingRevealBtn) spellingRevealBtn.addEventListener('click', revealSpellingAnswer);
   if (spellingAudioBigBtn) spellingAudioBigBtn.addEventListener('click', () => {
     const q = STATE.spelling.questions[STATE.spelling.currentIdx];
-    if (q) SpeechEngine.speak(q.word, 1.0);
+    if (q) SpeechEngine.speak(q.word, 0.78);
   });
   if (spellingAudioSlowBtn) spellingAudioSlowBtn.addEventListener('click', () => {
     const q = STATE.spelling.questions[STATE.spelling.currentIdx];
-    if (q) SpeechEngine.speak(q.word, 0.8);
+    if (q) SpeechEngine.speak(q.word, 0.65);
   });
 
   // Hangman Controls
@@ -2244,7 +2260,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hangmanHintBtn) hangmanHintBtn.addEventListener('click', giveHangmanHint);
   if (hangmanAudioBtn) hangmanAudioBtn.addEventListener('click', () => {
     const q = STATE.hangman.questions[STATE.hangman.currentIdx];
-    if (q) SpeechEngine.speak(q.word, 1.0);
+    if (q) SpeechEngine.speak(q.word, 0.78);
   });
 
   
@@ -2297,7 +2313,7 @@ const ChantBeatEngine = {
   style: 'popfunk',
   currentStep: 0,
   timerId: null,
-  volume: 0.35,
+  volume: 0.60, // Mặc định âm lượng 0.60x to rõ, sôi động, bùng nổ năng lượng
   isDucked: false,
   
   initContext() {
@@ -2339,19 +2355,21 @@ const ChantBeatEngine = {
     this.volume = Math.max(0, Math.min(1, parseFloat(val) || 0));
     if (this.beatGain && this.ctx) {
       try {
-        const target = this.isDucked ? (this.volume * 0.28) : this.volume;
+        const target = this.isDucked ? (this.volume * 0.20) : this.volume;
         this.beatGain.gain.cancelScheduledValues(this.ctx.currentTime);
         this.beatGain.gain.setValueAtTime(target, this.ctx.currentTime);
       } catch(e){}
     }
   },
-
-  duckBeat(duck) {
-    this.isDucked = !!duck;
+  
+  duckBeat(duck = true) {
+    this.isDucked = duck;
     if (!this.ctx || !this.beatGain) return;
     try {
       const now = this.ctx.currentTime;
-      const target = this.isDucked ? (this.volume * 0.25) : this.volume;
+      // Khi phát âm tiếng Anh: Giảm nhạc nền xuống 20% để giọng đọc cực kỳ tròn vành rõ chữ
+      // Khi đọc xong: Lập tức trả về âm lượng sôi động 100% trong 120ms
+      const target = this.isDucked ? (this.volume * 0.20) : this.volume;
       this.beatGain.gain.cancelScheduledValues(now);
       this.beatGain.gain.linearRampToValueAtTime(target, now + 0.12);
     } catch(e){}
@@ -2381,7 +2399,7 @@ const ChantBeatEngine = {
     if (genreTag) {
       const names = {
         kpop: '🇰🇷 K-Pop Dance (124 BPM)',
-        itsme: '😎 "It\'s Me" Trend Gen Z (116 BPM)',
+        itsme: "😎 It's Me Trend Gen Z (116 BPM)",
         simp808: '💖 Simp Gái 808 Chill (88 BPM)',
         popfunk: '🕺 Dance / Pop Funk (112 BPM)',
         edm: '⚡ TikTok Trend EDM (128 BPM)',
@@ -2413,7 +2431,7 @@ const ChantBeatEngine = {
     });
   },
 
-  // --- STUDIO QUALITY SYNTHESIZERS (0 HARSH BEEP TONES / KHÔNG TIẾNG TÚT TỤT) ---
+  // --- STUDIO QUALITY SYNTHESIZERS & ENERGETIC RHYTHMS ---
   play808Kick(time, gain) {
     if (!this.ctx || !this.beatGain || this.volume <= 0) return;
     try {
@@ -2422,22 +2440,22 @@ const ChantBeatEngine = {
       const filter = this.ctx.createBiquadFilter();
 
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(160, time);
+      filter.frequency.setValueAtTime(180, time);
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(115, time);
-      osc.frequency.exponentialRampToValueAtTime(42, time + 0.45);
+      osc.frequency.setValueAtTime(140, time);
+      osc.frequency.exponentialRampToValueAtTime(38, time + 0.45);
 
-      const peak = Math.max(0.001, (gain || this.volume) * 0.95);
+      const peak = Math.max(0.001, (gain || this.volume) * 1.05);
       g.gain.setValueAtTime(peak, time);
-      g.gain.exponentialRampToValueAtTime(0.001, time + 0.45);
+      g.gain.exponentialRampToValueAtTime(0.001, time + 0.50);
 
       osc.connect(filter);
       filter.connect(g);
       g.connect(this.beatGain);
 
       osc.start(time);
-      osc.stop(time + 0.46);
+      osc.stop(time + 0.52);
     } catch(e) {}
   },
 
@@ -2449,22 +2467,40 @@ const ChantBeatEngine = {
       const filter = this.ctx.createBiquadFilter();
 
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(220, time);
+      filter.frequency.setValueAtTime(280, time);
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(150, time);
-      osc.frequency.exponentialRampToValueAtTime(50, time + 0.12);
+      osc.frequency.setValueAtTime(260, time);
+      osc.frequency.exponentialRampToValueAtTime(48, time + 0.14);
 
-      const peak = Math.max(0.001, (gain || this.volume) * 0.85);
+      const peak = Math.max(0.001, (gain || this.volume) * 1.0);
       g.gain.setValueAtTime(peak, time);
-      g.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+      g.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
 
       osc.connect(filter);
       filter.connect(g);
       g.connect(this.beatGain);
 
       osc.start(time);
-      osc.stop(time + 0.16);
+      osc.stop(time + 0.20);
+
+      // Transient click for extra punch in speakers & headphones
+      this.initNoiseBuffer();
+      if (this.noiseBuffer) {
+        const nSrc = this.ctx.createBufferSource();
+        nSrc.buffer = this.noiseBuffer;
+        const nFilter = this.ctx.createBiquadFilter();
+        nFilter.type = 'bandpass';
+        nFilter.frequency.setValueAtTime(1800, time);
+        const nGain = this.ctx.createGain();
+        nGain.gain.setValueAtTime(peak * 0.35, time);
+        nGain.gain.exponentialRampToValueAtTime(0.001, time + 0.025);
+        nSrc.connect(nFilter);
+        nFilter.connect(nGain);
+        nGain.connect(this.beatGain);
+        nSrc.start(time);
+        nSrc.stop(time + 0.03);
+      }
     } catch(e) {}
   },
 
@@ -2474,36 +2510,57 @@ const ChantBeatEngine = {
       this.initNoiseBuffer();
       if (!this.noiseBuffer) return;
 
-      const src = this.ctx.createBufferSource();
-      src.buffer = this.noiseBuffer;
+      const peak = Math.max(0.001, (gain || this.volume) * 0.7);
 
-      const filter = this.ctx.createBiquadFilter();
-      const g = this.ctx.createGain();
-
-      if (type === 'rimshot') {
+      if (type === 'clap') {
+        // Double burst clap (authentic handclap)
+        [0, 0.014].forEach((delay, idx) => {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuffer;
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1400, time + delay);
+          filter.Q.setValueAtTime(1.2, time + delay);
+          const g = this.ctx.createGain();
+          const p = idx === 0 ? peak * 0.4 : peak * 0.85;
+          g.gain.setValueAtTime(p, time + delay);
+          g.gain.exponentialRampToValueAtTime(0.001, time + delay + (idx === 0 ? 0.03 : 0.18));
+          src.connect(filter);
+          filter.connect(g);
+          g.connect(this.beatGain);
+          src.start(time + delay);
+          src.stop(time + delay + 0.20);
+        });
+      } else if (type === 'rimshot') {
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuffer;
+        const filter = this.ctx.createBiquadFilter();
         filter.type = 'bandpass';
         filter.frequency.setValueAtTime(2200, time);
-        filter.Q.setValueAtTime(3.0, time);
-        const peak = Math.max(0.001, (gain || this.volume) * 0.35);
-        g.gain.setValueAtTime(peak, time);
-        g.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+        filter.Q.setValueAtTime(3.5, time);
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(peak * 0.6, time);
+        g.gain.exponentialRampToValueAtTime(0.001, time + 0.06);
         src.connect(filter);
         filter.connect(g);
         g.connect(this.beatGain);
         src.start(time);
-        src.stop(time + 0.06);
+        src.stop(time + 0.07);
       } else {
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuffer;
+        const filter = this.ctx.createBiquadFilter();
         filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(1600, time);
-        filter.Q.setValueAtTime(1.5, time);
-        const peak = Math.max(0.001, (gain || this.volume) * 0.45);
-        g.gain.setValueAtTime(peak, time);
-        g.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+        filter.frequency.setValueAtTime(1800, time);
+        filter.Q.setValueAtTime(1.4, time);
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(peak * 0.75, time);
+        g.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
         src.connect(filter);
         filter.connect(g);
         g.connect(this.beatGain);
         src.start(time);
-        src.stop(time + 0.13);
+        src.stop(time + 0.16);
       }
     } catch(e) {}
   },
@@ -2519,11 +2576,11 @@ const ChantBeatEngine = {
 
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'highpass';
-      filter.frequency.setValueAtTime(7500, time);
+      filter.frequency.setValueAtTime(8000, time);
 
       const g = this.ctx.createGain();
-      const dur = isOpen ? 0.12 : 0.035;
-      const peak = Math.max(0.001, (gain || this.volume) * (isOpen ? 0.22 : 0.16));
+      const dur = isOpen ? 0.14 : 0.04;
+      const peak = Math.max(0.001, (gain || this.volume) * (isOpen ? 0.35 : 0.25));
 
       g.gain.setValueAtTime(peak, time);
       g.gain.exponentialRampToValueAtTime(0.001, time + dur);
@@ -2537,7 +2594,66 @@ const ChantBeatEngine = {
     } catch(e) {}
   },
 
-  playWarmChord(time, freqs, duration = 0.4, gainVal = 0.2) {
+  playSynthBass(time, freq, duration = 0.18, wave = 'sawtooth') {
+    if (!this.ctx || !this.beatGain || this.volume <= 0 || !freq) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+
+      osc.type = wave;
+      osc.frequency.setValueAtTime(freq, time);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(950, time);
+      filter.frequency.exponentialRampToValueAtTime(180, time + duration);
+      filter.Q.setValueAtTime(3.5, time);
+
+      const peak = Math.max(0.001, this.volume * 0.45);
+      g.gain.setValueAtTime(0.001, time);
+      g.gain.linearRampToValueAtTime(peak, time + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+      osc.connect(filter);
+      filter.connect(g);
+      g.connect(this.beatGain);
+
+      osc.start(time);
+      osc.stop(time + duration + 0.02);
+    } catch(e) {}
+  },
+
+  playPluckMelody(time, freqs, duration = 0.16, gainVal = 0.3) {
+    if (!this.ctx || !this.beatGain || !freqs || this.volume <= 0) return;
+    try {
+      freqs.forEach(freq => {
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, time);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1800, time);
+        filter.frequency.exponentialRampToValueAtTime(450, time + duration);
+
+        const peak = Math.max(0.001, (gainVal || this.volume) * 0.28);
+        g.gain.setValueAtTime(0.001, time);
+        g.gain.linearRampToValueAtTime(peak, time + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(this.beatGain);
+
+        osc.start(time);
+        osc.stop(time + duration + 0.02);
+      });
+    } catch(e) {}
+  },
+
+  playWarmChord(time, freqs, duration = 0.35, gainVal = 0.25) {
     if (!this.ctx || !this.beatGain || !freqs || this.volume <= 0) return;
     try {
       freqs.forEach(freq => {
@@ -2546,14 +2662,14 @@ const ChantBeatEngine = {
         const filter = this.ctx.createBiquadFilter();
 
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(650, time);
+        filter.frequency.setValueAtTime(750, time);
 
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, time);
 
-        const peak = Math.max(0.001, (gainVal || this.volume) * 0.22);
+        const peak = Math.max(0.001, (gainVal || this.volume) * 0.26);
         g.gain.setValueAtTime(0.001, time);
-        g.gain.linearRampToValueAtTime(peak, time + 0.04);
+        g.gain.linearRampToValueAtTime(peak, time + 0.03);
         g.gain.exponentialRampToValueAtTime(0.001, time + duration);
 
         osc.connect(filter);
@@ -2573,65 +2689,130 @@ const ChantBeatEngine = {
 
     switch(this.style) {
       case 'kpop':
+        // K-Pop Dance: 4-on-the-floor kick, double claps, driving 8th bass, syncopated pluck stabs
         if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
         if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
-        else if (step % 2 === 0) this.playHiHat(time, vol, false);
-        if (step === 0) this.playWarmChord(time, [261.63, 329.63, 392.00], 0.22, vol);
-        else if (step === 6) this.playWarmChord(time, [220.00, 261.63, 329.63], 0.20, vol);
-        else if (step === 10) this.playWarmChord(time, [174.61, 220.00, 261.63], 0.20, vol);
-        else if (step === 14) this.playWarmChord(time, [196.00, 246.94, 293.66], 0.20, vol);
+        else this.playHiHat(time, vol * 0.7, false);
+
+        // Electro Bassline
+        if (step === 0 || step === 2) this.playSynthBass(time, 65.41, 0.16, 'sawtooth'); // C2
+        else if (step === 4 || step === 6) this.playSynthBass(time, 98.00, 0.16, 'sawtooth'); // G2
+        else if (step === 8) this.playSynthBass(time, 103.83, 0.16, 'sawtooth'); // Ab2
+        else if (step === 10) this.playSynthBass(time, 116.54, 0.16, 'sawtooth'); // Bb2
+        else if (step === 12) this.playSynthBass(time, 65.41, 0.16, 'sawtooth'); // C2
+        else if (step === 14) this.playSynthBass(time, 77.78, 0.16, 'sawtooth'); // Eb2
+
+        // Pluck Chord Stabs
+        if (step === 3 || step === 6 || step === 11 || step === 14) {
+          this.playPluckMelody(time, [523.25, 659.25, 783.99], 0.15, vol * 0.9);
+        }
         break;
 
       case 'itsme':
-        if (step === 0 || step === 6 || step === 10) this.play808Kick(time, vol);
+        // Trend Gen Z: Punchy kick, 808 sub, bouncy bass groove, catchy lead stabs
+        if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol);
+        if (step === 0 || step === 10) this.play808Kick(time, vol * 0.85);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
         if ([0, 2, 4, 6, 8, 9, 10, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.75, false);
-        if (step === 0) this.playWarmChord(time, [220.00, 261.63, 329.63], 0.35, vol);
-        else if (step === 8) this.playWarmChord(time, [174.61, 220.00, 261.63], 0.35, vol);
+
+        // Gen Z Swag Bassline
+        if (step === 0) this.playSynthBass(time, 55.00, 0.22, 'triangle'); // A1
+        else if (step === 3) this.playSynthBass(time, 65.41, 0.18, 'sawtooth'); // C2
+        else if (step === 6) this.playSynthBass(time, 73.42, 0.18, 'sawtooth'); // D2
+        else if (step === 10) this.playSynthBass(time, 82.41, 0.18, 'sawtooth'); // E2
+        else if (step === 12) this.playSynthBass(time, 55.00, 0.22, 'triangle'); // A1
+
+        if (step === 0 || step === 6 || step === 8 || step === 14) {
+          this.playPluckMelody(time, [440.00, 523.25, 659.25], 0.18, vol * 0.85);
+        }
         break;
 
       case 'simp808':
-        if (step === 0 || step === 8 || step === 11) this.play808Kick(time, vol * 1.15);
+        // Simp Gái 808: Booming sub kicks, rimshots, rolling hi-hats, neo-soul chords
+        if (step === 0 || step === 8 || step === 11) this.play808Kick(time, vol * 1.25);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
-        if (step % 2 === 0) this.playHiHat(time, vol * 0.5, false);
+        if (step % 2 === 0 || step === 14 || step === 15) this.playHiHat(time, vol * 0.6, false);
+
+        // Warm 808 Bass glide
+        if (step === 0) this.playSynthBass(time, 43.65, 0.45, 'triangle'); // F1
+        else if (step === 4) this.playSynthBass(time, 49.00, 0.35, 'triangle'); // G1
+        else if (step === 8) this.playSynthBass(time, 55.00, 0.45, 'triangle'); // A1
+        else if (step === 11) this.playSynthBass(time, 65.41, 0.35, 'triangle'); // C2
+
         if (step === 0) this.playWarmChord(time, [174.61, 220.00, 261.63, 329.63], 0.7, vol * 0.9);
         else if (step === 8) this.playWarmChord(time, [164.81, 196.00, 246.94, 293.66], 0.7, vol * 0.9);
         break;
 
       case 'edm':
-        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
+        // TikTok EDM: Huge 4-on-the-floor kick, massive clap, offbeat pumping bass, arpeggio plucks
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol * 1.15);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
         if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
-        if (step % 2 === 1) this.playWarmChord(time, [261.63, 392.00, 523.25], 0.12, vol * 0.7);
-        break;
 
-      case 'lofi':
-        if (step === 0 || step === 7) this.playPunchyKick(time, vol * 0.7);
-        if (step === 4 || step === 12) this.playSnare(time, vol * 0.7, 'rimshot');
-        if (step % 2 === 0) this.playHiHat(time, vol * 0.4, false);
-        if (step === 0) this.playWarmChord(time, [146.83, 220.00, 261.63, 329.63], 0.8, vol * 0.75);
-        else if (step === 8) this.playWarmChord(time, [196.00, 246.94, 293.66, 349.23], 0.8, vol * 0.75);
+        // Offbeat Sidechain Pumping Synth Bass (The iconic EDM groove)
+        if (step === 2 || step === 6 || step === 10 || step === 14) {
+          this.playSynthBass(time, 130.81, 0.22, 'sawtooth');
+        }
+
+        // Fast Arp Plucks
+        if (step % 3 === 0) {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          const note = notes[(step / 3) % notes.length];
+          this.playPluckMelody(time, [note], 0.12, vol * 0.85);
+        }
         break;
 
       case 'trap':
-        if (step === 0 || step === 5 || step === 8) this.play808Kick(time, vol);
+        // Hip-hop Trap: 808 kick, claps, triplet hat rolls, heavy sub
+        if (step === 0 || step === 5 || step === 8) this.play808Kick(time, vol * 1.1);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if ([0, 2, 4, 6, 8, 9, 10, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.7, false);
+        if ([0, 2, 4, 6, 8, 9, 10, 11, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.75, false);
+
+        if (step === 0 || step === 5 || step === 8 || step === 12) {
+          this.playSynthBass(time, 49.00, 0.35, 'sawtooth');
+        }
         break;
 
       case 'tropical':
-        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol * 0.8);
+        // Tropical Summer: Upbeat kicks, marimba offbeat plucks, lively shaker
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
-        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 0.6, true);
-        if (step === 3 || step === 7 || step === 11 || step === 15) this.playWarmChord(time, [523.25, 659.25], 0.15, vol * 0.5);
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 0.75, true);
+        if (step === 3 || step === 7 || step === 11 || step === 15) {
+          this.playPluckMelody(time, [523.25, 659.25, 783.99], 0.18, vol * 0.85);
+        }
+        if (step % 4 === 0) {
+          this.playSynthBass(time, 65.41, 0.20, 'triangle');
+        }
+        break;
+
+      case 'lofi':
+        // Lo-Fi Chill: Soft kicks, rimshots, lush vintage chords
+        if (step === 0 || step === 7) this.playPunchyKick(time, vol * 0.7);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 0.7, 'rimshot');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.4, false);
+        if (step === 0) this.playWarmChord(time, [146.83, 220.00, 261.63, 329.63], 0.8, vol * 0.85);
+        else if (step === 8) this.playWarmChord(time, [196.00, 246.94, 293.66, 349.23], 0.8, vol * 0.85);
         break;
 
       default: // popfunk
+        // Pop Funk: Punchy kicks, funky claps, slap bass, bouncy horn stabs
         if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if (step % 2 === 0) this.playHiHat(time, vol * 0.7, false);
-        if (step === 0 || step === 8) this.playWarmChord(time, [220.00, 277.18, 329.63], 0.25, vol * 0.6);
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.75, false);
+
+        // Slap Bass Groove
+        if (step === 0 || step === 2) this.playSynthBass(time, 55.00, 0.18, 'sawtooth'); // A1
+        else if (step === 6) this.playSynthBass(time, 65.41, 0.18, 'sawtooth'); // C2
+        else if (step === 8) this.playSynthBass(time, 73.42, 0.18, 'sawtooth'); // D2
+        else if (step === 10) this.playSynthBass(time, 82.41, 0.18, 'sawtooth'); // E2
+        else if (step === 14) this.playSynthBass(time, 98.00, 0.18, 'sawtooth'); // G2
+
+        // Funky Stabs
+        if (step === 0 || step === 3 || step === 6 || step === 8 || step === 11 || step === 14) {
+          this.playPluckMelody(time, [440.00, 554.37, 659.25], 0.16, vol * 0.85);
+        }
         break;
     }
   },
@@ -2798,7 +2979,7 @@ function runChantSequenceForCurrentWord() {
   if (meaningEl) meaningEl.classList.remove('highlight');
   
   // Speak Call (English)
-  SpeechEngine.speak(w.word, 1.15);
+  SpeechEngine.speak(w.word, 0.78);
   
   // Phase 2: RESPONSE (Sau 1.6s - Đối đáp nghĩa Tiếng Việt)
   STATE_CHANT.timerTimeout = setTimeout(() => {
@@ -2819,7 +3000,7 @@ function runChantSequenceForCurrentWord() {
     if (STATE_CHANT.speakVi) {
       speakVietnameseResponse(w.word, w.meaning);
     } else {
-      SpeechEngine.speak(w.word, 1.05);
+      SpeechEngine.speak(w.word, 0.78);
     }
     
     // Phase 3: CHEER (Sau 2.5s - Nhắc lại hoặc đọc ví dụ)
@@ -2838,9 +3019,9 @@ function runChantSequenceForCurrentWord() {
       if (meaningEl) meaningEl.classList.add('highlight');
       
       if (STATE_CHANT.speakExample && w.example) {
-        SpeechEngine.speak(w.example, 1.05);
+        SpeechEngine.speak(w.example, 0.75);
       } else {
-        SpeechEngine.speak(w.word, 1.2);
+        SpeechEngine.speak(w.word, 0.78);
       }
       
       // Step to next word after groove delay (2.4s)
@@ -2848,11 +3029,11 @@ function runChantSequenceForCurrentWord() {
         if (!STATE_CHANT.isPlaying) return;
         STATE_CHANT.currentWordIdx++;
         runChantSequenceForCurrentWord();
-      }, 2400);
+      }, 2800);
       
-    }, 2500);
+    }, 2800);
     
-  }, 1600);
+  }, 1900);
 }
 
 function speakVietnameseResponse(wordEn, meaningVi) {
@@ -2891,7 +3072,7 @@ function speakVietnameseResponse(wordEn, meaningVi) {
     // Nếu máy tính/điện thoại không có giọng tiếng Việt:
     // TUYỆT ĐỐI KHÔNG DÙNG GIỌNG TIẾNG ANH ĐỂ ĐỌC TIẾNG VIỆT (tránh đọc méo, đọc sai)!
     // Thay vào đó: Phát âm lặp lại từ tiếng Anh theo phong cách Call & Response của Chant!
-    SpeechEngine.speak(wordEn, 1.0);
+    SpeechEngine.speak(wordEn, 0.78);
   }
 }
 
@@ -3994,6 +4175,15 @@ const THEME_SYSTEM = {
 
 const STUDENT_SYSTEM = {
 
+  enforceAuthGate() {
+    if (this.currentStudent) {
+      document.body.classList.remove('auth-locked-mode');
+      return;
+    }
+    document.body.classList.add('auth-locked-mode');
+    this.openRegisterModal(false, 'login');
+  },
+
   openProfileModal() {
     if (!this.currentStudent) {
       this.openRegisterModal(false, 'login');
@@ -4253,10 +4443,11 @@ const STUDENT_SYSTEM = {
       });
     }
 
-    // Auto check if registered or logged in
-    // Note: Do not auto-block user on initial page load so they can immediately learn and click anywhere
+    // YÊU CẦU BẮT BUỘC: Học sinh phải đăng ký và đăng nhập mới học được!
     if (!this.currentStudent) {
-      // Guest mode ready
+      setTimeout(() => this.enforceAuthGate(), 250);
+    } else {
+      document.body.classList.remove('auth-locked-mode');
     }
   },
 
@@ -4315,8 +4506,17 @@ const STUDENT_SYSTEM = {
     const overlay = document.getElementById('studentRegisterModalOverlay');
     if (!overlay) return;
 
+    this.canCloseModal = (this.currentStudent !== null) || canClose;
+
     const closeBtn = overlay.querySelector('.custom-modal-close');
-    if (closeBtn) closeBtn.style.display = 'flex';
+    if (closeBtn) {
+      if (this.currentStudent) {
+        closeBtn.style.display = 'flex';
+      } else {
+        // Học sinh chưa đăng nhập -> Ẩn nút tắt để bắt buộc đăng nhập/đăng ký
+        closeBtn.style.display = 'none';
+      }
+    }
 
     this.switchAuthTab(defaultTab);
 
@@ -4342,8 +4542,15 @@ const STUDENT_SYSTEM = {
   },
 
   closeRegisterModal() {
+    if (!this.currentStudent && !this.canCloseModal) {
+      alert('⚠️ Em vui lòng Đăng ký tài khoản hoặc Đăng nhập để bắt đầu học tập và tham gia các trò chơi nhé!');
+      return;
+    }
     const overlay = document.getElementById('studentRegisterModalOverlay');
     if (overlay) overlay.classList.remove('active');
+    if (this.currentStudent) {
+      document.body.classList.remove('auth-locked-mode');
+    }
   },
 
   switchAuthTab(tab) {
@@ -4564,7 +4771,10 @@ const STUDENT_SYSTEM = {
     };
 
     this.saveStudent();
+    document.body.classList.remove('auth-locked-mode');
     this.closeRegisterModal();
+    if (typeof SFX !== 'undefined') SFX.playWin();
+    if (typeof launchConfetti === 'function') launchConfetti();
 
     if (grade !== CURRENT_GRADE) {
       switchGrade(grade, true);
@@ -4583,7 +4793,7 @@ const STUDENT_SYSTEM = {
     this.currentStudent = null;
     localStorage.removeItem('ENG_STUDENT_PROFILE');
     this.renderHeaderBadge();
-    this.openRegisterModal(false, 'login');
+    this.enforceAuthGate();
   },
 
   renderHeaderBadge() {
@@ -7079,3 +7289,22 @@ if (typeof document !== 'undefined') {
     startApp();
   }
 }
+
+
+// Chặn tắt Modal khi chưa đăng nhập / đăng ký
+(function setupAuthOverlayBackdropGuard() {
+  const overlay = document.getElementById('studentRegisterModalOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        if (typeof STUDENT_SYSTEM !== 'undefined' && !STUDENT_SYSTEM.currentStudent) {
+          alert('⚠️ Em vui lòng Đăng ký tài khoản hoặc Đăng nhập để mở khóa học tập và các trò chơi nhé!');
+          return;
+        }
+        if (typeof STUDENT_SYSTEM !== 'undefined') {
+          STUDENT_SYSTEM.closeRegisterModal();
+        }
+      }
+    });
+  }
+})();
