@@ -15,6 +15,21 @@ export interface AppCard {
 }
 
 export const apps: AppCard[] = [
+  // ==================== HỌC TỪ VỰNG TIẾNG ANH 6 - 12 GLOBAL SUCCESS ====================
+  {
+    id: "hoc-tu-vung-tieng-anh-6-12",
+    title: "SIÊU TRÍ NHỚ TỪ VỰNG 6 - 12",
+    description: "Học từ vựng Tiếng Anh Lớp 6 - 12 (Global Success) siêu tốc qua Flashcard 3D, Nhạc Chant sôi động, 11 game trí tuệ, phát âm AI bản xứ và theo dõi học sinh cho giáo viên.",
+    image: "/trolygvnn.jpg",
+    url: "/tuvung/",
+    category: "HỌC TỪ VỰNG & LUYỆN THI",
+    levelBadge: "TIỆN ÍCH",
+    badge: "MIỄN PHÍ 100%",
+    active: true,
+    featured: true,
+    order: 0
+  },
+
 
   // ==================== CÔNG CỤ CHỦ LỰC: NĂNG LỰC SỐ & AI ====================
   {

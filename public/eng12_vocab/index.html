@@ -23,8 +23,8 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Eng 12 Vocab Master - Học Từ Vựng Tiếng Anh Lớp 12 SGK Global Success</title>
-  <meta name="description" content="Ứng dụng học từ vựng Tiếng Anh 12 Global Success siêu tốc, chế độ Nhạc Chant vui tươi Call & Response, 10 chế độ luyện tập đa dạng, phát âm chuẩn US/UK. Tác giả: Thầy Đinh Văn Thành.">
+  <title>Vocab Master Pro - Học Từ Vựng Tiếng Anh Lớp 6 - 12 (Global Success)</title>
+  <meta name="description" content="Hệ thống học từ vựng Tiếng Anh 6 - 12 Global Success siêu tốc, chuẩn SGK mới, Nhạc Chant sôi động, 11 chế độ học thông minh, gõ từ nhớ sâu, phát âm chuẩn bản xứ. Tác giả: Thầy giáo Đinh Văn Thành.">
   <meta name="theme-color" content="#080d1a">
   
   <!-- Auto redirect /eng12_vocab -> /eng12_vocab/ for relative path safety -->
@@ -2460,6 +2460,361 @@ html, body {
   box-shadow: 0 0 16px rgba(99, 102, 241, 0.5) !important;
 }
 
+
+/* ==============================================================================
+   ENG 6-12 VOCAB MASTER - NEW STYLES (MULTI-GRADE, REGISTRATION, ADMIN, CERT)
+   Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+   ============================================================================== */
+
+/* GRADE SWITCHER BAR */
+.grade-scroll-bar {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+}
+
+.grade-pills-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: center;
+}
+.grade-pills-wrapper::-webkit-scrollbar { display: none; }
+
+.grade-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.grade-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.grade-pill.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: rgba(99, 102, 241, 0.6);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.grade-badge-tag {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* STUDENT HEADER PROFILE TAG */
+.student-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.student-header-tag button {
+  background: none;
+  border: none;
+  color: #34d399;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+/* MODAL OVERLAY STYLES */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-modal-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-modal-card.large {
+  max-width: 1000px;
+}
+
+.custom-modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.custom-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.custom-modal-close:hover {
+  background: rgba(244, 63, 94, 0.2);
+  color: #f43f5e;
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+.custom-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* FORM STYLES */
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* ADMIN DASHBOARD STYLES */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-kpi-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-kpi-label {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-kpi-val {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-top: 0.25rem;
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-top: 1rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  font-weight: 800;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* SMART IMPORTER DROPZONE */
+.smart-dropzone {
+  border: 2px dashed rgba(99, 102, 241, 0.4);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: rgba(99, 102, 241, 0.04);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.smart-dropzone:hover, .smart-dropzone.dragover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+/* CERTIFICATE OF ACHIEVEMENT */
+.cert-frame {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 8px double #eab308;
+  border-radius: 18px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 30px rgba(234, 179, 8, 0.25);
+  color: #ffffff;
+}
+
+.cert-header {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: #eab308;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cert-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0.75rem 0 0.5rem;
+  background: linear-gradient(135deg, #fef08a, #eab308);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cert-student-name {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin: 1rem 0;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.cert-body-text {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(234, 179, 8, 0.3);
+}
+
+.cert-sign-title {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.cert-sign-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #facc15;
+  margin-top: 2rem;
+}
+
 </style>
 </head>
 <body>
@@ -2474,12 +2829,22 @@ html, body {
         <a class="brand-wrapper" href="#" id="brandLogoBtn">
           <div class="brand-logo">🇬🇧</div>
           <div class="brand-info">
-            <h1>ENG 12 VOCAB MASTER</h1>
-            <span class="brand-badge">Global Success 2026</span>
+            <h1 id="brandTitleText">VOCAB MASTER PRO</h1>
+            <span class="brand-badge" id="currentGradeBadge">Global Success 6 - 12</span>
           </div>
         </a>
 
         <div class="header-actions">
+          <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Thông tin học sinh">
+            <span>👤 <span id="studentHeaderName">Em</span></span>
+            <button id="editStudentInfoBtn" title="Chỉnh sửa thông tin">✏️</button>
+          </div>
+          <button class="header-btn" id="openShareModalBtn" title="Đường link ngắn dekiemtraso.com/tuvung">
+            🔗 <span>Link Ngắn</span>
+          </button>
+          <button class="header-btn" id="openAdminModalBtn" title="Quản trị giáo viên & theo dõi học sinh" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-color: rgba(245,158,11,0.5); font-weight: 700;">
+            👑 <span>Admin</span>
+          </button>
           <button class="header-btn btn-qr" id="openQrModalBtn" title="Mở trên điện thoại">
             📱 <span>Mở ĐT</span>
           </button>
@@ -2492,6 +2857,13 @@ html, body {
         </div>
       </div>
     </header>
+    <!-- Grade Selector Bar (Lớp 6 đến Lớp 12) -->
+    <nav class="grade-scroll-bar" aria-label="Chọn khối lớp học">
+      <div class="grade-pills-wrapper" id="gradePillsContainer">
+        <!-- Dynamically injected by JavaScript initGradePills() -->
+      </div>
+    </nav>
+
 
     <!-- Unit Selector Horizontal Scrollbar -->
     <nav class="unit-scroll-bar" aria-label="Danh sách bài học">
@@ -2533,7 +2905,13 @@ html, body {
         <button class="mode-tab-btn" data-tab="tab-listen" role="tab" title="Lắng nghe & chọn từ chuẩn">
           🎧 <span>Luyện Nghe</span>
         </button>
-        <button class="mode-tab-btn" data-tab="tab-hub" role="tab" title="Sổ tay tra cứu 247 từ vựng">
+        <button class="mode-tab-btn" data-tab="tab-minitest" role="tab" style="background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(6,182,212,0.25)); border-color: rgba(16,185,129,0.5); color: #34d399; font-weight: 800;" title="Kiểm tra 15 phút & Cấp giấy khen điện tử">
+          🏆 <span>Test 15p</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-weakwords" role="tab" style="color: #f87171; border-color: rgba(248,113,113,0.4);" title="Sổ tay các từ khó cần ôn lại">
+          ⚠️ <span>Từ Khó (<span id="weakWordsCountBadge">0</span>)</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-hub" role="tab" title="Sổ tay tra cứu toàn bộ từ vựng">
           📖 <span>Tra Cứu</span>
         </button>
       </div>
@@ -2825,6 +3203,7 @@ html, body {
             <button class="fc-nav-btn btn-prev" id="scrambleResetBtn" title="Xếp lại từ đầu" style="max-width: 140px;">
               🔄 Xóa làm lại
             </button>
+            <button class="header-btn" id="restartScrambleBtn" title="Chơi lại từ đầu">🔄 Chơi lại</button>
             <button class="header-btn" id="scrambleHintBtn" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; font-weight: 800; padding: 0.75rem 1.2rem;">
               💡 Gợi ý (+1 chữ)
             </button>
@@ -3134,6 +3513,53 @@ html, body {
 
         <div class="match-game-board" id="hubWordsGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem;"></div>
       </section>
+    
+      <!-- ========================================== -->
+      <!-- TAB 12: MINI TEST 15 PHÚT & GIẤY KHEN     -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-minitest">
+        <div class="flashcard-view-wrapper">
+          <div class="fc-top-bar" style="justify-content: space-between;">
+            <div style="font-weight: 800; color: #34d399; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🏆 BÀI KIỂM TRA ĐÁNH GIÁ 15 PHÚT</span>
+              <span id="minitestProgressDisplay" style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;"></span>
+            </div>
+            <div id="minitestTimerDisplay" style="font-size: 1.1rem; font-weight: 900; color: #f59e0b; background: rgba(245,158,11,0.15); padding: 0.25rem 0.75rem; border-radius: 9999px; border: 1px solid rgba(245,158,11,0.3);">
+              ⏱️ 15:00
+            </div>
+          </div>
+
+          <div id="minitestQuestionContainer" style="background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 2rem 1.5rem; margin-top: 1rem; min-height: 320px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="text-align: center; padding: 2rem 1rem;">
+              <div style="font-size: 3.5rem; margin-bottom: 0.75rem;">📝</div>
+              <h2 style="font-size: 1.6rem; color: #ffffff; margin-bottom: 0.5rem;">Kiểm Tra 15 Phút Tổng Hợp Từ Vựng</h2>
+              <p style="color: #cbd5e1; max-width: 500px; margin: 0 auto 1.5rem; line-height: 1.6;">
+                Bài thi gồm 10 câu trắc nghiệm phản xạ và nghe phát âm. Đạt từ <strong>8.0 điểm</strong> trở lên để nhận <strong>GIẤY KHEN ĐIỆN TỬ</strong> vinh danh học sinh xuất sắc!
+              </p>
+              <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.8rem 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+                🚀 Bắt Đầu Làm Bài Ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 13: SỔ TAY TỪ KHÓ (WEAK WORDS)        -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-weakwords">
+        <div class="flashcard-view-wrapper">
+          <div class="fc-top-bar">
+            <div style="font-weight: 800; color: #f87171; font-size: 1.1rem;">
+              ⚠️ SỔ TAY TỪ KHÓ CẦN ÔN TẬP CẤP TỐC (SPACED REPETITION)
+            </div>
+          </div>
+          <div id="weakWordsListContainer" style="margin-top: 1rem; min-height: 300px;">
+            <!-- Dynamically injected -->
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Modal: QR Code to open on Mobile -->
@@ -3203,7 +3629,273 @@ html, body {
 
   <!-- Scripts: Direct Bulletproof Sequential Loading (NO document.write) -->
   <script src="confetti.browser.min.js"></script>
-  <script src="vocabulary_data.js?v=20261014_v15_speak_unit_title"></script>
-  <script src="app.js?v=20261014_v15_speak_unit_title"></script>
+  <script src="vocabulary_data.js?v=20261015_multigrade_v4"></script></script>
+  <script src="app.js?v=20261015_multigrade_v4"></script></script>
+
+  <!-- MODAL 1: ĐĂNG KÝ HỌC SINH BẮT BUỘC MIỄN PHÍ -->
+  <div class="custom-modal-overlay" id="studentRegisterModalOverlay">
+    <div class="custom-modal-card">
+      <div class="custom-modal-header">
+        <h2>🌟 Đăng Ký Học Tập Miễn Phí</h2>
+        <button class="custom-modal-close" id="regModalCloseBtn" onclick="STUDENT_SYSTEM.closeRegisterModal()">✕</button>
+      </div>
+      <div class="custom-modal-body">
+        <p style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem;">
+          Chào mừng em đến với <strong>Hệ Thống Luyện Siêu Trí Nhớ Từ Vựng Tiếng Anh 6 - 12 (Global Success)</strong> của Thầy Đinh Văn Thành! Vui lòng nhập thông tin để lưu giữ tiến độ học tập và cấp Giấy Khen vinh danh.
+        </p>
+        <form onsubmit="STUDENT_SYSTEM.submitRegistration(event)">
+          <div class="form-group">
+            <label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
+            <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required>
+          </div>
+          <div class="form-group">
+            <label for="regGrade">🎓 Khối Lớp Học (*)</label>
+            <select id="regGrade" class="form-control" style="background: #1e293b; color: white;">
+              <option value="6">🎒 Tiếng Anh Lớp 6 (THCS)</option>
+              <option value="7">📘 Tiếng Anh Lớp 7 (THCS)</option>
+              <option value="8">📗 Tiếng Anh Lớp 8 (THCS)</option>
+              <option value="9">📙 Tiếng Anh Lớp 9 (Thi Vào 10)</option>
+              <option value="10">📕 Tiếng Anh Lớp 10 (THPT)</option>
+              <option value="11">🎓 Tiếng Anh Lớp 11 (THPT)</option>
+              <option value="12" selected>⭐ Tiếng Anh Lớp 12 (Tốt Nghiệp QG)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regSchool">🏫 Trường Đang Theo Học (*)</label>
+            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: THCS Đồng Yên" required>
+          </div>
+          <div class="form-group">
+            <label for="regPhone">📱 Số Điện Thoại Phụ Huynh / Học Sinh (*)</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0987654321 (10 chữ số)" required>
+          </div>
+          <button type="submit" id="submitRegBtn" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+            🚀 Bắt Đầu Học Ngay (Miễn Phí 100%)
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADMIN QUẢN TRỊ VIÊN & THỐNG KÊ HỌC SINH -->
+  <div class="custom-modal-overlay" id="adminModalOverlay">
+    <div class="custom-modal-card large">
+      <div class="custom-modal-header">
+        <h2>👑 Quản Trị Viên & Theo Dõi Học Sinh</h2>
+        <button class="custom-modal-close" onclick="ADMIN_SYSTEM.closeAdminModal()">✕</button>
+      </div>
+      <div class="custom-modal-body">
+        <!-- Admin Navigation Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">
+          <button class="header-btn active" id="adminTabStudentsBtn" onclick="document.getElementById('adminSectionStudents').style.display='block'; document.getElementById('adminSectionImporter').style.display='none'; this.style.background='#6366f1'; document.getElementById('adminTabImporterBtn').style.background='rgba(255,255,255,0.06)';">
+            👥 Danh Sách & Tiến Độ Học Sinh
+          </button>
+          <button class="header-btn" id="adminTabImporterBtn" onclick="document.getElementById('adminSectionStudents').style.display='none'; document.getElementById('adminSectionImporter').style.display='block'; this.style.background='#6366f1'; document.getElementById('adminTabStudentsBtn').style.background='rgba(255,255,255,0.06)';">
+            📥 Bộ Nạp Từ Vựng Thông Minh (Lớp 6-12)
+          </button>
+        </div>
+
+        <!-- Section 1: Students Tracking -->
+        <div id="adminSectionStudents">
+          <div class="admin-kpi-grid">
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Tổng Học Sinh</span>
+              <span class="admin-kpi-val" id="adminTotalStudents">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Từ Đã Thuộc Làu</span>
+              <span class="admin-kpi-val" style="color: #34d399;" id="adminTotalWordsLearned">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Tổng Điểm XP</span>
+              <span class="admin-kpi-val" style="color: #38bdf8;" id="adminTotalXP">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Hoạt Động Hôm Nay</span>
+              <span class="admin-kpi-val" style="color: #f59e0b;" id="adminActiveToday">0</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 280px;">
+              <input type="text" id="adminSearchInput" class="form-control" placeholder="🔍 Tìm kiếm theo tên, trường, SĐT..." oninput="ADMIN_SYSTEM.renderAdminView()" style="padding: 0.5rem 0.8rem; font-size: 0.88rem;">
+              <select id="adminGradeFilter" class="form-control" style="width: 140px; background: #1e293b; color: white; padding: 0.5rem 0.6rem; font-size: 0.88rem;" onchange="ADMIN_SYSTEM.renderAdminView()">
+                <option value="all">Tất cả lớp</option>
+                <option value="6">Lớp 6</option>
+                <option value="7">Lớp 7</option>
+                <option value="8">Lớp 8</option>
+                <option value="9">Lớp 9</option>
+                <option value="10">Lớp 10</option>
+                <option value="11">Lớp 11</option>
+                <option value="12">Lớp 12</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="header-btn" onclick="ADMIN_SYSTEM.exportToExcel()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700;">
+                📥 Xuất Excel (.csv)
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Họ và Tên</th>
+                  <th>Khối Lớp</th>
+                  <th>Trường Học</th>
+                  <th>Số Điện Thoại</th>
+                  <th>Tiến Độ Học</th>
+                  <th>Bài Test</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="adminStudentTableBody">
+                <!-- Dynamically injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Smart Vocab Importer -->
+        <div id="adminSectionImporter" style="display: none;">
+          <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Thầy có thể tải bất kỳ file nào (Word .docx, Excel .xlsx, CSV, JSON hoặc dán danh sách từ vựng). Hệ thống sẽ <strong>tự động phân biệt các lớp từ 6 đến 12</strong> và số Unit để cập nhật vào cơ sở dữ liệu!
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Khối Lớp Cần Nạp:</label>
+              <select id="importTargetGrade" class="form-control" style="background: #1e293b; color: white; margin-top: 0.25rem;">
+                <option value="6">Lớp 6</option>
+                <option value="7">Lớp 7</option>
+                <option value="8">Lớp 8</option>
+                <option value="9">Lớp 9</option>
+                <option value="10">Lớp 10</option>
+                <option value="11">Lớp 11</option>
+                <option value="12" selected>Lớp 12</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Bài Học (Unit):</label>
+              <input type="number" id="importTargetUnit" class="form-control" value="1" min="1" max="16" style="margin-top: 0.25rem;">
+            </div>
+          </div>
+
+          <!-- File Upload Dropzone -->
+          <div class="smart-dropzone" onclick="document.getElementById('importerFileInput').click()">
+            <input type="file" id="importerFileInput" style="display: none;" accept=".docx,.xlsx,.csv,.json,.txt" onchange="SMART_IMPORTER.handleFileUpload(event)">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📂</div>
+            <div style="font-weight: 800; color: #ffffff; font-size: 1.05rem;">Bấm để chọn file hoặc Kéo & Thả file vào đây</div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.25rem;">Hỗ trợ: Word (.docx), Excel (.xlsx/.csv), JSON, Text</div>
+          </div>
+
+          <!-- Or Paste Text Directly -->
+          <div style="margin-top: 1rem;">
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Hoặc Dán Văn Bản Danh Mục Từ Vựng Trực Tiếp:</label>
+            <textarea id="importerPasteInput" class="form-control" rows="4" placeholder="Dán văn bản (Mỗi dòng một từ: Từ tiếng Anh | Phiên âm | Nghĩa tiếng Việt | Câu ví dụ)..." oninput="SMART_IMPORTER.processTextImport(this.value)" style="margin-top: 0.25rem; font-family: monospace; font-size: 0.85rem;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem;"><span id="importerWordCount" class="grade-badge-tag" style="background:rgba(99,102,241,0.3); color:#a5b4fc; font-size:0.85rem;">0 từ vựng</span><div id="importerStatus" style="font-size: 0.88rem; color: #34d399; font-weight: 700;">
+              Chưa có dữ liệu nào được tải lên.
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="header-btn" onclick="SMART_IMPORTER.downloadDatabaseBackup()" style="color: #38bdf8; border-color: rgba(56,189,248,0.4);">
+                💾 Sao Lưu Toàn Bộ JSON
+              </button>
+              <button class="header-btn" onclick="SMART_IMPORTER.saveToDatabase()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800;">
+                ✓ Lưu & Cập Nhật Vào Ứng Dụng
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Table -->
+          <div class="admin-table-wrapper" style="margin-top: 1rem; max-height: 280px;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Từ Tiếng Anh</th>
+                  <th>Phiên Âm</th>
+                  <th>Nghĩa Tiếng Việt</th>
+                  <th>Ví Dụ Minh Họa</th>
+                </tr>
+              </thead>
+              <tbody id="importerPreviewTbody">
+                <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 1.5rem;">Chưa có dữ liệu từ vựng được nạp.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: GIẤY KHEN ĐIỆN TỬ VINH DANH HỌC SINH -->
+  <div class="custom-modal-overlay" id="certificateModalOverlay">
+    <div class="custom-modal-card" style="background: transparent; border: none; box-shadow: none;">
+      <div class="cert-frame">
+        <button class="custom-modal-close" onclick="MINITEST_SYSTEM.closeCertificate()" style="position: absolute; top: 1rem; right: 1rem;">✕</button>
+        <div class="cert-header">BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỌC TẬP THÔNG MINH 2026</div>
+        <div class="cert-title">GIẤY KHEN VINH DANH</div>
+        <div style="font-size: 0.95rem; color: #facc15; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Hoàn Thành Xuất Sắc Bài Kiểm Tra Từ Vựng</div>
+        <div class="cert-student-name" id="certStudentName">Nguyễn Văn An</div>
+        <div class="cert-body-text" id="certDetailsText">
+          Đã đạt thành tích xuất sắc trong bài kiểm tra từ vựng Tiếng Anh Global Success.
+        </div>
+        <div class="cert-footer">
+          <div>
+            <div class="cert-sign-title">NGÀY CẤP CHỨNG NHẬN</div>
+            <div style="font-size: 0.9rem; color: #ffffff; margin-top: 1.5rem;" id="certDateDisplay">${new Date().toLocaleDateString('vi-VN')}</div>
+          </div>
+          <div>
+            <div class="cert-sign-title">BIÊN SOẠN & GIẢNG DẠY</div>
+            <div class="cert-sign-name">Thầy giáo Đinh Văn Thành</div>
+            <div style="font-size: 0.78rem; color: #94a3b8;">Trường THCS Đồng Yên</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ĐƯỜNG LINK NGẮN & QR CODE -->
+  <div class="custom-modal-overlay" id="shareModalOverlay">
+    <div class="custom-modal-card">
+      <div class="custom-modal-header">
+        <h2>🔗 Đường Link Ngắn Nhất & Quét QR</h2>
+        <button class="custom-modal-close" onclick="SHARE_SYSTEM.closeShareModal()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="text-align: center;">
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Đường link ngắn gọn, dễ nhớ nhất để Thầy/Cô và phụ huynh giới thiệu cho học sinh truy cập học tập trên điện thoại và máy tính:
+        </p>
+
+        <div style="background: rgba(99,102,241,0.12); border: 2px dashed #6366f1; border-radius: 14px; padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Đường Link Chính Thức:</div>
+          <div id="shareUrlDisplay" style="font-size: 1.35rem; font-weight: 900; color: #38bdf8; margin: 0.4rem 0; word-break: break-all;">
+            https://dekiemtraso.com/tuvung
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 1.25rem;">
+          <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <canvas id="shareQrCanvas" width="180" height="180"></canvas>
+            <div style="font-size: 0.78rem; color: #0f172a; font-weight: 800; margin-top: 4px;">Quét để học trên điện thoại</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button class="header-btn" onclick="SHARE_SYSTEM.copyShortLink()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800; padding: 0.65rem 1.25rem;">
+            📋 Sao Chép Link
+          </button>
+          <button class="header-btn" onclick="SHARE_SYSTEM.shareZalo()" style="background: #0068ff; color: white; font-weight: 800; padding: 0.65rem 1.25rem;">
+            📲 Gửi Qua Zalo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

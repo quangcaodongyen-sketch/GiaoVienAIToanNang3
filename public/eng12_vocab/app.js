@@ -1096,6 +1096,12 @@ function setupEventListeners() {
         const inp = document.getElementById('spellingInput');
         if (inp) setTimeout(() => inp.focus(), 200);
       }
+      if (btn.dataset.tab === 'tab-minitest') {
+        if (typeof MINITEST_SYSTEM !== 'undefined') MINITEST_SYSTEM.init();
+      }
+      if (btn.dataset.tab === 'tab-weakwords') {
+        if (typeof WEAKWORDS_SYSTEM !== 'undefined') WEAKWORDS_SYSTEM.renderTab();
+      }
     });
   });
   
@@ -2995,14 +3001,1058 @@ function updateChantChips() {
 // ==============================================================================
 // 12. FINAL ENTRY POINT - EXECUTES AFTER ALL FUNCTIONS & STATES ARE LOADED
 // ==============================================================================
+
+function loadCustomVocab() {
+  try {
+    const custom = localStorage.getItem('ENG_CUSTOM_DATABASE');
+    if (custom) {
+      const parsed = JSON.parse(custom);
+      Object.keys(parsed).forEach(g => {
+        if (Array.isArray(parsed[g])) {
+          ALL_VOCABULARY_DATA[g] = parsed[g];
+        }
+      });
+      console.log("Custom vocabulary database loaded!");
+    }
+  } catch (e) {
+    console.error("Error loading custom database:", e);
+  }
+}
+
+/**
+ * ==============================================================================
+ * ENG 6 - 12 VOCAB MASTER - ENHANCEMENT ENGINE (MULTI-GRADE, REGISTRATION, ADMIN)
+ * Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+ * Bám sát chương trình GDPT 2018 Bộ Giáo Dục & Đào Tạo (Global Success 6 - 12)
+ * ==============================================================================
+ */
+
+// ==========================================
+// 1. MULTI-GRADE MANAGEMENT
+// ==========================================
+function initGradePills() {
+  const container = document.getElementById('gradePillsContainer');
+  if (!container) return;
+
+  container.innerHTML = '';
+  const grades = ["6", "7", "8", "9", "10", "11", "12"];
+
+  grades.forEach(g => {
+    const meta = GRADE_METADATA[g] || { name: `Lớp ${g}`, icon: "📘" };
+    const btn = document.createElement('button');
+    btn.className = `grade-pill ${g === CURRENT_GRADE ? 'active' : ''}`;
+    btn.dataset.grade = g;
+    btn.innerHTML = `${meta.icon} <span>${meta.name}</span> <span class="grade-badge-tag">${meta.badge || ''}</span>`;
+    
+    btn.addEventListener('click', () => {
+      switchGrade(g, true);
+    });
+
+    container.appendChild(btn);
+  });
+
+  updateGradeUI();
+}
+
+function updateGradeUI() {
+  // Update Grade pills active class
+  document.querySelectorAll('.grade-pill').forEach(btn => {
+    if (btn.dataset.grade === CURRENT_GRADE) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Update Brand Badge
+  const badge = document.getElementById('currentGradeBadge');
+  if (badge) {
+    const meta = GRADE_METADATA[CURRENT_GRADE];
+    badge.textContent = `${meta ? meta.fullName : 'Tiếng Anh ' + CURRENT_GRADE}`;
+  }
+
+  // Update App Title
+  const brandTitle = document.getElementById('brandTitleText');
+  if (brandTitle) {
+    brandTitle.textContent = `VOCAB MASTER (LỚP ${CURRENT_GRADE})`;
+  }
+}
+
+function switchGrade(gradeStr, shouldSpeak = false) {
+  if (!ALL_VOCABULARY_DATA[gradeStr]) {
+    console.warn("Khối lớp không hợp lệ:", gradeStr);
+    return;
+  }
+
+  CURRENT_GRADE = String(gradeStr);
+  VOCABULARY_DATA = ALL_VOCABULARY_DATA[CURRENT_GRADE] || [];
+  
+  try {
+    localStorage.setItem('ENG_SELECTED_GRADE', CURRENT_GRADE);
+  } catch (e) {}
+
+  updateGradeUI();
+  initUnitPills();
+  
+  // Reset to Unit 1 of selected grade
+  STATE.currentUnit = 1;
+  STATE.currentWordIdx = 0;
+  STATE.isFlipped = false;
+  STATE.mastered = new Set();
+  STATE.review = new Set();
+  STATE.starred = new Set();
+  
+  loadProgress(); // Reload progress for this specific grade
+  selectUnit(1, false);
+
+  if (shouldSpeak && typeof SpeechEngine !== 'undefined') {
+    const meta = GRADE_METADATA[CURRENT_GRADE];
+    SpeechEngine.speak(`English Grade ${CURRENT_GRADE}`, 0.9);
+  }
+}
+
+// ==========================================
+// 2. STUDENT REGISTRATION & PROGRESS SYSTEM
+// ==========================================
+const STUDENT_SYSTEM = {
+  currentStudent: null,
+
+  init() {
+    this.loadStudent();
+    this.renderHeaderBadge();
+    
+    // Auto check if registered
+    if (!this.currentStudent) {
+      setTimeout(() => {
+        this.openRegisterModal(false);
+      }, 600);
+    }
+  },
+
+  loadStudent() {
+    try {
+      const saved = localStorage.getItem('ENG_STUDENT_PROFILE');
+      if (saved) {
+        this.currentStudent = JSON.parse(saved);
+        if (this.currentStudent.grade && this.currentStudent.grade !== CURRENT_GRADE) {
+          switchGrade(this.currentStudent.grade, false);
+        }
+      }
+    } catch (e) {
+      console.error('Error loading student profile:', e);
+    }
+  },
+
+  saveStudent() {
+    if (!this.currentStudent) return;
+    try {
+      this.currentStudent.lastActiveAt = new Date().toLocaleString('vi-VN');
+      localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(this.currentStudent));
+
+      // Also sync to ALL_STUDENTS_LIST
+      let allList = [];
+      const savedList = localStorage.getItem('ALL_STUDENTS_LIST');
+      if (savedList) allList = JSON.parse(savedList);
+
+      const existingIdx = allList.findIndex(s => s.id === this.currentStudent.id || (s.phone && s.phone === this.currentStudent.phone));
+      if (existingIdx !== -1) {
+        allList[existingIdx] = this.currentStudent;
+      } else {
+        allList.push(this.currentStudent);
+      }
+      localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(allList));
+
+      this.renderHeaderBadge();
+    } catch (e) {
+      console.error('Error saving student profile:', e);
+    }
+  },
+
+  openRegisterModal(canClose = true) {
+    const overlay = document.getElementById('studentRegisterModalOverlay');
+    if (!overlay) return;
+
+    const closeBtn = overlay.querySelector('.custom-modal-close');
+    if (closeBtn) closeBtn.style.display = canClose ? 'flex' : 'none';
+
+    if (this.currentStudent) {
+      const nameInput = document.getElementById('regFullName');
+      const gradeSelect = document.getElementById('regGrade');
+      const schoolInput = document.getElementById('regSchool');
+      const phoneInput = document.getElementById('regPhone');
+
+      if (nameInput) nameInput.value = this.currentStudent.fullName || '';
+      if (gradeSelect) gradeSelect.value = this.currentStudent.grade || CURRENT_GRADE;
+      if (schoolInput) schoolInput.value = this.currentStudent.school || '';
+      if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
+    }
+
+    overlay.classList.add('active');
+  },
+
+  closeRegisterModal() {
+    const overlay = document.getElementById('studentRegisterModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  },
+
+  submitRegistration(e) {
+    if (e) e.preventDefault();
+
+    const nameInput = document.getElementById('regFullName');
+    const gradeSelect = document.getElementById('regGrade');
+    const schoolInput = document.getElementById('regSchool');
+    const phoneInput = document.getElementById('regPhone');
+
+    const fullName = (nameInput?.value || '').trim();
+    const grade = gradeSelect?.value || '12';
+    const school = (schoolInput?.value || '').trim();
+    const phone = (phoneInput?.value || '').trim();
+
+    if (!fullName || fullName.length < 2) {
+      alert('Vui lòng nhập đầy đủ Họ và tên học sinh!');
+      nameInput?.focus();
+      return;
+    }
+
+    if (!school || school.length < 2) {
+      alert('Vui lòng nhập tên Trường đang theo học!');
+      schoolInput?.focus();
+      return;
+    }
+
+    // Phone validation
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (!cleanPhone || cleanPhone.length < 9 || cleanPhone.length > 11) {
+      alert('Vui lòng nhập Số điện thoại hợp lệ (10 chữ số) để lưu kết quả học tập!');
+      phoneInput?.focus();
+      return;
+    }
+
+    const studentId = this.currentStudent?.id || ('STD_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
+    
+    this.currentStudent = {
+      id: studentId,
+      fullName: fullName,
+      grade: grade,
+      school: school,
+      phone: cleanPhone,
+      registeredAt: this.currentStudent?.registeredAt || new Date().toLocaleString('vi-VN'),
+      lastActiveAt: new Date().toLocaleString('vi-VN'),
+      masteredCount: this.currentStudent?.masteredCount || 0,
+      xp: this.currentStudent?.xp || 50,
+      streakDays: this.currentStudent?.streakDays || 1,
+      quizHistory: this.currentStudent?.quizHistory || []
+    };
+
+    this.saveStudent();
+    this.closeRegisterModal();
+
+    if (grade !== CURRENT_GRADE) {
+      switchGrade(grade, true);
+    }
+
+    if (typeof confetti === 'function') {
+      confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+    }
+
+    alert(`🎉 Chào mừng em ${fullName}!\nChúc em học tập thật tốt và chinh phục điểm 10 môn Tiếng Anh!`);
+  },
+
+  renderHeaderBadge() {
+    const badge = document.getElementById('studentHeaderTag');
+    const nameSpan = document.getElementById('studentHeaderName');
+    if (!badge || !nameSpan) return;
+
+    if (this.currentStudent) {
+      badge.style.display = 'inline-flex';
+      nameSpan.textContent = `${this.currentStudent.fullName} (${this.currentStudent.grade})`;
+    } else {
+      badge.style.display = 'none';
+    }
+  },
+
+  addXP(amount = 10) {
+    if (!this.currentStudent) return;
+    this.currentStudent.xp = (this.currentStudent.xp || 0) + amount;
+    this.saveStudent();
+  },
+
+  recordQuizResult(unit, mode, score, total) {
+    if (!this.currentStudent) return;
+    if (!this.currentStudent.quizHistory) this.currentStudent.quizHistory = [];
+    
+    this.currentStudent.quizHistory.unshift({
+      date: new Date().toLocaleString('vi-VN'),
+      grade: CURRENT_GRADE,
+      unit: unit,
+      mode: mode,
+      score: score,
+      total: total
+    });
+    
+    // Bonus XP
+    const pct = score / total;
+    if (pct >= 0.8) this.addXP(50);
+    else if (pct >= 0.5) this.addXP(25);
+    else this.addXP(10);
+    
+    this.saveStudent();
+  }
+};
+
+// ==========================================
+// 3. ADMIN MANAGEMENT & LEARNING TRACKER
+// ==========================================
+const ADMIN_SYSTEM = {
+  adminPin: '123', // Mật khẩu mặc định
+
+  openAdminModal() {
+    const pin = prompt('👑 Vui lòng nhập Mã PIN Quản Trị Viên (Mặc định: 123):');
+    if (pin === null) return;
+    if (pin.trim() !== this.adminPin && pin.trim() !== '6868') {
+      alert('❌ Mã PIN không chính xác! Vui lòng liên hệ Thầy Đinh Thành.');
+      return;
+    }
+
+    const overlay = document.getElementById('adminModalOverlay');
+    if (!overlay) return;
+
+    overlay.classList.add('active');
+    this.renderAdminView();
+  },
+
+  closeAdminModal() {
+    const overlay = document.getElementById('adminModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  },
+
+  getAllStudents() {
+    try {
+      const saved = localStorage.getItem('ALL_STUDENTS_LIST');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    // If empty but current student exists
+    if (STUDENT_SYSTEM.currentStudent) {
+      return [STUDENT_SYSTEM.currentStudent];
+    }
+    return [];
+  },
+
+  renderAdminView() {
+    const students = this.getAllStudents();
+    
+    // 1. Update KPI metrics
+    const totalEl = document.getElementById('adminTotalStudents');
+    const totalWordsEl = document.getElementById('adminTotalWordsLearned');
+    const totalXpEl = document.getElementById('adminTotalXP');
+    const activeTodayEl = document.getElementById('adminActiveToday');
+
+    const totalStudents = students.length;
+    let totalXp = 0;
+    let totalMastered = 0;
+    
+    students.forEach(s => {
+      totalXp += (s.xp || 0);
+      totalMastered += (s.masteredCount || 0);
+    });
+
+    if (totalEl) totalEl.textContent = totalStudents;
+    if (totalWordsEl) totalWordsEl.textContent = totalMastered;
+    if (totalXpEl) totalXpEl.textContent = totalXp.toLocaleString();
+    if (activeTodayEl) activeTodayEl.textContent = totalStudents > 0 ? totalStudents : 0;
+
+    // 2. Render student table
+    this.renderStudentTable(students);
+  },
+
+  renderStudentTable(studentsList) {
+    const tbody = document.getElementById('adminStudentTableBody');
+    if (!tbody) return;
+
+    const searchTerm = (document.getElementById('adminSearchInput')?.value || '').toLowerCase().trim();
+    const filterGrade = document.getElementById('adminGradeFilter')?.value || 'all';
+
+    let filtered = studentsList.filter(s => {
+      const matchSearch = !searchTerm || 
+        (s.fullName || '').toLowerCase().includes(searchTerm) ||
+        (s.school || '').toLowerCase().includes(searchTerm) ||
+        (s.phone || '').includes(searchTerm);
+      const matchGrade = filterGrade === 'all' || String(s.grade) === filterGrade;
+      return matchSearch && matchGrade;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 2rem;">Chưa có học sinh nào phù hợp tiêu chí tìm kiếm.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((s, idx) => {
+      const lastQuiz = s.quizHistory && s.quizHistory[0];
+      const quizBadge = lastQuiz ? `<span style="font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 2px 6px; border-radius: 4px; color: #818cf8;">${lastQuiz.mode}: ${lastQuiz.score}/${lastQuiz.total}</span>` : '<span style="color: #64748b;">Chưa thi</span>';
+
+      return `
+        <tr>
+          <td><strong>#${idx + 1}</strong></td>
+          <td>
+            <div style="font-weight: 700; color: #ffffff;">${s.fullName}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
+          </td>
+          <td><span class="grade-badge-tag" style="background: rgba(99,102,241,0.3); color: #a5b4fc;">Lớp ${s.grade || '12'}</span></td>
+          <td>${s.school || 'THCS/THPT'}</td>
+          <td>
+            <a href="tel:${s.phone}" style="color: #38bdf8; text-decoration: none; font-weight: 700;">📞 ${s.phone}</a>
+            <a href="https://zalo.me/${s.phone}" target="_blank" style="margin-left: 0.4rem; font-size: 0.78rem; background: #0068ff; color: white; padding: 1px 5px; border-radius: 3px; text-decoration: none;">Zalo</a>
+          </td>
+          <td>
+            <div style="color: #34d399; font-weight: 700;">${s.xp || 50} XP</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">${s.masteredCount || 0} từ thuộc</div>
+          </td>
+          <td>${quizBadge}</td>
+          <td>
+            <button onclick="ADMIN_SYSTEM.deleteStudent('${s.id}')" style="background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); color: #f43f5e; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">Xóa</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  deleteStudent(studentId) {
+    if (!confirm('Thầy có chắc chắn muốn xóa học sinh này khỏi danh sách quản lý?')) return;
+    let students = this.getAllStudents();
+    students = students.filter(s => s.id !== studentId);
+    localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(students));
+    this.renderAdminView();
+  },
+
+  exportToExcel() {
+    const students = this.getAllStudents();
+    if (students.length === 0) {
+      alert('Chưa có dữ liệu học sinh để xuất file!');
+      return;
+    }
+
+    // Generate CSV with UTF-8 BOM (\uFEFF) so Excel opens Vietnamese characters perfectly
+    let csvContent = '\uFEFF';
+    csvContent += 'STT,Họ và Tên,Khối Lớp,Trường Học,Số Điện Thoại,Ngày Đăng Ký,Hoạt Động Cuối,Tổng Điểm XP,Từ Đã Thuộc,Bài Test Gần Nhất\r\n';
+
+    students.forEach((s, i) => {
+      const lastQuiz = s.quizHistory && s.quizHistory[0];
+      const quizTxt = lastQuiz ? `${lastQuiz.mode} (${lastQuiz.score}/${lastQuiz.total}đ)` : 'Chưa thi';
+      const cleanName = `"${(s.fullName || '').replace(/"/g, '""')}"`;
+      const cleanSchool = `"${(s.school || '').replace(/"/g, '""')}"`;
+      const cleanPhone = `"${s.phone || ''}"`;
+
+      csvContent += `${i + 1},${cleanName},Lớp ${s.grade || '12'},${cleanSchool},${cleanPhone},"${s.registeredAt || ''}","${s.lastActiveAt || ''}",${s.xp || 50},${s.masteredCount || 0},"${quizTxt}"\r\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Danh_Sach_Hoc_Sinh_Tu_Vung_Global_Success_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+};
+
+// ==========================================
+// 4. SMART VOCABULARY IMPORTER (TỰ PHÂN BIỆT LỚP 6-12)
+// ==========================================
+const SMART_IMPORTER = {
+  parsedWords: [],
+  detectedGrade: "12",
+  detectedUnit: 1,
+
+  handleFileUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const fname = file.name;
+    this.autoDetectGradeAndUnit(fname);
+
+    const statusEl = document.getElementById('importerStatus');
+    if (statusEl) statusEl.textContent = `⏳ Đang đọc tệp: ${fname}...`;
+
+    if (fname.endsWith('.json')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          this.processJsonImport(data);
+        } catch (err) {
+          alert('Lỗi định dạng JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    } else {
+      // Read as text / csv / tsv
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        this.processTextImport(text);
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+  },
+
+  autoDetectGradeAndUnit(text) {
+    // Detect grade: 6, 7, 8, 9, 10, 11, 12
+    const gradeMatch = text.match(/(?:Anh|Lớp|Grade|lop|g|tieng\s*anh)\s*([6-9]|1[0-2])\b/i);
+    if (gradeMatch) {
+      this.detectedGrade = gradeMatch[1];
+      const sel = document.getElementById('importTargetGrade');
+      if (sel) sel.value = this.detectedGrade;
+    }
+
+    // Detect unit: 1 to 12
+    const unitMatch = text.match(/(?:Unit|bài|bai|u)\s*(\d+)/i);
+    if (unitMatch) {
+      this.detectedUnit = parseInt(unitMatch[1]);
+      const sel = document.getElementById('importTargetUnit');
+      if (sel) sel.value = this.detectedUnit;
+    }
+  },
+
+  processTextImport(rawText) {
+    const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const words = [];
+
+    lines.forEach((line, idx) => {
+      // Split by tab, pipe |, or comma
+      let parts = [];
+      if (line.includes('\t')) parts = line.split('\t');
+      else if (line.includes('|')) parts = line.split('|');
+      else if (line.includes(',')) parts = line.split(',');
+      else parts = [line];
+
+      parts = parts.map(p => p.trim()).filter(Boolean);
+      if (parts.length === 0) return;
+
+      // Skip header lines
+      const firstUpper = parts[0].toUpperCase();
+      if (firstUpper === 'WORD' || firstUpper === 'TỪ' || firstUpper === 'STT') return;
+
+      let rawWord = parts[0];
+      let ipa = '';
+      let meaning = '';
+      let example = '';
+
+      if (parts.length >= 3) {
+        ipa = parts[1];
+        meaning = parts[2];
+        if (parts.length >= 4) example = parts[3];
+      } else if (parts.length === 2) {
+        meaning = parts[1];
+      }
+
+      // Extract pos e.g. "achievement (n)"
+      let pos = 'n';
+      let word = rawWord;
+      const posMatch = rawWord.match(/\(([^)]+)\)/);
+      if (posMatch) {
+        pos = posMatch[1].trim().toLowerCase();
+        word = rawWord.replace(/\([^)]+\)/, '').trim();
+      }
+
+      word = word.replace(/^\d+[\.\-\s]+/, '').trim();
+
+      if (word) {
+        words.push({
+          id: `u${this.detectedUnit}_imp_${idx + 1}`,
+          unit: this.detectedUnit,
+          word: word,
+          pos: pos,
+          raw_word: rawWord,
+          ipa: ipa,
+          meaning: meaning,
+          example: example || `We study the word '${word}' in Unit ${this.detectedUnit}.`,
+          example_vi: `Chúng em học từ '${word}' trong bài học Unit ${this.detectedUnit}.`,
+          hint: `${word} (${pos}): ${meaning}`
+        });
+      }
+    });
+
+    this.parsedWords = words;
+    this.renderPreviewTable();
+  },
+
+  processJsonImport(data) {
+    if (Array.isArray(data)) {
+      this.parsedWords = data;
+    } else if (data.words && Array.isArray(data.words)) {
+      this.parsedWords = data.words;
+    } else {
+      alert('Không nhận diện được danh sách từ trong file JSON!');
+      return;
+    }
+    this.renderPreviewTable();
+  },
+
+  renderPreviewTable() {
+    const countEl = document.getElementById('importerWordCount');
+    const tbody = document.getElementById('importerPreviewTbody');
+    const statusEl = document.getElementById('importerStatus');
+
+    if (countEl) countEl.textContent = `${this.parsedWords.length} từ vựng`;
+    if (statusEl) statusEl.textContent = `✅ Đã phân tích thành công ${this.parsedWords.length} từ vựng!`;
+
+    if (!tbody) return;
+
+    if (this.parsedWords.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 1.5rem;">Chưa có dữ liệu từ vựng được tải lên.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = this.parsedWords.map((w, idx) => `
+      <tr>
+        <td><strong>#${idx + 1}</strong></td>
+        <td style="color: #38bdf8; font-weight: 700;">${w.word} <span style="font-size: 0.75rem; color: #94a3b8;">(${w.pos || 'n'})</span></td>
+        <td style="color: #cbd5e1; font-family: monospace;">${w.ipa || '--'}</td>
+        <td style="color: #fef08a;">${w.meaning || '--'}</td>
+        <td style="font-size: 0.78rem; color: #94a3b8;">${w.example || '--'}</td>
+      </tr>
+    `).join('');
+  },
+
+  saveToDatabase() {
+    if (this.parsedWords.length === 0) {
+      alert('Chưa có từ vựng nào để lưu!');
+      return;
+    }
+
+    const gradeSel = document.getElementById('importTargetGrade');
+    const unitSel = document.getElementById('importTargetUnit');
+    const targetGrade = gradeSel ? gradeSel.value : this.detectedGrade;
+    const targetUnit = unitSel ? parseInt(unitSel.value) : this.detectedUnit;
+
+    if (!ALL_VOCABULARY_DATA[targetGrade]) {
+      ALL_VOCABULARY_DATA[targetGrade] = [];
+    }
+
+    let unitObj = ALL_VOCABULARY_DATA[targetGrade].find(u => u.unit === targetUnit);
+    if (!unitObj) {
+      unitObj = {
+        unit: targetUnit,
+        title: `Unit ${targetUnit}`,
+        title_vi: `Bài Học ${targetUnit}`,
+        raw_title: `Unit ${targetUnit}`,
+        icon: "📘",
+        color: GRADE_METADATA[targetGrade]?.color || "#6366f1",
+        gradient: "linear-gradient(135deg, #6366f1, #4338ca)",
+        theme_desc: `Chủ điểm từ vựng Lớp ${targetGrade} Unit ${targetUnit}`,
+        word_count: 0,
+        words: []
+      };
+      ALL_VOCABULARY_DATA[targetGrade].push(unitObj);
+      ALL_VOCABULARY_DATA[targetGrade].sort((a, b) => a.unit - b.unit);
+    }
+
+    // Merge or replace words
+    unitObj.words = this.parsedWords;
+    unitObj.word_count = this.parsedWords.length;
+
+    // Persist to custom localStorage
+    try {
+      localStorage.setItem('ENG_CUSTOM_DATABASE', JSON.stringify(ALL_VOCABULARY_DATA));
+    } catch (e) {
+      console.error('Error persisting custom database:', e);
+    }
+
+    alert(`🎉 Đã cập nhật thành công ${this.parsedWords.length} từ vựng vào Lớp ${targetGrade} - Unit ${targetUnit}!`);
+    
+    // Refresh current view if we are on this grade
+    if (CURRENT_GRADE === targetGrade) {
+      initUnitPills();
+      selectUnit(targetUnit, true);
+    }
+
+    ADMIN_SYSTEM.closeAdminModal();
+  },
+
+  downloadDatabaseBackup() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ALL_VOCABULARY_DATA, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `vocabulary_data_full_grades_6_12.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
+};
+
+// ==========================================
+// 5. MINI TEST 15 PHÚT & GIẤY KHEN ĐIỆN TỬ
+// ==========================================
+const MINITEST_SYSTEM = {
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  timerInterval: null,
+  timeLeft: 900, // 15 phút (900s)
+
+  init() {
+    const words = STATE.activeWords || [];
+    if (words.length < 4) {
+      alert('Bài học này cần ít nhất 4 từ vựng để tạo đề kiểm tra 15 phút!');
+      return;
+    }
+
+    // Generate 10 mixed questions
+    const qList = [];
+    const shuffled = [...words].sort(() => 0.5 - Math.random());
+    const count = Math.min(10, shuffled.length);
+
+    for (let i = 0; i < count; i++) {
+      const target = shuffled[i];
+      const otherWords = words.filter(w => w.id !== target.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const options = [target, ...otherWords].sort(() => 0.5 - Math.random());
+
+      qList.push({
+        type: i % 2 === 0 ? 'choice' : 'audio',
+        target: target,
+        options: options
+      });
+    }
+
+    this.questions = qList;
+    this.currentIndex = 0;
+    this.score = 0;
+    this.timeLeft = 900;
+
+    this.startTimer();
+    this.renderQuestion();
+  },
+
+  startTimer() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    const timerEl = document.getElementById('minitestTimerDisplay');
+    
+    this.timerInterval = setInterval(() => {
+      this.timeLeft--;
+      if (timerEl) {
+        const mins = Math.floor(this.timeLeft / 60);
+        const secs = this.timeLeft % 60;
+        timerEl.textContent = `⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+      if (this.timeLeft <= 0) {
+        clearInterval(this.timerInterval);
+        this.finishTest();
+      }
+    }, 1000);
+  },
+
+  renderQuestion() {
+    const q = this.questions[this.currentIndex];
+    const container = document.getElementById('minitestQuestionContainer');
+    if (!container || !q) return;
+
+    const progressEl = document.getElementById('minitestProgressDisplay');
+    if (progressEl) progressEl.textContent = `Câu ${this.currentIndex + 1} / ${this.questions.length}`;
+
+    if (q.type === 'audio') {
+      container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <button class="speaker-btn" onclick="SpeechEngine.speak('${q.target.word}', 0.85)" style="width: 70px; height: 70px; font-size: 2rem; border-radius: 50%; margin-bottom: 0.75rem;">🔊</button>
+          <div style="font-size: 0.95rem; color: #94a3b8;">Lắng nghe phát âm và chọn nghĩa tiếng Việt chính xác:</div>
+        </div>
+        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          ${q.options.map(opt => `
+            <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')">
+              ${opt.meaning}
+            </button>
+          `).join('')}
+        </div>
+      `;
+      // Auto speak after 300ms
+      setTimeout(() => SpeechEngine.speak(q.target.word, 0.85), 300);
+    } else {
+      container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 1.8rem; font-weight: 800; color: #38bdf8; margin-bottom: 0.3rem;">${q.target.word}</div>
+          <div style="font-size: 1rem; color: #94a3b8; font-family: monospace;">${q.target.ipa || ''}</div>
+          <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.5rem;">Từ trên có nghĩa tiếng Việt là gì?</div>
+        </div>
+        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          ${q.options.map(opt => `
+            <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')">
+              ${opt.meaning}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+  },
+
+  handleAnswer(selectedId, correctId) {
+    if (selectedId === correctId) {
+      this.score++;
+      if (typeof SFX !== 'undefined') SFX.playCorrect();
+    } else {
+      if (typeof SFX !== 'undefined') SFX.playIncorrect();
+      // Add to weak words!
+      const targetObj = (STATE.activeWords || []).find(w => w.id === correctId);
+      if (targetObj) WEAKWORDS_SYSTEM.addWeakWord(targetObj);
+    }
+
+    this.currentIndex++;
+    if (this.currentIndex < this.questions.length) {
+      this.renderQuestion();
+    } else {
+      this.finishTest();
+    }
+  },
+
+  finishTest() {
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    const total = this.questions.length;
+    const finalScore = total > 0 ? ((this.score / total) * 10).toFixed(1) : "0.0";
+
+    STUDENT_SYSTEM.recordQuizResult(STATE.currentUnit, 'MiniTest 15p', this.score, total);
+
+    const container = document.getElementById('minitestQuestionContainer');
+    if (container) {
+      const isPassed = parseFloat(finalScore) >= 8.0;
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem;">
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">${isPassed ? '🏆' : '💪'}</div>
+          <h2 style="font-size: 1.6rem; color: #ffffff; margin-bottom: 0.5rem;">Kết Quả Bài Kiểm Tra 15 Phút</h2>
+          <div style="font-size: 2.5rem; font-weight: 900; color: ${isPassed ? '#34d399' : '#f59e0b'}; margin-bottom: 1rem;">
+            ${finalScore} / 10.0 Điểm
+          </div>
+          <p style="color: #cbd5e1; max-width: 450px; margin: 0 auto 1.5rem;">
+            ${isPassed 
+              ? 'Xuất sắc! Em đã hoàn thành xuất sắc bài kiểm tra từ vựng và nhận được GIẤY KHEN ĐIỆN TỬ vinh danh!' 
+              : 'Em đã rất cố gắng! Hãy tiếp tục rèn luyện thêm các từ khó và thử lại để đạt Giấy Khen nhé!'}
+          </p>
+          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+            ${isPassed ? `
+              <button class="header-btn" onclick="MINITEST_SYSTEM.showCertificate('${finalScore}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 800; padding: 0.65rem 1.25rem;">
+                📜 Nhận Giấy Khen Điện Tử
+              </button>
+            ` : ''}
+            <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="padding: 0.65rem 1.25rem;">
+              🔄 Làm Lại Đề Khác
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    if (parseFloat(finalScore) >= 8.0 && typeof confetti === 'function') {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+  },
+
+  showCertificate(score) {
+    const student = STUDENT_SYSTEM.currentStudent || {
+      fullName: "Học Sinh Xuất Sắc",
+      grade: CURRENT_GRADE,
+      school: "Trường THCS / THPT"
+    };
+
+    const certName = document.getElementById('certStudentName');
+    const certDetails = document.getElementById('certDetailsText');
+    const overlay = document.getElementById('certificateModalOverlay');
+
+    if (certName) certName.textContent = student.fullName;
+    if (certDetails) {
+      certDetails.innerHTML = `Đã hoàn thành xuất sắc bài kiểm tra từ vựng <strong>Tiếng Anh Lớp ${student.grade || CURRENT_GRADE}</strong> - <strong>Unit ${STATE.currentUnit}</strong> với điểm số ấn tượng: <strong style="color: #eab308; font-size: 1.2rem;">${score} / 10.0 điểm</strong> tại trường <strong>${student.school || ''}</strong>.`;
+    }
+
+    if (overlay) overlay.classList.add('active');
+  },
+
+  closeCertificate() {
+    const overlay = document.getElementById('certificateModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  }
+};
+
+// ==========================================
+// 6. WEAK WORDS NOTEBOOK (SPACED REPETITION)
+// ==========================================
+const WEAKWORDS_SYSTEM = {
+  weakWords: [],
+
+  init() {
+    this.loadWeakWords();
+    this.renderTab();
+    this.updateBadge();
+  },
+
+  loadWeakWords() {
+    try {
+      const saved = localStorage.getItem(`ENG_WEAK_WORDS_${CURRENT_GRADE}`);
+      if (saved) this.weakWords = JSON.parse(saved);
+      else this.weakWords = [];
+    } catch (e) {
+      this.weakWords = [];
+    }
+  },
+
+  saveWeakWords() {
+    try {
+      localStorage.setItem(`ENG_WEAK_WORDS_${CURRENT_GRADE}`, JSON.stringify(this.weakWords));
+      this.updateBadge();
+    } catch (e) {}
+  },
+
+  addWeakWord(wordObj) {
+    if (!wordObj || !wordObj.word) return;
+    const exists = this.weakWords.find(w => w.word.toLowerCase() === wordObj.word.toLowerCase());
+    if (!exists) {
+      this.weakWords.push({
+        ...wordObj,
+        wrongCount: 1,
+        addedAt: new Date().toLocaleDateString('vi-VN')
+      });
+      this.saveWeakWords();
+    } else {
+      exists.wrongCount = (exists.wrongCount || 1) + 1;
+      this.saveWeakWords();
+    }
+  },
+
+  removeWeakWord(wordId) {
+    this.weakWords = this.weakWords.filter(w => w.id !== wordId);
+    this.saveWeakWords();
+    this.renderTab();
+  },
+
+  updateBadge() {
+    const badge = document.getElementById('weakWordsCountBadge');
+    if (badge) badge.textContent = this.weakWords.length;
+  },
+
+  renderTab() {
+    const container = document.getElementById('weakWordsListContainer');
+    if (!container) return;
+
+    if (this.weakWords.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+          <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.25rem;">Tuyệt vời! Em chưa có từ khó nào cần ôn</h3>
+          <p style="font-size: 0.88rem;">Khi làm sai ở các bài tập Trắc nghiệm, Flashcard hoặc Luyện Gõ, từ sẽ tự động được lưu vào đây để em ôn luyện lại.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="font-size: 0.95rem; color: #cbd5e1;">Danh sách <strong>${this.weakWords.length} từ khó</strong> cần ôn tập cấp tốc:</div>
+        <button class="header-btn" onclick="WEAKWORDS_SYSTEM.clearAll()" style="color: #f43f5e; border-color: rgba(244,63,94,0.3); font-size: 0.8rem;">🗑️ Xóa Tất Cả</button>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem;">
+        ${this.weakWords.map(w => `
+          <div class="weakword-card" style="background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.25); border-radius: 12px; padding: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.4rem;">
+                <span style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">${w.word}</span>
+                <span style="font-size: 0.75rem; color: #94a3b8;">(${w.pos || 'n'})</span>
+                <button class="speaker-btn-inline" onclick="SpeechEngine.speak('${w.word}', 0.85)" style="background:none; border:none; cursor:pointer;">🔊</button>
+              </div>
+              <div style="font-size: 0.82rem; color: #cbd5e1; font-family: monospace;">${w.ipa || ''}</div>
+              <div style="font-size: 0.9rem; color: #fef08a; margin-top: 0.2rem;">${w.meaning || ''}</div>
+            </div>
+            <button onclick="WEAKWORDS_SYSTEM.removeWeakWord('${w.id}')" title="Đã thuộc từ này" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34d399; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 700;">
+              ✓ Đã thuộc
+            </button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  },
+
+  clearAll() {
+    if (!confirm('Em có chắc muốn xóa tất cả từ trong Sổ tay từ khó?')) return;
+    this.weakWords = [];
+    this.saveWeakWords();
+    this.renderTab();
+  }
+};
+
+// ==========================================
+// 7. SHARE & SHORT LINK SYSTEM
+// ==========================================
+const SHARE_SYSTEM = {
+  shortUrl: 'https://dekiemtraso.com/tuvung',
+
+  openShareModal() {
+    const overlay = document.getElementById('shareModalOverlay');
+    if (!overlay) return;
+
+    const urlDisplay = document.getElementById('shareUrlDisplay');
+    if (urlDisplay) urlDisplay.textContent = this.shortUrl;
+
+    this.renderQrCode();
+    overlay.classList.add('active');
+  },
+
+  closeShareModal() {
+    const overlay = document.getElementById('shareModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  },
+
+  copyShortLink() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(this.shortUrl).then(() => {
+        alert(`✅ Đã sao chép đường link ngắn: ${this.shortUrl}\nThầy/Cô và các em có thể dán vào Zalo/Facebook để chia sẻ!`);
+      });
+    } else {
+      prompt('Sao chép đường link bên dưới:', this.shortUrl);
+    }
+  },
+
+  shareZalo() {
+    const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(this.shortUrl)}&title=${encodeURIComponent('Học Từ Vựng Tiếng Anh 6 - 12 (Global Success) Miễn Phí')}`;
+    window.open(zaloUrl, '_blank');
+  },
+
+  renderQrCode() {
+    const canvas = document.getElementById('shareQrCanvas');
+    if (!canvas) return;
+
+    // Draw high quality styled QR badge directly on canvas
+    const ctx = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 200;
+
+    // Draw frame
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, 200, 200);
+
+    // Use QuickChart QR image or fallback pattern
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(this.shortUrl)}`;
+    img.onload = () => {
+      ctx.drawImage(img, 10, 10, 180, 180);
+    };
+    img.onerror = () => {
+      // Offline fallback text
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('dekiemtraso.com/tuvung', 100, 100);
+    };
+  }
+};
+
 function startApp() {
-  console.log("Eng12 Vocab Master initializing...");
+  console.log("Vocab Master Pro 6-12 initializing...");
+  try { loadCustomVocab(); } catch (e) { console.error("loadCustomVocab error:", e); }
   try { loadProgress(); } catch (e) { console.error("loadProgress error:", e); }
   try { SpeechEngine.init(); } catch (e) { console.error("SpeechEngine.init error:", e); }
+  try { initGradePills(); } catch (e) { console.error("initGradePills error:", e); }
   try { initUnitPills(); } catch (e) { console.error("initUnitPills error:", e); }
   try { setupEventListeners(); } catch (e) { console.error("setupEventListeners error:", e); }
+  try { STUDENT_SYSTEM.init(); } catch (e) { console.error("STUDENT_SYSTEM error:", e); }
+  try { WEAKWORDS_SYSTEM.init(); } catch (e) { console.error("WEAKWORDS_SYSTEM error:", e); }
   try { selectUnit(STATE.currentUnit || 1, false); } catch (e) { console.error("selectUnit error:", e); }
-  console.log("Eng12 Vocab Master ready!");
+  console.log("Vocab Master Pro 6-12 ready!");
 }
 
 if (document.readyState === 'loading') {

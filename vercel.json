@@ -12,19 +12,29 @@
       "permanent": true
     },
     {
+      "source": "/tuvung",
+      "destination": "/tuvung/",
+      "permanent": true
+    },
+    {
       "source": "/eng12_vocab",
-      "destination": "/eng12_vocab/",
+      "destination": "/tuvung/",
       "permanent": true
     },
     {
       "source": "/tienganh12",
-      "destination": "/eng12_vocab/",
+      "destination": "/tuvung/",
+      "permanent": true
+    },
+    {
+      "source": "/hoc-tu-vung",
+      "destination": "/tuvung/",
       "permanent": true
     }
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|eng12_vocab/|.*\\..*).*)$",
+      "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)$",
       "destination": "/index.html"
     }
   ]

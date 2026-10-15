@@ -1,0 +1,3901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- FORCE PURGE OLD SERVICE WORKERS & STALE CACHE FOR PC & MOBILE -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) {
+          reg.unregister();
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vocab Master Pro - Học Từ Vựng Tiếng Anh Lớp 6 - 12 (Global Success)</title>
+  <meta name="description" content="Hệ thống học từ vựng Tiếng Anh 6 - 12 Global Success siêu tốc, chuẩn SGK mới, Nhạc Chant sôi động, 11 chế độ học thông minh, gõ từ nhớ sâu, phát âm chuẩn bản xứ. Tác giả: Thầy giáo Đinh Văn Thành.">
+  <meta name="theme-color" content="#080d1a">
+  
+  <!-- Auto redirect /eng12_vocab -> /eng12_vocab/ for relative path safety -->
+  <script>
+    if (!window.location.protocol.startsWith('file:') && window.location.pathname.endsWith('/eng12_vocab')) {
+      window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- INLINE CRITICAL CSS - 100% BULLETPROOF NO 404 OR MIME TYPE ISSUES -->
+  <style>
+/* ==============================================================================
+   ENG 12 VOCAB MASTER - ULTRA VIBRANT GAMIFIED DESIGN SYSTEM
+   Thiết kế chuẩn Sư phạm Hiện đại & Gamification (Duolingo / Quizlet Pro Style)
+   Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Vibrant Gamified Palette */
+  --bg-dark: #080d1a;
+  --bg-surface: #0f172a;
+  --bg-card: rgba(26, 35, 60, 0.7);
+  --bg-card-hover: rgba(38, 51, 88, 0.85);
+
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.45);
+  
+  --neon-violet: #8b5cf6;
+  --neon-cyan: #06b6d4;
+  --neon-emerald: #10b981;
+  --neon-amber: #f59e0b;
+  --neon-rose: #f43f5e;
+  --neon-pink: #ec4899;
+  --neon-blue: #3b82f6;
+
+  /* Kahoot 4 Colors for Quiz */
+  --color-a: #e11d48; /* Red */
+  --color-b: #2563eb; /* Blue */
+  --color-c: #d97706; /* Yellow/Gold */
+  --color-d: #059669; /* Green */
+
+  --text-pure: #ffffff;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-sub: #64748b;
+
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(99, 102, 241, 0.4);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-full: 9999px;
+
+  --shadow-3d-btn: 0 5px 0 rgba(0, 0, 0, 0.35);
+  --shadow-3d-pressed: 0 1px 0 rgba(0, 0, 0, 0.35);
+  --shadow-glow-cyan: 0 0 25px rgba(6, 182, 212, 0.45);
+  --shadow-glow-purple: 0 0 30px rgba(139, 92, 246, 0.45);
+  --shadow-glow-emerald: 0 0 25px rgba(16, 185, 129, 0.45);
+
+  --trans-fast: 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+  --trans-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Base Reset & Smooth Scroll */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* Dynamic Animated Background Mesh */
+.ambient-glow {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.glow-1 {
+  top: -120px;
+  right: -80px;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #4f46e5 0%, #ec4899 50%, transparent 75%);
+}
+
+.glow-2 {
+  bottom: -150px;
+  left: -100px;
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, #06b6d4 0%, #10b981 50%, transparent 75%);
+  animation-delay: -7s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 40px) scale(1.1); }
+  100% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.app-container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==============================================================================
+   HEADER & NAVBAR - VIBRANT BRANDING
+   ============================================================================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 15, 30, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  padding: 0.75rem 1.25rem;
+}
+
+.header-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+  position: relative;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  transform: rotate(-3deg);
+  transition: var(--trans-bounce);
+}
+
+.brand-wrapper:hover .brand-logo {
+  transform: rotate(0deg) scale(1.08);
+}
+
+.brand-info h1 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
+}
+
+.brand-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #34d399;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.18));
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.header-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: var(--trans-fast);
+}
+
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+}
+
+.header-btn.btn-qr {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.45);
+}
+
+.header-btn.btn-qr:hover {
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.7);
+}
+
+/* ==============================================================================
+   UNIT SELECTOR BAR - VIBRANT PILLS
+   ============================================================================== */
+.unit-scroll-bar {
+  background: rgba(15, 23, 42, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.65rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.unit-scroll-bar::-webkit-scrollbar { display: none; }
+
+.unit-pills-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.unit-pill {
+  flex-shrink: 0;
+  padding: 0.48rem 1rem;
+  border-radius: var(--radius-full);
+  background: rgba(30, 41, 59, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.86rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: var(--trans-bounce);
+}
+
+.unit-pill:hover {
+  background: rgba(51, 65, 85, 0.95);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.unit-pill.active {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-color: #c084fc;
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.55);
+  transform: scale(1.05);
+}
+
+/* ==============================================================================
+   MODE TABS BAR
+   ============================================================================== */
+.modes-bar {
+  max-width: 1300px;
+  margin: 1.25rem auto 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.modes-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 0.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  gap: 0.35rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+}
+
+.mode-tab-btn {
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.92rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: var(--trans-fast);
+  white-space: nowrap;
+}
+
+.mode-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mode-tab-btn.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+}
+
+.unit-meta-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.unit-meta-badge .meta-words {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(16, 185, 129, 0.25));
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+/* Main Container */
+.main-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 1.5rem auto;
+  padding: 0 1.25rem 4rem 1.25rem;
+  flex: 1;
+}
+
+.tab-pane {
+  display: none;
+  animation: tabFadeIn 0.3s ease;
+}
+.tab-pane.active { display: block; }
+
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==============================================================================
+   TAB 1: 3D FLASHCARDS - ULTRA PREMIUM CARD
+   ============================================================================== */
+.flashcard-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.fc-top-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fc-counter {
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: #cbd5e1;
+}
+.fc-counter span.current {
+  color: #38bdf8;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.fc-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fc-icon-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: var(--trans-bounce);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.fc-icon-btn:hover {
+  background: rgba(51, 65, 85, 0.95);
+  transform: scale(1.12);
+  border-color: #38bdf8;
+}
+
+.fc-icon-btn.active {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #fff;
+  border-color: #34d399;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+/* Progress Bar */
+.fc-progress-container {
+  width: 100%;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.fc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6, #06b6d4, #10b981);
+  width: 0%;
+  border-radius: var(--radius-full);
+  transition: width 0.35s ease;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+}
+
+/* 3D Stage */
+.flashcard-stage {
+  width: 100%;
+  height: 400px;
+  perspective: 1400px;
+  cursor: pointer;
+}
+
+.flashcard-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.34, 1.25, 0.64, 1);
+  border-radius: var(--radius-xl);
+}
+
+.flashcard-stage.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-xl);
+  padding: 2.2rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  user-select: none;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 30px rgba(99, 102, 241, 0.2);
+}
+
+/* Card Front - Holographic Glow */
+.card-front {
+  background: linear-gradient(145deg, rgba(30, 41, 69, 0.92) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border: 2px solid rgba(99, 102, 241, 0.45);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+/* Card Back - Emerald Glow */
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(145deg, rgba(16, 42, 45, 0.92) 0%, rgba(10, 25, 30, 0.98) 100%);
+  border: 2px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 30px rgba(16, 185, 129, 0.3);
+}
+
+.card-pos-badge {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25));
+  color: #a5b4fc;
+  border: 1px solid rgba(165, 180, 252, 0.4);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+.card-word-title {
+  font-family: var(--font-heading);
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1.15;
+  text-shadow: 0 2px 15px rgba(255, 255, 255, 0.35);
+}
+
+.card-ipa-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  background: rgba(6, 182, 212, 0.12);
+  padding: 0.25rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+}
+
+.card-audio-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.btn-pronounce {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border: none;
+  color: #fff;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-full);
+  font-size: 0.96rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 5px 18px rgba(99, 102, 241, 0.55);
+  transition: var(--trans-bounce);
+}
+
+.btn-pronounce:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.7);
+}
+
+.btn-pronounce.btn-slow {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+}
+.btn-pronounce.btn-slow:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #38bdf8;
+}
+
+.card-meaning-title {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #34d399;
+  line-height: 1.3;
+  text-shadow: 0 2px 15px rgba(52, 211, 153, 0.35);
+}
+
+.card-example-box {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 1.1rem 1.3rem;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid #10b981;
+  text-align: left;
+  margin-top: 0.5rem;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.card-example-en {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.45;
+  margin-bottom: 0.35rem;
+}
+
+.card-example-vi {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Flashcard Bottom Navigation Controls */
+.fc-bottom-controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.fc-nav-btn {
+  flex: 1;
+  padding: 0.9rem 1.3rem;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--trans-bounce);
+  border: none;
+}
+
+.fc-nav-btn.btn-prev {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  max-width: 125px;
+}
+.fc-nav-btn.btn-prev:hover {
+  background: rgba(51, 65, 85, 0.95);
+  transform: translateY(-2px);
+}
+
+.fc-nav-btn.btn-flip {
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  color: #ffffff;
+  box-shadow: 0 5px 20px rgba(236, 72, 153, 0.45);
+}
+.fc-nav-btn.btn-flip:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+}
+
+.fc-nav-btn.btn-next {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  color: #ffffff;
+  box-shadow: 0 5px 20px rgba(6, 182, 212, 0.45);
+  max-width: 145px;
+}
+.fc-nav-btn.btn-next:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.65);
+}
+
+.fc-mastery-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.btn-mastery {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1.5px solid transparent;
+  transition: var(--trans-fast);
+}
+
+.btn-mastery.btn-review {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.btn-mastery.btn-review:hover {
+  background: rgba(245, 158, 11, 0.28);
+  transform: translateY(-2px);
+}
+
+.btn-mastery.btn-mastered {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.btn-mastery.btn-mastered:hover {
+  background: rgba(16, 185, 129, 0.28);
+  transform: translateY(-2px);
+}
+
+/* ==============================================================================
+   TAB 3: WORD MATCHING MEMORY GAME - VIBRANT TILES
+   ============================================================================== */
+.game-container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.2);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.match-game-board {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 620px) {
+  .match-game-board {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Tile Styles: Distinct English vs Vietnamese */
+.match-tile {
+  min-height: 98px;
+  border-radius: var(--radius-lg);
+  padding: 1rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--trans-bounce);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+}
+
+/* English Tiles - Neon Cyan / Indigo Glow */
+.match-tile[data-type="en"] {
+  background: linear-gradient(145deg, rgba(30, 41, 75, 0.88), rgba(20, 25, 55, 0.95));
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+.match-tile[data-type="en"]::before {
+  content: '🇬🇧 EN';
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #38bdf8;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+/* Vietnamese Tiles - Neon Amber / Emerald Glow */
+.match-tile[data-type="vi"] {
+  background: linear-gradient(145deg, rgba(40, 35, 25, 0.88), rgba(25, 25, 20, 0.95));
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  color: #fef08a;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 700;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+.match-tile[data-type="vi"]::before {
+  content: '🇻🇳 VI';
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #fbbf24;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+.match-tile:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+.match-tile[data-type="en"]:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 10px 25px rgba(6, 182, 212, 0.45);
+}
+
+.match-tile[data-type="vi"]:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.45);
+}
+
+/* Selected state - Glowing Halo */
+.match-tile.selected {
+  border-color: #ec4899 !important;
+  background: linear-gradient(145deg, rgba(236, 72, 153, 0.35), rgba(139, 92, 246, 0.35)) !important;
+  box-shadow: 0 0 25px rgba(236, 72, 153, 0.7) !important;
+  transform: scale(1.08) !important;
+}
+
+/* Matched state - Emerald Brilliance */
+.match-tile.matched {
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3)) !important;
+  border-color: #10b981 !important;
+  color: #34d399 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+  opacity: 0.55;
+  pointer-events: none;
+  transform: scale(0.96) !important;
+}
+
+/* Shake Animation for Wrong Match */
+.match-tile.shake {
+  animation: tileShake 0.45s ease-in-out;
+  border-color: #f43f5e !important;
+  background: rgba(244, 63, 94, 0.25) !important;
+}
+
+@keyframes tileShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* ==============================================================================
+   TAB 2: SPEED QUIZ - KAHOOT 4 VIBRANT COLORS
+   ============================================================================== */
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 600px) {
+  .quiz-options-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.quiz-option-btn {
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.3rem;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  transition: var(--trans-fast);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+}
+
+/* Kahoot-like Colorful Options */
+.quiz-option-btn:nth-child(1) {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.25), rgba(159, 18, 57, 0.4));
+  border-color: rgba(244, 63, 94, 0.5);
+}
+.quiz-option-btn:nth-child(1) .opt-prefix { background: #e11d48; color: #fff; }
+
+.quiz-option-btn:nth-child(2) {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(30, 58, 138, 0.4));
+  border-color: rgba(59, 130, 246, 0.5);
+}
+.quiz-option-btn:nth-child(2) .opt-prefix { background: #2563eb; color: #fff; }
+
+.quiz-option-btn:nth-child(3) {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(146, 64, 14, 0.4));
+  border-color: rgba(245, 158, 11, 0.5);
+}
+.quiz-option-btn:nth-child(3) .opt-prefix { background: #d97706; color: #fff; }
+
+.quiz-option-btn:nth-child(4) {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(6, 78, 59, 0.4));
+  border-color: rgba(16, 185, 129, 0.5);
+}
+.quiz-option-btn:nth-child(4) .opt-prefix { background: #059669; color: #fff; }
+
+.quiz-option-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.quiz-option-btn .opt-prefix {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.92rem;
+  font-weight: 900;
+  font-family: var(--font-heading);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.quiz-option-btn.correct {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  border-color: #34d399 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.7) !important;
+  transform: scale(1.03);
+}
+
+.quiz-option-btn.wrong {
+  background: linear-gradient(135deg, #b91c1c, #f43f5e) !important;
+  border-color: #fca5a5 !important;
+  color: #ffffff !important;
+  animation: tileShake 0.4s ease-in-out;
+}
+
+/* ==============================================================================
+   TAB 4: LISTENING MASTER - AUDIO WAVE PULSE
+   ============================================================================== */
+.listen-center-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #6366f1, #06b6d4, #10b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5);
+  margin: 1.25rem auto;
+  transition: var(--trans-bounce);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.listen-center-icon:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 15px 40px rgba(6, 182, 212, 0.7);
+}
+
+.listen-center-icon.speaking {
+  animation: soundWave 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes soundWave {
+  from { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); transform: scale(1); }
+  to { box-shadow: 0 0 50px rgba(6, 182, 212, 0.9), 0 0 80px rgba(16, 185, 129, 0.6); transform: scale(1.12); }
+}
+
+/* ==============================================================================
+   TAB 5: VOCABULARY HUB - VIBRANT CARDS
+   ============================================================================== */
+.hub-word-card {
+  background: linear-gradient(145deg, rgba(30, 41, 65, 0.85), rgba(15, 23, 42, 0.92));
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  transition: var(--trans-fast);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hub-word-card:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-card {
+  background: linear-gradient(145deg, #0f172a, #1e1b4b);
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: var(--radius-xl);
+  max-width: 520px;
+  width: 100%;
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.35);
+  position: relative;
+}
+
+
+/* Thêm vào style.css: Các style cho chế độ Xếp Chữ (Word Scramble) */
+
+/* Scramble Game Styles */
+.scramble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.scramble-word-counter {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(6, 182, 212, 0.15);
+  padding: 0.35rem 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(6, 182, 212, 0.35);
+}
+
+.scramble-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Prompt Box */
+.scramble-prompt-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Peek Banner */
+.scramble-peek-banner {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(99, 102, 241, 0.3));
+  border: 2px dashed #ec4899;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  width: 90%;
+  animation: peekPulse 1.5s infinite alternate;
+}
+
+@keyframes peekPulse {
+  from { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
+  to { box-shadow: 0 0 35px rgba(236, 72, 153, 0.8); }
+}
+
+.peek-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #f472b6;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.peek-word {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.peek-ipa {
+  font-size: 1.15rem;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+}
+
+.scramble-pos-badge {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(99, 102, 241, 0.3));
+  color: #c084fc;
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  display: inline-block;
+}
+
+.scramble-meaning {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #34d399;
+  line-height: 1.3;
+  margin-top: 0.3rem;
+  text-shadow: 0 2px 10px rgba(52, 211, 153, 0.3);
+}
+
+.scramble-ipa-sub {
+  font-size: 1.05rem;
+  color: #38bdf8;
+  font-family: var(--font-mono);
+}
+
+/* Slots Row (Answer) */
+.scramble-slots-wrapper {
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.scramble-slots-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: center;
+  min-height: 58px;
+  padding: 0.6rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed rgba(255, 255, 255, 0.18);
+}
+
+.slot-box {
+  width: 48px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  cursor: pointer;
+  transition: var(--trans-bounce);
+  position: relative;
+  user-select: none;
+}
+
+.slot-box.filled {
+  border-style: solid;
+  border-color: #38bdf8;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.35);
+  transform: translateY(-2px);
+}
+
+.slot-box.space-slot {
+  width: 24px;
+  border: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.slot-box.correct {
+  border-color: #10b981 !important;
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.7) !important;
+  animation: correctBounce 0.4s ease-in-out;
+}
+
+@keyframes correctBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Letters Pool (Scrambled bouncing letters) */
+.scramble-letters-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scramble-letters-hint {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.scramble-letters-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.letter-tile {
+  width: 50px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #312e81, 0 8px 16px rgba(0, 0, 0, 0.4);
+  transition: var(--trans-bounce);
+  user-select: none;
+  animation: tileScatter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Candy colors for letter tiles */
+.letter-tile:nth-child(4n+1) {
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  box-shadow: 0 5px 0 #9f1239, 0 8px 16px rgba(236, 72, 153, 0.35);
+}
+.letter-tile:nth-child(4n+2) {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  box-shadow: 0 5px 0 #1e3a8a, 0 8px 16px rgba(14, 165, 233, 0.35);
+}
+.letter-tile:nth-child(4n+3) {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 5px 0 #92400e, 0 8px 16px rgba(245, 158, 11, 0.35);
+}
+.letter-tile:nth-child(4n+4) {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 5px 0 #065f46, 0 8px 16px rgba(16, 185, 129, 0.35);
+}
+
+.letter-tile:hover {
+  transform: translateY(-4px) scale(1.08);
+}
+.letter-tile:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.letter-tile.used {
+  opacity: 0.15;
+  pointer-events: none;
+  transform: scale(0.85);
+  box-shadow: none;
+}
+
+@keyframes tileScatter {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Bottom Actions */
+.scramble-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* Success Banner */
+.scramble-success-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+  border: 2px solid #10b981;
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  text-align: center;
+  animation: bannerFadeUp 0.35s ease;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+}
+
+@keyframes bannerFadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.success-text {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #34d399;
+  margin-bottom: 0.4rem;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+}
+
+.success-example {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+@media (max-width: 600px) {
+  .slot-box { width: 38px; height: 44px; font-size: 1.25rem; }
+  .letter-tile { width: 40px; height: 46px; font-size: 1.25rem; }
+  .peek-word { font-size: 1.9rem; }
+  .scramble-meaning { font-size: 1.35rem; }
+}
+
+
+
+/* ==========================================================================
+   EXTRA PRACTICE MODES STYLING
+   ========================================================================== */
+
+/* --- 1. SPEED BLITZ (TRUE / FALSE) --- */
+.blitz-timer-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.blitz-timer-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+  transition: width 0.1s linear;
+}
+
+.blitz-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 2.2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+.blitz-word {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.blitz-ipa {
+  font-family: monospace;
+  font-size: 1.15rem;
+  color: #38bdf8;
+  margin-top: 0.35rem;
+}
+
+.blitz-relation-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 1.2rem 0 0.6rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.blitz-relation-label::before,
+.blitz-relation-label::after {
+  content: '';
+  height: 1px;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.blitz-meaning {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fbbf24;
+  line-height: 1.3;
+}
+
+.blitz-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.blitz-btn {
+  padding: 1.35rem 1rem;
+  font-size: 1.35rem;
+  font-weight: 900;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid transparent;
+}
+
+.blitz-btn-sub {
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.blitz-btn-false {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(225, 29, 72, 0.3));
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.blitz-btn-false:hover, .blitz-btn-false:active {
+  background: linear-gradient(135deg, #ef4444, #e11d48);
+  color: #ffffff;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.45);
+}
+
+.blitz-btn-true {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+}
+
+.blitz-btn-true:hover, .blitz-btn-true:active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+}
+
+/* --- 2. SPELLING & DICTATION --- */
+.spelling-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  margin-bottom: 1.5rem;
+}
+
+.spelling-audio-trigger {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin: 0 auto 1.25rem auto;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.spelling-audio-trigger:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(236, 72, 153, 0.6);
+}
+
+.spelling-audio-trigger:active {
+  transform: scale(0.95);
+}
+
+.spelling-context-sentence {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  line-height: 1.6;
+  margin: 1.2rem 0;
+  padding: 1rem 1.2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  border-left: 4px solid #8b5cf6;
+}
+
+.spelling-gap-highlight {
+  color: #fbbf24;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.spelling-input-row {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 500px;
+  margin: 1.5rem auto 0 auto;
+}
+
+.spelling-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.spelling-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  background: rgba(15, 23, 42, 1);
+}
+
+.spelling-input.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.spelling-input.wrong {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  animation: tileShake 0.4s ease-in-out;
+}
+
+.spelling-submit-btn {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.spelling-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.6);
+}
+
+/* --- 3. HANGMAN (MYSTERY WORD DETECTIVE) --- */
+.hangman-hearts-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.hangman-slots-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.hangman-slot {
+  width: 48px;
+  height: 58px;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hangman-slot.revealed {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+  border-color: #34d399;
+  color: #34d399;
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+
+.hangman-slot.space {
+  width: 24px;
+  border: none;
+  background: transparent;
+}
+
+.hangman-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 650px;
+  margin: 1.5rem auto 0 auto;
+}
+
+.hangman-key-row {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.hangman-key {
+  min-width: 38px;
+  height: 48px;
+  padding: 0 0.5rem;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hangman-key:hover:not(:disabled) {
+  background: #38bdf8;
+  color: #041226;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.hangman-key.hit {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.hangman-key.miss {
+  background: rgba(255, 255, 255, 0.05);
+  color: #475569;
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- 4. CONTEXT SENTENCE COMPLETION --- */
+.context-question-box {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 1.8rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+}
+
+.context-sentence-text {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+.context-blank-token {
+  display: inline-block;
+  padding: 0.1rem 1rem;
+  margin: 0 0.35rem;
+  background: rgba(245, 158, 11, 0.2);
+  border-bottom: 3px solid #fbbf24;
+  color: #fbbf24;
+  font-weight: 900;
+  border-radius: 6px;
+}
+
+.context-sentence-vi {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-top: 1rem;
+  font-style: italic;
+  line-height: 1.5;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-top: 0.85rem;
+}
+
+
+
+.modes-bar {
+  max-width: 1400px;
+  margin: 1rem auto 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.modes-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 0.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  gap: 0.35rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.modes-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mode-tab-btn {
+  padding: 0.55rem 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.mode-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mode-tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+}
+
+
+
+/* ==========================================================================
+   VOCABULARY CHANT & KARAOKE PLAYER STYLES
+   ========================================================================== */
+.chant-stage-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chant-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s, box-shadow 0.25s;
+}
+
+.chant-card.beat-pulse {
+  transform: scale(1.02);
+  border-color: #38bdf8;
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
+}
+
+.chant-card.call-active {
+  border-color: #fbbf24;
+  box-shadow: 0 0 45px rgba(251, 191, 36, 0.45);
+}
+
+.chant-card.response-active {
+  border-color: #34d399;
+  box-shadow: 0 0 45px rgba(52, 211, 153, 0.45);
+}
+
+.chant-stage-glow {
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
+  filter: blur(35px);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.chant-call-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.chant-call-badge.call {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.response {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-call-badge.cheer {
+  background: rgba(236, 72, 153, 0.25);
+  color: #f472b6;
+  border-color: rgba(236, 72, 153, 0.5);
+  animation: tilePulse 0.4s ease;
+}
+
+.chant-word-main {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  transition: all 0.2s;
+}
+
+.chant-word-main.highlight {
+  color: #fbbf24;
+  text-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
+  transform: scale(1.05);
+}
+
+.chant-ipa-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.chant-ipa {
+  font-family: monospace;
+  font-size: 1.35rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.chant-pos {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.2rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.chant-meaning-main {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin-top: 1.25rem;
+  line-height: 1.3;
+  transition: all 0.2s;
+}
+
+.chant-meaning-main.highlight {
+  color: #34d399;
+  text-shadow: 0 0 25px rgba(52, 211, 153, 0.7);
+  transform: scale(1.04);
+}
+
+.chant-example-box {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  border-left: 5px solid #8b5cf6;
+  text-align: left;
+}
+
+.chant-example-en {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.5;
+}
+
+.chant-example-vi {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* Audio Visualizer Waves */
+.chant-visualizer-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  height: 52px;
+  margin: 1rem 0 0.5rem 0;
+  padding: 0 1rem;
+}
+
+.visualizer-bar {
+  flex: 1;
+  max-width: 14px;
+  height: 8px;
+  background: linear-gradient(180deg, #ec4899, #8b5cf6, #38bdf8);
+  border-radius: 6px;
+  transition: height 0.1s ease;
+}
+
+/* Control Panel */
+.chant-console {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1.4rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.chant-playback-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.btn-chant-play {
+  padding: 0.95rem 2.2rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-chant-play:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+}
+
+.btn-chant-play.playing {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
+}
+
+.chant-nav-circle-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 41, 59, 0.8);
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.chant-nav-circle-btn:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: scale(1.08);
+}
+
+.chant-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+}
+
+.chant-setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.chant-setting-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chant-select {
+  padding: 0.55rem 0.85rem;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+
+.chant-toggles-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.chant-toggle-pill {
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chant-toggle-pill.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+@media (max-width: 640px) {
+  .chant-word-main {
+    font-size: 2.5rem;
+  }
+  .chant-meaning-main {
+    font-size: 1.45rem;
+  }
+  .chant-card {
+    padding: 1.5rem 1rem;
+  }
+}
+
+  
+/* ==============================================================================
+   FULL VISIBILITY & NO TRUNCATION (HIỂN THỊ ĐỦ 100% TRÊN GIAO DIỆN)
+   ============================================================================== */
+.unit-scroll-bar {
+  overflow-x: visible !important;
+  padding: 0.65rem 1rem !important;
+}
+
+.unit-pills-wrapper {
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important; /* HIỂN THỊ ĐỦ TOÀN BỘ CÁC UNIT KHÔNG BỊ CẮT */
+  justify-content: center !important;
+  gap: 0.45rem !important;
+}
+
+.unit-pill {
+  flex-shrink: 0 !important;
+  padding: 0.45rem 0.9rem !important;
+  font-size: 0.84rem !important;
+  white-space: nowrap !important;
+}
+
+.modes-bar {
+  max-width: 1400px !important;
+  margin: 0.6rem auto 0 auto !important;
+  padding: 0 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+}
+
+.modes-tabs {
+  display: flex !important;
+  flex-wrap: wrap !important; /* HIỂN THỊ ĐỦ TOÀN BỘ 11 TABS KHÔNG BỊ CẮT CHỮ */
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+  white-space: normal !important;
+  padding: 0.4rem 0.6rem !important;
+}
+
+.mode-tab-btn {
+  padding: 0.48rem 0.88rem !important;
+  font-size: 0.84rem !important;
+  white-space: nowrap !important;
+}
+
+/* UNIT FULL VOCABULARY LIST SECTION (HIỂN THỊ ĐỦ TOÀN BỘ TỪ TRONG BÀI HỌC) */
+.unit-full-vocab-section {
+  max-width: 1100px;
+  margin: 2.2rem auto 1.5rem auto;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.full-vocab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.full-vocab-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.vocab-title-icon {
+  font-size: 1.5rem;
+}
+
+.full-vocab-sub {
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+
+.full-vocab-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.full-vocab-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.full-vocab-row:hover {
+  background: rgba(49, 65, 102, 0.85);
+  border-color: rgba(99, 102, 241, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.full-vocab-row.active-row {
+  background: rgba(99, 102, 241, 0.22);
+  border-color: #6366f1;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+}
+
+.fvr-num {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #64748b;
+  min-width: 28px;
+  text-align: center;
+}
+
+.fvr-word-box {
+  min-width: 170px;
+}
+
+.fvr-word {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: -0.01em;
+}
+
+.fvr-ipa {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: #a5b4fc;
+  margin-top: 0.15rem;
+}
+
+.fvr-pos {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  margin-left: 0.35rem;
+}
+
+.fvr-meaning-box {
+  flex: 1;
+}
+
+.fvr-meaning {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.fvr-example {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+.fvr-actions {
+  display: flex;
+  align-items: center;
+}
+
+.fvr-audio-btn {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  font-size: 1.1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+.fvr-audio-btn:hover {
+  background: #6366f1;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* CHANT PLAYLIST SECTION */
+.chant-playlist-section {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+}
+
+.chant-word-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chant-chip {
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.chant-chip:hover {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: rgba(236, 72, 153, 0.5);
+  color: #f472b6;
+}
+
+.chant-chip.playing {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+  transform: scale(1.06);
+}
+
+
+/* ==============================================================================
+   CLICKABLE LESSON TITLE (BẤM VÀO TÊN BÀI HỌC ĐỌC DÕNG DẠC & PHÁT SÁNG)
+   ============================================================================== */
+.unit-meta-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #f8fafc !important;
+  cursor: pointer !important;
+  padding: 0.45rem 1.1rem !important;
+  border-radius: var(--radius-full) !important;
+  background: rgba(30, 41, 59, 0.75) !important;
+  border: 1.5px solid rgba(99, 102, 241, 0.3) !important;
+  transition: all 0.22s ease !important;
+  user-select: none !important;
+}
+
+.unit-meta-badge:hover {
+  background: rgba(99, 102, 241, 0.35) !important;
+  border-color: #818cf8 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.45) !important;
+}
+
+.unit-meta-badge:active {
+  transform: scale(0.98) !important;
+}
+
+.meta-speaking-glow,
+.title-speaking-glow {
+  animation: titleGlowPulse 1.4s ease-in-out !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.75) !important;
+}
+
+@keyframes titleGlowPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+  40% { transform: scale(1.04); box-shadow: 0 0 30px rgba(56, 189, 248, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+}
+
+.unit-pill {
+  cursor: pointer !important;
+}
+
+.unit-pill.active {
+  border-color: #818cf8 !important;
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.5) !important;
+}
+
+
+/* ==============================================================================
+   ENG 6-12 VOCAB MASTER - NEW STYLES (MULTI-GRADE, REGISTRATION, ADMIN, CERT)
+   Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+   ============================================================================== */
+
+/* GRADE SWITCHER BAR */
+.grade-scroll-bar {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+}
+
+.grade-pills-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: center;
+}
+.grade-pills-wrapper::-webkit-scrollbar { display: none; }
+
+.grade-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.grade-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.grade-pill.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: rgba(99, 102, 241, 0.6);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.grade-badge-tag {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* STUDENT HEADER PROFILE TAG */
+.student-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.student-header-tag button {
+  background: none;
+  border: none;
+  color: #34d399;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+/* MODAL OVERLAY STYLES */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-modal-card {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-modal-card.large {
+  max-width: 1000px;
+}
+
+.custom-modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.custom-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.custom-modal-close:hover {
+  background: rgba(244, 63, 94, 0.2);
+  color: #f43f5e;
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+.custom-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* FORM STYLES */
+.form-group {
+  margin-bottom: 1.1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* ADMIN DASHBOARD STYLES */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-kpi-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-kpi-label {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-kpi-val {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-top: 0.25rem;
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-top: 1rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  font-weight: 800;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* SMART IMPORTER DROPZONE */
+.smart-dropzone {
+  border: 2px dashed rgba(99, 102, 241, 0.4);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: rgba(99, 102, 241, 0.04);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.smart-dropzone:hover, .smart-dropzone.dragover {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+/* CERTIFICATE OF ACHIEVEMENT */
+.cert-frame {
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 8px double #eab308;
+  border-radius: 18px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 30px rgba(234, 179, 8, 0.25);
+  color: #ffffff;
+}
+
+.cert-header {
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: #eab308;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cert-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 0.75rem 0 0.5rem;
+  background: linear-gradient(135deg, #fef08a, #eab308);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cert-student-name {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin: 1rem 0;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.cert-body-text {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(234, 179, 8, 0.3);
+}
+
+.cert-sign-title {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.cert-sign-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #facc15;
+  margin-top: 2rem;
+}
+
+</style>
+</head>
+<body>
+  <!-- Ambient background lighting -->
+  <!-- ambient-glow-1 disabled for 60fps -->
+  <!-- ambient-glow-2 disabled for 60fps -->
+
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <a class="brand-wrapper" href="#" id="brandLogoBtn">
+          <div class="brand-logo">🇬🇧</div>
+          <div class="brand-info">
+            <h1 id="brandTitleText">VOCAB MASTER PRO</h1>
+            <span class="brand-badge" id="currentGradeBadge">Global Success 6 - 12</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+          <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Thông tin học sinh">
+            <span>👤 <span id="studentHeaderName">Em</span></span>
+            <button id="editStudentInfoBtn" title="Chỉnh sửa thông tin">✏️</button>
+          </div>
+          <button class="header-btn" id="openShareModalBtn" title="Đường link ngắn dekiemtraso.com/tuvung">
+            🔗 <span>Link Ngắn</span>
+          </button>
+          <button class="header-btn" id="openAdminModalBtn" title="Quản trị giáo viên & theo dõi học sinh" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-color: rgba(245,158,11,0.5); font-weight: 700;">
+            👑 <span>Admin</span>
+          </button>
+          <button class="header-btn btn-qr" id="openQrModalBtn" title="Mở trên điện thoại">
+            📱 <span>Mở ĐT</span>
+          </button>
+          <button class="header-btn" id="themeToggleBtn" title="Chuyển chế độ sáng/tối">
+            🌙
+          </button>
+          <button class="header-btn" id="statsModalBtn" title="Tiến độ học tập">
+            📊 <span>Tiến Độ</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <!-- Grade Selector Bar (Lớp 6 đến Lớp 12) -->
+    <nav class="grade-scroll-bar" aria-label="Chọn khối lớp học">
+      <div class="grade-pills-wrapper" id="gradePillsContainer">
+        <!-- Dynamically injected by JavaScript initGradePills() -->
+      </div>
+    </nav>
+
+
+    <!-- Unit Selector Horizontal Scrollbar -->
+    <nav class="unit-scroll-bar" aria-label="Danh sách bài học">
+      <div class="unit-pills-wrapper" id="unitPillsContainer">
+        <!-- Dynamically injected by JavaScript -->
+      </div>
+    </nav>
+
+    <!-- Learning Modes Navigation Bar -->
+    <div class="modes-bar">
+      <div class="modes-tabs" role="tablist">
+        <button class="mode-tab-btn active" data-tab="tab-flashcard" role="tab" aria-selected="true" title="Thẻ ghi nhớ 3D">
+          🃏 <span>Thẻ 3D</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-chant" role="tab" style="background: linear-gradient(135deg, rgba(236,72,153,0.25), rgba(139,92,246,0.25)); border-color: rgba(236,72,153,0.5); color: #f472b6; font-weight: 800;" title="Chạy tự động các từ theo nhịp nhạc Chant Call & Response">
+          🎵 <span>Nhạc Chant</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-scramble" role="tab" title="Xếp chữ cái nhảy lung tung">
+          🔤 <span>Xếp Chữ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-blitz" role="tab" title="Phản xạ nhanh Đúng hay Sai trong 6s">
+          ⚡ <span>Đúng/Sai</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-spelling" role="tab" title="Nghe và gõ từ siêu trí nhớ">
+          ✍️ <span>Luyện Gõ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-hangman" role="tab" title="Thám tử đoán ô chữ bí mật">
+          🕵️ <span>Đoán Chữ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-context" role="tab" title="Điền từ vào câu ngữ cảnh THPT">
+          📝 <span>Ngữ Cảnh</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-quiz" role="tab" title="Trắc nghiệm 4 lựa chọn">
+          🎯 <span>Trắc Nghiệm</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-match" role="tab" title="Nối cặp từ tốc độ">
+          🧩 <span>Nối Từ</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-listen" role="tab" title="Lắng nghe & chọn từ chuẩn">
+          🎧 <span>Luyện Nghe</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-minitest" role="tab" style="background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(6,182,212,0.25)); border-color: rgba(16,185,129,0.5); color: #34d399; font-weight: 800;" title="Kiểm tra 15 phút & Cấp giấy khen điện tử">
+          🏆 <span>Test 15p</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-weakwords" role="tab" style="color: #f87171; border-color: rgba(248,113,113,0.4);" title="Sổ tay các từ khó cần ôn lại">
+          ⚠️ <span>Từ Khó (<span id="weakWordsCountBadge">0</span>)</span>
+        </button>
+        <button class="mode-tab-btn" data-tab="tab-hub" role="tab" title="Sổ tay tra cứu toàn bộ từ vựng">
+          📖 <span>Tra Cứu</span>
+        </button>
+      </div>
+
+      <div class="unit-meta-badge" id="currentUnitMeta">
+        <span id="unitTitleDisplay" title="Bấm để nghe đọc tên bài học">🔊 Unit 1: Life Stories We Admire</span>
+        <span class="meta-words" id="unitWordCountBadge">33 từ</span>
+      </div>
+    </div>
+
+    <!-- Main View Content Area -->
+    <main class="main-content">
+      <!-- ========================================== -->
+      <!-- TAB 1: 3D FLASHCARDS                       -->
+      <!-- ========================================== -->
+      <section class="tab-pane active" id="tab-flashcard">
+        <div class="flashcard-view-wrapper">
+          <div class="fc-top-bar">
+            <div class="fc-counter">
+              <span class="current" id="fcCurrentIdx">1</span> / <span id="fcTotalCount">33</span>
+              <span style="font-size: 0.85rem; margin-left: 0.5rem;" id="fcStatusBadge"></span>
+            </div>
+            
+            <div class="fc-top-actions">
+              <button class="fc-icon-btn" id="fcShuffleBtn" title="Xáo trộn thứ tự từ">🔀</button>
+              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)">▶️</button>
+              <button class="fc-icon-btn" id="fcVoiceSettingBtn" title="Đổi giọng đọc US / UK">🗣️</button>
+            </div>
+          </div>
+
+          <div class="fc-progress-container">
+            <div class="fc-progress-fill" id="fcProgressFill"></div>
+          </div>
+
+          <div class="flashcard-stage" id="flashcardStage" title="Bấm vào thẻ hoặc nhấn Phím Cách (Space) để lật thẻ">
+            <div class="flashcard-inner">
+              <!-- FRONT FACE -->
+              <div class="card-face card-front">
+                <div class="card-face-header">
+                  <span class="card-pos-badge" id="cardPosBadge">noun</span>
+                  <button class="fc-icon-btn" id="cardStarBtn" title="Đánh dấu từ yêu thích / cần chú ý" style="width: 36px; height: 36px;">⭐</button>
+                </div>
+
+                <div class="card-face-center" style="margin: auto 0; text-align: center;">
+                  <h2 class="card-word-title" id="cardWordTitle">account</h2>
+                  <div class="card-ipa-text" id="cardIpaText" style="margin-top: 0.5rem; display: inline-block;">/əˈkaʊnt/</div>
+
+                  <div class="card-audio-cluster" style="justify-content: center; margin-top: 1rem;">
+                    <button class="btn-pronounce" id="btnPronounceNormal" title="Phát âm chuẩn">
+                      🔊 Phát âm
+                    </button>
+                    <button class="btn-pronounce btn-slow" id="btnPronounceSlow" title="Phát âm chậm 0.8x">
+                      🐢 0.8x
+                    </button>
+                  </div>
+                </div>
+
+                <div class="card-face-footer" style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #94a3b8;">
+                  <span class="card-hint-click">👆 Nhấn vào thẻ để xem nghĩa & ví dụ</span>
+                  <span id="cardAccentTag" style="color: #38bdf8; font-weight: 700;">US Accent</span>
+                </div>
+              </div>
+
+              <!-- BACK FACE -->
+              <div class="card-face card-back">
+                <div class="card-face-header">
+                  <span class="card-pos-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4);">
+                    Nghĩa Tiếng Việt
+                  </span>
+                  <span style="font-size: 0.85rem; color: #a5b4fc; font-weight: 700;" id="cardUnitTag">Unit 1</span>
+                </div>
+
+                <div class="card-face-center" style="margin: 0.5rem 0; text-align: center;">
+                  <h3 class="card-meaning-title" id="cardMeaningTitle">câu chuyện, bản ghi chép</h3>
+
+                  <div class="card-example-box">
+                    <p class="card-example-en" id="cardExampleEn">"He gave a fascinating account of his journey across the world."</p>
+                    <p class="card-example-vi" id="cardExampleVi">"Anh ấy đã kể lại một câu chuyện hấp dẫn về hành trình của mình vòng quanh thế giới."</p>
+                    <button class="btn-pronounce btn-slow" id="btnSpeakSentence" style="padding: 0.35rem 0.85rem; font-size: 0.82rem; margin-top: 0.5rem; color: #34d399; border-color: rgba(16, 185, 129, 0.35);">
+                      🔊 Nghe câu ví dụ
+                    </button>
+                  </div>
+                </div>
+
+                <div class="card-face-footer" style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+                  <span class="card-hint-click">👆 Nhấn để lật lại từ vựng</span>
+                  <span style="color: #fbbf24; font-weight: 700;" id="cardHintText">💡 Mẹo ghi nhớ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fc-bottom-controls">
+            <button class="fc-nav-btn btn-prev" id="fcPrevBtn" title="Phím mũi tên Trái">
+              ⬅️ Trước
+            </button>
+            <button class="fc-nav-btn btn-flip" id="fcFlipBtn" title="Phím Cách (Space)">
+              🔄 Lật Thẻ
+            </button>
+            <button class="fc-nav-btn btn-next" id="fcNextBtn" title="Phím mũi tên Phải">
+              Tiếp ➡️
+            </button>
+          </div>
+
+          <div class="fc-mastery-actions">
+            <button class="btn-mastery btn-review" id="btnMarkReview" title="Đánh dấu cần ôn tập lại">
+              ⚠️ Cần ôn lại
+            </button>
+            <button class="btn-mastery btn-mastered" id="btnMarkMastered" title="Đánh dấu đã thuộc từ này">
+              ✅ Đã thuộc từ này
+            </button>
+          </div>
+        
+          <!-- ============================================================== -->
+          <!-- DANH SÁCH TOÀN BỘ TỪ VỰNG TRONG BÀI (HIỂN THỊ ĐỦ 100% TỪ)       -->
+          <!-- ============================================================== -->
+          <div class="unit-full-vocab-section">
+            <div class="full-vocab-header">
+              <div class="full-vocab-title">
+                <span class="vocab-title-icon">📚</span>
+                <span class="vocab-title-text" id="fullVocabSectionTitle">Danh sách toàn bộ từ vựng</span>
+              </div>
+              <div class="full-vocab-sub">Bấm vào bất kỳ từ nào để nghe phát âm dõng dạc & xem thẻ 3D</div>
+            </div>
+            <div class="full-vocab-grid" id="fullVocabGrid">
+              <!-- Rendered dynamically by JavaScript -->
+            </div>
+          </div>
+
+          </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: VOCABULARY CHANT & KARAOKE PLAYER   -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-chant">
+        <div class="chant-stage-wrapper">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="font-size: 1.1rem; font-weight: 800; color: #ec4899; background: rgba(236, 72, 153, 0.15); padding: 0.4rem 1.1rem; border-radius: 9999px; border: 1.5px solid rgba(236, 72, 153, 0.3);">
+              🎵 Nhạc Chant Vui Nhộn (Call & Response)
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8;" id="chantCounter">
+              Từ 1/33
+            </div>
+          </div>
+
+          <!-- Main Chant Card Stage -->
+          <div class="chant-card" id="chantCard">
+            <div class="chant-stage-glow"></div>
+            
+            <div class="chant-call-badge" id="chantCallBadge">
+              🎵 BẤM PHÁT ĐỂ BẮT ĐẦU CHANT
+            </div>
+
+            <h2 class="chant-word-main" id="chantWordMain">account</h2>
+
+            <div class="chant-ipa-row">
+              <span class="chant-ipa" id="chantIpa">/əˈkaʊnt/</span>
+              <span class="chant-pos" id="chantPos">noun</span>
+            </div>
+
+            <div class="chant-meaning-main" id="chantMeaningMain">
+              câu chuyện, bản ghi chép
+            </div>
+
+            <div class="chant-example-box" id="chantExampleBox">
+              <div class="chant-example-en" id="chantExampleEn">"He gave a fascinating account of his journey across the world."</div>
+              <div class="chant-example-vi" id="chantExampleVi">Dịch: Anh ấy đã kể lại một câu chuyện hấp dẫn về hành trình của mình vòng quanh thế giới.</div>
+            </div>
+
+            <!-- Visualizer Wave Bars -->
+            <div class="chant-visualizer-container" id="chantVisualizer"></div>
+          </div>
+
+          <!-- Console & Beat Controls -->
+          <div class="chant-console">
+            <div class="chant-playback-row">
+              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước">⏮️</button>
+              <button class="btn-chant-play" id="chantPlayBtn">
+                <span>▶️ BẮT ĐẦU CHANT</span>
+              </button>
+              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo">⏭️</button>
+            </div>
+
+            <div class="chant-settings-grid">
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Giai Điệu Beat (Nhạc Trẻ):</label>
+                <select class="chant-select" id="chantStyleSelect">
+                  <option value="popfunk">🕺 Dance / Pop Funk (112 BPM - Vui tươi)</option>
+                  <option value="edm">⚡ TikTok Trend EDM (126 BPM - Sôi động)</option>
+                  <option value="lofi">🎧 Lo-fi Chill Hop (85 BPM - Thư giãn)</option>
+                  <option value="trap">🎤 Hip-Hop Trap (96 BPM - Bắt tai)</option>
+                  <option value="tropical">🌴 Tropical Summer (115 BPM - Rộn rã)</option>
+                </select>
+              </div>
+
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Tốc Độ Nhịp Điệu (BPM):</label>
+                <select class="chant-select" id="chantBpmSelect">
+                  <option value="90">🐢 90 BPM (Thong thả dễ theo)</option>
+                  <option value="112" selected>⭐ 112 BPM (Chuẩn sư phạm)</option>
+                  <option value="128">🚀 128 BPM (Tăng tốc hào hứng)</option>
+                </select>
+              </div>
+
+              <div class="chant-setting-item">
+                <label class="chant-setting-label">Âm Lượng Beat Nhạc:</label>
+                <input type="range" id="chantVolSlider" min="0" max="1" step="0.05" value="0.4" style="accent-color: #38bdf8; cursor: pointer; margin-top: 0.4rem;">
+              </div>
+            </div>
+
+            <div class="chant-toggles-row">
+              <button class="chant-toggle-pill active" id="chantToggleVi">
+                <span>🇻🇳 Đọc Nghĩa Tiếng Việt</span>
+              </button>
+              <button class="chant-toggle-pill active" id="chantToggleEx">
+                <span>📖 Đọc Câu Ví Dụ</span>
+              </button>
+              <button class="chant-toggle-pill active" id="chantToggleLoop">
+                <span>🔁 Lặp Lại Toàn Unit</span>
+              </button>
+            </div>
+          </div>
+        
+          <!-- DANH SÁCH TOÀN BỘ TỪ THEO BÀI CHANT (HIỂN THỊ ĐỦ TẤT CẢ CÁC TỪ) -->
+          <div class="chant-playlist-section">
+            <div style="font-size: 1rem; font-weight: 800; color: #a5b4fc; margin-bottom: 0.8rem; display: flex; align-items: center; justify-content: space-between;">
+              <span>🎵 Danh sách toàn bộ từ vựng theo nhịp Chant</span>
+              <span id="chantPlaylistCount" style="color: #ec4899; font-weight: 800;"></span>
+            </div>
+            <div class="chant-word-chips" id="chantWordChips">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: WORD SCRAMBLE (XẾP CHỮ NHẢY LUNG TUNG) -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-scramble">
+        <div class="game-container" style="max-width: 780px;">
+          <div class="scramble-header">
+            <div class="quiz-score-badge">
+              ⭐ Điểm: <span id="scrambleScoreVal">0</span>
+            </div>
+            <div class="scramble-word-counter">
+              Từ <span id="scrambleWordIdx">1</span>/<span id="scrambleTotalWords">33</span>
+            </div>
+            <div class="scramble-top-actions">
+              <button class="header-btn" id="scramblePeekBtn" title="Xem từ gốc mẫu">
+                👁️ <span>Xem Từ Gốc</span>
+              </button>
+              <button class="header-btn" id="scrambleHearBtn" title="Nghe phát âm">
+                🔊 <span>Nghe</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="fc-progress-container">
+            <div class="fc-progress-fill" id="scrambleProgressFill" style="background: linear-gradient(90deg, #ec4899, #8b5cf6, #38bdf8);"></div>
+          </div>
+
+          <div class="scramble-prompt-box">
+            <div class="scramble-peek-banner" id="scramblePeekBanner" style="display: none;">
+              <span class="peek-label">TỪ GỐC MẪU (HÃY GHI NHỚ KỸ NHÉ!):</span>
+              <div class="peek-word" id="scramblePeekWord">account</div>
+              <div class="peek-ipa" id="scramblePeekIpa">/əˈkaʊnt/</div>
+            </div>
+
+            <div class="scramble-info-area" id="scrambleInfoArea">
+              <span class="scramble-pos-badge" id="scramblePosBadge">noun</span>
+              <h3 class="scramble-meaning" id="scrambleMeaning">câu chuyện, bản ghi chép</h3>
+              <div class="scramble-ipa-sub" id="scrambleIpaSub">/əˈkaʊnt/</div>
+            </div>
+          </div>
+
+          <div class="scramble-slots-wrapper">
+            <div class="scramble-slots-row" id="scrambleAnswerSlots"></div>
+          </div>
+
+          <div class="scramble-letters-wrapper">
+            <div class="scramble-letters-hint">👇 Bấm vào từng chữ cái để xếp thành từ có nghĩa:</div>
+            <div class="scramble-letters-pool" id="scrambleLettersPool"></div>
+          </div>
+
+          <div class="scramble-bottom-actions">
+            <button class="fc-nav-btn btn-prev" id="scrambleResetBtn" title="Xếp lại từ đầu" style="max-width: 140px;">
+              🔄 Xóa làm lại
+            </button>
+            <button class="header-btn" id="restartScrambleBtn" title="Chơi lại từ đầu">🔄 Chơi lại</button>
+            <button class="header-btn" id="scrambleHintBtn" style="background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; font-weight: 800; padding: 0.75rem 1.2rem;">
+              💡 Gợi ý (+1 chữ)
+            </button>
+            <button class="fc-nav-btn btn-next" id="scrambleNextBtn" title="Bỏ qua / Từ tiếp theo" style="max-width: 140px;">
+              Tiếp ➡️
+            </button>
+          </div>
+
+          <div class="scramble-success-banner" id="scrambleSuccessBanner" style="display: none;">
+            <div class="success-text">🎉 XUẤT SẮC! GHÉP ĐÚNG TỪ RỒI!</div>
+            <div class="success-example" id="scrambleSuccessExample"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 4: SPEED BLITZ (PHẢN XẠ NHANH ĐÚNG/SAI) -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-blitz">
+        <div class="game-container" style="max-width: 720px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(16, 185, 129, 0.3);">
+              ⚡ Điểm: <span id="blitzScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 0.95rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              🔥 Chuỗi: <span id="blitzStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="blitzQIdx">1</span>/<span id="blitzTotalQ">15</span>
+            </div>
+          </div>
+
+          <div class="blitz-timer-container">
+            <div class="blitz-timer-fill" id="blitzTimerFill"></div>
+          </div>
+
+          <div class="blitz-card" id="blitzCard">
+            <button class="fc-icon-btn" id="blitzAudioBtn" title="Nghe phát âm" style="position: absolute; right: 1.25rem; top: 1.25rem;">🔊</button>
+            <div class="blitz-word" id="blitzWord">biodiversity</div>
+            <div class="blitz-ipa" id="blitzIpa">/ˌbaɪəʊdaɪˈvɜːsəti/</div>
+            
+            <div class="blitz-relation-label">Có nghĩa là:</div>
+            <div class="blitz-meaning" id="blitzMeaning">đa dạng sinh học</div>
+          </div>
+
+          <div class="blitz-actions-grid">
+            <button class="blitz-btn blitz-btn-false" id="blitzFalseBtn">
+              <span>❌ SAI</span>
+              <span class="blitz-btn-sub">Phím [Trái] hoặc [F]</span>
+            </button>
+            <button class="blitz-btn blitz-btn-true" id="blitzTrueBtn">
+              <span>✅ ĐÚNG</span>
+              <span class="blitz-btn-sub">Phím [Phải] hoặc [J]</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 5: SPELLING & DICTATION (LUYỆN GÕ TỪ)   -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-spelling">
+        <div class="game-container" style="max-width: 760px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(56, 189, 248, 0.3);">
+              ✍️ Điểm gõ: <span id="spellingScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Từ <span id="spellingQIdx">1</span>/<span id="spellingTotalQ">15</span>
+            </div>
+          </div>
+
+          <div class="spelling-card" id="spellingCard">
+            <div style="display: flex; justify-content: center; gap: 0.75rem; align-items: center;">
+              <div class="spelling-audio-trigger" id="spellingAudioBigBtn" title="Bấm để nghe phát âm chuẩn">
+                🔊
+              </div>
+              <button class="btn-pronounce btn-slow" id="spellingAudioSlowBtn" title="Nghe chậm 0.8x" style="height: 42px;">
+                🐢 0.8x
+              </button>
+            </div>
+
+            <div style="margin-top: 0.75rem;">
+              <span class="scramble-pos-badge" id="spellingPos">noun</span>
+              <h3 style="font-size: 1.6rem; font-weight: 800; color: #fbbf24; margin-top: 0.35rem;" id="spellingMeaning">câu chuyện, bản ghi chép</h3>
+              <div style="font-family: monospace; color: #38bdf8; font-size: 1.05rem;" id="spellingIpa">/əˈkaʊnt/</div>
+            </div>
+
+            <div class="spelling-context-sentence">
+              <div id="spellingSentence">"He gave a fascinating <span class="spelling-gap-highlight">__________</span> of his journey."</div>
+              <div style="font-size: 0.9rem; color: #94a3b8; font-style: italic; margin-top: 0.5rem;" id="spellingSentenceVi"></div>
+            </div>
+
+            <div class="spelling-input-row">
+              <input type="text" class="spelling-input" id="spellingInput" placeholder="Gõ từ tiếng Anh vào đây..." autocomplete="off" spellcheck="false">
+              <button class="spelling-submit-btn" id="spellingSubmitBtn">Kiểm tra ↵</button>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.25rem;">
+              <button class="header-btn" id="spellingHintBtn" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
+                💡 Gợi ý chữ cái đầu
+              </button>
+              <button class="header-btn" id="spellingRevealBtn" style="color: #94a3b8;">
+                👁️ Hiện đáp án
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 6: HANGMAN (THÁM TỬ Ô CHỮ BÍ MẬT)      -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-hangman">
+        <div class="game-container" style="max-width: 780px;" id="hangmanContainer">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #ec4899; background: rgba(236, 72, 153, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(236, 72, 153, 0.3);">
+              🕵️ Phá án: <span id="hangmanScoreVal">0</span>
+            </div>
+            <div class="hangman-hearts-row" id="hangmanHearts" style="margin: 0;">
+              ❤️ ❤️ ❤️ ❤️ ❤️
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Từ <span id="hangmanWordIdx">1</span>/<span id="hangmanTotalWords">33</span>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin: 1.5rem 0 0.5rem 0;">
+            <span class="scramble-pos-badge" id="hangmanPos">noun</span>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #38bdf8; margin-top: 0.4rem;" id="hangmanMeaning">câu chuyện, bản ghi chép</h3>
+          </div>
+
+          <div class="hangman-slots-row" id="hangmanSlots"></div>
+
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+            <button class="header-btn" id="hangmanHintBtn" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">
+              💡 Mở 1 chữ cái
+            </button>
+            <button class="header-btn" id="hangmanAudioBtn">
+              🔊 Nghe phát âm
+            </button>
+          </div>
+
+          <div class="hangman-keyboard" id="hangmanKeyboard"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 7: CONTEXT SENTENCE (BÀI TẬP NGỮ CẢNH) -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-context">
+        <div class="game-container" id="contextContainer" style="max-width: 820px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              📝 Điểm: <span id="contextScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #34d399; background: rgba(16, 185, 129, 0.15); padding: 0.4rem 0.95rem; border-radius: 9999px; border: 1.5px solid rgba(16, 185, 129, 0.3);">
+              🔥 Chuỗi: <span id="contextStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="contextQIdx">1</span>/<span id="contextTotalQ">15</span>
+            </div>
+          </div>
+
+          <div class="context-question-box">
+            <span style="font-size: 0.85rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.06em;">CHỌN TỪ THÍCH HỢP ĐIỀN VÀO CHỖ TRỐNG (CHUẨN ĐỀ THI THPT):</span>
+            <div class="context-sentence-text" id="contextSentenceText" style="margin-top: 0.85rem;">
+              "Preserving cultural heritage is of vital <span class="context-blank-token">__________</span> to modern society."
+            </div>
+            <div class="context-sentence-vi" id="contextSentenceVi">
+              Dịch: Bảo tồn di sản văn hóa có tầm quan trọng sống còn đối với xã hội hiện đại.
+            </div>
+          </div>
+
+          <div class="quiz-options-grid" id="contextOptionsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 8: SPEED QUIZ GAME                     -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-quiz">
+        <div class="game-container" id="quizContainer">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #fbbf24; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              🏆 Điểm: <span id="quizScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #f43f5e; background: rgba(244, 63, 94, 0.15); padding: 0.4rem 0.95rem; border-radius: 9999px; border: 1.5px solid rgba(244, 63, 94, 0.3);">
+              🔥 Chuỗi: <span id="quizStreakVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="quizQIdx">1</span>/<span id="quizTotalQ">10</span>
+            </div>
+          </div>
+
+          <div class="fc-progress-container">
+            <div class="fc-progress-fill" id="quizProgressFill" style="background: linear-gradient(90deg, #f59e0b, #f43f5e);"></div>
+          </div>
+
+          <div style="text-align: center; padding: 2rem 1rem; background: rgba(0, 0, 0, 0.3); border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
+            <span style="font-size: 0.85rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.06em;">CHỌN NGHĨA TIẾNG VIỆT ĐÚNG</span>
+            <h2 style="font-size: 2.5rem; font-weight: 900; color: #fff; line-height: 1.2;" id="quizPromptWord">achievement</h2>
+            <div style="font-size: 1.15rem; color: #a5b4fc; font-family: monospace;" id="quizPromptIpa">/əˈtʃiːvmənt/</div>
+            <button class="btn-pronounce btn-slow" id="quizAudioPromptBtn" style="margin-top: 0.6rem; padding: 0.45rem 1.1rem;">
+              🔊 Nghe phát âm
+            </button>
+          </div>
+
+          <div class="quiz-options-grid" id="quizOptionsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 9: WORD MATCHING GAME                  -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-match">
+        <div class="game-container" style="max-width: 820px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;">
+            <div style="font-size: 1.1rem; font-weight: 800; color: #fbbf24; background: rgba(245, 158, 11, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(245, 158, 11, 0.3);">
+              ⏱️ Thời gian: <span id="matchTimerVal">00:00</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8; background: rgba(6, 182, 212, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(6, 182, 212, 0.3);">
+              ✨ Cặp đã ghép: <span id="matchedCountVal">0</span>/<span id="totalMatchPairs">8</span>
+            </div>
+            <button class="header-btn" id="restartMatchBtn" style="padding: 0.45rem 0.9rem; font-size: 0.86rem; background: linear-gradient(135deg, #06b6d4, #6366f1); border: none;">
+              🔄 Ván mới
+            </button>
+          </div>
+
+          <p style="text-align: center; font-size: 0.95rem; color: #cbd5e1; font-weight: 600;">
+            Lật và ghép đúng cặp <span style="color: #38bdf8;">🇬🇧 Từ Tiếng Anh</span> với <span style="color: #fbbf24;">🇻🇳 Nghĩa Tiếng Việt</span> tương ứng!
+          </p>
+
+          <div class="match-game-board" id="matchGameBoard"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 10: LISTENING MASTER                   -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-listen">
+        <div class="game-container">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 1.15rem; font-weight: 800; color: #38bdf8; background: rgba(6, 182, 212, 0.15); padding: 0.4rem 1rem; border-radius: 9999px; border: 1.5px solid rgba(6, 182, 212, 0.3);">
+              🎧 Điểm nghe: <span id="listenScoreVal">0</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 800; color: #94a3b8;">
+              Câu <span id="listenQIdx">1</span>/<span id="listenTotalQ">10</span>
+            </div>
+          </div>
+
+          <div style="text-align: center; padding: 2rem 1rem; background: rgba(0, 0, 0, 0.3); border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
+            <span style="font-size: 0.85rem; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.06em;">LẮNG NGHE & CHỌN TỪ CHÍNH XÁC</span>
+            
+            <div class="listen-center-icon" id="listenPlayBigBtn" title="Bấm để nghe lại phát âm">
+              🔊
+            </div>
+
+            <p style="font-size: 0.9rem; color: #94a3b8; font-weight: 600;">
+              Bấm vào biểu tượng loa để nghe lại nếu cần
+            </p>
+          </div>
+
+          <div class="quiz-options-grid" id="listenOptionsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 11: VOCABULARY HUB (SỔ TAY TRA CỨU)    -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-hub">
+        <div style="display: flex; gap: 0.85rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <div style="flex: 1; position: relative; min-width: 260px;">
+            <span style="position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem;">🔍</span>
+            <input type="text" id="hubSearchInput" placeholder="Tìm kiếm từ tiếng Anh hoặc nghĩa tiếng Việt..." 
+                   style="width: 100%; padding: 0.9rem 1rem 0.9rem 3rem; background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 16px; color: #ffffff; font-size: 0.98rem; outline: none;">
+          </div>
+
+          <select id="hubUnitFilter" style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 16px; color: #ffffff; padding: 0 1.2rem; font-size: 0.92rem; font-weight: 700; outline: none; cursor: pointer;">
+            <option value="all">🌟 Toàn bộ 10 Unit (247 từ)</option>
+            <option value="1">Unit 1: Life Stories We Admire</option>
+            <option value="2">Unit 2: A Multicultural World</option>
+            <option value="3">Unit 3: Green Living</option>
+            <option value="4">Unit 4: Urbanisation</option>
+            <option value="5">Unit 5: The World of Work</option>
+            <option value="6">Unit 6: Artificial Intelligence</option>
+            <option value="7">Unit 7: The World of Mass Media</option>
+            <option value="8">Unit 8: Wildlife Conservation</option>
+            <option value="9">Unit 9: Career Paths</option>
+            <option value="10">Unit 10: Lifelong Learning</option>
+          </select>
+
+          <select id="hubStatusFilter" style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 16px; color: #ffffff; padding: 0 1.2rem; font-size: 0.92rem; font-weight: 700; outline: none; cursor: pointer;">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="starred">⭐ Từ yêu thích</option>
+            <option value="mastered">✅ Đã thuộc</option>
+            <option value="review">⚠️ Cần ôn lại</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.25rem; font-size: 0.95rem; font-weight: 700; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
+          <span id="hubFoundCountText">Hiển thị 247 từ vựng</span>
+          <button id="hubPrintBtn" class="header-btn" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            🖨️ In / Xuất PDF
+          </button>
+        </div>
+
+        <div class="match-game-board" id="hubWordsGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem;"></div>
+      </section>
+    
+      <!-- ========================================== -->
+      <!-- TAB 12: MINI TEST 15 PHÚT & GIẤY KHEN     -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-minitest">
+        <div class="flashcard-view-wrapper">
+          <div class="fc-top-bar" style="justify-content: space-between;">
+            <div style="font-weight: 800; color: #34d399; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🏆 BÀI KIỂM TRA ĐÁNH GIÁ 15 PHÚT</span>
+              <span id="minitestProgressDisplay" style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;"></span>
+            </div>
+            <div id="minitestTimerDisplay" style="font-size: 1.1rem; font-weight: 900; color: #f59e0b; background: rgba(245,158,11,0.15); padding: 0.25rem 0.75rem; border-radius: 9999px; border: 1px solid rgba(245,158,11,0.3);">
+              ⏱️ 15:00
+            </div>
+          </div>
+
+          <div id="minitestQuestionContainer" style="background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 2rem 1.5rem; margin-top: 1rem; min-height: 320px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="text-align: center; padding: 2rem 1rem;">
+              <div style="font-size: 3.5rem; margin-bottom: 0.75rem;">📝</div>
+              <h2 style="font-size: 1.6rem; color: #ffffff; margin-bottom: 0.5rem;">Kiểm Tra 15 Phút Tổng Hợp Từ Vựng</h2>
+              <p style="color: #cbd5e1; max-width: 500px; margin: 0 auto 1.5rem; line-height: 1.6;">
+                Bài thi gồm 10 câu trắc nghiệm phản xạ và nghe phát âm. Đạt từ <strong>8.0 điểm</strong> trở lên để nhận <strong>GIẤY KHEN ĐIỆN TỬ</strong> vinh danh học sinh xuất sắc!
+              </p>
+              <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.8rem 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+                🚀 Bắt Đầu Làm Bài Ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 13: SỔ TAY TỪ KHÓ (WEAK WORDS)        -->
+      <!-- ========================================== -->
+      <section class="tab-pane" id="tab-weakwords">
+        <div class="flashcard-view-wrapper">
+          <div class="fc-top-bar">
+            <div style="font-weight: 800; color: #f87171; font-size: 1.1rem;">
+              ⚠️ SỔ TAY TỪ KHÓ CẦN ÔN TẬP CẤP TỐC (SPACED REPETITION)
+            </div>
+          </div>
+          <div id="weakWordsListContainer" style="margin-top: 1rem; min-height: 300px;">
+            <!-- Dynamically injected -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modal: QR Code to open on Mobile -->
+    <div class="modal-overlay" id="qrModalOverlay">
+      <div class="modal-card">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="font-size: 1.35rem; font-weight: 900; color: #fff;">📱 Mở Trên Điện Thoại</h3>
+          <button id="closeQrModalBtn" style="background: none; border: none; color: #94a3b8; font-size: 1.6rem; cursor: pointer;">&times;</button>
+        </div>
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem;">
+          <p style="font-size: 0.92rem; color: #cbd5e1; line-height: 1.5;">
+            Dùng Camera hoặc Zalo trên điện thoại quét mã QR bên dưới để bắt đầu học ngay:
+          </p>
+          <div style="background: #ffffff; padding: 1rem; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.4);">
+            <img id="qrImgElement" src="" alt="QR Code" style="width: 200px; height: 200px; display: block;">
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 0.75rem 1rem; border-radius: 10px; font-family: monospace; font-size: 0.88rem; width: 100%; word-break: break-all; color: #38bdf8;" id="currentUrlDisplay">
+            https://www.dekiemtraso.com/eng12_vocab/
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Progress & Statistics -->
+    <div class="modal-overlay" id="statsModalOverlay">
+      <div class="modal-card">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="font-size: 1.35rem; font-weight: 900; color: #fff;">📊 Tiến Độ Học Từ Vựng</h3>
+          <button id="closeStatsModalBtn" style="background: none; border: none; color: #94a3b8; font-size: 1.6rem; cursor: pointer;">&times;</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+            <div style="background: rgba(16, 185, 129, 0.18); border: 1.5px solid rgba(16, 185, 129, 0.4); padding: 1.1rem; border-radius: 14px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: 900; color: #34d399;" id="statsMasteredNum">0</div>
+              <div style="font-size: 0.85rem; color: #cbd5e1; font-weight: 700;">Từ đã thuộc (Mastered)</div>
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.18); border: 1.5px solid rgba(245, 158, 11, 0.4); padding: 1.1rem; border-radius: 14px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: 900; color: #fbbf24;" id="statsReviewNum">0</div>
+              <div style="font-size: 0.85rem; color: #cbd5e1; font-weight: 700;">Từ cần ôn lại</div>
+            </div>
+          </div>
+
+          <h4 style="font-size: 1rem; font-weight: 800; margin-top: 0.5rem; color: #fff;">Tiến độ từng Unit:</h4>
+          <div id="statsUnitsProgressList" style="display: flex; flex-direction: column; gap: 0.65rem; max-height: 250px; overflow-y: auto; padding-right: 0.4rem;"></div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+            <button class="header-btn" id="resetProgressBtn" style="color: #f43f5e; border-color: rgba(244, 63, 94, 0.4);">
+              🗑️ Xóa làm lại từ đầu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p class="footer-author">
+          Biên soạn & Thiết kế Sư phạm: <span>Thầy giáo Đinh Văn Thành</span> (THCS Đồng Yên)
+        </p>
+        <p style="font-size: 0.82rem; color: #94a3b8;">
+          Chương trình Tiếng Anh 12 Global Success • Bộ Giáo Dục & Đào Tạo • Nhạc Chant vui tươi Call & Response • Học là thuộc
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts: Direct Bulletproof Sequential Loading (NO document.write) -->
+  <script src="confetti.browser.min.js"></script>
+  <script src="vocabulary_data.js?v=20261015_multigrade_v4"></script></script>
+  <script src="app.js?v=20261015_multigrade_v4"></script></script>
+
+  <!-- MODAL 1: ĐĂNG KÝ HỌC SINH BẮT BUỘC MIỄN PHÍ -->
+  <div class="custom-modal-overlay" id="studentRegisterModalOverlay">
+    <div class="custom-modal-card">
+      <div class="custom-modal-header">
+        <h2>🌟 Đăng Ký Học Tập Miễn Phí</h2>
+        <button class="custom-modal-close" id="regModalCloseBtn" onclick="STUDENT_SYSTEM.closeRegisterModal()">✕</button>
+      </div>
+      <div class="custom-modal-body">
+        <p style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem;">
+          Chào mừng em đến với <strong>Hệ Thống Luyện Siêu Trí Nhớ Từ Vựng Tiếng Anh 6 - 12 (Global Success)</strong> của Thầy Đinh Văn Thành! Vui lòng nhập thông tin để lưu giữ tiến độ học tập và cấp Giấy Khen vinh danh.
+        </p>
+        <form onsubmit="STUDENT_SYSTEM.submitRegistration(event)">
+          <div class="form-group">
+            <label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
+            <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required>
+          </div>
+          <div class="form-group">
+            <label for="regGrade">🎓 Khối Lớp Học (*)</label>
+            <select id="regGrade" class="form-control" style="background: #1e293b; color: white;">
+              <option value="6">🎒 Tiếng Anh Lớp 6 (THCS)</option>
+              <option value="7">📘 Tiếng Anh Lớp 7 (THCS)</option>
+              <option value="8">📗 Tiếng Anh Lớp 8 (THCS)</option>
+              <option value="9">📙 Tiếng Anh Lớp 9 (Thi Vào 10)</option>
+              <option value="10">📕 Tiếng Anh Lớp 10 (THPT)</option>
+              <option value="11">🎓 Tiếng Anh Lớp 11 (THPT)</option>
+              <option value="12" selected>⭐ Tiếng Anh Lớp 12 (Tốt Nghiệp QG)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regSchool">🏫 Trường Đang Theo Học (*)</label>
+            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: THCS Đồng Yên" required>
+          </div>
+          <div class="form-group">
+            <label for="regPhone">📱 Số Điện Thoại Phụ Huynh / Học Sinh (*)</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="Ví dụ: 0987654321 (10 chữ số)" required>
+          </div>
+          <button type="submit" id="submitRegBtn" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+            🚀 Bắt Đầu Học Ngay (Miễn Phí 100%)
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADMIN QUẢN TRỊ VIÊN & THỐNG KÊ HỌC SINH -->
+  <div class="custom-modal-overlay" id="adminModalOverlay">
+    <div class="custom-modal-card large">
+      <div class="custom-modal-header">
+        <h2>👑 Quản Trị Viên & Theo Dõi Học Sinh</h2>
+        <button class="custom-modal-close" onclick="ADMIN_SYSTEM.closeAdminModal()">✕</button>
+      </div>
+      <div class="custom-modal-body">
+        <!-- Admin Navigation Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">
+          <button class="header-btn active" id="adminTabStudentsBtn" onclick="document.getElementById('adminSectionStudents').style.display='block'; document.getElementById('adminSectionImporter').style.display='none'; this.style.background='#6366f1'; document.getElementById('adminTabImporterBtn').style.background='rgba(255,255,255,0.06)';">
+            👥 Danh Sách & Tiến Độ Học Sinh
+          </button>
+          <button class="header-btn" id="adminTabImporterBtn" onclick="document.getElementById('adminSectionStudents').style.display='none'; document.getElementById('adminSectionImporter').style.display='block'; this.style.background='#6366f1'; document.getElementById('adminTabStudentsBtn').style.background='rgba(255,255,255,0.06)';">
+            📥 Bộ Nạp Từ Vựng Thông Minh (Lớp 6-12)
+          </button>
+        </div>
+
+        <!-- Section 1: Students Tracking -->
+        <div id="adminSectionStudents">
+          <div class="admin-kpi-grid">
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Tổng Học Sinh</span>
+              <span class="admin-kpi-val" id="adminTotalStudents">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Từ Đã Thuộc Làu</span>
+              <span class="admin-kpi-val" style="color: #34d399;" id="adminTotalWordsLearned">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Tổng Điểm XP</span>
+              <span class="admin-kpi-val" style="color: #38bdf8;" id="adminTotalXP">0</span>
+            </div>
+            <div class="admin-kpi-card">
+              <span class="admin-kpi-label">Hoạt Động Hôm Nay</span>
+              <span class="admin-kpi-val" style="color: #f59e0b;" id="adminActiveToday">0</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 280px;">
+              <input type="text" id="adminSearchInput" class="form-control" placeholder="🔍 Tìm kiếm theo tên, trường, SĐT..." oninput="ADMIN_SYSTEM.renderAdminView()" style="padding: 0.5rem 0.8rem; font-size: 0.88rem;">
+              <select id="adminGradeFilter" class="form-control" style="width: 140px; background: #1e293b; color: white; padding: 0.5rem 0.6rem; font-size: 0.88rem;" onchange="ADMIN_SYSTEM.renderAdminView()">
+                <option value="all">Tất cả lớp</option>
+                <option value="6">Lớp 6</option>
+                <option value="7">Lớp 7</option>
+                <option value="8">Lớp 8</option>
+                <option value="9">Lớp 9</option>
+                <option value="10">Lớp 10</option>
+                <option value="11">Lớp 11</option>
+                <option value="12">Lớp 12</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="header-btn" onclick="ADMIN_SYSTEM.exportToExcel()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700;">
+                📥 Xuất Excel (.csv)
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Họ và Tên</th>
+                  <th>Khối Lớp</th>
+                  <th>Trường Học</th>
+                  <th>Số Điện Thoại</th>
+                  <th>Tiến Độ Học</th>
+                  <th>Bài Test</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="adminStudentTableBody">
+                <!-- Dynamically injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Smart Vocab Importer -->
+        <div id="adminSectionImporter" style="display: none;">
+          <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+            Thầy có thể tải bất kỳ file nào (Word .docx, Excel .xlsx, CSV, JSON hoặc dán danh sách từ vựng). Hệ thống sẽ <strong>tự động phân biệt các lớp từ 6 đến 12</strong> và số Unit để cập nhật vào cơ sở dữ liệu!
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Khối Lớp Cần Nạp:</label>
+              <select id="importTargetGrade" class="form-control" style="background: #1e293b; color: white; margin-top: 0.25rem;">
+                <option value="6">Lớp 6</option>
+                <option value="7">Lớp 7</option>
+                <option value="8">Lớp 8</option>
+                <option value="9">Lớp 9</option>
+                <option value="10">Lớp 10</option>
+                <option value="11">Lớp 11</option>
+                <option value="12" selected>Lớp 12</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Bài Học (Unit):</label>
+              <input type="number" id="importTargetUnit" class="form-control" value="1" min="1" max="16" style="margin-top: 0.25rem;">
+            </div>
+          </div>
+
+          <!-- File Upload Dropzone -->
+          <div class="smart-dropzone" onclick="document.getElementById('importerFileInput').click()">
+            <input type="file" id="importerFileInput" style="display: none;" accept=".docx,.xlsx,.csv,.json,.txt" onchange="SMART_IMPORTER.handleFileUpload(event)">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📂</div>
+            <div style="font-weight: 800; color: #ffffff; font-size: 1.05rem;">Bấm để chọn file hoặc Kéo & Thả file vào đây</div>
+            <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.25rem;">Hỗ trợ: Word (.docx), Excel (.xlsx/.csv), JSON, Text</div>
+          </div>
+
+          <!-- Or Paste Text Directly -->
+          <div style="margin-top: 1rem;">
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 700;">Hoặc Dán Văn Bản Danh Mục Từ Vựng Trực Tiếp:</label>
+            <textarea id="importerPasteInput" class="form-control" rows="4" placeholder="Dán văn bản (Mỗi dòng một từ: Từ tiếng Anh | Phiên âm | Nghĩa tiếng Việt | Câu ví dụ)..." oninput="SMART_IMPORTER.processTextImport(this.value)" style="margin-top: 0.25rem; font-family: monospace; font-size: 0.85rem;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem;"><span id="importerWordCount" class="grade-badge-tag" style="background:rgba(99,102,241,0.3); color:#a5b4fc; font-size:0.85rem;">0 từ vựng</span><div id="importerStatus" style="font-size: 0.88rem; color: #34d399; font-weight: 700;">
+              Chưa có dữ liệu nào được tải lên.
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="header-btn" onclick="SMART_IMPORTER.downloadDatabaseBackup()" style="color: #38bdf8; border-color: rgba(56,189,248,0.4);">
+                💾 Sao Lưu Toàn Bộ JSON
+              </button>
+              <button class="header-btn" onclick="SMART_IMPORTER.saveToDatabase()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800;">
+                ✓ Lưu & Cập Nhật Vào Ứng Dụng
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Table -->
+          <div class="admin-table-wrapper" style="margin-top: 1rem; max-height: 280px;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Từ Tiếng Anh</th>
+                  <th>Phiên Âm</th>
+                  <th>Nghĩa Tiếng Việt</th>
+                  <th>Ví Dụ Minh Họa</th>
+                </tr>
+              </thead>
+              <tbody id="importerPreviewTbody">
+                <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 1.5rem;">Chưa có dữ liệu từ vựng được nạp.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: GIẤY KHEN ĐIỆN TỬ VINH DANH HỌC SINH -->
+  <div class="custom-modal-overlay" id="certificateModalOverlay">
+    <div class="custom-modal-card" style="background: transparent; border: none; box-shadow: none;">
+      <div class="cert-frame">
+        <button class="custom-modal-close" onclick="MINITEST_SYSTEM.closeCertificate()" style="position: absolute; top: 1rem; right: 1rem;">✕</button>
+        <div class="cert-header">BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỌC TẬP THÔNG MINH 2026</div>
+        <div class="cert-title">GIẤY KHEN VINH DANH</div>
+        <div style="font-size: 0.95rem; color: #facc15; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Hoàn Thành Xuất Sắc Bài Kiểm Tra Từ Vựng</div>
+        <div class="cert-student-name" id="certStudentName">Nguyễn Văn An</div>
+        <div class="cert-body-text" id="certDetailsText">
+          Đã đạt thành tích xuất sắc trong bài kiểm tra từ vựng Tiếng Anh Global Success.
+        </div>
+        <div class="cert-footer">
+          <div>
+            <div class="cert-sign-title">NGÀY CẤP CHỨNG NHẬN</div>
+            <div style="font-size: 0.9rem; color: #ffffff; margin-top: 1.5rem;" id="certDateDisplay">${new Date().toLocaleDateString('vi-VN')}</div>
+          </div>
+          <div>
+            <div class="cert-sign-title">BIÊN SOẠN & GIẢNG DẠY</div>
+            <div class="cert-sign-name">Thầy giáo Đinh Văn Thành</div>
+            <div style="font-size: 0.78rem; color: #94a3b8;">Trường THCS Đồng Yên</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ĐƯỜNG LINK NGẮN & QR CODE -->
+  <div class="custom-modal-overlay" id="shareModalOverlay">
+    <div class="custom-modal-card">
+      <div class="custom-modal-header">
+        <h2>🔗 Đường Link Ngắn Nhất & Quét QR</h2>
+        <button class="custom-modal-close" onclick="SHARE_SYSTEM.closeShareModal()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="text-align: center;">
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          Đường link ngắn gọn, dễ nhớ nhất để Thầy/Cô và phụ huynh giới thiệu cho học sinh truy cập học tập trên điện thoại và máy tính:
+        </p>
+
+        <div style="background: rgba(99,102,241,0.12); border: 2px dashed #6366f1; border-radius: 14px; padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Đường Link Chính Thức:</div>
+          <div id="shareUrlDisplay" style="font-size: 1.35rem; font-weight: 900; color: #38bdf8; margin: 0.4rem 0; word-break: break-all;">
+            https://dekiemtraso.com/tuvung
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 1.25rem;">
+          <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <canvas id="shareQrCanvas" width="180" height="180"></canvas>
+            <div style="font-size: 0.78rem; color: #0f172a; font-weight: 800; margin-top: 4px;">Quét để học trên điện thoại</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button class="header-btn" onclick="SHARE_SYSTEM.copyShortLink()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800; padding: 0.65rem 1.25rem;">
+            📋 Sao Chép Link
+          </button>
+          <button class="header-btn" onclick="SHARE_SYSTEM.shareZalo()" style="background: #0068ff; color: white; font-weight: 800; padding: 0.65rem 1.25rem;">
+            📲 Gửi Qua Zalo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
