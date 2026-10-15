@@ -368,9 +368,16 @@ const SpeechEngine = {
           window._activeSpeechUtterance = utterance;
           this.activeUtterance = utterance;
 
+          if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+            ChantBeatEngine.duckBeat(true);
+          }
+
           utterance.onend = () => {
             window._activeSpeechUtterance = null;
             this.activeUtterance = null;
+            if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+              ChantBeatEngine.duckBeat(false);
+            }
           };
 
           utterance.onerror = (err) => {
@@ -379,6 +386,9 @@ const SpeechEngine = {
             }
             window._activeSpeechUtterance = null;
             this.activeUtterance = null;
+            if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+              ChantBeatEngine.duckBeat(false);
+            }
           };
 
           window.speechSynthesis.speak(utterance);
@@ -2170,12 +2180,14 @@ const ChantBeatEngine = {
   ctx: null,
   masterGain: null,
   beatGain: null,
+  noiseBuffer: null,
   isPlaying: false,
   bpm: 112,
   style: 'popfunk',
   currentStep: 0,
   timerId: null,
-  volume: 0.3,
+  volume: 0.35,
+  isDucked: false,
   
   initContext() {
     if (!this.ctx) {
@@ -2188,6 +2200,7 @@ const ChantBeatEngine = {
           this.beatGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
           this.beatGain.connect(this.masterGain);
           this.masterGain.connect(this.ctx.destination);
+          this.initNoiseBuffer();
         }
       } catch (e) {
         console.warn("AudioContext init error:", e);
@@ -2197,32 +2210,320 @@ const ChantBeatEngine = {
       try { this.ctx.resume(); } catch(e){}
     }
   },
+
+  initNoiseBuffer() {
+    if (!this.ctx || this.noiseBuffer) return;
+    try {
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.5);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      this.noiseBuffer = buffer;
+    } catch(e) {}
+  },
   
   setVolume(val) {
-    this.volume = val;
+    this.volume = Math.max(0, Math.min(1, parseFloat(val) || 0));
     if (this.beatGain && this.ctx) {
-      try { this.beatGain.gain.setValueAtTime(val, this.ctx.currentTime); } catch(e){}
+      try {
+        const target = this.isDucked ? (this.volume * 0.28) : this.volume;
+        this.beatGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.beatGain.gain.setValueAtTime(target, this.ctx.currentTime);
+      } catch(e){}
     }
+  },
+
+  duckBeat(duck) {
+    this.isDucked = !!duck;
+    if (!this.ctx || !this.beatGain) return;
+    try {
+      const now = this.ctx.currentTime;
+      const target = this.isDucked ? (this.volume * 0.25) : this.volume;
+      this.beatGain.gain.cancelScheduledValues(now);
+      this.beatGain.gain.linearRampToValueAtTime(target, now + 0.12);
+    } catch(e){}
   },
   
   setBpm(newBpm) {
-    this.bpm = newBpm || 112;
+    this.bpm = parseInt(newBpm) || 112;
   },
   
   setStyle(newStyle) {
     this.style = newStyle || 'popfunk';
-    if (newStyle === 'edm') this.bpm = 124;
-    else if (newStyle === 'lofi') this.bpm = 85;
-    else if (newStyle === 'trap') this.bpm = 95;
-    else if (newStyle === 'tropical') this.bpm = 110;
+    if (this.style === 'kpop') this.bpm = 124;
+    else if (this.style === 'itsme') this.bpm = 116;
+    else if (this.style === 'simp808') this.bpm = 88;
+    else if (this.style === 'edm') this.bpm = 128;
+    else if (this.style === 'lofi') this.bpm = 82;
+    else if (this.style === 'trap') this.bpm = 96;
+    else if (this.style === 'tropical') this.bpm = 114;
     else this.bpm = 112;
+
+    const bpmSelect = document.getElementById('chantBpmSelect');
+    if (bpmSelect) {
+      bpmSelect.value = String(this.bpm);
+    }
+
+    const genreTag = document.getElementById('chantGenreTag');
+    if (genreTag) {
+      const names = {
+        kpop: '🇰🇷 K-Pop Dance (124 BPM)',
+        itsme: '😎 "It\'s Me" Trend Gen Z (116 BPM)',
+        simp808: '💖 Simp Gái 808 Chill (88 BPM)',
+        popfunk: '🕺 Dance / Pop Funk (112 BPM)',
+        edm: '⚡ TikTok Trend EDM (128 BPM)',
+        lofi: '🎧 Lo-fi Chill Học Bài (82 BPM)',
+        trap: '🎤 Hip-Hop Trap (96 BPM)',
+        tropical: '🌴 Tropical Summer (114 BPM)'
+      };
+      genreTag.textContent = names[this.style] || names.popfunk;
+    }
+
+    this.updateVisualizerTheme();
   },
-  
-  // Synthesizers: Hoàn toàn êm ái, KHÔNG CÓ TIẾNG KÊU TÚT TỤT CHÓI TAI
-  playKick(time) {},
-  playSnare(time) {},
-  playHiHat(time, isOpen = false) {},
-  playBass(time, freq, dur = 0.22) {},
+
+  updateVisualizerTheme() {
+    const gradients = {
+      kpop: 'linear-gradient(180deg, #ff2d75, #ec4899, #06b6d4)',
+      itsme: 'linear-gradient(180deg, #a855f7, #6366f1, #38bdf8)',
+      simp808: 'linear-gradient(180deg, #f43f5e, #fb7185, #f59e0b)',
+      popfunk: 'linear-gradient(180deg, #ec4899, #8b5cf6, #38bdf8)',
+      edm: 'linear-gradient(180deg, #10b981, #06b6d4, #6366f1)',
+      lofi: 'linear-gradient(180deg, #f97316, #fb923c, #a855f7)',
+      trap: 'linear-gradient(180deg, #e11d48, #9333ea, #3b82f6)',
+      tropical: 'linear-gradient(180deg, #14b8a6, #f59e0b, #ef4444)'
+    };
+    const grad = gradients[this.style] || gradients.popfunk;
+    const bars = document.querySelectorAll('.visualizer-bar');
+    bars.forEach(bar => {
+      bar.style.background = grad;
+    });
+  },
+
+  // --- STUDIO QUALITY SYNTHESIZERS (0 HARSH BEEP TONES / KHÔNG TIẾNG TÚT TỤT) ---
+  play808Kick(time, gain) {
+    if (!this.ctx || !this.beatGain || this.volume <= 0) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(160, time);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(115, time);
+      osc.frequency.exponentialRampToValueAtTime(42, time + 0.45);
+
+      const peak = Math.max(0.001, (gain || this.volume) * 0.95);
+      g.gain.setValueAtTime(peak, time);
+      g.gain.exponentialRampToValueAtTime(0.001, time + 0.45);
+
+      osc.connect(filter);
+      filter.connect(g);
+      g.connect(this.beatGain);
+
+      osc.start(time);
+      osc.stop(time + 0.46);
+    } catch(e) {}
+  },
+
+  playPunchyKick(time, gain) {
+    if (!this.ctx || !this.beatGain || this.volume <= 0) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(220, time);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, time);
+      osc.frequency.exponentialRampToValueAtTime(50, time + 0.12);
+
+      const peak = Math.max(0.001, (gain || this.volume) * 0.85);
+      g.gain.setValueAtTime(peak, time);
+      g.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+      osc.connect(filter);
+      filter.connect(g);
+      g.connect(this.beatGain);
+
+      osc.start(time);
+      osc.stop(time + 0.16);
+    } catch(e) {}
+  },
+
+  playSnare(time, gain, type = 'clap') {
+    if (!this.ctx || !this.beatGain || this.volume <= 0) return;
+    try {
+      this.initNoiseBuffer();
+      if (!this.noiseBuffer) return;
+
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.noiseBuffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      const g = this.ctx.createGain();
+
+      if (type === 'rimshot') {
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(2200, time);
+        filter.Q.setValueAtTime(3.0, time);
+        const peak = Math.max(0.001, (gain || this.volume) * 0.35);
+        g.gain.setValueAtTime(peak, time);
+        g.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+        src.connect(filter);
+        filter.connect(g);
+        g.connect(this.beatGain);
+        src.start(time);
+        src.stop(time + 0.06);
+      } else {
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1600, time);
+        filter.Q.setValueAtTime(1.5, time);
+        const peak = Math.max(0.001, (gain || this.volume) * 0.45);
+        g.gain.setValueAtTime(peak, time);
+        g.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+        src.connect(filter);
+        filter.connect(g);
+        g.connect(this.beatGain);
+        src.start(time);
+        src.stop(time + 0.13);
+      }
+    } catch(e) {}
+  },
+
+  playHiHat(time, gain, isOpen = false) {
+    if (!this.ctx || !this.beatGain || this.volume <= 0) return;
+    try {
+      this.initNoiseBuffer();
+      if (!this.noiseBuffer) return;
+
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.noiseBuffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(7500, time);
+
+      const g = this.ctx.createGain();
+      const dur = isOpen ? 0.12 : 0.035;
+      const peak = Math.max(0.001, (gain || this.volume) * (isOpen ? 0.22 : 0.16));
+
+      g.gain.setValueAtTime(peak, time);
+      g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(this.beatGain);
+
+      src.start(time);
+      src.stop(time + dur + 0.01);
+    } catch(e) {}
+  },
+
+  playWarmChord(time, freqs, duration = 0.4, gainVal = 0.2) {
+    if (!this.ctx || !this.beatGain || !freqs || this.volume <= 0) return;
+    try {
+      freqs.forEach(freq => {
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(650, time);
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, time);
+
+        const peak = Math.max(0.001, (gainVal || this.volume) * 0.22);
+        g.gain.setValueAtTime(0.001, time);
+        g.gain.linearRampToValueAtTime(peak, time + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(this.beatGain);
+
+        osc.start(time);
+        osc.stop(time + duration + 0.02);
+      });
+    } catch(e) {}
+  },
+
+  triggerStepAudio(step) {
+    if (!this.ctx || this.volume <= 0) return;
+    const time = this.ctx.currentTime;
+    const vol = this.volume;
+
+    switch(this.style) {
+      case 'kpop':
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
+        else if (step % 2 === 0) this.playHiHat(time, vol, false);
+        if (step === 0) this.playWarmChord(time, [261.63, 329.63, 392.00], 0.22, vol);
+        else if (step === 6) this.playWarmChord(time, [220.00, 261.63, 329.63], 0.20, vol);
+        else if (step === 10) this.playWarmChord(time, [174.61, 220.00, 261.63], 0.20, vol);
+        else if (step === 14) this.playWarmChord(time, [196.00, 246.94, 293.66], 0.20, vol);
+        break;
+
+      case 'itsme':
+        if (step === 0 || step === 6 || step === 10) this.play808Kick(time, vol);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
+        if ([0, 2, 4, 6, 8, 9, 10, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.75, false);
+        if (step === 0) this.playWarmChord(time, [220.00, 261.63, 329.63], 0.35, vol);
+        else if (step === 8) this.playWarmChord(time, [174.61, 220.00, 261.63], 0.35, vol);
+        break;
+
+      case 'simp808':
+        if (step === 0 || step === 8 || step === 11) this.play808Kick(time, vol * 1.15);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.5, false);
+        if (step === 0) this.playWarmChord(time, [174.61, 220.00, 261.63, 329.63], 0.7, vol * 0.9);
+        else if (step === 8) this.playWarmChord(time, [164.81, 196.00, 246.94, 293.66], 0.7, vol * 0.9);
+        break;
+
+      case 'edm':
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
+        if (step % 2 === 1) this.playWarmChord(time, [261.63, 392.00, 523.25], 0.12, vol * 0.7);
+        break;
+
+      case 'lofi':
+        if (step === 0 || step === 7) this.playPunchyKick(time, vol * 0.7);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 0.7, 'rimshot');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.4, false);
+        if (step === 0) this.playWarmChord(time, [146.83, 220.00, 261.63, 329.63], 0.8, vol * 0.75);
+        else if (step === 8) this.playWarmChord(time, [196.00, 246.94, 293.66, 349.23], 0.8, vol * 0.75);
+        break;
+
+      case 'trap':
+        if (step === 0 || step === 5 || step === 8) this.play808Kick(time, vol);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
+        if ([0, 2, 4, 6, 8, 9, 10, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.7, false);
+        break;
+
+      case 'tropical':
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol * 0.8);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 0.6, true);
+        if (step === 3 || step === 7 || step === 11 || step === 15) this.playWarmChord(time, [523.25, 659.25], 0.15, vol * 0.5);
+        break;
+
+      default: // popfunk
+        if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol);
+        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.7, false);
+        if (step === 0 || step === 8) this.playWarmChord(time, [220.00, 277.18, 329.63], 0.25, vol * 0.6);
+        break;
+    }
+  },
   
   start() {
     this.initContext();
@@ -2235,6 +2536,7 @@ const ChantBeatEngine = {
   runBeatLoop() {
     if (!this.isPlaying) return;
     try {
+      this.triggerStepAudio(this.currentStep);
       pulseVisualizer(this.currentStep);
     } catch(e){}
     this.currentStep = (this.currentStep + 1) % 16;
@@ -2247,6 +2549,11 @@ const ChantBeatEngine = {
     if (this.timerId) {
       clearTimeout(this.timerId);
       this.timerId = null;
+    }
+    if (this.ctx && this.beatGain) {
+      try {
+        this.beatGain.gain.setValueAtTime(0, this.ctx.currentTime);
+      } catch(e){}
     }
   }
 };
@@ -2269,6 +2576,9 @@ function initChantGame() {
   
   renderChantWord();
   initVisualizerBars();
+  ChantBeatEngine.updateVisualizerTheme();
+  ChantBeatEngine.setStyle(document.getElementById('chantStyleSelect')?.value || 'popfunk');
+
 }
 
 function renderChantWord() {
@@ -2449,8 +2759,21 @@ function speakVietnameseResponse(wordEn, meaningVi) {
     utt.voice = viVoice;
     
     window._activeSpeechUtterance = utt;
-    utt.onend = () => { window._activeSpeechUtterance = null; };
-    utt.onerror = () => { window._activeSpeechUtterance = null; };
+    if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+      ChantBeatEngine.duckBeat(true);
+    }
+    utt.onend = () => {
+      window._activeSpeechUtterance = null;
+      if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+        ChantBeatEngine.duckBeat(false);
+      }
+    };
+    utt.onerror = () => {
+      window._activeSpeechUtterance = null;
+      if (typeof ChantBeatEngine !== 'undefined' && ChantBeatEngine.isPlaying) {
+        ChantBeatEngine.duckBeat(false);
+      }
+    };
     
     window.speechSynthesis.speak(utt);
   } else {
