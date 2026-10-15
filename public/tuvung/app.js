@@ -144,76 +144,55 @@ function saveProgress() {
 // ==============================================================================
 // 2. WEB AUDIO SYNTHESIZER (SOUND EFFECTS CHIPTUNE)
 // ==============================================================================
+// ==============================================================================
+// 2. WEB AUDIO SYNTHESIZER - ĐÃ TẮT HOÀN TOÀN TIẾNG TÚT TỤT CHÓI TAI
+// Giữ lại 100% giọng phát âm chuẩn bản xứ của Giáo viên (SpeechEngine)
+// ==============================================================================
 class SoundEffects {
   constructor() {
     this.ctx = null;
+    this.muted = true; // Đã loại bỏ hoàn toàn tiếng kêu tút tụt theo yêu cầu của Thầy
   }
   
   init() {
-    if (!this.ctx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) this.ctx = new AudioContext();
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
+    // Không khởi tạo AudioContext gây tiếng ồn
   }
   
   playTone(freq, type = 'sine', duration = 0.15, startVol = 0.2) {
-    this.init();
-    if (!this.ctx) return;
-    try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      gain.gain.setValueAtTime(startVol, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + duration);
-    } catch (e) {}
+    // Tắt bỏ hoàn toàn tiếng tút chói tai
+    return;
   }
   
   playCorrect() {
-    this.init();
-    if (!this.ctx) return;
-    [523.25, 659.25, 783.99].forEach((freq, idx) => {
-      setTimeout(() => this.playTone(freq, 'triangle', 0.18, 0.25), idx * 70);
-    });
+    // Tắt bỏ tiếng kêu tút tụt khi làm đúng
+    return;
   }
   
   playWrong() {
-    this.init();
-    if (!this.ctx) return;
-    [220, 180].forEach((freq, idx) => {
-      setTimeout(() => this.playTone(freq, 'sawtooth', 0.2, 0.18), idx * 120);
-    });
+    // Tắt bỏ tiếng buzzer tút tụt khó chịu khi làm sai
+    return;
   }
   
   playFlip() {
-    this.playTone(420, 'sine', 0.08, 0.12);
+    // Tắt bỏ tiếng click tút khi lật thẻ
+    return;
   }
   
   playMatchSuccess() {
-    this.init();
-    if (!this.ctx) return;
-    [440, 554.37, 659.25, 880].forEach((freq, idx) => {
-      setTimeout(() => this.playTone(freq, 'sine', 0.25, 0.25), idx * 80);
-    });
+    return;
   }
   
   playWin() {
+    // Chỉ tạo hiệu ứng pháo hoa thị giác vui tươi, KHÔNG phát âm thanh tút tụt
     if (window.confetti) {
-      window.confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      try {
+        window.confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+      } catch (e) {}
     }
-    this.init();
-    if (!this.ctx) return;
-    const notes = [523.25, 659.25, 783.99, 1046.5];
-    notes.forEach((f, i) => {
-      setTimeout(() => this.playTone(f, 'triangle', 0.35, 0.3), i * 110);
-    });
+  }
+
+  playIncorrect() {
+    return;
   }
 }
 
@@ -2165,7 +2144,7 @@ const ChantBeatEngine = {
   initContext() {
     if (!this.ctx) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioContext();
+      /* AudioContext muted */ if (false) this.ctx = new AudioContext();
       this.masterGain = this.ctx.createGain();
       this.beatGain = this.ctx.createGain();
       this.beatGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
@@ -2197,118 +2176,22 @@ const ChantBeatEngine = {
     else this.bpm = 112; // popfunk
   },
   
-  // Instrument synthesizers
+    // Instrument synthesizers - ĐÃ TẮT BỎ HOÀN TOÀN TIẾNG NHẠC BEAT KÊU TÚT TỤT
+  // Tập trung 100% vào giọng đọc Call & Response phát âm chuẩn của Thầy giáo
   playKick(time) {
-    if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.connect(gain);
-    gain.connect(this.beatGain);
-    
-    const startFreq = this.style === 'trap' ? 180 : 150;
-    const endFreq = this.style === 'trap' ? 32 : 42;
-    const decay = this.style === 'trap' ? 0.45 : (this.style === 'lofi' ? 0.2 : 0.28);
-    
-    osc.frequency.setValueAtTime(startFreq, time);
-    osc.frequency.exponentialRampToValueAtTime(endFreq, time + 0.12);
-    
-    gain.gain.setValueAtTime(0.9, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
-    
-    osc.start(time);
-    osc.stop(time + decay);
+    return;
   },
   
   playSnare(time) {
-    if (!this.ctx) return;
-    // Noise
-    const bufSize = this.ctx.sampleRate * 0.18;
-    const noiseBuffer = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-    const whiteNoise = this.ctx.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-    
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = this.style === 'trap' ? 'bandpass' : 'highpass';
-    filter.frequency.setValueAtTime(this.style === 'lofi' ? 800 : 1100, time);
-    
-    const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(this.style === 'lofi' ? 0.4 : 0.7, time);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.18);
-    
-    whiteNoise.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.beatGain);
-    
-    whiteNoise.start(time);
-    whiteNoise.stop(time + 0.18);
-    
-    // Thump
-    const osc = this.ctx.createOscillator();
-    const oscGain = this.ctx.createGain();
-    osc.frequency.setValueAtTime(170, time);
-    osc.frequency.exponentialRampToValueAtTime(80, time + 0.08);
-    oscGain.gain.setValueAtTime(0.4, time);
-    oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.08);
-    osc.connect(oscGain);
-    oscGain.connect(this.beatGain);
-    osc.start(time);
-    osc.stop(time + 0.08);
+    return;
   },
   
   playHiHat(time, isOpen = false) {
-    if (!this.ctx) return;
-    const duration = isOpen ? 0.25 : 0.04;
-    const bufSize = Math.floor(this.ctx.sampleRate * duration);
-    const noiseBuffer = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-    const whiteNoise = this.ctx.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-    
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'highpass';
-    filter.frequency.setValueAtTime(this.style === 'lofi' ? 5000 : 7500, time);
-    
-    const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(isOpen ? 0.35 : 0.25, time);
-    gain.gain.exponentialRampToValueAtTime(0.005, time + duration);
-    
-    whiteNoise.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.beatGain);
-    
-    whiteNoise.start(time);
-    whiteNoise.stop(time + duration);
+    return;
   },
   
   playBass(time, freq, dur = 0.22) {
-    if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const filter = this.ctx.createBiquadFilter();
-    const gain = this.ctx.createGain();
-    
-    osc.type = this.style === 'lofi' ? 'sine' : 'sawtooth';
-    osc.frequency.setValueAtTime(freq, time);
-    
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(this.style === 'edm' ? 1200 : 700, time);
-    filter.frequency.exponentialRampToValueAtTime(140, time + dur);
-    
-    gain.gain.setValueAtTime(0.45, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-    
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.beatGain);
-    
-    osc.start(time);
-    osc.stop(time + dur);
+    return;
   },
   
   // Lookahead scheduler
