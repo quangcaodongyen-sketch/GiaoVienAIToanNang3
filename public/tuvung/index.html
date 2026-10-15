@@ -3040,6 +3040,326 @@ html, body {
   color: #64748b;
 }
 
+
+/* ==============================================================================
+   TEACHER CHATBOX WIDGET (THẦY ĐINH VĂN THÀNH & HỌC SINH)
+   ============================================================================== */
+#teacherChatWidgetContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+}
+
+#teacherChatFloatingBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #0284c7, #6366f1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  padding: 8px 18px 8px 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+#teacherChatFloatingBtn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.chat-btn-avatar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  background: #10b981;
+  border: 2px solid #0f172a;
+  border-radius: 50%;
+}
+
+.chat-btn-text {
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+.chat-unread-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+#teacherChatWindow {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 110px);
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 30px rgba(99, 102, 241, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100000;
+  backdrop-filter: blur(16px);
+  animation: chatSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes chatSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chat-win-header {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-win-teacher-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-teacher-avatar {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid #eab308;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.chat-teacher-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.chat-teacher-status {
+  font-size: 0.72rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.chat-win-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-action-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.chat-action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-zalo-banner {
+  background: rgba(0, 104, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 104, 255, 0.3);
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: #cbd5e1;
+}
+
+.chat-zalo-link-btn {
+  background: #0068ff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.73rem;
+}
+
+.chat-messages-stream {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.chat-bubble {
+  max-width: 84%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  word-break: break-word;
+  position: relative;
+}
+
+.chat-bubble.teacher {
+  align-self: flex-start;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-bottom-left-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chat-bubble.teacher .bubble-author {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fbbf24;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-bubble.student {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #0284c7, #4f46e5);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.chat-bubble.student .bubble-author {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 3px;
+  text-align: right;
+}
+
+.chat-bubble .bubble-time {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.chat-quick-suggestions {
+  padding: 6px 12px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  background: rgba(30, 41, 59, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-quick-suggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-quick-suggestions button {
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-quick-suggestions button:hover {
+  background: rgba(99, 102, 241, 0.25);
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.chat-input-footer {
+  padding: 10px 14px;
+  background: #1e293b;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-input-footer input {
+  flex: 1;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 9px 12px;
+  color: white;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.chat-input-footer input:focus {
+  border-color: #38bdf8;
+}
+
+.chat-input-footer button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.chat-input-footer button:hover {
+  transform: scale(1.06);
+}
+
 </style>
 </head>
 <body>
@@ -3919,11 +4239,14 @@ html, body {
       </div>
       <div class="custom-modal-body">
         <!-- Admin Navigation Tabs -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">
-          <button class="header-btn active" id="adminTabStudentsBtn" onclick="document.getElementById('adminSectionStudents').style.display='block'; document.getElementById('adminSectionImporter').style.display='none'; this.style.background='#6366f1'; document.getElementById('adminTabImporterBtn').style.background='rgba(255,255,255,0.06)';">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; flex-wrap: wrap;">
+          <button class="header-btn active" id="adminTabStudentsBtn" onclick="ADMIN_SYSTEM.switchTab('students')">
             👥 Danh Sách & Tiến Độ Học Sinh
           </button>
-          <button class="header-btn" id="adminTabImporterBtn" onclick="document.getElementById('adminSectionStudents').style.display='none'; document.getElementById('adminSectionImporter').style.display='block'; this.style.background='#6366f1'; document.getElementById('adminTabStudentsBtn').style.background='rgba(255,255,255,0.06)';">
+          <button class="header-btn" id="adminTabChatBtn" onclick="ADMIN_SYSTEM.switchTab('chat')" style="background: rgba(255,255,255,0.06);">
+            💬 Hộp Thư & Chat Với Học Sinh <span id="adminChatUnreadBadge" style="background: #ef4444; color: white; border-radius: 9999px; padding: 2px 7px; font-size: 0.72rem; margin-left: 4px; display: none;">0</span>
+          </button>
+          <button class="header-btn" id="adminTabImporterBtn" onclick="ADMIN_SYSTEM.switchTab('importer')" style="background: rgba(255,255,255,0.06);">
             📥 Bộ Nạp Từ Vựng Thông Minh (Lớp 6-12)
           </button>
         </div>
@@ -4092,6 +4415,22 @@ html, body {
             </table>
           </div>
         </div>
+
+        <!-- Section 3: Teacher-Student Live Chat & Inbox -->
+        <div id="adminSectionChat" style="display: none;">
+          <div style="margin-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">
+              Kênh trò chuyện hai chiều, hướng dẫn và giải đáp thắc mắc giữa <strong>Thầy giáo Đinh Văn Thành</strong> và từng học sinh.
+            </p>
+            <button class="header-btn" onclick="ADMIN_SYSTEM.broadcastAnnouncement()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: 700; font-size: 0.85rem; padding: 0.45rem 1rem;">
+              📢 Gửi Thông Báo / Lời Chúc Đến Toàn Bộ Học Sinh
+            </button>
+          </div>
+          <div id="adminChatInboxContainer">
+            <!-- Dynamically injected -->
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -4209,6 +4548,58 @@ html, body {
       </div>
       <div class="custom-modal-body" id="detailStudentModalBody">
         <!-- Dynamically injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING CHAT WIDGET: NHẮN TIN VỚI THẦY THÀNH -->
+  <div id="teacherChatWidgetContainer">
+    <button id="teacherChatFloatingBtn" onclick="TEACHER_CHAT.toggleChat()" title="Nhắn tin & Hỏi đáp với Thầy Đinh Thành">
+      <div class="chat-btn-avatar">
+        <span style="font-size: 1.4rem;">👨‍🏫</span>
+        <span class="chat-online-dot"></span>
+      </div>
+      <span class="chat-btn-text">Hỏi Thầy Thành</span>
+      <span class="chat-unread-badge" id="studentChatUnreadCount" style="display: none;">1</span>
+    </button>
+
+    <div id="teacherChatWindow" style="display: none;">
+      <div class="chat-win-header">
+        <div class="chat-win-teacher-info">
+          <div class="chat-teacher-avatar">👨‍🏫</div>
+          <div>
+            <div class="chat-teacher-name">Thầy giáo Đinh Văn Thành 👑</div>
+            <div class="chat-teacher-status">🟢 Đang trực tuyến • Sẵn sàng hỗ trợ</div>
+          </div>
+        </div>
+        <div class="chat-win-actions">
+          <a href="https://zalo.me/0915213717" target="_blank" class="chat-action-btn" title="Chat Zalo trực tiếp">📲 Zalo</a>
+          <button class="chat-action-btn" onclick="TEACHER_CHAT.toggleChat()">✕</button>
+        </div>
+      </div>
+
+      <!-- Quick Zalo Hotline Bar -->
+      <div class="chat-zalo-banner">
+        <span>Cần hỗ trợ gấp? Hotline/Zalo: <strong>0915.213.717</strong></span>
+        <a href="https://zalo.me/0915213717" target="_blank" class="chat-zalo-link-btn">Mở Zalo</a>
+      </div>
+
+      <!-- Message stream -->
+      <div class="chat-messages-stream" id="chatMessagesStream">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Quick suggestions -->
+      <div class="chat-quick-suggestions" id="chatQuickSuggestions">
+        <button onclick="TEACHER_CHAT.sendQuickText('Thầy ơi cho em hỏi cách học thuộc nhanh từ vựng bài này ạ!')">💡 Cách nhớ từ nhanh</button>
+        <button onclick="TEACHER_CHAT.sendQuickText('Thầy ơi làm thế nào để được cấp Giấy khen vinh danh ạ?')">🏆 Nhận Giấy khen</button>
+        <button onclick="TEACHER_CHAT.sendQuickText('Em chào Thầy Thành, em đang luyện bài tập môn Tiếng Anh ạ!')">👋 Chào Thầy Thành</button>
+      </div>
+
+      <!-- Input footer -->
+      <div class="chat-input-footer">
+        <input type="text" id="chatStudentInput" placeholder="Nhập tin nhắn gửi Thầy Thành..." onkeydown="if(event.key==='Enter') TEACHER_CHAT.sendMessage(); event.stopPropagation();">
+        <button id="chatSendBtn" onclick="TEACHER_CHAT.sendMessage()" title="Gửi tin nhắn">🚀</button>
       </div>
     </div>
   </div>

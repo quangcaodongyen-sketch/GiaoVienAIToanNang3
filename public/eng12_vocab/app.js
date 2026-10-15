@@ -3223,6 +3223,223 @@ function switchGrade(gradeStr, shouldSpeak = false) {
 // ==========================================
 // 2. STUDENT REGISTRATION & PROGRESS SYSTEM
 // ==========================================
+
+// ==============================================================================
+// 12. TEACHER CHATBOX SYSTEM (THẦY GIÁO ĐINH VĂN THÀNH & HỌC SINH 6 - 12)
+// ==============================================================================
+const TEACHER_CHAT = {
+  isOpen: false,
+  messages: [],
+
+  init() {
+    this.loadMessages();
+    this.renderMessages();
+    this.updateUnreadBadge();
+
+    // Default welcoming message if first time
+    if (this.messages.length === 0) {
+      const studentName = STUDENT_SYSTEM.currentStudent?.fullName || 'em';
+      const className = STUDENT_SYSTEM.currentStudent?.className ? 
+        (STUDENT_SYSTEM.currentStudent.className.toLowerCase().includes('lớp') ? STUDENT_SYSTEM.currentStudent.className : `Lớp ${STUDENT_SYSTEM.currentStudent.className}`) : 
+        (CURRENT_GRADE ? `Lớp ${CURRENT_GRADE}` : '');
+      this.messages.push({
+        id: 'MSG_INIT_' + Date.now(),
+        sender: 'teacher',
+        teacherName: 'Thầy Đinh Văn Thành',
+        text: `Chào em ${studentName} (${className})! Thầy Thành rất vui được đồng hành cùng em trong hành trình Luyện Siêu Trí Nhớ Từ Vựng Tiếng Anh. Em có thắc mắc gì về bài học, cách phát âm, hay bài tập cần giải đáp, hãy nhắn ngay cho thầy ở đây hoặc bấm nút Zalo phía trên nhé! Chúc em luôn học thật tốt! 🌟`,
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN'),
+        read: true
+      });
+      this.saveMessages();
+      this.renderMessages();
+    }
+  },
+
+  loadMessages() {
+    try {
+      const studentId = STUDENT_SYSTEM.currentStudent?.id || 'DEFAULT_STUDENT';
+      const saved = localStorage.getItem(`ENG_CHAT_${studentId}`);
+      if (saved) {
+        this.messages = JSON.parse(saved);
+      } else {
+        this.messages = [];
+      }
+    } catch (e) {
+      this.messages = [];
+    }
+  },
+
+  saveMessages() {
+    try {
+      const studentId = STUDENT_SYSTEM.currentStudent?.id || 'DEFAULT_STUDENT';
+      localStorage.setItem(`ENG_CHAT_${studentId}`, JSON.stringify(this.messages));
+      this.syncToGlobalInbox();
+    } catch (e) {}
+  },
+
+  syncToGlobalInbox() {
+    try {
+      const student = STUDENT_SYSTEM.currentStudent || {
+        id: 'DEFAULT_STUDENT',
+        fullName: 'Học Sinh',
+        className: '8A1',
+        grade: CURRENT_GRADE,
+        school: 'THCS Đồng Yên',
+        phone: '0915213717'
+      };
+
+      let allInbox = {};
+      const saved = localStorage.getItem('ENG_GLOBAL_CHAT_INBOX');
+      if (saved) allInbox = JSON.parse(saved);
+
+      allInbox[student.id] = {
+        student: student,
+        messages: this.messages,
+        lastUpdated: new Date().toLocaleString('vi-VN'),
+        unreadForAdmin: this.messages.filter(m => m.sender === 'student' && !m.readByAdmin).length
+      };
+
+      localStorage.setItem('ENG_GLOBAL_CHAT_INBOX', JSON.stringify(allInbox));
+    } catch (e) {}
+  },
+
+  toggleChat() {
+    const win = document.getElementById('teacherChatWindow');
+    if (!win) return;
+    this.isOpen = !this.isOpen;
+    win.style.display = this.isOpen ? 'flex' : 'none';
+
+    if (this.isOpen) {
+      this.messages.forEach(m => {
+        if (m.sender === 'teacher') m.read = true;
+      });
+      this.saveMessages();
+      this.updateUnreadBadge();
+      this.renderMessages();
+
+      const input = document.getElementById('chatStudentInput');
+      if (input) setTimeout(() => input.focus(), 200);
+    }
+  },
+
+  updateUnreadBadge() {
+    const badge = document.getElementById('studentChatUnreadCount');
+    if (!badge) return;
+    const unread = this.messages.filter(m => m.sender === 'teacher' && !m.read).length;
+    if (unread > 0) {
+      badge.style.display = 'inline-block';
+      badge.textContent = unread;
+    } else {
+      badge.style.display = 'none';
+    }
+  },
+
+  renderMessages() {
+    const stream = document.getElementById('chatMessagesStream');
+    if (!stream) return;
+
+    if (this.messages.length === 0) {
+      stream.innerHTML = `<div style="text-align: center; color: #94a3b8; font-size: 0.85rem; padding: 2rem 1rem;">Chưa có tin nhắn nào. Hãy gửi lời chào đến Thầy Thành!</div>`;
+      return;
+    }
+
+    const student = STUDENT_SYSTEM.currentStudent || {};
+    stream.innerHTML = this.messages.map(m => {
+      const isTeacher = (m.sender === 'teacher');
+      return `
+        <div class="chat-bubble ${isTeacher ? 'teacher' : 'student'}">
+          <div class="bubble-author">
+            ${isTeacher ? '👑 Thầy giáo Đinh Văn Thành' : `👤 ${student.fullName || 'Em'}`}
+          </div>
+          <div>${this.escapeHtml(m.text)}</div>
+          <div class="bubble-time">${m.timestamp || ''}</div>
+        </div>
+      `;
+    }).join('');
+
+    stream.scrollTop = stream.scrollHeight;
+  },
+
+  sendMessage() {
+    const input = document.getElementById('chatStudentInput');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    const student = STUDENT_SYSTEM.currentStudent;
+    if (!student) {
+      alert('Vui lòng đăng ký họ tên trước khi gửi tin nhắn cho Thầy Thành nhé!');
+      STUDENT_SYSTEM.openRegisterModal(false);
+      return;
+    }
+
+    const newMsg = {
+      id: 'MSG_' + Date.now(),
+      sender: 'student',
+      text: text,
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN'),
+      readByAdmin: false
+    };
+
+    this.messages.push(newMsg);
+    input.value = '';
+    this.saveMessages();
+    this.renderMessages();
+
+    if (typeof SFX !== 'undefined') SFX.playCorrect();
+
+    this.handleAutoResponse(text);
+  },
+
+  sendQuickText(text) {
+    const input = document.getElementById('chatStudentInput');
+    if (input) {
+      input.value = text;
+      this.sendMessage();
+    }
+  },
+
+  handleAutoResponse(userText) {
+    setTimeout(() => {
+      const student = STUDENT_SYSTEM.currentStudent;
+      const lower = userText.toLowerCase();
+      let reply = '';
+
+      if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi')) {
+        reply = `Thầy Thành chào em ${student?.fullName || ''}! Chúc em một ngày học tập tràn đầy năng lượng và tiếp thu bài thật tốt nhé! 🌟`;
+      } else if (lower.includes('nhớ') || lower.includes('thuộc') || lower.includes('mẹo')) {
+        reply = `Để nhớ từ vựng siêu nhanh và không bị quên, em hãy kết hợp: 1. Nghe nhạc Chant sôi động theo nhịp beat; 2. Làm bài tập phản xạ Đúng/Sai ⚡; 3. Lật thẻ Flashcard 3D ngắt quãng mỗi ngày. Thầy tin chắc em sẽ thuộc làu làu chỉ sau 10 phút! 💪`;
+      } else if (lower.includes('giấy khen') || lower.includes('chứng chỉ') || lower.includes('điểm 10')) {
+        reply = `Để nhận Giấy Khen vinh danh của Thầy, em chỉ cần hoàn thành bài Test 15 phút đạt từ 8.0 điểm trở lên hoặc duy trì chuỗi học tập 3 ngày liên tục. Cố gắng lên em nhé! 🏆`;
+      } else if (lower.includes('bài tập') || lower.includes('unit') || lower.includes('khó')) {
+        reply = `Thầy đã nhận được câu hỏi của em về bài học Unit ${STATE.currentUnit}. Thầy sẽ trực tiếp xem lại bài tập của em trong hệ thống và phản hồi chi tiết cho em. Em có thể bấm nút Zalo phía trên để trao đổi thêm với Thầy nhé! 📘`;
+      } else {
+        reply = `Thầy Thành đã nhận được tin nhắn của em ${student?.fullName || ''}. Thầy sẽ phản hồi sớm nhất cho em. Chúc em tiếp tục kiên trì rèn luyện từ vựng mỗi ngày thật tốt! 🚀`;
+      }
+
+      this.messages.push({
+        id: 'MSG_REPLY_' + Date.now(),
+        sender: 'teacher',
+        teacherName: 'Thầy Đinh Văn Thành',
+        text: reply,
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN'),
+        read: this.isOpen
+      });
+
+      this.saveMessages();
+      this.renderMessages();
+      this.updateUnreadBadge();
+      if (typeof SFX !== 'undefined') SFX.playWin();
+    }, 1200);
+  },
+
+  escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+};
+
+
 const STUDENT_SYSTEM = {
   currentStudent: null,
 
@@ -3508,8 +3725,331 @@ const ADMIN_SYSTEM = {
     if (!overlay) return;
 
     overlay.classList.add('active');
+    this.switchTab('students');
     this.populateFilterDropdowns();
     this.renderAdminView();
+    this.updateAdminChatBadge();
+  },
+
+  switchTab(tabName) {
+    const secStudents = document.getElementById('adminSectionStudents');
+    const secImporter = document.getElementById('adminSectionImporter');
+    const secChat = document.getElementById('adminSectionChat');
+    const btnStudents = document.getElementById('adminTabStudentsBtn');
+    const btnImporter = document.getElementById('adminTabImporterBtn');
+    const btnChat = document.getElementById('adminTabChatBtn');
+
+    if (secStudents) secStudents.style.display = (tabName === 'students') ? 'block' : 'none';
+    if (secImporter) secImporter.style.display = (tabName === 'importer') ? 'block' : 'none';
+    if (secChat) secChat.style.display = (tabName === 'chat') ? 'block' : 'none';
+
+    if (btnStudents) btnStudents.style.background = (tabName === 'students') ? '#6366f1' : 'rgba(255,255,255,0.06)';
+    if (btnImporter) btnImporter.style.background = (tabName === 'importer') ? '#6366f1' : 'rgba(255,255,255,0.06)';
+    if (btnChat) btnChat.style.background = (tabName === 'chat') ? '#6366f1' : 'rgba(255,255,255,0.06)';
+
+    if (tabName === 'chat') {
+      this.renderAdminChatInbox();
+    }
+  },
+
+  updateAdminChatBadge() {
+    const badge = document.getElementById('adminChatUnreadBadge');
+    if (!badge) return;
+    
+    let totalUnread = 0;
+    try {
+      const saved = localStorage.getItem('ENG_GLOBAL_CHAT_INBOX');
+      if (saved) {
+        const inbox = JSON.parse(saved);
+        Object.values(inbox).forEach(item => {
+          totalUnread += (item.unreadForAdmin || 0);
+        });
+      }
+    } catch (e) {}
+
+    if (totalUnread > 0) {
+      badge.style.display = 'inline-block';
+      badge.textContent = totalUnread;
+    } else {
+      badge.style.display = 'none';
+    }
+  },
+
+  selectedChatStudentId: null,
+
+  renderAdminChatInbox() {
+    const container = document.getElementById('adminChatInboxContainer');
+    if (!container) return;
+
+    let inbox = {};
+    try {
+      const saved = localStorage.getItem('ENG_GLOBAL_CHAT_INBOX');
+      if (saved) inbox = JSON.parse(saved);
+    } catch (e) {}
+
+    const students = this.getAllStudents();
+    students.forEach(s => {
+      if (!inbox[s.id]) {
+        let msgs = [];
+        try {
+          const sSaved = localStorage.getItem(`ENG_CHAT_${s.id}`);
+          if (sSaved) msgs = JSON.parse(sSaved);
+        } catch (e) {}
+        inbox[s.id] = {
+          student: s,
+          messages: msgs,
+          lastUpdated: s.lastActiveAt || 'Hôm nay',
+          unreadForAdmin: msgs.filter(m => m.sender === 'student' && !m.readByAdmin).length
+        };
+      }
+    });
+
+    const studentIds = Object.keys(inbox);
+
+    if (studentIds.length === 0) {
+      container.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 3rem;">Chưa có dữ liệu học sinh nào để trò chuyện.</div>`;
+      return;
+    }
+
+    if (!this.selectedChatStudentId || !inbox[this.selectedChatStudentId]) {
+      this.selectedChatStudentId = studentIds[0];
+    }
+
+    const currentChat = inbox[this.selectedChatStudentId];
+    const curStudent = currentChat.student || {};
+    const curMsgs = currentChat.messages || [];
+
+    // Mark messages from this student as read by Admin
+    let needSave = false;
+    curMsgs.forEach(m => {
+      if (m.sender === 'student' && !m.readByAdmin) {
+        m.readByAdmin = true;
+        needSave = true;
+      }
+    });
+    if (needSave) {
+      currentChat.unreadForAdmin = 0;
+      localStorage.setItem('ENG_GLOBAL_CHAT_INBOX', JSON.stringify(inbox));
+      localStorage.setItem(`ENG_CHAT_${this.selectedChatStudentId}`, JSON.stringify(curMsgs));
+      this.updateAdminChatBadge();
+    }
+
+    const classStr = curStudent.className ? 
+      (curStudent.className.toLowerCase().includes('lớp') ? curStudent.className : `Lớp ${curStudent.className}`) : 
+      `Lớp ${curStudent.grade || '12'}`;
+
+    container.innerHTML = `
+      <div style="display: grid; grid-template-columns: 280px 1fr; gap: 1rem; min-height: 480px; background: rgba(15,23,42,0.85); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+        <!-- Left: Student Conversations List -->
+        <div style="border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column;">
+          <div style="padding: 10px 12px; background: rgba(30,41,59,0.8); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 0.88rem; color: #ffffff;">👥 Học Sinh (${studentIds.length})</span>
+            <button onclick="ADMIN_SYSTEM.broadcastAnnouncement()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: 700;">
+              📢 Gửi Chung
+            </button>
+          </div>
+          <div style="flex: 1; overflow-y: auto; max-height: 440px;">
+            ${studentIds.map(sid => {
+              const item = inbox[sid];
+              const st = item.student || {};
+              const unread = item.unreadForAdmin || 0;
+              const isSelected = (sid === this.selectedChatStudentId);
+              const sClass = st.className ? (st.className.toLowerCase().includes('lớp') ? st.className : `Lớp ${st.className}`) : `Lớp ${st.grade || '12'}`;
+              const lastMsg = (item.messages && item.messages.length > 0) ? item.messages[item.messages.length - 1].text : 'Chưa có tin nhắn';
+
+              return `
+                <div onclick="ADMIN_SYSTEM.selectChatStudent('${sid}')" style="padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; background: ${isSelected ? 'rgba(99,102,241,0.25)' : 'transparent'}; transition: background 0.2s;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="color: ${isSelected ? '#38bdf8' : '#ffffff'}; font-size: 0.9rem;">${st.fullName || 'Học sinh'}</strong>
+                    ${unread > 0 ? `<span style="background: #ef4444; color: white; border-radius: 9999px; font-size: 0.7rem; padding: 1px 6px; font-weight: 800;">${unread}</span>` : ''}
+                  </div>
+                  <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px;">${sClass} • ${st.school || 'THCS'}</div>
+                  <div style="font-size: 0.73rem; color: #cbd5e1; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; opacity: 0.85;">
+                    ${lastMsg}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Right: Chat Messages Stream & Teacher Reply Box -->
+        <div style="display: flex; flex-direction: column; background: #0f172a;">
+          <!-- Chat Header -->
+          <div style="padding: 10px 16px; background: rgba(30,41,59,0.9); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 1.05rem; font-weight: 800; color: #ffffff;">👤 ${curStudent.fullName || 'Học sinh'} (${classStr})</div>
+              <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 2px;">
+                Trường: ${curStudent.school || 'THCS/THPT'} • SĐT: <strong style="color: #38bdf8;">${curStudent.phone}</strong>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <a href="tel:${curStudent.phone}" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); padding: 4px 10px; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 700;">📞 Gọi</a>
+              <a href="https://zalo.me/${curStudent.phone}" target="_blank" style="background: #0068ff; color: white; padding: 4px 10px; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 700;">💬 Zalo</a>
+            </div>
+          </div>
+
+          <!-- Message Stream -->
+          <div id="adminChatMessagesStream" style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; max-height: 320px; background: rgba(15,23,42,0.95);">
+            ${curMsgs.length === 0 ? `
+              <div style="text-align: center; color: #94a3b8; font-size: 0.85rem; padding: 3rem 1rem;">
+                Chưa có tin nhắn nào trong hội thoại này. Thầy Thành hãy gửi lời động viên đầu tiên đến em!
+              </div>
+            ` : curMsgs.map(m => {
+              const isTeacher = (m.sender === 'teacher');
+              return `
+                <div style="max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.88rem; line-height: 1.45; ${isTeacher ? 'align-self: flex-end; background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid rgba(234,179,8,0.3); color: #ffffff;' : 'align-self: flex-start; background: #1e293b; color: #f1f5f9; border: 1px solid rgba(255,255,255,0.08);'}">
+                  <div style="font-size: 0.72rem; font-weight: 800; color: ${isTeacher ? '#fbbf24' : '#38bdf8'}; margin-bottom: 2px;">
+                    ${isTeacher ? '👑 Thầy giáo Đinh Văn Thành' : `👤 ${curStudent.fullName || 'Học sinh'}`}
+                  </div>
+                  <div>${m.text}</div>
+                  <div style="font-size: 0.68rem; color: rgba(255,255,255,0.5); margin-top: 3px; text-align: right;">${m.timestamp || ''}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Teacher Quick Chips -->
+          <div style="padding: 6px 12px; background: rgba(30,41,59,0.5); display: flex; gap: 6px; overflow-x: auto; border-top: 1px solid rgba(255,255,255,0.05);">
+            <button onclick="ADMIN_SYSTEM.insertTeacherChip('Thầy khen ngợi em đã học rất chuyên cần! Hãy tiếp tục phát huy nhé! 🌟')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; padding: 3px 8px; border-radius: 9999px; font-size: 0.72rem; cursor: pointer; white-space: nowrap;">
+              🌟 Khen chuyên cần
+            </button>
+            <button onclick="ADMIN_SYSTEM.insertTeacherChip('Em nhớ làm bài Test 15 phút để lấy Giấy khen vinh danh của Thầy nhé! 🏆')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; padding: 3px 8px; border-radius: 9999px; font-size: 0.72rem; cursor: pointer; white-space: nowrap;">
+              🏆 Nhắc làm Test 15p
+            </button>
+            <button onclick="ADMIN_SYSTEM.insertTeacherChip('Từ vựng này em hãy bật phát âm nghe lại và đọc theo nhịp điệu nhé! 🎧')" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; padding: 3px 8px; border-radius: 9999px; font-size: 0.72rem; cursor: pointer; white-space: nowrap;">
+              🎧 Hướng dẫn phát âm
+            </button>
+          </div>
+
+          <!-- Teacher Input Box -->
+          <div style="padding: 10px 14px; background: #1e293b; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 8px;">
+            <input type="text" id="adminTeacherReplyInput" placeholder="Thầy Thành nhập lời dặn dò, giải đáp gửi em ${curStudent.fullName || 'học sinh'}..." style="flex: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 9px 12px; color: white; font-size: 0.88rem; outline: none;" onkeydown="if(event.key==='Enter') ADMIN_SYSTEM.submitTeacherReply(); event.stopPropagation();">
+            <button onclick="ADMIN_SYSTEM.submitTeacherReply()" style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; padding: 0 16px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 4px;">
+              🚀 Gửi
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const st = document.getElementById('adminChatMessagesStream');
+    if (st) st.scrollTop = st.scrollHeight;
+  },
+
+  selectChatStudent(studentId) {
+    this.selectedChatStudentId = studentId;
+    this.renderAdminChatInbox();
+  },
+
+  insertTeacherChip(text) {
+    const input = document.getElementById('adminTeacherReplyInput');
+    if (input) {
+      input.value = text;
+      input.focus();
+    }
+  },
+
+  submitTeacherReply() {
+    const input = document.getElementById('adminTeacherReplyInput');
+    if (!input || !this.selectedChatStudentId) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    this.sendTeacherReply(this.selectedChatStudentId, text);
+    input.value = '';
+  },
+
+  sendTeacherReply(studentId, text) {
+    let msgs = [];
+    try {
+      const saved = localStorage.getItem(`ENG_CHAT_${studentId}`);
+      if (saved) msgs = JSON.parse(saved);
+    } catch (e) {}
+
+    const replyMsg = {
+      id: 'MSG_TEACHER_' + Date.now(),
+      sender: 'teacher',
+      teacherName: 'Thầy Đinh Văn Thành',
+      text: text,
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN'),
+      read: false
+    };
+
+    msgs.push(replyMsg);
+    localStorage.setItem(`ENG_CHAT_${studentId}`, JSON.stringify(msgs));
+
+    let inbox = {};
+    try {
+      const savedInbox = localStorage.getItem('ENG_GLOBAL_CHAT_INBOX');
+      if (savedInbox) inbox = JSON.parse(savedInbox);
+    } catch (e) {}
+
+    if (inbox[studentId]) {
+      inbox[studentId].messages = msgs;
+      inbox[studentId].lastUpdated = new Date().toLocaleString('vi-VN');
+      localStorage.setItem('ENG_GLOBAL_CHAT_INBOX', JSON.stringify(inbox));
+    }
+
+    if (STUDENT_SYSTEM.currentStudent?.id === studentId) {
+      TEACHER_CHAT.loadMessages();
+      TEACHER_CHAT.renderMessages();
+      TEACHER_CHAT.updateUnreadBadge();
+    }
+
+    this.renderAdminChatInbox();
+  },
+
+  broadcastAnnouncement() {
+    const text = prompt('📢 Nhập thông báo hoặc lời dặn dò của Thầy Thành gửi đến TOÀN BỘ học sinh:');
+    if (!text || !text.trim()) return;
+
+    const students = this.getAllStudents();
+    if (students.length === 0) {
+      alert('Chưa có học sinh nào trong hệ thống!');
+      return;
+    }
+
+    const broadcastMsg = {
+      id: 'MSG_BROADCAST_' + Date.now(),
+      sender: 'teacher',
+      teacherName: 'Thầy Đinh Văn Thành',
+      text: `📢 [THÔNG BÁO TỪ THẦY THÀNH]: ${text.trim()}`,
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN'),
+      read: false
+    };
+
+    students.forEach(s => {
+      let sMsgs = [];
+      try {
+        const saved = localStorage.getItem(`ENG_CHAT_${s.id}`);
+        if (saved) sMsgs = JSON.parse(saved);
+      } catch (e) {}
+      sMsgs.push(broadcastMsg);
+      localStorage.setItem(`ENG_CHAT_${s.id}`, JSON.stringify(sMsgs));
+    });
+
+    let inbox = {};
+    try {
+      const savedInbox = localStorage.getItem('ENG_GLOBAL_CHAT_INBOX');
+      if (savedInbox) inbox = JSON.parse(savedInbox);
+    } catch (e) {}
+
+    students.forEach(s => {
+      if (inbox[s.id]) {
+        inbox[s.id].messages.push(broadcastMsg);
+      }
+    });
+    localStorage.setItem('ENG_GLOBAL_CHAT_INBOX', JSON.stringify(inbox));
+
+    if (STUDENT_SYSTEM.currentStudent) {
+      TEACHER_CHAT.loadMessages();
+      TEACHER_CHAT.renderMessages();
+      TEACHER_CHAT.updateUnreadBadge();
+    }
+
+    alert(`🎉 Đã gửi thông báo thành công đến toàn bộ ${students.length} học sinh!`);
+    this.renderAdminChatInbox();
   },
 
   closeAdminModal() {
@@ -4971,6 +5511,7 @@ function startApp() {
   try { initUnitPills(); } catch (e) { console.error("initUnitPills error:", e); }
   try { setupEventListeners(); } catch (e) { console.error("setupEventListeners error:", e); }
   try { STUDENT_SYSTEM.init(); } catch (e) { console.error("STUDENT_SYSTEM error:", e); }
+  try { TEACHER_CHAT.init(); } catch (e) { console.error("TEACHER_CHAT error:", e); }
   try { WEAKWORDS_SYSTEM.init(); } catch (e) { console.error("WEAKWORDS_SYSTEM error:", e); }
   try { GAMIFICATION.init(); } catch (e) { console.error("GAMIFICATION error:", e); }
   try { selectUnit(STATE.currentUnit || 1, false); } catch (e) { console.error("selectUnit error:", e); }
