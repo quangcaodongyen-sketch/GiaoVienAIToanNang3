@@ -1079,6 +1079,12 @@ function updateStatsModal() {
 
 function setupEventListeners() {
 
+  // Header Admin & Share buttons
+  const adminBtn = document.getElementById('openAdminModalBtn');
+  if (adminBtn) adminBtn.addEventListener('click', () => { if (typeof ADMIN_SYSTEM !== 'undefined') ADMIN_SYSTEM.openAdminModal(); });
+  const shareBtn = document.getElementById('openShareModalBtn');
+  if (shareBtn) shareBtn.addEventListener('click', () => { if (typeof SHARE_SYSTEM !== 'undefined') SHARE_SYSTEM.openShareModal(); });
+
   // ==============================================================================
   // BẤM VÀO TÊN BÀI HỌC Ở BẤT KỲ ĐÂU TRÊN MÀN HÌNH ĐỀU ĐỌC DÕNG DẠC TÊN BÀI:
   // ==============================================================================
@@ -3498,7 +3504,7 @@ const STUDENT_SYSTEM = {
     if (schoolInput) schoolInput.value = this.currentStudent.school || '';
     if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
     if (userInput) userInput.value = this.currentStudent.username || this.currentStudent.phone || '';
-    if (passInput) passInput.value = this.currentStudent.password || '123';
+    if (passInput) passInput.value = this.currentStudent.password || '';
 
     // KPI
     const xpVal = document.getElementById('profileKpiXP');
@@ -3732,10 +3738,9 @@ const STUDENT_SYSTEM = {
     }
 
     // Auto check if registered or logged in
+    // Note: Do not auto-block user on initial page load so they can immediately learn and click anywhere
     if (!this.currentStudent) {
-      setTimeout(() => {
-        this.openRegisterModal(false, 'login');
-      }, 600);
+      // Guest mode ready
     }
   },
 
@@ -3795,7 +3800,7 @@ const STUDENT_SYSTEM = {
     if (!overlay) return;
 
     const closeBtn = overlay.querySelector('.custom-modal-close');
-    if (closeBtn) closeBtn.style.display = canClose ? 'flex' : 'none';
+    if (closeBtn) closeBtn.style.display = 'flex';
 
     this.switchAuthTab(defaultTab);
 
@@ -3814,7 +3819,7 @@ const STUDENT_SYSTEM = {
       if (schoolInput) schoolInput.value = this.currentStudent.school || '';
       if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
       if (userInput) userInput.value = this.currentStudent.username || this.currentStudent.phone || '';
-      if (passInput) passInput.value = this.currentStudent.password || '123';
+      if (passInput) passInput.value = this.currentStudent.password || '';
     }
 
     overlay.classList.add('active');
@@ -4286,9 +4291,9 @@ const ADMIN_SYSTEM = {
       STUDENT_SYSTEM.renderHeaderBadge();
       this.closeAdminLoginModal();
       this.openAdminModalDirect();
-      alert('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)! Đăng nhập thành công.');
+      showAppToast('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)! Đăng nhập thành công.', 'success');
     } else {
-      alert('❌ Tên đăng nhập hoặc Mật khẩu Quản trị viên chưa chính xác!');
+      showAppToast('❌ Tên đăng nhập hoặc Mật khẩu Quản trị viên chưa chính xác!', 'error');
       document.getElementById('adminAuthPassword')?.focus();
     }
   },
@@ -5103,10 +5108,7 @@ const ADMIN_SYSTEM = {
 
     // Generate CSV with UTF-8 BOM so Excel opens Vietnamese characters perfectly
     let csvContent = '﻿';
-    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Mức Độ Chuyên Cần,Số Lần Test 15P,Điểm 15P Cao Nhất,Số Giấy Khen,Số Lần Ôn Tập Các Bài,Tổng Lượt Làm Bài,Chuỗi Ngày Streak,Tổng Điểm XP,Từ Đã Thuộc,Bài Tập Gần Nhất,Ngày Đăng Ký,Hoạt Động Cuối
-
-';
-
+    csvContent += 'STT,Họ và Tên,Lớp Học,Khối Sách,Trường Học,Số Điện Thoại,Mức Độ Chuyên Cần,Số Lần Test 15P,Điểm 15P Cao Nhất,Số Giấy Khen,Số Lần Ôn Tập Các Bài,Tổng Lượt Làm Bài,Chuỗi Ngày Streak,Tổng Điểm XP,Từ Đã Thuộc,Bài Tập Gần Nhất,Ngày Đăng Ký,Hoạt Động Cuối\r\n';
     const sorted = [...students].sort((a,b) => compareVietnameseNames(a.fullName, b.fullName, true));
 
     sorted.forEach((s, i) => {
@@ -6418,6 +6420,28 @@ const CERTIFICATE_CENTER = {
   }
 };
 
+
+
+// GLOBAL NON-BLOCKING TOAST NOTIFICATION
+function showAppToast(message, type = 'info') {
+  if (typeof document === 'undefined') return;
+  let toast = document.getElementById('globalAppToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'globalAppToast';
+    toast.style.cssText = 'position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #0f172a; border: 1.5px solid rgba(56, 189, 248, 0.4); color: #fff; padding: 12px 24px; border-radius: 9999px; font-size: 0.95rem; font-weight: 700; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.35); z-index: 999999; opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; display: flex; align-items: center; gap: 8px; font-family: Inter, system-ui, sans-serif;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.borderColor = type === 'error' ? '#f43f5e' : (type === 'success' ? '#10b981' : 'rgba(56, 189, 248, 0.6)');
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  if (toast._timer) clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-20px)';
+  }, 3200);
+}
 
 function startApp() {
 
