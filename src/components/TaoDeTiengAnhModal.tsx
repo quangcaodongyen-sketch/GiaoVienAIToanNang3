@@ -759,7 +759,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <h4 className="text-base font-bold text-white flex items-center gap-2">
                       <span>Phần Mềm Tạo Đề Tiếng Anh THCS (Công Văn 7991)</span>
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                        v4.1.0 (Mới nhất)
+                        v4.2.0 (Mới nhất - Lưu Desktop & Chuẩn PPCT)
                       </span>
                     </h4>
                     <p className="text-xs text-amber-300 font-medium mt-1 flex items-center gap-1.5">
