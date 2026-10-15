@@ -479,6 +479,18 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
   try { if (typeof initHangmanGame === 'function') initHangmanGame(); } catch (e) { console.error("initHangmanGame error:", e); }
   try { if (typeof initContextGame === 'function') initContextGame(); } catch (e) { console.error("initContextGame error:", e); }
   try { renderVocabularyHub(); } catch (e) { console.error("renderVocabularyHub error:", e); }
+
+  // Auto reload active tab game smoothly when switching units
+  try {
+    const curActivePane = document.querySelector('.tab-pane.active');
+    if (curActivePane) {
+      if (curActivePane.id === 'tab-minitest' && typeof MINITEST_SYSTEM !== 'undefined') {
+        MINITEST_SYSTEM.init();
+      } else if (curActivePane.id === 'tab-blitz' && typeof initBlitzGame === 'function') {
+        initBlitzGame();
+      }
+    }
+  } catch(e) {}
 }
 
 // ==============================================================================
@@ -3856,6 +3868,31 @@ const STUDENT_SYSTEM = {
     const loginUser = (document.getElementById('loginUsername')?.value || '').trim().toLowerCase();
     const loginPass = (document.getElementById('loginPassword')?.value || '').trim();
 
+    // Check Admin login (Username: Admin, Password: 123)
+    if (loginUser === 'admin' && (loginPass === '123' || loginPass === '6868')) {
+      this.currentStudent = {
+        id: 'ADMIN_DVT',
+        username: 'Admin',
+        fullName: 'Thầy Đinh Văn Thành',
+        role: 'admin',
+        className: 'Quản Trị Viên',
+        grade: CURRENT_GRADE || '12',
+        school: 'Trường THCS Đồng Yên',
+        phone: '0915213717',
+        avatar: 'av_top',
+        xp: 9999,
+        streakDays: 365,
+        registeredAt: 'Chính thức',
+        lastActiveAt: new Date().toLocaleString('vi-VN')
+      };
+      this.saveStudent();
+      this.closeRegisterModal();
+      this.renderHeaderBadge();
+      alert('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)!\nĐăng nhập quyền Quản trị viên thành công.');
+      ADMIN_SYSTEM.openAdminModalDirect();
+      return;
+    }
+
     if (!loginUser) {
       alert('Vui lòng nhập Tên đăng nhập hoặc Số điện thoại!');
       document.getElementById('loginUsername')?.focus();
@@ -4039,10 +4076,18 @@ const STUDENT_SYSTEM = {
       badge.style.cursor = 'pointer';
       if (loginBtn) loginBtn.style.display = 'none';
 
+      const isAdmin = this.currentStudent.role === 'admin' || (this.currentStudent.username || '').toLowerCase() === 'admin';
       const classStr = this.currentStudent.className ? 
         (this.currentStudent.className.toLowerCase().includes('lớp') ? this.currentStudent.className : `Lớp ${this.currentStudent.className}`) : 
         `Lớp ${this.currentStudent.grade || CURRENT_GRADE}`;
-      nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
+      
+      if (isAdmin) {
+        nameSpan.innerHTML = `👑 <strong style="color: #facc15;">Thầy Đinh Văn Thành (Admin)</strong>`;
+        badge.style.borderColor = '#facc15';
+        badge.style.boxShadow = '0 0 12px rgba(250, 204, 21, 0.5)';
+      } else {
+        nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
+      }
       badge.title = `${this.currentStudent.fullName} • ${classStr} • User: ${this.currentStudent.username || this.currentStudent.phone} • Bấm để xem Hồ sơ & Đổi Avatar`;
 
       // Update avatar circle in header
@@ -4193,14 +4238,62 @@ const STUDENT_SYSTEM = {
 const ADMIN_SYSTEM = {
   adminPin: '123', // Mật khẩu quản trị mặc định
 
-  openAdminModal() {
-    const pin = prompt('👑 Vui lòng nhập Mã PIN Quản Trị Viên (Mặc định: 123):');
-    if (pin === null) return;
-    if (pin.trim() !== this.adminPin && pin.trim() !== '6868') {
-      alert('❌ Mã PIN không chính xác! Vui lòng liên hệ Thầy Đinh Thành.');
+    openAdminModal() {
+    if (STUDENT_SYSTEM.currentStudent?.role === 'admin' || (STUDENT_SYSTEM.currentStudent?.username || '').toLowerCase() === 'admin') {
+      this.openAdminModalDirect();
       return;
     }
+    const modal = document.getElementById('adminLoginModalOverlay');
+    if (modal) {
+      modal.classList.add('active');
+      const uInput = document.getElementById('adminAuthUsername');
+      if (uInput) {
+        uInput.value = 'Admin';
+        setTimeout(() => document.getElementById('adminAuthPassword')?.focus(), 150);
+      }
+    } else {
+      this.openAdminModalDirect();
+    }
+  },
 
+  closeAdminLoginModal() {
+    const modal = document.getElementById('adminLoginModalOverlay');
+    if (modal) modal.classList.remove('active');
+  },
+
+  submitAdminLogin(e) {
+    if (e) e.preventDefault();
+    const u = (document.getElementById('adminAuthUsername')?.value || '').trim().toLowerCase();
+    const p = (document.getElementById('adminAuthPassword')?.value || '').trim();
+
+    if (u === 'admin' && (p === '123' || p === '6868')) {
+      STUDENT_SYSTEM.currentStudent = {
+        id: 'ADMIN_DVT',
+        username: 'Admin',
+        fullName: 'Thầy Đinh Văn Thành',
+        role: 'admin',
+        className: 'Quản Trị Viên',
+        grade: CURRENT_GRADE || '12',
+        school: 'Trường THCS Đồng Yên',
+        phone: '0915213717',
+        avatar: 'av_top',
+        xp: 9999,
+        streakDays: 365,
+        registeredAt: 'Chính thức',
+        lastActiveAt: new Date().toLocaleString('vi-VN')
+      };
+      STUDENT_SYSTEM.saveStudent();
+      STUDENT_SYSTEM.renderHeaderBadge();
+      this.closeAdminLoginModal();
+      this.openAdminModalDirect();
+      alert('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)! Đăng nhập thành công.');
+    } else {
+      alert('❌ Tên đăng nhập hoặc Mật khẩu Quản trị viên chưa chính xác!');
+      document.getElementById('adminAuthPassword')?.focus();
+    }
+  },
+
+  openAdminModalDirect() {
     const overlay = document.getElementById('adminModalOverlay');
     if (!overlay) return;
 
@@ -4210,6 +4303,19 @@ const ADMIN_SYSTEM = {
     this.renderAdminView();
     this.updateAdminChatBadge();
   },
+
+  togglePasswordVisibility(spanId, passVal) {
+    const el = document.getElementById(spanId);
+    if (!el) return;
+    if (el.textContent === '••••••') {
+      el.textContent = passVal;
+      el.style.color = '#34d399';
+    } else {
+      el.textContent = '••••••';
+      el.style.color = '#facc15';
+    }
+  },
+
 
   switchTab(tabName) {
     const secStudents = document.getElementById('adminSectionStudents');
@@ -4729,7 +4835,7 @@ const ADMIN_SYSTEM = {
           </td>
           <td>
             <div style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">User: ${s.username || s.phone || 'Chưa đặt'}</div>
-            <div style="font-size: 0.75rem; color: #facc15; font-family: monospace; margin-top: 2px;">MK: ${s.password || '123'}</div>
+            <div style="font-size: 0.75rem; color: #facc15; font-family: monospace; margin-top: 2px;">MK: <span id="admPass_${idx}">••••••</span> <button type="button" onclick="ADMIN_SYSTEM.togglePasswordVisibility('admPass_${idx}', '${s.password || '123'}')" style="background:none; border:none; color:#38bdf8; cursor:pointer; font-size:0.75rem; padding: 0 2px;" title="Xem mật khẩu">👁️</button></div>
           </td>
           <td>
             <span class="grade-badge-tag" style="background: rgba(99,102,241,0.25); color: #a5b4fc; font-weight: 700; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">
@@ -5267,9 +5373,17 @@ const MINITEST_SYSTEM = {
   timeLeft: 900, // 15 phút (900s)
 
   init() {
-    const words = STATE.activeWords || [];
+    let words = [...(STATE.activeWords || [])];
+    // If unit has few words, borrow extra words from full grade vocabulary pool for 100% smooth test
     if (words.length < 4) {
-      alert('Bài học này cần ít nhất 4 từ vựng để tạo đề kiểm tra 15 phút!');
+      if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
+        const extraWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
+        words = words.concat(extraWords);
+      }
+    }
+    if (words.length === 0) {
+      const container = document.getElementById('minitestQuestionContainer');
+      if (container) container.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem;">Vui lòng chọn bài học có từ vựng để làm bài kiểm tra.</div>';
       return;
     }
 
@@ -6306,6 +6420,28 @@ const CERTIFICATE_CENTER = {
 
 
 function startApp() {
+
+  // GLOBAL_MODAL_DISMISS_INSTALLED: Click backdrop or press ESC to dismiss ANY modal
+  document.querySelectorAll('.custom-modal-overlay, .modal').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+        overlay.classList.remove('open');
+      }
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.custom-modal-overlay.active, .modal.open').forEach(m => {
+        m.classList.remove('active');
+        m.classList.remove('open');
+      });
+      const themeMenu = document.getElementById('themePaletteMenu');
+      if (themeMenu) themeMenu.classList.remove('show');
+    }
+  });
+
   console.log("Vocab Master Pro 6-12 initializing...");
   try { loadCustomVocab(); } catch (e) { console.error("loadCustomVocab error:", e); }
   try { loadProgress(); } catch (e) { console.error("loadProgress error:", e); }
