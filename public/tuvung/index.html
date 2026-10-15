@@ -3658,6 +3658,55 @@ body {
   display: inline-block;
 }
 
+
+.header-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--accent-theme, #38bdf8);
+  background: var(--bg-card, #1e293b);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--primary-glow);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.header-avatar-circle:hover {
+  transform: scale(1.15);
+}
+.header-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preset-av-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.16s ease;
+}
+.preset-av-btn:hover {
+  transform: scale(1.18);
+  border-color: var(--accent-theme, #38bdf8);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+.preset-av-btn.active {
+  border-color: #facc15;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.7);
+  transform: scale(1.12);
+}
+
 </style>
   <!-- Instant Theme Initializer (Zero FOUT / No Flickering) -->
   <script>
@@ -3686,9 +3735,12 @@ body {
         </a>
 
         <div class="header-actions">
-          <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Thông tin tài khoản học sinh">
-            <span>👤 <span id="studentHeaderName">Em</span></span>
-            <button id="editStudentInfoBtn" title="Chỉnh sửa thông tin" style="background:none; border:none; cursor:pointer; font-size:0.85rem; padding:2px 4px;">✏️</button>
+                    <div class="student-header-tag" id="studentHeaderTag" style="display:none;" title="Bấm để xem Hồ sơ học sinh & Tùy chỉnh Avatar">
+            <div class="header-avatar-circle" id="studentHeaderAvatarCircle" onclick="STUDENT_SYSTEM.openProfileModal()">
+              <span id="studentHeaderAvatarIcon">👦</span>
+            </div>
+            <span id="studentHeaderName" onclick="STUDENT_SYSTEM.openProfileModal()" style="cursor: pointer;">Em</span>
+            <button id="editStudentInfoBtn" onclick="STUDENT_SYSTEM.openProfileModal()" title="Hồ sơ & Đổi Avatar" style="background:none; border:none; cursor:pointer; font-size:0.85rem; padding:2px 4px;">✏️</button>
             <button id="logoutStudentBtn" onclick="STUDENT_SYSTEM.logout()" title="Đổi tài khoản / Đăng xuất" style="background:none; border:none; cursor:pointer; font-size:0.85rem; padding:2px 4px; color:#f87171;">🚪</button>
           </div>
           <button class="header-btn" id="headerLoginBtn" onclick="STUDENT_SYSTEM.openRegisterModal(true, 'login')" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700; display: inline-flex;" title="Đăng nhập tài khoản học sinh">
@@ -4587,7 +4639,11 @@ body {
             Học sinh đăng ký tài khoản mới để lưu giữ tiến độ, nhận Giấy Khen điện tử và tích lũy điểm thưởng XP của Thầy Đinh Văn Thành.
           </p>
           <div class="form-group">
-            <label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
+                    <div class="form-group">
+          <label for="regBirthDate">🎂 Ngày Tháng Năm Sinh (*)</label>
+          <input type="date" id="regBirthDate" class="form-control" style="background: #1e293b; color: white;" onkeydown="event.stopPropagation()">
+        </div>
+<label for="regFullName">👤 Họ và Tên Học Sinh (*)</label>
             <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Đinh Văn Thành" onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
@@ -4638,7 +4694,141 @@ body {
   </div>
 
   <!-- MODAL 2: ADMIN QUẢN TRỊ VIÊN & THỐNG KÊ HỌC SINH -->
-  <div class="custom-modal-overlay" id="adminModalOverlay">
+  
+<!-- ============================================================================== -->
+<!-- MODAL: QUẢN LÝ HỒ SƠ & TÙY CHỈNH AVATAR HỌC SINH                              -->
+<!-- ============================================================================== -->
+<div class="custom-modal-overlay" id="studentProfileModalOverlay">
+  <div class="custom-modal-card" style="max-width: 620px;">
+    <div class="custom-modal-header">
+      <h2>👤 Hồ Sơ & Quản Lý Tài Khoản Học Sinh</h2>
+      <button class="custom-modal-close" onclick="STUDENT_SYSTEM.closeProfileModal()">✕</button>
+    </div>
+    <div class="custom-modal-body" style="padding: 1.25rem 1.5rem; max-height: 80vh; overflow-y: auto;">
+      
+      <!-- AVATAR SELECTION & UPLOAD SECTION -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle, rgba(255,255,255,0.1)); border-radius: 16px; padding: 1.15rem; margin-bottom: 1.25rem; text-align: center;">
+        <div style="font-size: 0.85rem; font-weight: 800; color: var(--accent-theme, #38bdf8); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.85rem;">
+          🖼️ Ảnh Đại Diện / Avatar (Sẽ xuất hiện trên Giấy Khen)
+        </div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
+          <!-- Avatar Preview Circle -->
+          <div id="profileAvatarPreview" style="width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--accent-theme, #38bdf8); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0f172a; box-shadow: 0 0 16px var(--primary-glow); font-size: 2.8rem; flex-shrink: 0;">
+            <span id="profileAvatarPreviewSpan">👦</span>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; text-align: left;">
+            <input type="file" id="profileAvatarFileInput" accept="image/*" style="display: none;" onchange="STUDENT_SYSTEM.onAvatarFileSelected(event)">
+            <button type="button" class="header-btn" onclick="document.getElementById('profileAvatarFileInput').click()" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; font-weight: 700; padding: 0.55rem 1rem; font-size: 0.88rem; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              📷 Tải ảnh từ điện thoại / máy tính
+            </button>
+            <div style="font-size: 0.74rem; color: #94a3b8; line-height: 1.4;">
+              ✓ Hỗ trợ ảnh chụp camera hoặc thư viện máy tính/điện thoại.<br>
+              ✓ Ảnh sẽ tự động đóng khung chân dung trang trọng trên Giấy Khen!
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset Avatars List -->
+        <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.85rem;">
+          <div style="font-size: 0.78rem; color: #cbd5e1; font-weight: 600; margin-bottom: 0.6rem;">
+            Hoặc chọn một Avatar gợi ý có sẵn dễ thương dưới đây:
+          </div>
+          <div id="presetAvatarsGrid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem;">
+            <!-- Rendered dynamically by STUDENT_SYSTEM.renderPresetAvatars() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAL INFORMATION FORM -->
+      <form id="profileEditForm" onsubmit="STUDENT_SYSTEM.saveProfileChanges(event)" onkeydown="event.stopPropagation()">
+        <div class="form-group">
+          <label for="profileFullName">👤 Họ và Tên Học Sinh (*)</label>
+          <input type="text" id="profileFullName" class="form-control" placeholder="Ví dụ: Đinh Văn Thành" onkeydown="event.stopPropagation()" required>
+        </div>
+
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label for="profileBirthDate">🎂 Ngày Tháng Năm Sinh (*)</label>
+            <input type="date" id="profileBirthDate" class="form-control" style="color: white; background: #1e293b;" onkeydown="event.stopPropagation()">
+          </div>
+          <div>
+            <label for="profileClassName">🏫 Lớp Học Cụ Thể (*)</label>
+            <input type="text" id="profileClassName" class="form-control" placeholder="Ví dụ: 8A1, 12A3..." oninput="STUDENT_SYSTEM.onProfileClassInput(this.value)" onkeydown="event.stopPropagation()" required>
+          </div>
+        </div>
+
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label for="profileGrade">🎓 Khối Lớp (*)</label>
+            <select id="profileGrade" class="form-control" style="background: #1e293b; color: white;" onkeydown="event.stopPropagation()">
+              <option value="6">🎒 Tiếng Anh Lớp 6 (THCS)</option>
+              <option value="7">📘 Tiếng Anh Lớp 7 (THCS)</option>
+              <option value="8">📗 Tiếng Anh Lớp 8 (THCS)</option>
+              <option value="9">📙 Tiếng Anh Lớp 9 (Thi Vào 10)</option>
+              <option value="10">📕 Tiếng Anh Lớp 10 (THPT)</option>
+              <option value="11">🎓 Tiếng Anh Lớp 11 (THPT)</option>
+              <option value="12">⭐ Tiếng Anh Lớp 12 (Tốt Nghiệp QG)</option>
+            </select>
+          </div>
+          <div>
+            <label for="profilePhone">📱 Số Điện Thoại (*)</label>
+            <input type="tel" id="profilePhone" class="form-control" placeholder="Ví dụ: 0915213717" onkeydown="event.stopPropagation()" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profileSchool">🏢 Trường Đang Theo Học (*)</label>
+          <input type="text" id="profileSchool" class="form-control" placeholder="Ví dụ: Trường THCS Đồng Yên" onkeydown="event.stopPropagation()" required>
+        </div>
+
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label for="profileUsername">🔑 Tên Đăng Nhập</label>
+            <input type="text" id="profileUsername" class="form-control" placeholder="Tên đăng nhập" onkeydown="event.stopPropagation()" required>
+          </div>
+          <div>
+            <label for="profilePassword">🔒 Mật Khẩu Đơn Giản</label>
+            <input type="text" id="profilePassword" class="form-control" placeholder="Mật khẩu" onkeydown="event.stopPropagation()" required>
+          </div>
+        </div>
+
+        <!-- LEARNING KPI SUMMARY -->
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 0.75rem 1rem; margin: 1rem 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
+          <div>
+            <div style="font-size: 0.72rem; color: #94a3b8;">Tổng Điểm XP</div>
+            <div id="profileKpiXP" style="font-weight: 800; font-size: 1.1rem; color: #f59e0b;">50</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #94a3b8;">Chuỗi Ngày</div>
+            <div id="profileKpiStreak" style="font-weight: 800; font-size: 1.1rem; color: #ec4899;">1 ngày</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #94a3b8;">Lượt Test 15P</div>
+            <div id="profileKpiMinitest" style="font-weight: 800; font-size: 1.1rem; color: #38bdf8;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #94a3b8;">Giấy Khen</div>
+            <div id="profileKpiCert" style="font-weight: 800; font-size: 1.1rem; color: #34d399;">0</div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+          <button type="submit" class="header-btn" style="flex: 2; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 0.98rem; padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.35); cursor: pointer;">
+            💾 LƯU HỒ SƠ & CẬP NHẬT
+          </button>
+          <button type="button" class="header-btn" onclick="STUDENT_SYSTEM.closeProfileModal(); CERTIFICATE_CENTER.openModal('exam');" style="flex: 1.2; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; font-weight: 700; font-size: 0.88rem; padding: 0.75rem; border-radius: 12px; cursor: pointer;">
+            📜 Xem Giấy Khen
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="custom-modal-overlay" id="adminModalOverlay">
     <div class="custom-modal-card large">
       <div class="custom-modal-header">
         <h2>👑 Quản Trị Viên & Theo Dõi Học Sinh</h2>

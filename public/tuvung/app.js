@@ -1,3 +1,33 @@
+
+// ==============================================================================
+// KHO AVATAR GỢI Ý & ĐỊNH DẠNG NGÀY SINH HỌC SINH
+// ==============================================================================
+const PRESET_AVATARS = [
+  { id: 'av_boy1', label: 'Nam sinh thông thái', icon: '👦', bg: 'linear-gradient(135deg, #0284c7, #38bdf8)' },
+  { id: 'av_girl1', label: 'Nữ sinh thanh lịch', icon: '👧', bg: 'linear-gradient(135deg, #ec4899, #f472b6)' },
+  { id: 'av_owl', label: 'Cú tri thức', icon: '🦉', bg: 'linear-gradient(135deg, #8b5cf6, #c084fc)' },
+  { id: 'av_astro', label: 'Phi hành gia', icon: '👨‍🚀', bg: 'linear-gradient(135deg, #1e293b, #475569)' },
+  { id: 'av_hero', label: 'Siêu nhân', icon: '🦸', bg: 'linear-gradient(135deg, #ef4444, #f87171)' },
+  { id: 'av_top', label: 'Thủ khoa', icon: '🎖️', bg: 'linear-gradient(135deg, #f59e0b, #fbbf24)' },
+  { id: 'av_fox', label: 'Cáo thông minh', icon: '🦊', bg: 'linear-gradient(135deg, #ea580c, #fb923c)' },
+  { id: 'av_lion', label: 'Sư tử dũng cảm', icon: '🦁', bg: 'linear-gradient(135deg, #d97706, #fde047)' },
+  { id: 'av_cat', label: 'Mèo con chăm học', icon: '🐱', bg: 'linear-gradient(135deg, #06b6d4, #67e8f9)' },
+  { id: 'av_bear', label: 'Gấu chăm chỉ', icon: '🐻', bg: 'linear-gradient(135deg, #78350f, #b45309)' },
+  { id: 'av_panda', label: 'Panda dễ thương', icon: '🐼', bg: 'linear-gradient(135deg, #334155, #94a3b8)' },
+  { id: 'av_star', label: 'Ngôi sao sáng', icon: '⭐', bg: 'linear-gradient(135deg, #eab308, #fef08a)' }
+];
+
+function formatBirthDate(dStr) {
+  if (!dStr) return '';
+  if (dStr.includes('-')) {
+    const parts = dStr.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+  }
+  return dStr;
+}
+
 /**
  * ENG 12 VOCAB MASTER - APPLICATION LOGIC (ULTRA VIBRANT EDITION)
  * Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
@@ -3429,6 +3459,235 @@ const THEME_SYSTEM = {
 };
 
 const STUDENT_SYSTEM = {
+
+  openProfileModal() {
+    if (!this.currentStudent) {
+      this.openRegisterModal(false, 'login');
+      return;
+    }
+
+    const overlay = document.getElementById('studentProfileModalOverlay');
+    if (!overlay) return;
+
+    // Fill fields
+    const nameInput = document.getElementById('profileFullName');
+    const bDateInput = document.getElementById('profileBirthDate');
+    const classInput = document.getElementById('profileClassName');
+    const gradeSelect = document.getElementById('profileGrade');
+    const schoolInput = document.getElementById('profileSchool');
+    const phoneInput = document.getElementById('profilePhone');
+    const userInput = document.getElementById('profileUsername');
+    const passInput = document.getElementById('profilePassword');
+
+    if (nameInput) nameInput.value = this.currentStudent.fullName || '';
+    if (bDateInput) bDateInput.value = this.currentStudent.birthDate || '';
+    if (classInput) classInput.value = this.currentStudent.className || '';
+    if (gradeSelect) gradeSelect.value = this.currentStudent.grade || CURRENT_GRADE;
+    if (schoolInput) schoolInput.value = this.currentStudent.school || '';
+    if (phoneInput) phoneInput.value = this.currentStudent.phone || '';
+    if (userInput) userInput.value = this.currentStudent.username || this.currentStudent.phone || '';
+    if (passInput) passInput.value = this.currentStudent.password || '123';
+
+    // KPI
+    const xpVal = document.getElementById('profileKpiXP');
+    const streakVal = document.getElementById('profileKpiStreak');
+    const miniVal = document.getElementById('profileKpiMinitest');
+    const certVal = document.getElementById('profileKpiCert');
+
+    if (xpVal) xpVal.textContent = this.currentStudent.xp || 50;
+    if (streakVal) streakVal.textContent = (this.currentStudent.streakDays || 1) + ' ngày';
+    const mCount = (this.currentStudent.minitestHistory || []).length || (this.currentStudent.minitestCount || 0);
+    if (miniVal) miniVal.textContent = mCount;
+    if (certVal) certVal.textContent = (this.currentStudent.certificates || []).length || mCount;
+
+    // Render Avatar Preview
+    this.updateProfileAvatarPreview();
+    this.renderPresetAvatars();
+
+    overlay.classList.add('active');
+  },
+
+  closeProfileModal() {
+    const overlay = document.getElementById('studentProfileModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  },
+
+  updateProfileAvatarPreview() {
+    const preview = document.getElementById('profileAvatarPreview');
+    if (!preview || !this.currentStudent) return;
+
+    const av = this.currentStudent.avatar;
+    if (av && av.startsWith('data:image')) {
+      preview.innerHTML = `<img src="${av}" style="width: 100%; height: 100%; object-fit: cover;">`;
+    } else {
+      const preset = PRESET_AVATARS.find(a => a.id === av);
+      const icon = preset ? preset.icon : '👦';
+      preview.innerHTML = `<span style="font-size: 2.8rem;">${icon}</span>`;
+    }
+  },
+
+  renderPresetAvatars() {
+    const grid = document.getElementById('presetAvatarsGrid');
+    if (!grid) return;
+
+    const curAv = this.currentStudent?.avatar || 'av_boy1';
+    grid.innerHTML = PRESET_AVATARS.map(a => `
+      <button type="button" class="preset-av-btn ${curAv === a.id ? 'active' : ''}" 
+              title="${a.label}" 
+              onclick="STUDENT_SYSTEM.selectPresetAvatar('${a.id}')">
+        ${a.icon}
+      </button>
+    `).join('');
+  },
+
+  selectPresetAvatar(avatarId) {
+    if (!this.currentStudent) return;
+    this.currentStudent.avatar = avatarId;
+    this.saveStudent();
+    this.updateProfileAvatarPreview();
+    this.renderPresetAvatars();
+    this.renderHeaderBadge();
+    if (typeof CERTIFICATE_CENTER !== 'undefined') {
+      CERTIFICATE_CENTER.avatarImgCache = null;
+    }
+  },
+
+  onAvatarFileSelected(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Vui lòng chọn file hình ảnh hợp lệ (JPG, PNG, WebP)!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (loadEvt) => {
+      const img = new Image();
+      img.onload = () => {
+        // Resize and compress via offscreen canvas to 300x300
+        const cvs = document.createElement('canvas');
+        cvs.width = 300;
+        cvs.height = 300;
+        const ctx = cvs.getContext('2d');
+        const minSide = Math.min(img.width, img.height);
+        const sx = (img.width - minSide) / 2;
+        const sy = (img.height - minSide) / 2;
+        ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 300, 300);
+        const compressed = cvs.toDataURL('image/jpeg', 0.85);
+
+        this.setCustomAvatar(compressed);
+      };
+      img.src = loadEvt.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  setCustomAvatar(dataUrl) {
+    if (!this.currentStudent) return;
+    this.currentStudent.avatar = dataUrl;
+    this.saveStudent();
+    this.updateProfileAvatarPreview();
+    this.renderPresetAvatars();
+    this.renderHeaderBadge();
+    if (typeof CERTIFICATE_CENTER !== 'undefined') {
+      CERTIFICATE_CENTER.avatarImgCache = null;
+    }
+    alert('✓ Cập nhật ảnh đại diện thành công! Ảnh này sẽ được xuất hiện trang trọng trên Giấy Khen của em.');
+  },
+
+  onProfileClassInput(val) {
+    if (!val) return;
+    const match = val.match(/(?:lớp\s*)?(6|7|8|9|10|11|12)/i);
+    if (match) {
+      const g = match[1];
+      const gradeSel = document.getElementById('profileGrade');
+      if (gradeSel && gradeSel.value !== g) {
+        gradeSel.value = g;
+      }
+    }
+  },
+
+  saveProfileChanges(e) {
+    if (e) e.preventDefault();
+    if (!this.currentStudent) return;
+
+    const nameInput = document.getElementById('profileFullName');
+    const bDateInput = document.getElementById('profileBirthDate');
+    const classInput = document.getElementById('profileClassName');
+    const gradeSelect = document.getElementById('profileGrade');
+    const schoolInput = document.getElementById('profileSchool');
+    const phoneInput = document.getElementById('profilePhone');
+    const userInput = document.getElementById('profileUsername');
+    const passInput = document.getElementById('profilePassword');
+
+    const fullName = (nameInput?.value || '').trim();
+    const birthDate = (bDateInput?.value || '').trim();
+    const className = (classInput?.value || '').trim();
+    const grade = gradeSelect?.value || this.currentStudent.grade || '12';
+    const school = (schoolInput?.value || '').trim();
+    const phone = (phoneInput?.value || '').trim();
+    let username = (userInput?.value || '').trim().toLowerCase();
+    const password = (passInput?.value || '').trim();
+
+    if (!fullName || fullName.length < 2) {
+      alert('Vui lòng nhập đầy đủ Họ và tên học sinh!');
+      nameInput?.focus();
+      return;
+    }
+
+    if (!className || className.length < 2) {
+      alert('Vui lòng nhập Lớp học cụ thể!');
+      classInput?.focus();
+      return;
+    }
+
+    if (!school || school.length < 2) {
+      alert('Vui lòng nhập tên Trường đang học!');
+      schoolInput?.focus();
+      return;
+    }
+
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (!cleanPhone || cleanPhone.length < 9) {
+      alert('Vui lòng nhập Số điện thoại hợp lệ!');
+      phoneInput?.focus();
+      return;
+    }
+
+    if (!username) username = cleanPhone;
+    username = username.replace(/[^a-z0-9_]/g, '');
+
+    // Check duplicate username with other students
+    const allStudents = ADMIN_SYSTEM.getAllStudents();
+    const duplicate = allStudents.find(s => (s.username || '').toLowerCase() === username && s.id !== this.currentStudent.id);
+    if (duplicate) {
+      alert(`⚠️ Tên đăng nhập "${username}" đã có bạn khác dùng rồi. Em vui lòng chọn tên đăng nhập khác nhé!`);
+      userInput?.focus();
+      return;
+    }
+
+    // Apply updates
+    this.currentStudent.fullName = fullName;
+    this.currentStudent.birthDate = birthDate;
+    this.currentStudent.className = className;
+    this.currentStudent.grade = grade;
+    this.currentStudent.school = school;
+    this.currentStudent.phone = cleanPhone;
+    this.currentStudent.username = username;
+    this.currentStudent.password = password || '123';
+    this.currentStudent.lastActiveAt = new Date().toLocaleString('vi-VN');
+
+    this.saveStudent();
+    this.closeProfileModal();
+
+    if (grade !== CURRENT_GRADE) {
+      switchGrade(grade, true);
+    }
+
+    alert('🎉 Hồ sơ và Ảnh đại diện của em đã được cập nhật thành công!');
+  },
+
   currentStudent: null,
 
   purgeOldDataCutoff() {
@@ -3659,6 +3918,7 @@ const STUDENT_SYSTEM = {
     const passwordInput = document.getElementById('regPassword');
 
     const fullName = (nameInput?.value || '').trim();
+    const birthDate = (document.getElementById('regBirthDate')?.value || '').trim();
     let className = (classInput?.value || '').trim();
     let grade = gradeSelect?.value || '12';
     const school = (schoolInput?.value || '').trim();
@@ -3725,6 +3985,8 @@ const STUDENT_SYSTEM = {
       username: username,
       password: password,
       fullName: fullName,
+      birthDate: birthDate,
+      avatar: this.currentStudent?.avatar || 'av_boy1',
       className: className,
       grade: grade,
       school: school,
@@ -3781,10 +4043,24 @@ const STUDENT_SYSTEM = {
         (this.currentStudent.className.toLowerCase().includes('lớp') ? this.currentStudent.className : `Lớp ${this.currentStudent.className}`) : 
         `Lớp ${this.currentStudent.grade || CURRENT_GRADE}`;
       nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
-      badge.title = `${this.currentStudent.fullName} • ${classStr} • User: ${this.currentStudent.username || this.currentStudent.phone} • SĐT: ${this.currentStudent.phone || ''} (Bấm ✏️ sửa, 🚪 đổi TK)`;
+      badge.title = `${this.currentStudent.fullName} • ${classStr} • User: ${this.currentStudent.username || this.currentStudent.phone} • Bấm để xem Hồ sơ & Đổi Avatar`;
+
+      // Update avatar circle in header
+      const avCircle = document.getElementById('studentHeaderAvatarCircle');
+      if (avCircle) {
+        const av = this.currentStudent.avatar;
+        if (av && av.startsWith('data:image')) {
+          avCircle.innerHTML = `<img src="${av}" alt="Avatar">`;
+        } else {
+          const preset = PRESET_AVATARS.find(a => a.id === av);
+          const icon = preset ? preset.icon : '👦';
+          avCircle.innerHTML = `<span>${icon}</span>`;
+        }
+      }
+
       badge.onclick = (e) => {
-        if (e.target && (e.target.id === 'logoutStudentBtn' || e.target.id === 'editStudentInfoBtn')) return;
-        this.openRegisterModal(true, 'register');
+        if (e.target && e.target.id === 'logoutStudentBtn') return;
+        this.openProfileModal();
       };
     } else {
       badge.style.display = 'none';
@@ -4438,8 +4714,18 @@ const ADMIN_SYSTEM = {
         <tr>
           <td><strong>#${idx + 1}</strong></td>
           <td>
-            <div style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">${s.fullName}</div>
-            <div style="font-size: 0.75rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid #38bdf8; background: #1e293b; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                ${s.avatar && s.avatar.startsWith('data:image') ? 
+                  `<img src="${s.avatar}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                  `<span>${(typeof PRESET_AVATARS !== 'undefined' ? PRESET_AVATARS : []).find(a => a.id === s.avatar)?.icon || '👦'}</span>`}
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">${s.fullName}</div>
+                <div style="font-size: 0.74rem; color: #38bdf8; font-weight: 600;">🎂 ${s.birthDate ? formatBirthDate(s.birthDate) : 'Chưa cập nhật NS'}</div>
+                <div style="font-size: 0.72rem; color: #94a3b8;">ĐK: ${s.registeredAt || 'Mới'}</div>
+              </div>
+            </div>
           </td>
           <td>
             <div style="font-weight: 800; color: #38bdf8; font-size: 0.85rem;">User: ${s.username || s.phone || 'Chưa đặt'}</div>
@@ -5772,27 +6058,113 @@ const CERTIFICATE_CENTER = {
     ctx.stroke();
 
     // Awarded to
+    ctx.textAlign = 'center';
     ctx.font = 'italic 23px "Times New Roman", serif';
     ctx.fillStyle = '#475569';
-    ctx.fillText('Trân trọng vinh danh và trao tặng cho học sinh:', 800, 385);
+    ctx.fillText('Trân trọng vinh danh và trao tặng cho học sinh:', 880, 385);
 
     // Student Full Name
-    ctx.font = 'bold 54px "Times New Roman", serif';
+    ctx.font = 'bold 52px "Times New Roman", serif';
     ctx.fillStyle = '#0f172a';
-    ctx.fillText((student.fullName || 'HỌC SINH').toUpperCase(), 800, 460);
+    ctx.fillText((student.fullName || 'HỌC SINH').toUpperCase(), 880, 455);
 
     // Underline
     ctx.lineWidth = 3;
     ctx.strokeStyle = '#0284c7';
     ctx.beginPath();
-    ctx.moveTo(520, 480);
-    ctx.lineTo(1080, 480);
+    ctx.moveTo(560, 475);
+    ctx.lineTo(1200, 475);
     ctx.stroke();
 
-    // Student Class & School
-    ctx.font = 'bold 26px "Times New Roman", serif';
+    // Student Class & Birth Date & School
+    ctx.font = 'bold 23px "Times New Roman", serif';
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText(`Học sinh: ${classStr} • ${student.school || 'Trường THCS Đồng Yên'}`, 800, 530);
+    const birthDisplay = student.birthDate ? formatBirthDate(student.birthDate) : '';
+    const studentInfoLine = birthDisplay ? 
+      `Sinh ngày: ${birthDisplay}  •  ${classStr}  •  ${student.school || 'Trường THCS Đồng Yên'}` : 
+      `Học sinh: ${classStr}  •  ${student.school || 'Trường THCS Đồng Yên'}`;
+    ctx.fillText(studentInfoLine, 880, 520);
+
+    // -------------------------------------------------------------
+    // KHUNG ẢNH CHÂN DUNG HỌC SINH DANH DỰ (HONORARY AVATAR FRAME)
+    // -------------------------------------------------------------
+    const avX = 220;
+    const avY = 450;
+    const avR = 70;
+
+    // 1. Frame Glow / Shadow
+    ctx.save();
+    ctx.shadowColor = 'rgba(180, 83, 9, 0.45)';
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 6;
+
+    // Outer Gold Ring
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#b45309';
+    ctx.beginPath();
+    ctx.arc(avX, avY, avR + 5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(avX, avY, avR + 10, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 2. Inner Clipping & Image / Preset Rendering
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avX, avY, avR, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.clip();
+
+    if (student.avatar && student.avatar.startsWith('data:image')) {
+      if (this.avatarImgCache && this.avatarImgCache.src === student.avatar && this.avatarImgCache.complete) {
+        ctx.drawImage(this.avatarImgCache, avX - avR, avY - avR, avR * 2, avR * 2);
+      } else {
+        const img = new Image();
+        img.onload = () => {
+          this.avatarImgCache = img;
+          this.drawCertificateOnCanvas(canvas);
+        };
+        img.src = student.avatar;
+      }
+    } else {
+      // Preset avatar or emoji
+      const avList = typeof PRESET_AVATARS !== 'undefined' ? PRESET_AVATARS : [];
+      const avPreset = avList.find(a => a.id === student.avatar);
+      const avIcon = avPreset ? avPreset.icon : '👦';
+
+      const grad = ctx.createLinearGradient(avX - avR, avY - avR, avX + avR, avY + avR);
+      grad.addColorStop(0, '#e0f2fe');
+      grad.addColorStop(1, '#bae6fd');
+      ctx.fillStyle = grad;
+      ctx.fillRect(avX - avR, avY - avR, avR * 2, avR * 2);
+
+      ctx.font = '76px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(avIcon, avX, avY + 4);
+    }
+    ctx.restore();
+
+    // 3. Honorary Ribbon Badge under Photo
+    ctx.save();
+    ctx.fillStyle = '#b45309';
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(avX - 65, avY + avR + 14, 130, 24, 6);
+    else ctx.rect(avX - 65, avY + avR + 14, 130, 24);
+    ctx.fill();
+
+    ctx.font = 'bold 12px "Times New Roman", serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ẢNH HỌC SINH', avX, avY + avR + 26);
+    ctx.restore();
 
     // Main citation
     ctx.font = '22px "Times New Roman", serif';
