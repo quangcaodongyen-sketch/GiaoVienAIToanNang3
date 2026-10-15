@@ -1393,10 +1393,18 @@ function initBlitzGame() {
   clearInterval(STATE.blitz.timerInterval);
   
   // Tối đa 12 từ, tối thiểu 4 từ
-  const totalCount = Math.min(12, Math.max(4, STATE.activeWords.length));
+  // Tăng số lượng câu hỏi đúng/sai: Mặc định từ 20 đến 30 câu (hoặc toàn bộ từ vựng của bài)
+  let wordPool = [...STATE.activeWords];
+  if (wordPool.length < 20) {
+    if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
+      const extra = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []).filter(w => !wordPool.some(x => x.id === w.id));
+      wordPool = wordPool.concat(fisherYatesShuffle(extra));
+    }
+  }
+  const totalCount = Math.min(30, Math.max(20, wordPool.length));
   
   // 1. Dùng thuật toán Fisher-Yates để đảo từ ngẫu nhiên tuyệt đối mỗi lần làm
-  const shuffledWords = fisherYatesShuffle(STATE.activeWords).slice(0, totalCount);
+  const shuffledWords = fisherYatesShuffle(typeof wordPool !== 'undefined' ? wordPool : STATE.activeWords).slice(0, totalCount);
   
   // 2. Tạo tập đáp án boolean cân bằng 50% TRUE - 50% FALSE ngẫu nhiên
   const half = Math.floor(shuffledWords.length / 2);
@@ -5452,37 +5460,78 @@ const MINITEST_SYSTEM = {
 
   init() {
     let words = [...(STATE.activeWords || [])];
-    // If unit has few words, borrow extra words from full grade vocabulary pool for 100% smooth test
-    if (words.length < 4) {
-      if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
-        const extraWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
-        words = words.concat(extraWords);
-      }
+    
+    // Nguồn từ vựng bài tập 15 phút: đảm bảo tối thiểu 40 câu hỏi phong phú
+    // Nếu Unit hiện tại ít hơn 40 từ, tự động bổ sung thêm từ vựng các Unit cùng khối lớp
+    if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
+      const allGradeWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []);
+      const remainingWords = allGradeWords.filter(w => !words.some(x => x.id === w.id || x.word.toLowerCase() === w.word.toLowerCase()));
+      words = words.concat(fisherYatesShuffle(remainingWords));
     }
+
     if (words.length === 0) {
       const container = document.getElementById('minitestQuestionContainer');
       if (container) container.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem;">Vui lòng chọn bài học có từ vựng để làm bài kiểm tra.</div>';
       return;
     }
 
-    // Generate 10 mixed questions
+    // TARGET: ĐÚNG 40 CÂU HỎI THEO YÊU CẦU CỦA THẦY
+    const TARGET_COUNT = 40;
     const qList = [];
-    const shuffled = [...words].sort(() => 0.5 - Math.random());
-    const count = Math.min(10, shuffled.length);
+    const shuffledPool = fisherYatesShuffle(words);
 
-    for (let i = 0; i < count; i++) {
-      const target = shuffled[i];
-      const otherWords = words.filter(w => w.id !== target.id).sort(() => 0.5 - Math.random()).slice(0, 3);
-      const options = [target, ...otherWords].sort(() => 0.5 - Math.random());
+    // Chuẩn bị 4 dạng bài tập sư phạm (10 câu mỗi dạng = 40 câu):
+    // Dạng 0: Audio Listening (Nghe phát âm -> Chọn nghĩa)
+    // Dạng 1: Reverse Recall (Nghĩa tiếng Việt -> Chọn từ tiếng Anh)
+    // Dạng 2: Sentence Cloze (Điền từ vào ngữ cảnh câu ví dụ thực tế)
+    // Dạng 3: Standard Choice (Từ tiếng Anh & Phiên âm -> Chọn nghĩa tiếng Việt)
+    for (let i = 0; i < TARGET_COUNT; i++) {
+      const target = shuffledPool[i % shuffledPool.length];
+      
+      // Chọn 3 phương án nhiễu hợp lý khác biệt từ
+      const otherWords = words.filter(w => w.id !== target.id && w.word.toLowerCase() !== target.word.toLowerCase());
+      const shuffledOthers = fisherYatesShuffle(otherWords).slice(0, 3);
+      const options = fisherYatesShuffle([target, ...shuffledOthers]);
+
+      const typeMod = i % 4;
+      let qType = 'choice';
+      let clozeSentence = '';
+
+      if (typeMod === 0) {
+        qType = 'audio';
+      } else if (typeMod === 1) {
+        qType = 'reverse';
+      } else if (typeMod === 2) {
+        qType = 'cloze';
+        // Tạo câu khuyết từ từ ví dụ
+        if (target.example && target.example.length > 5) {
+          try {
+            clozeSentence = target.example.replaceAll(target.word, '______');
+            if (!clozeSentence.includes('______')) {
+              const lowerWord = target.word.toLowerCase();
+              clozeSentence = target.example.split(' ').map(w => w.toLowerCase().includes(lowerWord) ? '______' : w).join(' ');
+            }
+          } catch(e) {
+            clozeSentence = `The student learned the word "______" in English class today.`;
+          }
+        }
+        if (!clozeSentence || !clozeSentence.includes('______')) {
+          clozeSentence = `The student learned the word "______" in English class today.`;
+        }
+      } else {
+        qType = 'choice';
+      }
 
       qList.push({
-        type: i % 2 === 0 ? 'choice' : 'audio',
+        type: qType,
         target: target,
-        options: options
+        options: options,
+        clozeSentence: clozeSentence
       });
     }
 
-    this.questions = qList;
+    // Đảo ngẫu nhiên vị trí các câu hỏi trong đề 40 câu
+    this.questions = fisherYatesShuffle(qList);
     this.currentIndex = 0;
     this.score = 0;
     this.timeLeft = 900;
@@ -5515,15 +5564,18 @@ const MINITEST_SYSTEM = {
     if (!container || !q) return;
 
     const progressEl = document.getElementById('minitestProgressDisplay');
-    if (progressEl) progressEl.textContent = `Câu ${this.currentIndex + 1} / ${this.questions.length}`;
+    if (progressEl) progressEl.textContent = `Câu ${this.currentIndex + 1} / ${this.questions.length} (40 câu)`;
 
     if (q.type === 'audio') {
       container.innerHTML = `
         <div style="text-align: center; margin-bottom: 1.5rem;">
-          <button class="speaker-btn" onclick="SpeechEngine.speak('${q.target.word}', 0.85)" style="width: 70px; height: 70px; font-size: 2rem; border-radius: 50%; margin-bottom: 0.75rem;">🔊</button>
+          <div style="display: inline-block; background: rgba(56,189,248,0.15); color: #38bdf8; font-size: 0.78rem; font-weight: 800; padding: 3px 14px; border-radius: 9999px; border: 1px solid rgba(56,189,248,0.3); margin-bottom: 0.6rem;">🎧 DẠNG 1: KỸ NĂNG NGHE PHÁT ÂM</div>
+          <div>
+            <button class="speaker-btn" onclick="SpeechEngine.speak('${q.target.word.replace(/'/g, "\'")}', 0.85)" style="width: 72px; height: 72px; font-size: 2.2rem; border-radius: 50%; margin-bottom: 0.75rem; cursor: pointer; background: rgba(56,189,248,0.2); border: 2px solid #38bdf8;">🔊</button>
+          </div>
           <div style="font-size: 0.95rem; color: #94a3b8;">Lắng nghe phát âm và chọn nghĩa tiếng Việt chính xác:</div>
         </div>
-        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
           ${q.options.map(opt => `
             <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')">
               ${opt.meaning}
@@ -5531,16 +5583,50 @@ const MINITEST_SYSTEM = {
           `).join('')}
         </div>
       `;
-      // Auto speak after 300ms
       setTimeout(() => SpeechEngine.speak(q.target.word, 0.85), 300);
-    } else {
+    } else if (q.type === 'reverse') {
       container.innerHTML = `
         <div style="text-align: center; margin-bottom: 1.5rem;">
-          <div style="font-size: 1.8rem; font-weight: 800; color: #38bdf8; margin-bottom: 0.3rem;">${q.target.word}</div>
-          <div style="font-size: 1rem; color: #94a3b8; font-family: monospace;">${q.target.ipa || ''}</div>
-          <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.5rem;">Từ trên có nghĩa tiếng Việt là gì?</div>
+          <div style="display: inline-block; background: rgba(168,85,247,0.15); color: #c084fc; font-size: 0.78rem; font-weight: 800; padding: 3px 14px; border-radius: 9999px; border: 1px solid rgba(168,85,247,0.3); margin-bottom: 0.6rem;">🔄 DẠNG 2: PHẢN XẠ NGHĨA → TỪ TIẾNG ANH</div>
+          <div style="font-size: 1.7rem; font-weight: 800; color: #f472b6; margin-bottom: 0.3rem;">"${q.target.meaning}"</div>
+          <div style="font-size: 0.92rem; color: #cbd5e1; margin-top: 0.4rem;">Nghĩa tiếng Việt trên tương ứng với từ tiếng Anh nào dưới đây?</div>
         </div>
         <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          ${q.options.map(opt => `
+            <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')" style="font-size: 1.05rem; font-weight: 700;">
+              ${opt.word}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    } else if (q.type === 'cloze') {
+      const sentence = q.clozeSentence || `The word is "______".`;
+      container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24; font-size: 0.78rem; font-weight: 800; padding: 3px 14px; border-radius: 9999px; border: 1px solid rgba(245,158,11,0.3); margin-bottom: 0.6rem;">📖 DẠNG 3: ĐIỀN TỪ VÀO NGỮ CẢNH CÂU VÍ DỤ</div>
+          <div style="font-size: 1.15rem; font-style: italic; color: #ffffff; line-height: 1.6; max-width: 620px; margin: 0 auto 0.5rem; background: rgba(255,255,255,0.04); padding: 0.85rem 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+            "${sentence}"
+          </div>
+          <div style="font-size: 0.88rem; color: #94a3b8; margin-top: 0.4rem;">💡 Gợi ý nghĩa: <span style="color: #34d399; font-weight: 700;">${q.target.meaning}</span></div>
+        </div>
+        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          ${q.options.map(opt => `
+            <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')" style="font-size: 1.05rem; font-weight: 700;">
+              ${opt.word}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      // Standard choice
+      container.innerHTML = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="display: inline-block; background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.78rem; font-weight: 800; padding: 3px 14px; border-radius: 9999px; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 0.6rem;">🎯 DẠNG 4: NHẬN BIẾT TỪ VỰNG & PHIÊN ÂM</div>
+          <div style="font-size: 1.85rem; font-weight: 800; color: #38bdf8; margin-bottom: 0.25rem;">${q.target.word}</div>
+          <div style="font-size: 1rem; color: #94a3b8; font-family: monospace;">${q.target.ipa || ''} <span style="color: #f59e0b; font-size: 0.8rem; text-transform: uppercase;">(${q.target.pos || 'từ'})</span></div>
+          <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 0.5rem;">Từ trên có nghĩa tiếng Việt là gì?</div>
+        </div>
+        <div class="quiz-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
           ${q.options.map(opt => `
             <button class="quiz-opt-btn" onclick="MINITEST_SYSTEM.handleAnswer('${opt.id}', '${q.target.id}')">
               ${opt.meaning}
@@ -5559,7 +5645,9 @@ const MINITEST_SYSTEM = {
       if (typeof SFX !== 'undefined') SFX.playIncorrect();
       // Add to weak words!
       const targetObj = (STATE.activeWords || []).find(w => w.id === correctId);
-      if (targetObj) WEAKWORDS_SYSTEM.addWeakWord(targetObj);
+      if (targetObj && typeof WEAKWORDS_SYSTEM !== 'undefined') {
+        WEAKWORDS_SYSTEM.addWeakWord(targetObj);
+      }
     }
 
     this.currentIndex++;
@@ -5570,9 +5658,9 @@ const MINITEST_SYSTEM = {
     }
   },
 
-    finishTest() {
+  finishTest() {
     if (this.timerInterval) clearInterval(this.timerInterval);
-    const total = this.questions.length;
+    const total = this.questions.length || 40;
     const finalScore = total > 0 ? ((this.score / total) * 10).toFixed(1) : "0.0";
 
     // Ghi nhận kết quả và cấp Giấy Khen Điện Tử chính thức
@@ -5591,43 +5679,38 @@ const MINITEST_SYSTEM = {
       container.innerHTML = `
         <div style="text-align: center; padding: 2.2rem 1rem;">
           <div style="font-size: 3.6rem; margin-bottom: 0.5rem;">${numScore >= 8.0 ? '🏆' : '⭐'}</div>
-          <h2 style="font-size: 1.65rem; color: #ffffff; margin-bottom: 0.35rem;">Kết Quả Bài Kiểm Tra 15 Phút</h2>
-          <div style="font-size: 2.7rem; font-weight: 900; color: ${numScore >= 8.0 ? '#34d399' : (numScore >= 6.5 ? '#38bdf8' : '#f59e0b')}; margin-bottom: 0.25rem;">
+          <h2 style="font-size: 1.65rem; color: #ffffff; margin-bottom: 0.35rem;">Kết Quả Bài Kiểm Tra 15 Phút (40 Câu)</h2>
+          <div style="font-size: 2.8rem; font-weight: 900; color: ${numScore >= 8.0 ? '#34d399' : (numScore >= 6.5 ? '#38bdf8' : '#f59e0b')}; margin-bottom: 0.25rem;">
             ${finalScore} / 10.0 Điểm
+          </div>
+          <div style="font-size: 1rem; color: #94a3b8; margin-bottom: 0.5rem;">
+            Đúng <strong>${this.score} / ${total} câu</strong> (0.25đ / câu)
           </div>
           <div style="font-size: 1.15rem; font-weight: 800; color: #facc15; margin-bottom: 1rem;">
             Xếp loại: ${rank}
           </div>
-          <p style="color: #cbd5e1; max-width: 520px; margin: 0 auto 1.5rem; line-height: 1.6; font-size: 0.95rem;">
-            Chúc mừng em đã hoàn thành bài kiểm tra 15 phút từ vựng Tiếng Anh! 
-            Hệ thống đã tự động cấp <strong>GIẤY KHEN ĐIỆN TỬ CHÍNH THỨC</strong> có con dấu và chữ ký của <strong>Thầy giáo Đinh Văn Thành</strong> cho em!
+          <p style="color: #cbd5e1; max-width: 540px; margin: 0 auto 1.5rem; line-height: 1.6; font-size: 0.95rem;">
+            Chúc mừng em đã hoàn thành bài kiểm tra 15 phút gồm 40 câu hỏi từ vựng Tiếng Anh! 
+            ${numScore >= 8.0 ? 'Hệ thống đã tự động cấp <strong>GIẤY KHEN ĐIỆN TỬ CHÍNH THỨC</strong> có con dấu và chữ ký của <strong>Thầy giáo Đinh Văn Thành</strong> cho em!' : 'Hãy tiếp tục ôn tập và làm lại để đạt từ 8.0 điểm trở lên và nhận Giấy Khen Điện Tử nhé!'}
           </p>
           <div style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap;">
-            <button class="header-btn" onclick="MINITEST_SYSTEM.showCertificate('${finalScore}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 900; font-size: 1.05rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(234,179,8,0.5);">
-              📜 Xem & Tải Giấy Khen Điện Tử
-            </button>
+            ${numScore >= 8.0 ? `
+              <button class="header-btn" onclick="MINITEST_SYSTEM.showCertificate('${finalScore}')" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 900; font-size: 1.05rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(234,179,8,0.5);">
+                📜 Xem & Tải Giấy Khen Điện Tử
+              </button>
+            ` : ''}
             <button class="header-btn" onclick="MINITEST_SYSTEM.init()" style="padding: 0.75rem 1.4rem; font-weight: 700; border-radius: 12px;">
-              🔄 Làm Lại Đề Khác
+              🔄 Làm Lại Đề 40 Câu Khác
             </button>
           </div>
         </div>
       `;
     }
-
-    if (typeof confetti === 'function') {
-      try { confetti({ particleCount: 130, spread: 80, origin: { y: 0.6 } }); } catch(e){}
-    }
   },
 
-  showCertificate(score) {
-    if (typeof CERTIFICATE_CENTER !== 'undefined') {
-      CERTIFICATE_CENTER.openModal('exam', score);
-    }
-  },
-
-  closeCertificate() {
-    if (typeof CERTIFICATE_CENTER !== 'undefined') {
-      CERTIFICATE_CENTER.closeModal();
+  showCertificate(scoreStr) {
+    if (typeof CERTIFICATE_SYSTEM !== 'undefined') {
+      CERTIFICATE_SYSTEM.openCertificate(STATE.currentUnit, scoreStr, STUDENT_SYSTEM.currentStudent);
     }
   }
 };
