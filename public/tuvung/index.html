@@ -2815,6 +2815,231 @@ html, body {
   margin-top: 2rem;
 }
 
+
+/* ==============================================================================
+   ENG 6-12 VOCAB MASTER - GAMIFICATION, REWARDS & CERTIFICATES SYSTEM
+   Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+   ============================================================================== */
+
+/* FLOATING XP ANIMATION */
+@keyframes floatUpFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-25px) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(1);
+  }
+}
+
+.floating-xp {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: #facc15;
+  text-shadow: 0 2px 10px rgba(250, 204, 21, 0.6), 0 0 20px rgba(0, 0, 0, 0.8);
+  animation: floatUpFade 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* STUDENT HEADER PROFILE & LEVEL */
+.student-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.student-header-tag:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+}
+
+.student-level-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.student-streak-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #fb923c;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* REAL-TIME UNIT PERCENTAGE BADGE */
+.unit-progress-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 8px;
+}
+
+.unit-progress-bar-mini {
+  width: 50px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.unit-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* AWARDS & CERTIFICATE BUTTON */
+.btn-awards {
+  background: linear-gradient(135deg, #eab308, #ca8a04) !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+  border-color: rgba(234, 179, 8, 0.5) !important;
+  box-shadow: 0 2px 10px rgba(234, 179, 8, 0.3) !important;
+}
+
+/* CERTIFICATE CENTER STYLES */
+.cert-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+  overflow-x: auto;
+}
+
+.cert-tab-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.cert-tab-btn.active {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+  color: #000;
+  border-color: #eab308;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+}
+
+.cert-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.cert-canvas-container canvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(234, 179, 8, 0.4);
+}
+
+/* BADGES SHOWCASE GRID */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.badge-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  transition: all 0.25s;
+}
+
+.badge-card.unlocked {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+}
+
+.badge-card.locked {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+
+.badge-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.badge-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.badge-desc {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.badge-status {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge-status.achieved {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.badge-status.not-achieved {
+  background: rgba(255, 255, 255, 0.06);
+  color: #64748b;
+}
+
 </style>
 </head>
 <body>
@@ -2842,7 +3067,10 @@ html, body {
           <button class="header-btn" id="openShareModalBtn" title="Đường link ngắn dekiemtraso.com/tuvung">
             🔗 <span>Link Ngắn</span>
           </button>
-          <button class="header-btn" id="openAdminModalBtn" title="Quản trị giáo viên & theo dõi học sinh" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-color: rgba(245,158,11,0.5); font-weight: 700;">
+          <button class="header-btn btn-awards" id="openCertCenterBtn" title="Xem Chứng Chỉ Chuyên Cần & Bảng Vàng Khen Thưởng" onclick="CERTIFICATE_CENTER.openModal('diligence')">
+            📜 <span>Chứng Chỉ</span>
+          </button>
+          <button class="header-btn" id="openAdminModalBtn"  title="Quản trị giáo viên & theo dõi học sinh" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-color: rgba(245,158,11,0.5); font-weight: 700;">
             👑 <span>Admin</span>
           </button>
           <button class="header-btn btn-qr" id="openQrModalBtn" title="Mở trên điện thoại">
@@ -3891,6 +4119,45 @@ html, body {
           </button>
           <button class="header-btn" onclick="SHARE_SYSTEM.shareZalo()" style="background: #0068ff; color: white; font-weight: 800; padding: 0.65rem 1.25rem;">
             📲 Gửi Qua Zalo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL 5: TRUNG TÂM CHỨNG CHỈ & BẢNG VÀNG KHEN THƯỞNG -->
+  <div class="custom-modal-overlay" id="certificateCenterModalOverlay">
+    <div class="custom-modal-card large" style="max-width: 1050px;">
+      <div class="custom-modal-header">
+        <h2>📜 Trung Tâm Chứng Chỉ & Khen Thưởng</h2>
+        <button class="custom-modal-close" onclick="CERTIFICATE_CENTER.closeModal()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="text-align: center;">
+        <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 1rem;">
+          Hệ thống tự động ghi nhận chuỗi chuyên cần, tỷ lệ % từ vựng đã thuộc và cấp Chứng chỉ vinh danh chính thức.
+        </p>
+
+        <!-- Certificate Tabs -->
+        <div class="cert-tabs" id="certTabsContainer">
+          <!-- Dynamically injected -->
+        </div>
+
+        <!-- Canvas Preview for Certificate -->
+        <div class="cert-canvas-container">
+          <canvas id="certDisplayCanvas" width="1200" height="820"></canvas>
+        </div>
+
+        <!-- Badges Grid (Shown when tab 'badges' is active) -->
+        <div class="badges-grid" id="certBadgesContainer" style="display: none;"></div>
+
+        <!-- Download & Share Actions -->
+        <div id="certDownloadActions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.25rem;">
+          <button class="header-btn" onclick="CERTIFICATE_CENTER.downloadPNG()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; font-size: 1rem; padding: 0.75rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.4);">
+            📸 Tải Ảnh Chứng Chỉ (Lưu Về Máy)
+          </button>
+          <button class="header-btn" onclick="CERTIFICATE_CENTER.shareZalo()" style="background: #0068ff; color: white; font-weight: 800; font-size: 1rem; padding: 0.75rem 1.6rem; border-radius: 12px;">
+            📲 Gửi Khoe Bố Mẹ Qua Zalo
           </button>
         </div>
       </div>

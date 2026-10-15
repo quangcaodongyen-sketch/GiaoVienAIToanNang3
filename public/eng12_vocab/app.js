@@ -4041,6 +4041,491 @@ const SHARE_SYSTEM = {
   }
 };
 
+/**
+ * ==============================================================================
+ * ENG 6-12 VOCAB MASTER - GAMIFICATION & CERTIFICATES ENGINE
+ * Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
+ * Khen thưởng kịp thời, động viên, tích điểm, cấp chứng chỉ chuyên cần & % đã đạt
+ * ==============================================================================
+ */
+
+const LEVELS_CONFIG = [
+  { level: 1, minXP: 0, title: "Tân Binh", icon: "🥉", color: "#94a3b8" },
+  { level: 2, minXP: 150, title: "Tập Sự Chăm Chỉ", icon: "🥈", color: "#a3e635" },
+  { level: 3, minXP: 400, title: "Chiến Binh Từ Vựng", icon: "🥇", color: "#facc15" },
+  { level: 4, minXP: 800, title: "Siêu Trí Nhớ Bạc", icon: "💎", color: "#38bdf8" },
+  { level: 5, minXP: 1500, title: "Siêu Trí Nhớ Vàng", icon: "👑", color: "#fb923c" },
+  { level: 6, minXP: 2500, title: "Bậc Thầy Ngôn Ngữ", icon: "🏆", color: "#c084fc" },
+  { level: 7, minXP: 4000, title: "Huyền Thoại Tiếng Anh", icon: "⚡", color: "#f43f5e" }
+];
+
+const BADGES_LIST = [
+  { id: "b_streak_3", icon: "🔥", title: "Ngọn Lửa Chuyên Cần", desc: "Học tập liên tục 3 ngày không nghỉ", check: s => (s.streakDays || 1) >= 3 },
+  { id: "b_words_20", icon: "📚", title: "Kho Tàng Từ Vựng", desc: "Thuộc làu từ 20 từ vựng trở lên", check: s => (s.masteredCount || 0) >= 20 },
+  { id: "b_spelling_5", icon: "✍️", title: "Bậc Thầy Chính Tả", desc: "Gõ đúng chuẩn xác 5 từ tiếng Anh", check: s => (s.spellingCorrect || 0) >= 5 },
+  { id: "b_quiz_perfect", icon: "🎯", title: "Thiện Xạ Trắc Nghiệm", desc: "Đạt điểm tuyệt đối 10/10 bài Quiz", check: s => (s.quizHistory || []).some(q => q.score === q.total && q.total >= 8) },
+  { id: "b_master_100", icon: "💎", title: "Chinh Phục 100%", desc: "Đạt 100% tỷ lệ thuộc từ của một Unit", check: s => (s.completedUnits || []).length >= 1 },
+  { id: "b_xp_500", icon: "⚡", title: "Đại Sứ Chuyên Cần", desc: "Tích lũy từ 500 điểm kinh nghiệm XP", check: s => (s.xp || 0) >= 500 }
+];
+
+const GAMIFICATION = {
+  currentCombo: 0,
+  comboTimer: null,
+
+  init() {
+    this.updateUI();
+  },
+
+  // Get current Level info
+  getLevelInfo(xp = 0) {
+    let current = LEVELS_CONFIG[0];
+    let next = LEVELS_CONFIG[1];
+
+    for (let i = 0; i < LEVELS_CONFIG.length; i++) {
+      if (xp >= LEVELS_CONFIG[i].minXP) {
+        current = LEVELS_CONFIG[i];
+        next = LEVELS_CONFIG[i + 1] || null;
+      } else {
+        break;
+      }
+    }
+
+    let progressPct = 100;
+    if (next) {
+      const range = next.minXP - current.minXP;
+      const currentProgress = xp - current.minXP;
+      progressPct = Math.min(100, Math.max(0, Math.round((currentProgress / range) * 100)));
+    }
+
+    return { current, next, progressPct };
+  },
+
+  // KHEN THƯỞNG KỊP THỜI: CỘNG ĐIỂM + HIỆU ỨNG BAY + ÂM THANH
+  awardXP(amount = 10, reason = "Đúng từ vựng", targetElement = null) {
+    if (!STUDENT_SYSTEM.currentStudent) {
+      STUDENT_SYSTEM.loadStudent();
+    }
+    const student = STUDENT_SYSTEM.currentStudent;
+    if (!student) return;
+
+    // Check combo
+    this.currentCombo++;
+    if (this.comboTimer) clearTimeout(this.comboTimer);
+    this.comboTimer = setTimeout(() => {
+      this.currentCombo = 0;
+    }, 4500);
+
+    let finalAmount = amount;
+    if (this.currentCombo >= 5) finalAmount += 15;
+    else if (this.currentCombo >= 3) finalAmount += 5;
+
+    const oldLevel = this.getLevelInfo(student.xp || 0).current.level;
+    STUDENT_SYSTEM.addXP(finalAmount);
+    const newLevel = this.getLevelInfo(student.xp || 0).current.level;
+
+    // Show floating +XP
+    this.showFloatingXP(finalAmount, targetElement);
+
+    // Audio chime
+    if (typeof SFX !== 'undefined' && SFX.playCorrect) {
+      SFX.playCorrect();
+    }
+
+    // Check Level Up
+    if (newLevel > oldLevel) {
+      this.celebrateLevelUp(newLevel);
+    }
+
+    this.updateUI();
+  },
+
+  showFloatingXP(amount, el) {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2 - 50;
+
+    if (el && typeof el.getBoundingClientRect === 'function') {
+      const rect = el.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top;
+    } else {
+      x = Math.max(80, Math.min(window.innerWidth - 80, x + (Math.random() * 80 - 40)));
+      y = Math.max(80, y + (Math.random() * 40 - 20));
+    }
+
+    const floatEl = document.createElement('div');
+    floatEl.className = 'floating-xp';
+    floatEl.style.left = `${x}px`;
+    floatEl.style.top = `${y}px`;
+    floatEl.innerHTML = `⭐ +${amount} XP ${this.currentCombo >= 3 ? `🔥x${this.currentCombo}` : ''}`;
+
+    document.body.appendChild(floatEl);
+    setTimeout(() => {
+      if (floatEl.parentNode) floatEl.parentNode.removeChild(floatEl);
+    }, 1100);
+  },
+
+  celebrateLevelUp(newLevel) {
+    const info = LEVELS_CONFIG.find(l => l.level === newLevel) || LEVELS_CONFIG[0];
+    if (typeof confetti === 'function') {
+      confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+    }
+    setTimeout(() => {
+      alert(`🎉 CHÚC MỪNG EM ĐÃ LÊN CẤP!\n${info.icon} CẤP ${info.level}: ${info.title.toUpperCase()}\nNhận thêm 50 XP thưởng thăng hạng!`);
+    }, 300);
+  },
+
+  // Calculate Unit Progress Percentage
+  getUnitMastery() {
+    const words = STATE.activeWords || [];
+    if (words.length === 0) return { mastered: 0, total: 0, percent: 0 };
+    
+    let masteredCount = 0;
+    words.forEach(w => {
+      if (STATE.mastered && STATE.mastered.has(w.id)) {
+        masteredCount++;
+      }
+    });
+
+    const percent = Math.round((masteredCount / words.length) * 100);
+    return { mastered: masteredCount, total: words.length, percent };
+  },
+
+  updateUI() {
+    const student = STUDENT_SYSTEM.currentStudent;
+    if (!student) return;
+
+    const { current, next, progressPct } = this.getLevelInfo(student.xp || 0);
+
+    // Update Header Student Info
+    const nameSpan = document.getElementById('studentHeaderName');
+    if (nameSpan) {
+      nameSpan.innerHTML = `
+        <span style="font-weight: 800; color: #ffffff;">${student.fullName}</span>
+        <span class="student-level-badge">${current.icon} Lv.${current.level} ${current.title}</span>
+        <span class="student-streak-badge" title="Chuỗi ngày học liên tục">🔥 ${student.streakDays || 1} ngày</span>
+      `;
+    }
+
+    // Update Unit Progress Bar & Percentage in unit banner
+    const { mastered, total, percent } = this.getUnitMastery();
+    const unitBadge = document.getElementById('unitWordCountBadge');
+    if (unitBadge) {
+      unitBadge.innerHTML = `
+        <span class="unit-progress-badge" title="Tỷ lệ % từ vựng đã thuộc trong Unit này">
+          🎯 ${percent}% Đạt (${mastered}/${total} từ)
+        </span>
+      `;
+    }
+
+    // Check 100% completion
+    if (percent === 100 && total > 0) {
+      if (!student.completedUnits) student.completedUnits = [];
+      const unitKey = `${CURRENT_GRADE}_${STATE.currentUnit}`;
+      if (!student.completedUnits.includes(unitKey)) {
+        student.completedUnits.push(unitKey);
+        STUDENT_SYSTEM.saveStudent();
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+        }
+      }
+    }
+  }
+};
+
+// ==========================================
+// TRUNG TÂM CHỨNG CHỈ & KHEN THƯỞNG
+// ==========================================
+const CERTIFICATE_CENTER = {
+  currentType: 'diligence', // 'diligence' | 'mastery' | 'exam'
+
+  openModal(type = 'diligence') {
+    this.currentType = type;
+    const overlay = document.getElementById('certificateCenterModalOverlay');
+    if (!overlay) return;
+
+    overlay.classList.add('active');
+    this.renderTabs();
+    this.renderCertificate();
+  },
+
+  closeModal() {
+    const overlay = document.getElementById('certificateCenterModalOverlay');
+    if (overlay) overlay.classList.remove('active');
+  },
+
+  switchType(type) {
+    this.currentType = type;
+    this.renderTabs();
+    this.renderCertificate();
+  },
+
+  renderTabs() {
+    const tabs = [
+      { id: 'diligence', label: '📜 Chứng Chỉ Chuyên Cần' },
+      { id: 'mastery', label: '🎖️ Chứng Nhận % Hoàn Thành' },
+      { id: 'exam', label: '🏆 Giấy Khen Điểm Thi' },
+      { id: 'badges', label: '🏅 Bảng Vàng Huy Hiệu' }
+    ];
+
+    const container = document.getElementById('certTabsContainer');
+    if (!container) return;
+
+    container.innerHTML = tabs.map(t => `
+      <button class="cert-tab-btn ${this.currentType === t.id ? 'active' : ''}" onclick="CERTIFICATE_CENTER.switchType('${t.id}')">
+        ${t.label}
+      </button>
+    `).join('');
+  },
+
+  renderCertificate() {
+    const canvas = document.getElementById('certDisplayCanvas');
+    const badgeContainer = document.getElementById('certBadgesContainer');
+    const actions = document.getElementById('certDownloadActions');
+
+    if (this.currentType === 'badges') {
+      if (canvas) canvas.style.display = 'none';
+      if (badgeContainer) {
+        badgeContainer.style.display = 'grid';
+        this.renderBadges(badgeContainer);
+      }
+      if (actions) actions.style.display = 'none';
+      return;
+    }
+
+    if (canvas) canvas.style.display = 'block';
+    if (badgeContainer) badgeContainer.style.display = 'none';
+    if (actions) actions.style.display = 'flex';
+
+    if (!canvas) return;
+    this.drawCertificateOnCanvas(canvas);
+  },
+
+  renderBadges(container) {
+    const student = STUDENT_SYSTEM.currentStudent || {};
+    container.innerHTML = BADGES_LIST.map(b => {
+      const isUnlocked = b.check(student);
+      return `
+        <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+          <div class="badge-icon">${b.icon}</div>
+          <div class="badge-title">${b.title}</div>
+          <div class="badge-desc">${b.desc}</div>
+          <div class="badge-status ${isUnlocked ? 'achieved' : 'not-achieved'}">
+            ${isUnlocked ? '✓ Đã Đạt Được' : '🔒 Đang Phấn Đấu'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  drawCertificateOnCanvas(canvas) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1200;
+    canvas.height = 820;
+
+    const student = STUDENT_SYSTEM.currentStudent || {
+      fullName: "Học Sinh Chăm Chỉ",
+      grade: CURRENT_GRADE,
+      school: "Trường THCS / THPT",
+      streakDays: 3,
+      xp: 350
+    };
+
+    const { percent } = GAMIFICATION.getUnitMastery();
+
+    // 1. Background gradient (Royal Pedagogy Dark Blue / Burgundy)
+    const bgGrad = ctx.createLinearGradient(0, 0, 1200, 820);
+    bgGrad.addColorStop(0, '#0a1128');
+    bgGrad.addColorStop(0.5, '#1c1954');
+    bgGrad.addColorStop(1, '#080d1a');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1200, 820);
+
+    // 2. Double Gold Border
+    ctx.lineWidth = 14;
+    ctx.strokeStyle = '#eab308';
+    ctx.strokeRect(25, 25, 1150, 770);
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#fef08a';
+    ctx.strokeRect(40, 40, 1120, 740);
+
+    // Corner Ornaments
+    ctx.fillStyle = '#eab308';
+    const corners = [[40, 40], [1160, 40], [40, 780], [1160, 780]];
+    corners.forEach(([cx, cy]) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 3. Header Texts
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 20px "Outfit", "Segoe UI", sans-serif';
+    ctx.fillStyle = '#facc15';
+    ctx.fillText('BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỌC TẬP THÔNG MINH 2026', 600, 95);
+
+    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('HỆ THỐNG LUYỆN SIÊU TRÍ NHỚ TỪ VỰNG TIẾNG ANH 6 - 12 (GLOBAL SUCCESS)', 600, 125);
+
+    // 4. Certificate Main Title
+    let mainTitle = 'CHỨNG CHỈ CHUYÊN CẦN HỌC TẬP';
+    let subTitle = 'XÁC NHẬN CHUYÊN CẦN VÀ Ý CHÍ BỨC PHÁ VƯỢT TRỘI';
+    let detailText = `Đã hoàn thành xuất sắc chuỗi ${student.streakDays || 1} ngày học tập chuyên cần liên tục, tích lũy ${student.xp || 50} điểm kinh nghiệm XP, đạt tỷ lệ chuyên cần 100% môn Tiếng Anh.`;
+
+    if (this.currentType === 'mastery') {
+      mainTitle = 'CHỨNG NHẬN CHINH PHỤC TỪ VỰNG';
+      subTitle = 'HOÀN THÀNH XUẤT SẮC TỶ LỆ GHI NHỚ TỪ VỰNG BÀI HỌC';
+      detailText = `Đã xuất sắc làm chủ và ghi nhớ ${percent}% số từ vựng trọng tâm trong bài học Unit ${STATE.currentUnit} - Bộ sách Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} Global Success.`;
+    } else if (this.currentType === 'exam') {
+      mainTitle = 'GIẤY KHEN THÀNH TÍCH XUẤT SẮC';
+      subTitle = 'ĐẠT ĐIỂM SỐ XUẤT SẮC TRONG BÀI THI TỪ VỰNG 15 PHÚT';
+      detailText = `Đạt kết quả xuất sắc trong bài kiểm tra đánh giá năng lực từ vựng Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} - Unit ${STATE.currentUnit}.`;
+    }
+
+    // Title gradient
+    ctx.font = 'bold 44px "Outfit", "Segoe UI", sans-serif';
+    ctx.fillStyle = '#fef08a';
+    ctx.fillText(mainTitle, 600, 200);
+
+    ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#eab308';
+    ctx.fillText(subTitle, 600, 235);
+
+    // Ribbon decor line
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#eab308';
+    ctx.beginPath();
+    ctx.moveTo(350, 255);
+    ctx.lineTo(850, 255);
+    ctx.stroke();
+
+    // 5. Awarded to
+    ctx.font = 'italic 18px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillText('Chứng chỉ danh dự được trân trọng trao tặng cho:', 600, 295);
+
+    // Student Full Name
+    ctx.font = 'bold 48px "Outfit", "Segoe UI", sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(student.fullName.toUpperCase(), 600, 360);
+
+    // Underline
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.moveTo(400, 375);
+    ctx.lineTo(800, 375);
+    ctx.stroke();
+
+    // Student Grade & School
+    ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`Học sinh Lớp ${student.grade || CURRENT_GRADE} • ${student.school || 'Trường THCS / THPT'}`, 600, 420);
+
+    // Highlight metric box
+    ctx.fillStyle = 'rgba(234, 179, 8, 0.1)';
+    ctx.strokeStyle = 'rgba(234, 179, 8, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.roundRect ? ctx.roundRect(300, 450, 600, 65, 14) : ctx.rect(300, 450, 600, 65);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 22px "Outfit", sans-serif';
+    if (this.currentType === 'mastery') {
+      ctx.fillStyle = '#34d399';
+      ctx.fillText(`🎯 TỶ LỆ HOÀN THÀNH: ${percent}% ĐẠT CHUẨN XUẤT SẮC`, 600, 492);
+    } else if (this.currentType === 'exam') {
+      ctx.fillStyle = '#facc15';
+      ctx.fillText(`🏆 KẾT QUẢ BÀI THI: 10.0 / 10.0 ĐIỂM TUYỆT ĐỐI`, 600, 492);
+    } else {
+      ctx.fillStyle = '#fb923c';
+      ctx.fillText(`🔥 CHUỖI CHUYÊN CẦN: ${student.streakDays || 1} NGÀY LIÊN TIẾP (100%)`, 600, 492);
+    }
+
+    // Details text
+    ctx.font = '18px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText(detailText, 600, 560);
+
+    // 6. Signatures and Official Red Seal
+    // Left: Issue Date
+    ctx.textAlign = 'left';
+    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('Ngày cấp chứng nhận:', 120, 660);
+    ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(new Date().toLocaleDateString('vi-VN'), 120, 690);
+    ctx.font = 'italic 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('Mã số: DVT-' + Math.floor(Math.random() * 89999 + 10000), 120, 720);
+
+    // Center: Official Red Seal
+    ctx.textAlign = 'center';
+    ctx.save();
+    ctx.translate(600, 690);
+    ctx.strokeStyle = '#dc2626';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(0, 0, 52, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#dc2626';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, 46, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillStyle = '#dc2626';
+    ctx.fillText('TRƯỜNG THCS ĐỒNG YÊN', 0, -22);
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillText('★ CHUYÊN CẦN ★', 0, 2);
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillText('XÁC NHẬN BỘ GD&ĐT', 0, 24);
+    ctx.restore();
+
+    // Right: Teacher signature
+    ctx.textAlign = 'right';
+    ctx.font = '16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('BIÊN SOẠN & GIẢNG DẠY', 1080, 650);
+
+    ctx.font = 'italic 26px "Brush Script MT", "Segoe Script", cursive, sans-serif';
+    ctx.fillStyle = '#facc15';
+    ctx.fillText('Dinh Van Thanh', 1080, 705);
+
+    ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Thầy giáo Đinh Văn Thành', 1080, 740);
+  },
+
+  downloadPNG() {
+    const canvas = document.getElementById('certDisplayCanvas');
+    if (!canvas) return;
+
+    const student = STUDENT_SYSTEM.currentStudent || { fullName: "HocSinh" };
+    const cleanName = (student.fullName || 'HocSinh').replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Chung_Chi_${this.currentType}_${cleanName}.png`;
+
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  },
+
+  shareZalo() {
+    const student = STUDENT_SYSTEM.currentStudent || { fullName: "Em" };
+    const text = `🎉 Con đã hoàn thành xuất sắc chứng chỉ học từ vựng Tiếng Anh tại https://dekiemtraso.com/tuvung!`;
+    const url = `https://zalo.me/share?url=${encodeURIComponent('https://dekiemtraso.com/tuvung')}&title=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  }
+};
+
+
 function startApp() {
   console.log("Vocab Master Pro 6-12 initializing...");
   try { loadCustomVocab(); } catch (e) { console.error("loadCustomVocab error:", e); }
@@ -4051,6 +4536,7 @@ function startApp() {
   try { setupEventListeners(); } catch (e) { console.error("setupEventListeners error:", e); }
   try { STUDENT_SYSTEM.init(); } catch (e) { console.error("STUDENT_SYSTEM error:", e); }
   try { WEAKWORDS_SYSTEM.init(); } catch (e) { console.error("WEAKWORDS_SYSTEM error:", e); }
+  try { GAMIFICATION.init(); } catch (e) { console.error("GAMIFICATION error:", e); }
   try { selectUnit(STATE.currentUnit || 1, false); } catch (e) { console.error("selectUnit error:", e); }
   console.log("Vocab Master Pro 6-12 ready!");
 }
