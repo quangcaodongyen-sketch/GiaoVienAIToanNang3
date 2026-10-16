@@ -267,9 +267,39 @@ export default function App() {
   const [mainViewTab, setMainViewTab] = useState<MainViewTab>(() => {
     const rawHash = window.location.hash.toLowerCase();
     if (rawHash === '#admin') return 'admin';
-    if (rawHash === '#hoc-sinh' || rawHash === '#students' || rawHash === '#hocsinh') return 'students';
+    if (
+      rawHash === '#hoc-sinh' || 
+      rawHash === '#students' || 
+      rawHash === '#hocsinh' || 
+      rawHash === '#tuvung' || 
+      rawHash === '#tu-vung' ||
+      rawHash === '#eng12_vocab'
+    ) return 'students';
     return 'teachers';
   });
+
+  // Tự động lắng nghe thay đổi hash trên URL (hỗ trợ chuyển hướng link từ vựng cũ sang cổng học sinh)
+  useEffect(() => {
+    const handleHash = () => {
+      const rawHash = window.location.hash.toLowerCase();
+      if (rawHash === '#admin') {
+        setMainViewTab('admin');
+      } else if (
+        rawHash === '#hoc-sinh' || 
+        rawHash === '#students' || 
+        rawHash === '#hocsinh' || 
+        rawHash === '#tuvung' || 
+        rawHash === '#tu-vung' ||
+        rawHash === '#eng12_vocab'
+      ) {
+        setMainViewTab('students');
+      } else if (rawHash === '#giao-vien' || rawHash === '#teachers' || rawHash === '' || rawHash === '#') {
+        setMainViewTab('teachers');
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   // Quản lý Chế độ Giao diện (Theme) & Bố cục Hiển thị (View Mode)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
@@ -1226,6 +1256,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   setMainViewTab('teachers');
+                  window.location.hash = '#giao-vien';
                   setIsMobileMenuOpen(false);
                 }}
                 className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
@@ -1239,6 +1270,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   setMainViewTab('admin');
+                  window.location.hash = '#admin';
                   setIsMobileMenuOpen(false);
                 }}
                 className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
@@ -1252,6 +1284,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   setMainViewTab('students');
+                  window.location.hash = '#hoc-sinh';
                   setIsMobileMenuOpen(false);
                 }}
                 className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${

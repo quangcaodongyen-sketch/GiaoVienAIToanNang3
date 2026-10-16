@@ -13,23 +13,63 @@
     },
     {
       "source": "/tuvung",
-      "destination": "/tuvung/",
-      "permanent": true
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/tuvung/",
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/tuvung/:path*",
+      "destination": "/#hoc-sinh",
+      "permanent": false
     },
     {
       "source": "/eng12_vocab",
-      "destination": "/tuvung/",
-      "permanent": true
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/eng12_vocab/",
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/eng12_vocab/:path*",
+      "destination": "/#hoc-sinh",
+      "permanent": false
     },
     {
       "source": "/tienganh12",
-      "destination": "/tuvung/",
-      "permanent": true
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/tienganh12/",
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/tienganh12/:path*",
+      "destination": "/#hoc-sinh",
+      "permanent": false
     },
     {
       "source": "/hoc-tu-vung",
-      "destination": "/tuvung/",
-      "permanent": true
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/hoc-tu-vung/",
+      "destination": "/#hoc-sinh",
+      "permanent": false
+    },
+    {
+      "source": "/hoc-tu-vung/:path*",
+      "destination": "/#hoc-sinh",
+      "permanent": false
     }
   ],
   "rewrites": [

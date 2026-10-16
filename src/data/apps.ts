@@ -36,7 +36,7 @@ export const apps: AppCard[] = [
     title: "SIÊU TRÍ NHỚ TỪ VỰNG 6 - 12",
     description: "Học từ vựng Tiếng Anh Lớp 6 - 12 (Global Success) siêu tốc qua Flashcard 3D, Nhạc Chant sôi động, 11 game trí tuệ, phát âm AI bản xứ và theo dõi học sinh cho giáo viên.",
     image: "/trolygvnn.jpg",
-    url: "/tuvung/",
+    url: "#hoc-sinh",
     category: "HỌC TỪ VỰNG & LUYỆN THI",
     levelBadge: "TIỆN ÍCH",
     badge: "MIỄN PHÍ 100%",

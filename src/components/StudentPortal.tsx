@@ -412,15 +412,9 @@ export const StudentPortal: React.FC = () => {
             <span>3. Tải Đề Kiểm Tra & Tài Liệu</span>
           </button>
 
-          <a
-            href="/tuvung/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition"
-          >
-            <span>Mở Web Siêu Trí Nhớ 6-12</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold">
+            <span>🎓 Cổng Học Sinh dekiemtraso.com</span>
+          </div>
         </div>
       </div>
 
