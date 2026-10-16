@@ -23,6 +23,7 @@ import {
   Check
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
+import { OnlineQuizPortal } from './OnlineQuizPortal';
 
 // Bộ dữ liệu từ vựng mẫu chuẩn Global Success
 interface VocabItem {
@@ -179,53 +180,6 @@ const SAMPLE_VOCABULARY: VocabItem[] = [
   }
 ];
 
-// Bộ đề kiểm tra trắc nghiệm online mẫu
-interface QuizQuestion {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: number; // 0 for A, 1 for B, 2 for C, 3 for D
-  explanation: string;
-}
-
-const SAMPLE_QUIZ_QUESTIONS: QuizQuestion[] = [
-  {
-    id: 1,
-    question: 'Listen and choose the word whose underlined part is pronounced differently:',
-    options: ['A. wanted', 'B. decided', 'C. played', 'D. needed'],
-    correctAnswer: 2,
-    explanation: 'Đáp án C: đuôi "-ed" trong "played" phát âm là /d/, còn các từ còn lại đuôi "-ed" phát âm là /ɪd/ sau âm /t/ và /d/.'
-  },
-  {
-    id: 2,
-    question: 'If you want to stay healthy, you should ________ more vegetables and fruits.',
-    options: ['A. eating', 'B. eat', 'C. ate', 'D. to eat'],
-    correctAnswer: 1,
-    explanation: 'Đáp án B: Sau động từ khuyết thiếu "should" dùng động từ nguyên thể không "to" (V-bare): should eat.'
-  },
-  {
-    id: 3,
-    question: 'My brother is interested in ________ chess with his friends after school.',
-    options: ['A. play', 'B. playing', 'C. plays', 'D. played'],
-    correctAnswer: 1,
-    explanation: 'Đáp án B: Cấu trúc "be interested in + V-ing" (thích thú làm gì).'
-  },
-  {
-    id: 4,
-    question: 'Choose the word that is CLOSEST in meaning to the underlined word:\n"The local community organised a charity run to raise money for orphans."',
-    options: ['A. collect', 'B. spend', 'C. waste', 'D. borrow'],
-    correctAnswer: 0,
-    explanation: 'Đáp án A: "raise money" đồng nghĩa với "collect money" (gây quỹ, quyên góp tiền).'
-  },
-  {
-    id: 5,
-    question: 'Hanoi is much ________ than my hometown, with tall buildings and heavy traffic.',
-    options: ['A. crowded', 'B. more crowded', 'C. most crowded', 'D. as crowded'],
-    correctAnswer: 1,
-    explanation: 'Đáp án B: Cấu trúc so sánh hơn với tính từ dài: "much + more + adj + than".'
-  }
-];
-
 // Danh mục tài liệu đề thi tải về cho học sinh
 interface StudentDownloadFile {
   id: string;
@@ -308,61 +262,6 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  // State Làm Bài Trắc Nghiệm Online
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [timeLeft, setTimeLeft] = useState<number>(900); // 15 phút (900s)
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
-
-  // Đồng hồ đếm ngược bài thi
-  useEffect(() => {
-    if (!isTimerRunning || isSubmitted) return;
-    if (timeLeft <= 0) {
-      handleSubmitQuiz();
-      return;
-    }
-    const timer = setInterval(() => {
-      setTimeLeft(prev => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft, isTimerRunning, isSubmitted]);
-
-  const handleSelectOption = (questionId: number, optionIndex: number) => {
-    if (isSubmitted) return;
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex
-    }));
-  };
-
-  const handleSubmitQuiz = () => {
-    setIsSubmitted(true);
-    setIsTimerRunning(false);
-  };
-
-  const handleResetQuiz = () => {
-    setSelectedAnswers({});
-    setIsSubmitted(false);
-    setTimeLeft(900);
-    setIsTimerRunning(true);
-  };
-
-  // Tính điểm số
-  let scoreCount = 0;
-  SAMPLE_QUIZ_QUESTIONS.forEach(q => {
-    if (selectedAnswers[q.id] === q.correctAnswer) {
-      scoreCount++;
-    }
-  });
-  const totalQuestions = SAMPLE_QUIZ_QUESTIONS.length;
-  const finalScore = ((scoreCount / totalQuestions) * 10).toFixed(1);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* HEADER GÓC HỌC SINH */}
@@ -376,7 +275,7 @@ export const StudentPortal: React.FC = () => {
             GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
           </h2>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Học từ vựng Tiếng Anh theo chuẩn giáo trình Global Success, làm bài kiểm tra trắc nghiệm chấm điểm tự động và tải đề thi miễn phí.
+            Học từ vựng Tiếng Anh Global Success, làm Kiểm tra Online theo từng lớp & từng Unit (5 bài/Unit, 20 câu/bài) chấm điểm ngay, và tải đề kiểm tra miễn phí.
           </p>
         </div>
 
@@ -403,7 +302,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>2. Làm Bài Thi Trực Tuyến</span>
+            <span>2. Kiểm tra Online</span>
           </button>
 
           <button
@@ -721,158 +620,9 @@ export const StudentPortal: React.FC = () => {
         </div>
       )}
 
-      {/* ==================== PHÂN HỆ 2: LÀM BÀI THI TRỰC TUYẾN ==================== */}
+      {/* ==================== PHÂN HỆ 2: KIỂM TRA ONLINE ==================== */}
       {activeTab === 'quiz' && (
-        <div className="space-y-6">
-          {/* Thanh Trạng Thái Đề Thi & Đồng Hồ */}
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Award className="w-5 h-5 text-amber-500" />
-                <span>Đề Kiểm Tra Trắc Nghiệm Tiếng Anh 15 Phút (Số 01)</span>
-              </h3>
-              <p className="text-xs text-slate-500">Chuẩn ma trận Bộ GD&ĐT • Tổng số {totalQuestions} câu hỏi</p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* Đồng hồ đếm ngược */}
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-mono text-sm font-bold border ${
-                timeLeft <= 120 
-                  ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' 
-                  : 'bg-blue-50 text-blue-700 border-blue-200'
-              }`}>
-                <Clock className="w-4 h-4" />
-                <span>{formatTime(timeLeft)}</span>
-              </div>
-
-              {!isSubmitted ? (
-                <button
-                  onClick={handleSubmitQuiz}
-                  className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-md transition cursor-pointer"
-                >
-                  Nộp bài chấm điểm
-                </button>
-              ) : (
-                <button
-                  onClick={handleResetQuiz}
-                  className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black shadow-md transition cursor-pointer flex items-center gap-1"
-                >
-                  <RotateCw className="w-3.5 h-3.5" />
-                  <span>Làm lại đề này</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* BẢNG KẾT QUẢ KHI ĐÃ NỘP BÀI */}
-          {isSubmitted && (
-            <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white shadow-xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn border border-emerald-500/40">
-              <div>
-                <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                  Kết Quả Đánh Giá Tự Động
-                </span>
-                <h4 className="text-2xl font-black mt-1">
-                  Điểm số: <span className="text-amber-300 text-3xl">{finalScore}</span> / 10 điểm
-                </h4>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Bạn đã trả lời đúng {scoreCount} trên tổng số {totalQuestions} câu hỏi. Xem giải thích chi tiết bên dưới!
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <a
-                  href="/app-15p-tienganh/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-white text-slate-950 font-black text-xs hover:bg-slate-100 transition shadow-md flex items-center gap-1.5"
-                >
-                  <span>Mở kho đề 15P đầy đủ</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          )}
-
-          {/* DANH SÁCH CÂU HỎI */}
-          <div className="space-y-4">
-            {SAMPLE_QUIZ_QUESTIONS.map((q, idx) => {
-              const selected = selectedAnswers[q.id];
-              const isCorrect = selected === q.correctAnswer;
-              return (
-                <div 
-                  key={q.id}
-                  className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition ${
-                    isSubmitted 
-                      ? isCorrect 
-                        ? 'border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20' 
-                        : 'border-red-500 bg-red-50/20 dark:bg-red-950/20'
-                      : 'border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
-                      <span className="text-blue-600 mr-1.5 font-black">Câu {idx + 1}:</span>
-                      {q.question}
-                    </p>
-                    {isSubmitted && (
-                      <span className="shrink-0">
-                        {isCorrect ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                        ) : (
-                          <XCircle className="w-5 h-5 text-red-500" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* 4 Lựa chọn A, B, C, D */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {q.options.map((opt, optIdx) => {
-                      const isOptionSelected = selected === optIdx;
-                      const isOptionCorrect = q.correctAnswer === optIdx;
-
-                      let btnStyle = 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300';
-                      if (isOptionSelected && !isSubmitted) {
-                        btnStyle = 'border-blue-600 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold';
-                      } else if (isSubmitted) {
-                        if (isOptionCorrect) {
-                          btnStyle = 'border-emerald-500 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 font-black';
-                        } else if (isOptionSelected && !isOptionCorrect) {
-                          btnStyle = 'border-red-500 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200 line-through';
-                        }
-                      }
-
-                      return (
-                        <button
-                          key={optIdx}
-                          disabled={isSubmitted}
-                          onClick={() => handleSelectOption(q.id, optIdx)}
-                          className={`w-full text-left px-3.5 py-2.5 rounded-xl border text-xs transition cursor-pointer flex items-center justify-between ${btnStyle}`}
-                        >
-                          <span>{opt}</span>
-                          {isSubmitted && isOptionCorrect && (
-                            <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-200 dark:bg-emerald-900 px-1.5 py-0.5 rounded">Đáp án đúng</span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* LỜI GIẢI THÍCH CHI TIẾT KHI ĐÃ NỘP BÀI */}
-                  {isSubmitted && (
-                    <div className="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                      <p className="font-bold text-blue-600 dark:text-blue-400 mb-0.5 flex items-center gap-1">
-                        <HelpCircle className="w-3.5 h-3.5" />
-                        <span>Lời giải thích sư phạm:</span>
-                      </p>
-                      <p>{q.explanation}</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <OnlineQuizPortal />
       )}
 
       {/* ==================== PHÂN HỆ 3: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
