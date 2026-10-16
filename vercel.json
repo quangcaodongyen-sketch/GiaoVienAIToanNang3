@@ -64,7 +64,23 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)$",
+      "source": "/hocsinh",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/hocsinh/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
