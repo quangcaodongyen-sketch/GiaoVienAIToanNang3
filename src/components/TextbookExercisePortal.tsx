@@ -18,7 +18,6 @@ import {
   BookMarked,
   MessageSquare,
   Type,
-  ChevronRight,
   Lightbulb
 } from 'lucide-react';
 import { 
@@ -31,6 +30,46 @@ import {
 
 export type FontSizeMode = 'normal' | 'large' | 'xlarge';
 
+// CẤU HÌNH 4 MÀU 3D ĐỘC LẬP CHO 4 ĐÁP ÁN A, B, C, D (KAHOOT / QUIZ SHOW STYLE)
+const OPTION_THEMES = [
+  // A: Đỏ / Ruby / Coral (Nổi bật rực rỡ)
+  {
+    label: 'A',
+    badge: 'bg-gradient-to-b from-rose-500 to-red-600 text-white border-b-4 border-red-800 shadow-md',
+    badgeActive: 'bg-gradient-to-b from-red-600 to-rose-700 text-white border-b-2 border-red-900 shadow-lg scale-105',
+    unselected: 'border-2 border-b-[5px] border-rose-300 dark:border-rose-900/60 bg-gradient-to-r from-rose-50/80 to-pink-50/50 hover:from-rose-100 hover:to-pink-100 dark:from-rose-950/25 dark:to-pink-950/15 text-slate-800 dark:text-slate-100 hover:border-rose-400',
+    selected: 'border-2 border-b-[5px] border-rose-600 bg-rose-100 dark:bg-rose-900/60 text-rose-950 dark:text-rose-100 ring-4 ring-rose-400/40 shadow-md translate-y-0.5',
+    accentText: 'text-rose-700 dark:text-rose-300'
+  },
+  // B: Xanh Dương / Ocean / Sky (Tươi mát, hiện đại)
+  {
+    label: 'B',
+    badge: 'bg-gradient-to-b from-blue-500 to-indigo-600 text-white border-b-4 border-blue-800 shadow-md',
+    badgeActive: 'bg-gradient-to-b from-blue-600 to-indigo-700 text-white border-b-2 border-blue-900 shadow-lg scale-105',
+    unselected: 'border-2 border-b-[5px] border-blue-300 dark:border-blue-900/60 bg-gradient-to-r from-blue-50/80 to-sky-50/50 hover:from-blue-100 hover:to-sky-100 dark:from-blue-950/25 dark:to-sky-950/15 text-slate-800 dark:text-slate-100 hover:border-blue-400',
+    selected: 'border-2 border-b-[5px] border-blue-600 bg-blue-100 dark:bg-blue-900/60 text-blue-950 dark:text-blue-100 ring-4 ring-blue-400/40 shadow-md translate-y-0.5',
+    accentText: 'text-blue-700 dark:text-blue-300'
+  },
+  // C: Vàng Cam / Amber / Honey (Ấm áp, sắc nét)
+  {
+    label: 'C',
+    badge: 'bg-gradient-to-b from-amber-500 to-orange-600 text-white border-b-4 border-amber-800 shadow-md',
+    badgeActive: 'bg-gradient-to-b from-amber-600 to-orange-700 text-white border-b-2 border-amber-900 shadow-lg scale-105',
+    unselected: 'border-2 border-b-[5px] border-amber-300 dark:border-amber-900/60 bg-gradient-to-r from-amber-50/80 to-yellow-50/50 hover:from-amber-100 hover:to-yellow-100 dark:from-amber-950/25 dark:to-yellow-950/15 text-slate-800 dark:text-slate-100 hover:border-amber-400',
+    selected: 'border-2 border-b-[5px] border-amber-600 bg-amber-100 dark:bg-amber-900/60 text-amber-950 dark:text-amber-100 ring-4 ring-amber-400/40 shadow-md translate-y-0.5',
+    accentText: 'text-amber-700 dark:text-amber-300'
+  },
+  // D: Xanh Lá / Emerald / Mint (Tươi tắn, tự tin)
+  {
+    label: 'D',
+    badge: 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white border-b-4 border-emerald-800 shadow-md',
+    badgeActive: 'bg-gradient-to-b from-emerald-600 to-teal-700 text-white border-b-2 border-emerald-900 shadow-lg scale-105',
+    unselected: 'border-2 border-b-[5px] border-emerald-300 dark:border-emerald-900/60 bg-gradient-to-r from-emerald-50/80 to-teal-50/50 hover:from-emerald-100 hover:to-teal-100 dark:from-emerald-950/25 dark:to-teal-950/15 text-slate-800 dark:text-slate-100 hover:border-emerald-400',
+    selected: 'border-2 border-b-[5px] border-emerald-600 bg-emerald-100 dark:bg-emerald-900/60 text-emerald-950 dark:text-emerald-100 ring-4 ring-emerald-400/40 shadow-md translate-y-0.5',
+    accentText: 'text-emerald-700 dark:text-emerald-300'
+  }
+];
+
 export const TextbookExercisePortal: React.FC = () => {
   // Navigation State
   const [selectedGrade, setSelectedGrade] = useState<number>(6);
@@ -38,7 +77,7 @@ export const TextbookExercisePortal: React.FC = () => {
   const [activeSectionId, setActiveSectionId] = useState<string>('getting_started');
   const [isFullUnitMode, setIsFullUnitMode] = useState<boolean>(false);
 
-  // Font size setting (defaults to 'large' for large, clear readability as requested)
+  // Font size setting (defaults to 'large' for large, clear readability)
   const [fontSizeMode, setFontSizeMode] = useState<FontSizeMode>(() => {
     try {
       const saved = localStorage.getItem('sgk_font_size_mode');
@@ -588,7 +627,7 @@ export const TextbookExercisePortal: React.FC = () => {
         </div>
 
         {/* DANH SÁCH CÂU HỎI */}
-        <div className="space-y-6">
+        <div className="space-y-7">
           {activeQuestions.map((q, idx) => {
             const selectedOpt = selectedAnswers[q.id];
             const isCorrect = isSubmitted && selectedOpt === q.correctAnswer;
@@ -598,86 +637,105 @@ export const TextbookExercisePortal: React.FC = () => {
               <div
                 key={q.id}
                 ref={el => { questionRefs.current[q.id] = el; }}
-                className={`p-6 sm:p-7 rounded-3xl border-2 transition-all duration-200 shadow-sm hover:shadow-md ${
+                className={`p-5 sm:p-7 rounded-3xl border-2 transition-all duration-200 shadow-sm hover:shadow-md space-y-4 ${
                   isSubmitted
                     ? isCorrect
-                      ? 'border-emerald-500 bg-emerald-50/30 dark:bg-emerald-950/20'
+                      ? 'border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20'
                       : isWrong
-                        ? 'border-red-500 bg-red-50/30 dark:bg-red-950/20'
+                        ? 'border-red-500 bg-red-50/20 dark:bg-red-950/20'
                         : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
                     : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
                 }`}
               >
-                {/* Header Câu hỏi */}
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="px-3 py-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-xs sm:text-sm shadow-xs uppercase tracking-wide">
-                        Câu {idx + 1}
+                {/* ========================================================
+                    THANH 3D CÂU HỎI MÀU SẮC ĐẸP (3D PODIUM BANNER)
+                   ======================================================== */}
+                <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border-t-2 border-white/20 border-b-[6px] border-indigo-950/90 overflow-hidden group">
+                  {/* Hiệu ứng ánh sáng 3D bóng bẩy phía trên */}
+                  <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                  <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
+
+                  {/* Header trong thanh 3D: Số câu, Chuyên mục, Phát âm & Đánh giá */}
+                  <div className="flex items-center justify-between gap-3 mb-3 relative z-10 flex-wrap">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-3.5 py-1 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-md border-b-2 border-orange-700">
+                        CÂU {idx + 1}
                       </span>
                       {q.section && (
-                        <span className="text-xs px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200/50 dark:border-emerald-800/50">
+                        <span className="text-xs px-3 py-1 rounded-xl bg-white/15 text-cyan-200 font-bold border border-white/20 backdrop-blur-xs">
                           {q.section}
                         </span>
                       )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       {/* Nút phát âm âm thanh bản xứ */}
                       <button
                         type="button"
                         onClick={() => speakSentence(q.question)}
-                        title="Nghe phát âm chuẩn bản xứ câu hỏi này"
-                        className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
+                        title="Nghe phát âm chuẩn bản ngữ câu hỏi này"
+                        className="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-cyan-200 font-bold text-xs sm:text-sm transition cursor-pointer flex items-center gap-1.5 border border-white/20 shadow-xs"
                       >
-                        <Volume2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <Volume2 className="w-4 h-4 text-cyan-300" />
                         <span className="hidden sm:inline">Nghe đọc</span>
                       </button>
-                    </div>
 
-                    {/* Nội dung câu hỏi - Chữ to rõ ràng theo chuẩn sư phạm */}
-                    <h3 className={`${getQuestionSizeClass()} text-slate-900 dark:text-white leading-relaxed mt-1 tracking-tight`}>
+                      {/* Trạng thái đúng sai sau khi nộp */}
+                      {isSubmitted && (
+                        <span className="shrink-0">
+                          {isCorrect ? (
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500 text-white font-black text-xs sm:text-sm shadow-md border-b-2 border-emerald-700">
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>CHÍNH XÁC (+1đ)</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500 text-white font-black text-xs sm:text-sm shadow-md border-b-2 border-rose-700">
+                              <XCircle className="w-4 h-4" />
+                              <span>CHƯA ĐÚNG</span>
+                            </div>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Nội dung câu hỏi - Chữ to, nổi bật trên nền Thanh 3D */}
+                  <div className="relative z-10 pt-1">
+                    <h3 className={`${getQuestionSizeClass()} text-white font-black tracking-tight leading-relaxed drop-shadow-sm`}>
                       {q.question}
                     </h3>
                   </div>
-
-                  {isSubmitted && (
-                    <span className="shrink-0 mt-1">
-                      {isCorrect ? (
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-black text-xs sm:text-sm shadow-xs">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                          <span>CHÍNH XÁC</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-black text-xs sm:text-sm shadow-xs">
-                          <XCircle className="w-5 h-5 text-rose-600" />
-                          <span>CHƯA ĐÚNG</span>
-                        </div>
-                      )}
-                    </span>
-                  )}
                 </div>
 
-                {/* 4 LỰA CHỌN A, B, C, D - NÚT TO, RÕ, ĐẸP MẮT */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-4">
+                {/* ========================================================
+                    4 LỰA CHỌN A, B, C, D - MỖI ĐÁP ÁN 1 MÀU 3D NỔI BẬT
+                   ======================================================== */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
                   {q.options.map((opt, optIdx) => {
+                    const theme = OPTION_THEMES[optIdx % OPTION_THEMES.length];
                     const isOptionSelected = selectedOpt === optIdx;
                     const isOptionCorrect = q.correctAnswer === optIdx;
 
-                    let btnContainerStyle = 'border-slate-200 dark:border-slate-700/80 hover:border-emerald-400 hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20 text-slate-800 dark:text-slate-200 bg-slate-50/50 dark:bg-slate-800/40';
-                    let badgeStyle = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700';
+                    let btnContainerStyle = theme.unselected;
+                    let badgeStyle = theme.badge;
 
-                    if (isOptionSelected && !isSubmitted) {
-                      btnContainerStyle = 'border-emerald-600 bg-emerald-50/90 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-100 ring-4 ring-emerald-500/20 shadow-sm';
-                      badgeStyle = 'bg-emerald-600 text-white font-black shadow-md scale-105';
-                    } else if (isSubmitted) {
+                    if (!isSubmitted) {
+                      if (isOptionSelected) {
+                        btnContainerStyle = theme.selected;
+                        badgeStyle = theme.badgeActive;
+                      }
+                    } else {
+                      // Đã nộp bài
                       if (isOptionCorrect) {
-                        btnContainerStyle = 'border-emerald-600 bg-emerald-100/90 dark:bg-emerald-950 text-emerald-950 dark:text-emerald-100 font-black ring-4 ring-emerald-500/20 shadow-sm';
-                        badgeStyle = 'bg-emerald-600 text-white font-black shadow-md scale-105';
+                        btnContainerStyle = 'border-2 border-b-[5px] border-emerald-600 bg-emerald-100/90 dark:bg-emerald-950 text-emerald-950 dark:text-emerald-100 ring-4 ring-emerald-500/30 shadow-md translate-y-0.5';
+                        badgeStyle = 'bg-gradient-to-b from-emerald-500 to-green-600 text-white border-b-4 border-emerald-800 shadow-md scale-105';
                       } else if (isOptionSelected && !isOptionCorrect) {
-                        btnContainerStyle = 'border-rose-500 bg-rose-100/90 dark:bg-rose-950 text-rose-950 dark:text-rose-100 line-through';
-                        badgeStyle = 'bg-rose-600 text-white font-black shadow-md';
+                        btnContainerStyle = 'border-2 border-b-[5px] border-rose-500 bg-rose-100/90 dark:bg-rose-950 text-rose-950 dark:text-rose-100 line-through opacity-85';
+                        badgeStyle = 'bg-gradient-to-b from-rose-500 to-red-600 text-white border-b-4 border-rose-800 shadow-md';
+                      } else {
+                        btnContainerStyle = 'opacity-50 border-2 border-b-[5px] border-slate-200 dark:border-slate-800 text-slate-500 bg-slate-50/50 dark:bg-slate-800/20';
                       }
                     }
-
-                    const OPT_LABELS = ['A', 'B', 'C', 'D'];
 
                     return (
                       <button
@@ -685,24 +743,30 @@ export const TextbookExercisePortal: React.FC = () => {
                         type="button"
                         disabled={isSubmitted}
                         onClick={() => handleSelectOption(q.id, optIdx)}
-                        className={`w-full text-left p-4 sm:p-4.5 rounded-2xl border-2 transition-all duration-150 cursor-pointer flex items-center justify-between gap-3 group ${btnContainerStyle}`}
+                        className={`w-full text-left p-4 sm:p-5 rounded-2xl sm:rounded-3xl transition-all duration-150 cursor-pointer flex items-center justify-between gap-3.5 group active:border-b-2 active:translate-y-1 ${btnContainerStyle}`}
                       >
                         <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                          {/* Badge chữ cái A, B, C, D to tròn rõ ràng */}
-                          <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 transition-transform ${badgeStyle}`}>
-                            {OPT_LABELS[optIdx]}
+                          {/* Badge chữ cái A, B, C, D 3D nổi khối */}
+                          <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 transition-transform ${badgeStyle}`}>
+                            {theme.label}
                           </div>
-                          {/* Nội dung phương án - Chữ to, đậm, nét */}
+                          {/* Nội dung phương án - Chữ to, đậm, rõ nét */}
                           <span className={`flex-1 text-left ${getOptionSizeClass()} leading-snug break-words`}>
                             {opt}
                           </span>
                         </div>
 
-                        {/* Nhãn đáp án đúng khi đã nộp bài */}
+                        {/* Nhãn đáp án khi đã nộp bài */}
                         {isSubmitted && isOptionCorrect && (
-                          <span className="text-xs font-black uppercase text-emerald-700 dark:text-emerald-300 bg-emerald-200 dark:bg-emerald-900 px-2 py-1 rounded-xl shrink-0 flex items-center gap-1 shadow-xs">
+                          <span className="text-xs font-black uppercase text-white bg-emerald-600 px-2.5 py-1 rounded-xl shrink-0 flex items-center gap-1 shadow-md border-b-2 border-emerald-800">
                             <Check className="w-3.5 h-3.5" />
                             <span>ĐÚNG</span>
+                          </span>
+                        )}
+                        {isSubmitted && isOptionSelected && !isOptionCorrect && (
+                          <span className="text-xs font-black uppercase text-white bg-rose-600 px-2.5 py-1 rounded-xl shrink-0 flex items-center gap-1 shadow-md border-b-2 border-rose-800">
+                            <XCircle className="w-3.5 h-3.5" />
+                            <span>SAI</span>
                           </span>
                         )}
                       </button>
@@ -712,7 +776,7 @@ export const TextbookExercisePortal: React.FC = () => {
 
                 {/* LỜI GIẢI THÍCH CHI TIẾT SƯ PHẠM */}
                 {isSubmitted && (
-                  <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-800 text-slate-800 dark:text-slate-200 space-y-1.5 animate-fadeIn">
+                  <div className="mt-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-amber-50/90 dark:bg-amber-950/30 border-2 border-b-[5px] border-amber-300 dark:border-amber-800 text-slate-800 dark:text-slate-200 space-y-1.5 animate-fadeIn">
                     <p className="font-black text-amber-800 dark:text-amber-300 flex items-center gap-2 text-xs sm:text-sm uppercase tracking-wide">
                       <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                       <span>Lời giải thích sư phạm chi tiết:</span>
@@ -736,7 +800,7 @@ export const TextbookExercisePortal: React.FC = () => {
             <button
               type="button"
               onClick={handleSubmitExercises}
-              className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm sm:text-base shadow-lg transition cursor-pointer flex items-center gap-2 scale-102"
+              className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm sm:text-base shadow-lg transition cursor-pointer flex items-center gap-2 scale-102 border-b-4 border-emerald-800 active:border-b-2 active:translate-y-0.5"
             >
               <CheckCircle2 className="w-5 h-5" />
               <span>Nộp bài & Chấm điểm ngay</span>
