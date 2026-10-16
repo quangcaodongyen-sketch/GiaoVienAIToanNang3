@@ -30,21 +30,11 @@
       "source": "/hoc-tu-vung",
       "destination": "/tuvung/",
       "permanent": true
-    },
-    {
-      "source": "/anhthe",
-      "destination": "/anhthe/",
-      "permanent": true
-    },
-    {
-      "source": "/anh-the",
-      "destination": "/anhthe/",
-      "permanent": true
     }
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|tuvung/|anhthe/|eng12_vocab/|.*\\..*).*)$",
+      "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)$",
       "destination": "/index.html"
     }
   ]
