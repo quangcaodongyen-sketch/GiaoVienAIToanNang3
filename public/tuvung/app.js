@@ -2381,14 +2381,11 @@ const ChantBeatEngine = {
   
   setStyle(newStyle) {
     this.style = newStyle || 'popfunk';
-    if (this.style === 'kpop') this.bpm = 124;
-    else if (this.style === 'itsme') this.bpm = 116;
-    else if (this.style === 'simp808') this.bpm = 88;
-    else if (this.style === 'edm') this.bpm = 128;
+    if (this.style === 'edm') this.bpm = 128;
     else if (this.style === 'lofi') this.bpm = 82;
     else if (this.style === 'trap') this.bpm = 96;
     else if (this.style === 'tropical') this.bpm = 114;
-    else this.bpm = 112;
+    else this.bpm = 112; // Mặc định Pop Funk sôi động
 
     const bpmSelect = document.getElementById('chantBpmSelect');
     if (bpmSelect) {
@@ -2398,14 +2395,11 @@ const ChantBeatEngine = {
     const genreTag = document.getElementById('chantGenreTag');
     if (genreTag) {
       const names = {
-        kpop: '🇰🇷 K-Pop Dance (124 BPM)',
-        itsme: "😎 It's Me Trend Gen Z (116 BPM)",
-        simp808: '💖 Simp Gái 808 Chill (88 BPM)',
         popfunk: '🕺 Dance / Pop Funk (112 BPM)',
         edm: '⚡ TikTok Trend EDM (128 BPM)',
-        lofi: '🎧 Lo-fi Chill Học Bài (82 BPM)',
         trap: '🎤 Hip-Hop Trap (96 BPM)',
-        tropical: '🌴 Tropical Summer (114 BPM)'
+        tropical: '🌴 Tropical Summer (114 BPM)',
+        lofi: '🎧 Lo-fi Chill Học Bài (82 BPM)'
       };
       genreTag.textContent = names[this.style] || names.popfunk;
     }
@@ -2415,14 +2409,11 @@ const ChantBeatEngine = {
 
   updateVisualizerTheme() {
     const gradients = {
-      kpop: 'linear-gradient(180deg, #ff2d75, #ec4899, #06b6d4)',
-      itsme: 'linear-gradient(180deg, #a855f7, #6366f1, #38bdf8)',
-      simp808: 'linear-gradient(180deg, #f43f5e, #fb7185, #f59e0b)',
       popfunk: 'linear-gradient(180deg, #ec4899, #8b5cf6, #38bdf8)',
       edm: 'linear-gradient(180deg, #10b981, #06b6d4, #6366f1)',
-      lofi: 'linear-gradient(180deg, #f97316, #fb923c, #a855f7)',
       trap: 'linear-gradient(180deg, #e11d48, #9333ea, #3b82f6)',
-      tropical: 'linear-gradient(180deg, #14b8a6, #f59e0b, #ef4444)'
+      tropical: 'linear-gradient(180deg, #14b8a6, #f59e0b, #ef4444)',
+      lofi: 'linear-gradient(180deg, #f97316, #fb923c, #a855f7)'
     };
     const grad = gradients[this.style] || gradients.popfunk;
     const bars = document.querySelectorAll('.visualizer-bar');
@@ -2688,67 +2679,11 @@ const ChantBeatEngine = {
     const vol = this.volume;
 
     switch(this.style) {
-      case 'kpop':
-        // K-Pop Dance: 4-on-the-floor kick, double claps, driving 8th bass, syncopated pluck stabs
-        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
-        else this.playHiHat(time, vol * 0.7, false);
-
-        // Electro Bassline
-        if (step === 0 || step === 2) this.playSynthBass(time, 65.41, 0.16, 'sawtooth'); // C2
-        else if (step === 4 || step === 6) this.playSynthBass(time, 98.00, 0.16, 'sawtooth'); // G2
-        else if (step === 8) this.playSynthBass(time, 103.83, 0.16, 'sawtooth'); // Ab2
-        else if (step === 10) this.playSynthBass(time, 116.54, 0.16, 'sawtooth'); // Bb2
-        else if (step === 12) this.playSynthBass(time, 65.41, 0.16, 'sawtooth'); // C2
-        else if (step === 14) this.playSynthBass(time, 77.78, 0.16, 'sawtooth'); // Eb2
-
-        // Pluck Chord Stabs
-        if (step === 3 || step === 6 || step === 11 || step === 14) {
-          this.playPluckMelody(time, [523.25, 659.25, 783.99], 0.15, vol * 0.9);
-        }
-        break;
-
-      case 'itsme':
-        // Trend Gen Z: Punchy kick, 808 sub, bouncy bass groove, catchy lead stabs
-        if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol);
-        if (step === 0 || step === 10) this.play808Kick(time, vol * 0.85);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if ([0, 2, 4, 6, 8, 9, 10, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.75, false);
-
-        // Gen Z Swag Bassline
-        if (step === 0) this.playSynthBass(time, 55.00, 0.22, 'triangle'); // A1
-        else if (step === 3) this.playSynthBass(time, 65.41, 0.18, 'sawtooth'); // C2
-        else if (step === 6) this.playSynthBass(time, 73.42, 0.18, 'sawtooth'); // D2
-        else if (step === 10) this.playSynthBass(time, 82.41, 0.18, 'sawtooth'); // E2
-        else if (step === 12) this.playSynthBass(time, 55.00, 0.22, 'triangle'); // A1
-
-        if (step === 0 || step === 6 || step === 8 || step === 14) {
-          this.playPluckMelody(time, [440.00, 523.25, 659.25], 0.18, vol * 0.85);
-        }
-        break;
-
-      case 'simp808':
-        // Simp Gái 808: Booming sub kicks, rimshots, rolling hi-hats, neo-soul chords
-        if (step === 0 || step === 8 || step === 11) this.play808Kick(time, vol * 1.25);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
-        if (step % 2 === 0 || step === 14 || step === 15) this.playHiHat(time, vol * 0.6, false);
-
-        // Warm 808 Bass glide
-        if (step === 0) this.playSynthBass(time, 43.65, 0.45, 'triangle'); // F1
-        else if (step === 4) this.playSynthBass(time, 49.00, 0.35, 'triangle'); // G1
-        else if (step === 8) this.playSynthBass(time, 55.00, 0.45, 'triangle'); // A1
-        else if (step === 11) this.playSynthBass(time, 65.41, 0.35, 'triangle'); // C2
-
-        if (step === 0) this.playWarmChord(time, [174.61, 220.00, 261.63, 329.63], 0.7, vol * 0.9);
-        else if (step === 8) this.playWarmChord(time, [164.81, 196.00, 246.94, 293.66], 0.7, vol * 0.9);
-        break;
-
       case 'edm':
         // TikTok EDM: Huge 4-on-the-floor kick, massive clap, offbeat pumping bass, arpeggio plucks
-        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol * 1.15);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol, true);
+        if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol * 1.2);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 1.1, 'clap');
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 1.1, true);
 
         // Offbeat Sidechain Pumping Synth Bass (The iconic EDM groove)
         if (step === 2 || step === 6 || step === 10 || step === 14) {
@@ -2759,18 +2694,18 @@ const ChantBeatEngine = {
         if (step % 3 === 0) {
           const notes = [523.25, 659.25, 783.99, 1046.50];
           const note = notes[(step / 3) % notes.length];
-          this.playPluckMelody(time, [note], 0.12, vol * 0.85);
+          this.playPluckMelody(time, [note], 0.12, vol * 0.9);
         }
         break;
 
       case 'trap':
         // Hip-hop Trap: 808 kick, claps, triplet hat rolls, heavy sub
-        if (step === 0 || step === 5 || step === 8) this.play808Kick(time, vol * 1.1);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if ([0, 2, 4, 6, 8, 9, 10, 11, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.75, false);
+        if (step === 0 || step === 5 || step === 8) this.play808Kick(time, vol * 1.2);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 1.1, 'clap');
+        if ([0, 2, 4, 6, 8, 9, 10, 11, 12, 14, 15].includes(step)) this.playHiHat(time, vol * 0.85, false);
 
         if (step === 0 || step === 5 || step === 8 || step === 12) {
-          this.playSynthBass(time, 49.00, 0.35, 'sawtooth');
+          this.playSynthBass(time, 49.00, 0.38, 'sawtooth');
         }
         break;
 
@@ -2778,40 +2713,41 @@ const ChantBeatEngine = {
         // Tropical Summer: Upbeat kicks, marimba offbeat plucks, lively shaker
         if (step === 0 || step === 4 || step === 8 || step === 12) this.playPunchyKick(time, vol);
         if (step === 4 || step === 12) this.playSnare(time, vol, 'rimshot');
-        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 0.75, true);
+        if (step === 2 || step === 6 || step === 10 || step === 14) this.playHiHat(time, vol * 0.8, true);
         if (step === 3 || step === 7 || step === 11 || step === 15) {
-          this.playPluckMelody(time, [523.25, 659.25, 783.99], 0.18, vol * 0.85);
+          this.playPluckMelody(time, [523.25, 659.25, 783.99], 0.18, vol * 0.9);
         }
         if (step % 4 === 0) {
-          this.playSynthBass(time, 65.41, 0.20, 'triangle');
+          this.playSynthBass(time, 65.41, 0.22, 'triangle');
         }
         break;
 
       case 'lofi':
         // Lo-Fi Chill: Soft kicks, rimshots, lush vintage chords
-        if (step === 0 || step === 7) this.playPunchyKick(time, vol * 0.7);
-        if (step === 4 || step === 12) this.playSnare(time, vol * 0.7, 'rimshot');
-        if (step % 2 === 0) this.playHiHat(time, vol * 0.4, false);
+        if (step === 0 || step === 7) this.playPunchyKick(time, vol * 0.75);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 0.75, 'rimshot');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.45, false);
         if (step === 0) this.playWarmChord(time, [146.83, 220.00, 261.63, 329.63], 0.8, vol * 0.85);
         else if (step === 8) this.playWarmChord(time, [196.00, 246.94, 293.66, 349.23], 0.8, vol * 0.85);
         break;
 
-      default: // popfunk
+      default: // popfunk - Mặc định cực kỳ sôi động, vui tươi, rộn rã
         // Pop Funk: Punchy kicks, funky claps, slap bass, bouncy horn stabs
-        if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol);
-        if (step === 4 || step === 12) this.playSnare(time, vol, 'clap');
-        if (step % 2 === 0) this.playHiHat(time, vol * 0.75, false);
+        if (step === 0 || step === 6 || step === 10) this.playPunchyKick(time, vol * 1.15);
+        if (step === 4 || step === 12) this.playSnare(time, vol * 1.1, 'clap');
+        if (step % 2 === 0) this.playHiHat(time, vol * 0.8, false);
+        if (step === 14) this.playHiHat(time, vol * 0.9, true); // Open hat at end of bar
 
-        // Slap Bass Groove
-        if (step === 0 || step === 2) this.playSynthBass(time, 55.00, 0.18, 'sawtooth'); // A1
-        else if (step === 6) this.playSynthBass(time, 65.41, 0.18, 'sawtooth'); // C2
-        else if (step === 8) this.playSynthBass(time, 73.42, 0.18, 'sawtooth'); // D2
-        else if (step === 10) this.playSynthBass(time, 82.41, 0.18, 'sawtooth'); // E2
-        else if (step === 14) this.playSynthBass(time, 98.00, 0.18, 'sawtooth'); // G2
+        // Slap Bass Groove (Super catchy & funky)
+        if (step === 0 || step === 2) this.playSynthBass(time, 55.00, 0.20, 'sawtooth'); // A1
+        else if (step === 6) this.playSynthBass(time, 65.41, 0.20, 'sawtooth'); // C2
+        else if (step === 8) this.playSynthBass(time, 73.42, 0.20, 'sawtooth'); // D2
+        else if (step === 10) this.playSynthBass(time, 82.41, 0.20, 'sawtooth'); // E2
+        else if (step === 14) this.playSynthBass(time, 98.00, 0.20, 'sawtooth'); // G2
 
-        // Funky Stabs
+        // Funky Horn / Guitar Pluck Stabs
         if (step === 0 || step === 3 || step === 6 || step === 8 || step === 11 || step === 14) {
-          this.playPluckMelody(time, [440.00, 554.37, 659.25], 0.16, vol * 0.85);
+          this.playPluckMelody(time, [440.00, 554.37, 659.25], 0.16, vol * 0.9);
         }
         break;
     }
