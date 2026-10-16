@@ -24,25 +24,25 @@
 
     <!-- Top Navigation Links (Appvip Style) -->
     <nav class="top-nav-links">
-      <button class="nav-tab-btn" data-view="view_chat">
+      <button class="nav-tab-btn" data-view="view_chat" onclick="switchView('view_chat')">
         <span class="tab-icon">💬</span> Trò chuyện AI
       </button>
-      <button class="nav-tab-btn active" data-view="view_image_edit">
+      <button class="nav-tab-btn active" data-view="view_image_edit" onclick="switchView('view_image_edit')">
         <span class="tab-icon">📸</span> Chỉnh sửa ảnh AI
       </button>
-      <button class="nav-tab-btn" data-view="view_text_to_image">
+      <button class="nav-tab-btn" data-view="view_text_to_image" onclick="switchView('view_text_to_image')">
         <span class="tab-icon">🎨</span> Tạo hình ảnh AI
       </button>
-      <button class="nav-tab-btn" data-view="view_video_gen">
+      <button class="nav-tab-btn" data-view="view_video_gen" onclick="switchView('view_video_gen')">
         <span class="tab-icon">🎬</span> Tạo video AI
       </button>
-      <button class="nav-tab-btn" data-view="view_admin_billing">
+      <button class="nav-tab-btn" data-view="view_admin_billing" onclick="switchView('view_admin_billing')">
         <span class="tab-icon">👑</span> Bản quyền Admin
       </button>
-      <button class="nav-tab-btn" data-view="view_news">
+      <button class="nav-tab-btn" data-view="view_news" onclick="switchView('view_news')">
         <span class="tab-icon">📰</span> Tin tức
       </button>
-      <button class="nav-tab-btn" data-view="view_guide">
+      <button class="nav-tab-btn" data-view="view_guide" onclick="switchView('view_guide')">
         <span class="tab-icon">📖</span> Hướng dẫn sử dụng
       </button>
     </nav>
@@ -57,12 +57,12 @@
         <span>Tiếng Việt</span>
       </div>
 
-      <button class="btn btn-admin-vip" id="btnAdminBadge" title="Tài khoản Quản Trị Viên VIP">
+      <button class="btn btn-admin-vip" id="btnAdminBadge" onclick="switchView('view_admin_billing')" title="Tài khoản Quản Trị Viên VIP">
         <span class="crown-icon">👑</span> Admin VIP (Toàn Quyền)
       </button>
 
       <!-- User Profile Dropdown -->
-      <div class="user-profile-box" id="userProfileBtn">
+      <div class="user-profile-box" id="userProfileBtn" onclick="switchView('view_admin_billing')">
         <div class="avatar-circle">
           <span>👨‍🏫</span>
         </div>
@@ -88,55 +88,55 @@
             <h3>Chỉnh sửa ảnh AI</h3>
           </div>
           <div class="tool-menu">
-            <a class="menu-item" data-tool="anh_cuoi">
+            <a class="menu-item" data-tool="anh_cuoi" onclick="selectTool('anh_cuoi')">
               <span class="menu-emoji">🤍</span>
               <span class="menu-name">Ảnh Cưới</span>
             </a>
-            <a class="menu-item active" data-tool="id_photo">
+            <a class="menu-item active" data-tool="id_photo" onclick="selectTool('id_photo')">
               <span class="menu-emoji">💳</span>
               <span class="menu-name">Chỉnh sửa ảnh thẻ</span>
             </a>
-            <a class="menu-item" data-tool="generative_fill">
+            <a class="menu-item" data-tool="generative_fill" onclick="selectTool('generative_fill')">
               <span class="menu-emoji">🪄</span>
               <span class="menu-name">Generative Fill</span>
             </a>
-            <a class="menu-item" data-tool="phuc_che">
+            <a class="menu-item" data-tool="phuc_che" onclick="selectTool('phuc_che')">
               <span class="menu-emoji">🔄</span>
               <span class="menu-name">Phục chế ảnh cũ</span>
             </a>
-            <a class="menu-item" data-tool="gia_dinh">
+            <a class="menu-item" data-tool="gia_dinh" onclick="selectTool('gia_dinh')">
               <span class="menu-emoji">👨‍👩‍👧</span>
               <span class="menu-name">Ảnh Gia Đình</span>
             </a>
-            <a class="menu-item" data-tool="baby">
+            <a class="menu-item" data-tool="baby" onclick="selectTool('baby')">
               <span class="menu-emoji">👶</span>
               <span class="menu-name">Baby</span>
             </a>
-            <a class="menu-item" data-tool="xu_huong">
+            <a class="menu-item" data-tool="xu_huong" onclick="selectTool('xu_huong')">
               <span class="menu-emoji">📈</span>
               <span class="menu-name">Xu hướng AI Hot</span>
             </a>
-            <a class="menu-item" data-tool="ghep_mat">
+            <a class="menu-item" data-tool="ghep_mat" onclick="selectTool('ghep_mat')">
               <span class="menu-emoji">👤</span>
               <span class="menu-name">Ghép mặt</span>
             </a>
-            <a class="menu-item" data-tool="kieu_toc">
+            <a class="menu-item" data-tool="kieu_toc" onclick="selectTool('kieu_toc')">
               <span class="menu-emoji">✂️</span>
               <span class="menu-name">Thay đổi kiểu tóc</span>
             </a>
-            <a class="menu-item" data-tool="trang_phuc">
+            <a class="menu-item" data-tool="trang_phuc" onclick="selectTool('trang_phuc')">
               <span class="menu-emoji">👔</span>
               <span class="menu-name">Thay trang phục</span>
             </a>
-            <a class="menu-item" data-tool="chinh_dang">
+            <a class="menu-item" data-tool="chinh_dang" onclick="selectTool('chinh_dang')">
               <span class="menu-emoji">🏃</span>
               <span class="menu-name">Chỉnh Dáng AI</span>
             </a>
-            <a class="menu-item" data-tool="san_pham">
+            <a class="menu-item" data-tool="san_pham" onclick="selectTool('san_pham')">
               <span class="menu-emoji">🛍️</span>
               <span class="menu-name">Ảnh sản phẩm</span>
             </a>
-            <a class="menu-item" data-tool="tet">
+            <a class="menu-item" data-tool="tet" onclick="selectTool('tet')">
               <span class="menu-emoji">🧧</span>
               <span class="menu-name">Biến Hình Ảnh Tết</span>
             </a>
@@ -154,16 +154,16 @@
 
           <div class="sidebar-sub-heading">QUẢN TRỊ ADMIN</div>
           <div class="sub-menu-list">
-            <a class="sub-item" data-view-target="view_admin_billing">
+            <a class="sub-item" data-view-target="view_admin_billing" onclick="switchView('view_admin_billing')">
               <span>👑</span> Bản quyền Admin VIP
             </a>
             <a class="sub-item" id="btnMyPrompts">
               <span>📑</span> Prompt của tôi
             </a>
-            <a class="sub-item" data-view-target="view_news">
+            <a class="sub-item" data-view-target="view_news" onclick="switchView('view_news')">
               <span>📰</span> Tin tức &amp; Cập nhật
             </a>
-            <a class="sub-item" data-view-target="view_guide">
+            <a class="sub-item" data-view-target="view_guide" onclick="switchView('view_guide')">
               <span>📖</span> Hướng dẫn sử dụng
             </a>
           </div>
@@ -183,7 +183,7 @@
             <div class="credit-count">
               <span class="credit-symbol">⚡</span> Vô hạn Credit (∞ / ∞)
             </div>
-            <button class="btn-manage-sub" data-view-target="view_admin_billing">
+            <button class="btn-manage-sub" data-view-target="view_admin_billing" onclick="switchView('view_admin_billing')">
               Quản lý Admin
             </button>
           </div>
@@ -204,9 +204,9 @@
             </button>
             <div class="demo-samples">
               <span class="demo-txt">Ảnh mẫu:</span>
-              <button class="sample-chip" data-sample="sample_nam.jpg">👨 Nam</button>
-              <button class="sample-chip" data-sample="sample_nu.jpg">👩 Nữ</button>
-              <button class="sample-chip" data-sample="sample_hocsinh.jpg">🧑 Học Sinh</button>
+              <button class="sample-chip" data-sample="sample_nam.jpg" onclick="loadSample('sample_nam.jpg')">👨 Nam</button>
+              <button class="sample-chip" data-sample="sample_nu.jpg" onclick="loadSample('sample_nu.jpg')">👩 Nữ</button>
+              <button class="sample-chip" data-sample="sample_hocsinh.jpg" onclick="loadSample('sample_hocsinh.jpg')">🧑 Học Sinh</button>
             </div>
           </div>
 
@@ -214,7 +214,7 @@
             <button class="btn btn-outline" id="btnSwitchViewMode" title="Chuyển chế độ xem so sánh">
               ⇹ Xem So Sánh
             </button>
-            <button class="btn btn-secondary" id="btnOpenPrintLab" title="Xếp khổ in ảnh thẻ 300 DPI">
+            <button class="btn btn-secondary" id="btnOpenPrintLab" onclick="openPrintModal()" title="Xếp khổ in ảnh thẻ 300 DPI">
               🖨️ Xếp Khổ In
             </button>
             <button class="btn btn-accent" id="btnExportZip" title="Tải toàn bộ ảnh ZIP">
@@ -325,7 +325,7 @@
           <div class="presets-section">
             <div class="presets-grid" id="presetsGrid">
               <!-- Preset 1 -->
-              <div class="preset-card" data-preset="quan_phuc">
+              <div class="preset-card" data-preset="quan_phuc" onclick="selectPreset('quan_phuc')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/quan_phuc.jpg" alt="Quân phục">
                 </div>
@@ -333,7 +333,7 @@
               </div>
 
               <!-- Preset 2 -->
-              <div class="preset-card active" data-preset="hoc_sinh_2">
+              <div class="preset-card active" data-preset="hoc_sinh_2" onclick="selectPreset('hoc_sinh_2')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/hoc_sinh_2.jpg" alt="Học sinh 2">
                 </div>
@@ -341,7 +341,7 @@
               </div>
 
               <!-- Preset 3 -->
-              <div class="preset-card" data-preset="anh_the_can_cuoc">
+              <div class="preset-card" data-preset="anh_the_can_cuoc" onclick="selectPreset('anh_the_can_cuoc')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/anh_the_can_cuoc.jpg" alt="Ảnh thẻ căn cước">
                 </div>
@@ -349,7 +349,7 @@
               </div>
 
               <!-- Preset 4 -->
-              <div class="preset-card" data-preset="so_mi_xanh_nhat">
+              <div class="preset-card" data-preset="so_mi_xanh_nhat" onclick="selectPreset('so_mi_xanh_nhat')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/so_mi_xanh_nhat.jpg" alt="Sơ mi xanh nhạt">
                 </div>
@@ -357,7 +357,7 @@
               </div>
 
               <!-- Preset 5 -->
-              <div class="preset-card" data-preset="ao_so_mi_polo">
+              <div class="preset-card" data-preset="ao_so_mi_polo" onclick="selectPreset('ao_so_mi_polo')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/ao_so_mi_polo.jpg" alt="Áo sơ mi polo">
                 </div>
@@ -365,7 +365,7 @@
               </div>
 
               <!-- Preset 6 -->
-              <div class="preset-card" data-preset="ao_vest_cong_so">
+              <div class="preset-card" data-preset="ao_vest_cong_so" onclick="selectPreset('ao_vest_cong_so')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/ao_vest_cong_so.jpg" alt="Áo vest công sở">
                 </div>
@@ -373,7 +373,7 @@
               </div>
 
               <!-- Preset 7 -->
-              <div class="preset-card" data-preset="ao_so_mi_nu">
+              <div class="preset-card" data-preset="ao_so_mi_nu" onclick="selectPreset('ao_so_mi_nu')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/ao_so_mi_nu.jpg" alt="Áo sơ mi nữ">
                 </div>
@@ -381,7 +381,7 @@
               </div>
 
               <!-- Preset 8 -->
-              <div class="preset-card" data-preset="ao_co_no">
+              <div class="preset-card" data-preset="ao_co_no" onclick="selectPreset('ao_co_no')">
                 <div class="preset-img-box">
                   <img src="./assets/presets/ao_co_no.jpg" alt="Áo cổ nơ">
                 </div>
@@ -396,11 +396,11 @@
             <div class="tuning-group">
               <label class="tuning-label">📐 Khổ ảnh thẻ:</label>
               <div class="size-pill-row">
-                <button class="size-pill-mini active" data-size="3x4">3x4 cm</button>
-                <button class="size-pill-mini" data-size="4x6">4x6 cm</button>
-                <button class="size-pill-mini" data-size="2x3">2x3 cm</button>
-                <button class="size-pill-mini" data-size="3.5x4.5">3.5x4.5</button>
-                <button class="size-pill-mini" data-size="5x5">5x5 cm</button>
+                <button class="size-pill-mini active" data-size="3x4" onclick="selectSize('3x4')">3x4 cm</button>
+                <button class="size-pill-mini" data-size="4x6" onclick="selectSize('4x6')">4x6 cm</button>
+                <button class="size-pill-mini" data-size="2x3" onclick="selectSize('2x3')">2x3 cm</button>
+                <button class="size-pill-mini" data-size="3.5x4.5" onclick="selectSize('3.5x4.5')">3.5x4.5</button>
+                <button class="size-pill-mini" data-size="5x5" onclick="selectSize('5x5')">5x5 cm</button>
               </div>
             </div>
 
@@ -408,25 +408,25 @@
             <div class="tuning-group">
               <label class="tuning-label">🎨 Màu phông nền:</label>
               <div class="bg-dots-row">
-                <button class="bg-dot-btn active" data-bg="blue_studio_radial" title="Xanh Đèn Studio Tỏa Sáng">
+                <button class="bg-dot-btn active" data-bg="blue_studio_radial" onclick="selectBg('blue_studio_radial')" title="Xanh Đèn Studio Tỏa Sáng">
                   <span class="dot-swatch radial-blue"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="blue_standard" title="Xanh Chuẩn 0084ff">
+                <button class="bg-dot-btn" data-bg="blue_standard" onclick="selectBg('blue_standard')" title="Xanh Chuẩn 0084ff">
                   <span class="dot-swatch" style="background:#0084ff;"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="white_cccd" title="Trắng Tinh CCCD / Hộ Chiếu">
+                <button class="bg-dot-btn" data-bg="white_cccd" onclick="selectBg('white_cccd')" title="Trắng Tinh CCCD / Hộ Chiếu">
                   <span class="dot-swatch" style="background:#FFFFFF; border:1px solid #94A3B8;"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="blue_light" title="Xanh Dương Nhạt">
+                <button class="bg-dot-btn" data-bg="blue_light" onclick="selectBg('blue_light')" title="Xanh Dương Nhạt">
                   <span class="dot-swatch" style="background:#3A86FF;"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="red_visa" title="Đỏ Visa">
+                <button class="bg-dot-btn" data-bg="red_visa" onclick="selectBg('red_visa')" title="Đỏ Visa">
                   <span class="dot-swatch" style="background:#D32F2F;"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="gray_studio" title="Xám Neutral">
+                <button class="bg-dot-btn" data-bg="gray_studio" onclick="selectBg('gray_studio')" title="Xám Neutral">
                   <span class="dot-swatch" style="background:#E2E8F0;"></span>
                 </button>
-                <button class="bg-dot-btn" data-bg="transparent" title="Trong Suốt PNG">
+                <button class="bg-dot-btn" data-bg="transparent" onclick="selectBg('transparent')" title="Trong Suốt PNG">
                   <span class="dot-swatch checkerboard"></span>
                 </button>
               </div>
@@ -467,11 +467,11 @@
 
           <!-- Bottom Big Orange Button: ✨ Tạo ảnh (Enter) -->
           <div class="generate-btn-container">
-            <button class="btn-generate-main" id="btnProcessBatch">
+            <button class="btn-generate-main" id="btnProcessBatch" onclick="processCurrentOrBatch()">
               <span class="sparkle-icon">✨</span> Tạo ảnh (Enter)
             </button>
             <div class="quick-row-actions">
-              <button class="btn btn-secondary w-50" id="btnApplyAll">
+              <button class="btn btn-secondary w-50" id="btnApplyAll" onclick="processCurrentOrBatch()">
                 Áp Dụng Tất Cả
               </button>
               <a class="btn btn-primary w-50" id="btnDownloadCurrent" download="anh_the_300dpi.jpg" href="#">
@@ -766,7 +766,7 @@
           <span>🖨️</span>
           <h3>Xếp Khổ In Ảnh Thẻ 300 DPI Chuẩn Lab</h3>
         </div>
-        <button class="modal-close" id="btnClosePrint">✕</button>
+        <button class="modal-close" id="btnClosePrint" onclick="closePrintModal()">✕</button>
       </div>
 
       <div class="print-body">
