@@ -6402,7 +6402,7 @@ const WEAKWORDS_SYSTEM = {
 // 7. SHARE & SHORT LINK SYSTEM
 // ==========================================
 const SHARE_SYSTEM = {
-  shortUrl: 'https://dekiemtraso.com/tuvung',
+  shortUrl: 'https://dekiemtraso.com/hocsinh',
 
   openShareModal() {
     const overlay = document.getElementById('shareModalOverlay');
@@ -6460,7 +6460,7 @@ const SHARE_SYSTEM = {
       ctx.fillStyle = '#0f172a';
       ctx.font = '14px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('dekiemtraso.com/tuvung', 100, 100);
+      ctx.fillText('dekiemtraso.com/hocsinh', 100, 100);
     };
   }
 };
@@ -7060,7 +7060,7 @@ const CERTIFICATE_CENTER = {
     ctx.font = 'italic 16px "Times New Roman", serif';
     ctx.fillStyle = '#64748b';
     ctx.fillText('Hệ thống kiểm tra số THCS', 150, 925);
-    ctx.fillText('Website: dekiemtraso.com/tuvung', 150, 950);
+    ctx.fillText('Website: dekiemtraso.com/hocsinh', 150, 950);
 
     // Center: Official Red Seal Stamp
     ctx.save();
@@ -7151,8 +7151,8 @@ const CERTIFICATE_CENTER = {
 
   shareZalo() {
     const student = this.targetStudent || STUDENT_SYSTEM.currentStudent || { fullName: "Em" };
-    const text = `🎉 Em đã hoàn thành xuất sắc bài kiểm tra 15 phút và nhận Giấy khen điện tử môn Tiếng Anh tại https://dekiemtraso.com/tuvung!`;
-    const url = `https://zalo.me/share?url=${encodeURIComponent('https://dekiemtraso.com/tuvung')}&title=${encodeURIComponent(text)}`;
+    const text = `🎉 Em đã hoàn thành xuất sắc bài kiểm tra 15 phút và nhận Giấy khen điện tử môn Tiếng Anh tại https://dekiemtraso.com/hocsinh!`;
+    const url = `https://zalo.me/share?url=${encodeURIComponent('https://dekiemtraso.com/hocsinh')}&title=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   }
 };

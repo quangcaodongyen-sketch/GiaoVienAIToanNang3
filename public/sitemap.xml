@@ -7,7 +7,15 @@
   <!-- Trang Chủ Chính -->
   <url>
     <loc>https://dekiemtraso.com/</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Cổng Học Tập Dành Cho Học Sinh Toàn Quốc & Học Từ Vựng 6 - 12 -->
+  <url>
+    <loc>https://dekiemtraso.com/hocsinh</loc>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

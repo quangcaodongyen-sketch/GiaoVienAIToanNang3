@@ -13,42 +13,52 @@
     },
     {
       "source": "/tuvung",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/tuvung/",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/eng12_vocab",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/eng12_vocab/",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/tienganh12",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/tienganh12/",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/hoc-tu-vung",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
       "permanent": false
     },
     {
       "source": "/hoc-tu-vung/",
-      "destination": "/#hoc-sinh",
+      "destination": "/hocsinh",
+      "permanent": false
+    },
+    {
+      "source": "/hoc-sinh",
+      "destination": "/hocsinh",
+      "permanent": false
+    },
+    {
+      "source": "/hoc-sinh/",
+      "destination": "/hocsinh",
       "permanent": false
     }
   ],
