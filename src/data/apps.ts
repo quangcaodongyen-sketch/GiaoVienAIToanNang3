@@ -15,6 +15,21 @@ export interface AppCard {
 }
 
 export const apps: AppCard[] = [
+  // ==================== STUDIO AI: CHỈNH SỬA & LÀM ẢNH THẺ HÀNG LOẠT ====================
+  {
+    id: "studio-ai-anh-the-hang-loat",
+    title: "STUDIO AI - LÀM ẢNH THẺ HÀNG LOẠT",
+    description: "Chỉnh sửa ảnh thẻ học sinh và giáo viên hàng loạt: Tự xoay thẳng mặt, căn chuẩn tỷ lệ 68%, khử sạch viền phông xanh, thay trang phục vest/sơ mi, xóa vật thể và xếp khổ in 10x15cm, A4 chuẩn 300 DPI.",
+    image: "/anh_the_studio.jpg",
+    url: "/anhthe/",
+    category: "TIỆN ÍCH SƯ PHẠM",
+    levelBadge: "TIỆN ÍCH",
+    badge: "ADMIN VIP",
+    active: true,
+    featured: true,
+    order: 0
+  },
+
   // ==================== HỌC TỪ VỰNG TIẾNG ANH 6 - 12 GLOBAL SUCCESS ====================
   {
     id: "hoc-tu-vung-tieng-anh-6-12",
