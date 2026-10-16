@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
+import { TextbookExercisePortal } from './TextbookExercisePortal';
 
 // Bộ dữ liệu từ vựng mẫu chuẩn Global Success
 interface VocabItem {
@@ -226,7 +227,7 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 ];
 
 export const StudentPortal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'vocab' | 'quiz' | 'downloads'>('vocab');
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'downloads'>('vocab');
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng
@@ -275,11 +276,11 @@ export const StudentPortal: React.FC = () => {
             GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
           </h2>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Học từ vựng Tiếng Anh Global Success, làm Kiểm tra Online theo từng lớp & từng Unit (5 bài/Unit, 20 câu/bài) chấm điểm ngay, và tải đề kiểm tra miễn phí.
+            Học từ vựng Tiếng Anh Global Success, làm đầy đủ Bài tập SGK theo từng phần (Getting Started, Closer Look, Skills...), Kiểm tra Online (5 bài/Unit, 20 câu/bài) chấm điểm ngay, và tải đề miễn phí.
           </p>
         </div>
 
-        {/* Nút Chuyển Nhanh 3 Tính Năng Của Học Sinh */}
+        {/* Nút Chuyển Nhanh 4 Tính Năng Của Học Sinh */}
         <div className="relative z-10 flex flex-wrap items-center gap-2 mt-6">
           <button
             onClick={() => setActiveTab('vocab')}
@@ -294,6 +295,18 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('sgk')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+              activeTab === 'sgk'
+                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
+                : 'bg-white/10 hover:bg-white/20 text-white'
+            }`}
+          >
+            <BookMarked className="w-4 h-4" />
+            <span>2. Bài Tập SGK Từng Phần</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('quiz')}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
               activeTab === 'quiz'
@@ -302,7 +315,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>2. Kiểm tra Online</span>
+            <span>3. Kiểm tra Online</span>
           </button>
 
           <button
@@ -314,7 +327,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Download className="w-4 h-4" />
-            <span>3. Tải Đề Kiểm Tra & Tài Liệu</span>
+            <span>4. Tải Đề Kiểm Tra & Tài Liệu</span>
           </button>
 
           <button
@@ -620,12 +633,17 @@ export const StudentPortal: React.FC = () => {
         </div>
       )}
 
-      {/* ==================== PHÂN HỆ 2: KIỂM TRA ONLINE ==================== */}
+      {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
+      {activeTab === 'sgk' && (
+        <TextbookExercisePortal />
+      )}
+
+      {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
       {activeTab === 'quiz' && (
         <OnlineQuizPortal />
       )}
 
-      {/* ==================== PHÂN HỆ 3: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
+      {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
       {activeTab === 'downloads' && (
         <div className="space-y-4">
           <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
