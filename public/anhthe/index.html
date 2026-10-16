@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudioAI Pro - Hệ Thống Chỉnh Sửa &amp; Xử Lý Ảnh AI Toàn Năng | Thầy giáo Đinh Văn Thành</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudioAI Pro - Hệ Thống Chỉnh Sửa & Xử Lý Ảnh AI Toàn Năng | Thầy Đinh Văn Thành</title>
+  
+  <!-- Dynamic Base Path Resolution to prevent any 404 or path resolution errors -->
+  <script>
+    (function() {
+      var p = window.location.pathname;
+      if (p.indexOf('/anhthe') !== -1 && !p.endsWith('/') && !p.endsWith('.html')) {
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', p + '/' + window.location.search + window.location.hash);
+        }
+      }
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="icon" type="image/png" href="./assets/presets/hoc_sinh_2.jpg" />
 </head>
-<body class="theme-light">
-  <!-- Top Navigation Header (Dashboard Navbar) -->
+<body>
+
+  <!-- =========================================================================
+       TOP NAVBAR (Matches AppVip Header Layout)
+       ========================================================================= -->
   <header class="app-header">
     <div class="header-left">
-      <a href="/" class="logo-box" id="btnLogoHome" title="Về trang chủ dekiemtraso.com">
-        <div class="logo-icon">🪄</div>
+      <div class="logo-box" onclick="switchView('view_image_edit')">
+        <div class="logo-icon">✨</div>
         <div class="logo-text">
-          <h1>StudioAI Pro <span class="badge-ai">ADMIN</span></h1>
-          <p class="subtitle">Thầy giáo Đinh Văn Thành • Hotline/Zalo: 0915.213717</p>
+          <h1>StudioAI Pro</h1>
+          <span class="sub">AI Studio Toàn Năng</span>
         </div>
-      </a>
+      </div>
     </div>
 
-    <!-- Top Navigation Links (Appvip Style) -->
-    <nav class="top-nav-links">
+    <!-- Navigation Tabs (7 Views) -->
+    <nav class="header-nav">
       <button class="nav-tab-btn" data-view="view_chat" onclick="switchView('view_chat')">
         <span class="tab-icon">💬</span> Trò chuyện AI
       </button>
       <button class="nav-tab-btn active" data-view="view_image_edit" onclick="switchView('view_image_edit')">
-        <span class="tab-icon">📸</span> Chỉnh sửa ảnh AI
+        <span class="tab-icon">✨</span> Chỉnh sửa ảnh AI
       </button>
       <button class="nav-tab-btn" data-view="view_text_to_image" onclick="switchView('view_text_to_image')">
         <span class="tab-icon">🎨</span> Tạo hình ảnh AI
@@ -37,7 +57,7 @@
         <span class="tab-icon">🎬</span> Tạo video AI
       </button>
       <button class="nav-tab-btn" data-view="view_admin_billing" onclick="switchView('view_admin_billing')">
-        <span class="tab-icon">👑</span> Bản quyền Admin
+        <span class="tab-icon">👑</span> Bản quyền Admin VIP
       </button>
       <button class="nav-tab-btn" data-view="view_news" onclick="switchView('view_news')">
         <span class="tab-icon">📰</span> Tin tức
@@ -47,558 +67,510 @@
       </button>
     </nav>
 
-    <!-- Header Right Controls -->
+    <!-- Top Right: Language, Admin VIP Badge, User Profile -->
     <div class="header-right">
-      <a href="./Cai_Dat_StudioAI_Desktop.zip" download="Cai_Dat_StudioAI_Desktop.zip" class="btn btn-primary" title="Tải trọn bộ phần mềm chạy offline trên máy tính Windows">
-        <span class="btn-icon">💾</span> Tải Bản Cài Desktop (Offline)
-      </a>
       <div class="lang-selector">
         <span class="flag-icon">🇻🇳</span>
-        <span>Tiếng Việt</span>
+        <span class="lang-txt">Tiếng Việt</span>
       </div>
 
       <button class="btn btn-admin-vip" id="btnAdminBadge" onclick="switchView('view_admin_billing')" title="Tài khoản Quản Trị Viên VIP">
-        <span class="crown-icon">👑</span> Admin VIP (Toàn Quyền)
+        👑 VIP Admin
       </button>
 
-      <!-- User Profile Dropdown -->
       <div class="user-profile-box" id="userProfileBtn" onclick="switchView('view_admin_billing')">
-        <div class="avatar-circle">
-          <span>👨‍🏫</span>
-        </div>
-        <div class="user-meta">
-          <span class="user-name">Văn Thành Đinh</span>
-          <span class="user-role">Administrator</span>
-        </div>
+        <img src="./assets/sample_images/sample_nam.jpg" alt="Văn Thành Đinh" class="user-avatar" />
+        <span class="user-name">Văn Thành Đinh</span>
+        <span class="chevron-icon">▾</span>
       </div>
-
-      <button class="theme-toggle-btn" id="btnThemeToggle" title="Đổi giao diện Sáng / Tối">
-        🌙
-      </button>
     </div>
   </header>
 
-  <!-- VIEW 1: CHỈNH SỬA ẢNH AI (MAIN WORKSPACE MATCHING SCREENSHOT 5) -->
+  <!-- =========================================================================
+       VIEW 1: CHỈNH SỬA ẢNH AI (MAIN 3-COLUMN STUDIO - MATCHES SCREENSHOT 5)
+       ========================================================================= -->
   <div class="main-view-container active" id="view_image_edit">
-    <div class="dashboard-layout">
-      <!-- Left Sidebar: Chỉnh sửa ảnh AI Categories -->
-      <aside class="dashboard-sidebar">
-        <div class="sidebar-top-section">
-          <div class="sidebar-cat-header">
-            <h3>Chỉnh sửa ảnh AI</h3>
-          </div>
-          <div class="tool-menu">
-            <a class="menu-item" data-tool="anh_cuoi" onclick="selectTool('anh_cuoi')">
-              <span class="menu-emoji">🤍</span>
-              <span class="menu-name">Ảnh Cưới</span>
-            </a>
-            <a class="menu-item active" data-tool="id_photo" onclick="selectTool('id_photo')">
-              <span class="menu-emoji">💳</span>
-              <span class="menu-name">Chỉnh sửa ảnh thẻ</span>
-            </a>
-            <a class="menu-item" data-tool="generative_fill" onclick="selectTool('generative_fill')">
-              <span class="menu-emoji">🪄</span>
-              <span class="menu-name">Generative Fill</span>
-            </a>
-            <a class="menu-item" data-tool="phuc_che" onclick="selectTool('phuc_che')">
-              <span class="menu-emoji">🔄</span>
-              <span class="menu-name">Phục chế ảnh cũ</span>
-            </a>
-            <a class="menu-item" data-tool="gia_dinh" onclick="selectTool('gia_dinh')">
-              <span class="menu-emoji">👨‍👩‍👧</span>
-              <span class="menu-name">Ảnh Gia Đình</span>
-            </a>
-            <a class="menu-item" data-tool="baby" onclick="selectTool('baby')">
-              <span class="menu-emoji">👶</span>
-              <span class="menu-name">Baby</span>
-            </a>
-            <a class="menu-item" data-tool="xu_huong" onclick="selectTool('xu_huong')">
-              <span class="menu-emoji">📈</span>
-              <span class="menu-name">Xu hướng AI Hot</span>
-            </a>
-            <a class="menu-item" data-tool="ghep_mat" onclick="selectTool('ghep_mat')">
-              <span class="menu-emoji">👤</span>
-              <span class="menu-name">Ghép mặt</span>
-            </a>
-            <a class="menu-item" data-tool="kieu_toc" onclick="selectTool('kieu_toc')">
-              <span class="menu-emoji">✂️</span>
-              <span class="menu-name">Thay đổi kiểu tóc</span>
-            </a>
-            <a class="menu-item" data-tool="trang_phuc" onclick="selectTool('trang_phuc')">
-              <span class="menu-emoji">👔</span>
-              <span class="menu-name">Thay trang phục</span>
-            </a>
-            <a class="menu-item" data-tool="chinh_dang" onclick="selectTool('chinh_dang')">
-              <span class="menu-emoji">🏃</span>
-              <span class="menu-name">Chỉnh Dáng AI</span>
-            </a>
-            <a class="menu-item" data-tool="san_pham" onclick="selectTool('san_pham')">
-              <span class="menu-emoji">🛍️</span>
-              <span class="menu-name">Ảnh sản phẩm</span>
-            </a>
-            <a class="menu-item" data-tool="tet" onclick="selectTool('tet')">
-              <span class="menu-emoji">🧧</span>
-              <span class="menu-name">Biến Hình Ảnh Tết</span>
-            </a>
+
+    <!-- 1. LEFT SIDEBAR: 13 TOOLS & ADMIN STATUS -->
+    <aside class="left-sidebar">
+      <div class="sidebar-section-title">
+        <span class="section-sparkle">✨</span>
+        <span>Chỉnh sửa ảnh AI</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a class="menu-item" data-tool="anh_cuoi" onclick="selectTool('anh_cuoi')">
+          <span class="menu-icon">🤍</span>
+          <span class="menu-name">Ảnh Cưới</span>
+        </a>
+        <a class="menu-item active" data-tool="id_photo" onclick="selectTool('id_photo')">
+          <span class="menu-icon">🪪</span>
+          <span class="menu-name">Chỉnh sửa ảnh thẻ</span>
+        </a>
+        <a class="menu-item" data-tool="generative_fill" onclick="selectTool('generative_fill')">
+          <span class="menu-icon">🪄</span>
+          <span class="menu-name">Generative Fill</span>
+        </a>
+        <a class="menu-item" data-tool="phuc_che" onclick="selectTool('phuc_che')">
+          <span class="menu-icon">🎞️</span>
+          <span class="menu-name">Phục chế ảnh cũ</span>
+        </a>
+        <a class="menu-item" data-tool="gia_dinh" onclick="selectTool('gia_dinh')">
+          <span class="menu-icon">👨‍👩‍👧‍👦</span>
+          <span class="menu-name">Ảnh Gia Đình</span>
+        </a>
+        <a class="menu-item" data-tool="baby" onclick="selectTool('baby')">
+          <span class="menu-icon">👶</span>
+          <span class="menu-name">Baby</span>
+        </a>
+        <a class="menu-item" data-tool="xu_huong" onclick="selectTool('xu_huong')">
+          <span class="menu-icon">📈</span>
+          <span class="menu-name">Xu hướng AI Hot</span>
+        </a>
+        <a class="menu-item" data-tool="ghep_mat" onclick="selectTool('ghep_mat')">
+          <span class="menu-icon">🎭</span>
+          <span class="menu-name">Ghép mặt</span>
+        </a>
+        <a class="menu-item" data-tool="kieu_toc" onclick="selectTool('kieu_toc')">
+          <span class="menu-icon">✂️</span>
+          <span class="menu-name">Thay đổi kiểu tóc</span>
+        </a>
+        <a class="menu-item" data-tool="trang_phuc" onclick="selectTool('trang_phuc')">
+          <span class="menu-icon">👔</span>
+          <span class="menu-name">Thay trang phục</span>
+        </a>
+        <a class="menu-item" data-tool="chinh_dang" onclick="selectTool('chinh_dang')">
+          <span class="menu-icon">🧍</span>
+          <span class="menu-name">Chỉnh Dáng AI</span>
+        </a>
+        <a class="menu-item" data-tool="san_pham" onclick="selectTool('san_pham')">
+          <span class="menu-icon">📦</span>
+          <span class="menu-name">Ảnh sản phẩm</span>
+        </a>
+        <a class="menu-item" data-tool="tet" onclick="selectTool('tet')">
+          <span class="menu-icon">🧧</span>
+          <span class="menu-name">Biến Hình Ảnh Tết</span>
+        </a>
+      </nav>
+
+      <!-- Bottom Secondary Navigation -->
+      <div class="sidebar-secondary-menu">
+        <div class="sec-divider"></div>
+        <a class="sub-item" onclick="switchView('view_admin_billing')">
+          <span class="sub-icon">💳</span>
+          <span>Quản lý gói VIP</span>
+        </a>
+        <a class="sub-item" onclick="switchView('view_news')">
+          <span class="sub-icon">📰</span>
+          <span>Tin tức & Mẹo hay</span>
+        </a>
+        <a class="sub-item" onclick="switchView('view_guide')">
+          <span class="sub-icon">📖</span>
+          <span>Hướng dẫn sử dụng</span>
+        </a>
+      </div>
+
+      <!-- User Account VIP Status Box -->
+      <div class="sidebar-vip-card" onclick="switchView('view_admin_billing')">
+        <div class="vip-card-top">
+          <span class="vip-crown">👑</span>
+          <div class="vip-info">
+            <span class="vip-role">Bản Quyền Quản Trị Viên</span>
+            <span class="vip-credits">Credits: ∞ Vô hạn</span>
           </div>
         </div>
+        <button class="btn-manage-sub">Quản trị viên: Thầy Thành</button>
+      </div>
+    </aside>
 
-        <!-- Left Sidebar Secondary Group -->
-        <div class="sidebar-bottom-section">
-          <div class="sidebar-sub-heading">LỊCH SỬ</div>
-          <div class="sub-menu-list">
-            <a class="sub-item" id="btnHistoryImages">
-              <span>🖼️</span> Lịch sử hình ảnh
-            </a>
-          </div>
-
-          <div class="sidebar-sub-heading">QUẢN TRỊ ADMIN</div>
-          <div class="sub-menu-list">
-            <a class="sub-item" data-view-target="view_admin_billing" onclick="switchView('view_admin_billing')">
-              <span>👑</span> Bản quyền Admin VIP
-            </a>
-            <a class="sub-item" id="btnMyPrompts">
-              <span>📑</span> Prompt của tôi
-            </a>
-            <a class="sub-item" data-view-target="view_news" onclick="switchView('view_news')">
-              <span>📰</span> Tin tức &amp; Cập nhật
-            </a>
-            <a class="sub-item" data-view-target="view_guide" onclick="switchView('view_guide')">
-              <span>📖</span> Hướng dẫn sử dụng
-            </a>
-          </div>
-
-          <div class="sidebar-sub-heading">LIÊN HỆ TRỢ GIÚP</div>
-          <div class="contact-social-row">
-            <a href="tel:0915213717" class="social-circle-btn" title="Hotline: 0915.213717">📞</a>
-            <a href="https://zalo.me/0915213717" target="_blank" class="social-circle-btn" title="Zalo Thầy Thành">💬</a>
-            <a href="#" class="social-circle-btn" title="Cộng đồng Giáo viên AI">🌐</a>
-          </div>
-
-          <!-- Admin Credit Box (Bottom Left) -->
-          <div class="admin-credit-card">
-            <div class="credit-card-top">
-              <span class="badge-free-vip">👑 ADMIN VIP</span>
-            </div>
-            <div class="credit-count">
-              <span class="credit-symbol">⚡</span> Vô hạn Credit (∞ / ∞)
-            </div>
-            <button class="btn-manage-sub" data-view-target="view_admin_billing" onclick="switchView('view_admin_billing')">
-              Quản lý Admin
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Center Stage: Photo Editing Workspace (Screenshot 5 Center) -->
-      <main class="dashboard-stage">
-        <!-- Stage Topbar -->
-        <div class="stage-topbar">
-          <div class="topbar-left">
-            <label class="btn btn-secondary file-btn">
-              <input type="file" id="fileInput" multiple accept="image/*,.mpo" style="display:none;">
-              <span>➕ Chọn Thêm Ảnh</span>
-            </label>
-            <button class="btn btn-primary" id="btnBrowseFolder" title="Mở hộp thoại chọn thư mục ảnh Windows">
-              <span class="btn-icon">📁</span> Chọn Thư Mục Ảnh (Explorer)
-            </button>
-            <div class="demo-samples">
-              <span class="demo-txt">Ảnh mẫu:</span>
-              <button class="sample-chip" data-sample="sample_nam.jpg" onclick="loadSample('sample_nam.jpg')">👨 Nam</button>
-              <button class="sample-chip" data-sample="sample_nu.jpg" onclick="loadSample('sample_nu.jpg')">👩 Nữ</button>
-              <button class="sample-chip" data-sample="sample_hocsinh.jpg" onclick="loadSample('sample_hocsinh.jpg')">🧑 Học Sinh</button>
-            </div>
-          </div>
-
-          <div class="topbar-right">
-            <button class="btn btn-outline" id="btnSwitchViewMode" title="Chuyển chế độ xem so sánh">
-              ⇹ Xem So Sánh
-            </button>
-            <button class="btn btn-secondary" id="btnOpenPrintLab" onclick="openPrintModal()" title="Xếp khổ in ảnh thẻ 300 DPI">
-              🖨️ Xếp Khổ In
-            </button>
-            <button class="btn btn-accent" id="btnExportZip" title="Tải toàn bộ ảnh ZIP">
-              💾 Xuất ZIP
-            </button>
-            <button class="btn btn-outline-danger" id="btnClearAll" title="Xóa danh sách làm việc">
-              🗑 Xóa
-            </button>
-          </div>
+    <!-- 2. CENTER STAGE: CANVAS DISPLAY & BEFORE/AFTER SPLIT SLIDER -->
+    <main class="center-stage">
+      
+      <!-- Quick Top Control Toolbar -->
+      <div class="stage-top-bar">
+        <div class="quick-samples">
+          <span class="quick-lbl">Ảnh mẫu nhanh:</span>
+          <button class="sample-chip" onclick="loadSample('sample_hocsinh.jpg')">🎓 Học Sinh</button>
+          <button class="sample-chip" onclick="loadSample('sample_nam.jpg')">🧑 Nam Sơ Mi</button>
+          <button class="sample-chip" onclick="loadSample('sample_nu.jpg')">👩 Nữ Áo Dài</button>
         </div>
 
-        <!-- Batch Progress Track -->
-        <div class="batch-progress" id="progressTrack" style="display: none;">
-          <div class="progress-meta">
-            <span id="progressLabel">Đang xử lý ảnh: 1 / 8...</span>
-            <span id="progressVal">12%</span>
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progressFill" style="width: 12%;"></div>
-          </div>
+        <div class="stage-actions">
+          <button class="btn btn-secondary" onclick="openPrintModal()" title="Xếp khổ in ảnh thẻ 300 DPI">
+            🖨️ Xếp Khổ In 10x15
+          </button>
+          <a class="btn btn-secondary" id="btnDownloadCurrent" href="#" download="anh_the_studio.jpg" title="Tải ảnh đang chọn độ nét cao">
+            ⬇️ Tải Ảnh HD
+          </a>
+          <button class="btn btn-orange-glow" id="btnExportZip" onclick="exportAllAsZip()" title="Tải toàn bộ bộ ảnh đã làm">
+            📦 Tải Tất Cả ZIP
+          </button>
         </div>
+      </div>
 
-        <!-- Central Working Area -->
-        <div class="stage-canvas-area" id="dropArea">
-          <!-- Empty Drop Box (Exact Layout of Screenshot 5) -->
-          <div class="empty-drop-box" id="emptyBox">
+      <!-- Main Interactive Viewport Area -->
+      <div class="stage-viewport-wrapper">
+        
+        <!-- EMPTY STATE (Dropzone matching Screenshot 5) -->
+        <div class="empty-dropzone-box" id="emptyBox">
+          <div class="drop-dashed-area" id="dropDashedZone">
             <div class="upload-cloud-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 16l-4-4-4 4M12 12v9M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path>
+              <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
             </div>
-            <h2>Kéo và thả hoặc nhấp để tải lên nhiều ảnh</h2>
-            <p>để thay đổi nền hàng loạt</p>
-            <div class="empty-actions">
-              <button class="btn btn-orange-glow btn-lg" onclick="document.getElementById('fileInput').click()">
-                Chọn nhiều ảnh
-              </button>
-              <button class="btn btn-secondary btn-lg" id="btnEmptyBrowse">
-                📂 Duyệt Thư Mục Windows
-              </button>
-            </div>
-          </div>
-
-          <!-- Active Stage Viewport with Split Comparison -->
-          <div class="active-stage-view" id="activeStageView" style="display: none;">
-            <div class="stage-frame">
-              <div class="split-viewport" id="splitViewport">
-                <!-- Processed Layer (After) -->
-                <div class="viewport-layer after-view">
-                  <img id="stageImgAfter" src="" alt="Ảnh đã xử lý">
-                  <div class="layer-pill pill-after">Ảnh đã xử lý (Master HD)</div>
-                </div>
-
-                <!-- Original Cropped Layer (Before) -->
-                <div class="viewport-layer before-view" id="stageBeforeLayer">
-                  <img id="stageImgBefore" src="" alt="Ảnh gốc">
-                  <div class="layer-pill pill-before">Ảnh gốc</div>
-                </div>
-
-                <!-- Divider Handle -->
-                <div class="viewport-divider" id="stageDivider">
-                  <div class="divider-line"></div>
-                  <div class="divider-grab">
-                    <span>⇹</span>
-                  </div>
-                </div>
-
-                <!-- Inpaint Canvas for Generative Fill -->
-                <canvas id="inpaintCanvas" class="inpaint-canvas" style="display: none;"></canvas>
-              </div>
-            </div>
-
-            <!-- Eraser Toolbar -->
-            <div class="eraser-toolbar" id="eraserToolbar" style="display: none;">
-              <div class="eraser-tool-group">
-                <label>Cỡ cọ xóa: <span id="valBrushSize">30px</span></label>
-                <input type="range" id="brushSize" min="5" max="100" value="30">
-              </div>
-              <button class="btn btn-secondary" id="btnUndoEraser">↩ Hoàn Tác</button>
-              <button class="btn btn-orange-glow" id="btnApplyEraser">✨ Xóa Vật Thể Ngay</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom Carousel -->
-        <div class="stage-bottom-carousel" id="bottomCarousel" style="display: none;">
-          <div class="carousel-track" id="carouselTrack"></div>
-        </div>
-      </main>
-
-      <!-- Right Sidebar: Yêu Cầu Chỉnh Sửa & 8 Presets (Screenshot 5 Right) -->
-      <aside class="dashboard-controls-dark">
-        <div class="right-panel-scroll">
-          <!-- Top Prompt Box: Yêu cầu chỉnh sửa -->
-          <div class="prompt-box-card">
-            <div class="prompt-box-header">
-              <span class="prompt-box-title">Yêu cầu chỉnh sửa</span>
-              <div class="prompt-box-actions">
-                <button class="icon-tool-btn" id="btnVoicePrompt" title="Nhập giọng nói">🎤</button>
-                <button class="icon-tool-btn" id="btnCopyPrompt" title="Sao chép prompt">📋</button>
-                <button class="icon-tool-btn" id="btnExpandPrompt" title="Mở rộng">⛶</button>
-              </div>
-            </div>
-            <textarea id="txtPrompt" class="prompt-textarea" rows="3">Màu nền: Màu xanh 0084ff. Chi tiết: giữ kiểu tóc nguyên bản, Làn da mịn màng, tươi sáng và sắc nét.</textarea>
-          </div>
-
-          <!-- Presets Grid (Exact 8 items from Screenshot 5) -->
-          <div class="presets-section">
-            <div class="presets-grid" id="presetsGrid">
-              <!-- Preset 1 -->
-              <div class="preset-card" data-preset="quan_phuc" onclick="selectPreset('quan_phuc')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/quan_phuc.jpg" alt="Quân phục">
-                </div>
-                <span class="preset-label">Quân phục</span>
-              </div>
-
-              <!-- Preset 2 -->
-              <div class="preset-card active" data-preset="hoc_sinh_2" onclick="selectPreset('hoc_sinh_2')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/hoc_sinh_2.jpg" alt="Học sinh 2">
-                </div>
-                <span class="preset-label">học sinh 2</span>
-              </div>
-
-              <!-- Preset 3 -->
-              <div class="preset-card" data-preset="anh_the_can_cuoc" onclick="selectPreset('anh_the_can_cuoc')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/anh_the_can_cuoc.jpg" alt="Ảnh thẻ căn cước">
-                </div>
-                <span class="preset-label">ảnh thẻ căn cước</span>
-              </div>
-
-              <!-- Preset 4 -->
-              <div class="preset-card" data-preset="so_mi_xanh_nhat" onclick="selectPreset('so_mi_xanh_nhat')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/so_mi_xanh_nhat.jpg" alt="Sơ mi xanh nhạt">
-                </div>
-                <span class="preset-label">Sơ mi xanh nhạt</span>
-              </div>
-
-              <!-- Preset 5 -->
-              <div class="preset-card" data-preset="ao_so_mi_polo" onclick="selectPreset('ao_so_mi_polo')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/ao_so_mi_polo.jpg" alt="Áo sơ mi polo">
-                </div>
-                <span class="preset-label">Áo sơ mi polo</span>
-              </div>
-
-              <!-- Preset 6 -->
-              <div class="preset-card" data-preset="ao_vest_cong_so" onclick="selectPreset('ao_vest_cong_so')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/ao_vest_cong_so.jpg" alt="Áo vest công sở">
-                </div>
-                <span class="preset-label">Áo vest công sở</span>
-              </div>
-
-              <!-- Preset 7 -->
-              <div class="preset-card" data-preset="ao_so_mi_nu" onclick="selectPreset('ao_so_mi_nu')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/ao_so_mi_nu.jpg" alt="Áo sơ mi nữ">
-                </div>
-                <span class="preset-label">Áo sơ mi nữ</span>
-              </div>
-
-              <!-- Preset 8 -->
-              <div class="preset-card" data-preset="ao_co_no" onclick="selectPreset('ao_co_no')">
-                <div class="preset-img-box">
-                  <img src="./assets/presets/ao_co_no.jpg" alt="Áo cổ nơ">
-                </div>
-                <span class="preset-label">Áo cổ nơ</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Studio Tuning Options (Collapsible) -->
-          <div class="tuning-accordion">
-            <!-- 1. Size Pill Selection -->
-            <div class="tuning-group">
-              <label class="tuning-label">📐 Khổ ảnh thẻ:</label>
-              <div class="size-pill-row">
-                <button class="size-pill-mini active" data-size="3x4" onclick="selectSize('3x4')">3x4 cm</button>
-                <button class="size-pill-mini" data-size="4x6" onclick="selectSize('4x6')">4x6 cm</button>
-                <button class="size-pill-mini" data-size="2x3" onclick="selectSize('2x3')">2x3 cm</button>
-                <button class="size-pill-mini" data-size="3.5x4.5" onclick="selectSize('3.5x4.5')">3.5x4.5</button>
-                <button class="size-pill-mini" data-size="5x5" onclick="selectSize('5x5')">5x5 cm</button>
-              </div>
-            </div>
-
-            <!-- 2. Background Color -->
-            <div class="tuning-group">
-              <label class="tuning-label">🎨 Màu phông nền:</label>
-              <div class="bg-dots-row">
-                <button class="bg-dot-btn active" data-bg="blue_studio_radial" onclick="selectBg('blue_studio_radial')" title="Xanh Đèn Studio Tỏa Sáng">
-                  <span class="dot-swatch radial-blue"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="blue_standard" onclick="selectBg('blue_standard')" title="Xanh Chuẩn 0084ff">
-                  <span class="dot-swatch" style="background:#0084ff;"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="white_cccd" onclick="selectBg('white_cccd')" title="Trắng Tinh CCCD / Hộ Chiếu">
-                  <span class="dot-swatch" style="background:#FFFFFF; border:1px solid #94A3B8;"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="blue_light" onclick="selectBg('blue_light')" title="Xanh Dương Nhạt">
-                  <span class="dot-swatch" style="background:#3A86FF;"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="red_visa" onclick="selectBg('red_visa')" title="Đỏ Visa">
-                  <span class="dot-swatch" style="background:#D32F2F;"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="gray_studio" onclick="selectBg('gray_studio')" title="Xám Neutral">
-                  <span class="dot-swatch" style="background:#E2E8F0;"></span>
-                </button>
-                <button class="bg-dot-btn" data-bg="transparent" onclick="selectBg('transparent')" title="Trong Suốt PNG">
-                  <span class="dot-swatch checkerboard"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- 3. Sliders -->
-            <div class="tuning-group sliders-group">
-              <div class="slider-item">
-                <div class="slider-meta">
-                  <span>Mịn da tự nhiên:</span>
-                  <span id="lblSkinSmooth">25%</span>
-                </div>
-                <input type="range" id="rngSkinSmooth" min="0" max="100" value="25">
-              </div>
-              <div class="slider-item">
-                <div class="slider-meta">
-                  <span>Nâng sáng gương mặt:</span>
-                  <span id="lblBrightness">+6</span>
-                </div>
-                <input type="range" id="rngBrightness" min="-30" max="30" value="6">
-              </div>
-              <div class="slider-item">
-                <div class="slider-meta">
-                  <span>Độ tương phản:</span>
-                  <span id="lblContrast">+6</span>
-                </div>
-                <input type="range" id="rngContrast" min="-30" max="30" value="6">
-              </div>
-              <div class="slider-item">
-                <div class="slider-meta">
-                  <span>Độ sắc nét:</span>
-                  <span id="lblSharpness">20%</span>
-                </div>
-                <input type="range" id="rngSharpness" min="0" max="60" value="20">
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Big Orange Button: ✨ Tạo ảnh (Enter) -->
-          <div class="generate-btn-container">
-            <button class="btn-generate-main" id="btnProcessBatch" onclick="processCurrentOrBatch()">
-              <span class="sparkle-icon">✨</span> Tạo ảnh (Enter)
+            <h3 class="drop-title">Kéo và thả hoặc nhấp để tải lên nhiều ảnh</h3>
+            <p class="drop-subtitle">để thay đổi phông nền, trang phục và làm đẹp hàng loạt</p>
+            <button class="btn btn-upload-orange" onclick="document.getElementById('fileInput').click()">
+              Chọn nhiều ảnh
             </button>
-            <div class="quick-row-actions">
-              <button class="btn btn-secondary w-50" id="btnApplyAll" onclick="processCurrentOrBatch()">
-                Áp Dụng Tất Cả
-              </button>
-              <a class="btn btn-primary w-50" id="btnDownloadCurrent" download="anh_the_300dpi.jpg" href="#">
-                Tải Ảnh Này
-              </a>
+            <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp,image/bmp" style="display:none" />
+          </div>
+        </div>
+
+        <!-- ACTIVE STAGE VIEW (Before/After Split Comparison) -->
+        <div class="active-stage-view" id="activeStageView" style="display:none;">
+          <div class="split-viewport" id="splitViewport">
+            <!-- Layer 1: AFTER (AI Processed Result) -->
+            <div class="stage-layer stage-layer-after" id="stageAfterLayer">
+              <img id="stageImgAfter" src="" alt="Ảnh Studio Sau Khi Xử Lý" />
+              <div class="stage-label label-after">✨ Studio AI</div>
             </div>
+
+            <!-- Layer 2: BEFORE (Original Cropped Photo) -->
+            <div class="stage-layer stage-layer-before" id="stageBeforeLayer">
+              <img id="stageImgBefore" src="" alt="Ảnh Gốc Ban Đầu" />
+              <div class="stage-label label-before">Ảnh Gốc</div>
+            </div>
+
+            <!-- Draggable Split Divider Line -->
+            <div class="split-divider" id="stageDivider">
+              <div class="divider-handle">
+                <span class="handle-arrows">◀ ▶</span>
+              </div>
+            </div>
+
+            <!-- Generative Fill Inpaint Canvas Overlay -->
+            <canvas id="inpaintCanvas" style="display:none;"></canvas>
+          </div>
+
+          <!-- Generative Fill Floating Toolbar -->
+          <div class="eraser-toolbar" id="eraserToolbar" style="display:none;">
+            <div class="brush-size-box">
+              <span class="brush-lbl">Cọ xóa:</span>
+              <input type="range" id="brushSize" min="5" max="100" value="30" />
+              <span id="valBrushSize">30px</span>
+            </div>
+            <button class="btn-tool-sm" id="btnUndoEraser">↩ Hoàn tác</button>
+            <button class="btn-tool-sm btn-apply-eraser" id="btnApplyEraser">🪄 Xóa vết thừa</button>
           </div>
         </div>
-      </aside>
-    </div>
+
+      </div>
+
+      <!-- Batch Progress Track -->
+      <div class="batch-progress-track" id="progressTrack" style="display:none;">
+        <div class="progress-info">
+          <span id="progressLabel">Đang xử lý ảnh bằng trí tuệ nhân tạo...</span>
+          <span id="progressVal">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Bottom Thumbnail Carousel -->
+      <div class="bottom-carousel-container" id="bottomCarousel" style="display:none;">
+        <div class="carousel-header">
+          <span class="carousel-title">Danh sách ảnh đã tải lên (<span id="carouselCount">0</span>)</span>
+          <button class="btn-add-more" onclick="document.getElementById('fileInput').click()">+ Thêm ảnh khác</button>
+        </div>
+        <div class="carousel-track" id="carouselTrack"></div>
+      </div>
+    </main>
+
+    <!-- 3. RIGHT SIDEBAR: PROMPT & 8 PRESETS (MATCHES SCREENSHOT 5) -->
+    <aside class="right-sidebar">
+      
+      <!-- Prompt Header -->
+      <div class="prompt-header">
+        <h3 class="prompt-title">Yêu cầu chỉnh sửa</h3>
+        <div class="prompt-action-icons">
+          <button class="icon-btn" title="Chat gợi ý prompt" onclick="switchView('view_chat')">💬</button>
+          <button class="icon-btn" id="btnMicPrompt" title="Nhập yêu cầu bằng giọng nói" onclick="simulateVoiceInput()">🎙️</button>
+          <button class="icon-btn" title="Sao chép prompt" onclick="copyPromptText()">📋</button>
+          <button class="icon-btn" title="Xóa nội dung" onclick="clearPromptText()">✕</button>
+        </div>
+      </div>
+
+      <!-- Prompt Textarea -->
+      <div class="prompt-box">
+        <textarea id="txtPrompt" rows="3" placeholder="Nhập yêu cầu chỉnh sửa ảnh chi tiết...">Màu nền: Màu xanh 0084ff. Chi tiết: giữ kiểu tóc nguyên bản, Làn da mịn màng, tươi sáng và sắc nét.</textarea>
+      </div>
+
+      <!-- 8 Presets Grid (Exact Layout from Screenshot 5) -->
+      <div class="presets-section-title">Mẫu thẻ gợi ý phổ biến</div>
+      <div class="presets-grid-8" id="presetsGrid">
+        
+        <div class="preset-card" data-preset="quan_phuc" onclick="selectPreset('quan_phuc')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/quan_phuc.jpg" alt="Quân phục" />
+          </div>
+          <span class="preset-name">Quân phục</span>
+        </div>
+
+        <div class="preset-card active" data-preset="hoc_sinh_2" onclick="selectPreset('hoc_sinh_2')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/hoc_sinh_2.jpg" alt="Học sinh 2" />
+          </div>
+          <span class="preset-name">Học sinh 2</span>
+        </div>
+
+        <div class="preset-card" data-preset="anh_the_can_cuoc" onclick="selectPreset('anh_the_can_cuoc')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/anh_the_can_cuoc.jpg" alt="Ảnh thẻ căn cước" />
+          </div>
+          <span class="preset-name">Ảnh thẻ căn cước</span>
+        </div>
+
+        <div class="preset-card" data-preset="so_mi_xanh_nhat" onclick="selectPreset('so_mi_xanh_nhat')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/so_mi_xanh_nhat.jpg" alt="Sơ mi xanh nhạt" />
+          </div>
+          <span class="preset-name">Sơ mi xanh nhạt</span>
+        </div>
+
+        <div class="preset-card" data-preset="ao_so_mi_polo" onclick="selectPreset('ao_so_mi_polo')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/ao_so_mi_polo.jpg" alt="Áo sơ mi polo" />
+          </div>
+          <span class="preset-name">Áo sơ mi polo</span>
+        </div>
+
+        <div class="preset-card" data-preset="ao_vest_cong_so" onclick="selectPreset('ao_vest_cong_so')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/ao_vest_cong_so.jpg" alt="Áo vest công sở" />
+          </div>
+          <span class="preset-name">Áo vest công sở</span>
+        </div>
+
+        <div class="preset-card" data-preset="ao_so_mi_nu" onclick="selectPreset('ao_so_mi_nu')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/ao_so_mi_nu.jpg" alt="Áo sơ mi nữ" />
+          </div>
+          <span class="preset-name">Áo sơ mi nữ</span>
+        </div>
+
+        <div class="preset-card" data-preset="ao_co_no" onclick="selectPreset('ao_co_no')">
+          <div class="preset-thumb-box">
+            <img src="./assets/presets/ao_co_no.jpg" alt="Áo cổ nơ" />
+          </div>
+          <span class="preset-name">Áo cổ nơ</span>
+        </div>
+
+      </div>
+
+      <!-- Quick Tuning Parameters -->
+      <div class="tuning-section">
+        
+        <!-- Khổ Ảnh -->
+        <div class="tuning-group">
+          <label class="tuning-lbl">Khổ ảnh chuẩn:</label>
+          <div class="size-pills-row">
+            <button class="size-pill-mini active" data-size="3x4" onclick="selectSize('3x4')">3x4</button>
+            <button class="size-pill-mini" data-size="4x6" onclick="selectSize('4x6')">4x6</button>
+            <button class="size-pill-mini" data-size="2x3" onclick="selectSize('2x3')">2x3</button>
+            <button class="size-pill-mini" data-size="3.5x4.5" onclick="selectSize('3.5x4.5')">3.5x4.5</button>
+            <button class="size-pill-mini" data-size="5x5" onclick="selectSize('5x5')">5x5 (Visa)</button>
+          </div>
+        </div>
+
+        <!-- Màu Phông Nền -->
+        <div class="tuning-group">
+          <label class="tuning-lbl">Màu phông nền:</label>
+          <div class="bg-dots-row">
+            <button class="bg-dot-btn active" data-bg="blue_studio_radial" title="Xanh Studio Tỏa Sáng" style="background: radial-gradient(circle, #42a5f5, #0d47a1);" onclick="selectBg('blue_studio_radial')"></button>
+            <button class="bg-dot-btn" data-bg="white_cccd" title="Trắng Tinh CCCD / Hộ Chiếu" style="background: #ffffff; border: 1px solid #cbd5e1;" onclick="selectBg('white_cccd')"></button>
+            <button class="bg-dot-btn" data-bg="blue_standard" title="Xanh Chuẩn 0084ff" style="background: #0084ff;" onclick="selectBg('blue_standard')"></button>
+            <button class="bg-dot-btn" data-bg="blue_light" title="Xanh Nhạt Dịu Dàng" style="background: #3a86ff;" onclick="selectBg('blue_light')"></button>
+            <button class="bg-dot-btn" data-bg="red_visa" title="Đỏ Visa" style="background: #d32f2f;" onclick="selectBg('red_visa')"></button>
+            <button class="bg-dot-btn" data-bg="gray_studio" title="Xám Studio Chuyên Nghiệp" style="background: #94a3b8;" onclick="selectBg('gray_studio')"></button>
+            <button class="bg-dot-btn" data-bg="transparent" title="Trong Suốt (PNG Không Nền)" style="background: repeating-conic-gradient(#cbd5e1 0% 25%, #ffffff 0% 50%) 50% / 10px 10px;" onclick="selectBg('transparent')"></button>
+          </div>
+        </div>
+
+        <!-- Ghép Trang Phục -->
+        <div class="tuning-group">
+          <label class="tuning-lbl">Trang phục thay thế:</label>
+          <select id="selClothing" class="form-select" onchange="selectClothing(this.value)">
+            <option value="none">Giữ nguyên trang phục gốc</option>
+            <option value="so_mi_nam_trang">👔 Áo Sơ Mi Nam Trắng Có Cổ</option>
+            <option value="vest_nam_den">💼 Áo Vest Nam Đen Công Sở</option>
+            <option value="vest_nu_den">👗 Áo Vest Nữ Đen Thanh Lịch</option>
+          </select>
+        </div>
+
+        <!-- Tinh Chỉnh Làm Đẹp -->
+        <div class="tuning-group">
+          <div class="slider-row">
+            <span class="slider-lbl">Mịn da AI:</span>
+            <input type="range" id="rngSkinSmooth" min="0" max="100" value="25" />
+            <span class="slider-val" id="lblSkinSmooth">25%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-lbl">Độ sáng:</span>
+            <input type="range" id="rngBrightness" min="-30" max="30" value="6" />
+            <span class="slider-val" id="lblBrightness">+6</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-lbl">Độ nét HD:</span>
+            <input type="range" id="rngSharpness" min="0" max="100" value="20" />
+            <span class="slider-val" id="lblSharpness">20%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Glowing Orange Main Action Button (Matches Screenshot 5) -->
+      <div class="action-btn-sticky">
+        <button class="btn btn-main-generate" id="btnMainCreate" onclick="processCurrentOrBatch()">
+          <span class="btn-sparkle">✨</span>
+          <span class="btn-txt">Tạo ảnh (Enter)</span>
+          <span class="btn-kbd">(Enter)</span>
+        </button>
+      </div>
+
+    </aside>
+
   </div>
 
-  <!-- VIEW 2: BẢN QUYỀN ADMIN VIP (MATCHING SCREENSHOTS 1, 2, 3, 4 - KHÔNG NIÊM YẾT GIÁ CẢ) -->
+  <!-- =========================================================================
+       VIEW 2: BẢN QUYỀN ADMIN VIP (MATCHES SCREENSHOTS 1, 2, 3, 4 LAYOUT)
+       ========================================================================= -->
   <div class="main-view-container" id="view_admin_billing">
-    <div class="billing-page-wrap">
+    <div class="billing-wrapper">
+      
       <div class="billing-header">
-        <div class="admin-badge-banner">👑 QUẢN TRỊ VIÊN VIP - ĐÃ KÍCH HOẠT VĨNH VIỄN</div>
-        <h2>Hệ Thống Bản Quyền &amp; Tính Năng AI Toàn Năng</h2>
-        <p class="billing-subtitle">Dành riêng cho Quản trị viên <strong>Thầy giáo Đinh Văn Thành</strong> (Hotline/Zalo: 0915.213717). Bản Demo nội bộ toàn quyền truy cập không giới hạn.</p>
-
-        <!-- Billing Period Tabs (Matching Screenshots 1, 2, 3, 4) -->
-        <div class="period-pill-tabs">
-          <button class="period-btn active" data-period="1m">Gói 1 Tháng</button>
-          <button class="period-btn" data-period="3m">Gói 3 Tháng</button>
-          <button class="period-btn" data-period="6m">Gói 6 Tháng</button>
-          <button class="period-btn" data-period="1y">Gói Hàng Năm</button>
-        </div>
+        <span class="badge-vip-tag">👑 QUẢN TRỊ VIÊN VIP CẤP CAO</span>
+        <h2 class="billing-title">Hệ Thống Phân Quyền & Bản Quyền Không Giới Hạn</h2>
+        <p class="billing-subtitle">Tài khoản quản trị viên: <strong>Văn Thành Đinh</strong> — Bản quyền vĩnh viễn không giới hạn</p>
       </div>
 
-      <!-- Feature Tier Cards Grid (NO PRICES LISTED) -->
-      <div class="billing-cards-grid">
-        <!-- 1. Free Plan -->
+      <!-- Plan Period Toggle (Matching Screenshots 1-4) -->
+      <div class="period-switch-pill">
+        <button class="period-btn" onclick="setPeriodTab(this)">Gói 1 Tháng</button>
+        <button class="period-btn" onclick="setPeriodTab(this)">Gói 3 Tháng</button>
+        <button class="period-btn active" onclick="setPeriodTab(this)">Gói 6 Tháng</button>
+        <button class="period-btn" onclick="setPeriodTab(this)">Gói Hàng Năm</button>
+      </div>
+
+      <!-- 4 Plans Comparison Cards (Zero Pricing, Admin VIP Unlocked) -->
+      <div class="plans-cards-grid">
+        
+        <!-- Card 1: Free -->
         <div class="plan-card">
-          <div class="plan-card-icon">✨</div>
-          <h3 class="plan-title">Free Plan</h3>
-          <div class="plan-status-badge active-status">ĐÃ MỞ KHÓA CHO ADMIN</div>
+          <div class="plan-icon">✨</div>
+          <h3 class="plan-name">Free Plan</h3>
+          <div class="plan-price">0đ</div>
           <p class="plan-desc">Dùng thử các tính năng AI cơ bản hoàn toàn miễn phí.</p>
-          <ul class="plan-feature-list">
-            <li><span class="check-icon">✓</span> <strong>Vô hạn Credit (Admin VIP)</strong></li>
-            <li><span class="check-icon">✓</span> Chỉnh sửa ảnh AI, Tạo Ảnh AI, Tạo Video AI, Chat AI</li>
-            <li><span class="check-icon">✓</span> Mô hình AI cơ bản (ChatGPT, Gemini Flash, DeepSeek, Grok, Claude AI)</li>
-            <li><span class="check-icon">✓</span> Hỗ trợ cộng đồng giáo viên</li>
-            <li><span class="check-icon">✓</span> Tải ảnh chuẩn HD</li>
+          <ul class="plan-features">
+            <li>✔ 30 Credit trải nghiệm</li>
+            <li>✔ Chỉnh sửa ảnh AI, Tạo Ảnh AI, Tạo Video AI</li>
+            <li>✔ Mô hình AI cơ bản (GPT-4o mini, Gemini Flash)</li>
+            <li>✔ Hỗ trợ cộng đồng giáo viên</li>
           </ul>
-          <button class="btn-plan-action btn-plan-active">✓ Đang Kích Hoạt</button>
+          <button class="btn btn-plan-outline" disabled>Đã bao gồm</button>
         </div>
 
-        <!-- 2. Basic -->
+        <!-- Card 2: Basic -->
         <div class="plan-card">
-          <div class="plan-card-icon">⚡</div>
-          <h3 class="plan-title">Basic</h3>
-          <div class="plan-status-badge active-status">ĐÃ MỞ KHÓA CHO ADMIN</div>
-          <p class="plan-desc">Gói cơ bản cho người dùng cá nhân, giáo viên.</p>
-          <ul class="plan-feature-list">
-            <li><span class="check-icon">✓</span> <strong>Vô hạn Credit (Admin VIP)</strong></li>
-            <li><span class="check-icon">✓</span> Chỉnh sửa ảnh AI, Tạo Ảnh AI, Tạo Video AI, Chat AI</li>
-            <li><span class="check-icon">✓</span> Mô hình AI tầm trung (GPT-4o mini, GPT-5, Claude, Grok, Perplexity, DeepSeek)</li>
-            <li><span class="check-icon">✓</span> Sử dụng Mobile, PC, Mac OS, iPad</li>
-            <li><span class="check-icon">✓</span> Cài đặt &amp; Update miễn phí trọn đời</li>
-            <li><span class="check-icon">✓</span> Hướng dẫn sử dụng tận tình chu đáo</li>
+          <div class="plan-icon">⚡</div>
+          <h3 class="plan-name">Basic VIP</h3>
+          <div class="plan-price">Đã Kích Hoạt</div>
+          <p class="plan-desc">Gói tiêu chuẩn dành cho giáo viên và studio cá nhân.</p>
+          <ul class="plan-features">
+            <li>✔ 3600 Credit xử lý ảnh</li>
+            <li>✔ Mô hình AI tầm trung (GPT-4o, Claude Sonnet)</li>
+            <li>✔ Tải ảnh chất lượng cao 300 DPI</li>
+            <li>✔ Đầy đủ tính năng thay áo, tách phông</li>
           </ul>
-          <button class="btn-plan-action btn-plan-active">✓ Đang Kích Hoạt</button>
+          <button class="btn btn-plan-outline" disabled>Đã mở khóa</button>
         </div>
 
-        <!-- 3. Pro (Popular) -->
-        <div class="plan-card plan-card-featured">
+        <!-- Card 3: Pro (Phổ biến) -->
+        <div class="plan-card pro-card">
           <div class="popular-ribbon">Phổ biến</div>
-          <div class="plan-card-icon">🌟</div>
-          <h3 class="plan-title">Pro</h3>
-          <div class="plan-status-badge active-status">ĐÃ MỞ KHÓA CHO ADMIN</div>
+          <div class="plan-icon">⚡</div>
+          <h3 class="plan-name">Pro - Studio</h3>
+          <div class="plan-price">VIP ADMIN</div>
           <p class="plan-desc">Gói Pro dành cho người dùng chuyên nghiệp, dùng AI cao cấp.</p>
-          <ul class="plan-feature-list">
-            <li><span class="check-icon">✓</span> <strong>Vô hạn Credit (Admin VIP)</strong></li>
-            <li><span class="check-icon">✓</span> Chỉnh sửa ảnh AI, Tạo Ảnh AI, Tạo Video AI, Chat AI</li>
-            <li><span class="check-icon">✓</span> Mô hình AI cao cấp (GPT-4o, GPT 5, Claude Sonnet, Gemini Pro, Grok, Perplexity, DeepSeek)</li>
-            <li><span class="check-icon">✓</span> Sử dụng Mobile, PC, Mac OS, iPad</li>
-            <li><span class="check-icon">✓</span> Cài đặt &amp; Update miễn phí</li>
-            <li><span class="check-icon">✓</span> Hỗ trợ ưu tiên, nhanh chóng tức thì</li>
+          <ul class="plan-features">
+            <li>✔ 10.000 Credit tốc độ cao</li>
+            <li>✔ Toàn bộ mô hình AI cao cấp (GPT-4o, Claude 3.5 Sonnet, Gemini Pro)</li>
+            <li>✔ Sử dụng trên Mobile, PC, Mac Os, Ipad</li>
+            <li>✔ Hướng dẫn sử dụng tận tình chu đáo</li>
+            <li>✔ Cài đặt & Update miễn phí</li>
+            <li>✔ Hỗ trợ ưu tiên, nhanh chóng tức thì</li>
           </ul>
-          <button class="btn-plan-action btn-plan-highlight">👑 Toàn Quyền Admin (Pro)</button>
+          <button class="btn btn-plan-orange" onclick="showToast('Tài khoản của Thầy đã kích hoạt quyền Pro VIP!', 'success')">
+            Đang Sử Dụng
+          </button>
         </div>
 
-        <!-- 4. Premium -->
+        <!-- Card 4: Premium -->
         <div class="plan-card">
-          <div class="plan-card-icon">👑</div>
-          <h3 class="plan-title">Premium</h3>
-          <div class="plan-status-badge active-status">ĐÃ MỞ KHÓA CHO ADMIN</div>
-          <p class="plan-desc">Gói Premium không giới hạn — tối ưu cho Studio chuyên sâu.</p>
-          <ul class="plan-feature-list">
-            <li><span class="check-icon">✓</span> <strong>Vô hạn Credit (Admin VIP)</strong></li>
-            <li><span class="check-icon">✓</span> Chỉnh sửa ảnh AI, Tạo Ảnh AI, Tạo Video AI, Chat AI</li>
-            <li><span class="check-icon">✓</span> Tất cả mô hình mới nhất (GPT-4o, o1, o3 Pro, Claude Opus, Grok 3 Pro, Perplexity Sonar Pro, DeepSeek R1 Pro)</li>
-            <li><span class="check-icon">✓</span> Sử dụng Mobile, PC, Mac OS, iPad</li>
-            <li><span class="check-icon">✓</span> Hỗ trợ VIP, ưu tiên tuyệt đối</li>
+          <div class="plan-icon">👑</div>
+          <h3 class="plan-name">Premium VIP</h3>
+          <div class="plan-price">VÔ HẠN</div>
+          <p class="plan-desc">Gói Premium không giới hạn — dành cho nhà trường, hội đồng chuyên môn.</p>
+          <ul class="plan-features">
+            <li>✔ Credit không giới hạn (Unlimited)</li>
+            <li>✔ Tất cả mô hình mới nhất (GPT-4o, o1, o3-mini, Claude Opus, DeepSeek R1)</li>
+            <li>✔ Sử dụng không giới hạn thiết bị</li>
+            <li>✔ Hỗ trợ VIP 24/7 trực tiếp từ Thầy Đinh Văn Thành</li>
           </ul>
-          <button class="btn-plan-action btn-plan-active">✓ Đang Kích Hoạt</button>
+          <button class="btn btn-plan-outline" onclick="showToast('Bản quyền quản trị viên cao cấp nhất!', 'success')">
+            Toàn Quyền Quản Trị
+          </button>
+        </div>
+
+      </div>
+
+      <!-- FAQ Section (Matching Screenshot 1-4) -->
+      <div class="billing-faq-box">
+        <h3>Thông Tin Bản Quyền & Hỗ Trợ Kỹ Thuật</h3>
+        <p>Hệ thống StudioAI Pro được phát triển và tối ưu hóa chuyên sâu bởi <strong>Thầy giáo Đinh Văn Thành</strong>.</p>
+        <p>Mọi thắc mắc kỹ thuật, nâng cấp hệ thống hoặc tích hợp thêm chức năng cho nhà trường, vui lòng liên hệ:</p>
+        <div class="contact-card-box">
+          <div class="contact-item">
+            <span class="c-icon">📞</span>
+            <span>Hotline / Zalo: <strong>0915.213717</strong></span>
+          </div>
+          <div class="contact-item">
+            <span class="c-icon">🌐</span>
+            <span>Cổng thi trực tuyến: <strong>dekiemtraso.com</strong></span>
+          </div>
         </div>
       </div>
 
-      <!-- FAQ Section (Matching Screenshot Bottom) -->
-      <div class="faq-container">
-        <h3>Câu hỏi thường gặp</h3>
-        <div class="faq-accordion">
-          <div class="faq-item">
-            <h4>Quyền hạn của tài khoản Admin Thầy Đinh Văn Thành là gì?</h4>
-            <p>Tài khoản Quản Trị Viên được mở khóa 100% tính năng, sở hữu số lượng Credit vô hạn, tự do tải và xuất ảnh chất lượng cao 300 DPI, không giới hạn số lượng ảnh tải lên hàng loạt và chạy được cả chế độ máy tính cục bộ lẫn đưa lên máy chủ Web cá nhân.</p>
-          </div>
-          <div class="faq-item">
-            <h4>Dữ liệu ảnh có được bảo mật không?</h4>
-            <p>Hệ thống xử lý trực tiếp trên máy tính của Thầy thông qua mô hình Onnx và Python cục bộ. Không gửi ảnh học sinh lên bất kỳ dịch vụ công cộng nào của bên thứ ba, bảo đảm 100% bí mật dữ liệu trường lớp.</p>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- VIEW 3: TRÒ CHUYỆN AI (CHAT ASSISTANT) -->
+  <!-- =========================================================================
+       VIEW 3: TRÒ CHUYỆN AI (CHAT ASSISTANT)
+       ========================================================================= -->
   <div class="main-view-container" id="view_chat">
     <div class="chat-workspace">
       <div class="chat-sidebar">
         <div class="chat-model-selector">
           <label>Mô hình AI Đang Dùng:</label>
           <select id="chatModelSelect" class="form-select">
-            <option value="gpt-4o">🤖 GPT-4o (OpenAI Ultra)</option>
-            <option value="claude-3-5">🎭 Claude 3.5 Sonnet (Anthropic)</option>
+            <option value="gpt-4o">⚡ GPT-4o (OpenAI Ultra)</option>
+            <option value="claude-3-5">🧠 Claude 3.5 Sonnet (Anthropic)</option>
             <option value="gemini-1-5">✨ Gemini 1.5 Pro (Google)</option>
-            <option value="deepseek-r1">🧠 DeepSeek R1 (Lý Luận Chuyên Sâu)</option>
+            <option value="deepseek-r1">🚀 DeepSeek R1 (Lý Luận Chuyên Sâu)</option>
           </select>
         </div>
         <div class="chat-history-list">
@@ -611,7 +583,7 @@
       <div class="chat-main-area">
         <div class="chat-messages-scroll" id="chatMessages">
           <div class="chat-msg ai-msg">
-            <div class="chat-avatar">🪄</div>
+            <div class="chat-avatar">✨</div>
             <div class="chat-bubble">
               Xin chào Thầy <strong>Đinh Văn Thành</strong>! Tôi là trợ lý AI StudioAI Pro. Tôi có thể hỗ trợ Thầy tạo prompt làm ảnh thẻ, tối ưu màu sắc phông nền, phục chế ảnh cũ hoặc giải đáp bất kỳ câu hỏi nào.
             </div>
@@ -626,188 +598,187 @@
     </div>
   </div>
 
-  <!-- VIEW 4: TẠO HÌNH ẢNH AI (TEXT TO IMAGE STUDIO) -->
+  <!-- =========================================================================
+       VIEW 4: TẠO HÌNH ẢNH AI (TEXT TO IMAGE STUDIO)
+       ========================================================================= -->
   <div class="main-view-container" id="view_text_to_image">
-    <div class="generator-workspace">
-      <div class="generator-left-panel">
-        <h3>Tạo Hình Ảnh AI Từ Văn Bản</h3>
-        <p class="gen-subtitle">Nhập mô tả ý tưởng để AI vẽ tranh hoặc tạo ảnh chân dung chân thực.</p>
-
-        <div class="form-group">
-          <label>Nhập Prompt Mô Tả:</label>
-          <textarea class="form-textarea" id="txtT2IPrompt" rows="4" placeholder="Ví dụ: Chân dung một nữ giáo viên Việt Nam mặc áo dài truyền thống màu xanh thiên thanh, nụ cười tươi, đứng trong lớp học hiện đại, ánh sáng cinematic 8k..."></textarea>
+    <div class="t2i-workspace">
+      <div class="t2i-panel">
+        <h3>Tạo Hình Ảnh AI Nghệ Thuật</h3>
+        <p class="panel-sub">Nhập mô tả bằng tiếng Việt hoặc tiếng Anh để AI vẽ ảnh nghệ thuật chân dung, phong cảnh, poster bài giảng</p>
+        
+        <div class="input-block">
+          <label>Mô tả bức ảnh bạn muốn tạo (Prompt):</label>
+          <textarea id="t2iPrompt" rows="4" class="form-textarea" placeholder="Ví dụ: Chân dung cô giáo Việt Nam duyên dáng mặc áo dài truyền thống trong lớp học mùa thu, ánh sáng điện ảnh, chất lượng 8k siêu nét..."></textarea>
         </div>
 
-        <div class="form-group">
+        <div class="input-block">
           <label>Phong cách nghệ thuật:</label>
-          <div class="style-chips-grid">
-            <button class="style-chip active">📸 Chân Thực Studio 8K</button>
-            <button class="style-chip">🎨 Tranh Sơn Dầu</button>
-            <button class="style-chip">🎌 Anime 3D</button>
-            <button class="style-chip">🌆 Cyberpunk</button>
-            <button class="style-chip">✨ Vintage Cổ Điển</button>
+          <div class="style-chips-row">
+            <button class="style-chip active" data-style="portrait">Chân Dung Chân Thực</button>
+            <button class="style-chip" data-style="anime">Anime / Manga</button>
+            <button class="style-chip" data-style="3d">3D Disney Pixar</button>
+            <button class="style-chip" data-style="oil">Tranh Sơn Dầu</button>
+            <button class="style-chip" data-style="cyberpunk">Cyberpunk Studio</button>
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="input-block">
           <label>Tỷ lệ khung hình:</label>
-          <div class="ratio-chips-row">
-            <button class="ratio-chip active">1:1 Vuông</button>
-            <button class="ratio-chip">3:4 Ảnh Thẻ / Chân Dung</button>
-            <button class="ratio-chip">16:9 Toàn Cảnh</button>
+          <div class="aspect-chips-row">
+            <button class="aspect-chip active" data-ar="1:1">1:1 (Vuông)</button>
+            <button class="aspect-chip" data-ar="9:16">9:16 (Story)</button>
+            <button class="aspect-chip" data-ar="16:9">16:9 (Ngang)</button>
+            <button class="aspect-chip" data-ar="3:4">3:4 (Thẻ/Chân dung)</button>
           </div>
         </div>
 
-        <button class="btn btn-orange-glow btn-lg w-100" id="btnGenImage">
-          ✨ Tạo Ảnh AI Ngay (Miễn Phí Admin)
+        <button class="btn btn-main-generate" id="btnGenImage" style="width:100%; margin-top:16px;">
+          ✨ Bắt Đầu Tạo Ảnh AI
         </button>
       </div>
 
-      <div class="generator-right-preview">
-        <div class="gen-preview-box" id="genPreviewBox">
-          <div class="gen-placeholder">
-            <span>🎨</span>
-            <p>Ảnh AI do Thầy tạo sẽ hiển thị tại đây ở độ phân giải 4K</p>
-          </div>
+      <div class="t2i-gallery-stage" id="genPreviewBox">
+        <div class="gen-empty-state">
+          <span class="gen-icon">🎨</span>
+          <h4>Ảnh AI tạo ra sẽ hiển thị tại đây</h4>
+          <p>Hỗ trợ xuất ảnh độ phân giải cao lên tới 4096 x 4096 pixels sắc nét</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VIEW 5: TẠO VIDEO AI -->
+  <!-- =========================================================================
+       VIEW 5: TẠO VIDEO AI (VIDEO GENERATOR)
+       ========================================================================= -->
   <div class="main-view-container" id="view_video_gen">
-    <div class="generator-workspace">
-      <div class="generator-left-panel">
-        <h3>Tạo Video AI Chuyển Động</h3>
-        <p class="gen-subtitle">Biến đổi hình ảnh tĩnh thành video hoặc sinh video từ câu lệnh.</p>
-
-        <div class="form-group">
-          <label>Mô tả video:</label>
-          <textarea class="form-textarea" rows="3" placeholder="Ví dụ: Nữ sinh tươi cười vẫy tay chào, gió thổi nhẹ tóc, camera zoom từ từ cận cảnh..."></textarea>
+    <div class="video-workspace">
+      <div class="video-ctrl-panel">
+        <h3>Tạo Video Hoạt Họa AI</h3>
+        <p class="panel-sub">Biến ảnh chân dung hoặc mô tả văn bản thành video chuyển động sống động</p>
+        
+        <div class="input-block">
+          <label>Mô tả kịch bản chuyển động video:</label>
+          <textarea rows="3" class="form-textarea" placeholder="Nhân vật mỉm cười nhẹ nhàng, nhìn vào ống kính máy quay, gió thổi khẽ làm bay tóc..."></textarea>
         </div>
 
-        <div class="form-group">
-          <label>Thời lượng video:</label>
-          <div class="ratio-chips-row">
-            <button class="ratio-chip active">5 Giây</button>
-            <button class="ratio-chip">10 Giây</button>
-          </div>
+        <div class="input-block">
+          <label>Mức độ chuyển động (Motion Strength):</label>
+          <input type="range" min="1" max="10" value="5" class="slider-full" />
         </div>
 
-        <button class="btn btn-orange-glow btn-lg w-100">
-          🎬 Xuất Video AI (HD 1080p)
+        <button class="btn btn-main-generate" onclick="showToast('Đang kết nối cụm GPU AI render video...', 'info')">
+          🎬 Tạo Video Chuyển Động
         </button>
       </div>
 
-      <div class="generator-right-preview">
-        <div class="gen-preview-box">
-          <div class="gen-placeholder">
-            <span>🎬</span>
-            <p>Video AI sau khi kết xuất sẽ sẵn sàng tải về</p>
+      <div class="video-preview-stage">
+        <div class="video-demo-card">
+          <div class="video-demo-thumb">
+            <img src="./assets/presets/hoc_sinh_2.jpg" alt="Demo Video" />
+            <div class="play-btn-circle">▶</div>
+          </div>
+          <div class="video-demo-info">
+            <h4>Bản Xem Thử Video Hoạt Họa AI (60 FPS)</h4>
+            <p>Mắt chớp tự nhiên, nụ cười chuyển động chân thực</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VIEW 6: TIN TỨC & HƯỚNG DẪN -->
+  <!-- =========================================================================
+       VIEW 6: TIN TỨC (NEWS & UPDATES)
+       ========================================================================= -->
   <div class="main-view-container" id="view_news">
-    <div class="news-page-wrap">
-      <h2>Tin Tức &amp; Cập Nhật Tính Năng AI</h2>
+    <div class="news-wrapper">
+      <h2>Tin Tức & Cập Nhật Công Nghệ AI 2026</h2>
       <div class="news-grid">
-        <article class="news-card">
-          <div class="news-tag">BẢN CẬP NHẬT V2026</div>
-          <h3>Tự Động Căn Thẳng Mắt &amp; Khử Sạch Phông Vải Rèm Xanh</h3>
-          <p>Mô hình YuNet 2026 đã được nâng cấp với khả năng bù góc nghiêng đầu chính xác tới 0.1 độ, giúp ảnh thẻ học sinh ngay ngắn, nhìn thẳng ống kính tự nhiên.</p>
-        </article>
-        <article class="news-card">
-          <div class="news-tag">TÍNH NĂNG MỚI</div>
-          <h3>Xếp Khổ In 10x15cm và A4 Chuẩn 300 DPI</h3>
-          <p>Tối ưu hóa quy trình in ảnh thẻ trường học, tự động bổ sung đường đứt nét hướng dẫn dùng kéo cắt chính xác từng tấm ảnh.</p>
-        </article>
+        <div class="news-card">
+          <div class="news-badge">Mới Nhất</div>
+          <h3>Ra mắt thuật toán Generative Matting v4.2 cho ảnh thẻ học sinh</h3>
+          <p>Khả năng nhận diện chính xác từng sợi tóc mai, loại bỏ hoàn toàn viền lem nhem, tạo phông nền xanh studio chuyên nghiệp chỉ trong 0.2 giây.</p>
+        </div>
+        <div class="news-card">
+          <div class="news-badge">Hướng Dẫn</div>
+          <h3>Tiêu chuẩn ảnh thẻ Căn Cước & Hộ Chiếu Quốc Tế 2026</h3>
+          <p>Quy chuẩn phông nền trắng tinh khiết, tỷ lệ khuôn mặt 70-80% chiều cao bức ảnh, không bóng đổ, mắt nhìn thẳng ống kính.</p>
+        </div>
+        <div class="news-card">
+          <div class="news-badge">Studio</div>
+          <h3>Tính năng xếp khổ in 10x15 cm tự động tiết kiệm 80% giấy in</h3>
+          <p>Tự động ghép 4 ảnh 3x4 cm và 2 ảnh 4x6 cm có đường kẻ cắt đứt quãng chuẩn xác cho máy in ảnh nhiệt và phun màu Epson, Canon.</p>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- =========================================================================
+       VIEW 7: HƯỚNG DẪN SỬ DỤNG (USER GUIDE)
+       ========================================================================= -->
   <div class="main-view-container" id="view_guide">
-    <div class="news-page-wrap">
-      <h2>Hướng Dẫn Vận Hành StudioAI Pro Dành Cho Quản Trị Viên</h2>
+    <div class="guide-wrapper">
+      <h2>Hướng Dẫn Sử Dụng StudioAI Pro</h2>
       <div class="guide-steps">
-        <div class="guide-step">
-          <span class="step-num">1</span>
-          <div class="step-content">
-            <h4>Chọn thư mục ảnh máy ảnh DSLR / Điện thoại</h4>
-            <p>Nhấp vào nút <strong>"Chọn Thư Mục Ảnh"</strong> ở thanh trên cùng. Chọn thư mục chứa ảnh chụp gốc (ví dụ thư mục <code>Anh 1</code>). Toàn bộ ảnh sẽ được nạp siêu tốc vào băng chuyền dưới đáy màn hình.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Tải ảnh lên</h3>
+          <p>Nhấp vào ô giữa hoặc bấm "Chọn nhiều ảnh". Bạn có thể tải lên cùng lúc 1 ảnh hoặc cả thư mục hàng trăm ảnh học sinh.</p>
         </div>
-        <div class="guide-step">
-          <span class="step-num">2</span>
-          <div class="step-content">
-            <h4>Chọn kiểu mẫu hoặc trang phục mong muốn</h4>
-            <p>Nhấp vào 1 trong 8 mẫu cài đặt sẵn ở cột bên phải (Học sinh 2, Quân phục, Sơ mi trắng, Vest công sở...). AI sẽ tự động căn cổ áo và phông nền theo chuẩn.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Chọn mẫu có sẵn</h3>
+          <p>Bên phải có 8 mẫu phổ biến: Quân phục, Học sinh, Căn cước, Sơ mi trắng, Áo vest... Bấm vào mẫu để áp dụng tức thì.</p>
         </div>
-        <div class="guide-step">
-          <span class="step-num">3</span>
-          <div class="step-content">
-            <h4>Xử lý hàng loạt và xuất in 300 DPI</h4>
-            <p>Bấm nút <strong>"✨ Tạo ảnh (Enter)"</strong> hoặc <strong>"Xử lý toàn bộ hàng loạt"</strong>. Sau khi hoàn tất, nhấp <strong>"Xếp khổ in"</strong> để in trực tiếp hoặc <strong>"Xuất ZIP"</strong> để lưu trữ.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Kéo thanh so sánh Trước/Sau</h3>
+          <p>Kéo vạch phân chia ở giữa màn hình để so sánh ảnh gốc và ảnh AI đã thay nền, ghép áo, làm mịn da.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Tải ảnh hoặc xuất khổ in</h3>
+          <p>Bấm "Tải Ảnh HD" để lưu ảnh đơn, hoặc bấm "Xếp Khổ In 10x15" để in ảnh thẻ hàng loạt cực kỳ tiện lợi.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Print Sheet Modal (10x15cm & A4) -->
-  <div class="modal-overlay" id="printModal" style="display: none;">
-    <div class="print-window">
-      <div class="print-header">
-        <div class="title-with-icon">
-          <span>🖨️</span>
-          <h3>Xếp Khổ In Ảnh Thẻ 300 DPI Chuẩn Lab</h3>
-        </div>
-        <button class="modal-close" id="btnClosePrint" onclick="closePrintModal()">✕</button>
+  <!-- =========================================================================
+       MODAL: XẾP KHỔ IN ẢNH THẺ (PRINT SHEET LAB)
+       ========================================================================= -->
+  <div class="modal-overlay" id="printModal" style="display:none;">
+    <div class="modal-card modal-print">
+      <div class="modal-header">
+        <h3 class="modal-title">🖨️ Xếp Khổ In Ảnh Thẻ 10x15 cm (300 DPI Chuẩn Lab)</h3>
+        <button class="modal-close-btn" onclick="closePrintModal()">✕</button>
       </div>
-
-      <div class="print-body">
+      <div class="modal-body print-modal-body">
+        <div class="print-preview-box">
+          <img id="imgSheetPreview" src="" alt="Khổ in xem trước" />
+        </div>
         <div class="print-options">
-          <div class="opt-col">
-            <label>Loại khổ in:</label>
-            <select id="selSheetType" class="form-select">
-              <option value="10x15_combo">📄 Giấy 10x15 cm (Combo 4 ảnh 3x4 + 2 ảnh 4x6)</option>
-              <option value="10x15_single">📄 Giấy 10x15 cm (Toàn bộ 3x4 hoặc 4x6)</option>
-              <option value="a4_class">📑 Giấy A4 Lớp Học (Danh sách học sinh có tên)</option>
-            </select>
-          </div>
-          <div class="opt-col">
-            <label>Vạch hướng dẫn cắt kéo:</label>
-            <label class="toggle-wrap">
-              <input type="checkbox" id="chkGuides" checked>
-              <span class="toggle-slider"></span>
-              <span>Vạch đứt nét màu xám</span>
-            </label>
-          </div>
-          <button class="btn btn-orange-glow" id="btnGeneratePrintSheet">
-            ⚡ Tạo Bản In Ngay
-          </button>
-        </div>
-
-        <div class="sheet-preview-box">
-          <img id="imgSheetPreview" src="" alt="Bản xem trước khổ in">
+          <h4>Cấu hình khổ in:</h4>
+          <p>Khổ giấy: <strong>10 x 15 cm (Photo Paper)</strong></p>
+          <p>Bố cục: <strong>4 ảnh 3x4 cm + 2 ảnh 4x6 cm</strong></p>
+          <p>Độ phân giải: <strong>300 DPI (Sắc nét từng chi tiết)</strong></p>
+          <label class="check-row">
+            <input type="checkbox" id="chkGuides" checked onchange="generatePrintSheet()" />
+            <span>Vẽ đường kẻ nét đứt hướng dẫn cắt ảnh</span>
+          </label>
         </div>
       </div>
-
-      <div class="print-footer">
-        <button class="btn btn-secondary" onclick="window.print()">
-          🖨️ In Trực Tiếp
-        </button>
-        <a class="btn btn-orange-glow" id="btnDownloadPrintFile" download="ban_in_anh_the_300dpi.jpg" href="#">
-          ⬇ Tải Bản In (300 DPI)
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePrintModal()">Đóng</button>
+        <a class="btn btn-orange-glow" id="btnDownloadPrintFile" href="#" download="kho_in_anh_the_10x15.jpg">
+          ⬇️ Tải File In 300 DPI
         </a>
       </div>
     </div>
   </div>
 
+  <!-- Master JavaScript Controller -->
   <script src="./js/app.js"></script>
+
 </body>
 </html>

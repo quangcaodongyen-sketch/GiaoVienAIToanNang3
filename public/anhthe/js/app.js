@@ -1,7 +1,7 @@
 /**
  * StudioAI Pro - Master Web Controller
- * Nền tảng chỉnh sửa & xử lý ảnh AI toàn năng - Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717)
- * Rock-solid client-side engine with auto-demo preloading and global handlers
+ * Nen tang chinh sua & xu ly anh AI toan nang
+ * Tac quyen: Thay giao Dinh Van Thanh (Hotline/Zalo: 0915.213717)
  */
 
 // Application Global State
@@ -10,7 +10,6 @@ window.StudioState = {
   activeId: null,
   activeView: 'view_image_edit',
   activeTool: 'id_photo',
-  viewMode: 'split',
   isBatchProcessing: false,
   settings: {
     size_key: '3x4',
@@ -27,9 +26,10 @@ window.StudioState = {
   }
 };
 
+// 8 Presets Definitions (Matches Screenshot 5)
 const PRESET_DEFINITIONS = {
   'quan_phuc': {
-    prompt: 'Trang phục: Quân phục nghiêm trang. Màu nền: Xanh studio 0084ff. Căn chỉnh vai ngay ngắn, nhìn thẳng ống kính.',
+    prompt: 'Trang phục: Quân phục nghiêm trang chuẩn điều lệnh. Màu nền: Xanh studio 0084ff. Căn chỉnh vai ngay ngắn, mắt nhìn thẳng ống kính.',
     clothing_id: 'vest_nu_den',
     bg_preset: 'blue_standard',
     label: 'Quân phục'
@@ -41,44 +41,44 @@ const PRESET_DEFINITIONS = {
     label: 'Học sinh 2'
   },
   'anh_the_can_cuoc': {
-    prompt: 'Trang phục: Áo sơ mi có cổ lịch sự. Màu nền: Trắng tinh chuẩn CCCD / Hộ chiếu. Giữ nguyên tóc, khuôn mặt nhìn thẳng.',
+    prompt: 'Trang phục: Áo sơ mi có cổ lịch sự. Màu nền: Trắng tinh khiết chuẩn CCCD / Hộ chiếu quốc tế. Giữ nguyên tóc, khuôn mặt nhìn thẳng.',
     clothing_id: 'so_mi_nam_trang',
     bg_preset: 'white_cccd',
     label: 'Ảnh thẻ căn cước'
   },
   'so_mi_xanh_nhat': {
-    prompt: 'Trang phục: Áo sơ mi màu xanh nhạt thanh lịch. Màu nền: Xanh studio. Da mịn màng tự nhiên.',
+    prompt: 'Trang phục: Áo sơ mi màu xanh nhạt thanh lịch. Màu nền: Xanh studio dịu nhẹ. Làn da sáng hồng mịn màng tự nhiên.',
     clothing_id: 'so_mi_nam_trang',
     bg_preset: 'blue_light',
     label: 'Sơ mi xanh nhạt'
   },
   'ao_so_mi_polo': {
-    prompt: 'Trang phục: Áo sơ mi polo có cổ trẻ trung. Màu nền: Xanh nhạt. Căn thẳng mặt, mắt nhìn thẳng camera.',
+    prompt: 'Trang phục: Áo sơ mi polo có cổ trẻ trung, gọn gàng. Màu nền: Xanh nhạt. Căn thẳng vai, khuôn mặt tự nhiên.',
     clothing_id: 'none',
     bg_preset: 'blue_light',
     label: 'Áo sơ mi polo'
   },
   'ao_vest_cong_so': {
-    prompt: 'Trang phục: Áo vest đen công sở kèm sơ mi trắng. Màu nền: Xanh 0084ff studio. Phong thái chuyên nghiệp.',
+    prompt: 'Trang phục: Áo vest đen công sở kèm sơ mi trắng. Màu nền: Xanh 0084ff studio. Phong thái chuyên nghiệp, tự tin.',
     clothing_id: 'vest_nam_den',
     bg_preset: 'blue_standard',
     label: 'Áo vest công sở'
   },
   'ao_so_mi_nu': {
-    prompt: 'Trang phục: Áo sơ mi trắng nữ công sở. Màu nền: Trắng hoặc xanh studio. Nét mặt tươi tắn, thanh lịch.',
+    prompt: 'Trang phục: Áo sơ mi trắng nữ công sở nhã nhặn. Màu nền: Trắng hoặc xanh studio. Nét mặt tươi tắn, thanh lịch.',
     clothing_id: 'so_mi_nam_trang',
     bg_preset: 'white_cccd',
     label: 'Áo sơ mi nữ'
   },
   'ao_co_no': {
-    prompt: 'Trang phục: Áo cổ nơ duyên dáng. Màu nền: Xanh studio tỏa sáng. Nét mặt rạng rỡ, sắc nét.',
+    prompt: 'Trang phục: Áo cổ nơ duyên dáng trang nhã. Màu nền: Xanh studio tỏa sáng. Nét mặt rạng rỡ, sắc nét từng chi tiết.',
     clothing_id: 'vest_nu_den',
     bg_preset: 'blue_studio_radial',
     label: 'Áo cổ nơ'
   }
 };
 
-// Toast notification
+// Toast Notifications
 window.showToast = function(message, type = 'info') {
   const existing = document.getElementById('studioToast');
   if (existing) existing.remove();
@@ -104,21 +104,20 @@ window.showToast = function(message, type = 'info') {
     align-items: center;
     gap: 8px;
   `;
-  toast.innerHTML = `<span>${type === 'error' ? '⚠️' : type === 'success' ? '✅' : '✨'}</span> ${message}`;
+  const icon = type === 'error' ? '⚠️' : type === 'success' ? '✅' : '✨';
+  toast.innerHTML = `<span>${icon}</span> ${message}`;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2800);
 };
 
-// View Switcher (Top Tabs)
+// Switch Views (Top Navigation Tabs)
 window.switchView = function(viewId) {
   window.StudioState.activeView = viewId;
 
-  // Update nav tabs
   document.querySelectorAll('.nav-tab-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === viewId);
   });
 
-  // Toggle containers
   document.querySelectorAll('.main-view-container').forEach(c => {
     c.classList.toggle('active', c.id === viewId);
   });
@@ -130,7 +129,7 @@ window.switchView = function(viewId) {
   window.showToast(`Đang mở: ${tabName}`, 'info');
 };
 
-// Left Sidebar Tools Switcher
+// Left Sidebar Tool Switcher (13 Tools)
 window.selectTool = function(toolKey) {
   window.StudioState.activeTool = toolKey;
 
@@ -152,25 +151,25 @@ window.selectTool = function(toolKey) {
   }
 
   if (toolKey === 'phuc_che') {
-    window.showToast('🔄 Đã kích hoạt chế độ Phục Chế Ảnh Cũ (Khử nhiễu, phục hồi HD)!', 'success');
+    window.showToast('🎞️ Đã kích hoạt Phục Chế Ảnh Cũ (Khử nhiễu, phục hồi HD)!', 'success');
     window.processCurrentClientSide(true);
   } else if (toolKey === 'anh_cuoi') {
-    window.showToast('🤍 Đã kích hoạt hiệu ứng Ảnh Cưới (Ánh sáng studio lãng mạn)!', 'success');
+    window.showToast('🤍 Đã kích hoạt hiệu ứng Ảnh Cưới Studio lãng mạn!', 'success');
     window.StudioState.settings.bg_preset = 'blue_studio_radial';
     window.processCurrentClientSide();
   } else if (toolKey === 'tet') {
-    window.showToast('🧧 Đã kích hoạt hiệu ứng Biến Hình Ảnh Tết (Phông đỏ may mắn)!', 'success');
+    window.showToast('🧧 Đã kích hoạt Biến Hình Ảnh Tết may mắn!', 'success');
     window.StudioState.settings.bg_preset = 'red_visa';
     window.processCurrentClientSide();
   } else if (toolKey === 'trang_phuc') {
-    window.showToast('👔 Hãy chọn mẫu trang phục (Quân phục, Vest, Sơ mi) ở cột bên phải!', 'info');
+    window.showToast('👔 Hãy chọn mẫu trang phục ở cột bên phải!', 'info');
   } else {
     const toolName = document.querySelector(`[data-tool="${toolKey}"] .menu-name`)?.textContent || toolKey;
     window.showToast(`Đã chọn công cụ: ${toolName}`, 'info');
   }
 };
 
-// Preset Selection (Right Sidebar 8 Cards)
+// Preset Selection (8 Cards)
 window.selectPreset = function(presetKey) {
   window.StudioState.settings.preset_id = presetKey;
 
@@ -191,7 +190,11 @@ window.selectPreset = function(presetKey) {
       btn.classList.toggle('active', btn.dataset.bg === def.bg_preset);
     });
 
-    window.showToast(`✓ Đã áp dụng mẫu: ${def.label}`, 'success');
+    // Update clothing select
+    const selCloth = document.getElementById('selClothing');
+    if (selCloth) selCloth.value = def.clothing_id;
+
+    window.showToast(`✨ Đã áp dụng mẫu: ${def.label}`, 'success');
     window.processCurrentClientSide();
   }
 };
@@ -216,7 +219,21 @@ window.selectBg = function(bgKey) {
   window.processCurrentClientSide();
 };
 
-// Sample Images Loader
+// Clothing Selection
+window.selectClothing = function(clothId) {
+  window.StudioState.settings.clothing_id = clothId;
+  window.showToast('Đã cập nhật trang phục', 'info');
+  window.processCurrentClientSide();
+};
+
+// Period Tab Switching in Billing/VIP View
+window.setPeriodTab = function(btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window.showToast(`Hiển thị quyền lợi: ${btn.textContent}`, 'info');
+};
+
+// Load Sample Image
 window.loadSample = function(sampleFilename) {
   const sampleUrl = `./assets/sample_images/${sampleFilename}`;
   const itemId = 'sample_' + Date.now();
@@ -230,7 +247,8 @@ window.loadSample = function(sampleFilename) {
     original_cropped_url: null
   };
 
-  window.StudioState.items.push(item);
+  // Replace or push
+  window.StudioState.items = [item];
   window.StudioState.activeId = itemId;
 
   window.renderCarousel();
@@ -243,6 +261,7 @@ window.loadSample = function(sampleFilename) {
 window.renderCarousel = function() {
   const track = document.getElementById('carouselTrack');
   const bottomCarousel = document.getElementById('bottomCarousel');
+  const countSpan = document.getElementById('carouselCount');
   if (!track || !bottomCarousel) return;
 
   if (window.StudioState.items.length === 0) {
@@ -250,6 +269,7 @@ window.renderCarousel = function() {
     return;
   }
   bottomCarousel.style.display = 'block';
+  if (countSpan) countSpan.textContent = window.StudioState.items.length;
   track.innerHTML = '';
 
   window.StudioState.items.forEach((it, idx) => {
@@ -275,7 +295,7 @@ window.renderCarousel = function() {
   });
 };
 
-// Update Viewports
+// Update Viewports (Empty state vs Active stage)
 window.updateViewports = function() {
   const emptyBox = document.getElementById('emptyBox');
   const activeStageView = document.getElementById('activeStageView');
@@ -307,7 +327,7 @@ window.updateViewports = function() {
   requestAnimationFrame(window.syncSplitViewport);
 };
 
-// Sync Split Viewport
+// Sync Split Viewport Dimension
 window.syncSplitViewport = function() {
   const vp = document.getElementById('splitViewport');
   const canvas = document.getElementById('inpaintCanvas');
@@ -320,7 +340,7 @@ window.syncSplitViewport = function() {
   }
 };
 
-// Client-Side Canvas Image Processor (Instant Online Processing)
+// Client-Side Canvas Image Processing Engine
 window.processCurrentClientSide = function(isVintageRestore = false) {
   const item = window.StudioState.items.find(i => i.id === window.StudioState.activeId);
   if (!item) return;
@@ -344,7 +364,7 @@ window.processCurrentClientSide = function(isVintageRestore = false) {
     canvas.height = targetDim.h;
     const ctx = canvas.getContext('2d');
 
-    // 1. Draw Background
+    // 1. Draw Chosen Background
     const bg = window.StudioState.settings.bg_preset;
     if (bg === 'blue_studio_radial') {
       const grad = ctx.createRadialGradient(
@@ -388,7 +408,7 @@ window.processCurrentClientSide = function(isVintageRestore = false) {
     const cropX = Math.round((srcW - cropW) / 2);
     const cropY = Math.max(0, Math.round((srcH - cropH) * 0.15));
 
-    // Save Original Cropped Preview
+    // Save Original Cropped Preview for Before Layer
     const cropCanvas = document.createElement('canvas');
     cropCanvas.width = targetDim.w;
     cropCanvas.height = targetDim.h;
@@ -396,24 +416,30 @@ window.processCurrentClientSide = function(isVintageRestore = false) {
     cropCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetDim.w, targetDim.h);
 
     if (isVintageRestore) {
-      // Create vintage aged effect on the Before layer
-      const cropData = cropCtx.getImageData(0, 0, targetDim.w, targetDim.h);
-      const cd = cropData.data;
-      for (let i = 0; i < cd.length; i += 4) {
-        const gray = 0.299 * cd[i] + 0.587 * cd[i+1] + 0.114 * cd[i+2];
-        cd[i] = Math.min(255, gray + 40);
-        cd[i+1] = Math.min(255, gray + 20);
-        cd[i+2] = Math.max(0, gray - 20);
-      }
-      cropCtx.putImageData(cropData, 0, 0);
+      // Vintage aged photo effect on the Before layer
+      try {
+        const cropData = cropCtx.getImageData(0, 0, targetDim.w, targetDim.h);
+        const cd = cropData.data;
+        for (let i = 0; i < cd.length; i += 4) {
+          const gray = 0.299 * cd[i] + 0.587 * cd[i+1] + 0.114 * cd[i+2];
+          cd[i] = Math.min(255, gray + 40);
+          cd[i+1] = Math.min(255, gray + 20);
+          cd[i+2] = Math.max(0, gray - 20);
+        }
+        cropCtx.putImageData(cropData, 0, 0);
+      } catch(e) {}
     }
 
-    item.original_cropped_url = cropCanvas.toDataURL('image/jpeg', 0.88);
+    try {
+      item.original_cropped_url = cropCanvas.toDataURL('image/jpeg', 0.88);
+    } catch(e) {
+      item.original_cropped_url = item.preview_url;
+    }
 
     // Draw to main canvas
     ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetDim.w, targetDim.h);
 
-    // 3. Overlay Clothing if chosen
+    // 3. Overlay Clothing if selected
     const clothId = window.StudioState.settings.clothing_id;
     if (clothId && clothId !== 'none') {
       const clothImg = new Image();
@@ -447,7 +473,13 @@ window.processCurrentClientSide = function(isVintageRestore = false) {
         ctx.putImageData(imgData, 0, 0);
       } catch(e) {}
 
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.94);
+      let dataUrl;
+      try {
+        dataUrl = canvas.toDataURL('image/jpeg', 0.94);
+      } catch(e) {
+        dataUrl = item.preview_url;
+      }
+
       item.processed_url = dataUrl;
       item.download_url = dataUrl;
       item.status = 'done';
@@ -456,10 +488,18 @@ window.processCurrentClientSide = function(isVintageRestore = false) {
       window.updateViewports();
     }
   };
+
+  img.onerror = () => {
+    item.status = 'done';
+    item.processed_url = item.preview_url;
+    window.renderCarousel();
+    window.updateViewports();
+  };
+
   img.src = item.preview_url || item.thumb_url;
 };
 
-// Batch Process or Single Process Trigger
+// Batch Process or Single Process Action
 window.processCurrentOrBatch = function() {
   if (window.StudioState.items.length === 0) {
     window.loadSample('sample_hocsinh.jpg');
@@ -471,7 +511,7 @@ window.processCurrentOrBatch = function() {
   const pVal = document.getElementById('progressVal');
   const pFill = document.getElementById('progressFill');
 
-  if (track) track.style.display = 'flex';
+  if (track) track.style.display = 'block';
   const total = window.StudioState.items.length;
 
   window.StudioState.items.forEach((it, idx) => {
@@ -482,11 +522,11 @@ window.processCurrentOrBatch = function() {
   });
 
   window.processCurrentClientSide();
-  window.showToast(`Đã xử lý xong ảnh thẻ chất lượng cao!`, 'success');
+  window.showToast('✨ Đã xử lý xong ảnh thẻ chất lượng cao!', 'success');
 
   setTimeout(() => {
     if (track) track.style.display = 'none';
-  }, 2500);
+  }, 2000);
 };
 
 // Split Slider Dragging Setup
@@ -557,7 +597,9 @@ function setupInpaintDrawing() {
     if (window.StudioState.activeTool !== 'generative_fill') return;
     isDrawing = true;
     const { x, y } = getCoords(e);
-    history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    try {
+      history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    } catch(err) {}
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineCap = 'round';
@@ -589,7 +631,7 @@ function setupInpaintDrawing() {
     btnApply.addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       history = [];
-      window.showToast('✨ Đã xóa vật thể và làm mịn da vùng chọn!', 'success');
+      window.showToast('✨ Đã xóa vết thừa và làm mịn da vùng chọn!', 'success');
     });
   }
 }
@@ -650,19 +692,69 @@ window.generatePrintSheet = function() {
       ctx.strokeRect(1339, 59, w4x6 + 2, h4x6 + 2);
     }
 
-    const sheetUrl = canvas.toDataURL('image/jpeg', 0.95);
-    if (imgPreview) imgPreview.src = sheetUrl;
-    if (btnDl) btnDl.href = sheetUrl;
+    try {
+      const sheetUrl = canvas.toDataURL('image/jpeg', 0.95);
+      if (imgPreview) imgPreview.src = sheetUrl;
+      if (btnDl) btnDl.href = sheetUrl;
+    } catch(e) {}
   };
   img.src = src;
 };
 
-// INITIALIZATION ON DOM READY
+// Prompt Utilities
+window.simulateVoiceInput = function() {
+  window.showToast('🎙️ Đang nghe giọng nói của Thầy...', 'info');
+  setTimeout(() => {
+    const txtPrompt = document.getElementById('txtPrompt');
+    if (txtPrompt) {
+      txtPrompt.value = 'Màu nền xanh chuẩn 0084ff, mặc áo sơ mi trắng có cổ, làm mịn da tự nhiên, tóc tai ngay ngắn nhìn thẳng camera.';
+    }
+    window.showToast('✅ Đã nhận diện giọng nói tiếng Việt thành công!', 'success');
+  }, 1200);
+};
+
+window.copyPromptText = function() {
+  const txtPrompt = document.getElementById('txtPrompt');
+  if (txtPrompt) {
+    navigator.clipboard.writeText(txtPrompt.value).then(() => {
+      window.showToast('📋 Đã sao chép prompt vào bộ nhớ tạm!', 'success');
+    }).catch(() => {
+      window.showToast('Đã chọn prompt', 'info');
+    });
+  }
+};
+
+window.clearPromptText = function() {
+  const txtPrompt = document.getElementById('txtPrompt');
+  if (txtPrompt) txtPrompt.value = '';
+  window.showToast('Đã xóa nội dung prompt', 'info');
+};
+
+// Export All as ZIP (or multi-download)
+window.exportAllAsZip = function() {
+  if (window.StudioState.items.length === 0) {
+    window.showToast('Chưa có ảnh nào để tải!', 'error');
+    return;
+  }
+  window.StudioState.items.forEach((it, idx) => {
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = it.processed_url || it.preview_url;
+      a.download = `anh_the_${it.filename || ('anh_' + idx + '.jpg')}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }, idx * 300);
+  });
+  window.showToast(`📦 Đang tải xuống toàn bộ ${window.StudioState.items.length} ảnh thẻ!`, 'success');
+};
+
+// DOM Ready Setup
 document.addEventListener('DOMContentLoaded', () => {
   setupSplitSlider();
   setupInpaintDrawing();
 
-  // Attach File Inputs
+  // Attach File Input Listener
   const fileInput = document.getElementById('fileInput');
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
@@ -685,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
             original_cropped_url: null
           };
           window.StudioState.items.push(item);
-          window.StudioState.activeId = itemId;
+          if (i === 0) window.StudioState.activeId = itemId;
           window.renderCarousel();
           window.updateViewports();
           window.processCurrentClientSide();
@@ -698,7 +790,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sliders Realtime Tuning
   const rngSmooth = document.getElementById('rngSkinSmooth');
   const rngBright = document.getElementById('rngBrightness');
-  const rngContrast = document.getElementById('rngContrast');
   const rngSharp = document.getElementById('rngSharpness');
 
   if (rngSmooth) {
@@ -716,14 +807,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.processCurrentClientSide();
     });
   }
-  if (rngContrast) {
-    rngContrast.addEventListener('input', (e) => {
-      const val = parseInt(e.target.value);
-      window.StudioState.settings.contrast = val;
-      document.getElementById('lblContrast').textContent = val >= 0 ? `+${val}` : `${val}`;
-      window.processCurrentClientSide();
-    });
-  }
   if (rngSharp) {
     rngSharp.addEventListener('input', (e) => {
       window.StudioState.settings.sharpness = parseInt(e.target.value);
@@ -732,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Interactive AI Chat Simulation
+  // AI Chat Assistant Interactive Setup
   const chatIn = document.getElementById('chatInputTxt');
   const btnChat = document.getElementById('btnSendChat');
   const chatBox = document.getElementById('chatMessages');
@@ -752,15 +835,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const aMsg = document.createElement('div');
       aMsg.className = 'chat-msg ai-msg';
       aMsg.innerHTML = `
-        <div class="chat-avatar">🪄</div>
+        <div class="chat-avatar">✨</div>
         <div class="chat-bubble">
           Dạ Thầy Thành! Trợ lý AI đã ghi nhận yêu cầu: <strong>"${txt}"</strong>.<br>
-          Gợi ý: Áp dụng phông <strong>Xanh Studio (#0084ff)</strong>, áo sơ mi trắng có cổ và tỷ lệ vai 68% để tạo ảnh thẻ chuẩn chỉnh nhất!
+          Gợi ý: Hãy áp dụng phông <strong>Xanh Studio (#0084ff)</strong>, áo sơ mi trắng có cổ và tỷ lệ vai 68% để tạo ảnh thẻ chuẩn chỉnh nhất!
         </div>
       `;
       chatBox.appendChild(aMsg);
       chatBox.scrollTop = chatBox.scrollHeight;
-    }, 500);
+    }, 600);
   }
 
   if (btnChat) btnChat.onclick = sendChat;
@@ -774,14 +857,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (pBox) {
         pBox.innerHTML = '<p style="color:#FA541C; font-weight:700;">⏳ AI đang vẽ ảnh 8K Ultra-HD...</p>';
         setTimeout(() => {
-          pBox.innerHTML = '<img src="./assets/sample_images/sample_nu.jpg" style="max-width:100%; max-height:100%; border-radius:12px;" alt="Ảnh AI">';
-          window.showToast('Đã tạo ảnh nghệ thuật AI thành công!', 'success');
-        }, 1000);
+          pBox.innerHTML = '<img src="./assets/sample_images/sample_nu.jpg" style="max-width:100%; max-height:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2);" alt="Ảnh AI">';
+          window.showToast('✨ Đã tạo ảnh nghệ thuật AI thành công!', 'success');
+        }, 1200);
       }
     };
   }
 
-  // PRELOAD DEFAULT DEMO SAMPLE IMMEDIATELY ON START
-  // This ensures the web app is NEVER blank or unresponsive!
+  // Preload default demo portrait immediately
   window.loadSample('sample_hocsinh.jpg');
 });
