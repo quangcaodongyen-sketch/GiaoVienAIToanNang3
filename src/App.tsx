@@ -56,7 +56,11 @@ import { webSecurityGuard } from './services/webSecurityGuard';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
 import { systemMaintenanceService } from './services/systemMaintenanceService';
 import { getAppShareUrl, copyToClipboard, syncBrowserHash } from './utils/shareUtils';
+import { TeacherCatalog } from './components/TeacherCatalog';
+import { AdminPortal } from './components/AdminPortal';
+import { StudentPortal } from './components/StudentPortal';
 
+export type MainViewTab = 'teachers' | 'admin' | 'students';
 export type ThemeMode = 'pedagogical' | 'dark-cyber' | 'emerald-sage' | 'royal-purple';
 export type ViewMode = 'grid' | 'compact';
 
@@ -259,6 +263,14 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Quản lý 3 Phân Hệ Chính Của Website: Kho Giáo Viên | Quản Trị Admin | Góc Học Sinh
+  const [mainViewTab, setMainViewTab] = useState<MainViewTab>(() => {
+    const rawHash = window.location.hash.toLowerCase();
+    if (rawHash === '#admin') return 'admin';
+    if (rawHash === '#hoc-sinh' || rawHash === '#students' || rawHash === '#hocsinh') return 'students';
+    return 'teachers';
+  });
+
   // Quản lý Chế độ Giao diện (Theme) & Bố cục Hiển thị (View Mode)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     const saved = localStorage.getItem('gvai_theme_mode');
@@ -441,6 +453,18 @@ export default function App() {
     const handleHash = () => {
       const rawHash = window.location.hash;
       const hash = rawHash.replace(/_/g, '-');
+      if (hash === '#admin' || hash === '#quan-tri') {
+        setMainViewTab('admin');
+        return;
+      }
+      if (hash === '#hoc-sinh' || hash === '#students' || hash === '#hocsinh') {
+        setMainViewTab('students');
+        return;
+      }
+      if (hash === '#giao-vien' || hash === '#apps') {
+        setMainViewTab('teachers');
+        return;
+      }
       if (hash === '#dung-thu' || hash === '#trial') {
         setShowTrialModal(true);
         webSecurityGuard.setActiveApp('trial', 'Đăng Ký Trải Nghiệm Giáo Viên AI');
@@ -603,42 +627,6 @@ export default function App() {
       window.removeEventListener('popstate', handleHash);
     };
   }, []);
-
-  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
-
-  // Filter only active apps
-  const activeApps = apps
-    .filter((app) => app.active)
-    .sort((a, b) => a.order - b.order);
-
-  // Lọc ứng dụng theo Category Tab và từ khóa tìm kiếm
-  const filteredApps = activeApps.filter((app) => {
-    // Lọc theo Tab Danh mục
-    if (selectedCategory !== 'ALL') {
-      if (selectedCategory === 'THCS') {
-        if (!app.category.includes('THCS')) return false;
-      } else if (selectedCategory === 'THPT') {
-        if (!app.category.includes('THPT')) return false;
-      } else if (selectedCategory === 'PRIMARY') {
-        if (!app.category.includes('TIỂU HỌC') && app.levelBadge !== 'TIỂU HỌC') return false;
-      } else if (selectedCategory === 'NLS') {
-        const isNls = app.category.includes('5512') || app.id.includes('nls') || app.id.includes('soangiaoan');
-        if (!isNls) return false;
-      } else if (selectedCategory === 'UTILITY') {
-        const isUtility = app.category.includes('TIỆN ÍCH') || app.id.includes('cleaner') || app.id.includes('record') || app.id.includes('pdf') || app.id.includes('chuan-hoa') || app.id.includes('math') || app.id.includes('listening') || app.id.includes('troly');
-        if (!isUtility) return false;
-      }
-    }
-
-    // Lọc theo từ khóa tìm kiếm
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return true;
-    return (
-      app.title.toLowerCase().includes(query) ||
-      app.description.toLowerCase().includes(query) ||
-      app.category.toLowerCase().includes(query)
-    );
-  });
 
   const [copyToast, setCopyToast] = useState<{ visible: boolean; url: string; title: string }>({
     visible: false,
@@ -1090,84 +1078,61 @@ export default function App() {
               </div>
             </a>
 
-            {/* Desktop Navigation & Actions */}
-            <div className="hidden lg:flex items-center gap-2 text-xs xl:text-sm font-bold">
-              {/* Nút Kho Ứng Dụng */}
-              <a
-                href="#apps"
-                className={`px-3 py-2 rounded-xl text-blue-600 bg-blue-50/80 dark:bg-blue-950/40 hover:bg-blue-100 transition-colors flex items-center gap-1.5`}
-              >
-                <Layers className="w-4 h-4 text-blue-600" />
-                <span>Kho Ứng Dụng ({activeApps.length})</span>
-              </a>
-
-              {/* Nút Đổi Giao Diện Dropdown / Menu */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className={`px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer text-xs ${t.textHeading}`}
-                  title="Thay đổi giao diện màu sắc của website"
-                >
-                  <Palette className="w-3.5 h-3.5 text-blue-600" />
-                  <span>{t.icon} {t.shortName}</span>
-                </button>
-
-                {showThemeMenu && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-50 animate-fadeIn space-y-1">
-                    <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                      Chọn Giao Diện Website
-                    </div>
-                    {(Object.keys(THEMES) as ThemeMode[]).map((mode) => {
-                      const cfg = THEMES[mode];
-                      const isAct = themeMode === mode;
-                      return (
-                        <button
-                          key={mode}
-                          onClick={() => changeTheme(mode)}
-                          className={`w-full text-left px-3 py-2 rounded-xl transition flex items-center justify-between text-xs font-semibold cursor-pointer ${
-                            isAct
-                              ? 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold'
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-base">{cfg.icon}</span>
-                            <div>
-                              <div>{cfg.name}</div>
-                              <div className="text-[10px] text-slate-400 font-normal line-clamp-1">{cfg.description}</div>
-                            </div>
-                          </div>
-                          {isAct && <Check className="w-4 h-4 text-blue-600 shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Nút Đổi Bố Cục Thẻ / Bảng */}
+            {/* Desktop Navigation 3 Trụ Cột Chính: Kho Giáo Viên | Quản Trị Admin | Dành Cho Học Sinh */}
+            <div className="hidden lg:flex items-center gap-1.5 text-xs xl:text-sm font-bold">
+              {/* Nút 1: Kho Ứng Dụng Giáo Viên */}
               <button
                 type="button"
-                onClick={() => changeViewMode(appViewMode === 'grid' ? 'compact' : 'grid')}
-                className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer text-xs"
-                title="Chuyển đổi giữa Dạng Thẻ Lưới và Dạng Danh Mục Khoa Học"
+                onClick={() => {
+                  setMainViewTab('teachers');
+                  window.location.hash = '#giao-vien';
+                }}
+                className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                  mainViewTab === 'teachers'
+                    ? 'bg-blue-600 text-white shadow-md font-black'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
               >
-                {appViewMode === 'grid' ? (
-                  <>
-                    <ListFilter className="w-3.5 h-3.5 text-indigo-600" />
-                    <span>Dạng Danh Mục</span>
-                  </>
-                ) : (
-                  <>
-                    <LayoutGrid className="w-3.5 h-3.5 text-indigo-600" />
-                    <span>Dạng Thẻ Lưới</span>
-                  </>
-                )}
+                <Layers className="w-4 h-4" />
+                <span>1. Kho Ứng Dụng Giáo Viên</span>
+              </button>
+
+              {/* Nút 2: Bảng Quản Trị Admin */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('admin');
+                  window.location.hash = '#admin';
+                }}
+                className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                  mainViewTab === 'admin'
+                    ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <Crown className="w-4 h-4 text-amber-500" />
+                <span>2. Quản Trị Admin</span>
+              </button>
+
+              {/* Nút 3: Dành Cho Học Sinh */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('students');
+                  window.location.hash = '#hoc-sinh';
+                }}
+                className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                  mainViewTab === 'students'
+                    ? 'bg-emerald-600 text-white shadow-md font-black'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4 text-emerald-500" />
+                <span>3. Dành Cho Học Sinh</span>
               </button>
             </div>
 
-            {/* Action Buttons: Dùng thử 5 lần, Admin & Hotline */}
+            {/* Action Buttons: Dùng thử 5 lần & Hotline Zalo */}
             <div className="hidden md:flex items-center gap-2 lg:gap-2.5 font-medium text-sm">
               <button
                 onClick={() => setShowTrialModal(true)}
@@ -1175,16 +1140,7 @@ export default function App() {
                 title="Đăng ký dùng thử 5 lần miễn phí"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                <span>TRẢI NGHIỆM DÙNG THỬ</span>
-              </button>
-
-              <button
-                onClick={() => setShowAdminDashboard(true)}
-                className="px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700 transition-all text-xs font-bold flex items-center gap-1.5 shadow-2xs group cursor-pointer"
-                title="Bảng Quản Trị Bản Quyền Cloud 24/7"
-              >
-                <Crown className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
-                <span>Quản Trị</span>
+                <span>DÙNG THỬ 5 LẦN</span>
               </button>
 
               <a
@@ -1267,23 +1223,44 @@ export default function App() {
                 </button>
               </div>
 
-              <a 
-                href="#apps" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-blue-700 font-bold flex items-center gap-2.5 transition-colors"
+              <button 
+                onClick={() => {
+                  setMainViewTab('teachers');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
+                  mainViewTab === 'teachers' ? 'bg-blue-600 text-white' : 'hover:bg-blue-50 text-slate-800 dark:text-slate-200'
+                }`}
               >
-                <Layers className="w-4 h-4 text-blue-600" />
-                Kho Ứng Dụng ({activeApps.length})
-              </a>
+                <Layers className="w-4 h-4 text-blue-500" />
+                <span>1. Kho Ứng Dụng Giáo Viên</span>
+              </button>
 
-              <a 
-                href="#footer-info" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3.5 py-2 rounded-xl hover:bg-blue-50 text-slate-800 dark:text-slate-200 font-semibold flex items-center gap-2.5 transition-colors"
+              <button 
+                onClick={() => {
+                  setMainViewTab('admin');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
+                  mainViewTab === 'admin' ? 'bg-amber-500 text-slate-950 font-black' : 'hover:bg-amber-50 text-slate-800 dark:text-slate-200'
+                }`}
               >
-                <UserCheck className="w-4 h-4 text-indigo-600" />
-                Thông Tin Tác Giả & Hỗ Trợ
-              </a>
+                <Crown className="w-4 h-4 text-amber-500" />
+                <span>2. Bảng Quản Trị Admin</span>
+              </button>
+
+              <button 
+                onClick={() => {
+                  setMainViewTab('students');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
+                  mainViewTab === 'students' ? 'bg-emerald-600 text-white' : 'hover:bg-emerald-50 text-slate-800 dark:text-slate-200'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4 text-emerald-500" />
+                <span>3. Dành Cho Học Sinh</span>
+              </button>
 
               <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
                 <button
@@ -1295,16 +1272,6 @@ export default function App() {
                 >
                   <Sparkles className="w-4 h-4 text-emerald-600" />
                   Đăng Ký Dùng Thử 5 Lần Miễn Phí
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setShowAdminDashboard(true);
-                  }}
-                  className="px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-bold text-left flex items-center gap-2.5 shadow-2xs"
-                >
-                  <Crown className="w-4 h-4 text-amber-600" />
-                  Quản Trị Admin Cloud
                 </button>
                 <a
                   href={BRAND.zaloUrl}
@@ -1322,484 +1289,66 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {/* HERO SECTION ĐƠN GIẢN, TINH TẾ (CHỈ 1-2 DÒNG) */}
-        <section className={`pt-3 pb-3 sm:pt-6 sm:pb-4 transition-colors duration-300`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className={`rounded-3xl ${t.heroGradient} text-white p-5 sm:p-7 shadow-xl border ${t.heroBorder} flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all duration-300`}>
-              
-              {/* Tiêu đề & 1-2 dòng mô tả ngắn gọn */}
-              <div className="space-y-2 max-w-2xl">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
-                  Kho Tiện Ích Giáo Dục &amp; Tạo Đề Kiểm Tra Tham Khảo
-                </h1>
-                <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
-                  Chia sẻ các ứng dụng hỗ trợ tạo đề kiểm tra &amp; tiện ích giảng dạy tham khảo dành cho giáo viên.
-                </p>
-                <p className="text-xs text-cyan-300 font-semibold">
-                  Tác giả: Đinh Thành • Điện thoại / Zalo: 0915.213717
-                </p>
-              </div>
-
-              {/* Nút thao tác */}
-              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                <button
-                  onClick={() => setShowTrialModal(true)}
-                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>TRẢI NGHIỆM DÙNG THỬ</span>
-                </button>
-                <a
-                  href={BRAND.zaloUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5"
-                >
-                  <MessageCircle className="w-4 h-4 text-teal-300" />
-                  <span>Zalo: 0915.213717</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const modes: ThemeMode[] = ['pedagogical', 'dark-cyber', 'emerald-sage', 'royal-purple'];
-                    const next = modes[(modes.indexOf(themeMode) + 1) % modes.length];
-                    changeTheme(next);
-                  }}
-                  className="px-3 py-2.5 rounded-xl bg-black/30 hover:bg-black/50 text-white border border-white/20 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer"
-                  title="Bấm để chuyển sang giao diện tiếp theo"
-                >
-                  <Palette className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Đổi Giao Diện ({t.shortName})</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* APPS SECTION (PRIMARY SHOWCASE) - GIAO DIỆN & BỘ LỌC KHOA HỌC */}
-        <section id="apps" className="pt-3 pb-12 sm:pt-4 sm:pb-16 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            {/* THANH TÌM KIẾM, ĐIỀU KHIỂN GIAO DIỆN VÀ BỘ LỌC TABS KHOA HỌC */}
-            <div className={`${t.filterBoxBg} rounded-3xl border ${t.filterBoxBorder} shadow-sm p-4 sm:p-5 mb-6 transition-all space-y-4`}>
-              
-              {/* Hàng 1: Tiêu đề + Chuyển đổi Bố cục + Ô tìm kiếm */}
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                {/* Tiêu đề & Trạng thái giao diện */}
-                <div className="flex items-center gap-3">
-                  <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950 shrink-0"></div>
-                  <div>
-                    <h2 className={`text-base sm:text-lg font-black ${t.textHeading} tracking-tight flex flex-wrap items-center gap-2`}>
-                      <span>Kho Ứng Dụng Chuyên Môn THCS & THPT 2026</span>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${t.badgeBg}`}>
-                        Chuẩn Bộ GD&ĐT
-                      </span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        {t.icon} {t.name}
-                      </span>
-                    </h2>
-                    <p className={`text-xs ${t.textMuted} mt-0.5`}>
-                      Chọn lọc công cụ chuyên biệt theo nhu cầu soạn bài và kiểm tra đánh giá của Thầy/Cô
+        {/* 1. PHÂN HỆ KHO ỨNG DỤNG GIÁO VIÊN */}
+        {mainViewTab === 'teachers' && (
+          <>
+            {/* HERO BANNER TINH TẾ (CHỈ 1-2 DÒNG) */}
+            <section className={`pt-3 pb-2 sm:pt-4 sm:pb-2 transition-colors duration-300`}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className={`rounded-3xl ${t.heroGradient} text-white p-4 sm:p-6 shadow-xl border ${t.heroBorder} flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300`}>
+                  <div className="space-y-1 max-w-2xl">
+                    <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                      Kho Tiện Ích Giáo Dục &amp; Tạo Đề Kiểm Tra Tham Khảo
+                    </h1>
+                    <p className="text-xs sm:text-sm text-blue-100/90 leading-relaxed font-normal">
+                      Chia sẻ các phần mềm tạo đề kiểm tra &amp; tiện ích giảng dạy tải về dùng miễn phí, nâng cấp Pro qua Zalo.
+                    </p>
+                    <p className="text-xs text-cyan-300 font-semibold">
+                      Tác giả: Đinh Thành • Hotline / Zalo: 0915.213717 • Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                     </p>
                   </div>
-                </div>
 
-                {/* Bộ nút chuyển đổi View Mode + Ô tìm kiếm */}
-                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                  {/* Nút Bố cục Thẻ Lưới vs Danh Mục Khoa Học */}
-                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
                     <button
-                      type="button"
-                      onClick={() => changeViewMode('grid')}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                        appViewMode === 'grid'
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                      title="Xem dạng thẻ lưới trực quan có hình ảnh"
+                      onClick={() => setShowTrialModal(true)}
+                      className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <LayoutGrid className="w-3.5 h-3.5" />
-                      <span>Thẻ Lưới</span>
+                      <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                      <span>DÙNG THỬ 5 LƯỢT</span>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => changeViewMode('compact')}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                        appViewMode === 'compact'
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                      title="Xem dạng danh mục khoa học gọn gàng"
+                    <a
+                      href={BRAND.zaloUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs transition flex items-center gap-1.5"
                     >
-                      <ListFilter className="w-3.5 h-3.5" />
-                      <span>Danh Mục Khoa Học</span>
-                    </button>
+                      <MessageCircle className="w-4 h-4 text-teal-300" />
+                      <span>Zalo Tư Vấn Pro</span>
+                    </a>
                   </div>
-
-                  {/* Ô tìm kiếm nhanh */}
-                  <div className="relative w-full sm:w-72">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder="Tìm môn học, tên ứng dụng..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-8 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 transition"
-                    />
-                    {searchQuery && (
-                      <button
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded-full"
-                        title="Xóa tìm kiếm"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Bộ đếm kết quả */}
-                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 font-black bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shrink-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>{filteredApps.length}/{activeApps.length}</span>
-                  </span>
                 </div>
               </div>
+            </section>
 
-              {/* Hàng 2: Bộ lọc danh mục cấp học (Category Tabs) */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-sans">
-                {[
-                  { id: 'ALL', label: 'Tất Cả Ứng Dụng', count: activeApps.length },
-                  { id: 'PRIMARY', label: '🎒 Đề Thi Tiểu Học (TT 27)', count: activeApps.filter(a => a.category.includes('TIỂU HỌC') || a.levelBadge === 'TIỂU HỌC').length },
-                  { id: 'THCS', label: '🏫 Đề Thi Cấp THCS (CV 7991)', count: activeApps.filter(a => a.category.includes('THCS')).length },
-                  { id: 'THPT', label: '🎓 Đề Thi Cấp THPT (2025+)', count: activeApps.filter(a => a.category.includes('THPT')).length },
-                  { id: 'NLS', label: '📝 Giáo Án & NLS (5512)', count: activeApps.filter(a => a.category.includes('5512') || a.id.includes('nls')).length },
-                  { id: 'UTILITY', label: '🛠️ Tiện Ích Sư Phạm', count: activeApps.filter(a => a.category.includes('TIỆN ÍCH') || a.id.includes('cleaner') || a.id.includes('record') || a.id.includes('pdf') || a.id.includes('chuan-hoa') || a.id.includes('math') || a.id.includes('listening') || a.id.includes('troly')).length },
-                ].map((tab) => {
-                  const isActive = selectedCategory === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setSelectedCategory(tab.id)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
-                        isActive
-                          ? `${t.activeTabBg} ${t.activeTabText} ${t.activeTabShadow}`
-                          : `${t.inactiveTabBg} ${t.inactiveTabText}`
-                      }`}
-                    >
-                      <span>{tab.label}</span>
-                      <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                      }`}>
-                        {tab.count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* BẢNG DANH MỤC ỨNG DỤNG ĐƠN GIẢN, GỌN GÀNG, KHÔNG TỐN DIỆN TÍCH */}
+            <TeacherCatalog
+              onOpenAppModal={(app) => {
+                handleAppClick(app, { preventDefault: () => {} } as any);
+              }}
+              onCopyShareLink={handleCopyShareLink}
+            />
+          </>
+        )}
 
-              {/* Hàng 3: Gợi ý tìm nhanh theo môn học (Quick Subject Chips) */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pt-1 scrollbar-none text-[11px]">
-                <span className="text-slate-400 font-semibold shrink-0">Lọc nhanh:</span>
-                {QUICK_SUBJECT_CHIPS.map((chip, idx) => {
-                  const isCurrent = searchQuery.toLowerCase() === chip.query.toLowerCase();
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setSearchQuery(chip.query)}
-                      className={`px-2.5 py-1 rounded-lg transition shrink-0 cursor-pointer font-medium ${
-                        isCurrent
-                          ? 'bg-blue-600 text-white font-bold'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                      }`}
-                    >
-                      {chip.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+        {/* 2. PHÂN HỆ QUẢN TRỊ ADMIN (THẦY THÀNH) */}
+        {mainViewTab === 'admin' && (
+          <AdminPortal onBackToHome={() => setMainViewTab('teachers')} />
+        )}
 
-            {/* BANNER QUẢNG CÁO CHÉO CÁC APP TÍNH TIỀN PRO */}
-            <div className="mb-6">
-              <CrossPromoBanner
-                onNavigateApp={(hash) => {
-                  window.location.hash = hash;
-                }}
-              />
-            </div>
-
-            {/* EMPTY STATE KHI KHÔNG TÌM THẤY KẾT QUẢ */}
-            {filteredApps.length === 0 ? (
-              <div className={`max-w-md mx-auto py-12 px-6 ${t.cardBg} rounded-3xl border ${t.cardBorder} shadow-sm text-center`}>
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600">
-                  <Search className="w-6 h-6" />
-                </div>
-                <h3 className={`text-base font-bold ${t.textHeading} mb-1`}>
-                  Không tìm thấy ứng dụng phù hợp
-                </h3>
-                <p className={`text-xs ${t.textMuted} mb-4`}>
-                  Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ {activeApps.length} ứng dụng.
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('ALL');
-                  }}
-                  className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-colors shadow-sm cursor-pointer`}
-                >
-                  Xem toàn bộ {activeApps.length} ứng dụng
-                </button>
-              </div>
-            ) : appViewMode === 'compact' ? (
-              /* ==================== BỐ CỤC 1: DẠNG DANH MỤC KHOA HỌC GỌN GÀNG ==================== */
-              <div className="space-y-3">
-                <div className="hidden md:flex items-center justify-between px-4 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <span className="w-7 text-center">STT</span>
-                    <span className="w-14 text-center">Ảnh</span>
-                    <span>Tên Ứng Dụng & Phân Loại Môn Học</span>
-                  </div>
-                  <div>Thao Tác & Trải Nghiệm</div>
-                </div>
-
-                {filteredApps.map((app, index) => (
-                  <div
-                    key={app.id}
-                    className={`p-3.5 sm:p-4 rounded-2xl ${t.cardBg} border ${t.cardBorder} ${t.cardHoverBorder} ${t.cardHoverShadow} transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-3.5 group`}
-                  >
-                    {/* Phần Trái: STT + Thumbnail + Tên Ứng Dụng + Badges */}
-                    <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
-                      <span className="w-7 h-7 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold text-xs flex items-center justify-center shrink-0">
-                        {index + 1}
-                      </span>
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
-                        {!appImgErrors[app.id] ? (
-                          <img 
-                            src={app.image} 
-                            alt={app.title} 
-                            onError={() => handleAppImgError(app.id)} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100 dark:bg-slate-800">
-                            <Layers className="w-5 h-5" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-black ${
-                            app.levelBadge === 'TIỂU HỌC' ? 'bg-amber-600 text-white' :
-                            app.levelBadge === 'THCS' ? 'bg-blue-700 text-white' :
-                            app.levelBadge === 'THPT' ? 'bg-purple-700 text-white' :
-                            app.levelBadge === 'CV 5512' ? 'bg-emerald-700 text-white' :
-                            'bg-slate-700 text-white'
-                          }`}>
-                            {app.levelBadge || 'TIỆN ÍCH'}
-                          </span>
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${t.badgeBg}`}>
-                            {app.category}
-                          </span>
-                          {app.featured && (
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-gradient-to-r from-amber-500 to-yellow-500 text-white flex items-center gap-1">
-                              <Crown className="w-2.5 h-2.5" />
-                              HOT
-                            </span>
-                          )}
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                            app.badge === 'MIỄN PHÍ' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' :
-                            app.badge === 'NỘI BỘ ADMIN' ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' :
-                            'bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300'
-                          }`}>
-                            {app.badge}
-                          </span>
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-cyan-100 text-cyan-900 dark:bg-cyan-950/80 dark:text-cyan-300 border border-cyan-300/50 dark:border-cyan-700/50 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            {app.version || 'v3.8.2'} • {app.updatedAt || '09/10/2026 22:58'}
-                          </span>
-                        </div>
-                        <h3 className={`text-sm sm:text-base font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors truncate`}>
-                          {app.title}
-                        </h3>
-                        <p className={`text-xs ${t.textMuted} line-clamp-1 mt-0.5`}>
-                          {app.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Phần Phải: Nút Copy Link gửi khách & Mở công cụ */}
-                    <div className="flex items-center gap-2 shrink-0 justify-end pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
-                      <button
-                        type="button"
-                        onClick={(e) => handleCopyShareLink(app.url, app.title, e)}
-                        className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
-                        title={`Sao chép link gửi khách: ${getAppShareUrl(app.url)}`}
-                      >
-                        <Copy className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                        <span>Copy Link</span>
-                      </button>
-                      {app.url && app.url.startsWith('http') ? (
-                        <a
-                          href={app.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:shadow`}
-                        >
-                          <span>Mở công cụ</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => handleAppClick(app, e)}
-                          className={`px-4 py-2 rounded-xl ${t.primaryBtn} text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:shadow cursor-pointer`}
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                          <span>Trải nghiệm ngay</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              /* ==================== BỐ CỤC 2: DẠNG THẺ LƯỚI TRỰC QUAN (GRID VIEW) ==================== */
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-                {filteredApps.map((app) => (
-                  <div
-                    key={app.id}
-                    className={`group ${t.cardBg} rounded-2xl border ${t.cardBorder} overflow-hidden shadow-xs ${t.cardHoverBorder} ${t.cardHoverShadow} transition-all duration-300 flex flex-col hover:-translate-y-1 ${
-                      app.featured ? 'ring-2 ring-amber-400/80 shadow-amber-500/10' : ''
-                    }`}
-                  >
-                    <div className="relative h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                      {!appImgErrors[app.id] ? (
-                        <img
-                          src={app.image}
-                          alt={app.title}
-                          onError={() => handleAppImgError(app.id)}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 text-slate-400">
-                          <Layers className="w-12 h-12 mb-2" />
-                          <span className="text-xs font-semibold">GV AI TOÀN NĂNG</span>
-                        </div>
-                      )}
-                      
-                      {/* Badge Cấp học rõ nét ở góc trên bên trái */}
-                      <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
-                        {app.levelBadge === 'TIỂU HỌC' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-600 text-white shadow-md border border-amber-400/50 tracking-wide flex items-center gap-1">
-                            🎒 TIỂU HỌC
-                          </span>
-                        )}
-                        {app.levelBadge === 'THCS' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-700 text-white shadow-md border border-blue-400/50 tracking-wide flex items-center gap-1">
-                            🏫 CẤP THCS
-                          </span>
-                        )}
-                        {app.levelBadge === 'THPT' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-purple-700 text-white shadow-md border border-purple-400/50 tracking-wide flex items-center gap-1">
-                            🎓 CẤP THPT
-                          </span>
-                        )}
-                        {app.levelBadge === 'CV 5512' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-700 text-white shadow-md border border-emerald-400/50 tracking-wide flex items-center gap-1">
-                            📝 CV 5512
-                          </span>
-                        )}
-                        {app.levelBadge === 'TIỆN ÍCH' && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-slate-700 text-white shadow-md border border-slate-500/50 tracking-wide flex items-center gap-1">
-                            🛠️ TIỆN ÍCH
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Badge HOT và Bản Quyền PRO ở góc trên bên phải */}
-                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                        {app.featured && (
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-xs flex items-center gap-1">
-                            <Crown className="w-3 h-3" />
-                            HOT
-                          </span>
-                        )}
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-xs shadow-xs ${
-                          app.badge === 'MIỄN PHÍ'
-                            ? 'bg-emerald-600 text-white border border-emerald-400/40'
-                            : 'bg-gradient-to-r from-amber-600 to-rose-600 text-white border border-amber-400/30'
-                        }`}>
-                          {app.badge}
-                        </span>
-                      </div>
-                      
-                      <div className="absolute bottom-3 left-3">
-                        <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs backdrop-blur-xs">
-                          {app.category}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                      <div>
-                        <div className="flex items-center justify-between text-[11px] mb-2 font-mono">
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            {app.version || 'v3.8.2'}
-                          </span>
-                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                            🕒 {app.updatedAt || '09/10/2026 22:58'}
-                          </span>
-                        </div>
-                        <h3 className={`text-lg font-bold ${t.textHeading} group-hover:text-blue-600 transition-colors line-clamp-1`}>
-                          {app.title}
-                        </h3>
-                        <p className={`text-sm ${t.textMuted} leading-relaxed mt-2 line-clamp-3`}>
-                          {app.description}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        {app.url && app.url.startsWith('http') ? (
-                          <a
-                            href={app.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`flex-1 py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01]`}
-                          >
-                            <span>Mở công cụ ngay</span>
-                            <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                          </a>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={(e) => handleAppClick(app, e)}
-                            className={`flex-1 py-2.5 px-4 rounded-xl ${t.primaryBtn} text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group-hover:scale-[1.01] cursor-pointer`}
-                          >
-                            <span>Mở công cụ ngay</span>
-                            <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12 text-amber-300" />
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={(e) => handleCopyShareLink(app.url, app.title, e)}
-                          className="py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0 shadow-xs active:scale-95"
-                          title={`Sao chép link gửi khách: ${getAppShareUrl(app.url)}`}
-                        >
-                          <Copy className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                          <span className="hidden sm:inline">Copy Link</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+        {/* 3. PHÂN HỆ DÀNH CHO HỌC SINH (TỪ VỰNG + THI ONLINE + TẢI ĐỀ) */}
+        {mainViewTab === 'students' && (
+          <StudentPortal />
+        )}
 
       </main>
 
@@ -1874,11 +1423,15 @@ export default function App() {
               <span className="text-slate-600">•</span>
               <button
                 type="button"
-                onClick={() => setShowAdminDashboard(true)}
+                onClick={() => {
+                  setMainViewTab('admin');
+                  window.location.hash = '#admin';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-400" />
-                <span>Cổng Quản Trị Hệ Thống</span>
+                <span>Cổng Quản Trị Admin</span>
               </button>
             </div>
           </div>

@@ -1,0 +1,794 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  GraduationCap, 
+  BookOpen, 
+  CheckCircle2, 
+  XCircle, 
+  Volume2, 
+  RotateCw, 
+  Download, 
+  Clock, 
+  Award, 
+  HelpCircle, 
+  ArrowRight, 
+  ArrowLeft, 
+  Shuffle, 
+  Filter, 
+  Search,
+  ExternalLink,
+  BookMarked,
+  Sparkles,
+  FileText
+} from 'lucide-react';
+import { BRAND } from '../config/brand';
+
+// Bộ dữ liệu từ vựng mẫu chuẩn Global Success
+interface VocabItem {
+  id: string;
+  grade: number;
+  unit: string;
+  word: string;
+  phonetic: string;
+  type: string;
+  meaning: string;
+  example: string;
+  exampleMeaning: string;
+}
+
+const SAMPLE_VOCABULARY: VocabItem[] = [
+  // LỚP 6
+  {
+    id: 'v6-1',
+    grade: 6,
+    unit: 'Unit 1: My New School',
+    word: 'uniform',
+    phonetic: '/ˈjuːnɪfɔːm/',
+    type: 'noun',
+    meaning: 'đồng phục',
+    example: 'We wear our uniform to school on Mondays.',
+    exampleMeaning: 'Chúng tôi mặc đồng phục đến trường vào các ngày thứ Hai.'
+  },
+  {
+    id: 'v6-2',
+    grade: 6,
+    unit: 'Unit 1: My New School',
+    word: 'calculator',
+    phonetic: '/ˈkælkjuleɪtə(r)/',
+    type: 'noun',
+    meaning: 'máy tính cầm tay',
+    example: 'You can use a calculator in maths lessons.',
+    exampleMeaning: 'Bạn có thể sử dụng máy tính cầm tay trong giờ học Toán.'
+  },
+  {
+    id: 'v6-3',
+    grade: 6,
+    unit: 'Unit 1: My New School',
+    word: 'compass',
+    phonetic: '/ˈkʌmpəs/',
+    type: 'noun',
+    meaning: 'com-pa / la bàn',
+    example: 'I need a compass to draw a perfect circle.',
+    exampleMeaning: 'Tôi cần một chiếc com-pa để vẽ một hình tròn hoàn hảo.'
+  },
+  // LỚP 7
+  {
+    id: 'v7-1',
+    grade: 7,
+    unit: 'Unit 1: Hobbies',
+    word: 'community',
+    phonetic: '/kəˈmjuːnəti/',
+    type: 'noun',
+    meaning: 'cộng đồng',
+    example: 'She is very active in the local community.',
+    exampleMeaning: 'Cô ấy rất tích cực tham gia các hoạt động trong cộng đồng địa phương.'
+  },
+  {
+    id: 'v7-2',
+    grade: 7,
+    unit: 'Unit 2: Healthy Living',
+    word: 'allergy',
+    phonetic: '/ˈælədʒi/',
+    type: 'noun',
+    meaning: 'dị ứng',
+    example: 'He has an allergy to seafood.',
+    exampleMeaning: 'Anh ấy bị dị ứng với đồ hải sản.'
+  },
+  // LỚP 8
+  {
+    id: 'v8-1',
+    grade: 8,
+    unit: 'Unit 1: Leisure Time',
+    word: 'origami',
+    phonetic: '/ˌɒrɪˈɡɑːmi/',
+    type: 'noun',
+    meaning: 'nghệ thuật gấp giấy Nhật Bản',
+    example: 'My sister enjoys folding paper into origami animals.',
+    exampleMeaning: 'Chị tôi thích gấp giấy thành các con vật origami.'
+  },
+  {
+    id: 'v8-2',
+    grade: 8,
+    unit: 'Unit 2: Life in the Countryside',
+    word: 'harvest',
+    phonetic: '/ˈhɑːvɪst/',
+    type: 'noun / verb',
+    meaning: 'vụ thu hoạch / thu hoạch mùa màng',
+    example: 'Farmers are busy harvesting rice in the autumn.',
+    exampleMeaning: 'Người nông dân bận rộn thu hoạch lúa vào mùa thu.'
+  },
+  // LỚP 9
+  {
+    id: 'v9-1',
+    grade: 9,
+    unit: 'Unit 1: Local Community',
+    word: 'artisan',
+    phonetic: '/ˌɑːtɪˈzæn/',
+    type: 'noun',
+    meaning: 'nghệ nhân / thợ thủ công lành nghề',
+    example: 'Bat Trang pottery village has many skilled artisans.',
+    exampleMeaning: 'Làng gốm Bát Tràng có rất nhiều nghệ nhân lành nghề.'
+  },
+  {
+    id: 'v9-2',
+    grade: 9,
+    unit: 'Unit 2: City Life',
+    word: 'cosmopolitan',
+    phonetic: '/ˌkɒzməˈpɒlɪtən/',
+    type: 'adjective',
+    meaning: 'mang tính quốc tế / đa văn hóa',
+    example: 'Hanoi is becoming a modern, cosmopolitan city.',
+    exampleMeaning: 'Hà Nội đang dần trở thành một thành phố hiện đại, đa văn hóa.'
+  },
+  // LỚP 10
+  {
+    id: 'v10-1',
+    grade: 10,
+    unit: 'Unit 1: Family Life',
+    word: 'breadwinner',
+    phonetic: '/ˈbredwɪnə(r)/',
+    type: 'noun',
+    meaning: 'trụ cột gia đình (người kiếm tiền chính)',
+    example: 'In many families, both parents are now the breadwinners.',
+    exampleMeaning: 'Trong nhiều gia đình hiện nay, cả bố và mẹ đều là trụ cột kinh tế.'
+  },
+  // LỚP 11
+  {
+    id: 'v11-1',
+    grade: 11,
+    unit: 'Unit 1: A Long and Healthy Life',
+    word: 'longevity',
+    phonetic: '/lɒnˈdʒevəti/',
+    type: 'noun',
+    meaning: 'tuổi thọ / sự sống lâu',
+    example: 'A balanced diet and regular exercise contribute to longevity.',
+    exampleMeaning: 'Chế độ ăn cân đối và tập thể dục thường xuyên giúp tăng tuổi thọ.'
+  },
+  // LỚP 12
+  {
+    id: 'v12-1',
+    grade: 12,
+    unit: 'Unit 1: Life Stories We Admire',
+    word: 'perseverance',
+    phonetic: '/ˌpɜːsɪˈvɪərəns/',
+    type: 'noun',
+    meaning: 'sự kiên trì, bền bỉ',
+    example: 'Success requires both talent and great perseverance.',
+    exampleMeaning: 'Thành công đòi hỏi cả tài năng lẫn sự kiên trì to lớn.'
+  }
+];
+
+// Bộ đề kiểm tra trắc nghiệm online mẫu
+interface QuizQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: number; // 0 for A, 1 for B, 2 for C, 3 for D
+  explanation: string;
+}
+
+const SAMPLE_QUIZ_QUESTIONS: QuizQuestion[] = [
+  {
+    id: 1,
+    question: 'Listen and choose the word whose underlined part is pronounced differently:',
+    options: ['A. wanted', 'B. decided', 'C. played', 'D. needed'],
+    correctAnswer: 2,
+    explanation: 'Đáp án C: đuôi "-ed" trong "played" phát âm là /d/, còn các từ còn lại đuôi "-ed" phát âm là /ɪd/ sau âm /t/ và /d/.'
+  },
+  {
+    id: 2,
+    question: 'If you want to stay healthy, you should ________ more vegetables and fruits.',
+    options: ['A. eating', 'B. eat', 'C. ate', 'D. to eat'],
+    correctAnswer: 1,
+    explanation: 'Đáp án B: Sau động từ khuyết thiếu "should" dùng động từ nguyên thể không "to" (V-bare): should eat.'
+  },
+  {
+    id: 3,
+    question: 'My brother is interested in ________ chess with his friends after school.',
+    options: ['A. play', 'B. playing', 'C. plays', 'D. played'],
+    correctAnswer: 1,
+    explanation: 'Đáp án B: Cấu trúc "be interested in + V-ing" (thích thú làm gì).'
+  },
+  {
+    id: 4,
+    question: 'Choose the word that is CLOSEST in meaning to the underlined word:\n"The local community organised a charity run to raise money for orphans."',
+    options: ['A. collect', 'B. spend', 'C. waste', 'D. borrow'],
+    correctAnswer: 0,
+    explanation: 'Đáp án A: "raise money" đồng nghĩa với "collect money" (gây quỹ, quyên góp tiền).'
+  },
+  {
+    id: 5,
+    question: 'Hanoi is much ________ than my hometown, with tall buildings and heavy traffic.',
+    options: ['A. crowded', 'B. more crowded', 'C. most crowded', 'D. as crowded'],
+    correctAnswer: 1,
+    explanation: 'Đáp án B: Cấu trúc so sánh hơn với tính từ dài: "much + more + adj + than".'
+  }
+];
+
+// Danh mục tài liệu đề thi tải về cho học sinh
+interface StudentDownloadFile {
+  id: string;
+  title: string;
+  subject: string;
+  grade: string;
+  format: string;
+  size: string;
+  url: string;
+  description: string;
+}
+
+const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
+  {
+    id: 'mat-1',
+    title: 'Đề kiểm tra Tiếng Anh 6 - Global Success (Chuẩn CV 7991)',
+    subject: 'Tiếng Anh',
+    grade: 'Lớp 6',
+    format: 'DOC',
+    size: '6 KB',
+    url: '/De_Kiem_Tra_Tieng_Anh_6_Global_Success_CV7991.doc',
+    description: 'Đề kiểm tra 4 kỹ năng bám sát ma trận, bản đặc tả và có đáp án chi tiết.'
+  },
+  {
+    id: 'mat-2',
+    title: 'Tài liệu hướng dẫn giải bài tập và ôn thi 8 môn THCS',
+    subject: 'Tổng hợp',
+    grade: 'Lớp 6, 7, 8, 9',
+    format: 'DOCX',
+    size: '25 KB',
+    url: '/HUONG_DAN_TAO_DE_THCS_8_MON.docx',
+    description: 'Phương pháp ôn tập và dạng bài trọng tâm môn Toán, Văn, Anh, KHTN...'
+  },
+  {
+    id: 'mat-3',
+    title: 'Đề cương ôn tập & Khung kiến thức Tiếng Anh THCS',
+    subject: 'Tiếng Anh',
+    grade: 'Lớp 9',
+    format: 'DOCX',
+    size: '38 KB',
+    url: '/HUONG_DAN_SU_DUNG.docx',
+    description: 'Tổng hợp từ vựng và chủ điểm ngữ pháp trọng tâm thi vào 10.'
+  }
+];
+
+export const StudentPortal: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'vocab' | 'quiz' | 'downloads'>('vocab');
+
+  // State Học Từ Vựng
+  const [selectedGrade, setSelectedGrade] = useState<number>(6);
+  const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
+  const [isFlipped, setIsFlipped] = useState<boolean>(false);
+  const [vocabSearch, setVocabSearch] = useState<string>('');
+
+  // Lọc từ vựng theo khối lớp và tìm kiếm
+  const filteredVocab = SAMPLE_VOCABULARY.filter(item => {
+    const matchGrade = selectedGrade === 0 || item.grade === selectedGrade;
+    const matchSearch = vocabSearch.trim() === '' || 
+      item.word.toLowerCase().includes(vocabSearch.toLowerCase()) ||
+      item.meaning.toLowerCase().includes(vocabSearch.toLowerCase());
+    return matchGrade && matchSearch;
+  });
+
+  const currentWord = filteredVocab[currentVocabIndex] || filteredVocab[0];
+
+  // Phát âm từ tiếng Anh bằng Web Speech API giọng chuẩn bản xứ
+  const speakWord = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9; // Tốc độ vừa phải cho học sinh
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert('Trình duyệt của bạn chưa hỗ trợ phát âm tự động.');
+    }
+  };
+
+  // State Làm Bài Trắc Nghiệm Online
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [timeLeft, setTimeLeft] = useState<number>(900); // 15 phút (900s)
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
+
+  // Đồng hồ đếm ngược bài thi
+  useEffect(() => {
+    if (!isTimerRunning || isSubmitted) return;
+    if (timeLeft <= 0) {
+      handleSubmitQuiz();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, isTimerRunning, isSubmitted]);
+
+  const handleSelectOption = (questionId: number, optionIndex: number) => {
+    if (isSubmitted) return;
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: optionIndex
+    }));
+  };
+
+  const handleSubmitQuiz = () => {
+    setIsSubmitted(true);
+    setIsTimerRunning(false);
+  };
+
+  const handleResetQuiz = () => {
+    setSelectedAnswers({});
+    setIsSubmitted(false);
+    setTimeLeft(900);
+    setIsTimerRunning(true);
+  };
+
+  // Tính điểm số
+  let scoreCount = 0;
+  SAMPLE_QUIZ_QUESTIONS.forEach(q => {
+    if (selectedAnswers[q.id] === q.correctAnswer) {
+      scoreCount++;
+    }
+  });
+  const totalQuestions = SAMPLE_QUIZ_QUESTIONS.length;
+  const finalScore = ((scoreCount / totalQuestions) * 10).toFixed(1);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* HEADER GÓC HỌC SINH */}
+      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-sky-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
+        <div className="relative z-10 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold mb-3 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+            <span>Cổng Học Tập Dành Cho Học Sinh Toàn Quốc</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">
+            GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
+          </h2>
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Học từ vựng Tiếng Anh theo chuẩn giáo trình Global Success, làm bài kiểm tra trắc nghiệm chấm điểm tự động và tải đề thi miễn phí.
+          </p>
+        </div>
+
+        {/* Nút Chuyển Nhanh 3 Tính Năng Của Học Sinh */}
+        <div className="relative z-10 flex flex-wrap items-center gap-2 mt-6">
+          <button
+            onClick={() => setActiveTab('vocab')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+              activeTab === 'vocab'
+                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
+                : 'bg-white/10 hover:bg-white/20 text-white'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>1. Học Từ Vựng 6 - 12</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('quiz')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+              activeTab === 'quiz'
+                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
+                : 'bg-white/10 hover:bg-white/20 text-white'
+            }`}
+          >
+            <Award className="w-4 h-4" />
+            <span>2. Làm Bài Thi Trực Tuyến</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('downloads')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+              activeTab === 'downloads'
+                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
+                : 'bg-white/10 hover:bg-white/20 text-white'
+            }`}
+          >
+            <Download className="w-4 h-4" />
+            <span>3. Tải Đề Kiểm Tra & Tài Liệu</span>
+          </button>
+
+          <a
+            href="/tuvung/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition"
+          >
+            <span>Mở Web Siêu Trí Nhớ 6-12</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      </div>
+
+      {/* ==================== PHÂN HỆ 1: HỌC TỪ VỰNG ==================== */}
+      {activeTab === 'vocab' && (
+        <div className="space-y-6">
+          {/* Thanh lọc theo khối lớp */}
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5 text-blue-600" />
+                <span>Chọn khối lớp:</span>
+              </span>
+              {[6, 7, 8, 9, 10, 11, 12].map(grade => (
+                <button
+                  key={grade}
+                  onClick={() => {
+                    setSelectedGrade(grade);
+                    setCurrentVocabIndex(0);
+                    setIsFlipped(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                    selectedGrade === grade
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Lớp {grade}
+                </button>
+              ))}
+            </div>
+
+            {/* Ô tìm kiếm từ */}
+            <div className="relative min-w-[220px]">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Tìm từ vựng hoặc nghĩa..."
+                value={vocabSearch}
+                onChange={e => {
+                  setVocabSearch(e.target.value);
+                  setCurrentVocabIndex(0);
+                  setIsFlipped(false);
+                }}
+                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          {/* KHUNG FLASHCARD 3D TƯƠNG TÁC */}
+          {currentWord ? (
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div 
+                onClick={() => setIsFlipped(!isFlipped)}
+                className="min-h-[320px] sm:min-h-[360px] bg-white dark:bg-slate-900 rounded-3xl border-2 border-blue-500/30 hover:border-blue-500 p-8 flex flex-col justify-between items-center text-center shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl relative select-none"
+              >
+                <div className="w-full flex items-center justify-between text-xs text-slate-400">
+                  <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 font-bold border border-blue-200 dark:border-blue-800">
+                    Lớp {currentWord.grade} • {currentWord.unit}
+                  </span>
+                  <span className="font-semibold text-slate-500">
+                    Từ {currentVocabIndex + 1} / {filteredVocab.length}
+                  </span>
+                </div>
+
+                {/* Nội dung Mặt Trước (English) hoặc Mặt Sau (Vietnamese) */}
+                {!isFlipped ? (
+                  <div className="my-auto space-y-3">
+                    <h3 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+                      {currentWord.word}
+                    </h3>
+                    <p className="text-lg text-blue-600 dark:text-blue-400 font-mono font-medium">
+                      {currentWord.phonetic}
+                    </p>
+                    <span className="inline-block px-3 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                      ({currentWord.type})
+                    </span>
+                    <div className="pt-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          speakWord(currentWord.word);
+                        }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition active:scale-95 cursor-pointer"
+                        title="Bấm để nghe phát âm chuẩn bản xứ"
+                      >
+                        <Volume2 className="w-4 h-4 animate-bounce" />
+                        <span>Nghe phát âm chuẩn</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="my-auto space-y-4 animate-fadeIn">
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                      Ý Nghĩa Tiếng Việt
+                    </span>
+                    <h3 className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400">
+                      {currentWord.meaning}
+                    </h3>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 text-left border border-slate-200 dark:border-slate-700 text-xs sm:text-sm">
+                      <p className="font-medium text-slate-900 dark:text-white mb-1">
+                        💬 <span className="italic">{currentWord.example}</span>
+                      </p>
+                      <p className="text-slate-500 dark:text-slate-400">
+                        👉 {currentWord.exampleMeaning}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="w-full flex items-center justify-center text-xs text-slate-400 gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <RotateCw className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Bấm vào thẻ để lật xem {isFlipped ? 'Mặt trước (Tiếng Anh)' : 'Mặt sau (Tiếng Việt)'}</span>
+                </div>
+              </div>
+
+              {/* Nút Điều Khiển Chuyển Thẻ */}
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  disabled={currentVocabIndex === 0}
+                  onClick={() => {
+                    setCurrentVocabIndex(prev => Math.max(0, prev - 1));
+                    setIsFlipped(false);
+                  }}
+                  className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Từ trước</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    const randomIndex = Math.floor(Math.random() * filteredVocab.length);
+                    setCurrentVocabIndex(randomIndex);
+                    setIsFlipped(false);
+                  }}
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                  title="Xáo trộn ngẫu nhiên để luyện phản xạ"
+                >
+                  <Shuffle className="w-4 h-4 text-purple-600" />
+                  <span>Xáo trộn</span>
+                </button>
+
+                <button
+                  disabled={currentVocabIndex === filteredVocab.length - 1}
+                  onClick={() => {
+                    setCurrentVocabIndex(prev => Math.min(filteredVocab.length - 1, prev + 1));
+                    setIsFlipped(false);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                >
+                  <span>Từ tiếp theo</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800">
+              <BookOpen className="w-10 h-10 text-slate-400 mx-auto mb-2 opacity-50" />
+              <p className="text-sm text-slate-500">Không tìm thấy từ vựng phù hợp với từ khóa "{vocabSearch}"</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ==================== PHÂN HỆ 2: LÀM BÀI THI TRỰC TUYẾN ==================== */}
+      {activeTab === 'quiz' && (
+        <div className="space-y-6">
+          {/* Thanh Trạng Thái Đề Thi & Đồng Hồ */}
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-500" />
+                <span>Đề Kiểm Tra Trắc Nghiệm Tiếng Anh 15 Phút (Số 01)</span>
+              </h3>
+              <p className="text-xs text-slate-500">Chuẩn ma trận Bộ GD&ĐT • Tổng số {totalQuestions} câu hỏi</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {/* Đồng hồ đếm ngược */}
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-mono text-sm font-bold border ${
+                timeLeft <= 120 
+                  ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' 
+                  : 'bg-blue-50 text-blue-700 border-blue-200'
+              }`}>
+                <Clock className="w-4 h-4" />
+                <span>{formatTime(timeLeft)}</span>
+              </div>
+
+              {!isSubmitted ? (
+                <button
+                  onClick={handleSubmitQuiz}
+                  className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-md transition cursor-pointer"
+                >
+                  Nộp bài chấm điểm
+                </button>
+              ) : (
+                <button
+                  onClick={handleResetQuiz}
+                  className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black shadow-md transition cursor-pointer flex items-center gap-1"
+                >
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Làm lại đề này</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* BẢNG KẾT QUẢ KHI ĐÃ NỘP BÀI */}
+          {isSubmitted && (
+            <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white shadow-xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn border border-emerald-500/40">
+              <div>
+                <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                  Kết Quả Đánh Giá Tự Động
+                </span>
+                <h4 className="text-2xl font-black mt-1">
+                  Điểm số: <span className="text-amber-300 text-3xl">{finalScore}</span> / 10 điểm
+                </h4>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Bạn đã trả lời đúng {scoreCount} trên tổng số {totalQuestions} câu hỏi. Xem giải thích chi tiết bên dưới!
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href="/app-15p-tienganh/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-xl bg-white text-slate-950 font-black text-xs hover:bg-slate-100 transition shadow-md flex items-center gap-1.5"
+                >
+                  <span>Mở kho đề 15P đầy đủ</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* DANH SÁCH CÂU HỎI */}
+          <div className="space-y-4">
+            {SAMPLE_QUIZ_QUESTIONS.map((q, idx) => {
+              const selected = selectedAnswers[q.id];
+              const isCorrect = selected === q.correctAnswer;
+              return (
+                <div 
+                  key={q.id}
+                  className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition ${
+                    isSubmitted 
+                      ? isCorrect 
+                        ? 'border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20' 
+                        : 'border-red-500 bg-red-50/20 dark:bg-red-950/20'
+                      : 'border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">
+                      <span className="text-blue-600 mr-1.5 font-black">Câu {idx + 1}:</span>
+                      {q.question}
+                    </p>
+                    {isSubmitted && (
+                      <span className="shrink-0">
+                        {isCorrect ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                        ) : (
+                          <XCircle className="w-5 h-5 text-red-500" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 4 Lựa chọn A, B, C, D */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {q.options.map((opt, optIdx) => {
+                      const isOptionSelected = selected === optIdx;
+                      const isOptionCorrect = q.correctAnswer === optIdx;
+
+                      let btnStyle = 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300';
+                      if (isOptionSelected && !isSubmitted) {
+                        btnStyle = 'border-blue-600 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold';
+                      } else if (isSubmitted) {
+                        if (isOptionCorrect) {
+                          btnStyle = 'border-emerald-500 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 font-black';
+                        } else if (isOptionSelected && !isOptionCorrect) {
+                          btnStyle = 'border-red-500 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200 line-through';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={optIdx}
+                          disabled={isSubmitted}
+                          onClick={() => handleSelectOption(q.id, optIdx)}
+                          className={`w-full text-left px-3.5 py-2.5 rounded-xl border text-xs transition cursor-pointer flex items-center justify-between ${btnStyle}`}
+                        >
+                          <span>{opt}</span>
+                          {isSubmitted && isOptionCorrect && (
+                            <span className="text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-200 dark:bg-emerald-900 px-1.5 py-0.5 rounded">Đáp án đúng</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* LỜI GIẢI THÍCH CHI TIẾT KHI ĐÃ NỘP BÀI */}
+                  {isSubmitted && (
+                    <div className="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                      <p className="font-bold text-blue-600 dark:text-blue-400 mb-0.5 flex items-center gap-1">
+                        <HelpCircle className="w-3.5 h-3.5" />
+                        <span>Lời giải thích sư phạm:</span>
+                      </p>
+                      <p>{q.explanation}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ==================== PHÂN HỆ 3: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
+      {activeTab === 'downloads' && (
+        <div className="space-y-4">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <BookMarked className="w-5 h-5 text-blue-600" />
+                <span>Kho Đề Thi & Đề Cương Ôn Tập Tải Về Miễn Phí</span>
+              </h3>
+              <p className="text-xs text-slate-500">Các tệp tài liệu định dạng Word (.doc/.docx) và PDF có kèm đáp án để tự ôn ở nhà</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {DOWNLOADABLE_MATERIALS.map(item => (
+              <div 
+                key={item.id}
+                className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-2">
+                    <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 font-bold border border-blue-200 dark:border-blue-800">
+                      {item.grade}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 font-mono text-slate-600 dark:text-slate-400 font-bold">
+                      {item.format} • {item.size}
+                    </span>
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-2">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-slate-500 line-clamp-2 mb-4">
+                    {item.description}
+                  </p>
+                </div>
+
+                <a
+                  href={item.url}
+                  download
+                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải tài liệu về máy</span>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

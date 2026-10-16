@@ -394,8 +394,8 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
 
   // Trạng thái kích hoạt bằng mã Key Ed25519 & Đồng bộ Cloud
   const [inputKey, setInputKey] = useState('');
-  const [, setVerifyResult] = useState<SmartListeningVerifyResult | null>(null);
-  const [, setIsSyncingCloud] = useState(false);
+  const [verifyResult, setVerifyResult] = useState<SmartListeningVerifyResult | null>(null);
+  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
 
   // Ref điều khiển playback
   const isPlayingRef = useRef(false);
@@ -792,7 +792,8 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
         phoneNumber: phoneZalo,
         schoolUnit: schoolUnit,
         appId: 'smart-listening',
-        notes: `Gói: ${regPackage} | Đăng ký từ Web Pro`
+        appName: 'Smart Listening Pro',
+        packageType: (regPackage as any) || 'LIFETIME'
       });
 
       setRegSuccess(true);
