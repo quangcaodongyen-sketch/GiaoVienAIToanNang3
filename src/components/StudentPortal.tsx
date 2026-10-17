@@ -1,3 +1,5 @@
+import audioPronunciationService, { VoiceAccent } from '../services/audioPronunciationService';
+import { IpaChartPronunciationModal } from './IpaChartPronunciationModal';
 import React, { useState, useEffect } from 'react';
 import { 
   GraduationCap, 
@@ -240,6 +242,19 @@ export const StudentPortal: React.FC = () => {
   const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [vocabSearch, setVocabSearch] = useState<string>('');
+  const [isIpaModalOpen, setIsIpaModalOpen] = useState(false);
+  const [voiceAccent, setVoiceAccent] = useState<VoiceAccent>(() => audioPronunciationService.getAccent());
+  const [speechRate, setSpeechRate] = useState<number>(() => audioPronunciationService.getRate());
+
+  const handleToggleAccent = (newAccent: VoiceAccent) => {
+    setVoiceAccent(newAccent);
+    audioPronunciationService.setAccent(newAccent);
+  };
+
+  const handleToggleRate = (newRate: number) => {
+    setSpeechRate(newRate);
+    audioPronunciationService.setRate(newRate);
+  };
 
   // Lọc từ vựng theo khối lớp và tìm kiếm
   const filteredVocab = SAMPLE_VOCABULARY.filter(item => {
@@ -252,17 +267,12 @@ export const StudentPortal: React.FC = () => {
 
   const currentWord = filteredVocab[currentVocabIndex] || filteredVocab[0];
 
-  // Phát âm từ tiếng Anh bằng Web Speech API giọng chuẩn bản xứ
-  const speakWord = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.9; // Tốc độ vừa phải cho học sinh
-      window.speechSynthesis.speak(utterance);
-    } else {
-      alert('Trình duyệt của bạn chưa hỗ trợ phát âm tự động.');
-    }
+  // Phát âm từ tiếng Anh bằng Audio Pronunciation Service chuẩn tuyệt đối (Microsoft Natural / Google US-UK)
+  const speakWord = (text: string, customRate?: number) => {
+    audioPronunciationService.speak(text, {
+      accent: voiceAccent,
+      rate: customRate || speechRate
+    });
   };
 
   return (
@@ -318,6 +328,16 @@ export const StudentPortal: React.FC = () => {
           >
             <Award className="w-4 h-4" />
             <span>3. Kiểm tra Online</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsIpaModalOpen(true)}
+            className="px-4 py-2.5 rounded-xl font-black text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-md border border-amber-300 hover:scale-105"
+            title="Mở Bảng 44 Âm Chuẩn Quốc Tế IPA bám sát SGK Global Success"
+          >
+            <Sparkles className="w-4 h-4 text-slate-950 animate-bounce" />
+            <span>🗣️ Bảng 44 Âm IPA Chuẩn</span>
           </button>
 
           <button
@@ -533,7 +553,43 @@ export const StudentPortal: React.FC = () => {
 
               {/* KHUNG FLASHCARD 3D TƯƠNG TÁC */}
               {currentWord ? (
-                <div className="max-w-2xl mx-auto space-y-4">
+                <div className="max-w-2xl mx-auto space-y-3">
+                  {/* Thanh điều khiển phát âm chuẩn US/UK & Bảng IPA */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-1.5 bg-blue-50/80 dark:bg-slate-800/80 rounded-2xl border border-blue-200 dark:border-blue-800 text-xs">
+                    <div className="flex items-center gap-2 font-bold text-slate-700 dark:text-slate-200">
+                      <Volume2 className="w-4 h-4 text-blue-600 animate-pulse" />
+                      <span>Giọng phát âm:</span>
+                      <div className="inline-flex rounded-lg p-0.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleAccent('US')}
+                          className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition ${
+                            voiceAccent === 'US' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-blue-600'
+                          }`}
+                        >
+                          🇺🇸 US (Mỹ)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleAccent('UK')}
+                          className={`px-2.5 py-0.5 rounded text-[11px] font-bold transition ${
+                            voiceAccent === 'UK' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-blue-600'
+                          }`}
+                        >
+                          🇬🇧 UK (Anh)
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsIpaModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[11px] font-black transition cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Tra Bảng 44 Âm IPA Chuẩn</span>
+                    </button>
+                  </div>
                   <div 
                     onClick={() => setIsFlipped(!isFlipped)}
                     className="min-h-[320px] sm:min-h-[360px] bg-white dark:bg-slate-900 rounded-3xl border-2 border-blue-500/30 hover:border-blue-500 p-8 flex flex-col justify-between items-center text-center shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl relative select-none"
@@ -558,17 +614,29 @@ export const StudentPortal: React.FC = () => {
                         <span className="inline-block px-3 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
                           ({currentWord.type})
                         </span>
-                        <div className="pt-3">
+                        <div className="pt-3 flex flex-wrap items-center justify-center gap-2">
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               speakWord(currentWord.word);
                             }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition active:scale-95 cursor-pointer"
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md transition active:scale-95 cursor-pointer"
                             title="Bấm để nghe phát âm chuẩn bản xứ"
                           >
                             <Volume2 className="w-4 h-4 animate-bounce" />
-                            <span>Nghe phát âm chuẩn</span>
+                            <span>Phát âm ({voiceAccent})</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              speakWord(currentWord.word, 0.65);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition active:scale-95 cursor-pointer border border-slate-200 dark:border-slate-700"
+                            title="Nghe tốc độ chậm để nghe rõ từng âm tiết và ending sound"
+                          >
+                            <span>🐢 Chậm (0.65x)</span>
                           </button>
                         </div>
                       </div>
@@ -581,10 +649,23 @@ export const StudentPortal: React.FC = () => {
                           {currentWord.meaning}
                         </h3>
                         <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 text-left border border-slate-200 dark:border-slate-700 text-xs sm:text-sm">
-                          <p className="font-medium text-slate-900 dark:text-white mb-1">
-                            💬 <span className="italic">{currentWord.example}</span>
-                          </p>
-                          <p className="text-slate-500 dark:text-slate-400">
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="font-medium text-slate-900 dark:text-white mb-1 flex-1">
+                              💬 <span className="italic">{currentWord.example}</span>
+                            </p>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                speakWord(currentWord.example);
+                              }}
+                              className="p-1.5 rounded-xl bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 shrink-0 transition"
+                              title="Nghe đọc cả câu ví dụ"
+                            >
+                              <Volume2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <p className="text-slate-500 dark:text-slate-400 mt-1">
                             👉 {currentWord.exampleMeaning}
                           </p>
                         </div>
@@ -714,6 +795,11 @@ export const StudentPortal: React.FC = () => {
           </div>
         </div>
       )}
+      {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
+      <IpaChartPronunciationModal
+        isOpen={isIpaModalOpen}
+        onClose={() => setIsIpaModalOpen(false)}
+      />
     </div>
   );
 };

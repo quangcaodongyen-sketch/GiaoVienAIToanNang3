@@ -1,3 +1,5 @@
+import audioPronunciationService, { VoiceAccent } from '../services/audioPronunciationService';
+import { IpaChartPronunciationModal } from './IpaChartPronunciationModal';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, 
@@ -175,15 +177,35 @@ export const TextbookExercisePortal: React.FC = () => {
     } catch {}
   };
 
-  // Text to speech for authentic English pronunciation
-  const speakSentence = (text: string) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+  // Audio Pronunciation Service State & Controls chuẩn tuyệt đối
+  const [isIpaModalOpen, setIsIpaModalOpen] = useState(false);
+  const [voiceAccent, setVoiceAccent] = useState<VoiceAccent>(() => audioPronunciationService.getAccent());
+  const [speechRate, setSpeechRate] = useState<number>(() => audioPronunciationService.getRate());
+
+  const handleToggleAccent = (newAccent: VoiceAccent) => {
+    setVoiceAccent(newAccent);
+    audioPronunciationService.setAccent(newAccent);
+  };
+
+  const handleToggleRate = (newRate: number) => {
+    setSpeechRate(newRate);
+    audioPronunciationService.setRate(newRate);
+  };
+
+  // Text to speech for authentic English pronunciation chuẩn tuyệt đối
+  const speakSentence = (text: string, customRate?: number) => {
     const clean = text.replace(/_{2,}/g, 'blank').replace(/\[.*?\]/g, '');
-    const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
+    audioPronunciationService.speak(clean, {
+      accent: voiceAccent,
+      rate: customRate || speechRate
+    });
+  };
+
+  const speakOption = (optText: string, customRate?: number) => {
+    audioPronunciationService.speak(optText, {
+      accent: voiceAccent,
+      rate: customRate || speechRate
+    });
   };
 
   // Current active questions
@@ -706,6 +728,82 @@ export const TextbookExercisePortal: React.FC = () => {
           </div>
         </div>
 
+        {/* THANH ĐIỀU KHIỂN PHÁT ÂM CHUẨN TUYỆT ĐỐI */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 dark:from-slate-800 dark:via-blue-950/40 dark:to-slate-800 border-2 border-blue-200 dark:border-blue-800 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm">
+            <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+              <Volume2 className="w-4 h-4 animate-pulse" />
+            </div>
+            <div>
+              <span className="font-black text-blue-950 dark:text-blue-100 flex items-center gap-1.5">
+                <span>Phát Âm Chuẩn Bản Xứ:</span>
+                <span className="bg-emerald-500 text-white text-[10px] px-2 py-0.2 rounded-full uppercase font-black">
+                  Chuẩn 100%
+                </span>
+              </span>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Bấm vào biểu tượng 🔊 bên cạnh mỗi từ hoặc phương án để nghe phát âm chuẩn tuyệt đối
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* TOGGLE US / UK */}
+            <div className="inline-flex rounded-xl p-1 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold shadow-xs">
+              <button
+                type="button"
+                onClick={() => handleToggleAccent('US')}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                  voiceAccent === 'US' ? 'bg-blue-600 text-white font-black shadow-sm' : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                🇺🇸 US (Mỹ)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleToggleAccent('UK')}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                  voiceAccent === 'UK' ? 'bg-blue-600 text-white font-black shadow-sm' : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                🇬🇧 UK (Anh)
+              </button>
+            </div>
+
+            {/* TOGGLE SPEED */}
+            <div className="inline-flex rounded-xl p-1 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold shadow-xs">
+              <button
+                type="button"
+                onClick={() => handleToggleRate(0.85)}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                  speechRate >= 0.8 ? 'bg-indigo-600 text-white font-black shadow-sm' : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                1.0x Chuẩn
+              </button>
+              <button
+                type="button"
+                onClick={() => handleToggleRate(0.68)}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                  speechRate < 0.8 ? 'bg-indigo-600 text-white font-black shadow-sm' : 'text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                🐢 0.7x Chậm rõ âm
+              </button>
+            </div>
+
+            {/* NÚT MỞ BẢNG 44 ÂM IPA */}
+            <button
+              type="button"
+              onClick={() => setIsIpaModalOpen(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs shadow-sm border border-amber-300 flex items-center gap-1.5 transition cursor-pointer hover:scale-105"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+              <span>🗣️ Tra Bảng 44 Âm IPA</span>
+            </button>
+          </div>
+        </div>
+
         {/* DANH SÁCH CÂU HỎI */}
         <div className="space-y-7">
           {activeQuestions.map((q, idx) => {
@@ -830,9 +928,24 @@ export const TextbookExercisePortal: React.FC = () => {
                           <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 transition-transform ${badgeStyle}`}>
                             {theme.label}
                           </div>
-                          {/* Nội dung phương án - Chữ to, đậm, rõ nét */}
-                          <span className={`flex-1 text-left ${getOptionSizeClass()} leading-snug break-words`}>
-                            {opt}
+                          {/* Nội dung phương án - Chữ to, đậm, rõ nét & Hỗ trợ gạch chân thẻ <u> */}
+                          <span
+                            className={`flex-1 text-left ${getOptionSizeClass()} leading-snug break-words`}
+                            dangerouslySetInnerHTML={{ __html: opt }}
+                          />
+                          {/* Nút phát âm trực tiếp từng từ / phương án */}
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              speakOption(opt);
+                            }}
+                            title="Bấm để nghe phát âm chuẩn bản xứ"
+                            className="p-1.5 sm:p-2 rounded-xl bg-white/80 dark:bg-slate-800/80 hover:bg-white text-blue-600 dark:text-blue-400 hover:text-blue-700 shadow-sm border border-blue-200 dark:border-blue-800 shrink-0 transition hover:scale-110 active:scale-95 cursor-pointer flex items-center gap-1"
+                          >
+                            <Volume2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                            <span className="text-[11px] font-bold hidden sm:inline">Phát âm</span>
                           </span>
                         </div>
 
@@ -857,10 +970,21 @@ export const TextbookExercisePortal: React.FC = () => {
                 {/* LỜI GIẢI THÍCH CHI TIẾT SƯ PHẠM */}
                 {isSubmitted && (
                   <div className="mt-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-amber-50/90 dark:bg-amber-950/30 border-2 border-b-[5px] border-amber-300 dark:border-amber-800 text-slate-800 dark:text-slate-200 space-y-1.5 animate-fadeIn">
-                    <p className="font-black text-amber-800 dark:text-amber-300 flex items-center gap-2 text-xs sm:text-sm uppercase tracking-wide">
-                      <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                      <span>Lời giải thích sư phạm chi tiết:</span>
-                    </p>
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <p className="font-black text-amber-800 dark:text-amber-300 flex items-center gap-2 text-xs sm:text-sm uppercase tracking-wide">
+                        <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                        <span>Lời giải thích sư phạm chi tiết:</span>
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => speakOption(q.options[q.correctAnswer])}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm cursor-pointer"
+                        title="Nghe phát âm chuẩn từ đáp án đúng"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>Nghe đáp án đúng ({voiceAccent})</span>
+                      </button>
+                    </div>
                     <p className={`${getExplanationSizeClass()} leading-relaxed text-slate-800 dark:text-slate-200 font-medium pl-6`}>
                       {q.explanation}
                     </p>
@@ -888,6 +1012,11 @@ export const TextbookExercisePortal: React.FC = () => {
           </div>
         )}
       </div>
+      {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
+      <IpaChartPronunciationModal
+        isOpen={isIpaModalOpen}
+        onClose={() => setIsIpaModalOpen(false)}
+      />
     </div>
   );
 };
