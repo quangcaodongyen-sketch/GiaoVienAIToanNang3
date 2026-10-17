@@ -32,6 +32,8 @@ import { licenseService, LicenseRecord } from '../services/licenseService';
 import { documentStorageService, StorageFolder, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 import { generateEd25519Key } from '../services/nlsKeyService';
+import { AdminStudentGradebook } from './AdminStudentGradebook';
+import { GraduationCap } from 'lucide-react';
 
 interface AdminPortalProps {
   onBackToHome?: () => void;
@@ -46,7 +48,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
   const [pinError, setPinError] = useState(false);
 
   // Tab Chính Trong Admin: 'licenses' | 'documents' | 'system'
-  const [adminTab, setAdminTab] = useState<'licenses' | 'documents' | 'system'>('licenses');
+  const [adminTab, setAdminTab] = useState<'licenses' | 'documents' | 'students' | 'system'>('students');
 
   // ==================== STATE QUẢN LÝ TÀI KHOẢN PRO ====================
   const [licenses, setLicenses] = useState<LicenseRecord[]>([]);
@@ -329,6 +331,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
 
         {/* NÚT ĐIỀU HƯỚNG 3 TAB CHÍNH */}
         <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setAdminTab('students')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              adminTab === 'students'
+                ? 'bg-indigo-600 text-white shadow-xs font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <GraduationCap className="w-3.5 h-3.5 text-amber-300" />
+            <span>1. Sổ Điểm & Quản Lý Học Sinh</span>
+          </button>
+
           <button
             onClick={() => setAdminTab('licenses')}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
@@ -720,6 +734,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ==================== MỤC: QUẢN LÝ HỌC SINH & SỔ ĐIỂM ONLINE ==================== */}
+      {adminTab === 'students' && (
+        <AdminStudentGradebook />
       )}
 
       {/* ==================== MỤC 3: CẤU HÌNH HỆ THỐNG & BẢO TRÌ ==================== */}

@@ -25,6 +25,8 @@ import {
 import { BRAND } from '../config/brand';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
+import { StudentClassComparison } from './StudentClassComparison';
+import { Trophy, Target } from 'lucide-react';
 
 // Bộ dữ liệu từ vựng mẫu chuẩn Global Success
 interface VocabItem {
@@ -227,7 +229,7 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 ];
 
 export const StudentPortal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'downloads'>('vocab');
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'downloads' | 'leaderboard'>('vocab');
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng
@@ -316,6 +318,18 @@ export const StudentPortal: React.FC = () => {
           >
             <Award className="w-4 h-4" />
             <span>3. Kiểm tra Online</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('leaderboard')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+              activeTab === 'leaderboard'
+                ? 'bg-amber-400 text-slate-950 shadow-md font-black'
+                : 'bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30'
+            }`}
+          >
+            <Trophy className="w-4 h-4 text-amber-400" />
+            <span>5. Thi Đua & Sổ Điểm Lớp</span>
           </button>
 
           <button
@@ -641,6 +655,14 @@ export const StudentPortal: React.FC = () => {
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
       {activeTab === 'quiz' && (
         <OnlineQuizPortal />
+      )}
+
+      {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
+      {activeTab === 'leaderboard' && (
+        <StudentClassComparison 
+          onStartExercise={() => setActiveTab('sgk')}
+          onStartQuiz={() => setActiveTab('quiz')}
+        />
       )}
 
       {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}

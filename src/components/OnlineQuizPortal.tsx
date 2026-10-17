@@ -21,6 +21,7 @@ import {
   Type,
   Lightbulb
 } from 'lucide-react';
+import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { 
   GRADES_QUIZ_DATA, 
   GradeQuizInfo, 
@@ -231,6 +232,27 @@ export const OnlineQuizPortal: React.FC = () => {
 
     saveQuizAttempt(result);
     setSubmittedResult(result);
+    // Lưu kết quả vào Sổ Điểm Lớp Online
+    const curStudent = studentGradebookService.getActiveStudent();
+    if (curStudent) {
+      studentGradebookService.recordSubmission({
+        studentId: curStudent.id,
+        studentCode: curStudent.studentCode,
+        studentName: curStudent.name,
+        classId: curStudent.classId,
+        className: curStudent.className,
+        grade: selectedGradeNum,
+        testType: 'online_quiz',
+        unitNumber: selectedUnitNum,
+        unitTitle: currentUnit.unitTitle || currentUnit.title,
+        testTitle: activeTest.title,
+        score: score,
+        correctCount: correct,
+        totalQuestions: activeTest.questions.length,
+        timeSpentSeconds: timeSpent
+      });
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

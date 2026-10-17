@@ -20,6 +20,7 @@ import {
   Type,
   Lightbulb
 } from 'lucide-react';
+import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { 
   TEXTBOOK_UNITS_DATA, 
   SGKUnit, 
@@ -70,11 +71,58 @@ const OPTION_THEMES = [
   }
 ];
 
+
+// Phân loại dạng bài tập bám sát SGK Global Success
+const getQuestionTypeMeta = (q: SGKExerciseQuestion) => {
+  const text = (q.question || '').toLowerCase();
+  const exp = (q.explanation || '').toLowerCase();
+  if (text.includes('pronounced') || text.includes('underlined') || exp.includes('phát âm') || exp.includes('ngữ âm')) {
+    return { label: 'Phát Âm & Ngữ Âm', color: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30', icon: '🎵' };
+  }
+  if (text.includes('stress') || exp.includes('trọng âm')) {
+    return { label: 'Trọng Âm Từ Vựng', color: 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30', icon: '⚡' };
+  }
+  if (text.includes('read') || text.includes('passage') || exp.includes('đọc hiểu') || exp.includes('đoạn văn')) {
+    return { label: 'Đọc Hiểu Đoạn Văn', color: 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30', icon: '📑' };
+  }
+  if (text.includes('mistake') || text.includes('error') || text.includes('needs correction') || exp.includes('lỗi sai')) {
+    return { label: 'Tìm Lỗi Sai', color: 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30', icon: '🔍' };
+  }
+  if (text.includes('closest') || text.includes('opposite') || text.includes('means') || exp.includes('từ đồng nghĩa') || exp.includes('trái nghĩa')) {
+    return { label: 'Từ Đồng Nghĩa / Trái Nghĩa', color: 'bg-teal-500/15 text-teal-800 dark:text-teal-300 border-teal-500/30', icon: '📚' };
+  }
+  if (text.includes('lan:') || text.includes('nam:') || text.includes('mai:') || text.includes('peter:') || text.includes(' - ')) {
+    return { label: 'Giao Tiếp Everyday English', color: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/30', icon: '💬' };
+  }
+  if (exp.includes('thì ') || exp.includes('hiện tại') || exp.includes('quá khứ') || exp.includes('câu điều kiện') || exp.includes('bị động') || exp.includes('ngữ pháp')) {
+    return { label: 'Ngữ Pháp & Cấu Trúc', color: 'bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 border-cyan-500/30', icon: '📐' };
+  }
+  return { label: 'Từ Vựng Chuyên Đề SGK', color: 'bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/30', icon: '📖' };
+};
+
 export const TextbookExercisePortal: React.FC = () => {
   // Navigation State
   const [selectedGrade, setSelectedGrade] = useState<number>(6);
   const [selectedUnitNum, setSelectedUnitNum] = useState<number>(1);
   const [activeSectionId, setActiveSectionId] = useState<string>('getting_started');
+  // Lấy thông tin học sinh đang làm bài
+  const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
+  const [shuffleSeed, setShuffleSeed] = useState<number>(0);
+  const [toastNotify, setToastNotify] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastNotify(msg);
+    setTimeout(() => setToastNotify(null), 3000);
+  };
+
+  const handleShuffleNewQuestions = () => {
+    setShuffleSeed(prev => prev + 1);
+    setSelectedAnswers({});
+    setIsSubmitted(false);
+    setScoreResult(null);
+    showToast('Đã xáo trộn đề thành công! Bạn có bộ câu hỏi và đáp án tươi mới.');
+  };
+
   const [isFullUnitMode, setIsFullUnitMode] = useState<boolean>(false);
 
   // Font size setting (defaults to 'large' for large, clear readability)
@@ -200,6 +248,32 @@ export const TextbookExercisePortal: React.FC = () => {
       localStorage.setItem('sgk_completed_sections', JSON.stringify(updated));
     } catch {}
 
+        // Lưu vào Sổ Điểm Trực Tuyến Toàn Diện
+    const curStudent = studentGradebookService.getActiveStudent();
+    if (curStudent) {
+      const sectionName = isFullUnitMode 
+        ? 'Toàn bộ 7 phần SGK' 
+        : (currentUnit.sections.find(s => s.sectionId === activeSectionId)?.sectionName || 'Bài tập SGK');
+
+      studentGradebookService.recordSubmission({
+        studentId: curStudent.id,
+        studentCode: curStudent.studentCode,
+        studentName: curStudent.name,
+        classId: curStudent.classId,
+        className: curStudent.className,
+        grade: selectedGrade,
+        testType: 'sgk_exercise',
+        unitNumber: selectedUnitNum,
+        unitTitle: currentUnit.title,
+        testTitle: `${currentUnit.title}: ${sectionName}`,
+        score: score,
+        correctCount: correct,
+        totalQuestions: activeQuestions.length,
+        timeSpentSeconds: 300,
+      });
+      showToast(`Đã tự động ghi nhận điểm ${score} vào Sổ Điểm Lớp ${curStudent.className}!`);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -274,6 +348,12 @@ export const TextbookExercisePortal: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {toastNotify && (
+        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 border border-emerald-400/50 animate-bounce">
+          <CheckCircle2 className="w-5 h-5 shrink-0" />
+          <span className="font-bold text-sm">{toastNotify}</span>
+        </div>
+      )}
       {/* HEADER BANNER */}
       <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-cyan-950 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border-2 border-emerald-600/40">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
