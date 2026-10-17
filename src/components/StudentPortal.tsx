@@ -1,3 +1,4 @@
+import vocabularyService, { VocabItem, UnitInfo } from '../services/vocabularyService';
 import audioPronunciationService, { VoiceAccent } from '../services/audioPronunciationService';
 import { IpaChartPronunciationModal } from './IpaChartPronunciationModal';
 import React, { useState, useEffect } from 'react';
@@ -43,147 +44,6 @@ interface VocabItem {
   exampleMeaning: string;
 }
 
-const SAMPLE_VOCABULARY: VocabItem[] = [
-  // LỚP 6
-  {
-    id: 'v6-1',
-    grade: 6,
-    unit: 'Unit 1: My New School',
-    word: 'uniform',
-    phonetic: '/ˈjuːnɪfɔːm/',
-    type: 'noun',
-    meaning: 'đồng phục',
-    example: 'We wear our uniform to school on Mondays.',
-    exampleMeaning: 'Chúng tôi mặc đồng phục đến trường vào các ngày thứ Hai.'
-  },
-  {
-    id: 'v6-2',
-    grade: 6,
-    unit: 'Unit 1: My New School',
-    word: 'calculator',
-    phonetic: '/ˈkælkjuleɪtə(r)/',
-    type: 'noun',
-    meaning: 'máy tính cầm tay',
-    example: 'You can use a calculator in maths lessons.',
-    exampleMeaning: 'Bạn có thể sử dụng máy tính cầm tay trong giờ học Toán.'
-  },
-  {
-    id: 'v6-3',
-    grade: 6,
-    unit: 'Unit 1: My New School',
-    word: 'compass',
-    phonetic: '/ˈkʌmpəs/',
-    type: 'noun',
-    meaning: 'com-pa / la bàn',
-    example: 'I need a compass to draw a perfect circle.',
-    exampleMeaning: 'Tôi cần một chiếc com-pa để vẽ một hình tròn hoàn hảo.'
-  },
-  // LỚP 7
-  {
-    id: 'v7-1',
-    grade: 7,
-    unit: 'Unit 1: Hobbies',
-    word: 'community',
-    phonetic: '/kəˈmjuːnəti/',
-    type: 'noun',
-    meaning: 'cộng đồng',
-    example: 'She is very active in the local community.',
-    exampleMeaning: 'Cô ấy rất tích cực tham gia các hoạt động trong cộng đồng địa phương.'
-  },
-  {
-    id: 'v7-2',
-    grade: 7,
-    unit: 'Unit 2: Healthy Living',
-    word: 'allergy',
-    phonetic: '/ˈælədʒi/',
-    type: 'noun',
-    meaning: 'dị ứng',
-    example: 'He has an allergy to seafood.',
-    exampleMeaning: 'Anh ấy bị dị ứng với đồ hải sản.'
-  },
-  // LỚP 8
-  {
-    id: 'v8-1',
-    grade: 8,
-    unit: 'Unit 1: Leisure Time',
-    word: 'origami',
-    phonetic: '/ˌɒrɪˈɡɑːmi/',
-    type: 'noun',
-    meaning: 'nghệ thuật gấp giấy Nhật Bản',
-    example: 'My sister enjoys folding paper into origami animals.',
-    exampleMeaning: 'Chị tôi thích gấp giấy thành các con vật origami.'
-  },
-  {
-    id: 'v8-2',
-    grade: 8,
-    unit: 'Unit 2: Life in the Countryside',
-    word: 'harvest',
-    phonetic: '/ˈhɑːvɪst/',
-    type: 'noun / verb',
-    meaning: 'vụ thu hoạch / thu hoạch mùa màng',
-    example: 'Farmers are busy harvesting rice in the autumn.',
-    exampleMeaning: 'Người nông dân bận rộn thu hoạch lúa vào mùa thu.'
-  },
-  // LỚP 9
-  {
-    id: 'v9-1',
-    grade: 9,
-    unit: 'Unit 1: Local Community',
-    word: 'artisan',
-    phonetic: '/ˌɑːtɪˈzæn/',
-    type: 'noun',
-    meaning: 'nghệ nhân / thợ thủ công lành nghề',
-    example: 'Bat Trang pottery village has many skilled artisans.',
-    exampleMeaning: 'Làng gốm Bát Tràng có rất nhiều nghệ nhân lành nghề.'
-  },
-  {
-    id: 'v9-2',
-    grade: 9,
-    unit: 'Unit 2: City Life',
-    word: 'cosmopolitan',
-    phonetic: '/ˌkɒzməˈpɒlɪtən/',
-    type: 'adjective',
-    meaning: 'mang tính quốc tế / đa văn hóa',
-    example: 'Hanoi is becoming a modern, cosmopolitan city.',
-    exampleMeaning: 'Hà Nội đang dần trở thành một thành phố hiện đại, đa văn hóa.'
-  },
-  // LỚP 10
-  {
-    id: 'v10-1',
-    grade: 10,
-    unit: 'Unit 1: Family Life',
-    word: 'breadwinner',
-    phonetic: '/ˈbredwɪnə(r)/',
-    type: 'noun',
-    meaning: 'trụ cột gia đình (người kiếm tiền chính)',
-    example: 'In many families, both parents are now the breadwinners.',
-    exampleMeaning: 'Trong nhiều gia đình hiện nay, cả bố và mẹ đều là trụ cột kinh tế.'
-  },
-  // LỚP 11
-  {
-    id: 'v11-1',
-    grade: 11,
-    unit: 'Unit 1: A Long and Healthy Life',
-    word: 'longevity',
-    phonetic: '/lɒnˈdʒevəti/',
-    type: 'noun',
-    meaning: 'tuổi thọ / sự sống lâu',
-    example: 'A balanced diet and regular exercise contribute to longevity.',
-    exampleMeaning: 'Chế độ ăn cân đối và tập thể dục thường xuyên giúp tăng tuổi thọ.'
-  },
-  // LỚP 12
-  {
-    id: 'v12-1',
-    grade: 12,
-    unit: 'Unit 1: Life Stories We Admire',
-    word: 'perseverance',
-    phonetic: '/ˌpɜːsɪˈvɪərəns/',
-    type: 'noun',
-    meaning: 'sự kiên trì, bền bỉ',
-    example: 'Success requires both talent and great perseverance.',
-    exampleMeaning: 'Thành công đòi hỏi cả tài năng lẫn sự kiên trì to lớn.'
-  }
-];
 
 // Danh mục tài liệu đề thi tải về cho học sinh
 interface StudentDownloadFile {
@@ -239,9 +99,20 @@ export const StudentPortal: React.FC = () => {
   const [iframeKey, setIframeKey] = useState<number>(0);
   const [isFullscreenIframe, setIsFullscreenIframe] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<number>(6);
+  const [selectedUnit, setSelectedUnit] = useState<number>(1); // Mặc định Unit 1 bám sát SGK
   const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [vocabSearch, setVocabSearch] = useState<string>('');
+
+  // Danh sách các Unit chính thức theo SGK Global Success
+  const availableUnits: UnitInfo[] = React.useMemo(() => {
+    return vocabularyService.getUnitsByGrade(selectedGrade);
+  }, [selectedGrade]);
+
+  // Toàn bộ từ vựng đầy đủ 100% bám sát Unit và khối lớp
+  const filteredVocab: VocabItem[] = React.useMemo(() => {
+    return vocabularyService.getVocabulary(selectedGrade, selectedUnit, vocabSearch);
+  }, [selectedGrade, selectedUnit, vocabSearch]);
   const [isIpaModalOpen, setIsIpaModalOpen] = useState(false);
   const [voiceAccent, setVoiceAccent] = useState<VoiceAccent>(() => audioPronunciationService.getAccent());
   const [speechRate, setSpeechRate] = useState<number>(() => audioPronunciationService.getRate());
@@ -256,14 +127,7 @@ export const StudentPortal: React.FC = () => {
     audioPronunciationService.setRate(newRate);
   };
 
-  // Lọc từ vựng theo khối lớp và tìm kiếm
-  const filteredVocab = SAMPLE_VOCABULARY.filter(item => {
-    const matchGrade = selectedGrade === 0 || item.grade === selectedGrade;
-    const matchSearch = vocabSearch.trim() === '' || 
-      item.word.toLowerCase().includes(vocabSearch.toLowerCase()) ||
-      item.meaning.toLowerCase().includes(vocabSearch.toLowerCase());
-    return matchGrade && matchSearch;
-  });
+
 
   const currentWord = filteredVocab[currentVocabIndex] || filteredVocab[0];
 
@@ -508,24 +372,27 @@ export const StudentPortal: React.FC = () => {
           ) : (
             /* CHẾ ĐỘ 2: THẺ FLASHCARD NHANH */
             <div className="space-y-6">
-              {/* Thanh lọc theo khối lớp */}
-              <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
+              {/* Thanh chọn khối lớp & Danh mục đầy đủ từng Unit */}
+              <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border-2 border-blue-200 dark:border-slate-800 shadow-sm space-y-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                  <span className="text-xs font-black text-blue-900 dark:text-blue-200 flex items-center gap-1 uppercase tracking-wide">
                     <Filter className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Chọn khối lớp:</span>
+                    <span>Khối lớp:</span>
                   </span>
                   {[6, 7, 8, 9, 10, 11, 12].map(grade => (
                     <button
                       key={grade}
+                      type="button"
                       onClick={() => {
                         setSelectedGrade(grade);
+                        setSelectedUnit(1); // Reset về Unit 1 của lớp đó
                         setCurrentVocabIndex(0);
                         setIsFlipped(false);
                       }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
                         selectedGrade === grade
-                          ? 'bg-blue-600 text-white shadow-xs'
+                          ? 'bg-blue-600 text-white shadow-sm scale-105'
                           : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                       }`}
                     >
@@ -550,6 +417,66 @@ export const StudentPortal: React.FC = () => {
                   />
                 </div>
               </div>
+
+              {/* THANH CHỌN TỪNG UNIT ĐẦY ĐỦ 100% THEO DANH MỤC SGK */}
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide flex items-center gap-1.5">
+                    <BookMarked className="w-4 h-4 text-amber-500" />
+                    <span>Danh mục bài học (Unit) - Lớp {selectedGrade}:</span>
+                  </span>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                    {selectedUnit === 0 
+                      ? `Toàn bộ ${filteredVocab.length} từ vựng Lớp ${selectedGrade}`
+                      : `Đầy đủ ${filteredVocab.length} từ vựng Unit ${selectedUnit}`}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-thin">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedUnit(0);
+                      setCurrentVocabIndex(0);
+                      setIsFlipped(false);
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-black shrink-0 transition cursor-pointer ${
+                      selectedUnit === 0
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    }`}
+                  >
+                    Tất cả các Unit ({vocabularyService.getVocabulary(selectedGrade, 0).length} từ)
+                  </button>
+
+                  {availableUnits.map(u => (
+                    <button
+                      key={u.unitNumber}
+                      type="button"
+                      onClick={() => {
+                        setSelectedUnit(u.unitNumber);
+                        setCurrentVocabIndex(0);
+                        setIsFlipped(false);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition cursor-pointer flex items-center gap-1.5 ${
+                        selectedUnit === u.unitNumber
+                          ? 'bg-blue-600 text-white shadow-sm font-black'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 border border-slate-200/50'
+                      }`}
+                    >
+                      <span>Unit {u.unitNumber}: {u.title}</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        selectedUnit === u.unitNumber 
+                          ? 'bg-white/20 text-white' 
+                          : 'bg-blue-100 dark:bg-slate-700 text-blue-700 dark:text-blue-300'
+                      }`}>
+                        {u.wordCount} từ
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
 
               {/* KHUNG FLASHCARD 3D TƯƠNG TÁC */}
               {currentWord ? (

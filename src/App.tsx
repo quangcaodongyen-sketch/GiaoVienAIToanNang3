@@ -1191,14 +1191,7 @@ export default function App() {
 
             {/* Action Buttons: Dùng thử 5 lần & Hotline Zalo */}
             <div className="hidden md:flex items-center gap-2 lg:gap-2.5 font-medium text-sm">
-              <button
-                onClick={() => setShowTrialModal(true)}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all text-xs font-black flex items-center gap-1.5 active:scale-95 cursor-pointer"
-                title="Đăng ký dùng thử 5 lần miễn phí"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                <span>DÙNG THỬ 5 LẦN</span>
-              </button>
+
 
               <a
                 href={BRAND.zaloUrl}
@@ -1323,16 +1316,7 @@ export default function App() {
               </button>
 
               <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setShowTrialModal(true);
-                  }}
-                  className="px-3.5 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-left flex items-center gap-2.5 shadow-2xs"
-                >
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  Đăng Ký Dùng Thử 5 Lần Miễn Phí
-                </button>
+
                 <a
                   href={BRAND.zaloUrl}
                   target="_blank"
