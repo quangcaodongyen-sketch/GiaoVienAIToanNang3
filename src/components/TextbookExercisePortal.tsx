@@ -355,7 +355,7 @@ export const TextbookExercisePortal: React.FC = () => {
         </div>
       )}
       {/* HEADER BANNER */}
-      <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-cyan-950 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border-2 border-emerald-600/40">
+      <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border-2 border-blue-400/40">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 text-xs sm:text-sm font-black mb-3 uppercase tracking-wider backdrop-blur-md">
@@ -543,7 +543,7 @@ export const TextbookExercisePortal: React.FC = () => {
       )}
 
       {/* KHU VỰC BÀI TẬP (EXERCISE ARENA) */}
-      <div className="bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-3xl border-2 border-slate-200 dark:border-slate-800 shadow-md space-y-6">
+      <div className="bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-3xl border-2 border-blue-200 shadow-md space-y-6">
         {/* THANH ĐIỀU HƯỚNG VÀ BỘ CHỈNH CỠ CHỮ */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div>
@@ -730,7 +730,7 @@ export const TextbookExercisePortal: React.FC = () => {
                 {/* ========================================================
                     THANH 3D CÂU HỎI MÀU SẮC ĐẸP (3D PODIUM BANNER)
                    ======================================================== */}
-                <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border-t-2 border-white/20 border-b-[6px] border-indigo-950/90 overflow-hidden group">
+                <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-xl border-t-2 border-white/30 border-b-[6px] border-blue-950 overflow-hidden group">
                   {/* Hiệu ứng ánh sáng 3D bóng bẩy phía trên */}
                   <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                   <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />

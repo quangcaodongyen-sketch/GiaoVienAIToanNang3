@@ -473,7 +473,7 @@ export const OnlineQuizPortal: React.FC = () => {
 
           {/* BẢNG BÁO CÁO KẾT QUẢ VINH DANH KHI ĐÃ NỘP BÀI */}
           {isSubmitted && submittedResult && (
-            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 text-white shadow-2xl border-2 border-blue-500/50 animate-fadeIn relative overflow-hidden">
+            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 text-white shadow-2xl border-2 border-blue-400 animate-fadeIn relative overflow-hidden">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                 <div className="space-y-2 text-center md:text-left">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 text-xs sm:text-sm font-black uppercase tracking-wider">
@@ -565,7 +565,7 @@ export const OnlineQuizPortal: React.FC = () => {
                   {/* ========================================================
                       THANH 3D CÂU HỎI MÀU SẮC ĐẸP (3D PODIUM BANNER)
                      ======================================================== */}
-                  <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white shadow-xl border-t-2 border-white/20 border-b-[6px] border-indigo-950/90 overflow-hidden group">
+                  <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-xl border-t-2 border-white/30 border-b-[6px] border-blue-950 overflow-hidden group">
                     {/* Hiệu ứng ánh sáng 3D bóng bẩy phía trên */}
                     <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                     <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />

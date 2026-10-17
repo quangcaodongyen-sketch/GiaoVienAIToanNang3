@@ -268,7 +268,7 @@ export const StudentPortal: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* HEADER GÓC HỌC SINH */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-sky-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
+      <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold mb-3 uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
@@ -288,8 +288,8 @@ export const StudentPortal: React.FC = () => {
             onClick={() => setActiveTab('vocab')}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
               activeTab === 'vocab'
-                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
-                : 'bg-white/10 hover:bg-white/20 text-white'
+                ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
+                : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -300,8 +300,8 @@ export const StudentPortal: React.FC = () => {
             onClick={() => setActiveTab('sgk')}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
               activeTab === 'sgk'
-                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
-                : 'bg-white/10 hover:bg-white/20 text-white'
+                ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
+                : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <BookMarked className="w-4 h-4" />
@@ -312,8 +312,8 @@ export const StudentPortal: React.FC = () => {
             onClick={() => setActiveTab('quiz')}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
               activeTab === 'quiz'
-                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
-                : 'bg-white/10 hover:bg-white/20 text-white'
+                ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
+                : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <Award className="w-4 h-4" />
@@ -336,8 +336,8 @@ export const StudentPortal: React.FC = () => {
             onClick={() => setActiveTab('downloads')}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
               activeTab === 'downloads'
-                ? 'bg-cyan-400 text-slate-950 shadow-md font-black'
-                : 'bg-white/10 hover:bg-white/20 text-white'
+                ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
+                : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <Download className="w-4 h-4" />
