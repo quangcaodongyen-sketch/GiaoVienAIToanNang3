@@ -729,13 +729,13 @@ ${exportDisabilityProc}
                     <span>XÁC NHẬN PHIÊN BẢN MỚI NHẤT ĐÃ CẬP NHẬT LÊN WEB DEKIEMTRASO.COM</span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-md font-mono text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    Phiên bản v3.8.2 (Mới nhất)
+                    Phiên bản v3.9.0 (Thông minh & Đa cấp học)
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20 font-mono">
-                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (22:58:23)</span></div>
+                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">17/10/2026 (10:50:00)</span></div>
                   <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100%</span></div>
-                  <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
+                  <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Nhận diện Lớp 1-12, Số tiết linh hoạt, Bảng mã NLS-AI</span></div>
                 </div>
               </div>
               {/* CÁC PHƯƠNG ÁN TẢI BỘ CÀI ĐẶT */}
