@@ -1,0 +1,53 @@
+================================================================================
+HƯỚNG DẪN SỬ DỤNG PHẦN MỀM TẠO ĐỀ KIỂM TRA TIN HỌC THCS (LỚP 6, 7, 8, 9)
+CHUẨN BỘ GIÁO DỤC VÀ ĐÀO TẠO - CÔNG VĂN 7991/BGDĐT-GDTrH
+BỘ SÁCH: KẾT NỐI TRI THỨC VỚI CUỘC SỐNG - NĂM HỌC 2026 - 2027
+TÁC GIẢ & BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH - HOTLINE/ZALO: 0915.213717
+================================================================================
+
+I. GIỚI THIỆU PHẦN MỀM
+Phần mềm Tạo Đề Kiểm Tra Tin Học THCS là công cụ chuyên biệt dành riêng cho giáo viên Tin học cấp THCS (khối 6, 7, 8, 9) dạy bộ sách Kết nối tri thức với cuộc sống.
+Phần mềm được lập trình tự động hóa hoàn toàn từ khâu chọn ma trận, lấy câu hỏi từ ngân hàng chuẩn hóa đến xuất file Word .docx chuyên nghiệp, sẵn sàng in ấn hoặc kiểm duyệt chuyên môn.
+
+II. CÁC TÍNH NĂNG VƯỢT TRỘI
+1. CẤU TRÚC ĐỀ ĐỊNH KỲ 10,0 ĐIỂM CHUẨN CÔNG VĂN 7991:
+   - Phần I. Trắc nghiệm nhiều lựa chọn: 12 câu (3,0 điểm) - Áp dụng thuật toán cân bằng đáp án thông minh 3A - 3B - 3C - 3D (không có quá 2 câu liên tiếp trùng đáp án).
+   - Phần II. Trắc nghiệm Đúng - Sai: 2 câu tình huống lớn (8 ý con a, b, c, d - 2,0 điểm) - Bảng chấm điểm lũy tiến 0.1 - 0.25 - 0.5 - 1.0 điểm.
+   - Phần III. Trắc nghiệm Trả lời ngắn: 4 câu (2,0 điểm) - Điền kết quả, cú pháp lệnh hoặc địa chỉ ô tính.
+   - Phần IV. Tự luận & Thực hành: 2 câu (3,0 điểm) - Giải thuật, lập trình Scratch/Python, bảng tính Excel kèm Barem thang điểm chi tiết.
+
+2. MA TRẬN 16 CỘT 3 TẦNG & BẢN ĐẶC TẢ 7 CỘT CÓ DÒNG TỔNG:
+   - Tự động đồng bộ 100% giữa Ma trận đề kiểm tra, Bản đặc tả đề và nội dung đề kiểm tra.
+   - Định dạng bảng biểu Word chuẩn sư phạm, không lỗi tràn viền hay rớt chữ.
+
+3. XUẤT ĐỒNG THỜI 02 BẢN WORD:
+   - Bản Giáo viên: Đầy đủ Ma trận, Bản đặc tả, Đề bài (có bôi đỏ phương án đúng), Bảng đáp án trắc nghiệm và Hướng dẫn chấm chi tiết.
+   - Bản Học sinh: Đề kiểm tra chuẩn trang A4 sạch sẽ, tích hợp bảng điểm tiếng Việt theo Công văn 7991, có thể in ngay cho học sinh làm bài.
+
+4. BIÊN BẢN PHẢN BIỆN ĐỀ KIỂM TRA CHUẨN 01 TRANG A4:
+   - Tự động trích xuất Biên bản duyệt đề, phản biện đề thi bám sát Nghị định 30/2020/NĐ-CP và Công văn 7991.
+   - Tự động chuẩn hóa tên trường tiếng Việt (viết hoa chữ cái đầu), tự động gợi ý mốc thời gian duyệt đề theo tuần chuyên môn năm học 2026 - 2027.
+   - Bảng chữ ký 2 cột không đường viền (Borderless Table) đảm bảo trọn vẹn trong đúng 01 trang A4.
+
+5. ĐỀ CƯƠNG ÔN TẬP TOÀN DIỆN & BỘ CÂU HỎI TƯƠNG TỰ:
+   - Tích hợp tính năng tạo Đề cương 4 dạng bài tập theo 4 mức độ nhận thức (Biết, Hiểu, Vận dụng, Vận dụng cao).
+   - Tạo bộ câu hỏi tương tự rèn luyện sâu kèm ma trận giải thích chi tiết.
+   - Tạo bài tập theo từng dạng với tính năng 1-chạm (Đáp án đỏ, nhấn Ctrl+A đổi màu đen là in được ngay).
+
+III. HƯỚNG DẪN CÀI ĐẶT & KÍCH HOẠT
+1. Khởi chạy:
+   - Nhấp đúp vào tệp "Tao_De_Tin_Hoc_THCS.exe" để mở ứng dụng.
+   - Không cần cài đặt Python hay bất kỳ phần mềm môi trường phức tạp nào.
+2. Dùng thử:
+   - Mỗi máy tính được cung cấp 05 lượt dùng thử đầy đủ tính năng hoàn toàn miễn phí.
+3. Kích hoạt bản quyền vĩnh viễn:
+   - Mở menu Kích hoạt bản quyền trên giao diện phần mềm.
+   - Sao chép "Mã thiết bị" (dạng DVT-XXXX-XXXX).
+   - Gửi mã thiết bị qua Zalo tác giả: 0915.213717 (Thầy giáo Đinh Văn Thành) để nhận Khóa kích hoạt bản quyền trọn đời.
+
+IV. HỖ TRỢ PHÁP LÝ & KỸ THUẬT
+- Tác giả: Thầy giáo Đinh Văn Thành
+- Đơn vị công tác: Trường THCS Đồng Yên
+- Số điện thoại / Zalo: 0915.213717
+- Hỗ trợ cập nhật ngân hàng câu hỏi định kỳ và bảo hành trọn đời phần mềm.
+================================================================================

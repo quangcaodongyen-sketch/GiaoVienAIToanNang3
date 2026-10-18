@@ -197,7 +197,7 @@ export const apps: AppCard[] = [
   {
     id: "tao-de-tin-thcs",
     title: "TẠO ĐỀ TIN HỌC THCS (CV 7991)",
-    description: "Tạo đề kiểm tra Tin học THCS kết hợp lý thuyết và bài tập thực hành máy tính.",
+    description: "Chuẩn Công văn 7991: 12 MCQ (3A-3B-3C-3D), 2 Đúng/Sai, 4 TL ngắn, 2 Tự luận và Biên bản phản biện 1 trang A4.",
     image: "/taode_tin.png",
     url: "#tao-de-tin",
     category: "ĐỀ THI CẤP THCS (CV 7991)",

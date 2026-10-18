@@ -149,12 +149,13 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     name: 'Tin học',
     fullName: 'Môn Tin học THCS',
     icon: '💻',
-    size: '34 MB',
-    desc: 'Lý thuyết số học, bài tập thực hành phần mềm bảng tính Excel, thuật toán và lập trình Python cơ bản.',
+    size: '36 MB',
+    desc: 'Cấu trúc chuẩn CV 7991: 12 MCQ (3A-3B-3C-3D) + 2 Đúng/Sai + 4 Trả lời ngắn + 2 Tự luận / Lập trình.',
     highlights: [
-      'Phần trắc nghiệm lý thuyết số hóa, mạng máy tính và thuật toán tư duy',
-      'Bài tập thực hành bảng tính Excel, hệ cơ sở dữ liệu và đoạn mã Python trực quan',
-      'Xuất bản đặc tả và đề kiểm tra định kỳ 15 phút, giữa kì, cuối kì đầy đủ đáp án'
+      'Cấu trúc 10.0đ chuẩn CV 7991 & thuật toán cân bằng đáp án thông minh 3A - 3B - 3C - 3D',
+      'Tự động xuất Biên bản phản biện, duyệt đề thi chuẩn 01 trang A4 theo Nghị định 30/2020',
+      'Ngân hàng 1.200+ câu hỏi bám sát SGK Kết nối tri thức Lớp 6, 7, 8, 9',
+      'Đầy đủ Ma trận 16 cột 3 tầng, Bản đặc tả 7 cột và Đề cương ôn tập 4 dạng bài tập'
     ],
     zipUrl: EXAM_7MON_RESOURCES.subjects.TIN.zipUrl,
     exeUrl: EXAM_7MON_RESOURCES.subjects.TIN.exeUrl,
