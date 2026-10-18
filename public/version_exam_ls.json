@@ -1,12 +1,12 @@
 {
   "appId": "taode-ls-thcs",
   "appName": "Tạo Đề Kiểm Tra Lịch Sử THCS Kết Nối Tri Thức (CV 7991)",
-  "currentVersion": "5.0.0",
-  "latestVersion": "5.0.0",
-  "releaseDate": "15/10/2026 (13:30)",
-  "changelog": "• [15/10/2026 - v5.0.0 PRO] Khắc phục triệt để lỗi khởi động giao diện, ứng dụng vận hành mượt mà 100% trên Windows.\n• Chuẩn hóa toàn diện sản phẩm xuất ra theo chuẩn 100% form mẫu file 'Bảng đặc tả, Kiểm tra GK2 Lớp 6.docx' của Bộ GD&ĐT: Bao gồm I. Mục đích kiểm tra (Kiến thức, Năng lực, Phẩm chất), II. Hình thức kiểm tra, III. Bảng ma trận 18 cột (3 tầng) và Bản đặc tả 13 cột (4 tầng) có đầy đủ dòng Tổng số câu, Tổng điểm, Tỉ lệ %.\n• Cấu trúc đề 45 phút chuẩn Công văn 7991: Phần I (12 câu TN - 3,0đ), Phần II (04 câu Đúng - Sai tư liệu - 4,0đ, 16 lệnh hỏi), Phần III (02 bài Tự luận - 3,0đ) = 10,0 ĐIỂM.\n• Tự động phân bổ theo % số tiết trên PPCT và Phụ lục của Bộ GD&ĐT cho toàn bộ 78 bài học SGK Lớp 6, 7, 8, 9 (Kết nối tri thức với cuộc sống).\n• Sinh trọn bộ 4 mã đề ngẫu nhiên khác nhau (901, 902, 903, 904) kèm Ma trận, Đặc tả, Đề thi, Bảng điểm và Đáp án - Hướng dẫn chấm chi tiết.\n• Tùy chọn mở rộng: Giáo viên tùy ý tăng/giảm số câu TN và TL ở mỗi bài học bằng bộ Stepper [-] [+] hoặc bấm '⚡ Tự động chuẩn PPCT' để về chuẩn Bộ bất kỳ lúc nào.\n• Xuất song song 2 bản Word (.docx): Bản Giáo viên (Master đáp án đỏ RGB) và Bản Học sinh sạch 100% in ngay.\n• Đóng gói bộ cài đặt duy nhất Cai_Dat_TaoDe_LS_THCS.exe và cập nhật đồng bộ lên hệ sinh thái Web.",
+  "currentVersion": "5.2.0",
+  "latestVersion": "5.2.0",
+  "releaseDate": "18/10/2026 (20:00)",
+  "changelog": "• [18/10/2026 - v5.2.0 PRO] Nâng cấp giao diện Xanh Navy Pro sang trọng, đẳng cấp đồng bộ chuẩn Tiếng Anh THCS, thanh tiêu đề Header tinh gọn thanh thoát.\n• Tích hợp tính năng & Nút bấm '📋 XUẤT BIÊN BẢN PHẢN BIỆN ĐỀ (WORD CHUẨN)': Xuất file Word Biên bản duyệt, phản biện đề kiểm tra định kỳ chuẩn thể thức văn bản Nghị định 30/2020/NĐ-CP và Công văn 7991/BGDĐT-GDTrH, gói gọn vừa vặn trong đúng 01 trang in A4.\n• Định dạng Phần II (Câu 13 đến 16 Đúng - Sai) vào bảng 3 cột chuẩn mẫu của Bộ và Sở GD&ĐT (Lệnh hỏi | Đúng | Sai; Bản Giáo viên có đáp án Đ/S đỏ, Bản Học sinh để trống 100% để làm bài).\n• Khống chế mặc định đoạn trích dẫn/dẫn nhập tư liệu lịch sử không vượt quá 7 dòng (đã kiểm định 100% câu hỏi đạt chuẩn).\n• Nâng cấp ngân hàng câu hỏi toàn diện 78 bài học chính khóa SGK Kết nối tri thức Lớp 6, 7, 8, 9; hỗ trợ sinh ngẫu nhiên phong phú từ 1 đến 24 mã đề độc lập, không trùng lặp.\n• Tự động xuất Bảng tổng hợp đáp án Đúng/Sai 17 cột (Mã đề + 16 ý hỏi của 4 câu) khi tạo nhiều mã đề, giúp thầy cô chấm 20-24 mã đề trên 1 trang duy nhất.\n• Đầy đủ 2 hình thức: Cài đặt tự động vào Word Ribbon (Cai_Dat_TaoDe_LS_THCS.exe) và Bản chạy trực tiếp Desktop không cần cài đặt.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
   "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
-  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - Trường THCS Đồng Yên"
+  "author": "Tác giả: Thầy giáo Đinh Văn Thành (Tel/zalo: 0915.213717) - Trường THCS Đồng Yên"
 }

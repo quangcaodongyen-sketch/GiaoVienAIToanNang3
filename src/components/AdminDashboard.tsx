@@ -1,4 +1,5 @@
-import { cloudSyncService, isAppMatching, SecurityAlertItem } from '../services/cloudSyncService';
+import { cloudSyncService, SecurityAlertItem } from '../services/cloudSyncService';
+import { isAppMatching, removeDiacritics } from '../services/appMatcher';
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, 
@@ -170,7 +171,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     setDirectMid(up);
     if (up.includes('TECHPT') || up.includes('CONGNGHEPT')) setDirectAppId('taode_thpt_congnghe');
     else if (up.includes('MATHPT') || up.includes('TOANPT')) setDirectAppId('taode_thpt_toan');
-    else if (up.includes('PHYPT') || up.includes('VATLIPT')) setDirectAppId('taode_thpt_vatli');
+    else if (up.includes('PHYPT') || up.includes('VATLIPT') || up.includes('VATLYPT')) setDirectAppId('taode_thpt_vatli');
     else if (up.includes('CHMPT') || up.includes('HOAPT')) setDirectAppId('taode_thpt_hoa');
     else if (up.includes('BIOPT') || up.includes('SINHPT')) setDirectAppId('taode_thpt_sinh');
     else if (up.includes('INFPT') || up.includes('TINPT')) setDirectAppId('taode_thpt_tin');
@@ -179,10 +180,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     else if (up.includes('GDKTPT')) setDirectAppId('taode_thpt_gdktpl');
     else if (up.includes('LITPT') || up.includes('NGUVANPT')) setDirectAppId('taode_thpt_nguvan');
     else if (up.includes('ENGPT')) setDirectAppId('taode_thpt_tienganh');
-    else if (up.includes('KHTN')) setDirectAppId('taode_khtn_thcs');
-    else if (up.includes('ENGCS') || up.startsWith('DVT-ENG-')) setDirectAppId('taode_tienganh_thcs');
+    else if (up.includes('KHTN') || up.startsWith('KHTN-DVT-')) setDirectAppId('taode_khtn_thcs');
+    else if (up.includes('ENGCS') || up.startsWith('DVT-ENG-') || up.startsWith('ENG-DVT-') || up.includes('ENG-DVT')) setDirectAppId('taode_tienganh_thcs');
     else if (up.includes('ENG15')) setDirectAppId('taode_15p');
-    else if (up.includes('LSTHCS') || up.includes('LS-DVT')) setDirectAppId('taode_lichsu_thcs');
+    else if (up.includes('LSTHCS') || up.includes('LS-DVT') || up.startsWith('LS-DVT-')) setDirectAppId('taode_lichsu_thcs');
+    else if (up.includes('ENGPRI') || up.includes('TIEUHOC') || up.includes('ENG-TH') || up.includes('PRI')) setDirectAppId('taode_tieuhoc_tienganh');
     else if (up.includes('THCS8M')) setDirectAppId('taode_thcs_8m');
     else if (up.includes('NLS')) setDirectAppId('nls_ai_thcs');
     else if (up.includes('MATH')) setDirectAppId('math_studio');
@@ -1023,6 +1025,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     try {
       const appMap: Record<string, string> = {
         'taode_thpt_toan': 'Tạo Đề Môn Toán THPT (2025+)',
+        'taode_thpt_vatli': 'Tạo Đề Môn Vật Lí THPT (2025+)',
         'taode_thpt_vatly': 'Tạo Đề Môn Vật Lí THPT (2025+)',
         'taode_thpt_hoa': 'Tạo Đề Môn Hóa Học THPT (2025+)',
         'taode_thpt_sinh': 'Tạo Đề Môn Sinh Học THPT (2025+)',
@@ -1035,6 +1038,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         'taode_thpt_tienganh': 'Tạo Đề Môn Tiếng Anh THPT (2025+)',
         'nls_ai_thcs': 'Tích Hợp NLS - AI THCS (CV 5512)',
         'taode_tienganh_thcs': 'Tạo Đề Tiếng Anh THCS Global Success',
+        'taode_khtn_thcs': 'Tạo Đề Khoa Học Tự Nhiên THCS (KHTN)',
+        'taode_lichsu_thcs': 'Tạo Đề Lịch Sử THCS Chuyên Sâu (CV 7991)',
         'taode_thcs_8m': 'Tạo Đề THCS 8 Môn (CV 7991)',
         'taode_15p': 'Tạo Đề 15 Phút Tiếng Anh THCS',
         'smart_listening_tts': 'Smart Listening Pro (Text To Speech)',
@@ -1043,7 +1048,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
         'chuan_hoa_vb': 'Chuẩn Hóa Văn Bản Hành Chính AI',
         'pdf_suite': 'PDF Suite Pro (Tách - Gộp - Lọc Trắng)',
         'screen_record': 'Screen Record Pro V2',
-        'math_studio': 'Đinh Thành MathStudio 2026+'
+        'math_studio': 'Đinh Thành MathStudio 2026+',
+        'taode_tieuhoc_tienganh': 'Tạo Đề Tiếng Anh Tiểu Học Global Success (TT 27)'
       };
 
       const effectiveAppName = appMap[directAppId] || 'Phần Mềm Giáo Viên AI';
@@ -2703,6 +2709,109 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 </div>
               </div>
             )}
+
+            {/* ===================================================================== */}
+            {/* DANH SÁCH GIÁO VIÊN ĐANG CHỜ DUYỆT CẤP KEY (PENDING) - TAB 1 CẤP TỐC */}
+            {/* ===================================================================== */}
+            {(() => {
+              const pendingList = registrationRequests.filter(r => r.status === 'PENDING');
+              if (pendingList.length === 0) {
+                return (
+                  <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 text-center">
+                    <p className="text-xs text-slate-400 flex items-center justify-center gap-1.5 font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>Hiện tại không có đơn đăng ký nào đang chờ duyệt. Tất cả giáo viên toàn quốc đã được cấp phép Pro!</span>
+                    </p>
+                  </div>
+                );
+              }
+              return (
+                <div className="bg-slate-900 border-2 border-red-500/60 rounded-2xl p-4 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+                      <h4 className="text-xs sm:text-sm font-black text-rose-300 flex items-center gap-1.5">
+                        <span>⚡ ĐƠN ĐĂNG KÝ ĐANG CHỜ KÍCH HOẠT:</span>
+                        <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-mono font-bold text-xs">
+                          {pendingList.length} đơn mới
+                        </span>
+                      </h4>
+                    </div>
+                    <span className="text-[11px] text-slate-400 hidden sm:inline">
+                      Bấm "⚡ Kích Hoạt 1-Chạm" để cấp phép ngay hoặc "Điền Form" để xem chi tiết
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {pendingList.map((req) => (
+                      <div
+                        key={req.id || req.machineId}
+                        className="bg-slate-950 border border-slate-800 hover:border-amber-500/60 rounded-xl p-3 transition flex flex-col justify-between gap-2.5"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="font-bold text-white text-xs sm:text-sm truncate">
+                              👤 {req.fullName || 'Giáo viên'}
+                            </span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40 font-mono font-bold shrink-0">
+                              CHỜ DUYỆT
+                            </span>
+                          </div>
+                          {req.schoolUnit && (
+                            <div className="text-[11px] text-slate-400 truncate flex items-center gap-1">
+                              <Building2 className="w-3 h-3 text-purple-400 shrink-0" />
+                              <span className="truncate">{req.schoolUnit}</span>
+                            </div>
+                          )}
+                          {req.phoneNumber && (
+                            <div className="text-[11px] text-emerald-400 font-mono flex items-center gap-1">
+                              <Phone className="w-3 h-3 text-emerald-400 shrink-0" />
+                              <span>{req.phoneNumber}</span>
+                            </div>
+                          )}
+                          <div className="text-[11px] font-bold text-cyan-300 truncate">
+                            📦 {req.appName || req.appId}
+                          </div>
+                          <div className="bg-slate-900 px-2 py-1 rounded text-[11px] font-mono text-amber-300 truncate font-bold border border-slate-800">
+                            💻 {req.machineId}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 pt-1 border-t border-slate-800/80">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDirectMidChange(req.machineId);
+                              setDirectName(req.fullName || '');
+                              setDirectPhone(req.phoneNumber || '');
+                              setDirectSchool(req.schoolUnit || '');
+                            }}
+                            className="flex-1 py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-bold transition text-center cursor-pointer"
+                            title="Tải thông tin giáo viên lên form chỉnh sửa phía trên"
+                          >
+                            📝 Điền Form
+                          </button>
+                          <button
+                            type="button"
+                            disabled={approvingId === `${req.machineId}_1YEAR`}
+                            onClick={() => handleApproveReq(req.id, '1YEAR', req.issueNumber)}
+                            className="flex-1 py-1.5 px-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-[11px] font-black transition text-center cursor-pointer shadow-md shadow-emerald-900/40 active:scale-95 flex items-center justify-center gap-1"
+                            title="Kích hoạt nhanh 1 Năm và tạo mã key gửi Zalo"
+                          >
+                            {approvingId === `${req.machineId}_1YEAR` ? (
+                              <RefreshCw className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Zap className="w-3 h-3 text-amber-300" />
+                            )}
+                            <span>⚡ Kích Hoạt 1-Chạm</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -3256,22 +3365,15 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                     .filter(r => {
                       if (reqFilter !== 'ALL' && r.status !== reqFilter) return false;
                       if (regAppFilter !== 'ALL') {
-                        const appK = (r.appId || r.appName || '').toLowerCase();
-                        if (regAppFilter === 'tts') {
-                          if (!appK.includes('tts') && !appK.includes('speech') && !appK.includes('listening') && !appK.includes('bài nghe') && !appK.includes('smart-listening') && !r.machineId.toUpperCase().startsWith('MB-')) return false;
-                        } else if (regAppFilter === 'khtn') {
-                          if (!appK.includes('khtn') && !appK.includes('tự nhiên') && !r.machineId.toUpperCase().includes('KHTN')) return false;
-                        } else {
-                          if (!appK.includes(regAppFilter.toLowerCase())) return false;
-                        }
+                        if (!isAppMatching(r.appId, r.appName, regAppFilter)) return false;
                       }
                       if (regSearchTerm.trim()) {
-                        const q = regSearchTerm.toLowerCase();
-                        const matchMid = r.machineId.toLowerCase().includes(q);
-                        const matchName = (r.fullName || '').toLowerCase().includes(q);
-                        const matchSchool = (r.schoolUnit || '').toLowerCase().includes(q);
+                        const q = removeDiacritics(regSearchTerm);
+                        const matchMid = removeDiacritics(r.machineId).includes(q);
+                        const matchName = removeDiacritics(r.fullName || '').includes(q);
+                        const matchSchool = removeDiacritics(r.schoolUnit || '').includes(q);
                         const matchPhone = (r.phoneNumber || '').includes(q);
-                        const matchApp = (r.appName || '').toLowerCase().includes(q);
+                        const matchApp = removeDiacritics(r.appName || '').includes(q);
                         if (!matchMid && !matchName && !matchSchool && !matchPhone && !matchApp) return false;
                       }
                       return true;

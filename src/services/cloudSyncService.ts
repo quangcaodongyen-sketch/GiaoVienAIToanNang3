@@ -27,131 +27,8 @@ const getHeaders = (): Record<string, string> => {
   return headers;
 };
 
-/**
- * KIỂM TRA KHỚP ỨNG DỤNG ĐỘC LẬP
- * Đảm bảo kích hoạt 1 App KHÔNG ĐƯỢC làm kích hoạt các App khác!
- */
-export const isAppMatching = (
-  regAppId: string | undefined,
-  regAppName: string | undefined,
-  targetAppId: string
-): boolean => {
-  if (!targetAppId) return true;
-  const target = targetAppId.trim().toLowerCase();
-  const rId = (regAppId || '').trim().toLowerCase();
-  const rName = (regAppName || '').trim().toLowerCase();
-
-  // Master / All Bundle có hiệu lực với tất cả ứng dụng
-  if (rId === 'all' || rId === 'full_web' || rId === 'master' || rName.includes('toàn bộ') || rName.includes('tất cả')) {
-    return true;
-  }
-
-  // Các Môn THPT 2025+ Độc Lập
-  const thptSubjs = ['toan', 'vatly', 'hoa', 'sinh', 'tin', 'lichsu', 'diali', 'gdktpl', 'congnghe', 'nguvan', 'engpt'];
-  for (const s of thptSubjs) {
-    if (target.includes(s) && (target.includes('thpt') || target.includes('pt'))) {
-      const matchS = rId.includes(s) || rName.includes(s);
-      const matchPt = rId.includes('thpt') || rId.includes('pt') || rName.includes('thpt');
-      return matchS && matchPt;
-    }
-  }
-
-  // Tiếng Anh Tiểu Học (Thông tư 27)
-  if (target.includes('engpri') || target.includes('tieuhoc') || target.includes('pri')) {
-    return (
-      rId.includes('engpri') ||
-      rId.includes('tieuhoc') ||
-      rName.includes('tiểu học') ||
-      rName.includes('thông tư 27')
-    );
-  }
-
-  // Tiếng Anh THCS
-  if (target.includes('eng') || target.includes('tienganh') || target.includes('exam')) {
-    return (
-      rId.includes('eng') ||
-      rId.includes('tienganh') ||
-      rId.includes('exam') ||
-      rName.includes('tiếng anh') ||
-      rName.includes('english')
-    ) && !rName.includes('toán') && !rName.includes('năng lực số');
-  }
-
-  // Tích Hợp NLS-AI THCS
-  if (target.includes('nls')) {
-    return (
-      rId.includes('nls') ||
-      rName.includes('nls') ||
-      rName.includes('năng lực số') ||
-      rName.includes('5512')
-    ) && !rName.includes('tiếng anh') && !rName.includes('toán');
-  }
-
-  // Đinh Thành MathStudio 2026+ Pro (Toán học & Mathpix)
-  if (target.includes('mathstudio') || target.includes('mathpix')) {
-    return (
-      rId.includes('mathstudio') ||
-      rId.includes('mathpix') ||
-      rName.includes('mathstudio') ||
-      rName.includes('mathpix') ||
-      rName.includes('soạn thảo toán')
-    );
-  }
-
-  // Tạo Đề Khoa Học Tự Nhiên THCS (KHTN)
-  if (target.includes('khtn') || target.includes('khoa học tự nhiên') || target.includes('tu_nhien') || target.includes('tunhien')) {
-    return rId.includes('khtn') || rName.includes('khtn') || rName.includes('khoa học tự nhiên');
-  }
-
-  // Tạo Đề 8 Môn / Toán THCS
-  if (target.includes('8mon') || target.includes('toan') || target.includes('van') || (target.includes('math') && !target.includes('mathstudio'))) {
-    const isEng = rId.includes('eng') || rName.includes('tiếng anh');
-    const isNls = rId.includes('nls') || rName.includes('năng lực số');
-    const isMathStudio = rId.includes('mathstudio') || rName.includes('mathstudio');
-    const isKhtn = rId.includes('khtn') || rName.includes('khoa học tự nhiên');
-    if (isEng || isNls || isMathStudio || isKhtn) return false;
-    return (
-      rId.includes('8mon') ||
-      rId.includes('toan') ||
-      rId.includes('math') ||
-      rName.includes('8 môn') ||
-      rName.includes('toán') ||
-      rName.includes('tạo đề')
-    );
-  }
-
-  // Sinh Đề Biến Thể
-  if (target.includes('bienthe') || target.includes('var')) {
-    return rId.includes('bienthe') || rName.includes('biến thể');
-  }
-
-  // Chuẩn Hóa Văn Bản
-  if (target.includes('chuanhoa') || target.includes('cvb')) {
-    return rId.includes('chuanhoa') || rName.includes('chuẩn hóa');
-  }
-
-  // Dọn Rác & Tăng Tốc
-  if (target.includes('cleaner') || target.includes('cln')) {
-    return rId.includes('cleaner') || rName.includes('dọn rác');
-  }
-
-  // Bộ Tiện Ích PDF
-  if (target.includes('pdf')) {
-    return rId.includes('pdf') || rName.includes('pdf');
-  }
-
-  // Ghi Âm & Quay Màn Hình
-  if (target.includes('record') || target.includes('rec')) {
-    return rId.includes('record') || rName.includes('quay màn hình');
-  }
-
-  // Smart Listening Pro / Tạo File Nghe SGK
-  if (target.includes('listening') || target.includes('tts') || target.includes('nghe')) {
-    return rId.includes('listening') || rId.includes('tts') || rName.includes('listening') || rName.includes('bài nghe') || rName.includes('file nghe');
-  }
-
-  return rId === target;
-};
+import { isAppMatching, removeDiacritics } from './appMatcher';
+export { isAppMatching, removeDiacritics };
 
 class CloudSyncService {
   // Alias tiện ích tương thích ngược
@@ -271,21 +148,25 @@ ${JSON.stringify(payloadData, null, 2)}
         const body: string = issue.body || '';
         const match = body.match(/```gvai-reg\s*([\s\S]*?)\s*```/);
         
-        let regData: RegistrationRequest | null = null;
+        let regData: any = null;
         if (match && match[1]) {
           try {
             regData = JSON.parse(match[1]);
+            if (regData.key && !regData.licenseKey) {
+              regData.licenseKey = regData.key;
+            }
           } catch {
             // ignore
           }
         }
 
         if (!regData) {
+          const midMatch = issue.title.match(/([A-Z0-9]+-)?DVT-[A-Z0-9]{4}-[A-Z0-9]{4}(-[A-Z0-9]{4})?|GV-[A-Z0-9]{4}-[A-Z0-9]{4}|MB-[A-Z0-9]{4}-[A-Z0-9]{4}/);
           regData = {
             id: `REG-${issue.id}`,
-            machineId: issue.title.match(/GV-[A-Z0-9]{4}-[A-Z0-9]{4}/)?.[0] || 'GV-UNKNOWN',
-            fullName: issue.user?.login || 'Giáo viên',
-            schoolUnit: 'Trường THCS',
+            machineId: midMatch ? midMatch[0] : 'GV-UNKNOWN',
+            fullName: issue.title.split(' - ')?.[1] || issue.user?.login || 'Giáo viên',
+            schoolUnit: 'Trường THCS / THPT',
             phoneNumber: '0915.213717',
             appId: 'tich-hop-nls-ai',
             appName: 'Tích Hợp NLS & AI Vào Giáo Án THCS',
@@ -294,6 +175,12 @@ ${JSON.stringify(payloadData, null, 2)}
             status: issue.labels?.some((l: any) => l.name === 'status:approved') ? 'APPROVED' : issue.state === 'closed' ? 'APPROVED' : 'PENDING',
             createdAt: new Date(issue.created_at).toLocaleString('vi-VN')
           };
+        }
+
+        // Tự động trích xuất License Key nếu có trong body
+        const keyMatch = body.match(/KEY-[A-Z0-9]+-\d{8}-[A-Za-z0-9\-_=]+/);
+        if (keyMatch && !regData.licenseKey) {
+          regData.licenseKey = keyMatch[0];
         }
 
         const titleUpper = (issue.title || '').toUpperCase();
@@ -343,18 +230,26 @@ ${JSON.stringify(payloadData, null, 2)}
         });
       }
 
-            // Tự động kéo thêm từ public/cloud_registrations.json (ghi từ Add-in Word & App Desktop)
+      // Tự động kéo thêm từ public/cloud_registrations.json (ghi từ Add-in Word & App Desktop)
       try {
         const staticResp = await fetch('/cloud_registrations.json?t=' + Date.now());
         if (staticResp.ok) {
           const staticList = await staticResp.json();
           if (Array.isArray(staticList)) {
             for (const item of staticList) {
-              const existingIdx = results.findIndex(r => r.machineId === item.machineId);
+              const existingIdx = results.findIndex(r => r.machineId === item.machineId && (isAppMatching(r.appId, r.appName, item.appId) || r.appId === item.appId));
               if (existingIdx === -1) {
                 results.unshift(item);
-              } else if (item.status === 'APPROVED' || item.status === 'REJECTED') {
-                results[existingIdx].status = item.status;
+              } else {
+                if (item.status === 'APPROVED' || item.status === 'REJECTED') {
+                  results[existingIdx].status = item.status;
+                }
+                if (item.licenseKey && !results[existingIdx].licenseKey) {
+                  results[existingIdx].licenseKey = item.licenseKey;
+                }
+                if (item.key && !results[existingIdx].licenseKey) {
+                  results[existingIdx].licenseKey = item.key;
+                }
               }
             }
           }
@@ -429,10 +324,36 @@ ${JSON.stringify(payloadData, null, 2)}
         body: JSON.stringify({ body: commentBody })
       });
 
+      // Cập nhật body issue với trạng thái APPROVED và licenseKey để mọi thiết bị/trình duyệt đọc được ngay mà không cần quét comments
+      let updatedBody: string | undefined;
+      try {
+        const getIss = await fetch(`${GITHUB_API_URL}/issues/${issueNumber}`, { headers: getHeaders() });
+        if (getIss.ok) {
+          const issData = await getIss.json();
+          let curBody = issData.body || '';
+          const m = curBody.match(/```gvai-reg\s*([\s\S]*?)\s*```/);
+          if (m && m[1]) {
+            try {
+              const regJson = JSON.parse(m[1]);
+              regJson.status = 'APPROVED';
+              regJson.packageType = packageType;
+              if (licenseKey) regJson.licenseKey = licenseKey;
+              if (expDate) regJson.expiryDateStr = expDate;
+              regJson.reviewedBy = reviewerName;
+              regJson.reviewedAt = now;
+              updatedBody = curBody.replace(/```gvai-reg\s*[\s\S]*?\s*```/, `\`\`\`gvai-reg\n${JSON.stringify(regJson, null, 2)}\n\`\`\``);
+            } catch {}
+          }
+        }
+      } catch {}
+
       const patchBody: any = {
         state: 'closed',
         labels: ['registration', 'status:approved', `package:${packageType.toLowerCase()}`]
       };
+      if (updatedBody) {
+        patchBody.body = updatedBody;
+      }
       if (machineId) {
         patchBody.title = `[ĐÃ DUYỆT - ${pkgLabel.toUpperCase()}] ${machineId} - ${fullName || 'Giáo viên'}`;
       }
@@ -470,16 +391,25 @@ ${JSON.stringify(payloadData, null, 2)}
         const allIssuesResp = await fetch(`${GITHUB_API_URL}/issues?state=all&per_page=100`, { headers: getHeaders() });
         if (allIssuesResp.ok) {
           const allIssues = await allIssuesResp.json();
-          const bareMid = cleanMid.replace('NLS-', '').replace('ENG-', '').replace('TAODE-', '');
+          const coreMatch = cleanMid.match(/[A-Z0-9]{4}-[A-Z0-9]{4}/);
+          const corePart = coreMatch ? coreMatch[0] : cleanMid;
           const matchingIssues = allIssues.filter((iss: any) => {
             const t = iss.title || '';
             const b = iss.body || '';
             const isDel = iss.labels?.some((l: any) => l.name === 'status:deleted') || t.includes('[ĐÃ XÓA]');
-            const midMatch = (t.includes(cleanMid) || b.includes(cleanMid) || t.includes(bareMid) || b.includes(bareMid));
+            const midMatch = (t.includes(cleanMid) || b.includes(cleanMid) || t.includes(corePart) || b.includes(corePart));
             if (!midMatch || isDel) return false;
             // ĐỘC LẬP BẢN QUYỀN: Bắt buộc khớp đúng AppId
             if (appId) {
-              return isAppMatching(iss.appId || '', `${t} ${b}`, appId);
+              let issueAppId = '';
+              const mReg = b.match(/```gvai-reg\s*([\s\S]*?)\s*```/);
+              if (mReg && mReg[1]) {
+                try {
+                  const parsedReg = JSON.parse(mReg[1]);
+                  issueAppId = parsedReg.appId || '';
+                } catch {}
+              }
+              return isAppMatching(issueAppId, `${t} ${b}`, appId);
             }
             return true;
           });

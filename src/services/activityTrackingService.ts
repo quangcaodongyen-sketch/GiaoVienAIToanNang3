@@ -1,27 +1,51 @@
 
-export const isAdminMachine = (mid?: string): boolean => {
-  if (!mid) return false;
-  const upper = mid.toUpperCase();
-  return ADMIN_WHITELIST_MACHINES.includes(mid) ||
-         ADMIN_WHITELIST_MACHINES.includes(upper) ||
-         upper.includes('DVT') ||
-         upper.includes('ADMIN') ||
-         mid === 'GV-33B3-4A70' ||
-         mid === 'GV-0DAD-F76C';
-};
+import { isAppMatching, removeDiacritics } from './appMatcher';
 
 export const ADMIN_WHITELIST_MACHINES = [
-  'NLS-DVT-5EA7-F4C2-8083',
-  'DVT-5EA7-F4C2-8083',
+  '0B1D-A6A7-5A14',
+  '0B1D-A6A7',
+  'EA28-719A-1353',
+  'EA28-719A',
   '5EA7-F4C2-8083',
-  'KHTN-DVT-1DC7-7839-5808',
-  'DVT-1DC7-7839-5808',
+  '5EA7-F4C2',
   '1DC7-7839-5808',
+  '1DC7-7839',
   'CN-DVT-0B1D-A6A7-5A14',
   'GV-0DAD-F76C',
   'GV-33B3-4A70',
-  'NLS-DVT-0B1D-A6A7-5A14'
+  'NLS-DVT-0B1D-A6A7-5A14',
+  'DVT-MATH-0B1D-A6A7-5A14',
+  'ENG-DVT-0B1D-A6A7-5A14',
+  'DVT-ENGPT-0B1D-A6A7',
+  'DVT-MATHPT-0B1D-A6A7',
+  'NLS-DVT-5EA7-F4C2-8083',
+  'DVT-5EA7-F4C2-8083',
+  'KHTN-DVT-1DC7-7839-5808',
+  'DVT-1DC7-7839-5808',
+  'MB-E10D-BE85',
+  'MB-54A9-08D6'
 ];
+
+export const isAdminMachine = (mid?: string): boolean => {
+  if (!mid) return false;
+  const upper = mid.toUpperCase().trim();
+  // Khớp chính xác với danh sách máy Admin hoặc chứa dấu vân tay phần cứng riêng của Admin
+  // TUYỆT ĐỐI KHÔNG dùng upper.includes('DVT') vì mọi app của giáo viên đều chứa 'DVT-'
+  if (ADMIN_WHITELIST_MACHINES.some(adm => adm.toUpperCase() === upper || upper === adm.toUpperCase())) {
+    return true;
+  }
+  const adminFingerprints = [
+    '0B1D-A6A7',
+    'EA28-719A',
+    '5EA7-F4C2',
+    '1DC7-7839',
+    'GV-0DAD-F76C',
+    'GV-33B3-4A70',
+    'MB-E10D-BE85',
+    'MB-54A9-08D6'
+  ];
+  return adminFingerprints.some(fp => upper.includes(fp)) || upper.includes('ADMIN-PC');
+};
 /**
  * DỊCH VỤ THEO DÕI HOẠT ĐỘNG, ĐĂNG KÝ THÀNH VIÊN & QUẢN TRỊ MÁY TÍNH
  * Hệ sinh thái Giáo Viên AI Toàn Năng - Tác giả Đinh Thành
@@ -160,6 +184,97 @@ export const ECOSYSTEM_APPS_CATALOG = [
     appName: 'Tạo Đề Tiếng Anh THPT (Global Success 10, 11, 12 - BGD&ĐT)',
     shortName: 'Tạo Đề TA THPT',
     category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_khtn_thcs',
+    appName: 'Tạo Đề Khoa Học Tự Nhiên THCS (Kết Nối Tri Thức - CV 7991)',
+    shortName: 'Tạo Đề KHTN THCS',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_lichsu_thcs',
+    appName: 'Tạo Đề Lịch Sử THCS Kết Nối Tri Thức (CV 7991)',
+    shortName: 'Tạo Đề Sử THCS',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_tieuhoc_tienganh',
+    appName: 'Tạo Đề Tiếng Anh Tiểu Học (Lớp 1-5 Global Success - TT 27)',
+    shortName: 'Tạo Đề TA Tiểu Học',
+    category: 'tienganh' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_congnghe',
+    appName: 'Tạo Đề Công Nghệ THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Công Nghệ THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_toan',
+    appName: 'Tạo Đề Toán THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Toán THPT 2025',
+    category: 'toan' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_vatli',
+    appName: 'Tạo Đề Vật Lí THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Vật Lí THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_hoa',
+    appName: 'Tạo Đề Hóa Học THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Hóa Học THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_sinh',
+    appName: 'Tạo Đề Sinh Học THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Sinh Học THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_tin',
+    appName: 'Tạo Đề Tin Học THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Tin Học THPT',
+    category: 'tienich' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_lichsu',
+    appName: 'Tạo Đề Lịch Sử THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Lịch Sử THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_diali',
+    appName: 'Tạo Đề Địa Lí THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Địa Lí THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_gdktpl',
+    appName: 'Tạo Đề GDKT & PL THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'GDKT&PL THPT',
+    category: 'chung' as const,
+    badge: 'BẢN QUYỀN PRO'
+  },
+  {
+    appId: 'taode_thpt_nguvan',
+    appName: 'Tạo Đề Ngữ Văn THPT (Định Dạng Mới BGD&ĐT 2025+)',
+    shortName: 'Ngữ Văn THPT',
+    category: 'chung' as const,
     badge: 'BẢN QUYỀN PRO'
   },
   {
@@ -1008,7 +1123,7 @@ class ActivityTrackingService {
       allRegistrations.forEach(r => {
         if (!isAdminMachine(r.machineId)) {
           const mid = r.machineId.toUpperCase();
-          const matchesApp = r.appId === appId || (!r.appId && appId === 'tich-hop-nls-ai');
+          const matchesApp = isAppMatching(r.appId, r.appName, appId) || r.appId === appId;
           if (matchesApp) {
             const existing = appMachinesMap.get(mid);
             if (existing) {
@@ -1041,12 +1156,27 @@ class ActivityTrackingService {
       localLicenses.forEach(lic => {
         if (!isAdminMachine(lic.machine_id) && lic.status === 'ACTIVE') {
           const mid = lic.machine_id.toUpperCase();
-          const existing = appMachinesMap.get(mid);
-          if (existing) {
-            existing.status = 'ACTIVE_PRO';
-            if (lic.teacher_name) existing.fullName = lic.teacher_name;
-            if (lic.school_unit) existing.schoolUnit = lic.school_unit;
-            if (lic.phone_zalo) existing.phoneNumber = lic.phone_zalo;
+          const matchesLic = isAppMatching(lic.app_id || (lic as any).product_id, lic.notes || '', appId);
+          if (matchesLic) {
+            const existing = appMachinesMap.get(mid);
+            if (existing) {
+              existing.status = 'ACTIVE_PRO';
+              if (lic.teacher_name) existing.fullName = lic.teacher_name;
+              if (lic.school_unit) existing.schoolUnit = lic.school_unit;
+              if (lic.phone_zalo) existing.phoneNumber = lic.phone_zalo;
+            } else {
+              appMachinesMap.set(mid, {
+                machineId: mid,
+                firstSeenAt: new Date(lic.created_at || Date.now()).toLocaleDateString('vi-VN'),
+                lastSeenAt: new Date(lic.created_at || Date.now()).toLocaleDateString('vi-VN'),
+                fullName: lic.teacher_name,
+                schoolUnit: lic.school_unit,
+                phoneNumber: lic.phone_zalo,
+                status: 'ACTIVE_PRO',
+                installCount: 1,
+                updateCount: 0
+              });
+            }
           }
         }
       });
