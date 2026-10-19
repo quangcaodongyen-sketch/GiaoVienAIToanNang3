@@ -1353,13 +1353,7 @@ export default function App() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => setShowTrialModal(true)}
-                      className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer active:scale-95"
-                    >
-                      <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>DÙNG THỬ 5 LƯỢT</span>
-                    </button>
+
                     <a
                       href={BRAND.zaloUrl}
                       target="_blank"
@@ -1457,14 +1451,7 @@ export default function App() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowTrialModal(true)}
-                className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors cursor-pointer"
-              >
-                Trải nghiệm dùng thử
-              </button>
-              <span className="text-slate-600">•</span>
+
               <button
                 type="button"
                 onClick={() => {
