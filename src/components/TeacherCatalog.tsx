@@ -21,108 +21,130 @@ interface TeacherCatalogProps {
   onCopyShareLink: (url: string, title: string, e: React.MouseEvent) => void;
 }
 
-// Bảng ánh xạ link tải file .exe hoặc .zip cho từng phần mềm
+// CDN lưu trữ bộ cài đặt tốc độ cao GitHub Releases (tag v3.0-nls)
+const CDN_BASE = 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls';
+
+// Bảng ánh xạ link tải file .exe hoặc .zip cho từng phần mềm (100% link thật CDN)
 const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
   'tichhop-nls-ai-thcs': {
-    exe: '/Cai_Dat_Tich_Hop_NLS_AI.exe',
-    zip: '/Tich_Hop_NLS_AI_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe`,
+    zip: `${CDN_BASE}/Tich_Hop_NLS_AI_THCS_Pass_123.zip`
   },
   'tao-de-tieng-anh-tieu-hoc': {
-    zip: '/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip'
+    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip`
   },
   'tao-de-tieng-viet-tieu-hoc': {
-    exe: '/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe',
-    zip: '/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe`,
+    zip: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip`
   },
   'tao-de-tieng-anh-thcs': {
-    exe: '/Tao_De_Tieng_Anh_THCS_Desktop.exe',
-    zip: '/Tao_De_Tieng_Anh_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/TaoDe_TiengAnh_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_THCS_Pass_123.zip`
   },
   'tao-de-15p-tienganh': {
-    exe: '/TaoDe_15Phut_TiengAnh_THCS.exe',
-    zip: '/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/TaoDe_15Phut_TiengAnh_THCS.exe`,
+    zip: `${CDN_BASE}/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip`
   },
   'tao-de-toan-thcs': {
-    exe: '/Trung_Tam_Tao_De_THCS.exe',
-    zip: '/Trung_Tam_Tao_De_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_Toan_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Toan_THCS_Pass_123.zip`
   },
   'tao-de-van-thcs': {
-    exe: '/Tao_De_Van_THCS.exe',
-    zip: '/Tao_De_Van_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_Van_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Van_THCS_Pass_123.zip`
   },
   'tao-de-khtn-thcs': {
-    exe: '/Tao_De_KHTN_THCS.exe',
-    zip: '/Tao_De_KHTN_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_KHTN_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_KHTN_THCS_Pass_123.zip`
+  },
+  'tao-de-sudia-thcs': {
+    exe: `${CDN_BASE}/Tao_De_Su_Dia_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Su_Dia_THCS_Pass_123.zip`
   },
   'tao-de-lich-su-thcs': {
-    exe: '/Cai_Dat_TaoDe_LS_THCS.exe',
-    zip: '/Tao_De_Lich_Su_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_LS_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Lich_Su_THCS_Pass_123.zip`
   },
   'tao-de-tin-thcs': {
-    exe: '/Tao_De_Tin_Hoc_THCS.exe',
-    zip: '/Tao_De_Tin_Hoc_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_Tin_Hoc_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Tin_Hoc_THCS_Pass_123.zip`
   },
   'tao-de-cn-thcs': {
-    exe: '/Tao_De_Cong_Nghe_THCS.exe',
-    zip: '/Tao_De_Cong_Nghe_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_Cong_Nghe_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_Cong_Nghe_THCS_Pass_123.zip`
   },
   'tao-de-gdcd-thcs': {
-    exe: '/Tao_De_GDCD_THCS.exe',
-    zip: '/Tao_De_GDCD_THCS_Pass_123.zip'
+    exe: `${CDN_BASE}/Tao_De_GDCD_THCS.exe`,
+    zip: `${CDN_BASE}/Tao_De_GDCD_THCS_Pass_123.zip`
   },
   'tao-de-tieng-anh-thpt': {
-    exe: '/Cai_Dat_TaoDe_TiengAnh_THPT.exe',
-    zip: '/Tao_De_Tieng_Anh_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengAnh_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_THPT_Pass_123.zip`
   },
   'tao-de-toan-thpt': {
-    zip: '/TaoDe_Toan_THPT.dotm'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_Toan_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_Toan_THPT_Pass_123.zip`
   },
   'tao-de-van-thpt': {
-    zip: '/Tao_De_NguVan_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_NguVan_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_NguVan_THPT_Pass_123.zip`
   },
   'tao-de-vatli-thpt': {
-    zip: '/Tao_De_VatLi_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_VatLi_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_VatLi_THPT_Pass_123.zip`
   },
   'tao-de-hoahoc-thpt': {
-    zip: '/Tao_De_HoaHoc_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_HoaHoc_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_HoaHoc_THPT_Pass_123.zip`
   },
   'tao-de-sinhhoc-thpt': {
-    zip: '/Tao_De_SinhHoc_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_SinhHoc_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_SinhHoc_THPT_Pass_123.zip`
   },
   'tao-de-lichsu-thpt': {
-    zip: '/Tao_De_LichSu_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_LichSu_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_LichSu_THPT_Pass_123.zip`
   },
   'tao-de-diali-thpt': {
-    zip: '/Tao_De_DiaLi_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_DiaLi_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_DiaLi_THPT_Pass_123.zip`
   },
   'tao-de-tin-thpt': {
-    zip: '/Tao_De_TinHoc_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TinHoc_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_TinHoc_THPT_Pass_123.zip`
   },
   'tao-de-cn-thpt': {
-    zip: '/Tao_De_CongNghe_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_CongNghe_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_CongNghe_THPT_Pass_123.zip`
   },
   'tao-de-gdktpl-thpt': {
-    zip: '/Tao_De_GDKTPL_THPT_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_TaoDe_GDKTPL_THPT.exe`,
+    zip: `${CDN_BASE}/Tao_De_GDKTPL_THPT_Pass_123.zip`
   },
-  'chuanhoavanbanvip': {
-    zip: '/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip'
-  },
-  'dinhthanh-cleaner-pro': {
-    exe: '/DinhThanh_Cleaner_Pro.exe',
-    zip: '/DinhThanh_Cleaner_Pro_v4.5.zip'
-  },
-  'TACH-GOP-PDF': {
-    zip: '/PDF_Suite_Pro_Pass_123.zip'
-  },
-  'screen-record-v2': {
-    exe: '/Screen_Record_Pro_V2.exe'
-  },
-  'sinhdebienthe': {
-    zip: '/Sinh_3_De_Bien_The_VIP_Pass_123.zip'
+  'smart-listening-pro': {
+    exe: `${CDN_BASE}/Cai_Dat_Smart_Listening_Pro.exe`,
+    zip: `${CDN_BASE}/Smart_Listening_Pro_Pass_123.zip`
   },
   'mathstudio-pro': {
-    exe: '/Cai_Dat_MathStudio.exe',
-    zip: '/MathStudio_Pro_Pass_123.zip'
+    exe: `${CDN_BASE}/Cai_Dat_MathStudio_Pass_123.zip`,
+    zip: `${CDN_BASE}/MathStudio_Pro_Pass_123.zip`
+  },
+  'chuanhoavanbanvip': {
+    exe: `${CDN_BASE}/Cai_Dat_AI_Word.exe`,
+    zip: `${CDN_BASE}/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip`
+  },
+  'dinhthanh-cleaner-pro': {
+    exe: `${CDN_BASE}/DinhThanh_Cleaner_Pro.exe`,
+    zip: `${CDN_BASE}/DinhThanh_Cleaner_Pro_v4.5.zip`
+  },
+  'TACH-GOP-PDF': {
+    zip: `${CDN_BASE}/PDF_Suite_Pro_Pass_123.zip`
+  },
+  'screen-record-v2': {
+    exe: `${CDN_BASE}/Screen_Record_Pro_V2.exe`
+  },
+  'sinhdebienthe': {
+    zip: `${CDN_BASE}/Sinh_3_De_Bien_The_VIP_Pass_123.zip`
   }
 };
 
@@ -197,6 +219,26 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
       </div>
 
       {/* BẢNG DANH MỤC ỨNG DỤNG ĐƠN GIẢN - GỌN GÀNG - KHÔNG TỐN DIỆN TÍCH */}
+      {/* KHUYẾN NGHỊ TẢI FILE AN TOÀN - TRÁNH BÁO LỖI VIRUS */}
+      <div className="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <ShieldCheck className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="font-bold text-emerald-900 dark:text-emerald-200">
+              Khuyên dùng: Tải bản nén <span className="underline decoration-emerald-500 font-extrabold">.zip (Pass: 123)</span> để không bao giờ bị trình duyệt chặn nhầm virus!
+            </p>
+            <p className="text-emerald-700 dark:text-emerald-400 text-[11px] mt-0.5">
+              Tải siêu tốc qua máy chủ Cloud. Mật khẩu giải nén chung: <span className="font-mono font-bold bg-emerald-200 dark:bg-emerald-900/60 px-1.5 py-0.2 rounded text-emerald-950 dark:text-emerald-100">123</span> • Hoặc chọn bản <span className="font-semibold">.exe</span> cài trực tiếp.
+            </p>
+          </div>
+        </div>
+        <span className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 font-semibold text-[11px]">
+          ✓ 100% Sạch & An toàn
+        </span>
+      </div>
+
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
@@ -207,7 +249,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                 <th className="py-3 px-3 min-w-[120px]">Cấp Học / Môn</th>
                 <th className="py-3 px-3 min-w-[250px]">Chức Năng Chính</th>
                 <th className="py-3 px-3 text-center min-w-[130px]">Dùng Thử Trực Tuyến</th>
-                <th className="py-3 px-3 text-center min-w-[150px]">Tải Về Miễn Phí</th>
+                <th className="py-3 px-3 text-center min-w-[180px]">Tải Bộ Cài Miễn Phí</th>
                 <th className="py-3 px-3 text-center min-w-[140px]">Bản Quyền Pro</th>
               </tr>
             </thead>
@@ -280,34 +322,38 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                       {/* TẢI BỘ CÀI MIỄN PHÍ */}
                       <td className="py-3 px-3 text-center">
                         <div className="inline-flex items-center gap-1.5 flex-wrap justify-center">
-                          {downloads.exe && (
-                            <a
-                              href={downloads.exe}
-                              download
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] shadow-2xs transition"
-                              title="Tải tệp cài đặt thực thi .exe"
-                            >
-                              <Download className="w-3 h-3" />
-                              <span>.exe</span>
-                            </a>
-                          )}
+                          {/* ƯU TIÊN .ZIP (PASS: 123) TRƯỚC - AN TOÀN 100%, KHÔNG BỊ TRÌNH DUYỆT CHẶN BÁO VIRUS */}
                           {downloads.zip && (
                             <a
                               href={downloads.zip}
-                              download
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-[11px] border border-slate-300 dark:border-slate-700 shadow-2xs transition"
-                              title="Bản nén .zip (Mật khẩu giải nén: 123)"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-2xs transition active:scale-95 group/zip"
+                              title="Khuyên dùng: Tải bản .zip (Pass: 123) - 100% không bao giờ bị Chrome / Windows chặn nhầm virus"
                             >
-                              <Download className="w-3 h-3" />
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-200 group-hover/zip:text-white shrink-0" />
                               <span>.zip (Pass: 123)</span>
+                            </a>
+                          )}
+                          {/* BẢN .EXE TRỰC TIẾP */}
+                          {downloads.exe && (
+                            <a
+                              href={downloads.exe}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-[11px] border border-slate-300 dark:border-slate-700 shadow-2xs transition active:scale-95"
+                              title="Tải tệp cài .exe trực tiếp (Nếu trình duyệt hỏi, bấm 'Vẫn giữ / Keep')"
+                            >
+                              <Download className="w-3 h-3 text-slate-500" />
+                              <span>.exe</span>
                             </a>
                           )}
                           {!downloads.exe && !downloads.zip && (
                             <button
                               onClick={() => onOpenAppModal(app)}
-                              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-slate-400 text-[11px] hover:text-blue-600"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 text-slate-500 text-[11px] hover:text-blue-600 font-medium"
                             >
-                              <span>Xem link tải</span>
+                              <span>Dùng Online</span>
                             </button>
                           )}
                         </div>

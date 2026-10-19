@@ -349,7 +349,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <a
                     href="https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.exe"
-                    download="TaoDe_15Phut_TiengAnh_THCS.exe"
+                    download="TaoDe_15Phut_TiengAnh_THCS.exe" target="_blank" rel="noopener noreferrer"
                     className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer text-center"
                   >
                     <Download className="w-5 h-5 shrink-0" />
@@ -357,7 +357,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                   </a>
                   <a
                     href={EXAM_15P_RESOURCES.fullZipUrl}
-                    download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip"
+                    download="TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip" target="_blank" rel="noopener noreferrer"
                     className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all cursor-pointer text-center"
                   >
                     <Download className="w-5 h-5 shrink-0" />
