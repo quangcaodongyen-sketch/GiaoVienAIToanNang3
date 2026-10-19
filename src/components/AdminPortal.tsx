@@ -587,28 +587,32 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
                       <span className="text-[10px] bg-slate-200 dark:bg-slate-700 px-1.5 py-0.2 rounded font-mono">
                         {count}
                       </span>
-                      {/* Nút sửa/xóa thư mục (không xóa thư mục hệ thống mặc định nếu muốn giữ) */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingFolder(folder);
-                          setEditFolderName(folder.name);
-                        }}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-600 transition"
-                        title="Chỉnh sửa tên thư mục"
-                      >
-                        <Edit3 className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteFolder(folder);
-                        }}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-600 transition"
-                        title="Xóa thư mục"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
+                      {/* Nút sửa/xóa thư mục */}
+                      {!folder.isSystemDefault && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingFolder(folder);
+                              setEditFolderName(folder.name);
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-600 transition"
+                            title="Chỉnh sửa tên thư mục"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteFolder(folder);
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-600 transition"
+                            title="Xóa thư mục"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 );
@@ -698,27 +702,45 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
                             {file.fileType}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3 font-mono text-slate-500">
-                          {(file.size / 1024).toFixed(1)} KB
+                        <td className="py-2.5 px-3 font-mono text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
+                          {file.size >= 1024 * 1024
+                            ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+                            : `${(file.size / 1024).toFixed(1)} KB`}
                         </td>
-                        <td className="py-2.5 px-3 text-slate-400 text-[11px]">
+                        <td className="py-2.5 px-3 text-slate-400 text-[11px] whitespace-nowrap">
                           {new Date(file.uploadedAt).toLocaleDateString('vi-VN')}
                         </td>
-                        <td className="py-2.5 px-3 text-right space-x-1">
+                        <td className="py-2.5 px-3 text-right space-x-1 whitespace-nowrap">
+                          {file.downloadUrl && (
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(file.downloadUrl || '');
+                                alert(`Đã sao chép link tải: ${file.name}
+
+Thầy có thể dán (Ctrl+V) gửi ngay cho giáo viên qua Zalo.`);
+                              }}
+                              className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition inline-flex items-center cursor-pointer"
+                              title="Sao chép link tải trực tiếp gửi cho Giáo viên"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                           <button
                             onClick={() => documentStorageService.downloadFile(file)}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
+                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition inline-flex items-center cursor-pointer"
                             title="Tải tệp về máy tính"
                           >
                             <Download className="w-3.5 h-3.5" />
                           </button>
-                          <button
-                            onClick={() => handleDeleteFile(file)}
-                            className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition"
-                            title="Xóa tệp tin"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          {!file.isOfficial && (
+                            <button
+                              onClick={() => handleDeleteFile(file)}
+                              className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition inline-flex items-center cursor-pointer"
+                              title="Xóa tệp tin"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))
