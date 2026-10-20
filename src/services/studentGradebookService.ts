@@ -406,11 +406,27 @@ class StudentGradebookService {
     return true;
   }
 
-  public deleteStudent(id: string): boolean {
-    this.students = this.students.filter(s => s.id !== id);
-    this.submissions = this.submissions.filter(sub => sub.studentId !== id);
+  public deleteStudent(idOrIdentifier: string): boolean {
+    const target = (idOrIdentifier || '').trim().toLowerCase();
+    this.students = this.students.filter(s => 
+      s.id !== idOrIdentifier && 
+      (s.username || '').toLowerCase() !== target &&
+      (s.studentCode || '').toLowerCase() !== target
+    );
+    this.submissions = this.submissions.filter(sub => 
+      sub.studentId !== idOrIdentifier &&
+      (sub.studentCode || '').toLowerCase() !== target
+    );
+    if (this.activeStudent && (
+      this.activeStudent.id === idOrIdentifier || 
+      (this.activeStudent.username || '').toLowerCase() === target ||
+      (this.activeStudent.studentCode || '').toLowerCase() === target
+    )) {
+      this.setActiveStudent(null);
+    }
     this.saveStudents();
     this.saveSubmissions();
+    this.syncToCloud().catch(() => {});
     return true;
   }
 
