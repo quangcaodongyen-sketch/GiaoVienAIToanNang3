@@ -144,88 +144,87 @@ export const StudentPortal: React.FC = () => {
       {/* HEADER GÓC HỌC SINH */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold mb-3 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
-            <span>Cổng Học Tập Dành Cho Học Sinh Toàn Quốc</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 text-xs font-bold mb-2 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+            <span>Hệ Thống Học Tập & Ôn Luyện — Trường THCS Đồng Yên</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1 text-white">
             GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Học từ vựng Tiếng Anh Global Success, làm đầy đủ Bài tập SGK theo từng phần (Getting Started, Closer Look, Skills...), Kiểm tra Online (5 bài/Unit, 20 câu/bài) chấm điểm ngay, và tải đề miễn phí.
+          <p className="text-blue-100/90 text-xs sm:text-sm max-w-3xl leading-normal">
+            Luyện từ vựng Tiếng Anh, giải bài tập SGK theo từng phần, làm đề kiểm tra online và theo dõi sổ điểm thi đua theo lớp.
           </p>
         </div>
 
-        {/* Nút Chuyển Nhanh 4 Tính Năng Của Học Sinh */}
-        <div className="relative z-10 flex flex-wrap items-center gap-2 mt-6">
+        {/* Nút Chuyển Nhanh Các Tính Năng */}
+        <div className="relative z-10 flex flex-wrap items-center gap-2 mt-4">
           <button
             onClick={() => setActiveTab('vocab')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'vocab'
                 ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
                 : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>1. Học Từ Vựng 6 - 12</span>
+            <span>1. Từ Vựng SGK</span>
           </button>
 
           <button
             onClick={() => setActiveTab('sgk')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'sgk'
                 ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
                 : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <BookMarked className="w-4 h-4" />
-            <span>2. Bài Tập SGK Từng Phần</span>
+            <span>2. Bài Tập SGK</span>
           </button>
 
           <button
             onClick={() => setActiveTab('quiz')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'quiz'
                 ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
                 : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>3. Kiểm tra Online</span>
+            <span>3. Kiểm Tra Online</span>
           </button>
 
           <button
             type="button"
             onClick={() => setIsIpaModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl font-black text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-md border border-amber-300 hover:scale-105"
-            title="Mở Bảng 44 Âm Chuẩn Quốc Tế IPA bám sát SGK Global Success"
+            className="px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-sm"
+            title="Mở Bảng 44 Âm Chuẩn Quốc Tế IPA"
           >
-            <Sparkles className="w-4 h-4 text-slate-950 animate-bounce" />
-            <span>🗣️ Bảng 44 Âm IPA Chuẩn</span>
+            <span>🗣️ Bảng Âm IPA</span>
           </button>
 
           <button
             onClick={() => setActiveTab('leaderboard')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'leaderboard'
                 ? 'bg-amber-400 text-slate-950 shadow-md font-black'
                 : 'bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30'
             }`}
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span>5. Thi Đua & Sổ Điểm Lớp</span>
+            <span>4. Thi Đua & Sổ Điểm Lớp</span>
           </button>
 
           <button
             onClick={() => setActiveTab('downloads')}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'downloads'
                 ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
                 : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
             }`}
           >
             <Download className="w-4 h-4" />
-            <span>4. Tải Đề Kiểm Tra & Tài Liệu</span>
+            <span>5. Tải Đề & Tài Liệu</span>
           </button>
 
           <button
