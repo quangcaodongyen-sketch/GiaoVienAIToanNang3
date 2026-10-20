@@ -169,7 +169,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Tin_Hoc_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86',
     description: 'Bộ cài đặt All-in-One Tạo đề Tin học THCS (Lớp 6, 7, 8, 9 CV 7991) - Tự động tạo Shortcut Desktop & Tích hợp Word Add-in ribbon',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -182,7 +182,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Tin_Hoc_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1UoyLxirC4th9u7dGvyZarlWBTRs6ISny',
     description: 'File nén trọn bộ Tạo đề Tin học THCS (Pass giải nén: 123) - Tự động phân phối cho GV',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -195,7 +195,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_GDCD_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=13B9CNEi9-rj1YgbUyAM6IUDyzDqAvsgp',
     description: 'Bộ cài đặt All-in-One Tạo đề GDCD THCS (Lớp 6, 7, 8, 9 CV 7991) - Tự động tạo Shortcut Desktop & Word Ribbon',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -208,7 +208,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_GDCD_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1NDZJDC75Cv0SsKccnPCJi20QukGH8McO',
     description: 'File nén trọn bộ Tạo đề GDCD THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -221,7 +221,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Toan_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=101JAzB5CpgE16dN25JC_uI88g7Wym6WD',
     description: 'Bộ cài đặt All-in-One Tạo đề Toán THCS (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -234,7 +234,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Toan_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl',
     description: 'File nén trọn bộ Tạo đề Toán THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -247,7 +247,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Van_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9',
     description: 'Bộ cài đặt All-in-One Tạo đề Ngữ văn THCS (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -260,7 +260,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Van_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7',
     description: 'File nén trọn bộ Tạo đề Ngữ văn THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -273,7 +273,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_KHTN_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1BM_1b5e6U8k778SIq0OjuJI_NnLlBXbH',
     description: 'Bộ cài đặt All-in-One Tạo đề Khoa học tự nhiên THCS (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -286,7 +286,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_KHTN_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX',
     description: 'File nén trọn bộ Tạo đề KHTN THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -299,7 +299,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Cong_Nghe_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw',
     description: 'Bộ cài đặt All-in-One Tạo đề Công nghệ THCS (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -312,7 +312,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Cong_Nghe_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL',
     description: 'File nén trọn bộ Tạo đề Công nghệ THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -325,7 +325,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Cai_Dat_TaoDe_LS_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod',
     description: 'Bộ cài đặt All-in-One Tạo đề Lịch sử THCS Chuyên Sâu (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -338,7 +338,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Lich_Su_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1R22KTK7x1JIbGi_X9KNwBgErL3qitthk',
     description: 'File nén trọn bộ Tạo đề Lịch sử THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -351,7 +351,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Su_Dia_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1P1fZxrJ2C6Rf1mpqUpKe8Vr703tf-Vb6',
     description: 'Bộ cài đặt Tạo đề Lịch sử & Địa lí THCS (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -364,7 +364,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Su_Dia_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B',
     description: 'File nén trọn bộ Tạo đề Lịch sử & Địa lí THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -377,7 +377,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/TaoDe_TiengAnh_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY',
     description: 'Bộ cài đặt All-in-One Tạo đề Tiếng Anh THCS Global Success (Lớp 6, 7, 8, 9 CV 7991)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -390,7 +390,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'zip',
     mimeType: 'application/zip',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Tao_De_Tieng_Anh_THCS_Pass_123.zip`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d',
     description: 'File nén trọn bộ Tạo đề Tiếng Anh THCS (Pass giải nén: 123)',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true
@@ -403,7 +403,7 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     fileType: 'exe',
     mimeType: 'application/x-msdownload',
     uploadedAt: '2026-10-19T22:25:00Z',
-    downloadUrl: `${GITHUB_RELEASE_BASE}/Cai_Dat_TaoDe_15Phut_TiengAnh_THCS.exe`,
+    downloadUrl: 'https://drive.google.com/uc?export=download&id=1UvoS3l1rw8_omyensQ9qtuBeyyUJ9bdE',
     description: 'Bộ cài đặt Tạo đề kiểm tra thường xuyên 15 phút Tiếng Anh THCS',
     uploader: 'Thầy Đinh Thành (Tác quyền)',
     isOfficial: true

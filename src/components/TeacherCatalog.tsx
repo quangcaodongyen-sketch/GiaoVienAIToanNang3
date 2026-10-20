@@ -38,44 +38,44 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
     zip: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip`
   },
   'tao-de-tieng-anh-thcs': {
-    exe: `${CDN_BASE}/TaoDe_TiengAnh_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY',
+    zip: 'https://drive.google.com/uc?export=download&id=1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d'
   },
   'tao-de-15p-tienganh': {
-    exe: `${CDN_BASE}/TaoDe_15Phut_TiengAnh_THCS.exe`,
-    zip: `${CDN_BASE}/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1UvoS3l1rw8_omyensQ9qtuBeyyUJ9bdE',
+    zip: 'https://drive.google.com/uc?export=download&id=1Gp-DRLSBVZgzJJI7spQ7VkE_wRrNSFJw'
   },
   'tao-de-toan-thcs': {
-    exe: `${CDN_BASE}/Tao_De_Toan_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Toan_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=101JAzB5CpgE16dN25JC_uI88g7Wym6WD',
+    zip: 'https://drive.google.com/uc?export=download&id=1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl'
   },
   'tao-de-van-thcs': {
-    exe: `${CDN_BASE}/Tao_De_Van_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Van_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9',
+    zip: 'https://drive.google.com/uc?export=download&id=13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7'
   },
   'tao-de-khtn-thcs': {
-    exe: `${CDN_BASE}/Tao_De_KHTN_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_KHTN_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1BM_1b5e6U8k778SIq0OjuJI_NnLlBXbH',
+    zip: 'https://drive.google.com/uc?export=download&id=1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX'
   },
   'tao-de-sudia-thcs': {
-    exe: `${CDN_BASE}/Tao_De_Su_Dia_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Su_Dia_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1P1fZxrJ2C6Rf1mpqUpKe8Vr703tf-Vb6',
+    zip: 'https://drive.google.com/uc?export=download&id=1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B'
   },
   'tao-de-lich-su-thcs': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_LS_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Lich_Su_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod',
+    zip: 'https://drive.google.com/uc?export=download&id=1R22KTK7x1JIbGi_X9KNwBgErL3qitthk'
   },
   'tao-de-tin-thcs': {
-    exe: `${CDN_BASE}/Tao_De_Tin_Hoc_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Tin_Hoc_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86',
+    zip: 'https://drive.google.com/uc?export=download&id=1UoyLxirC4th9u7dGvyZarlWBTRs6ISny'
   },
   'tao-de-cn-thcs': {
-    exe: `${CDN_BASE}/Tao_De_Cong_Nghe_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_Cong_Nghe_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw',
+    zip: 'https://drive.google.com/uc?export=download&id=1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL'
   },
   'tao-de-gdcd-thcs': {
-    exe: `${CDN_BASE}/Tao_De_GDCD_THCS.exe`,
-    zip: `${CDN_BASE}/Tao_De_GDCD_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/uc?export=download&id=13B9CNEi9-rj1YgbUyAM6IUDyzDqAvsgp',
+    zip: 'https://drive.google.com/uc?export=download&id=1NDZJDC75Cv0SsKccnPCJi20QukGH8McO'
   },
   'tao-de-tieng-anh-thpt': {
     exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengAnh_THPT.exe`,

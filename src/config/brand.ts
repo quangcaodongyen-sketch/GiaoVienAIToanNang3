@@ -35,7 +35,7 @@ export const BRAND = {
 
 // Cấu hình link lưu trữ trực tiếp tốc độ cao cho Tích hợp NLS - AI THCS V3
 export const NLS_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI.exe",
   addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TichHop_NLS_AI.dotm",
   forceUninstallUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC.exe",
@@ -48,7 +48,7 @@ export const NLS_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
 export const EXAM_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
@@ -59,14 +59,14 @@ export const EXAM_RESOURCES = {
 
 // Cấu hình link tài nguyên Tạo Đề 15 Phút Tiếng Anh THCS
 export const EXAM_15P_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.dotm",
   videoDirectUrl: ""
 };
 
 // Cấu hình link tài nguyên Tạo Đề Tiếng Anh Tiểu Học (Lớp 1-5 Global Success - TT 27)
 export const EXAM_ENG_PRIMARY_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip",
@@ -77,7 +77,7 @@ export const EXAM_ENG_PRIMARY_RESOURCES = {
 
 // Cấu hình link tài nguyên Smart Listening Pro (Audio Text To Speech)
 export const SMART_LISTENING_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Smart_Listening_Pro.exe",
   standardZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Smart_Listening_Pro.zip",
   videoDirectUrl: ""
@@ -85,31 +85,31 @@ export const SMART_LISTENING_RESOURCES = {
 
 // Cấu hình link tài nguyên MathStudio
 export const MATHSTUDIO_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/MathStudio_Pro_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/DinhThanh_MathStudio.dotm"
 };
 
 // Cấu hình link tài nguyên Chuẩn hóa văn bản
 export const CHUAN_HOA_VB_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_AI_Word.exe",
   addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/AI_Word_Assistant.dotm"
 };
 
 // Cấu hình link tài nguyên Dọn rác Cleaner Pro
 export const CLEANER_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/DinhThanh_Cleaner_Pro_v4.5.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/DinhThanh_Cleaner_Pro.exe"
 };
 
 // Cấu hình link tài nguyên Sinh 3 đề biến thể
 export const SINH_DE_BIEN_THE_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Sinh_3_De_Bien_The_VIP_Pass_123.zip"
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing"
 };
 
 // Cấu hình link tài nguyên Tách gộp PDF
 export const PDF_SUITE_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/PDF_Suite_Pro_Pass_123.zip"
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing"
 };
 
 // Cấu hình link tài nguyên Screen Record Pro
@@ -120,7 +120,7 @@ export const SCREEN_RECORD_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh THPT Global Success (Lớp 10, 11, 12)
 export const EXAM_TIENG_ANH_THPT_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
@@ -131,7 +131,7 @@ export const EXAM_TIENG_ANH_THPT_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Toán THPT Kết Nối Tri Thức (QĐ 764/BGDĐT)
 export const EXAM_TOAN_THPT_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Toan_THPT.exe",
   exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_Toan_THPT.dotm",
@@ -146,8 +146,8 @@ export const EXAM_THPT_RESOURCES = {
       name: "Toán học",
       fullName: "Môn Toán học THPT",
       appTag: "MATHPT",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THPT_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Toan_THPT.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl",
+      exeUrl: "https://drive.google.com/uc?export=download&id=101JAzB5CpgE16dN25JC_uI88g7Wym6WD",
       dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_Toan_THPT.dotm",
       size: "114 MB",
       icon: "📐",
@@ -157,8 +157,8 @@ export const EXAM_THPT_RESOURCES = {
       name: "Tiếng Anh",
       fullName: "Môn Tiếng Anh THPT",
       appTag: "ENGPT",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY",
       dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THPT.dotm",
       size: "117 MB",
       icon: "🇬🇧",
@@ -168,8 +168,8 @@ export const EXAM_THPT_RESOURCES = {
       name: "Ngữ văn",
       fullName: "Môn Ngữ văn THPT",
       appTag: "LITPT",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_NguVan_THPT_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_NguVan_THPT.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9",
       dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_NguVan_THPT.dotm",
       size: "111 MB",
       icon: "📖",
@@ -223,8 +223,8 @@ export const EXAM_THPT_RESOURCES = {
       name: "Lịch sử",
       fullName: "Môn Lịch sử THPT",
       appTag: "HISPT",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_LichSu_THPT_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LichSu_THPT.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1R22KTK7x1JIbGi_X9KNwBgErL3qitthk",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod",
       dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_LichSu_THPT.dotm",
       size: "113 MB",
       icon: "🏛️",
@@ -271,7 +271,7 @@ export const THPT_10MON_RESOURCES = EXAM_THPT_RESOURCES;
 // Cấu hình link tài nguyên của Trung Tâm Tạo Đề 7 Môn THCS & 7 App Độc Lập (CV 7991)
 export const EXAM_7MON_RESOURCES = {
   // Link tải trọn bộ tổng hợp 7 môn Hub .zip (Pass: 123)
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Trung_Tam_Tao_De_THCS.exe",
   videoDirectUrl: "",
   videoWatchUrl: "",
@@ -280,64 +280,64 @@ export const EXAM_7MON_RESOURCES = {
   subjects: {
     TOAN: {
       name: "Toán học",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl",
+      exeUrl: "https://drive.google.com/uc?export=download&id=101JAzB5CpgE16dN25JC_uI88g7Wym6WD",
       size: "78 MB",
       icon: "📐",
       color: "from-blue-600 to-indigo-600"
     },
     VAN: {
       name: "Ngữ văn",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Van_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Van_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9",
       size: "35 MB",
       icon: "📖",
       color: "from-rose-600 to-red-600"
     },
     KHTN: {
       name: "Khoa học tự nhiên",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1BM_1b5e6U8k778SIq0OjuJI_NnLlBXbH",
       size: "35 MB",
       icon: "🔬",
       color: "from-emerald-600 to-teal-600"
     },
     SUDIA: {
       name: "Lịch sử & Địa lí",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Su_Dia_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Su_Dia_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1P1fZxrJ2C6Rf1mpqUpKe8Vr703tf-Vb6",
       size: "35 MB",
       icon: "🌍",
       color: "from-amber-600 to-orange-600"
     },
     GDCD: {
       name: "Giáo dục công dân",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDCD_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_GDCD_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1NDZJDC75Cv0SsKccnPCJi20QukGH8McO",
+      exeUrl: "https://drive.google.com/uc?export=download&id=13B9CNEi9-rj1YgbUyAM6IUDyzDqAvsgp",
       size: "35 MB",
       icon: "⚖️",
       color: "from-red-600 to-pink-600"
     },
     TIN: {
       name: "Tin học",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1UoyLxirC4th9u7dGvyZarlWBTRs6ISny",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86",
       size: "67 MB",
       icon: "💻",
       color: "from-sky-600 to-cyan-600"
     },
     CN: {
       name: "Công nghệ",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Cong_Nghe_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw",
       size: "35 MB",
       icon: "⚙️",
       color: "from-teal-600 to-emerald-600"
     },
     LICHSU: {
       name: "Lịch sử",
-      zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
+      zipUrl: "https://drive.google.com/uc?export=download&id=1R22KTK7x1JIbGi_X9KNwBgErL3qitthk",
+      exeUrl: "https://drive.google.com/uc?export=download&id=1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod",
       size: "91 MB",
       icon: "🏛️",
       color: "from-amber-600 to-yellow-600"
@@ -349,7 +349,7 @@ export const EXAM_8MON_RESOURCES = EXAM_7MON_RESOURCES;
 
 // Cấu hình link tài nguyên Tạo Đề Lịch Sử THCS Chuyên Sâu (CV 7991)
 export const EXAM_LICHSU_THCS_RESOURCES = {
-  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
   dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_LS_THCS.dotm",
   videoDirectUrl: "",
