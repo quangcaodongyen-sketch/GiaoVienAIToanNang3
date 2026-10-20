@@ -261,84 +261,124 @@ export const StudentPortal: React.FC = () => {
     e.preventDefault();
     setRegError('');
 
-    const name = regFullName.trim();
-    if (!name || name.length < 2) {
-      setRegError('Vui lòng nhập đầy đủ Họ và tên học sinh!');
-      return;
-    }
+    try {
+      const name = regFullName.trim();
+      if (!name || name.length < 2) {
+        const msg = 'Vui lòng nhập đầy đủ Họ và tên học sinh (tối thiểu 2 ký tự)!';
+        setRegError(msg);
+        alert('⚠️ ' + msg);
+        return;
+      }
 
-    if (checkInappropriate(name)) {
-      setRegError('⛔ TÊN KHÔNG HỢP LỆ! Họ tên chứa từ ngữ phi giáo dục hoặc vi phạm tiêu chuẩn học đường. Vui lòng nhập họ tên thật nghiêm túc!');
-      return;
-    }
+      if (checkInappropriate(name)) {
+        const msg = '⛔ TÊN KHÔNG HỢP LỆ! Họ tên chứa từ ngữ vi phạm tiêu chuẩn học đường. Vui lòng nhập họ tên thật nghiêm túc!';
+        setRegError(msg);
+        alert(msg);
+        return;
+      }
 
-    const cleanCls = regClassName.trim().toUpperCase();
-    if (!cleanCls) {
-      setRegError('Vui lòng chọn hoặc nhập Lớp học của em!');
-      return;
-    }
+      const cleanCls = regClassName.trim().toUpperCase() || '7A1';
 
-    const cleanPhone = regPhone.replace(/[^0-9]/g, '');
-    if (cleanPhone && cleanPhone.length < 9) {
-      setRegError('Số điện thoại không hợp lệ (tối thiểu 9 chữ số)!');
-      return;
-    }
+      const cleanPhone = regPhone.replace(/[^0-9]/g, '');
+      if (cleanPhone && cleanPhone.length < 9) {
+        const msg = 'Số điện thoại không hợp lệ (tối thiểu 9 chữ số)!';
+        setRegError(msg);
+        alert('⚠️ ' + msg);
+        return;
+      }
 
-    const rawUser = regUsername.trim().toLowerCase().replace(/\s+/g, '');
-    if (!rawUser || rawUser.length < 3) {
-      setRegError('Vui lòng nhập Tên đăng nhập (tối thiểu 3 ký tự viết liền không dấu)!');
-      return;
-    }
-    if (checkInappropriate(rawUser)) {
-      setRegError('⛔ TÊN ĐĂNG NHẬP KHÔNG HỢP LỆ! Vui lòng chọn tên đăng nhập trong sáng, lịch sự!');
-      return;
-    }
+      const rawUser = regUsername.trim().toLowerCase().replace(/\s+/g, '');
+      if (!rawUser || rawUser.length < 3) {
+        const msg = 'Vui lòng nhập Tên đăng nhập (tối thiểu 3 ký tự viết liền không dấu)!';
+        setRegError(msg);
+        alert('⚠️ ' + msg);
+        return;
+      }
 
-    const pass = regPassword.trim();
-    if (!pass || pass.length < 4) {
-      setRegError('Vui lòng nhập Mật khẩu bảo mật cho tài khoản của em (tối thiểu 4 ký tự)!');
-      return;
+      if (checkInappropriate(rawUser)) {
+        const msg = '⛔ TÊN ĐĂNG NHẬP KHÔNG HỢP LỆ! Vui lòng chọn tên đăng nhập trong sáng, lịch sự!';
+        setRegError(msg);
+        alert(msg);
+        return;
+      }
+
+      const pass = regPassword.trim();
+      if (!pass || pass.length < 4) {
+        const msg = 'Vui lòng nhập Mật khẩu bảo mật cho tài khoản của em (tối thiểu 4 ký tự)!';
+        setRegError(msg);
+        alert('⚠️ ' + msg);
+        return;
+      }
+
+      // Kiểm tra tên đăng nhập trong danh sách học sinh
+      const allStus = studentGradebookService.getAllStudents();
+      const existingIdx = allStus.findIndex(
+        s => (s.username && s.username.toLowerCase() === rawUser) || 
+             (s.studentCode && s.studentCode.toLowerCase() === rawUser)
+      );
+
+      let savedProfile: StudentProfile;
+
+      if (existingIdx !== -1) {
+        // Tên đăng nhập đã tồn tại trong danh sách: Cập nhật lại mật khẩu và thông tin cho em học sinh
+        const existing = allStus[existingIdx];
+        studentGradebookService.updateStudent(existing.id, {
+          name: name || existing.name,
+          password: pass,
+          className: cleanCls,
+          grade: regGrade,
+          gender: regGender,
+          parentPhone: cleanPhone || existing.parentPhone
+        });
+        savedProfile = {
+          ...existing,
+          name: name || existing.name,
+          password: pass,
+          className: cleanCls,
+          grade: regGrade,
+          gender: regGender,
+          parentPhone: cleanPhone || existing.parentPhone
+        };
+      } else {
+        // Tạo mới hồ sơ học sinh
+        const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
+        savedProfile = studentGradebookService.addStudent({
+          studentCode: code,
+          username: rawUser,
+          password: pass,
+          name: name,
+          classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
+          className: cleanCls,
+          grade: regGrade,
+          gender: regGender,
+          parentPhone: cleanPhone,
+          note: 'Học sinh tự đăng ký trực tuyến'
+        });
+      }
+
+      studentGradebookService.setActiveStudent(savedProfile);
+      setCurrentStudent(savedProfile);
+      setShowAuthModal(false);
+      setRegFullName('');
+      setRegUsername('');
+      setRegPassword('');
+      setRegPhone('');
+      setRegError('');
+
+      // Mở màn hình xác nhận "Đăng ký thành công!" rõ ràng, chuyên nghiệp
+      setRegisteredSuccessInfo({
+        name: savedProfile.name,
+        username: savedProfile.username || rawUser,
+        password: savedProfile.password || pass,
+        className: savedProfile.className,
+        phone: savedProfile.parentPhone || cleanPhone,
+        studentCode: savedProfile.studentCode,
+        grade: savedProfile.grade
+      });
+    } catch (err: any) {
+      console.error('Lỗi đăng ký tài khoản:', err);
+      alert('Có lỗi xảy ra khi tạo tài khoản: ' + (err?.message || 'Vui lòng thử lại!'));
     }
-
-    // Kiểm tra trùng tên đăng nhập trong danh sách học sinh
-    const allStus = studentGradebookService.getAllStudents();
-    const isExisted = allStus.some(s => s.username?.toLowerCase() === rawUser || s.studentCode.toLowerCase() === rawUser);
-    if (isExisted) {
-      setRegError(`Tên đăng nhập "${rawUser}" đã có bạn đăng ký trước. Em vui lòng chọn tên đăng nhập khác nhé!`);
-      return;
-    }
-
-    const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
-    const newProfile = studentGradebookService.addStudent({
-      studentCode: code,
-      username: rawUser,
-      password: pass,
-      name: name,
-      classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
-      className: cleanCls,
-      grade: regGrade,
-      gender: regGender,
-      parentPhone: cleanPhone,
-      note: 'Học sinh tự đăng ký trực tuyến'
-    });
-
-    studentGradebookService.setActiveStudent(newProfile);
-    setCurrentStudent(newProfile);
-    setShowAuthModal(false);
-    setRegFullName('');
-    setRegUsername('');
-    setRegPassword('');
-    setRegPhone('');
-    // Mở màn hình xác nhận "Đăng ký thành công!" rõ ràng, chuyên nghiệp
-    setRegisteredSuccessInfo({
-      name: name,
-      username: rawUser,
-      password: pass,
-      className: cleanCls,
-      phone: cleanPhone,
-      studentCode: code,
-      grade: regGrade
-    });
   };
 
     // Quản lý Tài Liệu & Quyền Admin upload/xóa
@@ -1003,7 +1043,7 @@ export const StudentPortal: React.FC = () => {
 
             {/* ================= TAB 1: FORM ĐĂNG KÝ HỌC SINH MỚI ================= */}
             {authActiveTab === 'register' && (
-              <form onSubmit={handleRegisterSubmit} className="space-y-3.5 text-xs">
+              <form onSubmit={handleRegisterSubmit} noValidate className="space-y-3.5 text-xs">
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                     👤 Họ và tên học sinh (*):
@@ -1320,7 +1360,7 @@ export const StudentPortal: React.FC = () => {
 
       {/* ==================== MODAL XÁC NHẬN "ĐĂNG KÝ THÀNH CÔNG!" ==================== */}
       {registeredSuccessInfo && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[99999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border-2 border-emerald-500 shadow-2xl overflow-hidden relative my-auto animate-in zoom-in-95 duration-200">
             {/* Header banner với hiệu ứng chúc mừng */}
             <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 p-6 text-white text-center relative">
