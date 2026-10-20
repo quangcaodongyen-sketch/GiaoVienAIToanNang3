@@ -3857,17 +3857,15 @@ function updateGradeUI() {
     }
   });
 
-  // Update Brand Badge
+  // Update Brand Badge & Title (Clean, Single Line, No Clutter)
   const badge = document.getElementById('currentGradeBadge');
   if (badge) {
-    const meta = GRADE_METADATA[CURRENT_GRADE];
-    badge.textContent = `${meta ? meta.fullName : 'Tiếng Anh ' + CURRENT_GRADE}`;
+    badge.textContent = `TIẾNG ANH LỚP ${CURRENT_GRADE}`;
   }
 
-  // Update App Title
   const brandTitle = document.getElementById('brandTitleText');
   if (brandTitle) {
-    brandTitle.textContent = `VOCAB MASTER (LỚP ${CURRENT_GRADE})`;
+    brandTitle.textContent = `VOCAB MASTER`;
   }
 }
 
