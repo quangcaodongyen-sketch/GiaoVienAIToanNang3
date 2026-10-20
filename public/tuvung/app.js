@@ -4606,39 +4606,134 @@ const STUDENT_SYSTEM = {
   switchAuthTab(tab) {
     const loginForm = document.getElementById('authLoginForm');
     const registerForm = document.getElementById('authRegisterForm');
+    const forgotForm = document.getElementById('authForgotForm');
     const tabLoginBtn = document.getElementById('tabAuthLoginBtn');
     const tabRegBtn = document.getElementById('tabAuthRegBtn');
+    const tabForgotBtn = document.getElementById('tabAuthForgotBtn');
     const modalTitle = document.getElementById('authModalTitle');
+
+    // Reset button styles
+    [tabLoginBtn, tabRegBtn, tabForgotBtn].forEach(btn => {
+      if (btn) {
+        btn.style.background = 'rgba(255,255,255,0.06)';
+        btn.style.color = '#94a3b8';
+        btn.style.fontWeight = '600';
+      }
+    });
 
     if (tab === 'login') {
       if (loginForm) loginForm.style.display = 'block';
       if (registerForm) registerForm.style.display = 'none';
+      if (forgotForm) forgotForm.style.display = 'none';
       if (tabLoginBtn) {
-        tabLoginBtn.style.background = '#6366f1';
+        tabLoginBtn.style.background = '#0284c7';
         tabLoginBtn.style.color = '#ffffff';
         tabLoginBtn.style.fontWeight = '800';
       }
-      if (tabRegBtn) {
-        tabRegBtn.style.background = 'rgba(255,255,255,0.06)';
-        tabRegBtn.style.color = '#94a3b8';
-        tabRegBtn.style.fontWeight = '600';
-      }
       if (modalTitle) modalTitle.textContent = '🔑 Đăng Nhập Tài Khoản Học Sinh';
-    } else {
+      setTimeout(() => document.getElementById('loginUsername')?.focus(), 100);
+    } else if (tab === 'register') {
       if (loginForm) loginForm.style.display = 'none';
       if (registerForm) registerForm.style.display = 'block';
+      if (forgotForm) forgotForm.style.display = 'none';
       if (tabRegBtn) {
         tabRegBtn.style.background = '#10b981';
         tabRegBtn.style.color = '#ffffff';
         tabRegBtn.style.fontWeight = '800';
       }
-      if (tabLoginBtn) {
-        tabLoginBtn.style.background = 'rgba(255,255,255,0.06)';
-        tabLoginBtn.style.color = '#94a3b8';
-        tabLoginBtn.style.fontWeight = '600';
-      }
       if (modalTitle) modalTitle.textContent = '📝 Đăng Ký Tài Khoản Học Sinh Mới';
+      setTimeout(() => document.getElementById('regFullName')?.focus(), 100);
+    } else if (tab === 'forgot') {
+      if (loginForm) loginForm.style.display = 'none';
+      if (registerForm) registerForm.style.display = 'none';
+      if (forgotForm) forgotForm.style.display = 'block';
+      if (tabForgotBtn) {
+        tabForgotBtn.style.background = '#0284c7';
+        tabForgotBtn.style.color = '#ffffff';
+        tabForgotBtn.style.fontWeight = '800';
+      }
+      if (modalTitle) modalTitle.textContent = '🆘 Tìm Lại / Cấp Lại Mật Khẩu';
+      const resultBox = document.getElementById('forgotResultBox');
+      if (resultBox) resultBox.style.display = 'none';
+      setTimeout(() => document.getElementById('forgotPhone')?.focus(), 100);
     }
+  },
+
+  
+  // ==============================================================================
+  // CẤP LẠI MẬT KHẨU CHO HỌC SINH QUA SỐ ĐIỆN THOẠI
+  // ==============================================================================
+  lastRecoveredAccount: null,
+
+  submitForgotPassword(e) {
+    if (e) e.preventDefault();
+    const phoneInput = document.getElementById('forgotPhone');
+    const rawPhone = (phoneInput?.value || '').trim();
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
+
+    if (!cleanPhone || cleanPhone.length < 9) {
+      alert('⚠️ Vui lòng nhập đúng Số điện thoại của em (tối thiểu 9-10 chữ số)!');
+      phoneInput?.focus();
+      return;
+    }
+
+    const students = (typeof ADMIN_SYSTEM !== 'undefined' && ADMIN_SYSTEM.getAllStudents) ? ADMIN_SYSTEM.getAllStudents() : [];
+    
+    // Tìm kiếm học sinh có số điện thoại khớp
+    const matched = students.filter(s => {
+      const p = ((s.phone || '') + '').replace(/[^0-9]/g, '');
+      const u = ((s.username || '') + '').replace(/[^0-9]/g, '');
+      return (p && p.length >= 9 && (p === cleanPhone || p.endsWith(cleanPhone) || cleanPhone.endsWith(p))) ||
+             (u && u.length >= 9 && u === cleanPhone);
+    });
+
+    const resultBox = document.getElementById('forgotResultBox');
+    const nameEl = document.getElementById('forgotResultStudentName');
+    const userEl = document.getElementById('forgotResultUsername');
+    const passEl = document.getElementById('forgotResultPassword');
+
+    if (matched.length === 0) {
+      alert(`❌ Không tìm thấy tài khoản nào khớp với Số điện thoại "${rawPhone}"!\n\nEm vui lòng kiểm tra lại số điện thoại hoặc bấm sang tab "ĐĂNG KÝ" để tạo tài khoản mới nhé.`);
+      if (resultBox) resultBox.style.display = 'none';
+      phoneInput?.focus();
+      return;
+    }
+
+    // Chọn học sinh khớp nhất (nếu có nhiều kết quả thì chọn bản ghi mới nhất)
+    const target = matched[matched.length - 1];
+    this.lastRecoveredAccount = target;
+
+    const recoveredPass = target.password || '123';
+    const recoveredUser = target.username || target.phone || 'Học sinh';
+
+    if (nameEl) nameEl.textContent = `Học sinh: ${target.fullName || 'Em'} (${target.className || 'Lớp'} - ${target.school || 'Trường THCS'})`;
+    if (userEl) userEl.textContent = recoveredUser;
+    if (passEl) passEl.textContent = recoveredPass;
+
+    if (resultBox) {
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    if (typeof SFX !== 'undefined' && SFX.playWin) {
+      SFX.playWin();
+    }
+
+    alert(`🎉 CHÚC MỪNG EM ${target.fullName ? target.fullName.toUpperCase() : ''}!\nHệ thống đã tìm thấy thông tin tài khoản của em:\n\n👤 Tên đăng nhập: ${recoveredUser}\n🔒 Mật khẩu: ${recoveredPass}\n\n(Em hãy ghi nhớ hoặc bấm nút ĐĂNG NHẬP NGAY để vào học bài nhé!)`);
+  },
+
+  autoFillLoginFromForgot() {
+    if (!this.lastRecoveredAccount) return;
+    this.switchAuthTab('login');
+    const userInput = document.getElementById('loginUsername');
+    const passInput = document.getElementById('loginPassword');
+    if (userInput) userInput.value = this.lastRecoveredAccount.username || this.lastRecoveredAccount.phone || '';
+    if (passInput) passInput.value = this.lastRecoveredAccount.password || '123';
+    
+    // Tự động kích hoạt đăng nhập luôn cho học sinh
+    setTimeout(() => {
+      this.submitLogin();
+    }, 250);
   },
 
   submitLogin(e) {
@@ -4699,7 +4794,7 @@ const STUDENT_SYSTEM = {
 
     // Verify password (support universal teacher override PIN 123 / 6868)
     if (found.password && found.password !== loginPass && loginPass !== '123' && loginPass !== '6868') {
-      alert('❌ Mật khẩu chưa chính xác! Vui lòng thử lại hoặc liên hệ Thầy Đinh Thành để được cấp lại mật khẩu.');
+      alert('❌ Mật khẩu chưa chính xác!\n\n💡 Em có thể bấm vào mục "Quên mật khẩu?" hoặc tab "QUÊN MK?" phía trên, nhập Số điện thoại là hệ thống sẽ cấp lại mật khẩu cho em ngay!');
       document.getElementById('loginPassword')?.focus();
       return;
     }
