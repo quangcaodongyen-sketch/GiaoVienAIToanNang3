@@ -122,7 +122,7 @@ export const StudentPortal: React.FC = () => {
       return;
     }
 
-    const all = studentGradebookService.getAllStudents();
+    const all = studentGradebookService.getStudents();
     const found = all.find(s => {
       const p = (s.parentPhone || '').replace(/[^0-9]/g, '');
       return p && (p === clean || p.endsWith(clean) || clean.endsWith(p));
@@ -198,7 +198,7 @@ export const StudentPortal: React.FC = () => {
     }
 
     const cleanInput = inputVal.replace(/[^0-9]/g, '');
-    const allStus = studentGradebookService.getAllStudents();
+    const allStus = studentGradebookService.getStudents();
     const found = allStus.find(s => {
       const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
       const codeMatch = s.studentCode.toLowerCase() === inputVal.toLowerCase();
@@ -310,51 +310,34 @@ export const StudentPortal: React.FC = () => {
         return;
       }
 
-      // Kiểm tra tên đăng nhập trong danh sách học sinh
-      const allStus = studentGradebookService.getAllStudents();
-      const existingIdx = allStus.findIndex(
+      // Kiểm tra tên đăng nhập trong danh sách học sinh - NẾU TỒN TẠI PHẢI BÁO LẠI CHO HỌC SINH!
+      const allStus = studentGradebookService.getStudents();
+      const isExisted = allStus.some(
         s => (s.username && s.username.toLowerCase() === rawUser) || 
              (s.studentCode && s.studentCode.toLowerCase() === rawUser)
       );
 
-      let savedProfile: StudentProfile;
-
-      if (existingIdx !== -1) {
-        // Tên đăng nhập đã tồn tại trong danh sách: Cập nhật lại mật khẩu và thông tin cho em học sinh
-        const existing = allStus[existingIdx];
-        studentGradebookService.updateStudent(existing.id, {
-          name: name || existing.name,
-          password: pass,
-          className: cleanCls,
-          grade: regGrade,
-          gender: regGender,
-          parentPhone: cleanPhone || existing.parentPhone
-        });
-        savedProfile = {
-          ...existing,
-          name: name || existing.name,
-          password: pass,
-          className: cleanCls,
-          grade: regGrade,
-          gender: regGender,
-          parentPhone: cleanPhone || existing.parentPhone
-        };
-      } else {
-        // Tạo mới hồ sơ học sinh
-        const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
-        savedProfile = studentGradebookService.addStudent({
-          studentCode: code,
-          username: rawUser,
-          password: pass,
-          name: name,
-          classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
-          className: cleanCls,
-          grade: regGrade,
-          gender: regGender,
-          parentPhone: cleanPhone,
-          note: 'Học sinh tự đăng ký trực tuyến'
-        });
+      if (isExisted) {
+        const msg = `⛔ Tên đăng nhập "${rawUser}" đã có bạn đăng ký rồi! Em vui lòng chọn tên đăng nhập khác (ví dụ: ${rawUser}${Math.floor(10 + Math.random() * 90)}) nhé.`;
+        setRegError(msg);
+        alert(msg);
+        return;
       }
+
+      // Tạo mới hồ sơ học sinh
+      const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
+      const savedProfile = studentGradebookService.addStudent({
+        studentCode: code,
+        username: rawUser,
+        password: pass,
+        name: name,
+        classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
+        className: cleanCls,
+        grade: regGrade,
+        gender: regGender,
+        parentPhone: cleanPhone,
+        note: 'Học sinh tự đăng ký trực tuyến'
+      });
 
       studentGradebookService.setActiveStudent(savedProfile);
       setCurrentStudent(savedProfile);
@@ -1162,7 +1145,7 @@ export const StudentPortal: React.FC = () => {
                     required
                     value={regPhone}
                     onChange={(e) => setRegPhone(e.target.value)}
-                    placeholder="Ví dụ: 0915213717 (để tìm lại tài khoản và nhận điểm)..."
+                    placeholder="Ví dụ: 0988123456 (để tìm lại tài khoản khi quên MK)..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                   />
                 </div>
@@ -1209,7 +1192,7 @@ export const StudentPortal: React.FC = () => {
                       setLoginStudentInput(e.target.value);
                       setLoginError('');
                     }}
-                    placeholder="Ví dụ: HS7A1-01 hoặc 0915213717 hoặc Họ tên..."
+                    placeholder="Nhập tên đăng nhập, mã học sinh hoặc SĐT..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
                     autoFocus
                   />
@@ -1288,7 +1271,7 @@ export const StudentPortal: React.FC = () => {
                       required
                       value={searchPhone}
                       onChange={(e) => setSearchPhone(e.target.value)}
-                      placeholder="Ví dụ: 0915213717..."
+                      placeholder="Ví dụ: 0988123456..."
                       className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                       autoFocus
                     />

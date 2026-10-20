@@ -82,10 +82,10 @@ export interface ClassComparisonStats {
 }
 
 const STORAGE_KEYS = {
-  CLASSES: 'gvai_gradebook_classes_v3_dongyen',
-  STUDENTS: 'gvai_gradebook_students_v3_dongyen',
-  SUBMISSIONS: 'gvai_gradebook_submissions_v3_dongyen',
-  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v3_dongyen'
+  CLASSES: 'gvai_gradebook_classes_v4_clean',
+  STUDENTS: 'gvai_gradebook_students_v4_clean',
+  SUBMISSIONS: 'gvai_gradebook_submissions_v4_clean',
+  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v4_clean'
 };
 
 // Dữ liệu lớp học khởi tạo mẫu
@@ -165,6 +165,14 @@ class StudentGradebookService {
 
   private initData() {
     try {
+      // Xoá sạch toàn bộ tài khoản thử nghiệm cũ theo yêu cầu của Thầy Thành
+      try {
+        localStorage.removeItem('gvai_gradebook_students_v3_dongyen');
+        localStorage.removeItem('gvai_gradebook_active_student_v3_dongyen');
+        localStorage.removeItem('ENG_STUDENT_PROFILE');
+        localStorage.removeItem('gvai_student_trial_count');
+      } catch {}
+
       const clsRaw = localStorage.getItem(STORAGE_KEYS.CLASSES);
       this.classes = clsRaw ? JSON.parse(clsRaw) : DEFAULT_CLASSES;
 
@@ -241,6 +249,18 @@ class StudentGradebookService {
       return this.students.filter(s => s.classId === classId);
     }
     return [...this.students];
+  }
+
+  // Alias method để tương thích 100% không bao giờ gặp lỗi "Ve.getAllStudents is not a function"
+  public getAllStudents(): StudentProfile[] {
+    return this.getStudents();
+  }
+
+  // Xóa sạch toàn bộ tài khoản học sinh
+  public clearAllStudents(): void {
+    this.students = [];
+    this.saveStudents();
+    this.setActiveStudent(null);
   }
 
   public getStudentById(id: string): StudentProfile | undefined {
