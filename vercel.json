@@ -1,6 +1,131 @@
 {
   "redirects": [
     {
+      "source": "/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Tin_Hoc_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Toan_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Trung_Tam_Tao_De_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Trung_Tam_Tao_De_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Van_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Van_THCS.exe",
+      "destination": "https://drive.google.com/file/d/13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_KHTN_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_KHTN_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Lich_Su_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1R22KTK7x1JIbGi_X9KNwBgErL3qitthk/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Cai_Dat_TaoDe_LS_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1R22KTK7x1JIbGi_X9KNwBgErL3qitthk/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Su_Dia_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Su_Dia_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_GDCD_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1NDZJDC75Cv0SsKccnPCJi20QukGH8McO/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_GDCD_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1NDZJDC75Cv0SsKccnPCJi20QukGH8McO/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Cong_Nghe_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Cong_Nghe_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tao_De_Tieng_Anh_THCS_Desktop.exe",
+      "destination": "https://drive.google.com/file/d/1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/TaoDe_15Phut_TiengAnh_THCS_Pass_123.zip",
+      "destination": "https://drive.google.com/file/d/1Gp-DRLSBVZgzJJI7spQ7VkE_wRrNSFJw/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/TaoDe_15Phut_TiengAnh_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1Gp-DRLSBVZgzJJI7spQ7VkE_wRrNSFJw/view?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Cai_Dat_Tich_Hop_NLS_AI.exe",
+      "destination": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Tich_Hop_NLS_AI_Pass_123.zip",
+      "destination": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe",
+      "destination": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      "permanent": false
+    },
+    {
+      "source": "/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip",
+      "destination": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "has": [
         {
@@ -83,6 +208,5 @@
       "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)",
       "destination": "/index.html"
     }
-  ],
-  "buildCommand": "NODE_OPTIONS=--max-old-space-size=4096 vite build"
+  ]
 }
