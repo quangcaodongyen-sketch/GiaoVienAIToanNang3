@@ -376,29 +376,30 @@ export const TextbookExercisePortal: React.FC = () => {
           <span className="font-bold text-sm">{toastNotify}</span>
         </div>
       )}
-      {/* HEADER BANNER */}
-      <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border-2 border-blue-400/40">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 text-xs sm:text-sm font-black mb-3 uppercase tracking-wider backdrop-blur-md">
-            <BookMarked className="w-4 h-4 text-emerald-300 animate-pulse" />
-            <span>Chương Trình Chuẩn 100% Sách Giáo Khoa Global Success (6 - 12)</span>
+      {/* HEADER BANNER - SLIM & COMPACT */}
+      <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border border-blue-400/30 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden">
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold uppercase tracking-wider">
+              <BookMarked className="w-3.5 h-3.5 text-emerald-300" />
+              <span>SGK Global Success</span>
+            </div>
+            <h2 className="text-base sm:text-lg font-black tracking-tight text-white m-0">
+              BÀI TẬP SGK THEO TỪNG BÀI HỌC
+            </h2>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight mb-3">
-            BÀI TẬP SGK THEO TỪNG LỚP & TỪNG PHẦN BÀI HỌC
-          </h2>
-          <p className="text-emerald-100/90 text-sm sm:text-base leading-relaxed font-medium">
-            Luyện tập toàn bộ 7 phần bài học bám sát 100% từng trang sách giáo khoa: Getting Started, A Closer Look 1 & 2, Communication, Skills 1 & 2, Looking Back & Project. Chấm điểm tức thì, phát âm giọng chuẩn bản xứ và xem lời giải thích chi tiết!
+          <p className="text-blue-100/80 text-xs max-w-xl hidden md:block m-0">
+            Đầy đủ 7 phần: Getting Started, Closer Look, Skills, Looking Back & Project kèm phát âm chuẩn.
           </p>
         </div>
 
-        {/* BỘ LỌC CHỌN KHỐI LỚP 6 - 12 */}
-        <div className="relative z-10 mt-6 pt-5 border-t border-emerald-700/50">
-          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-emerald-200 mb-3">
-            <GraduationCap className="w-4 h-4 text-emerald-400" />
-            <span>Chọn Khối Lớp Học Tập:</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        {/* BỘ LỌC CHỌN KHỐI LỚP */}
+        <div className="relative z-10 pt-2.5 border-t border-blue-500/30 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-bold text-blue-200 flex items-center gap-1">
+            <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Khối lớp:</span>
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5">
             {[6, 7, 8, 9, 10, 11, 12].map(g => (
               <button
                 key={g}
@@ -408,17 +409,17 @@ export const TextbookExercisePortal: React.FC = () => {
                   setSelectedUnitNum(1);
                   handleSelectSection('getting_started');
                 }}
-                className={`px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-2 ${
+                className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
                   selectedGrade === g
-                    ? 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-lg font-black scale-105 ring-2 ring-white/50'
-                    : 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-xs'
+                    ? 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-md font-black scale-105'
+                    : 'bg-white/10 hover:bg-white/20 text-white'
                 }`}
               >
                 <span>Lớp {g}</span>
                 {g <= 9 ? (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950/40 text-emerald-200">THCS</span>
+                  <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-950/40 text-emerald-200 font-bold">THCS</span>
                 ) : (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-950/40 text-cyan-200">THPT</span>
+                  <span className="text-[10px] px-1 py-0.2 rounded bg-cyan-950/40 text-cyan-200 font-bold">THPT</span>
                 )}
               </button>
             ))}
