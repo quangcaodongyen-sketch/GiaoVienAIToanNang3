@@ -4275,6 +4275,44 @@ const THEME_SYSTEM = {
 
 const STUDENT_SYSTEM = {
 
+  // HAM KIEM TRA VA DONG BO QUYEN ADMIN TU HE THONG CHINH CUA WEB
+  checkSystemAdminAuth() {
+    try {
+      const isSystemAdmin = 
+        localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+        sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
+        localStorage.getItem('gvai_admin_auth') === 'true' ||
+        sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+        localStorage.getItem('gvai_unlimited_machine') === 'true';
+
+      if (isSystemAdmin) {
+        if (!this.currentStudent || this.currentStudent.role !== 'admin') {
+          this.currentStudent = {
+            id: 'ADMIN_DVT',
+            username: 'Admin',
+            fullName: 'Thầy Đinh Văn Thành',
+            role: 'admin',
+            className: 'Quản Trị Viên',
+            grade: window.CURRENT_GRADE || '7',
+            school: 'Trường THCS Đồng Yên',
+            phone: '0915213717',
+            avatar: 'av_top',
+            xp: 99999,
+            streakDays: 365,
+            registeredAt: 'Chính thức',
+            lastActiveAt: new Date().toLocaleString('vi-VN')
+          };
+          this.saveStudent();
+        }
+        return true;
+      }
+    } catch (e) {
+      console.warn('checkSystemAdminAuth error:', e);
+    }
+    return false;
+  },
+
+
   enforceAuthGate() {
     if (this.currentStudent) {
       document.body.classList.remove('auth-locked-mode');
@@ -4519,6 +4557,7 @@ const STUDENT_SYSTEM = {
   init() {
     THEME_SYSTEM.init();
     this.purgeOldDataCutoff();
+    this.checkSystemAdminAuth();
     this.loadStudent();
     this.renderHeaderBadge();
     
