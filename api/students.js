@@ -1,7 +1,9 @@
 // Vercel Serverless Function: Dong bo tai khoan hoc sinh xuyen thiet bi (PC <-> Smartphone)
+// Ho tro day du khong luu cache, khong bi tre du lieu
 const CLOUD_STORAGE_URL = 'https://extendsclass.com/api/json-storage/bin/bbfdeba';
 
 export default async function handler(req, res) {
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -9,6 +11,10 @@ export default async function handler(req, res) {
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
+  // Chong cache 100% tren Vercel Edge va trinh duyet
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -16,8 +22,13 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const resp = await fetch(CLOUD_STORAGE_URL, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Vercel Serverless)' }
+      const freshUrl = CLOUD_STORAGE_URL + '?_t=' + Date.now();
+      const resp = await fetch(freshUrl, {
+        cache: 'no-store',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Vercel Serverless)',
+          'Cache-Control': 'no-cache'
+        }
       });
       if (!resp.ok) {
         return res.status(resp.status).json({ students: [] });
@@ -31,7 +42,7 @@ export default async function handler(req, res) {
       const resp = await fetch(CLOUD_STORAGE_URL, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'application/json',
           'User-Agent': 'Mozilla/5.0 (Vercel Serverless)'
         },
         body: bodyPayload

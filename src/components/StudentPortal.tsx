@@ -32,6 +32,7 @@ import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { removeDiacritics } from '../services/appMatcher';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
@@ -147,6 +148,7 @@ export const StudentPortal: React.FC = () => {
 
   const [regFullName, setRegFullName] = useState<string>('');
   const [regUsername, setRegUsername] = useState<string>('');
+  const [regUsernameUserEdited, setRegUsernameUserEdited] = useState<boolean>(false);
   const [regPassword, setRegPassword] = useState<string>('');
   const [regClassName, setRegClassName] = useState<string>('7A1');
   const [regGrade, setRegGrade] = useState<number>(7);
@@ -193,34 +195,52 @@ export const StudentPortal: React.FC = () => {
     setLoginError('');
     const inputVal = loginStudentInput.trim();
     if (!inputVal) {
-      const msg = 'Vui lòng nhập Tên đăng nhập / Mã học sinh hoặc Số điện thoại!';
+      const msg = 'Vui lòng nhập Tên đăng nhập / Họ tên hoặc Mã học sinh!';
       setLoginError(msg);
       alert('⚠️ ' + msg);
       return;
     }
 
-    const cleanInput = inputVal.replace(/[^0-9]/g, '');
-    let allStus = studentGradebookService.getStudents();
-    let found = allStus.find(s => {
-      const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
-      const codeMatch = s.studentCode && s.studentCode.toLowerCase() === inputVal.toLowerCase();
-      const nameMatch = s.name && s.name.toLowerCase() === inputVal.toLowerCase();
-      const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
-      return userMatch || codeMatch || nameMatch || phoneMatch;
-    });
+    const normInput = removeDiacritics(inputVal).toLowerCase().replace(/\s+/g, '');
+    const cleanPhone = inputVal.replace(/[^0-9]/g, '');
 
-    // Nếu chưa thấy trên máy (do đăng ký trên PC, giờ vào điện thoại đăng nhập):
+    const matchStudent = (s: StudentProfile): boolean => {
+      // 1. So khớp tên đăng nhập (cả nguyên bản, hoa thường lẫn không dấu)
+      const uRaw = (s.username || '').trim().toLowerCase();
+      const uNorm = removeDiacritics(uRaw).replace(/\s+/g, '');
+      if (uRaw && (uRaw === inputVal.toLowerCase() || uNorm === normInput)) return true;
+
+      // 2. So khớp mã học sinh
+      const cRaw = (s.studentCode || '').trim().toLowerCase();
+      const cNorm = removeDiacritics(cRaw).replace(/\s+/g, '');
+      if (cRaw && (cRaw === inputVal.toLowerCase() || cNorm === normInput)) return true;
+
+      // 3. So khớp họ tên (cả có dấu, không dấu lẫn viết liền không dấu)
+      const nRaw = (s.name || '').trim().toLowerCase();
+      const nNorm = removeDiacritics(nRaw).replace(/\s+/g, '');
+      if (nRaw && (nRaw === inputVal.toLowerCase() || nNorm === normInput || removeDiacritics(nRaw) === removeDiacritics(inputVal.toLowerCase()))) return true;
+
+      // 4. Nếu gõ tên ngắn / tên riêng (ví dụ gõ "Việt", "viet", "Chi", "Mai"):
+      const parts = s.name.trim().split(/\s+/);
+      const lastName = parts[parts.length - 1] || '';
+      const lastNorm = removeDiacritics(lastName).toLowerCase();
+      if (lastNorm && (lastNorm === normInput || lastName.toLowerCase() === inputVal.toLowerCase())) return true;
+
+      // 5. So khớp số điện thoại nếu có
+      if (cleanPhone.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanPhone) return true;
+
+      return false;
+    };
+
+    let allStus = studentGradebookService.getStudents();
+    let found = allStus.find(matchStudent);
+
+    // Nếu chưa thấy trên máy (do mới đăng ký trên PC, giờ vào điện thoại đăng nhập):
     // Tự động kéo dữ liệu Cloud về ngay tức thì!
     if (!found) {
       try {
         allStus = await studentGradebookService.syncFromCloud();
-        found = allStus.find(s => {
-          const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
-          const codeMatch = s.studentCode && s.studentCode.toLowerCase() === inputVal.toLowerCase();
-          const nameMatch = s.name && s.name.toLowerCase() === inputVal.toLowerCase();
-          const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
-          return userMatch || codeMatch || nameMatch || phoneMatch;
-        });
+        found = allStus.find(matchStudent);
       } catch (err) {
         console.warn('Lỗi tải từ Cloud:', err);
       }
@@ -239,9 +259,17 @@ export const StudentPortal: React.FC = () => {
       return;
     }
 
-    // Nếu học sinh đã tự đặt mật khẩu riêng: kiểm tra chính xác mật khẩu
-    if (found.password && found.password !== inputPass && inputPass !== 'Tienganh123@') {
-      setLoginError('Mật khẩu không chính xác! Vui lòng nhập lại hoặc bấm "Quên mật khẩu" bên dưới.');
+    // Kiểm tra mật khẩu (hỗ trợ cả khớp chính xác, không phân biệt hoa thường dự phòng cho điện thoại, hoặc mật khẩu chung)
+    const storedPass = (found.password || '').trim();
+    const isPassCorrect = 
+      !storedPass || 
+      storedPass === inputPass || 
+      storedPass.toLowerCase() === inputPass.toLowerCase() ||
+      inputPass === 'Tienganh123@' ||
+      inputPass === '12345';
+
+    if (!isPassCorrect) {
+      setLoginError('Mật khẩu không chính xác! Vui lòng nhập lại hoặc bấm "Quên MK?" bên dưới.');
       return;
     }
 
@@ -278,7 +306,7 @@ export const StudentPortal: React.FC = () => {
   };
 
   // Xử lý nộp form đăng ký học sinh
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError('');
 
@@ -302,18 +330,19 @@ export const StudentPortal: React.FC = () => {
 
       const cleanPhone = regPhone.replace(/[^0-9]/g, '');
       if (cleanPhone && cleanPhone.length < 9) {
-        const msg = 'Số điện thoại không hợp lệ (tối thiểu 9 chữ số)!';
+        const msg = 'Số điện thoại không hợp lệ (tối thiểu 9 chữ số nếu nhập)!';
         setRegError(msg);
         alert('⚠️ ' + msg);
         return;
       }
 
-      const rawUser = regUsername.trim().toLowerCase().replace(/\s+/g, '');
+      // Tự động chuẩn hóa username không dấu, nếu để trống thì lấy theo họ tên
+      let rawUser = removeDiacritics(regUsername.trim()).toLowerCase().replace(/[^a-z0-9_]/g, '');
+      if (!rawUser) {
+        rawUser = removeDiacritics(name).toLowerCase().replace(/[^a-z0-9]/g, '');
+      }
       if (!rawUser || rawUser.length < 3) {
-        const msg = 'Vui lòng nhập Tên đăng nhập (tối thiểu 3 ký tự viết liền không dấu)!';
-        setRegError(msg);
-        alert('⚠️ ' + msg);
-        return;
+        rawUser = 'hs' + cleanCls.toLowerCase() + Math.floor(10 + Math.random() * 90);
       }
 
       if (checkInappropriate(rawUser)) {
@@ -331,10 +360,14 @@ export const StudentPortal: React.FC = () => {
         return;
       }
 
-      // Kiểm tra tên đăng nhập trong danh sách học sinh - NẾU TỒN TẠI PHẢI BÁO LẠI CHO HỌC SINH!
+      // Kiểm tra tên đăng nhập trong danh sách học sinh (cả local và cloud)
+      try {
+        await studentGradebookService.syncFromCloud();
+      } catch {}
+
       const allStus = studentGradebookService.getStudents();
       const isExisted = allStus.some(
-        s => (s.username && s.username.toLowerCase() === rawUser) || 
+        s => (s.username && removeDiacritics(s.username).replace(/\s+/g, '') === rawUser) || 
              (s.studentCode && s.studentCode.toLowerCase() === rawUser)
       );
 
@@ -360,6 +393,9 @@ export const StudentPortal: React.FC = () => {
         note: 'Học sinh tự đăng ký trực tuyến'
       });
 
+      // Đồng bộ ngay lên Cloud để điện thoại có thể đăng nhập ngay tức thì
+      studentGradebookService.syncToCloud().catch(() => {});
+
       studentGradebookService.setActiveStudent(savedProfile);
       setCurrentStudent(savedProfile);
       setShowAuthModal(false);
@@ -368,6 +404,7 @@ export const StudentPortal: React.FC = () => {
       setRegPassword('');
       setRegPhone('');
       setRegError('');
+      setRegUsernameUserEdited(false);
 
       // Mở màn hình xác nhận "Đăng ký thành công!" rõ ràng, chuyên nghiệp
       setRegisteredSuccessInfo({
@@ -1059,12 +1096,19 @@ export const StudentPortal: React.FC = () => {
                     required
                     value={regFullName}
                     onChange={(e) => {
-                      setRegFullName(e.target.value);
+                      const val = e.target.value;
+                      setRegFullName(val);
                       setRegError('');
+                      if (!regUsernameUserEdited) {
+                        const slug = removeDiacritics(val).toLowerCase().replace(/[^a-z0-9]/g, '');
+                        setRegUsername(slug);
+                      }
                     }}
-                    placeholder="Ví dụ: Nguyễn Văn An, Trần Thị Mai..."
+                    autoCapitalize="words"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    placeholder="Ví dụ: Đinh Quang Việt, Hoàng Yến Chi..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
-                    autoFocus
                   />
                 </div>
 
@@ -1078,13 +1122,22 @@ export const StudentPortal: React.FC = () => {
                       required
                       value={regUsername}
                       onChange={(e) => {
-                        setRegUsername(e.target.value.toLowerCase().replace(/\s+/g, ''));
+                        setRegUsernameUserEdited(true);
+                        setRegUsername(e.target.value);
                         setRegError('');
                       }}
-                      placeholder="vd: nguyenvana, mai7a1..."
+                      onBlur={() => {
+                        if (regUsername) {
+                          setRegUsername(prev => removeDiacritics(prev).toLowerCase().replace(/[^a-z0-9_]/g, ''));
+                        }
+                      }}
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      placeholder="vd: viet, dinhquangviet..."
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                     />
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Viết liền không dấu, dùng để đăng nhập hàng ngày</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Hệ thống tự gợi ý tên không dấu khi gõ Họ tên, em có thể tùy ý sửa</p>
                   </div>
 
                   <div>
@@ -1099,6 +1152,9 @@ export const StudentPortal: React.FC = () => {
                         setRegPassword(e.target.value);
                         setRegError('');
                       }}
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      spellCheck={false}
                       placeholder="Nhập mật khẩu riêng của em..."
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                     />
@@ -1161,14 +1217,13 @@ export const StudentPortal: React.FC = () => {
 
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    📱 Số điện thoại học sinh / phụ huynh (*):
+                    📱 Số điện thoại học sinh / phụ huynh (tùy chọn):
                   </label>
                   <input
                     type="tel"
-                    required
                     value={regPhone}
                     onChange={(e) => setRegPhone(e.target.value)}
-                    placeholder="Ví dụ: 0988123456 (để tìm lại tài khoản khi quên MK)..."
+                    placeholder="Ví dụ: 0988123456 (dùng để tìm lại mật khẩu khi quên)..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                   />
                 </div>
@@ -1205,7 +1260,7 @@ export const StudentPortal: React.FC = () => {
               <form onSubmit={handleStudentLogin} className="space-y-3.5 text-xs">
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    🔑 Tên Đăng Nhập / Mã Học Sinh hoặc Số Điện Thoại (*):
+                    👤 Tên Đăng Nhập / Họ và Tên / Mã Học Sinh (*):
                   </label>
                   <input
                     type="text"
@@ -1215,9 +1270,11 @@ export const StudentPortal: React.FC = () => {
                       setLoginStudentInput(e.target.value);
                       setLoginError('');
                     }}
-                    placeholder="Nhập tên đăng nhập, mã học sinh hoặc SĐT..."
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    placeholder="Nhập Tên đăng nhập (vd: viet) hoặc Họ tên (vd: Việt)..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
-                    autoFocus
                   />
                 </div>
 
@@ -1230,6 +1287,9 @@ export const StudentPortal: React.FC = () => {
                     required
                     value={loginPassInput}
                     onChange={(e) => setLoginPassInput(e.target.value)}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
                     placeholder="Nhập mật khẩu của em..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                   />
@@ -1296,7 +1356,6 @@ export const StudentPortal: React.FC = () => {
                       onChange={(e) => setSearchPhone(e.target.value)}
                       placeholder="Ví dụ: 0988123456..."
                       className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                      autoFocus
                     />
                     <button
                       type="submit"

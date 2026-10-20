@@ -259,10 +259,14 @@ class StudentGradebookService {
   public async syncFromCloud(): Promise<StudentProfile[]> {
     try {
       let cloudStudents: StudentProfile[] | null = null;
+      const bust = '_t=' + Date.now();
 
-      // 1. Gọi API Vercel cùng domain
+      // 1. Gọi API Vercel cùng domain (kèm timestamp chống cache hoàn toàn)
       try {
-        const resp = await fetch(CLOUD_SYNC_ENDPOINT, { cache: 'no-store' });
+        const resp = await fetch(CLOUD_SYNC_ENDPOINT + '?' + bust, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+        });
         if (resp.ok) {
           const json = await resp.json();
           if (json && Array.isArray(json.students)) {
@@ -273,10 +277,13 @@ class StudentGradebookService {
         // Fallback
       }
 
-      // 2. Fallback gọi trực tiếp nếu API Vercel chưa sẵn sàng
+      // 2. Fallback gọi trực tiếp ExtendsClass nếu API Vercel chưa sẵn sàng
       if (!cloudStudents) {
         try {
-          const resp = await fetch(CLOUD_STORAGE_FALLBACK, { cache: 'no-store' });
+          const resp = await fetch(CLOUD_STORAGE_FALLBACK + '?' + bust, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+          });
           if (resp.ok) {
             const json = await resp.json();
             if (json && Array.isArray(json.students)) {
@@ -288,25 +295,30 @@ class StudentGradebookService {
         }
       }
 
-      if (cloudStudents && Array.isArray(cloudStudents) && cloudStudents.length > 0) {
+      if (cloudStudents && Array.isArray(cloudStudents)) {
+        let hasNewLocal = false;
         const map = new Map<string, StudentProfile>();
-        this.students.forEach(s => {
+        cloudStudents.forEach(s => {
           const key = (s.username || s.studentCode || s.id).toLowerCase();
           map.set(key, s);
         });
-        cloudStudents.forEach(s => {
+        this.students.forEach(s => {
           const key = (s.username || s.studentCode || s.id).toLowerCase();
           const existing = map.get(key);
           if (!existing) {
             map.set(key, s);
+            hasNewLocal = true;
           } else {
             if (s.password && !existing.password) {
-              map.set(key, { ...existing, password: s.password });
+              existing.password = s.password;
             }
           }
         });
         this.students = Array.from(map.values());
         this.saveStudents();
+        if (hasNewLocal) {
+          this.syncToCloud().catch(() => {});
+        }
       }
     } catch (e) {
       console.warn('Lỗi syncFromCloud:', e);
@@ -325,9 +337,12 @@ class StudentGradebookService {
 
       let success = false;
       try {
-        const resp = await fetch(CLOUD_SYNC_ENDPOINT, {
+        const resp = await fetch(CLOUD_SYNC_ENDPOINT + '?_t=' + Date.now(), {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+          },
           body: payload
         });
         if (resp.ok) success = true;
@@ -337,9 +352,12 @@ class StudentGradebookService {
 
       if (!success) {
         try {
-          await fetch(CLOUD_STORAGE_FALLBACK, {
+          await fetch(CLOUD_STORAGE_FALLBACK + '?_t=' + Date.now(), {
             method: 'PUT',
-            headers: { 'Content-Type': 'text/plain' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache'
+            },
             body: payload
           });
         } catch (e) {
