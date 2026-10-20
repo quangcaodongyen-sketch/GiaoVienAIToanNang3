@@ -166,6 +166,13 @@ function saveProgress() {
       starred: Array.from(STATE.starred)
     };
     localStorage.setItem('ENG12_VOCAB_PROGRESS', JSON.stringify(data));
+    // Cập nhật lại thanh tiến độ và % lộ trình từng Unit
+    if (typeof initUnitPills === 'function') {
+      const container = document.getElementById('unitPillsContainer');
+      if (container && container.children.length > 0) {
+        initUnitPills();
+      }
+    }
   } catch (e) {
     console.error('Error saving progress:', e);
   }
@@ -181,52 +188,111 @@ function saveProgress() {
 class SoundEffects {
   constructor() {
     this.ctx = null;
-    this.muted = true; // Đã loại bỏ hoàn toàn tiếng kêu tút tụt theo yêu cầu của Thầy
+    this.muted = false; // Bật âm thanh ngân vang vui tươi theo yêu cầu của Thầy Thành
   }
   
   init() {
-    // Không khởi tạo AudioContext gây tiếng ồn
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
+    }
   }
   
-  playTone(freq, type = 'sine', duration = 0.15, startVol = 0.2) {
-    // Tắt bỏ hoàn toàn tiếng tút chói tai
-    return;
+  playTone(freq, type = 'sine', duration = 0.15, startVol = 0.12) {
+    if (this.muted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(startVol, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration);
+    } catch(e) {}
   }
   
+  // Âm thanh ngân vang chime trong trẻo khi chọn đúng câu trả lời (C5 -> E5 -> G5)
   playCorrect() {
-    // Tắt bỏ tiếng kêu tút tụt khi làm đúng
-    return;
+    if (this.muted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99]; // Đô - Mi - Sol cao vút tươi vui
+      notes.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.28);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.28);
+      });
+    } catch (e) {}
   }
   
   playWrong() {
-    // Tắt bỏ tiếng buzzer tút tụt khó chịu khi làm sai
-    return;
+    if (this.muted) return;
+    // Âm trầm êm dịu, không chói tai
+    this.playTone(220, 'sine', 0.18, 0.08);
   }
   
   playFlip() {
-    // Tắt bỏ tiếng click tút khi lật thẻ
-    return;
+    this.playTone(480, 'sine', 0.06, 0.05);
   }
   
   playMatchSuccess() {
-    return;
+    this.playCorrect();
   }
   
+  // Pháo hoa kết thúc bài tập ngân vang rực rỡ
   playWin() {
-    // Chỉ tạo hiệu ứng pháo hoa thị giác vui tươi, KHÔNG phát âm thanh tút tụt
+    this.playCorrect();
     if (window.confetti) {
       try {
-        window.confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+        window.confetti({
+          particleCount: 160,
+          spread: 90,
+          origin: { y: 0.6 },
+          colors: ['#38bdf8', '#3b82f6', '#10b981', '#facc15', '#ffffff']
+        });
       } catch (e) {}
     }
   }
 
   playIncorrect() {
-    return;
+    this.playWrong();
   }
 }
 
 const SFX = new SoundEffects();
+
+// Hàm tiện ích cộng điểm bay lên và ngân vang âm thanh chuẩn Thầy Thành
+function triggerAnswerSuccess(targetEl, points = 10, reason = "Trả lời đúng") {
+  try {
+    if (typeof SFX !== 'undefined' && SFX.playCorrect) SFX.playCorrect();
+    if (typeof GAMIFICATION !== 'undefined' && GAMIFICATION.awardXP) {
+      GAMIFICATION.awardXP(points, reason, targetEl);
+    } else if (typeof GAMIFICATION !== 'undefined' && GAMIFICATION.showFloatingXP) {
+      GAMIFICATION.showFloatingXP(points, targetEl);
+    }
+  } catch(e) {}
+}
+
 
 // ==============================================================================
 // 3. WEB SPEECH SYNTHESIS ENGINE (PRONUNCIATION)
@@ -465,8 +531,9 @@ function selectUnit(unitNum, shouldSpeakTitle = true) {
     const badgeEl = document.getElementById('unitWordCountBadge');
     if (badgeEl) badgeEl.textContent = `${unitObj.word_count} từ`;
     
-    document.querySelectorAll('.unit-pill').forEach((p, idx) => {
-      p.classList.toggle('active', (idx + 1) === unitNum);
+    document.querySelectorAll('.unit-pill').forEach((p) => {
+      const pUnit = parseInt(p.dataset.unit, 10);
+      p.classList.toggle('active', pUnit === unitNum);
     });
     
     // BẤM CHỌN UNIT NÀO THÌ ĐỌC TÊN BÀI HỌC DÕNG DẠC:
@@ -704,7 +771,7 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
   
   if (isCorrect) {
     clickedBtn.classList.add('correct');
-    SFX.playCorrect();
+    triggerAnswerSuccess(clickedBtn, 10, 'Đúng trắc nghiệm');
     STATE.quiz.streak++;
     const points = 10 + (STATE.quiz.streak > 1 ? (STATE.quiz.streak - 1) * 5 : 0);
     STATE.quiz.score += points;
@@ -844,7 +911,7 @@ function handleMatchTileClick(el, tile) {
         el.classList.remove('selected');
         prev.el.classList.add('matched');
         el.classList.add('matched');
-        SFX.playMatchSuccess();
+        triggerAnswerSuccess(el, 10, 'Ghép đúng cặp từ');
         
         // Đọc lại từ vựng một lần nữa để học sinh ghi nhớ sâu
         if (tile.wordObj && tile.wordObj.word) {
@@ -962,7 +1029,7 @@ function renderListenQuestion(autoSpeak = false) {
       
       if (opt.id === q.id) {
         btn.classList.add('correct');
-        SFX.playCorrect();
+        triggerAnswerSuccess(btn, 10, 'Đúng bài nghe');
         STATE.listen.score += 10;
         document.getElementById('listenScoreVal').textContent = STATE.listen.score;
       } else {
@@ -1077,32 +1144,88 @@ function renderVocabularyHub() {
 // 10. MODAL DIALOGS & PROGRESS STATS
 // ==============================================================================
 function updateStatsModal() {
-  document.getElementById('statsMasteredNum').textContent = STATE.mastered.size;
-  document.getElementById('statsReviewNum').textContent = STATE.review.size;
+  const masteredNum = document.getElementById('statsMasteredNum');
+  const reviewNum = document.getElementById('statsReviewNum');
+  if (masteredNum) masteredNum.textContent = STATE.mastered.size;
+  if (reviewNum) reviewNum.textContent = STATE.review.size;
   
+  // 1. Lộ trình hoàn thiện từng Unit
   const list = document.getElementById('statsUnitsProgressList');
-  list.innerHTML = '';
-  
-  VOCABULARY_DATA.forEach(u => {
-    const unitWordIds = u.words.map(w => w.id);
-    const masteredCount = unitWordIds.filter(id => STATE.mastered.has(id)).length;
-    const pct = Math.round((masteredCount / u.words.length) * 100);
-    
-    const row = document.createElement('div');
-    row.style.background = 'rgba(255,255,255,0.06)';
-    row.style.padding = '0.7rem 0.9rem';
-    row.style.borderRadius = '10px';
-    row.innerHTML = `
-      <div style="display: flex; justify-content: space-between; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.35rem;">
-        <span>Unit ${u.unit}: ${u.title}</span>
-        <span style="color: #38bdf8;">${masteredCount}/${u.words.length} (${pct}%)</span>
+  if (list) {
+    list.innerHTML = '';
+    VOCABULARY_DATA.forEach(u => {
+      const unitWordIds = (u.words || []).map(w => w.id);
+      const masteredCount = unitWordIds.filter(id => STATE.mastered.has(id)).length;
+      const totalWords = (u.words && u.words.length) || 1;
+      const pct = Math.round((masteredCount / totalWords) * 100);
+      
+      const row = document.createElement('div');
+      row.style.background = 'rgba(15, 39, 68, 0.7)';
+      row.style.border = '1px solid rgba(56, 189, 248, 0.25)';
+      row.style.padding = '0.65rem 0.85rem';
+      row.style.borderRadius = '10px';
+      row.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 0.86rem; font-weight: 700; margin-bottom: 0.3rem;">
+          <span style="color: #ffffff;">Unit ${u.unit}: ${u.title}</span>
+          <span style="color: #38bdf8; font-weight: 800;">${masteredCount}/${totalWords} từ (${pct}%)</span>
+        </div>
+        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #0284c7, #38bdf8, #10b981);"></div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  // 2. Sổ điểm học sinh chi tiết (Lịch sử bài tập & Điểm kiểm tra 15 phút)
+  let gradebookSection = document.getElementById('studentGradebookSection');
+  if (!gradebookSection && list && list.parentNode) {
+    gradebookSection = document.createElement('div');
+    gradebookSection.id = 'studentGradebookSection';
+    gradebookSection.style.marginTop = '1.25rem';
+    list.parentNode.insertBefore(gradebookSection, document.getElementById('resetProgressBtn')?.parentNode);
+  }
+
+  if (gradebookSection) {
+    const student = (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) || null;
+    const history = (student && student.quizHistory) || [];
+    const minitests = (student && student.minitestHistory) || [];
+    const certs = (student && student.certificates) || [];
+
+    let rowsHtml = '';
+    if (minitests.length === 0 && history.length === 0) {
+      rowsHtml = '<div style="text-align: center; color: #94a3b8; font-size: 0.85rem; padding: 0.8rem;">Em chưa có điểm bài làm nào. Hãy làm bài tập và kiểm tra 15P để lưu điểm vào sổ nhé!</div>';
+    } else {
+      // Ưu tiên hiển thị bài 15 phút trước
+      const combined = [
+        ...minitests.map(m => ({ date: m.date, title: `Kiểm tra 15P Unit ${m.unit}`, score: `${m.score}/10đ`, rank: m.rank || 'Đạt', certId: m.certId, type: '15p' })),
+        ...history.slice(0, 10).map(h => ({ date: h.date, title: `${h.mode} (Unit ${h.unit})`, score: h.scoreDisplay || `${h.score}/${h.total}`, rank: 'Hoàn thành', certId: null, type: 'exercise' }))
+      ];
+
+      rowsHtml = combined.slice(0, 8).map(item => `
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background: rgba(14, 42, 77, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; margin-bottom: 0.4rem; font-size: 0.84rem;">
+          <div>
+            <div style="color: #ffffff; font-weight: 700;">${item.type === '15p' ? '🏆 ' : '📝 '} ${item.title}</div>
+            <div style="color: #94a3b8; font-size: 0.74rem;">${item.date}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="color: #facc15; font-weight: 800; font-size: 0.92rem;">${item.score}</div>
+            <div style="color: #38bdf8; font-size: 0.72rem; font-weight: 700;">${item.rank}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    gradebookSection.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; margin-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem;">
+        <h4 style="font-size: 0.98rem; font-weight: 800; color: #ffffff; margin: 0;">📖 Sổ Điểm Học Sinh & Lịch Sử Làm Bài</h4>
+        ${certs.length > 0 ? `<button onclick="if (typeof CERTIFICATE_CENTER !== 'undefined') CERTIFICATE_CENTER.openModal('exam');" style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 800; cursor: pointer;">📜 Xem Giấy Khen (${certs.length})</button>` : ''}
       </div>
-      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-        <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #ec4899, #38bdf8, #10b981);"></div>
+      <div style="max-height: 180px; overflow-y: auto; padding-right: 0.2rem;">
+        ${rowsHtml}
       </div>
     `;
-    list.appendChild(row);
-  });
+  }
 }
 
 function setupEventListeners() {
@@ -1641,7 +1764,7 @@ function handleBlitzAnswer(userChoice) {
   const card = document.getElementById('blitzCard');
   
   if (isRight) {
-    if (typeof SFX !== 'undefined') SFX.playCorrect();
+    triggerAnswerSuccess(card, 10, 'Đúng phản xạ chớp nhoáng');
     STATE.blitz.streak++;
     STATE.blitz.correctCount++;
     const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
@@ -1779,7 +1902,7 @@ function checkSpellingAnswer() {
   
   if (userVal === targetVal) {
     input.className = 'spelling-input correct';
-    SFX.playCorrect();
+    triggerAnswerSuccess(input, 10, 'Gõ đúng chính tả');
     STATE.spelling.score += 10;
     const scoreEl = document.getElementById('spellingScoreVal');
     if (scoreEl) scoreEl.textContent = STATE.spelling.score;
@@ -1988,7 +2111,8 @@ function guessHangmanLetter(ch) {
 }
 
 function handleHangmanWin() {
-  SFX.playWin();
+  triggerAnswerSuccess(document.getElementById('hangmanSlots'), 20, 'Phá án Hangman thành công');
+  if (typeof SFX !== 'undefined') SFX.playWin();
   launchConfetti();
   STATE.hangman.score += 20;
   const scoreEl = document.getElementById('hangmanScoreVal');
@@ -2145,7 +2269,7 @@ function handleContextAnswer(isCorrect, clickedBtn, correctId) {
   
   if (isCorrect) {
     clickedBtn.classList.add('correct');
-    SFX.playCorrect();
+    triggerAnswerSuccess(clickedBtn, 10, 'Đúng ngữ cảnh');
     STATE.context.streak++;
     const bonus = STATE.context.streak > 1 ? (STATE.context.streak - 1) * 5 : 0;
     STATE.context.score += (10 + bonus);
@@ -3336,10 +3460,8 @@ function checkScrambleAnswer() {
   const targetWord = STATE.scramble.targetLetters.join('').toLowerCase();
   
   if (formedWord === targetWord) {
-    if (typeof SFX !== 'undefined') {
-      SFX.playCorrect();
-      SFX.playWin();
-    }
+    triggerAnswerSuccess(document.getElementById('scramblePlayArea'), 15, 'Xếp đúng từ');
+    if (typeof SFX !== 'undefined') SFX.playWin();
     
     document.querySelectorAll('.slot-box').forEach(b => b.classList.add('correct'));
     
@@ -3605,15 +3727,28 @@ function initUnitPills() {
     const pill = document.createElement('button');
     pill.className = `unit-pill ${u.unit === STATE.currentUnit ? 'active' : ''}`;
     pill.dataset.unit = u.unit;
+
+    // Tính chính xác tỷ lệ % hoàn thiện của từng bài học
+    const totalWords = (u.words && u.words.length) || u.word_count || 1;
+    let masteredCount = 0;
+    if (u.words && STATE.mastered) {
+      masteredCount = u.words.filter(w => STATE.mastered.has(w.id)).length;
+    }
+    const unitPct = Math.round((masteredCount / totalWords) * 100);
+    const isCompleted = unitPct >= 100;
+
     pill.innerHTML = `
       <div class="unit-pill-top">
-        <span class="pill-u-num">${u.icon || '📖'} Unit ${u.unit}</span>
-        <span class="pill-word-badge">${u.word_count || (u.words ? u.words.length : 0)} từ</span>
+        <span class="pill-u-num">${isCompleted ? '⭐' : (u.icon || '📖')} Unit ${u.unit}</span>
+        <span class="pill-word-badge ${unitPct > 0 ? 'has-progress' : ''}">${unitPct}%</span>
       </div>
       <div class="unit-pill-title-en" title="${u.title}">${u.title}</div>
       <div class="unit-pill-title-vi" title="${u.title_vi || ''}">${u.title_vi || ''}</div>
+      <div class="unit-pill-progress-bar">
+        <div class="unit-pill-progress-fill" style="width: ${unitPct}%;"></div>
+      </div>
     `;
-    pill.title = `Unit ${u.unit}: ${u.title} - ${u.title_vi || ''} (${u.word_count || (u.words ? u.words.length : 0)} từ vựng)`;
+    pill.title = `Unit ${u.unit}: ${u.title} • Đã hoàn thành ${masteredCount}/${totalWords} từ (${unitPct}%)`;
     pill.addEventListener('click', () => selectUnit(u.unit, true));
     container.appendChild(pill);
   });
@@ -6205,7 +6340,7 @@ const MINITEST_SYSTEM = {
   handleAnswer(selectedId, correctId) {
     if (selectedId === correctId) {
       this.score++;
-      if (typeof SFX !== 'undefined') SFX.playCorrect();
+      triggerAnswerSuccess(document.getElementById('minitestQuestionContainer'), 10, 'Đúng câu 15 phút');
     } else {
       if (typeof SFX !== 'undefined') SFX.playIncorrect();
       // Add to weak words!
@@ -6567,7 +6702,7 @@ const GAMIFICATION = {
     floatEl.className = 'floating-xp';
     floatEl.style.left = `${x}px`;
     floatEl.style.top = `${y}px`;
-    floatEl.innerHTML = `⭐ +${amount} XP ${this.currentCombo >= 3 ? `🔥x${this.currentCombo}` : ''}`;
+    floatEl.innerHTML = `✨ +${amount} Điểm ${this.currentCombo >= 3 ? `🔥x${this.currentCombo}` : ''}`;
 
     document.body.appendChild(floatEl);
     setTimeout(() => {
@@ -6783,11 +6918,23 @@ const CERTIFICATE_CENTER = {
     const score = this.customScore || (student.minitestBestScore ? student.minitestBestScore.toFixed(1) : "10.0");
     const numScore = parseFloat(score);
     let rank = "XUẤT SẮC";
-    if (numScore < 5.0) rank = "HOÀN THÀNH";
-    else if (numScore < 6.5) rank = "TRUNG BÌNH KHÁ";
-    else if (numScore < 8.0) rank = "KHÁ";
-    else if (numScore < 9.0) rank = "GIỎI";
-    else rank = "XUẤT SẮC";
+    let certTitleLevel = "GIẤY KHEN XUẤT SẮC";
+    if (numScore < 5.0) {
+      rank = "HOÀN THÀNH";
+      certTitleLevel = "CHỨNG NHẬN HOÀN THÀNH";
+    } else if (numScore < 6.5) {
+      rank = "TRUNG BÌNH KHÁ";
+      certTitleLevel = "GIẤY KHEN KHÁ";
+    } else if (numScore < 8.0) {
+      rank = "KHÁ";
+      certTitleLevel = "GIẤY KHEN DANH DỰ (HẠNG KHÁ)";
+    } else if (numScore < 9.0) {
+      rank = "GIỎI";
+      certTitleLevel = "GIẤY KHEN DANH DỰ (HẠNG GIỎI)";
+    } else {
+      rank = "XUẤT SẮC";
+      certTitleLevel = "GIẤY KHEN XUẤT SẮC ĐẶC BIỆT";
+    }
 
     const certCode = this.customCertId || ('DVT-' + (new Date().getFullYear()) + '-' + Math.floor(Math.random() * 89999 + 10000));
     const { percent } = (typeof GAMIFICATION !== 'undefined' && GAMIFICATION.getUnitMastery) ? GAMIFICATION.getUnitMastery() : { percent: 85 };
@@ -6864,7 +7011,7 @@ const CERTIFICATE_CENTER = {
     ctx.fillText('BỘ GIÁO DỤC VÀ ĐÀO TẠO • HỆ THỐNG LUYỆN TỪ VỰNG TIẾNG ANH GLOBAL SUCCESS (6 - 12)', 800, 185);
 
     // Main Certificate Title
-    let mainTitle = 'GIẤY KHEN';
+    let mainTitle = certTitleLevel;
     let subTitle = 'CHỨNG NHẬN THÀNH TÍCH BÀI KIỂM TRA 15 PHÚT MÔN TIẾNG ANH';
     let detailText = `Đã xuất sắc hoàn thành Bài kiểm tra đánh giá 15 phút - Từ vựng Tiếng Anh Lớp ${student.grade || CURRENT_GRADE} (Unit ${currentUnit})`;
     let highlightMetric = `🏆 KẾT QUẢ: ${score} / 10.0 ĐIỂM  •  XẾP LOẠI: ${rank}`;

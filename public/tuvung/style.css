@@ -11,14 +11,14 @@
   --font-body: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Vibrant Gamified Palette */
-  --bg-dark: #080d1a;
-  --bg-surface: #0f172a;
-  --bg-card: rgba(26, 35, 60, 0.7);
-  --bg-card-hover: rgba(38, 51, 88, 0.85);
+  /* Vibrant Blue Pedagogical Palette - Chuẩn Xanh Dương Chữ Trắng Thầy Thành */
+  --bg-dark: #07172c;
+  --bg-surface: #0b2240;
+  --bg-card: rgba(14, 42, 77, 0.85);
+  --bg-card-hover: rgba(20, 58, 104, 0.95);
 
-  --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.45);
+  --primary: #0284c7;
+  --primary-glow: rgba(2, 132, 199, 0.45);
   
   --neon-violet: #8b5cf6;
   --neon-cyan: #06b6d4;
@@ -3808,4 +3808,116 @@ body {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
   letter-spacing: -0.2px !important;
+}
+
+
+/* ==============================================================================
+   THẦY GIÁO ĐINH VĂN THÀNH - GIAO DIỆN XANH DƯƠNG CHỦ ĐẠO & CHỮ TRẮNG TƯƠNG PHẢN
+   ============================================================================== */
+:root {
+  --text-pure: #ffffff !important;
+  --text-main: #f8fafc !important;
+}
+
+body {
+  background-color: #07172c !important;
+  color: #ffffff !important;
+}
+
+/* Header xanh navy trang trọng */
+header, .app-header {
+  background: rgba(11, 34, 64, 0.92) !important;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Unit Pill thanh thoát, nền xanh đậm, chữ trắng tương phản */
+.unit-pill {
+  background: rgba(14, 42, 77, 0.85) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.25) !important;
+  color: #ffffff !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.unit-pill:hover {
+  background: rgba(20, 58, 104, 0.95) !important;
+  border-color: #38bdf8 !important;
+  transform: translateY(-2px);
+}
+
+.unit-pill.active {
+  background: linear-gradient(135deg, #0284c7, #1d4ed8) !important;
+  border-color: #7dd3fc !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.6) !important;
+}
+
+.unit-pill.active .pill-u-num {
+  color: #ffffff !important;
+}
+
+.unit-pill.active .pill-word-badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* Badge % hoàn thành trên Unit Pill */
+.pill-word-badge.has-progress {
+  background: rgba(16, 185, 129, 0.25) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Thanh lộ trình % hoàn thiện mini dưới đáy Unit Pill */
+.unit-pill-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.unit-pill-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Tab điều hướng xanh dương */
+.mode-tab-btn.active {
+  background: linear-gradient(135deg, #0284c7, #2563eb) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.5) !important;
+}
+
+/* Nút bấm nổi bật + Chữ trắng */
+.header-btn, .btn-primary {
+  background: rgba(14, 42, 77, 0.8) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.header-btn:hover, .btn-primary:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+}
+
+/* Hiệu ứng bay +10 Điểm vàng óng rực rỡ */
+.floating-xp {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.45rem !important;
+  color: #facc15 !important;
+  text-shadow: 0 2px 12px rgba(250, 204, 21, 0.8), 0 0 24px rgba(0, 0, 0, 0.9) !important;
+  animation: floatUpFade 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
