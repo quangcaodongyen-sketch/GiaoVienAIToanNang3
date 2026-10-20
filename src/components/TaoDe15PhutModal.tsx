@@ -348,7 +348,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                 {/* 2 NÚT TẢI BỘ CÀI CHÍNH */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <a
-                    href="https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_15Phut_TiengAnh_THCS.exe"
+                    href="https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing"
                     download="TaoDe_15Phut_TiengAnh_THCS.exe" target="_blank" rel="noopener noreferrer"
                     className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer text-center"
                   >

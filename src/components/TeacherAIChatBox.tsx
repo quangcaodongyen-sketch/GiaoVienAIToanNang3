@@ -180,8 +180,8 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
           '• Hạn ngạch cài đặt 5 máy tính an toàn bảo mật Ed25519.',
         actions: [
           { label: '🚀 MỞ CÔNG CỤ TẠO ĐỀ TOÁN NGAY', actionType: 'open-modal' as const, appId: 'tao-de-toan-thcs', subjectKey: 'TOAN', primary: true },
-          { label: '📥 Tải Bộ Cài Đặt (.EXE - 78 MB)', actionType: 'open-url' as const, url: 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TOAN_THCS.exe' },
-          { label: '📦 Tải File Zip (Pass: 123)', actionType: 'open-url' as const, url: 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Toan_THCS_Pass_123.zip' },
+          { label: '📥 Tải Bộ Cài Đặt (.EXE - 78 MB)', actionType: 'open-url' as const, url: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing' },
+          { label: '📦 Tải File Zip (Pass: 123)', actionType: 'open-url' as const, url: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing' },
           { label: '💬 Chat Zalo Với Thầy Thành', actionType: 'zalo' as const }
         ]
       };
@@ -232,7 +232,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
           '• Tự động tạo ma trận, bản đặc tả và đề thi chuẩn đẹp kèm công thức và ký hiệu hóa học chuẩn.',
         actions: [
           { label: '🚀 MỞ CÔNG CỤ TẠO ĐỀ KHTN NGAY', actionType: 'open-modal' as const, appId: 'tao-de-khtn-thcs', subjectKey: 'KHTN', primary: true },
-          { label: '📦 Tải Bản Nén (.ZIP Pass: 123)', actionType: 'open-url' as const, url: 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip' },
+          { label: '📦 Tải Bản Nén (.ZIP Pass: 123)', actionType: 'open-url' as const, url: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing' },
           { label: '💬 Chat Zalo Với Thầy Thành', actionType: 'zalo' as const }
         ]
       };
@@ -314,7 +314,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
           '• Định dạng Word chuẩn không lỗi dãn dòng, giữ nguyên cấu trúc bảng giáo án.',
         actions: [
           { label: '🚀 MỞ CÔNG CỤ TÍCH HỢP NLS & AI', actionType: 'open-modal' as const, appId: 'tich-hop-nls-ai', primary: true },
-          { label: '📦 Tải Bản Cài Đặt Add-in (.ZIP Pass: 123)', actionType: 'open-url' as const, url: 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_THCS_Pass_123.zip' },
+          { label: '📦 Tải Bản Cài Đặt Add-in (.ZIP Pass: 123)', actionType: 'open-url' as const, url: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing' },
           { label: '💬 Hỗ Trợ Zalo Thầy Thành', actionType: 'zalo' as const }
         ]
       };

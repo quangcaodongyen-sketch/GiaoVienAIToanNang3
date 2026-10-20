@@ -602,7 +602,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <a
-                    href="https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe" target="_blank" rel="noopener noreferrer"
+                    href="https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing" target="_blank" rel="noopener noreferrer"
                     download="Cai_Dat_TaoDe_TiengViet_TieuHoc.exe"
                     className="py-3.5 px-5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 transition-all text-center cursor-pointer"
                   >
@@ -611,7 +611,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                   </a>
 
                   <a
-                    href="https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip" target="_blank" rel="noopener noreferrer"
+                    href="https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing" target="_blank" rel="noopener noreferrer"
                     download="Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip"
                     className="py-3.5 px-5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all text-center cursor-pointer"
                   >

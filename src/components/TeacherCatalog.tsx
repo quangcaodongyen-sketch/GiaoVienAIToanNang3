@@ -23,20 +23,21 @@ interface TeacherCatalogProps {
 }
 
 // CDN lưu trữ bộ cài đặt tốc độ cao GitHub Releases (tag v3.0-nls)
-const CDN_BASE = 'https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls';
+// Kho Google Drive chính thức tốc độ cao, không bao giờ bị chặn virus
+const CDN_BASE = 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing';
 
 // Bảng ánh xạ link tải file .exe hoặc .zip cho từng phần mềm (100% link thật CDN)
 const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
   'tichhop-nls-ai-thcs': {
-    exe: `${CDN_BASE}/Cai_Dat_Tich_Hop_NLS_AI_THCS.exe`,
-    zip: `${CDN_BASE}/Tich_Hop_NLS_AI_THCS_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-tieng-anh-tieu-hoc': {
-    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_Tieu_Hoc_Pass_123.zip`
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-tieng-viet-tieu-hoc': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc.exe`,
-    zip: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-tieng-anh-thcs': {
     exe: 'https://drive.google.com/file/d/1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY/view?usp=sharing',
@@ -79,73 +80,73 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
     zip: 'https://drive.google.com/file/d/1NDZJDC75Cv0SsKccnPCJi20QukGH8McO/view?usp=sharing'
   },
   'tao-de-tieng-anh-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengAnh_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_Tieng_Anh_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-toan-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_Toan_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_Toan_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-van-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_NguVan_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_NguVan_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-vatli-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_VatLi_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_VatLi_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-hoahoc-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_HoaHoc_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_HoaHoc_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-sinhhoc-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_SinhHoc_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_SinhHoc_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-lichsu-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_LichSu_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_LichSu_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-diali-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_DiaLi_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_DiaLi_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-tin-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_TinHoc_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_TinHoc_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-cn-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_CongNghe_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_CongNghe_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'tao-de-gdktpl-thpt': {
-    exe: `${CDN_BASE}/Cai_Dat_TaoDe_GDKTPL_THPT.exe`,
-    zip: `${CDN_BASE}/Tao_De_GDKTPL_THPT_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'smart-listening-pro': {
-    exe: `${CDN_BASE}/Cai_Dat_Smart_Listening_Pro.exe`,
-    zip: `${CDN_BASE}/Smart_Listening_Pro_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'mathstudio-pro': {
-    exe: `${CDN_BASE}/Cai_Dat_MathStudio_Pass_123.zip`,
-    zip: `${CDN_BASE}/MathStudio_Pro_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'chuanhoavanbanvip': {
-    exe: `${CDN_BASE}/Cai_Dat_AI_Word.exe`,
-    zip: `${CDN_BASE}/Chuan_Hoa_Van_Ban_VIP_Pass_123.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'dinhthanh-cleaner-pro': {
-    exe: `${CDN_BASE}/DinhThanh_Cleaner_Pro.exe`,
-    zip: `${CDN_BASE}/DinhThanh_Cleaner_Pro_v4.5.zip`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'TACH-GOP-PDF': {
-    zip: `${CDN_BASE}/PDF_Suite_Pro_Pass_123.zip`
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'screen-record-v2': {
-    exe: `${CDN_BASE}/Screen_Record_Pro_V2.exe`
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   },
   'sinhdebienthe': {
-    zip: `${CDN_BASE}/Sinh_3_De_Bien_The_VIP_Pass_123.zip`
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
   }
 };
 
