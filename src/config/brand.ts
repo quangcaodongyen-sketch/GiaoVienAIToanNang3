@@ -36,8 +36,8 @@ export const BRAND = {
 // Cấu hình link lưu trữ trực tiếp tốc độ cao cho Tích hợp NLS - AI THCS V3
 export const NLS_RESOURCES = {
   fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI.exe",
-  addinUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TichHop_NLS_AI.dotm",
+  exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  addinUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   forceUninstallUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC.exe",
   forceUninstallZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/GO_BO_ADDIN_NLS_BATBUOC_Pass_123.zip",
   videoDirectUrl: "",

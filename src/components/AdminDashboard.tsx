@@ -131,9 +131,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('gvai_admin_reg_view_mode');
       if (saved === 'cards' || saved === 'table') return saved;
-      if (window.innerWidth < 768) return 'cards';
     }
-    return 'cards';
+    return 'table'; // Mặc định bảng danh sách gọn gàng chuẩn Excel theo yêu cầu Admin
   });
 
   // Modal Hồ Sơ Chi Tiết & Kích Hoạt Nhanh cho từng thành viên
@@ -874,7 +873,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           appName: effectiveAppName,
           packageType: pkg,
           status: 'APPROVED',
-          createdAt: new Date().toLocaleString('vi-VN'),
+          createdAt: targetReq?.createdAt || new Date().toLocaleString('vi-VN'),
+          firstActivatedAt: targetReq?.firstActivatedAt || targetReq?.createdAt || new Date().toLocaleString('vi-VN'),
           expiryDateStr: expDateStr,
           daysRemaining: durationDays
         }
@@ -892,6 +892,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
               packageType: pkg,
               reviewedBy: reviewer,
               reviewedAt: new Date().toLocaleString('vi-VN'),
+              firstActivatedAt: r.firstActivatedAt || r.createdAt || new Date().toLocaleString('vi-VN'),
               daysRemaining: durationDays,
               expiryDateStr: expDateStr
             };
@@ -4036,21 +4037,24 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                                     </div>
                                   </td>
 
-                                  {/* Cột 6: Hạn Dùng / Ngày Gửi */}
+                                  {/* Cột 6: Hạn Dùng / Ngày Kích Hoạt Đầu Tiên */}
                                   <td className="py-1.5 px-2">
                                     {isApproved ? (
                                       <div>
                                         <div className="text-emerald-400 font-bold text-xs flex items-center gap-1">
                                           <span>🟢 Còn {req.daysRemaining ?? 365} ngày</span>
                                         </div>
-                                        <div className="text-slate-400 text-[10px] font-mono mt-0.5">
+                                        <div className="text-cyan-400 text-[10px] font-mono mt-0.5">
                                           Hạn: {req.expiryDateStr || 'Chuẩn'}
+                                        </div>
+                                        <div className="text-slate-400 text-[9px] font-mono mt-0.5">
+                                          Đầu: {req.firstActivatedAt || req.createdAt || 'Mới đây'}
                                         </div>
                                       </div>
                                     ) : (
                                       <div className="text-slate-400 text-[11px] font-mono flex items-center gap-1">
-                                        <Clock className="w-3 h-3 text-slate-500 shrink-0" />
-                                        <span>{req.createdAt || 'Mới đây'}</span>
+                                        <Clock className="w-3 h-3 text-amber-500 shrink-0" />
+                                        <span>Gửi: {req.createdAt || 'Mới đây'}</span>
                                       </div>
                                     )}
                                   </td>
