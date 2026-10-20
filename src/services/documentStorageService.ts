@@ -28,8 +28,8 @@ export interface StorageFileItem {
   isOfficial?: boolean;
 }
 
-const STORAGE_KEY_FOLDERS = 'gvai_admin_folders_v1';
-const STORAGE_KEY_FILES = 'gvai_admin_files_v1';
+const STORAGE_KEY_FOLDERS = 'gvai_admin_folders_v2_clean';
+const STORAGE_KEY_FILES = 'gvai_admin_files_v2_clean';
 
 // IndexedDB Helper để lưu file dung lượng lớn không bao giờ bị giới hạn 5MB của localStorage
 const IDB_NAME = 'gvai_document_db_v1';
@@ -658,29 +658,54 @@ class DocumentStorageService {
 
   private loadData() {
     try {
-      // 1. NẠP DANH MỤC THƯ MỤC
+      // 1. NẠP VÀ LÀM SẠCH TRIỆT ĐỂ DANH MỤC THƯ MỤC (CHỐNG LẶP & ĐỒNG BỘ 100%)
       const savedFolders = localStorage.getItem(STORAGE_KEY_FOLDERS);
+      let rawList: StorageFolder[] = [];
       if (savedFolders) {
-        this.folders = JSON.parse(savedFolders);
-      } else {
-        this.folders = [...DEFAULT_FOLDERS];
+        try {
+          rawList = JSON.parse(savedFolders);
+        } catch (e) {
+          rawList = [];
+        }
+      }
+      if (rawList.length === 0) {
+        rawList = [...DEFAULT_FOLDERS];
       }
 
       // Đảm bảo thư mục All Apps luôn luôn có mặt ở đầu danh sách
-      const hasAllApps = this.folders.some(f => f.id === FOLDER_ALL_APPS_ID);
+      const hasAllApps = rawList.some(f => f.id === FOLDER_ALL_APPS_ID);
       if (!hasAllApps) {
-        this.folders.unshift(FOLDER_ALL_APPS);
+        rawList.unshift(FOLDER_ALL_APPS);
       }
 
-      // Đảm bảo các thư mục hệ thống cơ bản không bị thiếu
-      const defaultSysIds = ['folder-van-ban-bao-cao', 'folder-phu-luc-ppct'];
-      defaultSysIds.forEach(sysId => {
-        if (!this.folders.some(f => f.id === sysId)) {
-          const found = DEFAULT_FOLDERS.find(df => df.id === sysId);
-          if (found) this.folders.push(found);
+      // Lọc sạch trùng lặp theo ID và chuẩn hóa tên (tránh lặp 2 thư mục Văn bản - Báo cáo hay Phụ lục)
+      const uniqueMap = new Map<string, StorageFolder>();
+      const seenNames = new Set<string>();
+
+      // Thư mục All Apps luôn ưu tiên số 1
+      uniqueMap.set(FOLDER_ALL_APPS_ID, FOLDER_ALL_APPS);
+      seenNames.add(FOLDER_ALL_APPS.name.toLowerCase().trim());
+
+      rawList.forEach(f => {
+        if (!f || !f.id) return;
+        if (f.id === FOLDER_ALL_APPS_ID) return; // Đã add
+        const normName = (f.name || '').toLowerCase().trim();
+        if (!uniqueMap.has(f.id) && !seenNames.has(normName)) {
+          uniqueMap.set(f.id, f);
+          seenNames.add(normName);
         }
       });
 
+      // Đảm bảo các thư mục chuẩn có mặt
+      DEFAULT_FOLDERS.forEach(df => {
+        const normName = df.name.toLowerCase().trim();
+        if (!uniqueMap.has(df.id) && !seenNames.has(normName)) {
+          uniqueMap.set(df.id, df);
+          seenNames.add(normName);
+        }
+      });
+
+      this.folders = Array.from(uniqueMap.values());
       this.saveFolders();
 
       // 2. NẠP DANH SÁCH TỆP TIN
