@@ -32,7 +32,7 @@ import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
-import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
