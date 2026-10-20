@@ -81,6 +81,9 @@ export interface ClassComparisonStats {
   rankCounts: Record<AcademicRank, number>;
 }
 
+const CLOUD_SYNC_ENDPOINT = '/api/students';
+const CLOUD_STORAGE_FALLBACK = 'https://extendsclass.com/api/json-storage/bin/bbfdeba';
+
 const STORAGE_KEYS = {
   CLASSES: 'gvai_gradebook_classes_v4_clean',
   STUDENTS: 'gvai_gradebook_students_v4_clean',
@@ -161,6 +164,7 @@ class StudentGradebookService {
 
   constructor() {
     this.initData();
+    this.syncFromCloud().catch(() => {});
   }
 
   private initData() {
@@ -251,6 +255,102 @@ class StudentGradebookService {
     return [...this.students];
   }
 
+  // Tự động kéo danh sách học sinh từ Cloud về (giúp đăng ký trên PC lập tức đăng nhập được trên Điện thoại)
+  public async syncFromCloud(): Promise<StudentProfile[]> {
+    try {
+      let cloudStudents: StudentProfile[] | null = null;
+
+      // 1. Gọi API Vercel cùng domain
+      try {
+        const resp = await fetch(CLOUD_SYNC_ENDPOINT, { cache: 'no-store' });
+        if (resp.ok) {
+          const json = await resp.json();
+          if (json && Array.isArray(json.students)) {
+            cloudStudents = json.students;
+          }
+        }
+      } catch (e) {
+        // Fallback
+      }
+
+      // 2. Fallback gọi trực tiếp nếu API Vercel chưa sẵn sàng
+      if (!cloudStudents) {
+        try {
+          const resp = await fetch(CLOUD_STORAGE_FALLBACK, { cache: 'no-store' });
+          if (resp.ok) {
+            const json = await resp.json();
+            if (json && Array.isArray(json.students)) {
+              cloudStudents = json.students;
+            }
+          }
+        } catch (e) {
+          // Ignored
+        }
+      }
+
+      if (cloudStudents && Array.isArray(cloudStudents) && cloudStudents.length > 0) {
+        const map = new Map<string, StudentProfile>();
+        this.students.forEach(s => {
+          const key = (s.username || s.studentCode || s.id).toLowerCase();
+          map.set(key, s);
+        });
+        cloudStudents.forEach(s => {
+          const key = (s.username || s.studentCode || s.id).toLowerCase();
+          const existing = map.get(key);
+          if (!existing) {
+            map.set(key, s);
+          } else {
+            if (s.password && !existing.password) {
+              map.set(key, { ...existing, password: s.password });
+            }
+          }
+        });
+        this.students = Array.from(map.values());
+        this.saveStudents();
+      }
+    } catch (e) {
+      console.warn('Lỗi syncFromCloud:', e);
+    }
+    return [...this.students];
+  }
+
+  // Đẩy danh sách học sinh lên Cloud để thiết bị khác đồng bộ
+  public async syncToCloud(): Promise<void> {
+    try {
+      const payload = JSON.stringify({
+        school: 'THCS Dong Yen',
+        updatedAt: Date.now(),
+        students: this.students
+      });
+
+      let success = false;
+      try {
+        const resp = await fetch(CLOUD_SYNC_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        });
+        if (resp.ok) success = true;
+      } catch (e) {
+        // Fallback
+      }
+
+      if (!success) {
+        try {
+          await fetch(CLOUD_STORAGE_FALLBACK, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'text/plain' },
+            body: payload
+          });
+        } catch (e) {
+          // Ignored
+        }
+      }
+    } catch (e) {
+      console.warn('Lỗi syncToCloud:', e);
+    }
+  }
+
   // Alias method để tương thích 100% không bao giờ gặp lỗi "Ve.getAllStudents is not a function"
   public getAllStudents(): StudentProfile[] {
     return this.getStudents();
@@ -275,6 +375,7 @@ class StudentGradebookService {
     };
     this.students.push(newStudent);
     this.saveStudents();
+    this.syncToCloud().catch(() => {});
     return newStudent;
   }
 
@@ -283,6 +384,7 @@ class StudentGradebookService {
     if (idx === -1) return false;
     this.students[idx] = { ...this.students[idx], ...data };
     this.saveStudents();
+    this.syncToCloud().catch(() => {});
     return true;
   }
 

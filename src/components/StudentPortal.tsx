@@ -187,28 +187,49 @@ export const StudentPortal: React.FC = () => {
   };
 
   // Đăng xuất học sinh
-    // Xử lý đăng nhập học sinh
-  const handleStudentLogin = (e: React.FormEvent) => {
+    // Xử lý đăng nhập học sinh (Hỗ trợ đồng bộ xuyên thiết bị PC <-> Smartphone)
+  const handleStudentLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
     const inputVal = loginStudentInput.trim();
     if (!inputVal) {
-      setLoginError('Vui lòng nhập Tên đăng nhập / Mã học sinh hoặc Số điện thoại!');
+      const msg = 'Vui lòng nhập Tên đăng nhập / Mã học sinh hoặc Số điện thoại!';
+      setLoginError(msg);
+      alert('⚠️ ' + msg);
       return;
     }
 
     const cleanInput = inputVal.replace(/[^0-9]/g, '');
-    const allStus = studentGradebookService.getStudents();
-    const found = allStus.find(s => {
+    let allStus = studentGradebookService.getStudents();
+    let found = allStus.find(s => {
       const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
-      const codeMatch = s.studentCode.toLowerCase() === inputVal.toLowerCase();
-      const nameMatch = s.name.toLowerCase() === inputVal.toLowerCase();
+      const codeMatch = s.studentCode && s.studentCode.toLowerCase() === inputVal.toLowerCase();
+      const nameMatch = s.name && s.name.toLowerCase() === inputVal.toLowerCase();
       const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
       return userMatch || codeMatch || nameMatch || phoneMatch;
     });
 
+    // Nếu chưa thấy trên máy (do đăng ký trên PC, giờ vào điện thoại đăng nhập):
+    // Tự động kéo dữ liệu Cloud về ngay tức thì!
     if (!found) {
-      setLoginError(`Không tìm thấy tài khoản học sinh "${inputVal}". Nếu chưa có tài khoản, em vui lòng bấm tab "Đăng Ký Học"!`);
+      try {
+        allStus = await studentGradebookService.syncFromCloud();
+        found = allStus.find(s => {
+          const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
+          const codeMatch = s.studentCode && s.studentCode.toLowerCase() === inputVal.toLowerCase();
+          const nameMatch = s.name && s.name.toLowerCase() === inputVal.toLowerCase();
+          const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
+          return userMatch || codeMatch || nameMatch || phoneMatch;
+        });
+      } catch (err) {
+        console.warn('Lỗi tải từ Cloud:', err);
+      }
+    }
+
+    if (!found) {
+      const msg = `Không tìm thấy tài khoản "${inputVal}". Nếu em vừa đăng ký trên máy tính, vui lòng kiểm tra lại tên đăng nhập hoặc bấm tab "Đăng Ký Học" nhé!`;
+      setLoginError(msg);
+      alert('⚠️ ' + msg);
       return;
     }
 
@@ -384,6 +405,8 @@ export const StudentPortal: React.FC = () => {
 
   useEffect(() => {
     reloadDocList();
+    // Đồng bộ tài khoản học sinh từ Cloud khi mở trang (giúp điện thoại cập nhật ngay)
+    studentGradebookService.syncFromCloud().catch(() => {});
   }, []);
 
   const handleAdminVerify = (e: React.FormEvent) => {
