@@ -4081,6 +4081,71 @@ header, .app-header {
     } catch(e){}
   </script>
 
+<style>
+/* BEAUTIFUL CIRCULAR AVATAR IN HEADER & PROFILE */
+.header-avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50% !important;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0f172a;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.header-avatar-circle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+  border-color: #60a5fa;
+}
+.header-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.header-avatar-circle span {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+/* AVATAR CROP MODAL STYLES */
+.crop-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+  background: #090d16;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.crop-container:active {
+  cursor: grabbing;
+}
+.crop-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.crop-guide-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+</style>
 </head>
 <body>
   <!-- Ambient background lighting -->
@@ -4239,6 +4304,9 @@ header, .app-header {
         </button>
         <button class="mode-tab-btn" data-tab="tab-listen" role="tab" title="Lắng nghe & chọn từ chuẩn">
           🎧 <span>Luyện Nghe</span>
+        </button>
+                <button class="mode-tab-btn" data-tab="tab-online-exam" role="tab" style="background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(239,68,68,0.25)); border-color: rgba(245,158,11,0.5); color: #fbbf24; font-weight: 900;" title="Làm bài thi thử Giữa kỳ & Cuối kỳ chuẩn cấu trúc Bộ GD&ĐT (Nghe, Nói, Đọc, Viết & Trắc nghiệm)">
+          📝 <span>Đề Giữa Kỳ / Cuối Kỳ</span>
         </button>
         <button class="mode-tab-btn" data-tab="tab-minitest" role="tab" style="background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(6,182,212,0.25)); border-color: rgba(16,185,129,0.5); color: #34d399; font-weight: 800;" title="Kiểm tra 15 phút & Cấp giấy khen điện tử">
           🏆 <span>Test 15p</span>
@@ -5015,6 +5083,62 @@ header, .app-header {
           </div>
         </div>
       </section>
+
+    
+      <!-- ==================== TAB KIỂM TRA ĐỀ GIỮA KỲ & CUỐI KỲ ONLINE ==================== -->
+      <div class="tab-pane" id="tab-online-exam" role="tabpanel">
+        <div class="exam-header-banner" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #38bdf8; border-radius: 20px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 8px 30px rgba(0,0,0,0.4); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+          <div style="flex: 1; min-width: 280px;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+              <span style="background: #e11d48; color: white; font-weight: 900; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Chuẩn GDPT 2018</span>
+              <span id="examGradeTitle" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">TIẾNG ANH GLOBAL SUCCESS</span>
+            </div>
+            <h2 id="examMainHeading" style="font-size: 1.4rem; font-weight: 900; color: #ffffff; margin: 0 0 0.35rem 0;">Đề Kiểm Tra Định Kỳ Online (Đủ 4 Kỹ Năng)</h2>
+            <p style="font-size: 0.82rem; color: #94a3b8; margin: 0;">Gồm Part A (Listening), Part B (Language & Grammar), Part C (Reading), Part D (Writing & Speaking). Đề sinh ngẫu nhiên vô vàn mã đề khác nhau bám sát đề thi thật.</p>
+          </div>
+
+          <!-- Controls: Chọn loại đề, Đổi đề ngẫu nhiên, Nút Admin Tải Đề Word -->
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <select id="examTypeSelect" onchange="ONLINE_EXAM_SYSTEM.generateExam()" style="background: #1e293b; color: #f8fafc; border: 1px solid #38bdf8; padding: 0.6rem 0.85rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; outline: none;">
+              <option value="giua-ky-1">Đề Giữa Học Kỳ 1</option>
+              <option value="cuoi-ky-1">Đề Cuối Học Kỳ 1</option>
+              <option value="giua-ky-2">Đề Giữa Học Kỳ 2</option>
+              <option value="cuoi-ky-2">Đề Cuối Học Kỳ 2</option>
+            </select>
+
+            <button type="button" onclick="ONLINE_EXAM_SYSTEM.generateExam()" class="header-btn" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 800; padding: 0.6rem 1.1rem; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(37,99,235,0.4);">
+              <span>🎲 Đổi Đề Khác</span>
+            </button>
+
+            <!-- Nút Tải Đề Word chỉ hiện với Admin -->
+            <button type="button" id="adminDownloadWordBtn" onclick="ONLINE_EXAM_SYSTEM.downloadWordDoc()" style="display: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 900; padding: 0.6rem 1.15rem; border-radius: 12px; border: none; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(16,185,129,0.4);" title="Chỉ Thầy Đinh Thành (Admin) mới có quyền tải đề Word & Đáp án về">
+              <span>📥 Tải Đề Word + Đáp Án (Admin)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Exam Paper Container -->
+        <div id="examPaperContainer" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 1.75rem; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+          <!-- Dynamic exam content injected here -->
+        </div>
+
+        <!-- Action submit bar -->
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button type="button" id="submitExamBtn" onclick="ONLINE_EXAM_SYSTEM.submitExam()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 900; font-size: 1.05rem; padding: 0.85rem 2.2rem; border-radius: 16px; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(245,158,11,0.4); display: flex; align-items: center; gap: 8px;">
+            <span>🚀 NỘP BÀI THI & CHẤM ĐIỂM NGAY</span>
+          </button>
+        </div>
+
+        <!-- Result Modal / Card -->
+        <div id="examResultCard" style="display:none; margin-top: 2rem; background: linear-gradient(135deg, #0f172a, #1e293b); border: 2px solid #10b981; border-radius: 20px; padding: 1.5rem; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;" id="examResultEmoji">🎉</div>
+          <h3 id="examResultScore" style="font-size: 1.8rem; font-weight: 900; color: #34d399; margin: 0 0 0.5rem 0;">Điểm số: 10 / 10</h3>
+          <p id="examResultFeedback" style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 1rem;">Xuất sắc! Em đã hoàn thành xuất sắc đề kiểm tra.</p>
+          <button type="button" onclick="ONLINE_EXAM_SYSTEM.generateExam()" style="background: #2563eb; color: white; font-weight: 800; padding: 0.6rem 1.25rem; border-radius: 12px; border: none; cursor: pointer;">
+            Làm Đề Khác Tiếp Tục
+          </button>
+        </div>
+      </div>
 
     </main>
 
@@ -5820,6 +5944,46 @@ header, .app-header {
       </div>
     </div>
   </div>
+
+
+<!-- ==================== MODAL CĂN CHỈNH KÉO DỊCH AVATAR HÌNH TRÒN ==================== -->
+<div class="custom-modal-overlay" id="avatarCropModalOverlay" style="display:none; z-index:10001;">
+  <div class="custom-modal-card" style="max-width: 450px; text-align: center; border-radius: 24px; border: 2px solid #38bdf8; background: #0f172a; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+    <div class="custom-modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 1.25rem;">
+      <h2 style="font-size: 1.1rem; color: #38bdf8; font-weight: 800; display:flex; align-items:center; gap:8px; margin:0;">
+        <span>🎯 Căn Chỉnh Khung Ảnh Tròn</span>
+      </h2>
+      <button class="custom-modal-close" onclick="AVATAR_CROPPER.close()">✕</button>
+    </div>
+    <div class="custom-modal-body" style="padding: 1.25rem;">
+      <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1rem;">
+        👆 <b>Dùng chuột hoặc ngón tay chạm kéo ảnh</b> dịch chuyển vào giữa khung tròn. Dùng thanh trượt bên dưới để Phóng to / Thu nhỏ ảnh cho vừa vặn nhất!
+      </p>
+
+      <!-- Canvas container -->
+      <div class="crop-container" id="cropContainer" title="Kéo giữ chuột để dịch chuyển ảnh">
+        <canvas id="cropCanvas" width="320" height="320"></canvas>
+        <div class="crop-guide-overlay"></div>
+      </div>
+
+      <!-- Zoom Slider -->
+      <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+        <span style="font-size: 1rem; color: #94a3b8;">🔍-</span>
+        <input type="range" id="cropZoomSlider" min="0.5" max="3" step="0.05" value="1" style="width: 60%; cursor: pointer;" oninput="AVATAR_CROPPER.onZoomChange(this.value)">
+        <span style="font-size: 1.1rem; color: #38bdf8;">🔍+</span>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" class="form-btn-secondary" onclick="AVATAR_CROPPER.close()" style="flex: 1; padding: 0.7rem; border-radius: 12px; font-weight: 700; cursor: pointer;">
+          Hủy Bỏ
+        </button>
+        <button type="button" class="form-btn-primary" onclick="AVATAR_CROPPER.applyCrop()" style="flex: 1.5; padding: 0.7rem; border-radius: 12px; font-weight: 800; background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);">
+          ✓ Lưu Làm Ảnh Đại Diện
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
