@@ -886,27 +886,29 @@ export const OnlineQuizPortal: React.FC = () => {
            ======================================================== */
         <div className="space-y-6 animate-fadeIn">
           {/* BANNER GIỚI THIỆU PHÂN HỆ KIỂM TRA ONLINE */}
-          <div className="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border-2 border-blue-600/40">
-            <div className="relative z-10 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs sm:text-sm font-black uppercase tracking-wider mb-3">
-                <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
-                <span>Hệ Thống Kiểm Tra Trắc Nghiệm Online Chuẩn Bộ GD&ĐT</span>
+          <div className="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden border border-blue-500/30">
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 mb-2.5">
+              <div className="flex items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-xs font-bold uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>Trắc Nghiệm Chuẩn Bộ GD&ĐT</span>
+                </div>
+                <h2 className="text-base sm:text-lg font-black tracking-tight text-white m-0">
+                  KIỂM TRA ONLINE THEO TỪNG BÀI
+                </h2>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight mb-3">
-                KIỂM TRA ONLINE THEO TỪNG LỚP &amp; TỪNG UNIT
-              </h2>
-              <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-medium">
-                Đầy đủ 7 khối lớp (Lớp 6 đến Lớp 12). Mỗi Unit gồm <strong>đúng 5 bài kiểm tra chuyên sâu</strong>, mỗi bài <strong>20 câu trắc nghiệm</strong> (20 phút). Chữ to rõ ràng, âm thanh chuẩn bản ngữ, chấm điểm tức thì và giải thích chi tiết sư phạm.
+              <p className="text-slate-300 text-xs max-w-xl hidden md:block m-0">
+                Mỗi Unit gồm 5 bài kiểm tra chuyên sâu (20 câu/bài), chấm điểm tự động và giải thích chi tiết.
               </p>
             </div>
 
             {/* BẢNG CHỌN KHỐI LỚP (LỚP 6 - 12) */}
-            <div className="relative z-10 mt-6 pt-5 border-t border-white/15">
-              <span className="text-xs sm:text-sm font-bold text-cyan-200 block mb-3 flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-cyan-400" />
-                <span>BƯỚC 1: CHỌN KHỐI LỚP BẠN ĐANG HỌC:</span>
+            <div className="relative z-10 pt-2.5 border-t border-white/10 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-cyan-200 flex items-center gap-1">
+                <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Khối lớp:</span>
               </span>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <div className="flex flex-wrap items-center gap-1.5">
                 {[6, 7, 8, 9, 10, 11, 12].map(gNum => {
                   const isSelected = selectedGradeNum === gNum;
                   const isTHPT = gNum >= 10;
@@ -918,15 +920,15 @@ export const OnlineQuizPortal: React.FC = () => {
                         setSelectedGradeNum(gNum);
                         setSelectedUnitNum(1);
                       }}
-                      className={`px-4 sm:px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
+                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
                         isSelected
-                          ? 'bg-gradient-to-r from-cyan-400 to-blue-300 text-slate-950 shadow-lg scale-105 ring-2 ring-white/50'
-                          : 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-xs'
+                          ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-md font-black scale-105'
+                          : 'bg-white/10 hover:bg-white/20 text-white'
                       }`}
                     >
                       <span>Lớp {gNum}</span>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${
-                        isSelected ? 'bg-slate-900 text-cyan-300' : 'bg-white/15 text-white/80'
+                      <span className={`text-[10px] px-1 py-0.2 rounded font-bold ${
+                        isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-black/30 text-cyan-200'
                       }`}>
                         {isTHPT ? 'THPT' : 'THCS'}
                       </span>
