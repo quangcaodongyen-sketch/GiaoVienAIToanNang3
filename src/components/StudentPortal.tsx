@@ -101,9 +101,12 @@ export const StudentPortal: React.FC = () => {
   const [trialCount, setTrialCount] = useState<number>(() => {
     return Number(localStorage.getItem('gvai_student_trial_count') || '0');
   });
-  const [showRegModal, setShowRegModal] = useState<boolean>(false);
-  // Tìm lại thông tin tài khoản qua Số điện thoại
-  const [showForgotModal, setShowForgotModal] = useState<boolean>(false);
+  // Modal Đăng Nhập / Đăng Ký / Quên MK Tích Hợp All-In-One
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [authActiveTab, setAuthActiveTab] = useState<'register' | 'login' | 'forgot'>('register');
+  const [loginStudentInput, setLoginStudentInput] = useState<string>('');
+  const [loginPassInput, setLoginPassInput] = useState<string>('');
+  const [loginError, setLoginError] = useState<string>('');
   const [searchPhone, setSearchPhone] = useState<string>('');
   const [recoveredStudent, setRecoveredStudent] = useState<StudentProfile | null>(null);
   const [searchPhoneError, setSearchPhoneError] = useState<string>('');
@@ -170,13 +173,45 @@ export const StudentPortal: React.FC = () => {
   };
 
   // Đăng xuất học sinh
+    // Xử lý đăng nhập học sinh
+  const handleStudentLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    const inputVal = loginStudentInput.trim();
+    if (!inputVal) {
+      setLoginError('Vui lòng nhập Tên đăng nhập / Mã học sinh hoặc Số điện thoại!');
+      return;
+    }
+
+    const cleanInput = inputVal.replace(/[^0-9]/g, '');
+    const allStus = studentGradebookService.getAllStudents();
+    const found = allStus.find(s => {
+      const codeMatch = s.studentCode.toLowerCase() === inputVal.toLowerCase();
+      const nameMatch = s.name.toLowerCase() === inputVal.toLowerCase();
+      const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
+      return codeMatch || nameMatch || phoneMatch;
+    });
+
+    if (!found) {
+      setLoginError(`Không tìm thấy tài khoản học sinh "${inputVal}". Nếu chưa có tài khoản, em vui lòng bấm tab "Đăng Ký Học"!`);
+      return;
+    }
+
+    studentGradebookService.setActiveStudent(found);
+    setCurrentStudent(found);
+    setShowAuthModal(false);
+    setLoginStudentInput('');
+    setLoginPassInput('');
+    alert(`🎉 Chúc mừng em ${found.name} (Lớp ${found.className}) đã đăng nhập thành công!`);
+  };
+
   const handleStudentLogout = () => {
     if (window.confirm('Em có chắc chắn muốn đăng xuất tài khoản học sinh hiện tại không?')) {
       studentGradebookService.setActiveStudent(null);
       localStorage.removeItem('ENG_STUDENT_PROFILE');
       setCurrentStudent(null);
       alert('Đã đăng xuất tài khoản thành công! Em có thể đăng ký tài khoản mới để tiếp tục học tập.');
-      setShowRegModal(true);
+      setShowAuthModal(true);
     }
   };
 
@@ -188,7 +223,7 @@ export const StudentPortal: React.FC = () => {
     localStorage.setItem('gvai_student_trial_count', nextTrial.toString());
 
     if (nextTrial > 3) {
-      setShowRegModal(true);
+      setShowAuthModal(true);
       return false;
     }
     return true;
@@ -410,18 +445,22 @@ export const StudentPortal: React.FC = () => {
                 </button>
               </>
             ) : (
-              <div className="flex items-center gap-2">
-                <div className="text-left">
-                  <span className="text-[11px] text-amber-200 block">Em đang dùng chế độ học thử ({trialCount}/3 lượt)</span>
-                  <span className="text-xs font-bold text-white">Chưa có tài khoản học sinh</span>
+              <div className="flex items-center gap-2.5">
+                <div className="text-left hidden sm:block">
+                  <span className="text-[11px] text-amber-200 block font-medium">Chế độ học thử ({trialCount}/3 lượt)</span>
+                  <span className="text-xs font-bold text-white">Chưa đăng nhập học sinh</span>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setShowRegModal(true)}
-                  className="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  onClick={() => {
+                    setAuthActiveTab('register');
+                    setShowAuthModal(true);
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 hover:from-amber-300 hover:to-amber-200 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer border border-amber-200"
+                  title="Đăng Ký Học / Đăng Nhập (Quên MK) - Tích hợp đầy đủ"
                 >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  <span>Đăng Ký Học</span>
+                  <UserPlus className="w-4 h-4 text-slate-900" />
+                  <span>Đăng Ký / Đăng Nhập (Quên MK)</span>
                 </button>
               </div>
             )}
@@ -829,267 +868,353 @@ export const StudentPortal: React.FC = () => {
       )}
 
       
-      {/* ==================== MODAL ĐĂNG KÝ TÀI KHOẢN HỌC SINH ==================== */}
-      {showRegModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative">
+      
+      {/* ==================== MODAL TÍCH HỢP TẤT CẢ: ĐĂNG KÝ HỌC / ĐĂNG NHẬP / QUÊN MK ==================== */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative animate-in fade-in zoom-in-95 duration-150 max-h-[92vh] overflow-y-auto">
             {currentStudent && (
               <button
                 type="button"
-                onClick={() => setShowRegModal(false)}
+                onClick={() => setShowAuthModal(false)}
                 className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               >
                 <XCircle className="w-6 h-6" />
               </button>
             )}
 
+            {/* Header Modal */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold shadow-md">
-                <GraduationCap className="w-6 h-6" />
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black shadow-md text-xl">
+                🎓
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                  Đăng Ký Tài Khoản Học Sinh
+                  Tài Khoản Học Sinh Trực Tuyến
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Tạo hồ sơ học sinh mới để lưu trữ kết quả và thi đua theo lớp
+                  Trường THCS Đồng Yên • Hệ thống học tập & ôn luyện tự động
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleRegisterSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Họ và tên học sinh (*):
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={regFullName}
-                  onChange={(e) => {
-                    setRegFullName(e.target.value);
-                    setRegError('');
-                  }}
-                  placeholder="Ví dụ: Nguyễn Văn An, Trần Thị Mai..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
-                />
-              </div>
+            {/* TAB CHUYỂN ĐỔI 3 TRONG 1: ĐĂNG KÝ | ĐĂNG NHẬP | QUÊN MK */}
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
+              <button
+                type="button"
+                onClick={() => setAuthActiveTab('register')}
+                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
+                  authActiveTab === 'register'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>📝 Đăng Ký Học</span>
+              </button>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => setAuthActiveTab('login')}
+                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
+                  authActiveTab === 'login'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>🔑 Đăng Nhập</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAuthActiveTab('forgot')}
+                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
+                  authActiveTab === 'forgot'
+                    ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>🆘 Quên MK?</span>
+              </button>
+            </div>
+
+            {/* ================= TAB 1: FORM ĐĂNG KÝ HỌC SINH MỚI ================= */}
+            {authActiveTab === 'register' && (
+              <form onSubmit={handleRegisterSubmit} className="space-y-3.5 text-xs">
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    Khối Lớp:
+                    👤 Họ và tên học sinh (*):
                   </label>
-                  <select
-                    value={regGrade}
+                  <input
+                    type="text"
+                    required
+                    value={regFullName}
                     onChange={(e) => {
-                      const g = Number(e.target.value);
-                      setRegGrade(g);
-                      setRegClassName(`${g}A1`);
+                      setRegFullName(e.target.value);
+                      setRegError('');
                     }}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
-                  >
-                    <option value={6}>Lớp 6</option>
-                    <option value={7}>Lớp 7</option>
-                    <option value={8}>Lớp 8</option>
-                    <option value={9}>Lớp 9</option>
-                  </select>
+                    placeholder="Ví dụ: Nguyễn Văn An, Trần Thị Mai..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Khối Lớp:
+                    </label>
+                    <select
+                      value={regGrade}
+                      onChange={(e) => {
+                        const g = Number(e.target.value);
+                        setRegGrade(g);
+                        setRegClassName(`${g}A1`);
+                      }}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
+                    >
+                      <option value={6}>Lớp 6</option>
+                      <option value={7}>Lớp 7</option>
+                      <option value={8}>Lớp 8</option>
+                      <option value={9}>Lớp 9</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Lớp Học Sẵn:
+                    </label>
+                    <select
+                      value={regClassName}
+                      onChange={(e) => setRegClassName(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                    >
+                      {['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6'].map(suffix => (
+                        <option key={suffix} value={`${regGrade}${suffix}`}>
+                          {regGrade}{suffix} {suffix.startsWith('B') ? '(Phân hiệu VP)' : '(Trường chính)'}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Giới Tính:
+                    </label>
+                    <select
+                      value={regGender}
+                      onChange={(e) => setRegGender(e.target.value as 'Nam' | 'Nữ')}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
+                    >
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    Lớp Học:
+                    📱 Số điện thoại học sinh / phụ huynh (*):
                   </label>
-                  <select
-                    value={regClassName}
-                    onChange={(e) => setRegClassName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
-                  >
-                    {['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6'].map(suffix => (
-                      <option key={suffix} value={`${regGrade}${suffix}`}>
-                        {regGrade}{suffix} {suffix.startsWith('B') ? '(Phân hiệu VP)' : '(Trường chính)'}
-                      </option>
-                    ))}
-                  </select>
+                  <input
+                    type="tel"
+                    required
+                    value={regPhone}
+                    onChange={(e) => setRegPhone(e.target.value)}
+                    placeholder="Ví dụ: 0915213717 (để tìm lại tài khoản và nhận điểm)..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                  />
                 </div>
 
-                <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    Giới Tính:
-                  </label>
-                  <select
-                    value={regGender}
-                    onChange={(e) => setRegGender(e.target.value as 'Nam' | 'Nữ')}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
-                  >
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                  </select>
-                </div>
-              </div>
+                {regError && (
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{regError}</span>
+                  </div>
+                )}
 
-              <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Số điện thoại học sinh / phụ huynh (*):
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={regPhone}
-                  onChange={(e) => setRegPhone(e.target.value)}
-                  placeholder="Ví dụ: 0915213717 (để tìm lại tài khoản và nhận điểm)..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                />
-              </div>
-
-              {regError && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>{regError}</span>
-                </div>
-              )}
-
-              <div className="pt-2 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowRegModal(false);
-                    setShowForgotModal(true);
-                  }}
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                >
-                  Quên tài khoản? Tìm lại qua SĐT
-                </button>
-
-                <div className="flex items-center gap-2">
+                <div className="pt-2 flex items-center justify-end gap-2">
                   {currentStudent && (
                     <button
                       type="button"
-                      onClick={() => setShowRegModal(false)}
-                      className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                      onClick={() => setShowAuthModal(false)}
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                     >
                       Đóng
                     </button>
                   )}
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-md transition cursor-pointer"
                   >
-                    Xác Nhận Đăng Ký
+                    Xác Nhận Đăng Ký Tài Khoản
                   </button>
                 </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+              </form>
+            )}
 
-      {/* ==================== MODAL TÌM LẠI TÀI KHOẢN / MẬT KHẨU QUA SỐ ĐIỆN THOẠI ==================== */}
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative">
-            <button
-              type="button"
-              onClick={() => setShowForgotModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
-            >
-              <XCircle className="w-6 h-6" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center font-bold shadow-md text-xl">
-                📱
-              </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                  Tìm Lại Tên Đăng Nhập & Mật Khẩu
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Nhập số điện thoại đã đăng ký để hiển thị đầy đủ thông tin tài khoản
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSearchPhone} className="space-y-3.5 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Nhập Số Điện Thoại Đã Đăng Ký (*):
-                </label>
-                <div className="flex gap-2">
+            {/* ================= TAB 2: FORM ĐĂNG NHẬP HỌC SINH ================= */}
+            {authActiveTab === 'login' && (
+              <form onSubmit={handleStudentLogin} className="space-y-3.5 text-xs">
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    🔑 Tên Đăng Nhập / Mã Học Sinh hoặc Số Điện Thoại (*):
+                  </label>
                   <input
-                    type="tel"
+                    type="text"
                     required
-                    value={searchPhone}
-                    onChange={(e) => setSearchPhone(e.target.value)}
-                    placeholder="Ví dụ: 0915213717..."
-                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                    value={loginStudentInput}
+                    onChange={(e) => {
+                      setLoginStudentInput(e.target.value);
+                      setLoginError('');
+                    }}
+                    placeholder="Ví dụ: HS7A1-01 hoặc 0915213717 hoặc Họ tên..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
                     autoFocus
                   />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    🔒 Mật khẩu (Mặc định: 123 hoặc Số điện thoại):
+                  </label>
+                  <input
+                    type="password"
+                    value={loginPassInput}
+                    onChange={(e) => setLoginPassInput(e.target.value)}
+                    placeholder="Mặc định: 123..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                  />
+                </div>
+
+                {loginError && (
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{loginError}</span>
+                  </div>
+                )}
+
+                <div className="pt-2 flex items-center justify-between gap-2">
                   <button
-                    type="submit"
-                    className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow transition cursor-pointer shrink-0"
+                    type="button"
+                    onClick={() => setAuthActiveTab('forgot')}
+                    className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
                   >
-                    Kiểm Tra
+                    Quên mật khẩu? Bấm vào đây
                   </button>
-                </div>
-              </div>
 
-              {searchPhoneError && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>{searchPhoneError}</span>
-                </div>
-              )}
-
-              {recoveredStudent && (
-                <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-500 dark:border-emerald-700 text-xs space-y-2 animate-in fade-in">
-                  <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-black text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                    <span>ĐÃ TÌM THẤY TÀI KHOẢN HỌC SINH!</span>
+                  <div className="flex items-center gap-2">
+                    {currentStudent && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAuthModal(false)}
+                        className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                      >
+                        Đóng
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                    >
+                      Đăng Nhập Vào Học
+                    </button>
                   </div>
+                </div>
+              </form>
+            )}
 
-                  <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 text-slate-800 dark:text-slate-200">
-                    <p>👤 <strong>Họ và tên:</strong> <span className="font-bold text-blue-600">{recoveredStudent.name}</span></p>
-                    <p>🏫 <strong>Lớp học:</strong> <span className="font-bold">{recoveredStudent.className}</span></p>
-                    <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 text-sm">{recoveredStudent.studentCode}</span></p>
-                    <p>🔒 <strong>Mật khẩu mặc định:</strong> <span className="font-mono font-bold text-amber-600 text-sm">123</span> (hoặc SĐT: {recoveredStudent.parentPhone})</p>
+            {/* ================= TAB 3: FORM QUÊN MK - NHẬP SĐT TÌM LẠI TÀI KHOẢN ================= */}
+            {authActiveTab === 'forgot' && (
+              <form onSubmit={handleSearchPhone} className="space-y-3.5 text-xs">
+                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200">
+                  <p className="font-bold flex items-center gap-1.5 mb-1">
+                    <span>💡</span> CẤP LẠI TÊN ĐĂNG NHẬP & MẬT KHẨU TỰ ĐỘNG
+                  </p>
+                  <p className="text-[11px] opacity-90 leading-relaxed">
+                    Em chỉ cần nhập Số điện thoại đã đăng ký, hệ thống sẽ kiểm tra và hiển thị ngay thông tin đăng nhập!
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    📱 Nhập Số Điện Thoại Đã Đăng Ký (*):
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      required
+                      value={searchPhone}
+                      onChange={(e) => setSearchPhone(e.target.value)}
+                      placeholder="Ví dụ: 0915213717..."
+                      className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow transition cursor-pointer shrink-0"
+                    >
+                      Kiểm Tra
+                    </button>
                   </div>
+                </div>
+
+                {searchPhoneError && (
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{searchPhoneError}</span>
+                  </div>
+                )}
+
+                {recoveredStudent && (
+                  <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-500 dark:border-emerald-700 text-xs space-y-2 animate-in fade-in">
+                    <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-black text-sm">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                      <span>ĐÃ TÌM THẤY TÀI KHOẢN HỌC SINH!</span>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 text-slate-800 dark:text-slate-200">
+                      <p>👤 <strong>Họ và tên:</strong> <span className="font-bold text-blue-600">{recoveredStudent.name}</span></p>
+                      <p>🏫 <strong>Lớp học:</strong> <span className="font-bold">{recoveredStudent.className}</span></p>
+                      <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 text-sm">{recoveredStudent.studentCode}</span></p>
+                      <p>🔒 <strong>Mật khẩu của em:</strong> <span className="font-mono font-bold text-amber-600 text-sm">123</span> (hoặc SĐT: {recoveredStudent.parentPhone})</p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleSelectRecoveredStudent();
+                        setShowAuthModal(false);
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                    >
+                      👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG TÀI KHOẢN NÀY
+                    </button>
+                  </div>
+                )}
+
+                <div className="pt-2 flex items-center justify-between text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setAuthActiveTab('register')}
+                    className="font-bold text-blue-600 hover:underline cursor-pointer"
+                  >
+                    ← Chưa có tài khoản? Bấm Đăng ký
+                  </button>
 
                   <button
                     type="button"
-                    onClick={handleSelectRecoveredStudent}
-                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                    onClick={() => setShowAuthModal(false)}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                   >
-                    👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG TÀI KHOẢN NÀY
+                    Đóng
                   </button>
                 </div>
-              )}
-
-              <div className="pt-2 flex items-center justify-between text-xs">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForgotModal(false);
-                    setShowRegModal(true);
-                  }}
-                  className="font-bold text-blue-600 hover:underline cursor-pointer"
-                >
-                  ← Đăng ký tài khoản mới
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowForgotModal(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                >
-                  Đóng
-                </button>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
         </div>
       )}
-"
+
       {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
       <IpaChartPronunciationModal
         isOpen={isIpaModalOpen}
