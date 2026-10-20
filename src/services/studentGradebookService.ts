@@ -19,6 +19,8 @@ export interface ClassRoom {
 export interface StudentProfile {
   id: string;
   studentCode: string; // VD: "HS7A1-01", "HS7A1-05"
+  username?: string;
+  password?: string;
   name: string;
   classId: string;
   className: string;

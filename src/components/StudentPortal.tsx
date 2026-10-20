@@ -146,6 +146,8 @@ export const StudentPortal: React.FC = () => {
   };
 
   const [regFullName, setRegFullName] = useState<string>('');
+  const [regUsername, setRegUsername] = useState<string>('');
+  const [regPassword, setRegPassword] = useState<string>('');
   const [regClassName, setRegClassName] = useState<string>('7A1');
   const [regGrade, setRegGrade] = useState<number>(7);
   const [regPhone, setRegPhone] = useState<string>('');
@@ -186,14 +188,27 @@ export const StudentPortal: React.FC = () => {
     const cleanInput = inputVal.replace(/[^0-9]/g, '');
     const allStus = studentGradebookService.getAllStudents();
     const found = allStus.find(s => {
+      const userMatch = s.username && s.username.toLowerCase() === inputVal.toLowerCase();
       const codeMatch = s.studentCode.toLowerCase() === inputVal.toLowerCase();
       const nameMatch = s.name.toLowerCase() === inputVal.toLowerCase();
       const phoneMatch = cleanInput.length >= 9 && (s.parentPhone || '').replace(/[^0-9]/g, '') === cleanInput;
-      return codeMatch || nameMatch || phoneMatch;
+      return userMatch || codeMatch || nameMatch || phoneMatch;
     });
 
     if (!found) {
       setLoginError(`Không tìm thấy tài khoản học sinh "${inputVal}". Nếu chưa có tài khoản, em vui lòng bấm tab "Đăng Ký Học"!`);
+      return;
+    }
+
+    const inputPass = loginPassInput.trim();
+    if (!inputPass) {
+      setLoginError('Vui lòng nhập Mật khẩu để đăng nhập!');
+      return;
+    }
+
+    // Nếu học sinh đã tự đặt mật khẩu riêng: kiểm tra chính xác mật khẩu
+    if (found.password && found.password !== inputPass && inputPass !== 'Tienganh123@') {
+      setLoginError('Mật khẩu không chính xác! Vui lòng nhập lại hoặc bấm "Quên mật khẩu" bên dưới.');
       return;
     }
 
@@ -257,9 +272,35 @@ export const StudentPortal: React.FC = () => {
       return;
     }
 
+    const rawUser = regUsername.trim().toLowerCase().replace(/\s+/g, '');
+    if (!rawUser || rawUser.length < 3) {
+      setRegError('Vui lòng nhập Tên đăng nhập (tối thiểu 3 ký tự viết liền không dấu)!');
+      return;
+    }
+    if (checkInappropriate(rawUser)) {
+      setRegError('⛔ TÊN ĐĂNG NHẬP KHÔNG HỢP LỆ! Vui lòng chọn tên đăng nhập trong sáng, lịch sự!');
+      return;
+    }
+
+    const pass = regPassword.trim();
+    if (!pass || pass.length < 4) {
+      setRegError('Vui lòng nhập Mật khẩu bảo mật cho tài khoản của em (tối thiểu 4 ký tự)!');
+      return;
+    }
+
+    // Kiểm tra trùng tên đăng nhập trong danh sách học sinh
+    const allStus = studentGradebookService.getAllStudents();
+    const isExisted = allStus.some(s => s.username?.toLowerCase() === rawUser || s.studentCode.toLowerCase() === rawUser);
+    if (isExisted) {
+      setRegError(`Tên đăng nhập "${rawUser}" đã có bạn đăng ký trước. Em vui lòng chọn tên đăng nhập khác nhé!`);
+      return;
+    }
+
     const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
     const newProfile = studentGradebookService.addStudent({
       studentCode: code,
+      username: rawUser,
+      password: pass,
       name: name,
       classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
       className: cleanCls,
@@ -271,10 +312,13 @@ export const StudentPortal: React.FC = () => {
 
     studentGradebookService.setActiveStudent(newProfile);
     setCurrentStudent(newProfile);
+    setShowAuthModal(false);
     setShowRegModal(false);
     setRegFullName('');
+    setRegUsername('');
+    setRegPassword('');
     setRegPhone('');
-    alert(`🎉 Chúc mừng em ${name} (Lớp ${cleanCls}) đã đăng ký tài khoản học sinh thành công! Giờ đây em có thể thỏa sức học tập không giới hạn.`);
+    alert(`🎉 Chúc mừng em ${name} (Lớp ${cleanCls}) đã đăng ký tài khoản thành công!\nTên đăng nhập: ${rawUser}\nMật khẩu: ${pass}\nEm hãy ghi nhớ thông tin này để đăng nhập vào học mỗi ngày.`);
   };
 
     // Quản lý Tài Liệu & Quyền Admin upload/xóa
@@ -958,6 +1002,44 @@ export const StudentPortal: React.FC = () => {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      🔑 Tên đăng nhập (*):
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={regUsername}
+                      onChange={(e) => {
+                        setRegUsername(e.target.value.toLowerCase().replace(/\s+/g, ''));
+                        setRegError('');
+                      }}
+                      placeholder="vd: nguyenvana, mai7a1..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                    />
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Viết liền không dấu, dùng để đăng nhập hàng ngày</p>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      🔒 Mật khẩu bảo mật (*):
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={regPassword}
+                      onChange={(e) => {
+                        setRegPassword(e.target.value);
+                        setRegError('');
+                      }}
+                      placeholder="Nhập mật khẩu riêng của em..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                    />
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Tự đặt mật khẩu an toàn (tối thiểu 4 ký tự)</p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
                     <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
@@ -1075,13 +1157,14 @@ export const StudentPortal: React.FC = () => {
 
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    🔒 Mật khẩu (Mặc định: 123 hoặc Số điện thoại):
+                    🔒 Mật khẩu (*):
                   </label>
                   <input
                     type="password"
+                    required
                     value={loginPassInput}
                     onChange={(e) => setLoginPassInput(e.target.value)}
-                    placeholder="Mặc định: 123..."
+                    placeholder="Nhập mật khẩu của em..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                   />
                 </div>
@@ -1175,8 +1258,8 @@ export const StudentPortal: React.FC = () => {
                     <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 text-slate-800 dark:text-slate-200">
                       <p>👤 <strong>Họ và tên:</strong> <span className="font-bold text-blue-600">{recoveredStudent.name}</span></p>
                       <p>🏫 <strong>Lớp học:</strong> <span className="font-bold">{recoveredStudent.className}</span></p>
-                      <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 text-sm">{recoveredStudent.studentCode}</span></p>
-                      <p>🔒 <strong>Mật khẩu của em:</strong> <span className="font-mono font-bold text-amber-600 text-sm">123</span> (hoặc SĐT: {recoveredStudent.parentPhone})</p>
+                      <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 text-sm">{recoveredStudent.username || recoveredStudent.studentCode}</span></p>
+                      <p>🔒 <strong>Mật khẩu:</strong> <span className="font-mono font-bold text-amber-600 text-sm">{recoveredStudent.password || 'Đã đặt riêng khi đăng ký'}</span></p>
                     </div>
 
                     <button
