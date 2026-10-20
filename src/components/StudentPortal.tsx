@@ -227,27 +227,7 @@ export const StudentPortal: React.FC = () => {
             <span>5. Tải Đề & Tài Liệu</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              navigator.clipboard?.writeText('https://dekiemtraso.com/hocsinh');
-              setCopiedLink(true);
-              setTimeout(() => setCopiedLink(false), 2500);
-            }}
-            title="Bấm để sao chép đường link gửi cho học sinh"
-            className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-400/20 hover:bg-cyan-400/30 text-cyan-200 border border-cyan-400/40 text-xs font-bold transition cursor-pointer"
-          >
-            <span>🎓 dekiemtraso.com/hocsinh</span>
-            {copiedLink ? (
-              <span className="flex items-center gap-1 text-emerald-300 font-extrabold text-[11px]">
-                <Check className="w-3.5 h-3.5" /> Đã chép
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 text-cyan-300 hover:text-white text-[11px]">
-                <Copy className="w-3 h-3" /> Chép link
-              </span>
-            )}
-          </button>
+          
         </div>
       </div>
 
