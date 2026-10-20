@@ -26,6 +26,7 @@ import {
   Check
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
+import { OnlineExamPortal } from './OnlineExamPortal';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
@@ -91,7 +92,7 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 ];
 
 export const StudentPortal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'downloads' | 'leaderboard'>('vocab');
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'downloads' | 'leaderboard'>('vocab');
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng
@@ -183,6 +184,18 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('exam')}
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'exam'
+                ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md font-black border-2 border-amber-300'
+                : 'bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-400/30'
+            }`}
+          >
+            <FileText className="w-4 h-4 text-amber-300" />
+            <span>3. Kiểm Tra GK-CK</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('quiz')}
             className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'quiz'
@@ -191,7 +204,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>3. Kiểm Tra Online</span>
+            <span>4. Ôn Từng Unit</span>
           </button>
 
           <button
@@ -212,7 +225,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span>4. Thi Đua & Sổ Điểm Lớp</span>
+            <span>5. Thi Đua & Sổ Điểm Lớp</span>
           </button>
 
           <button
@@ -224,7 +237,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Download className="w-4 h-4" />
-            <span>5. Tải Đề & Tài Liệu</span>
+            <span>6. Tải Đề & Tài Liệu</span>
           </button>
 
           
@@ -312,6 +325,11 @@ export const StudentPortal: React.FC = () => {
       {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
       {activeTab === 'sgk' && (
         <TextbookExercisePortal />
+      )}
+
+      {/* ==================== PHÂN HỆ MỚI: ĐỀ KIỂM TRA GIỮA KỲ & CUỐI KỲ ONLINE (10 ĐỀ HOÁN ĐỔI) ==================== */}
+      {activeTab === 'exam' && (
+        <OnlineExamPortal onGoToLeaderboard={() => setActiveTab('leaderboard')} />
       )}
 
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}

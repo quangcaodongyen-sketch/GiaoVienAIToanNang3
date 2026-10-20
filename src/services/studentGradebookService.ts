@@ -38,7 +38,7 @@ export interface StudentSubmission {
   classId: string;
   className: string;
   grade: number;
-  testType: 'sgk_exercise' | 'online_quiz';
+  testType: 'sgk_exercise' | 'online_quiz' | 'gk_ck_exam';
   unitNumber: number;
   unitTitle: string;
   testTitle: string;
@@ -439,6 +439,63 @@ class StudentGradebookService {
   }
 
   // ==================== BẢNG XẾP HẠNG & SO SÁNH HỌC SINH THEO LỚP ====================
+  
+  // ==================== BẢNG XẾP HẠNG TOÀN KHỐI ====================
+  public getGradeLeaderboard(grade: number): ClassLeaderboardItem[] {
+    const gradeStudents = this.students.filter(s => s.grade === grade);
+    const gradeSubs = this.submissions.filter(s => s.grade === grade);
+
+    const items: ClassLeaderboardItem[] = gradeStudents.map(student => {
+      const stuSubs = gradeSubs.filter(s => s.studentId === student.id);
+      const testsCount = stuSubs.length;
+      const highestScore = testsCount > 0 ? Math.max(...stuSubs.map(s => s.score)) : 0;
+      const averageScore = testsCount > 0 
+        ? Math.round((stuSubs.reduce((acc, s) => acc + s.score, 0) / testsCount) * 10) / 10 
+        : 0;
+
+      let rankLevel: AcademicRank = 'CAN_CO_GANG';
+      if (averageScore >= 9.0) rankLevel = 'XUAT_SAC';
+      else if (averageScore >= 8.0) rankLevel = 'GIOI';
+      else if (averageScore >= 6.5) rankLevel = 'KHA';
+      else if (averageScore >= 5.0) rankLevel = 'DAT';
+
+      const recentSub = stuSubs[0];
+
+      const badges: string[] = [];
+      if (highestScore === 10) badges.push('Điểm 10 Tuyệt Đối 🌟');
+      if (testsCount >= 5) badges.push('Chăm Chỉ Luyện Đề 📚');
+      if (averageScore >= 8.5) badges.push('Thủ Khoa Khối 🏆');
+
+      return {
+        studentId: student.id,
+        studentCode: student.studentCode,
+        studentName: student.name,
+        className: student.className,
+        gender: student.gender,
+        rank: 0,
+        testsCount,
+        highestScore,
+        averageScore,
+        rankLevel,
+        recentTestTitle: recentSub?.testTitle,
+        recentScore: recentSub?.score,
+        badges
+      };
+    });
+
+    items.sort((a, b) => {
+      if (b.averageScore !== a.averageScore) return b.averageScore - a.averageScore;
+      if (b.highestScore !== a.highestScore) return b.highestScore - a.highestScore;
+      return b.testsCount - a.testsCount;
+    });
+
+    items.forEach((item, index) => {
+      item.rank = index + 1;
+    });
+
+    return items;
+  }
+
   public getClassLeaderboard(classId: string): ClassLeaderboardItem[] {
     const classStudents = this.getStudents(classId);
     const classSubs = this.submissions.filter(s => s.classId === classId);
