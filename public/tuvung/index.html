@@ -4030,6 +4030,48 @@ header, .app-header {
   letter-spacing: -0.01em !important;
 }
 
+
+/* ==============================================================================
+   CHUẨN HÓA BIỂU TƯỢNG MEDIA SVG - KHẮC PHỤC TRIỆT ĐỂ LỖI FONT / Ô VUÔNG
+   ============================================================================== */
+.media-icon {
+  width: 1.25em;
+  height: 1.25em;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.btn-chant-play {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.btn-chant-play .btn-chant-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.chant-nav-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chant-nav-circle-btn .media-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.fc-icon-btn .media-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 </style>
   <!-- Instant Theme Initializer (Zero FOUT / No Flickering) -->
   <script>
@@ -4230,7 +4272,7 @@ header, .app-header {
             
             <div class="fc-top-actions">
               <button class="fc-icon-btn" id="fcShuffleBtn" title="Xáo trộn thứ tự từ">🔀</button>
-              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)">▶️</button>
+              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
               <button class="fc-icon-btn" id="fcVoiceSettingBtn" title="Đổi giọng đọc US / UK">🗣️</button>
             </div>
           </div>
@@ -4387,11 +4429,11 @@ header, .app-header {
           <!-- Console & Beat Controls -->
           <div class="chant-console">
             <div class="chant-playback-row">
-              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước">⏮️</button>
+              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
               <button class="btn-chant-play" id="chantPlayBtn">
-                <span>▶️ BẮT ĐẦU ĐỐI ĐÁP</span>
+                <span class="btn-chant-text"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> BẮT ĐẦU ĐỐI ĐÁP</span>
               </button>
-              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo">⏭️</button>
+              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
             </div>
 
             <div class="chant-settings-grid">

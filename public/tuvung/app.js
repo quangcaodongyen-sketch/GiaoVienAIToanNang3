@@ -665,7 +665,7 @@ function toggleAutoPlay() {
   } else {
     STATE.isAutoPlaying = true;
     btn.classList.add('active');
-    btn.innerHTML = '⏸️';
+    btn.innerHTML = '<svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
     runAutoPlayStep();
   }
 }
@@ -676,7 +676,7 @@ function stopAutoPlay() {
   const btn = document.getElementById('fcAutoPlayBtn');
   if (btn) {
     btn.classList.remove('active');
-    btn.innerHTML = '▶️';
+    btn.innerHTML = '<svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
   }
 }
 
@@ -2901,7 +2901,7 @@ function initChantGame() {
   
   const playBtn = document.getElementById('chantPlayBtn');
   if (playBtn) {
-    playBtn.innerHTML = '<span>▶️ BẮT ĐẦU CHANT</span>';
+    playBtn.innerHTML = '<span class="btn-chant-text"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> BẮT ĐẦU CHANT</span>';
     playBtn.classList.remove('playing');
   }
   
@@ -2954,7 +2954,7 @@ function startChant() {
   
   const playBtn = document.getElementById('chantPlayBtn');
   if (playBtn) {
-    playBtn.innerHTML = '<span>⏸️ TẠM DỪNG</span>';
+    playBtn.innerHTML = '<span class="btn-chant-text"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg> TẠM DỪNG</span>';
     playBtn.classList.add('playing');
   }
   
@@ -2970,14 +2970,14 @@ function pauseChant() {
   
   const playBtn = document.getElementById('chantPlayBtn');
   if (playBtn) {
-    playBtn.innerHTML = '<span>▶️ TIẾP TỤC CHANT</span>';
+    playBtn.innerHTML = '<span class="btn-chant-text"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> TIẾP TỤC CHANT</span>';
     playBtn.classList.remove('playing');
   }
   
   const badgeEl = document.getElementById('chantCallBadge');
   if (badgeEl) {
     badgeEl.className = 'chant-call-badge';
-    badgeEl.textContent = '⏸️ ĐANG TẠM DỪNG';
+    badgeEl.textContent = '⏸ ĐANG TẠM DỪNG';
   }
 }
 

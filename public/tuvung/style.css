@@ -3982,3 +3982,45 @@ header, .app-header {
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
 }
+
+
+/* ==============================================================================
+   CHUẨN HÓA BIỂU TƯỢNG MEDIA SVG - KHẮC PHỤC TRIỆT ĐỂ LỖI FONT / Ô VUÔNG
+   ============================================================================== */
+.media-icon {
+  width: 1.25em;
+  height: 1.25em;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.btn-chant-play {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.btn-chant-play .btn-chant-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.chant-nav-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chant-nav-circle-btn .media-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.fc-icon-btn .media-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
