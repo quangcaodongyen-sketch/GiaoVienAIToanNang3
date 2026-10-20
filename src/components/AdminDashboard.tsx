@@ -41,6 +41,7 @@ import {
   Zap,
   Download,
   ShieldCheck,
+  GraduationCap,
   Users,
   LayoutGrid,
   Table as TableIcon,
