@@ -386,7 +386,21 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {leaderboard.map((item) => {
+              {leaderboard.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-12 px-4 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-xl font-bold">
+                        👥
+                      </div>
+                      <h5 className="font-black text-sm text-slate-800">Lớp {currentClassObj?.name} chưa có học sinh nào đăng ký tham gia</h5>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Các bạn học sinh lớp {currentClassObj?.name} sau khi đăng ký tài khoản và hoàn thành bài tập SGK hoặc Đề kiểm tra online, điểm số sẽ tự động được hệ thống ghi nhận và vinh danh trực tiếp tại đây!
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : leaderboard.map((item) => {
                 const isMe = item.studentId === activeStudent?.id;
                 return (
                   <tr 

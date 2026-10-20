@@ -5289,9 +5289,81 @@ header, .app-header {
               </select>
             </div>
           </div>
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label for="regClassSelect">🏫 Chọn Lớp Học Sẵn (*)</label>
+              <select id="regClassSelect" class="form-control" style="background: #1e293b; color: white; font-weight: 700;" onchange="STUDENT_SYSTEM.onClassSelectChange(this.value)" onkeydown="event.stopPropagation()">
+                <option value="">-- Bấm chọn lớp có sẵn --</option>
+                <optgroup label="Khối 6">
+                  <option value="6A1">Lớp 6A1 (Trường chính)</option>
+                  <option value="6A2">Lớp 6A2 (Trường chính)</option>
+                  <option value="6A3">Lớp 6A3 (Trường chính)</option>
+                  <option value="6A4">Lớp 6A4 (Trường chính)</option>
+                  <option value="6A5">Lớp 6A5 (Trường chính)</option>
+                  <option value="6B1">Lớp 6B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B2">Lớp 6B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B3">Lớp 6B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B4">Lớp 6B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B5">Lớp 6B5 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B6">Lớp 6B6 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 7">
+                  <option value="7A1">Lớp 7A1 (Trường chính)</option>
+                  <option value="7A2">Lớp 7A2 (Trường chính)</option>
+                  <option value="7A3">Lớp 7A3 (Trường chính)</option>
+                  <option value="7A4">Lớp 7A4 (Trường chính)</option>
+                  <option value="7A5">Lớp 7A5 (Trường chính)</option>
+                  <option value="7B1">Lớp 7B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B2">Lớp 7B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B3">Lớp 7B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B4">Lớp 7B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B5">Lớp 7B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 8">
+                  <option value="8A1">Lớp 8A1 (Trường chính)</option>
+                  <option value="8A2">Lớp 8A2 (Trường chính)</option>
+                  <option value="8A3">Lớp 8A3 (Trường chính)</option>
+                  <option value="8A4">Lớp 8A4 (Trường chính)</option>
+                  <option value="8A5">Lớp 8A5 (Trường chính)</option>
+                  <option value="8B1">Lớp 8B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B2">Lớp 8B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B3">Lớp 8B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B4">Lớp 8B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B5">Lớp 8B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 9">
+                  <option value="9A1">Lớp 9A1 (Trường chính)</option>
+                  <option value="9A2">Lớp 9A2 (Trường chính)</option>
+                  <option value="9A3">Lớp 9A3 (Trường chính)</option>
+                  <option value="9A4">Lớp 9A4 (Trường chính)</option>
+                  <option value="9A5">Lớp 9A5 (Trường chính)</option>
+                  <option value="9B1">Lớp 9B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B2">Lớp 9B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B3">Lớp 9B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B4">Lớp 9B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B5">Lớp 9B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối Cấp 3 THPT & Trường Khác">
+                  <option value="10A1">Lớp 10A1 (THPT)</option>
+                  <option value="11A1">Lớp 11A1 (THPT)</option>
+                  <option value="12A1">Lớp 12A1 (THPT)</option>
+                  <option value="OTHER">✍️ Tự nhập lớp khác...</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label for="regClassName">📝 Tên Lớp Cụ Thể (*)</label>
+              <input type="text" id="regClassName" class="form-control" placeholder="Ví dụ: 7A1, 8B2..." oninput="STUDENT_SYSTEM.onClassInput(this.value)" onkeydown="event.stopPropagation()" required>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="regSchool">🏢 Trường Đang Theo Học (*)</label>
-            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: Trường THCS Đồng Yên" onkeydown="event.stopPropagation()" required>
+            <label for="regSchoolSelect">🏢 Trường Đang Theo Học (*)</label>
+            <select id="regSchoolSelect" class="form-control" style="background: #1e293b; color: white; margin-bottom: 0.5rem; font-weight: 700;" onchange="STUDENT_SYSTEM.onSchoolSelectChange(this.value)" onkeydown="event.stopPropagation()">
+              <option value="Trường THCS Đồng Yên">Trường THCS Đồng Yên (Trường chính)</option>
+              <option value="Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)">Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)</option>
+              <option value="OTHER">✍️ Trường khác / Tự nhập tên trường...</option>
+            </select>
+            <input type="text" id="regSchool" class="form-control" value="Trường THCS Đồng Yên" placeholder="Tên trường học của em..." onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group">
             <label for="regPhone">📱 Số Điện Thoại (*)</label>

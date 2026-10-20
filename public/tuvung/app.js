@@ -4528,10 +4528,88 @@ const STUDENT_SYSTEM = {
         allList.push(this.currentStudent);
       }
       localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(allList));
+      // AUTO SYNC TO GRADEBOOK SYSTEM SO STUDENT IS VISIBLE IN CLASS LEADERBOARD
+      try {
+        const gradebookKey = 'gvai_gradebook_students_v3_dongyen';
+        let gbStudents = [];
+        const gbRaw = localStorage.getItem(gradebookKey);
+        if (gbRaw) gbStudents = JSON.parse(gbRaw);
+
+        const existingGbIdx = gbStudents.findIndex(s => s.id === this.currentStudent.id || s.studentCode === this.currentStudent.id);
+        const gbProfile = {
+          id: this.currentStudent.id,
+          studentCode: 'HS' + (this.currentStudent.className || '7A1').toUpperCase().replace(/\s+/g, '') + '-' + (this.currentStudent.id.slice(-4)),
+          name: this.currentStudent.fullName,
+          classId: 'cls-' + (this.currentStudent.className || '7a1').toLowerCase().replace(/\s+/g, ''),
+          className: (this.currentStudent.className || '7A1').toUpperCase(),
+          grade: parseInt(this.currentStudent.grade) || 7,
+          gender: 'Nam',
+          dob: this.currentStudent.birthDate || '',
+          parentPhone: this.currentStudent.phone || '',
+          note: this.currentStudent.school || '',
+          createdAt: new Date().toISOString()
+        };
+
+        if (existingGbIdx !== -1) {
+          gbStudents[existingGbIdx] = { ...gbStudents[existingGbIdx], ...gbProfile };
+        } else {
+          gbStudents.push(gbProfile);
+        }
+        localStorage.setItem(gradebookKey, JSON.stringify(gbStudents));
+      } catch (errGb) {
+        console.warn('Gradebook sync error:', errGb);
+      }
+
 
       this.renderHeaderBadge();
     } catch (e) {
       console.error('Error saving student profile:', e);
+    }
+  },
+
+    onClassSelectChange(val) {
+    if (!val) return;
+    const classInput = document.getElementById('regClassName');
+    const schoolSelect = document.getElementById('regSchoolSelect');
+    const schoolInput = document.getElementById('regSchool');
+    const gradeSelect = document.getElementById('regGrade');
+
+    if (val === 'OTHER') {
+      if (classInput) {
+        classInput.value = '';
+        classInput.focus();
+      }
+      if (schoolSelect) schoolSelect.value = 'OTHER';
+      return;
+    }
+
+    if (classInput) classInput.value = val;
+    this.onClassInput(val);
+
+    // Auto set school based on A/B class
+    // Lớp B -> THCS Đồng Yên (Phân hiệu Vĩnh Phúc)
+    // Lớp A -> Trường THCS Đồng Yên (Trường chính)
+    if (/^[6-9]B/i.test(val)) {
+      if (schoolSelect) schoolSelect.value = 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)';
+      if (schoolInput) schoolInput.value = 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)';
+    } else if (/^[6-9]A/i.test(val)) {
+      if (schoolSelect) schoolSelect.value = 'Trường THCS Đồng Yên';
+      if (schoolInput) schoolInput.value = 'Trường THCS Đồng Yên';
+    } else if (/^1[0-2]/i.test(val)) {
+      if (schoolSelect) schoolSelect.value = 'OTHER';
+      if (schoolInput) schoolInput.value = 'Trường THPT';
+    }
+  },
+
+  onSchoolSelectChange(val) {
+    const schoolInput = document.getElementById('regSchool');
+    if (!schoolInput) return;
+    if (val === 'OTHER') {
+      schoolInput.value = '';
+      schoolInput.placeholder = 'Nhập tên trường học của em...';
+      schoolInput.focus();
+    } else {
+      schoolInput.value = val;
     }
   },
 
@@ -7829,6 +7907,52 @@ const ONLINE_EXAM_SYSTEM = {
     }
 
     // Add XP to student
+    
+    // AUTO RECORD SCORE INTO GRADEBOOK SỔ ĐIỂM
+    try {
+      const subKey = 'gvai_gradebook_submissions_v3_dongyen';
+      let subs = [];
+      const subRaw = localStorage.getItem(subKey);
+      if (subRaw) subs = JSON.parse(subRaw);
+
+      if (STUDENT_SYSTEM.currentStudent) {
+        const stu = STUDENT_SYSTEM.currentStudent;
+        const className = (stu.className || '7A1').toUpperCase();
+        const scoreNum = parseFloat(scaledScore) || 0;
+        let rankLvl = 'CAN_CO_GANG';
+        if (scoreNum >= 9.0) rankLvl = 'XUAT_SAC';
+        else if (scoreNum >= 8.0) rankLvl = 'GIOI';
+        else if (scoreNum >= 6.5) rankLvl = 'KHA';
+        else if (scoreNum >= 5.0) rankLvl = 'DAT';
+
+        const newSub = {
+          id: 'sub-' + Date.now().toString(36),
+          studentId: stu.id,
+          studentCode: 'HS' + className.replace(/\s+/g, '') + '-' + (stu.id.slice(-4)),
+          studentName: stu.fullName,
+          classId: 'cls-' + className.toLowerCase().replace(/\s+/g, ''),
+          className: className,
+          grade: parseInt(stu.grade) || 7,
+          testType: 'online_quiz',
+          unitNumber: 1,
+          unitTitle: this.examMeta.typeLabel || 'Đề Kiểm Tra Định Kỳ',
+          testTitle: `Đề ${this.examMeta.typeLabel || 'Định Kỳ'} (${this.examMeta.code || 'TA'})`,
+          score: scoreNum,
+          correctCount: score,
+          totalQuestions: total,
+          timeSpentSeconds: 600,
+          submittedAt: new Date().toISOString(),
+          rankLevel: rankLvl,
+          teacherFeedback: 'Hệ thống tự động chấm điểm bài làm trực tuyến.',
+          feedbackDate: new Date().toISOString()
+        };
+        subs.unshift(newSub);
+        localStorage.setItem(subKey, JSON.stringify(subs));
+      }
+    } catch (errSub) {
+      console.warn('Submission sync error:', errSub);
+    }
+
     if (STUDENT_SYSTEM.addXP) {
       STUDENT_SYSTEM.addXP(Math.round(score * 5));
     }

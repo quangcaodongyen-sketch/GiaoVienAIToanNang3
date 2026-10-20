@@ -80,222 +80,77 @@ export interface ClassComparisonStats {
 }
 
 const STORAGE_KEYS = {
-  CLASSES: 'gvai_gradebook_classes_v2',
-  STUDENTS: 'gvai_gradebook_students_v2',
-  SUBMISSIONS: 'gvai_gradebook_submissions_v2',
-  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v2'
+  CLASSES: 'gvai_gradebook_classes_v3_dongyen',
+  STUDENTS: 'gvai_gradebook_students_v3_dongyen',
+  SUBMISSIONS: 'gvai_gradebook_submissions_v3_dongyen',
+  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v3_dongyen'
 };
 
 // Dữ liệu lớp học khởi tạo mẫu
-const DEFAULT_CLASSES: ClassRoom[] = [
-  { id: 'cls-6a1', name: '6A1', grade: 6, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Đinh Văn Thành', description: 'Lớp 6A1 - Khối 6 Tiếng Anh Global Success', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-6a2', name: '6A2', grade: 6, schoolYear: '2025 - 2026', homeroomTeacher: 'Cô Hoàng Thu Hà', description: 'Lớp 6A2 - Khối 6', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-7a1', name: '7A1', grade: 7, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Đinh Văn Thành', description: 'Lớp 7A1 - Khối 7 Tiếng Anh Global Success', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-7a2', name: '7A2', grade: 7, schoolYear: '2025 - 2026', homeroomTeacher: 'Cô Trần Mai Anh', description: 'Lớp 7A2 - Khối 7', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-8a1', name: '8A1', grade: 8, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Đinh Văn Thành', description: 'Lớp 8A1 - Khối 8 Tiếng Anh Global Success', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-9a1', name: '9A1', grade: 9, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Đinh Văn Thành', description: 'Lớp 9A1 - Ôn thi vào lớp 10 THPT', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-10a1', name: '10A1', grade: 10, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Nguyễn Hữu Đức', description: 'Lớp 10A1 THPT', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-11a1', name: '11A1', grade: 11, schoolYear: '2025 - 2026', homeroomTeacher: 'Cô Lê Minh Phương', description: 'Lớp 11A1 THPT', createdAt: '2025-09-05T07:30:00Z' },
-  { id: 'cls-12a1', name: '12A1', grade: 12, schoolYear: '2025 - 2026', homeroomTeacher: 'Thầy Đinh Văn Thành', description: 'Lớp 12A1 THPT - Ôn thi Tốt nghiệp 2025+', createdAt: '2025-09-05T07:30:00Z' },
+// Danh sách các lớp học chuẩn Trường THCS Đồng Yên (Trường chính & Phân hiệu Vĩnh Phúc) + Cấp 3 THPT
+export const DONG_YEN_CLASSES: ClassRoom[] = [
+  // KHỐI 6: 6A1 - 6A5 (Trường chính), 6B1 - 6B6 (Phân hiệu Vĩnh Phúc)
+  { id: 'cls-6a1', name: '6A1', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6a2', name: '6A2', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6a3', name: '6A3', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6a4', name: '6A4', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6a5', name: '6A5', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b1', name: '6B1', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b2', name: '6B2', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b3', name: '6B3', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b4', name: '6B4', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b5', name: '6B5', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-6b6', name: '6B6', grade: 6, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+
+  // KHỐI 7: 7A1 - 7A5 (Trường chính), 7B1 - 7B5 (Phân hiệu Vĩnh Phúc)
+  { id: 'cls-7a1', name: '7A1', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7a2', name: '7A2', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7a3', name: '7A3', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7a4', name: '7A4', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7a5', name: '7A5', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7b1', name: '7B1', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7b2', name: '7B2', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7b3', name: '7B3', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7b4', name: '7B4', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-7b5', name: '7B5', grade: 7, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+
+  // KHỐI 8: 8A1 - 8A5 (Trường chính), 8B1 - 8B5 (Phân hiệu Vĩnh Phúc)
+  { id: 'cls-8a1', name: '8A1', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8a2', name: '8A2', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8a3', name: '8A3', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8a4', name: '8A4', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8a5', name: '8A5', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8b1', name: '8B1', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8b2', name: '8B2', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8b3', name: '8B3', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8b4', name: '8B4', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-8b5', name: '8B5', grade: 8, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+
+  // KHỐI 9: 9A1 - 9A5 (Trường chính), 9B1 - 9B5 (Phân hiệu Vĩnh Phúc)
+  { id: 'cls-9a1', name: '9A1', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9a2', name: '9A2', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9a3', name: '9A3', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9a4', name: '9A4', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9a5', name: '9A5', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THCS Đồng Yên', description: 'Trường THCS Đồng Yên (Trường chính)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9b1', name: '9B1', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9b2', name: '9B2', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9b3', name: '9B3', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9b4', name: '9B4', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-9b5', name: '9B5', grade: 9, schoolYear: '2026 - 2027', homeroomTeacher: 'THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', description: 'Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)', createdAt: '2026-09-05T07:30:00Z' },
+
+  // CẤP 3 THPT & TRƯỜNG KHÁC
+  { id: 'cls-10a1', name: '10A1', grade: 10, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 10A1 THPT', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-11a1', name: '11A1', grade: 11, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 11A1 THPT', createdAt: '2026-09-05T07:30:00Z' },
+  { id: 'cls-12a1', name: '12A1', grade: 12, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 12A1 THPT - Ôn thi Tốt nghiệp 2026 - 2027', createdAt: '2026-09-05T07:30:00Z' }
 ];
 
-// Dữ liệu học sinh khởi tạo mẫu
-const DEFAULT_STUDENTS: StudentProfile[] = [
-  // Lớp 7A1 (Lớp trọng điểm demo)
-  { id: 'stu-7a1-01', studentCode: 'HS7A1-01', name: 'Nguyễn Văn An', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nam', dob: '2012-04-12', parentPhone: '0988.112233', note: 'Hăng hái phát biểu, tiếp thu nhanh', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-02', studentCode: 'HS7A1-02', name: 'Trần Thị Bích Ngọc', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nữ', dob: '2012-08-20', parentPhone: '0977.223344', note: 'Chăm chỉ, ngữ pháp rất chắc chắn', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-03', studentCode: 'HS7A1-03', name: 'Lê Hoàng Long', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nam', dob: '2012-02-15', parentPhone: '0912.334455', note: 'Kỹ năng nghe và phát âm tốt', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-04', studentCode: 'HS7A1-04', name: 'Phạm Quỳnh Chi', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nữ', dob: '2012-11-03', parentPhone: '0934.556677', note: 'Cần chú ý chia thì hiện tại hoàn thành', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-05', studentCode: 'HS7A1-05', name: 'Vũ Minh Đức', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nam', dob: '2012-06-18', parentPhone: '0945.667788', note: 'Tiến bộ vượt bậc trong tháng qua', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-06', studentCode: 'HS7A1-06', name: 'Đỗ Thảo Linh', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nữ', dob: '2012-09-25', parentPhone: '0966.778899', note: 'Tự giác học bài, mục tiêu thi HSG', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-07', studentCode: 'HS7A1-07', name: 'Hoàng Quốc Bảo', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nam', dob: '2012-01-30', parentPhone: '0916.889900', note: 'Cần củng cố từ vựng Unit 2 Healthy Living', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-7a1-08', studentCode: 'HS7A1-08', name: 'Bùi Thúy Hằng', classId: 'cls-7a1', className: '7A1', grade: 7, gender: 'Nữ', dob: '2012-07-14', parentPhone: '0922.990011', note: 'Làm bài cẩn thận, chữ đẹp', createdAt: '2025-09-05T08:00:00Z' },
+const DEFAULT_CLASSES: ClassRoom[] = DONG_YEN_CLASSES;
 
-  // Lớp 6A1
-  { id: 'stu-6a1-01', studentCode: 'HS6A1-01', name: 'Nguyễn Minh Quân', classId: 'cls-6a1', className: '6A1', grade: 6, gender: 'Nam', dob: '2013-05-10', parentPhone: '0981.234567', note: 'Nhiệt tình tham gia trò chơi từ vựng', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-6a1-02', studentCode: 'HS6A1-02', name: 'Lê Phương Thảo', classId: 'cls-6a1', className: '6A1', grade: 6, gender: 'Nữ', dob: '2013-10-12', parentPhone: '0972.345678', note: 'Học từ vựng rất nhanh', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-6a1-03', studentCode: 'HS6A1-03', name: 'Đoàn Gia Huy', classId: 'cls-6a1', className: '6A1', grade: 6, gender: 'Nam', dob: '2013-03-22', parentPhone: '0963.456789', note: 'Cần rèn luyện thêm phần phát âm /s/ và /es/', createdAt: '2025-09-05T08:00:00Z' },
+// Xóa sạch toàn bộ học sinh ảo demo cũ, hệ thống bắt đầu danh sách học sinh thật trống
+const DEFAULT_STUDENTS: StudentProfile[] = [];
 
-  // Lớp 8A1
-  { id: 'stu-8a1-01', studentCode: 'HS8A1-01', name: 'Trịnh Thanh Tùng', classId: 'cls-8a1', className: '8A1', grade: 8, gender: 'Nam', dob: '2011-09-15', parentPhone: '0904.567890', note: 'Học lực khá giỏi', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-8a1-02', studentCode: 'HS8A1-02', name: 'Vũ Mai Hương', classId: 'cls-8a1', className: '8A1', grade: 8, gender: 'Nữ', dob: '2011-12-08', parentPhone: '0915.678901', note: 'Điểm đọc hiểu luôn đạt tuyệt đối', createdAt: '2025-09-05T08:00:00Z' },
-
-  // Lớp 9A1
-  { id: 'stu-9a1-01', studentCode: 'HS9A1-01', name: 'Đặng Tuấn Kiệt', classId: 'cls-9a1', className: '9A1', grade: 9, gender: 'Nam', dob: '2010-06-20', parentPhone: '0926.789012', note: 'Mục tiêu thi đỗ trường chuyên', createdAt: '2025-09-05T08:00:00Z' },
-  { id: 'stu-9a1-02', studentCode: 'HS9A1-02', name: 'Nguyễn Hà My', classId: 'cls-9a1', className: '9A1', grade: 9, gender: 'Nữ', dob: '2010-03-11', parentPhone: '0937.890123', note: 'Nắm vững các dạng đề thi chuyển cấp', createdAt: '2025-09-05T08:00:00Z' },
-];
-
-// Dữ liệu bài làm & điểm số mẫu
-const DEFAULT_SUBMISSIONS: StudentSubmission[] = [
-  {
-    id: 'sub-001',
-    studentId: 'stu-7a1-02',
-    studentCode: 'HS7A1-02',
-    studentName: 'Trần Thị Bích Ngọc',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 9.5,
-    correctCount: 19,
-    totalQuestions: 20,
-    timeSpentSeconds: 680,
-    submittedAt: '2026-10-15T09:15:00Z',
-    rankLevel: 'XUAT_SAC',
-    teacherFeedback: 'Bài làm xuất sắc! Em phát âm từ vựng rất chuẩn xác, tiếp tục giữ vững phong độ nhé!',
-    feedbackDate: '2026-10-15T14:30:00Z'
-  },
-  {
-    id: 'sub-002',
-    studentId: 'stu-7a1-01',
-    studentCode: 'HS7A1-01',
-    studentName: 'Nguyễn Văn An',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 9.0,
-    correctCount: 18,
-    totalQuestions: 20,
-    timeSpentSeconds: 740,
-    submittedAt: '2026-10-15T09:30:00Z',
-    rankLevel: 'XUAT_SAC',
-    teacherFeedback: 'Rất tốt! Chỉ chú ý câu số 14 về trọng âm từ có 3 âm tiết kết thúc bằng -tion.',
-    feedbackDate: '2026-10-15T14:32:00Z'
-  },
-  {
-    id: 'sub-003',
-    studentId: 'stu-7a1-03',
-    studentCode: 'HS7A1-03',
-    studentName: 'Lê Hoàng Long',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 8.5,
-    correctCount: 17,
-    totalQuestions: 20,
-    timeSpentSeconds: 820,
-    submittedAt: '2026-10-15T10:00:00Z',
-    rankLevel: 'GIOI',
-    teacherFeedback: 'Học tốt, làm bài tập trung. Cố gắng thêm 1 câu nữa là đạt điểm Xuất sắc!',
-    feedbackDate: '2026-10-15T14:35:00Z'
-  },
-  {
-    id: 'sub-004',
-    studentId: 'stu-7a1-06',
-    studentCode: 'HS7A1-06',
-    studentName: 'Đỗ Thảo Linh',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 8.0,
-    correctCount: 16,
-    totalQuestions: 20,
-    timeSpentSeconds: 890,
-    submittedAt: '2026-10-15T10:20:00Z',
-    rankLevel: 'GIOI',
-    teacherFeedback: 'Đạt kết quả Giỏi, chú ý đọc kỹ câu hỏi dạng bài đọc hiểu.',
-    feedbackDate: '2026-10-15T14:38:00Z'
-  },
-  {
-    id: 'sub-005',
-    studentId: 'stu-7a1-05',
-    studentCode: 'HS7A1-05',
-    studentName: 'Vũ Minh Đức',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 7.5,
-    correctCount: 15,
-    totalQuestions: 20,
-    timeSpentSeconds: 930,
-    submittedAt: '2026-10-15T10:45:00Z',
-    rankLevel: 'KHA',
-    teacherFeedback: 'Có nhiều tiến bộ so với tuần trước. Hãy ôn thêm dạng bài tập A Closer Look 2.',
-    feedbackDate: '2026-10-15T14:40:00Z'
-  },
-  {
-    id: 'sub-006',
-    studentId: 'stu-7a1-04',
-    studentCode: 'HS7A1-04',
-    studentName: 'Phạm Quỳnh Chi',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 7.0,
-    correctCount: 14,
-    totalQuestions: 20,
-    timeSpentSeconds: 980,
-    submittedAt: '2026-10-15T11:00:00Z',
-    rankLevel: 'KHA',
-    teacherFeedback: 'Cần cẩn thận hơn khi chọn đáp án, tránh nhầm lẫn thì hiện tại tiếp diễn.',
-    feedbackDate: '2026-10-15T14:42:00Z'
-  },
-  {
-    id: 'sub-007',
-    studentId: 'stu-7a1-07',
-    studentCode: 'HS7A1-07',
-    studentName: 'Hoàng Quốc Bảo',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'online_quiz',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'Bài 01: Phát Âm & Trọng Âm (Phonetics & Stress)',
-    score: 6.0,
-    correctCount: 12,
-    totalQuestions: 20,
-    timeSpentSeconds: 1100,
-    submittedAt: '2026-10-15T11:15:00Z',
-    rankLevel: 'DAT',
-    teacherFeedback: 'Em đã đạt yêu cầu cơ bản, cần dành thêm thời gian luyện từ vựng mỗi ngày nhé.',
-    feedbackDate: '2026-10-15T14:45:00Z'
-  },
-  {
-    id: 'sub-008',
-    studentId: 'stu-7a1-08',
-    studentCode: 'HS7A1-08',
-    studentName: 'Bùi Thúy Hằng',
-    classId: 'cls-7a1',
-    className: '7A1',
-    grade: 7,
-    testType: 'sgk_exercise',
-    unitNumber: 1,
-    unitTitle: 'Unit 1: Hobbies',
-    testTitle: 'A Closer Look 2: Ngữ Pháp & Cấu Trúc',
-    score: 8.5,
-    correctCount: 5,
-    totalQuestions: 6,
-    timeSpentSeconds: 420,
-    submittedAt: '2026-10-16T08:30:00Z',
-    rankLevel: 'GIOI',
-    teacherFeedback: 'Bài làm rất tốt, câu chia động từ chính xác!',
-    feedbackDate: '2026-10-16T11:00:00Z'
-  }
-];
+// Xóa sạch bài nộp ảo demo cũ, điểm sẽ do hệ thống tự động ghi nhận khi học sinh làm bài tập
+const DEFAULT_SUBMISSIONS: StudentSubmission[] = [];
 
 class StudentGradebookService {
   private classes: ClassRoom[] = [];
