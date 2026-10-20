@@ -42,6 +42,13 @@ class SystemMaintenanceService {
   /**
    * Kiểm tra người dùng hiện tại có phải là Admin đang đăng nhập hợp lệ không
    */
+    /**
+   * Alias tương thích cho việc kiểm tra phiên đăng nhập Admin
+   */
+  public isSessionAuthenticated(): boolean {
+    return this.isAdminSession();
+  }
+
   public isAdminSession(): boolean {
     if (typeof window === 'undefined') return false;
     
