@@ -30,6 +30,7 @@ import { OnlineExamPortal } from './OnlineExamPortal';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
+import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
@@ -171,7 +172,7 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'downloads' | 'leaderboard'>('vocab');
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard'>('vocab');
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng
@@ -308,6 +309,18 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('hsg')}
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'hsg'
+                ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md font-black border-2 border-purple-300'
+                : 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/30'
+            }`}
+            title="Chương trình bồi dưỡng học sinh giỏi Tiếng Anh THCS (Lý thuyết, Đề thi online & Tài liệu tải về)"
+          >
+            <span>🏆 Ôn Thi HSG</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('downloads')}
             className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'downloads'
@@ -316,7 +329,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Download className="w-4 h-4" />
-            <span>6. Tải Đề & Tài Liệu</span>
+            <span>7. Tải Đề & Tài Liệu</span>
           </button>
 
           
@@ -618,6 +631,12 @@ export const StudentPortal: React.FC = () => {
           )}
         </div>
       )}
+      
+      {/* ==================== PHÂN HỆ MỚI: ÔN THI HỌC SINH GIỎI THCS ==================== */}
+      {activeTab === 'hsg' && (
+        <HsgEnglishPreparationPortal />
+      )}
+
       {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
       <IpaChartPronunciationModal
         isOpen={isIpaModalOpen}
