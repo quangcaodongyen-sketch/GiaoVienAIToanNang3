@@ -139,7 +139,7 @@ export const StudentPortal: React.FC = () => {
     if (!recoveredStudent) return;
     studentGradebookService.setActiveStudent(recoveredStudent);
     setCurrentStudent(recoveredStudent);
-    setShowForgotModal(false);
+    setShowAuthModal(false);
     setSearchPhone('');
     setRecoveredStudent(null);
     alert(`🎉 Đã đăng nhập vào tài khoản của em ${recoveredStudent.name} (${recoveredStudent.className}) thành công!`);
@@ -153,6 +153,18 @@ export const StudentPortal: React.FC = () => {
   const [regPhone, setRegPhone] = useState<string>('');
   const [regGender, setRegGender] = useState<'Nam' | 'Nữ'>('Nam');
   const [regError, setRegError] = useState<string>('');
+
+  // Modal hiển thị xác nhận "Đăng ký thành công!" trang trọng, đẹp mắt
+  const [registeredSuccessInfo, setRegisteredSuccessInfo] = useState<{
+    name: string;
+    username: string;
+    password: string;
+    className: string;
+    phone: string;
+    studentCode: string;
+    grade: number;
+  } | null>(null);
+  const [copiedUsername, setCopiedUsername] = useState<boolean>(false);
 
   // Danh sách từ ngữ phi giáo dục, thô tục, vi phạm tiêu chuẩn cộng đồng
   const FORBIDDEN_WORDS = [
@@ -313,12 +325,20 @@ export const StudentPortal: React.FC = () => {
     studentGradebookService.setActiveStudent(newProfile);
     setCurrentStudent(newProfile);
     setShowAuthModal(false);
-    setShowRegModal(false);
     setRegFullName('');
     setRegUsername('');
     setRegPassword('');
     setRegPhone('');
-    alert(`🎉 Chúc mừng em ${name} (Lớp ${cleanCls}) đã đăng ký tài khoản thành công!\nTên đăng nhập: ${rawUser}\nMật khẩu: ${pass}\nEm hãy ghi nhớ thông tin này để đăng nhập vào học mỗi ngày.`);
+    // Mở màn hình xác nhận "Đăng ký thành công!" rõ ràng, chuyên nghiệp
+    setRegisteredSuccessInfo({
+      name: name,
+      username: rawUser,
+      password: pass,
+      className: cleanCls,
+      phone: cleanPhone,
+      studentCode: code,
+      grade: regGrade
+    });
   };
 
     // Quản lý Tài Liệu & Quyền Admin upload/xóa
@@ -1294,6 +1314,117 @@ export const StudentPortal: React.FC = () => {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ==================== MODAL XÁC NHẬN "ĐĂNG KÝ THÀNH CÔNG!" ==================== */}
+      {registeredSuccessInfo && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border-2 border-emerald-500 shadow-2xl overflow-hidden relative my-auto animate-in zoom-in-95 duration-200">
+            {/* Header banner với hiệu ứng chúc mừng */}
+            <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 p-6 text-white text-center relative">
+              <button
+                type="button"
+                onClick={() => setRegisteredSuccessInfo(null)}
+                className="absolute top-3 right-3 text-white/80 hover:text-white cursor-pointer transition p-1 hover:bg-white/20 rounded-full"
+                title="Đóng"
+              >
+                <XCircle className="w-6 h-6" />
+              </button>
+              
+              <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg border-2 border-white/40">
+                <CheckCircle2 className="w-10 h-10 text-white" />
+              </div>
+              
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-black tracking-wide uppercase mb-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                Hệ Thống Ôn Luyện Tiếng Anh THCS
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight">
+                Đăng Ký Thành Công!
+              </h2>
+              <p className="text-xs text-emerald-100 mt-1 font-medium">
+                Chúc mừng em <strong className="text-white underline">{registeredSuccessInfo.name}</strong> đã tạo tài khoản thành công!
+              </p>
+            </div>
+
+            {/* Chi tiết tài khoản vừa tạo */}
+            <div className="p-5 space-y-4">
+              <div className="bg-slate-50 dark:bg-slate-800/80 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">👤 Họ và tên học sinh:</span>
+                  <span className="font-black text-slate-900 dark:text-white text-sm">{registeredSuccessInfo.name}</span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">🏫 Lớp học:</span>
+                  <span className="font-black px-2.5 py-0.5 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
+                    Lớp {registeredSuccessInfo.className}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">🔑 Tên đăng nhập:</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">
+                      {registeredSuccessInfo.username}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(registeredSuccessInfo.username);
+                        setCopiedUsername(true);
+                        setTimeout(() => setCopiedUsername(false), 2000);
+                      }}
+                      className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-md text-slate-500 transition cursor-pointer"
+                      title="Sao chép tên đăng nhập"
+                    >
+                      {copiedUsername ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">🔒 Mật khẩu:</span>
+                  <span className="font-mono font-black text-amber-600 dark:text-amber-400 text-sm bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-300 dark:border-amber-800">
+                    {registeredSuccessInfo.password}
+                  </span>
+                </div>
+
+                {registeredSuccessInfo.phone && (
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">📱 Số điện thoại:</span>
+                    <span className="font-mono text-slate-700 dark:text-slate-300 font-bold">{registeredSuccessInfo.phone}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">🆔 Mã học sinh:</span>
+                  <span className="font-mono text-slate-600 dark:text-slate-400 font-semibold">{registeredSuccessInfo.studentCode}</span>
+                </div>
+              </div>
+
+              {/* Hộp nhắc nhở an toàn & ghi nhớ */}
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-2.5">
+                <span className="text-lg shrink-0 mt-0.5">💡</span>
+                <p className="leading-relaxed">
+                  <strong>Em hãy chụp màn hình</strong> hoặc ghi nhớ lại <strong>Tên đăng nhập</strong> và <strong>Mật khẩu</strong> trên để đăng nhập học từ vựng và làm bài thi mỗi ngày nhé!
+                </p>
+              </div>
+
+              {/* Nút hành động chính */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setRegisteredSuccessInfo(null)}
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm shadow-lg shadow-emerald-600/30 transition transform active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>🚀 Bắt Đầu Vào Học Ngay</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
