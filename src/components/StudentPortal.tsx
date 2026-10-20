@@ -31,6 +31,7 @@ import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
+import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
@@ -95,6 +96,112 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 ];
 
 export const StudentPortal: React.FC = () => {
+  // ==================== QUẢN LÝ TÀI KHOẢN HỌC SINH & ĐĂNG XUẤT / ĐĂNG KÝ ====================
+  const [currentStudent, setCurrentStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
+  const [trialCount, setTrialCount] = useState<number>(() => {
+    return Number(localStorage.getItem('gvai_student_trial_count') || '0');
+  });
+  const [showRegModal, setShowRegModal] = useState<boolean>(false);
+  const [regFullName, setRegFullName] = useState<string>('');
+  const [regClassName, setRegClassName] = useState<string>('7A1');
+  const [regGrade, setRegGrade] = useState<number>(7);
+  const [regPhone, setRegPhone] = useState<string>('');
+  const [regGender, setRegGender] = useState<'Nam' | 'Nữ'>('Nam');
+  const [regError, setRegError] = useState<string>('');
+
+  // Danh sách từ ngữ phi giáo dục, thô tục, vi phạm tiêu chuẩn cộng đồng
+  const FORBIDDEN_WORDS = [
+    'dit', 'lon', 'buoi', 'cac', 'cc', 'dcm', 'cl', 'vcl', 'vl', 'dm', 'dkm', 'đụ', 'địt', 'lồn', 'buồi', 'cặc', 'đĩ', 'chó',
+    'chet', 'giet', 'tu tu', 'ma tuy', 'ke', 'da', 'sex', 'porn', 'xxx', 'fuck', 'bitch', 'asshole', 'shit', 'pussy', 'dick',
+    'ngu', 'oc cho', 'suc vat', 'khung', 'dien', 'dmm', 'loz', 'lol', 'cave', 'dam tac', 'khung bo', 'phan dong'
+  ];
+
+  const checkInappropriate = (val: string): boolean => {
+    if (!val) return false;
+    const clean = val.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, ' ');
+    const tokens = clean.split(/\s+/).filter(Boolean);
+    for (const bad of FORBIDDEN_WORDS) {
+      const badNorm = bad.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (tokens.includes(badNorm) || clean.includes(' ' + badNorm + ' ') || clean.startsWith(badNorm + ' ') || clean.endsWith(' ' + badNorm)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Đăng xuất học sinh
+  const handleStudentLogout = () => {
+    if (window.confirm('Em có chắc chắn muốn đăng xuất tài khoản học sinh hiện tại không?')) {
+      studentGradebookService.setActiveStudent(null);
+      localStorage.removeItem('ENG_STUDENT_PROFILE');
+      setCurrentStudent(null);
+      alert('Đã đăng xuất tài khoản thành công! Em có thể đăng ký tài khoản mới để tiếp tục học tập.');
+      setShowRegModal(true);
+    }
+  };
+
+  // Kiểm tra giới hạn học thử (nếu chưa có tài khoản thì tối đa 3 lần tương tác bài học)
+  const requireRegisteredStudent = (): boolean => {
+    if (currentStudent) return true;
+    const nextTrial = trialCount + 1;
+    setTrialCount(nextTrial);
+    localStorage.setItem('gvai_student_trial_count', nextTrial.toString());
+
+    if (nextTrial > 3) {
+      setShowRegModal(true);
+      return false;
+    }
+    return true;
+  };
+
+  // Xử lý nộp form đăng ký học sinh
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRegError('');
+
+    const name = regFullName.trim();
+    if (!name || name.length < 2) {
+      setRegError('Vui lòng nhập đầy đủ Họ và tên học sinh!');
+      return;
+    }
+
+    if (checkInappropriate(name)) {
+      setRegError('⛔ TÊN KHÔNG HỢP LỆ! Họ tên chứa từ ngữ phi giáo dục hoặc vi phạm tiêu chuẩn học đường. Vui lòng nhập họ tên thật nghiêm túc!');
+      return;
+    }
+
+    const cleanCls = regClassName.trim().toUpperCase();
+    if (!cleanCls) {
+      setRegError('Vui lòng chọn hoặc nhập Lớp học của em!');
+      return;
+    }
+
+    const cleanPhone = regPhone.replace(/[^0-9]/g, '');
+    if (cleanPhone && cleanPhone.length < 9) {
+      setRegError('Số điện thoại không hợp lệ (tối thiểu 9 chữ số)!');
+      return;
+    }
+
+    const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
+    const newProfile = studentGradebookService.addStudent({
+      studentCode: code,
+      name: name,
+      classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
+      className: cleanCls,
+      grade: regGrade,
+      gender: regGender,
+      parentPhone: cleanPhone,
+      note: 'Học sinh tự đăng ký trực tuyến'
+    });
+
+    studentGradebookService.setActiveStudent(newProfile);
+    setCurrentStudent(newProfile);
+    setShowRegModal(false);
+    setRegFullName('');
+    setRegPhone('');
+    alert(`🎉 Chúc mừng em ${name} (Lớp ${cleanCls}) đã đăng ký tài khoản học sinh thành công! Giờ đây em có thể thỏa sức học tập không giới hạn.`);
+  };
+
     // Quản lý Tài Liệu & Quyền Admin upload/xóa
   const [docList, setDocList] = useState<StorageFileItem[]>([]);
   const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(() => systemMaintenanceService.isSessionAuthenticated());
@@ -224,17 +331,61 @@ export const StudentPortal: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* HEADER GÓC HỌC SINH */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 text-xs font-bold mb-2 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-            <span>Hệ Thống Học Tập & Ôn Luyện — Trường THCS Đồng Yên</span>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 text-xs font-bold mb-2 uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+              <span>Hệ Thống Học Tập & Ôn Luyện — Trường THCS Đồng Yên</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1 text-white">
+              GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
+            </h2>
+            <p className="text-blue-100/90 text-xs sm:text-sm leading-normal">
+              Luyện từ vựng Tiếng Anh, giải bài tập SGK theo từng phần, làm đề kiểm tra online và theo dõi sổ điểm thi đua theo lớp.
+            </p>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1 text-white">
-            GÓC HỌC TẬP & ÔN LUYỆN TRỰC TUYẾN
-          </h2>
-          <p className="text-blue-100/90 text-xs sm:text-sm max-w-3xl leading-normal">
-            Luyện từ vựng Tiếng Anh, giải bài tập SGK theo từng phần, làm đề kiểm tra online và theo dõi sổ điểm thi đua theo lớp.
-          </p>
+
+          {/* KHUNG HIỂN THỊ TÀI KHOẢN HỌC SINH & NÚT ĐĂNG XUẤT */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-3 sm:p-4 rounded-2xl flex items-center gap-3 shrink-0 self-start md:self-auto shadow-lg">
+            {currentStudent ? (
+              <>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 font-black text-sm flex items-center justify-center shadow-md">
+                  {currentStudent.gender === 'Nữ' ? '👧' : '👦'}
+                </div>
+                <div className="text-left">
+                  <div className="text-xs text-amber-300 font-bold flex items-center gap-1.5">
+                    <span>Lớp {currentStudent.className}</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-white/15 text-white font-mono">{currentStudent.studentCode}</span>
+                  </div>
+                  <h4 className="text-sm font-black text-white line-clamp-1">{currentStudent.name}</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleStudentLogout}
+                  className="ml-2 p-2 rounded-xl bg-rose-500/80 hover:bg-rose-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
+                  title="Đăng xuất tài khoản học sinh"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Đăng Xuất</span>
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center gap-2">
+                <div className="text-left">
+                  <span className="text-[11px] text-amber-200 block">Em đang dùng chế độ học thử ({trialCount}/3 lượt)</span>
+                  <span className="text-xs font-bold text-white">Chưa có tài khoản học sinh</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowRegModal(true)}
+                  className="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>Đăng Ký Học</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Nút Chuyển Nhanh Các Tính Năng */}

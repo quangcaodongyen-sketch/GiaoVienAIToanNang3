@@ -1,4 +1,46 @@
 
+// ==================== BỘ LỌC TÊN VÀ TÀI KHOẢN PHI GIÁO DỤC, VI PHẠM CHÍNH SÁCH ====================
+const INAPPROPRIATE_KEYWORDS = [
+  'dit', 'lon', 'buoi', 'cac', 'cc', 'dcm', 'cl', 'vcl', 'vl', 'dm', 'dkm', 'đụ', 'địt', 'lồn', 'buồi', 'cặc', 'đĩ', 'chó',
+  'chet', 'giet', 'tu tu', 'ma tuy', 'ke', 'da', 'sex', 'porn', 'xxx', 'fuck', 'bitch', 'asshole', 'shit', 'pussy', 'dick',
+  'ngu', 'oc cho', 'suc vat', 'khung', 'dien', 'dmm', 'loz', 'lol', 'cave', 'phim sex', 'dam tac', 'khung bo', 'phan dong'
+];
+
+function checkInappropriateText(text) {
+  if (!text) return false;
+  const normalized = text.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]/g, ' ');
+  const words = normalized.split(/\s+/).filter(Boolean);
+  
+  for (const bad of INAPPROPRIATE_KEYWORDS) {
+    const badNorm = bad.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if (words.includes(badNorm) || normalized.includes(' ' + badNorm + ' ') || normalized.startsWith(badNorm + ' ') || normalized.endsWith(' ' + badNorm)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Biến theo dõi lượt học thử của học sinh chưa đăng ký
+let TRIAL_ACTIONS_COUNT = 0;
+const MAX_TRIAL_ACTIONS = 5; // Cho phép xem thử 5 từ/lượt, sau đó bắt buộc đăng ký học
+
+function checkTrialLimit() {
+  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) {
+    return true; // Đã đăng ký/đăng nhập -> không giới hạn
+  }
+  TRIAL_ACTIONS_COUNT++;
+  if (TRIAL_ACTIONS_COUNT > MAX_TRIAL_ACTIONS) {
+    alert('⏳ EM ĐÃ DÙNG HẾT LƯỢT HỌC THỬ MIỄN PHÍ!\n\nĐể tiếp tục học từ vựng SGK, làm bài tập và đề kiểm tra trực tuyến, em vui lòng bấm Đăng ký tài khoản học sinh (hoàn toàn miễn phí) nhé!');
+    STUDENT_SYSTEM.canCloseModal = false;
+    STUDENT_SYSTEM.enforceAuthGate();
+    return false;
+  }
+  return true;
+}
+
+
 // ==============================================================================
 // KHO AVATAR GỢI Ý & ĐỊNH DẠNG NGÀY SINH HỌC SINH
 // ==============================================================================
@@ -626,6 +668,7 @@ function flipCard() {
 }
 
 function nextWord() {
+  if (!checkTrialLimit()) return;
   if (STATE.currentWordIdx < STATE.activeWords.length - 1) {
     STATE.currentWordIdx++;
   } else {
@@ -4237,8 +4280,10 @@ const STUDENT_SYSTEM = {
       document.body.classList.remove('auth-locked-mode');
       return;
     }
-    document.body.classList.add('auth-locked-mode');
-    this.openRegisterModal(false, 'login');
+    if (TRIAL_ACTIONS_COUNT >= MAX_TRIAL_ACTIONS) {
+      document.body.classList.add('auth-locked-mode');
+      this.openRegisterModal(false, 'register');
+    }
   },
 
   openProfileModal() {
@@ -4909,6 +4954,12 @@ const STUDENT_SYSTEM = {
 
     if (!fullName || fullName.length < 2) {
       alert('Vui lòng nhập đầy đủ Họ và tên học sinh (ví dụ: Đinh Văn Thành)!');
+      nameInput?.focus();
+      return;
+    }
+
+    if (checkInappropriateText(fullName) || checkInappropriateText(username)) {
+      alert('⛔ TỪ CHỐI ĐĂNG KÝ!\nTên học sinh hoặc Tên đăng nhập chứa từ ngữ phi giáo dục, không phù hợp môi trường học đường hoặc vi phạm tiêu chuẩn cộng đồng.\n\nEm vui lòng sử dụng tên thật và tên tài khoản nghiêm túc, đúng chuẩn học sinh nhé!');
       nameInput?.focus();
       return;
     }
