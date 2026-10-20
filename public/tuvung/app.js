@@ -646,11 +646,7 @@ function initQuiz() {
   if (playArea) playArea.style.display = 'block';
   if (finishedView) finishedView.style.display = 'none';
 
-  let words = [...STATE.activeWords];
-  if (words.length < 4) {
-    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
-    words = words.concat(extra);
-  }
+  let words = [...STATE.activeWords]; // 100% bam sat Unit SGK
   if (!words || words.length === 0) return;
   
   const shuffled = fisherYatesShuffle(words);
@@ -766,11 +762,7 @@ function initMatchGame() {
   if (board) board.style.display = 'grid';
   if (banner) banner.style.display = 'none';
 
-  let words = [...STATE.activeWords];
-  if (words.length < 4) {
-    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
-    words = words.concat(extra);
-  }
+  let words = [...STATE.activeWords]; // 100% bam sat Unit SGK
   if (!words || words.length === 0) return;
   
   const chosenWords = words.sort(() => 0.5 - Math.random()).slice(0, 8);
@@ -907,11 +899,7 @@ function initListenGame(autoSpeak = false) {
   if (grid) grid.style.display = 'grid';
   if (banner) banner.style.display = 'none';
 
-  let words = [...STATE.activeWords];
-  if (words.length < 4) {
-    const extra = (VOCABULARY_DATA || []).flatMap(u => u.words || []).filter(w => !words.some(x => x.id === w.id));
-    words = words.concat(extra);
-  }
+  let words = [...STATE.activeWords]; // 100% bam sat Unit SGK
   if (!words || words.length === 0) return;
   
   const shuffled = words.sort(() => 0.5 - Math.random());
@@ -1534,13 +1522,8 @@ function initBlitzGame() {
   // Tối đa 12 từ, tối thiểu 4 từ
   // Tăng số lượng câu hỏi đúng/sai: Mặc định từ 20 đến 30 câu (hoặc toàn bộ từ vựng của bài)
   let wordPool = [...STATE.activeWords];
-  if (wordPool.length < 20) {
-    if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
-      const extra = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []).filter(w => !wordPool.some(x => x.id === w.id));
-      wordPool = wordPool.concat(fisherYatesShuffle(extra));
-    }
-  }
-  const totalCount = Math.min(30, Math.max(20, wordPool.length));
+  // 100% bam sat SGK Unit
+  const totalCount = wordPool.length;
   
   // 1. Dùng thuật toán Fisher-Yates để đảo từ ngẫu nhiên tuyệt đối mỗi lần làm
   const shuffledWords = fisherYatesShuffle(typeof wordPool !== 'undefined' ? wordPool : STATE.activeWords).slice(0, totalCount);
@@ -1568,10 +1551,6 @@ function initBlitzGame() {
 
   // 3. Nguồn từ để gán nghĩa sai: lấy từ bài học hiện tại + toàn khối sách nếu bài ít từ
   let distractorPool = STATE.activeWords;
-  if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
-    const allGradeWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []);
-    if (allGradeWords.length >= 10) distractorPool = allGradeWords;
-  }
   
   // 4. Sinh bộ câu hỏi với nghĩa đảo ngẫu nhiên mỗi lần chơi
   const questions = shuffledWords.map((w, idx) => {
@@ -2313,7 +2292,7 @@ const ChantBeatEngine = {
   style: 'popfunk',
   currentStep: 0,
   timerId: null,
-  volume: 0.60, // Mặc định âm lượng 0.60x to rõ, sôi động, bùng nổ năng lượng
+  volume: 0.92, // Mặc định âm lượng 0.60x to rõ, sôi động, bùng nổ năng lượng
   isDucked: false,
   
   initContext() {
@@ -2355,7 +2334,7 @@ const ChantBeatEngine = {
     this.volume = Math.max(0, Math.min(1, parseFloat(val) || 0));
     if (this.beatGain && this.ctx) {
       try {
-        const target = this.isDucked ? (this.volume * 0.20) : this.volume;
+        const target = this.isDucked ? (this.volume * 0.80) : this.volume;
         this.beatGain.gain.cancelScheduledValues(this.ctx.currentTime);
         this.beatGain.gain.setValueAtTime(target, this.ctx.currentTime);
       } catch(e){}
@@ -2369,7 +2348,7 @@ const ChantBeatEngine = {
       const now = this.ctx.currentTime;
       // Khi phát âm tiếng Anh: Giảm nhạc nền xuống 20% để giọng đọc cực kỳ tròn vành rõ chữ
       // Khi đọc xong: Lập tức trả về âm lượng sôi động 100% trong 120ms
-      const target = this.isDucked ? (this.volume * 0.20) : this.volume;
+      const target = this.isDucked ? (this.volume * 0.80) : this.volume;
       this.beatGain.gain.cancelScheduledValues(now);
       this.beatGain.gain.linearRampToValueAtTime(target, now + 0.12);
     } catch(e){}
@@ -4353,7 +4332,7 @@ const STUDENT_SYSTEM = {
   purgeOldDataCutoff() {
     // Thời điểm mốc: 12h00 trưa ngày 15/10/2026
     // Mọi tài khoản cũ tạo trước 12h trưa nay đều bị thanh lọc xóa sạch theo lệnh của Thầy Thành.
-    const PURGE_MARKER = 'ENG_PURGE_EPOCH_2026_10_15_12H_FINAL';
+    const PURGE_MARKER = 'ENG_PURGE_EPOCH_2026_10_20_CLEAN_DEMO_V2';
     if (!localStorage.getItem(PURGE_MARKER)) {
       console.log('🔄 Đang thanh lọc dữ liệu: Xóa sạch toàn bộ tài khoản cũ trước 12h trưa 15/10/2026...');
       localStorage.removeItem('ALL_STUDENTS_LIST');
@@ -5313,7 +5292,23 @@ const ADMIN_SYSTEM = {
   getAllStudents() {
     try {
       const saved = localStorage.getItem('ALL_STUDENTS_LIST');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        let list = JSON.parse(saved);
+        // Loc sach 100% cac tai khoan demo/thu nghiem rac
+        const DEMO_NAMES = ['hoc sinh', 'demo', 'test', 'nguyen van an', 'hoc sinh demo', 'default_student'];
+        list = list.filter(s => {
+          if (!s || !s.fullName) return false;
+          const fn = s.fullName.toLowerCase().trim();
+          const un = (s.username || '').toLowerCase().trim();
+          const ph = (s.phone || '').trim();
+          if (DEMO_NAMES.some(d => fn.includes(d) || un.includes(d))) return false;
+          if (s.id === 'DEFAULT_STUDENT' || s.id === 'DEMO_1' || s.id === 'DEMO_2') return false;
+          if (ph === '0123456789' || ph === '0900000000' || ph === '0999999999') return false;
+          return true;
+        });
+        localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(list));
+        return list;
+      }
     } catch (e) {}
     if (STUDENT_SYSTEM.currentStudent) {
       return [STUDENT_SYSTEM.currentStudent];
@@ -6037,15 +6032,7 @@ const MINITEST_SYSTEM = {
   timeLeft: 900, // 15 phút (900s)
 
   init() {
-    let words = [...(STATE.activeWords || [])];
-    
-    // Nguồn từ vựng bài tập 15 phút: đảm bảo tối thiểu 40 câu hỏi phong phú
-    // Nếu Unit hiện tại ít hơn 40 từ, tự động bổ sung thêm từ vựng các Unit cùng khối lớp
-    if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
-      const allGradeWords = ALL_VOCABULARY_DATA[CURRENT_GRADE].flatMap(u => u.words || []);
-      const remainingWords = allGradeWords.filter(w => !words.some(x => x.id === w.id || x.word.toLowerCase() === w.word.toLowerCase()));
-      words = words.concat(fisherYatesShuffle(remainingWords));
-    }
+    let words = [...(STATE.activeWords || [])]; // 100% bam sat Unit SGK hien tai
 
     if (words.length === 0) {
       const container = document.getElementById('minitestQuestionContainer');

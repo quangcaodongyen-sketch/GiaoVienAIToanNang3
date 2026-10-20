@@ -51,6 +51,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
+import AdminStudentGradebook from './AdminStudentGradebook';
 import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem, isAdminMachine, AppQuotaStatItem, EcosystemQuotaSummary, AppInstalledMachineDetail } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
@@ -83,7 +84,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
   // Tab chuyển đổi giữa Marketing, Tracking, TTS, NLS-AI, Tạo Đề Tiếng Anh, Sinh 3 Đề Biến Thể, Screen Record V2, Cleaner Pro, Chuẩn Hóa VB, PDF Suite, Tạo Đề 8 Môn THCS, MathStudio, Tạo Đề 15P Tiếng Anh, Security Alerts
   const [userRole, setUserRole] = useState<'ADMIN' | 'SUB_ADMIN' | null>(null);
   const [currentAdminName, setCurrentAdminName] = useState<string>('');
-  const [adminTab, setAdminTab] = useState<'key_gen' | 'tracking' | 'system' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'de15p' | 'security'>('key_gen');
+  const [adminTab, setAdminTab] = useState<'key_gen' | 'tracking' | 'students' | 'system' | 'tts' | 'nls' | 'taode' | 'bienthe' | 'record' | 'cleaner' | 'chuanhoavb' | 'pdfsuite' | 'thcs8m' | 'mathstudio' | 'de15p' | 'security'>('key_gen');
   const [systemSubTab, setSystemSubTab] = useState<'quota' | 'stats' | 'machines' | 'security'>('quota');
   
   // State Tab Marketing & Quảng cáo tự động Việt Nam
@@ -2338,6 +2339,20 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   {registrationRequests.filter(r => r.status === 'PENDING').length}
                 </span>
               )}
+            </button>
+
+            {/* TAB THÀNH VIÊN HỌC TỪ VỰNG & LỚP HỌC */}
+            <button
+              type="button"
+              onClick={() => setAdminTab('students')}
+              className={`py-2.5 px-3.5 sm:px-4 rounded-xl flex items-center gap-2 transition-all cursor-pointer font-black text-xs sm:text-sm shadow-md shrink-0 ${
+                adminTab === 'students'
+                  ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 text-white shadow-blue-500/30 ring-2 ring-blue-300'
+                  : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4 text-sky-400" />
+              <span>📚 THÀNH VIÊN HỌC TỪ VỰNG</span>
             </button>
 
             {userRole === 'ADMIN' && (
@@ -7353,6 +7368,12 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
         {/* ========================================================================= */}
         {/* TAB 11: CẢNH BÁO XÂM NHẬP, PHÁ KHÓA & NHẬN DIỆN THIẾT BỊ KHẢ NGHI */}
         {/* ========================================================================= */}
+        {adminTab === 'students' && (
+          <div className="flex-1 flex flex-col min-h-0 bg-slate-900/60 rounded-2xl border border-slate-800 p-2 overflow-y-auto">
+            <AdminStudentGradebook />
+          </div>
+        )}
+
         {adminTab === 'security' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             {/* Header tab */}
