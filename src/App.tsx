@@ -32,7 +32,6 @@ import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
 import { TrialRegisterModal } from './components/TrialRegisterModal';
-import { TeacherAIChatBox } from './components/TeacherAIChatBox';
 import { activityTrackingService, ADMIN_WHITELIST_MACHINES } from './services/activityTrackingService';
 import { OnlineTTSModal } from './components/OnlineTTSModal';
 import { NLSAIModal } from './components/NLSAIModal';
@@ -1718,8 +1717,6 @@ export default function App() {
         </div>
       )}
 
-      {/* CHAT BOX TRỢ LÝ AI & THẦY ĐINH THÀNH (CÓ TIẾNG CHUÔNG CHÀO ĐÓN & HỖ TRỢ ĐA MÔN) */}
-      <TeacherAIChatBox onOpenApp={handleOpenAppFromChat} />
     </div>
   );
 }
