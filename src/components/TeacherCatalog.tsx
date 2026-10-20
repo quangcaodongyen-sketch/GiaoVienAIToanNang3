@@ -38,44 +38,44 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
     zip: `${CDN_BASE}/Cai_Dat_TaoDe_TiengViet_TieuHoc_Pass_123.zip`
   },
   'tao-de-tieng-anh-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY',
-    zip: 'https://drive.google.com/uc?export=download&id=1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d'
+    exe: 'https://drive.google.com/file/d/1hb-9vs-ny-xGcJUGaX5_86k-pN0op0qY/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1fOFfPS7DgcNgJrTj_kvdEwK8-lScgL1d/view?usp=sharing'
   },
   'tao-de-15p-tienganh': {
-    exe: 'https://drive.google.com/uc?export=download&id=1UvoS3l1rw8_omyensQ9qtuBeyyUJ9bdE',
-    zip: 'https://drive.google.com/uc?export=download&id=1Gp-DRLSBVZgzJJI7spQ7VkE_wRrNSFJw'
+    exe: 'https://drive.google.com/file/d/1UvoS3l1rw8_omyensQ9qtuBeyyUJ9bdE/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1Gp-DRLSBVZgzJJI7spQ7VkE_wRrNSFJw/view?usp=sharing'
   },
   'tao-de-toan-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=101JAzB5CpgE16dN25JC_uI88g7Wym6WD',
-    zip: 'https://drive.google.com/uc?export=download&id=1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl'
+    exe: 'https://drive.google.com/file/d/101JAzB5CpgE16dN25JC_uI88g7Wym6WD/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1jI0pqYZLGiVAvEjrSuUTCx2IgmtqNaSl/view?usp=sharing'
   },
   'tao-de-van-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9',
-    zip: 'https://drive.google.com/uc?export=download&id=13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7'
+    exe: 'https://drive.google.com/file/d/1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7/view?usp=sharing'
   },
   'tao-de-khtn-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1BM_1b5e6U8k778SIq0OjuJI_NnLlBXbH',
-    zip: 'https://drive.google.com/uc?export=download&id=1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX'
+    exe: 'https://drive.google.com/file/d/1BM_1b5e6U8k778SIq0OjuJI_NnLlBXbH/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1dZwFXL1ruCJhHF9RLQ_9JviWuG1ovaHX/view?usp=sharing'
   },
   'tao-de-sudia-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1P1fZxrJ2C6Rf1mpqUpKe8Vr703tf-Vb6',
-    zip: 'https://drive.google.com/uc?export=download&id=1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B'
+    exe: 'https://drive.google.com/file/d/1P1fZxrJ2C6Rf1mpqUpKe8Vr703tf-Vb6/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1ouEeznfCOyJXiX3AukFcAoIBidCTLa9B/view?usp=sharing'
   },
   'tao-de-lich-su-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod',
-    zip: 'https://drive.google.com/uc?export=download&id=1R22KTK7x1JIbGi_X9KNwBgErL3qitthk'
+    exe: 'https://drive.google.com/file/d/1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1R22KTK7x1JIbGi_X9KNwBgErL3qitthk/view?usp=sharing'
   },
   'tao-de-tin-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86',
-    zip: 'https://drive.google.com/uc?export=download&id=1UoyLxirC4th9u7dGvyZarlWBTRs6ISny'
+    exe: 'https://drive.google.com/file/d/1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing'
   },
   'tao-de-cn-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw',
-    zip: 'https://drive.google.com/uc?export=download&id=1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL'
+    exe: 'https://drive.google.com/file/d/1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL/view?usp=sharing'
   },
   'tao-de-gdcd-thcs': {
-    exe: 'https://drive.google.com/uc?export=download&id=13B9CNEi9-rj1YgbUyAM6IUDyzDqAvsgp',
-    zip: 'https://drive.google.com/uc?export=download&id=1NDZJDC75Cv0SsKccnPCJi20QukGH8McO'
+    exe: 'https://drive.google.com/file/d/13B9CNEi9-rj1YgbUyAM6IUDyzDqAvsgp/view?usp=sharing',
+    zip: 'https://drive.google.com/file/d/1NDZJDC75Cv0SsKccnPCJi20QukGH8McO/view?usp=sharing'
   },
   'tao-de-tieng-anh-thpt': {
     exe: `${CDN_BASE}/Cai_Dat_TaoDe_TiengAnh_THPT.exe`,
@@ -242,7 +242,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-            <thead className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-700">
+            <thead className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white font-bold border-b border-blue-800 shadow-sm">
               <tr>
                 <th className="py-3 px-3 w-10 text-center">STT</th>
                 <th className="py-3 px-3 min-w-[200px]">Tên Phần Mềm & Ứng Dụng</th>
@@ -311,7 +311,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                       <td className="py-3 px-3 text-center">
                         <button
                           onClick={() => onOpenAppModal(app)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300 border border-cyan-300/60 text-xs font-bold transition shadow-2xs cursor-pointer active:scale-95"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-xs font-bold transition shadow-2xs cursor-pointer active:scale-95"
                           title="Trải nghiệm thử 5 lượt miễn phí"
                         >
                           <Sparkles className="w-3 h-3 text-cyan-600 animate-pulse" />
@@ -319,39 +319,35 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                         </button>
                       </td>
 
-                      {/* TẢI BỘ CÀI MIỄN PHÍ */}
+                      {/* TẢI BỘ CÀI ĐẶT DUY NHẤT (CHUẨN XANH DƯƠNG CHUYÊN NGHIỆP) */}
                       <td className="py-3 px-3 text-center">
-                        <div className="inline-flex items-center gap-1.5 flex-wrap justify-center">
-                          {/* ƯU TIÊN .ZIP (PASS: 123) TRƯỚC - AN TOÀN 100%, KHÔNG BỊ TRÌNH DUYỆT CHẶN BÁO VIRUS */}
-                          {downloads.zip && (
+                        <div className="inline-flex items-center justify-center">
+                          {downloads.zip ? (
                             <a
                               href={downloads.zip}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-2xs transition active:scale-95 group/zip"
-                              title="Khuyên dùng: Tải bản .zip (Pass: 123) - 100% không bao giờ bị Chrome / Windows chặn nhầm virus"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-95 cursor-pointer"
+                              title="Tải bộ cài đặt 2-in-1 bản quyền (Pass giải nén: 123) - 100% không bị chặn nhầm virus"
                             >
-                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-200 group-hover/zip:text-white shrink-0" />
-                              <span>.zip (Pass: 123)</span>
+                              <Download className="w-3.5 h-3.5 text-blue-100 shrink-0" />
+                              <span>Tải Bộ Cài (.zip)</span>
                             </a>
-                          )}
-                          {/* BẢN .EXE TRỰC TIẾP */}
-                          {downloads.exe && (
+                          ) : downloads.exe ? (
                             <a
                               href={downloads.exe}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 px-2 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-[11px] border border-slate-300 dark:border-slate-700 shadow-2xs transition active:scale-95"
-                              title="Tải tệp cài .exe trực tiếp (Nếu trình duyệt hỏi, bấm 'Vẫn giữ / Keep')"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-95 cursor-pointer"
+                              title="Tải bộ cài đặt thực thi .exe"
                             >
-                              <Download className="w-3 h-3 text-slate-500" />
-                              <span>.exe</span>
+                              <Download className="w-3.5 h-3.5 text-blue-100 shrink-0" />
+                              <span>Tải Cài Đặt</span>
                             </a>
-                          )}
-                          {!downloads.exe && !downloads.zip && (
+                          ) : (
                             <button
                               onClick={() => onOpenAppModal(app)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 text-slate-500 text-[11px] hover:text-blue-600 font-medium"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 text-xs hover:bg-blue-100 font-bold border border-blue-200 cursor-pointer"
                             >
                               <span>Dùng Online</span>
                             </button>

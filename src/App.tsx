@@ -335,7 +335,7 @@ export default function App() {
     if (saved === 'grid' || saved === 'compact') {
       return saved;
     }
-    return 'grid';
+    return 'compact';
   });
 
   const [themeToast, setThemeToast] = useState<string | null>(null);
