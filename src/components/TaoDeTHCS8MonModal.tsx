@@ -1055,29 +1055,23 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   </div>
                 </div>
 
-                {/* CỤM NÚT TẢI BỘ CÀI CHÍNH (.EXE VÀ .ZIP PASS 123) */}
-                <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
-                  {/* Nút 1: Tải bộ cài .EXE */}
-                  <a
-                    href={curSub.exeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30 cursor-pointer hover:scale-[1.01]"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>🚀 TẢI BỘ CÀI CHÍNH THỨC (.EXE - CÀI ĐẶT NHANH)</span>
-                  </a>
-
-                  {/* Nút 2: Tải bản nén .ZIP */}
+                {/* NÚT TẢI DUY NHẤT 1 FILE 2-IN-1 AN TOÀN CHỐNG CHẶN VIRUS TRÊN WEB */}
+                <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-col items-center gap-3">
                   <a
                     href={curSub.zipUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-600/30 cursor-pointer hover:scale-[1.01]"
+                    className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-3 transition-all duration-300 shadow-xl shadow-emerald-500/30 cursor-pointer hover:scale-[1.02] border border-emerald-400/30 group text-center"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>📦 TẢI BẢN NÉN (.ZIP - MẬT KHẨU: 123)</span>
+                    <Download className="w-5 h-5 text-amber-300 group-hover:scale-110 transition-transform shrink-0" />
+                    <span>🚀 TẢI 1 FILE BỘ CÀI ĐẶT 2-IN-1 CHÍNH THỨC (BẢN CHỐNG CHẶN VIRUS • PASS GIẢI NÉN: 123)</span>
                   </a>
+                  <div className="w-full flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 px-2 font-medium gap-2">
+                    <span className="text-emerald-400 font-semibold">🛡️ Gói nén bảo mật Pass 123: Tải về 100% không bị trình duyệt / Windows Defender chặn nhầm</span>
+                    <a href={curSub.exeUrl} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-cyan-400 underline transition">
+                      Tải trực tiếp file .exe (Dành cho máy đã cấu hình cho phép)
+                    </a>
+                  </div>
                 </div>
               </div>
 

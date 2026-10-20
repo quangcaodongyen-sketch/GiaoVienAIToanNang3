@@ -321,7 +321,7 @@ export const EXAM_7MON_RESOURCES = {
     TIN: {
       name: "Tin học",
       zipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
-      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_Tin_THCS.exe",
+      exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
       size: "67 MB",
       icon: "💻",
       color: "from-sky-600 to-cyan-600"
