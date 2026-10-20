@@ -11,7 +11,8 @@ import {
   Layers, 
   Share2, 
   Laptop,
-  Check
+  Check,
+  ShieldCheck
 } from 'lucide-react';
 import { apps, AppCard } from '../data/apps';
 import { BRAND } from '../config/brand';
