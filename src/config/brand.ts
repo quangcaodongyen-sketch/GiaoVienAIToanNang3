@@ -290,7 +290,7 @@ export const EXAM_7MON_RESOURCES = {
       name: "Ngữ văn",
       zipUrl: "https://drive.google.com/file/d/13ZG7pVSjgkaXKPwRr5_nKIkdxDUL03O7/view?usp=sharing",
       exeUrl: "https://drive.google.com/file/d/1DFqNm7ecPqDUJqvNlmxvjiPri5VnwlI9/view?usp=sharing",
-      size: "35 MB",
+      size: "74 MB",
       icon: "📖",
       color: "from-rose-600 to-red-600"
     },

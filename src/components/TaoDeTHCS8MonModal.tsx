@@ -81,7 +81,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     name: 'Ngữ văn',
     fullName: 'Môn Ngữ văn THCS',
     icon: '📖',
-    size: '34 MB',
+    size: '74 MB',
     desc: 'Cấu trúc chuẩn CV 7991: Đọc hiểu văn bản ngoài SGK (6.0 điểm) & Viết đoạn văn / bài văn (4.0 điểm).',
     highlights: [
       'Ngân hàng văn bản ngữ liệu phong phú, chọn lọc ngoài SGK chuẩn CT GDPT 2018',
@@ -1049,7 +1049,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20">
-                    <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">09/10/2026 (Lúc 23:45:00)</span></div>
+                    <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">21/10/2026 (Lúc 05:00:00)</span></div>
                     <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% ({curSub.size})</span></div>
                     <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
                   </div>
