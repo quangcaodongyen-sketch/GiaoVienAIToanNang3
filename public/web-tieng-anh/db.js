@@ -594,14 +594,14 @@ const QUESTION_BANK = [
 // ── Users & Auth ─────────────────────────────────────────────────
 const DEFAULT_USERS = [
   {
-    id: 'u001', username: 'dinhvanthanh', password: 'Admin@2024!', name: 'Tác giả Đinh Thành',
+    id: 'u001', username: 'dinhvanthanh', password: 'Tienganh123@', name: 'Tác giả Đinh Thành',
     role: 'superadmin', email: 'dinhvanthanh@thcsdongyen.edu.vn', school: 'Trường THCS',
     license: 'school', licenseExpiry: '2030-12-31', examCount: 28,
     avatar: '👨‍🏫', color: '#2563eb', createdAt: '2024-01-01',
     bio: 'Giáo viên Tiếng Anh – Trường THCS. Tác giả & Quản trị viên hệ thống EnglishExam Pro.'
   },
   {
-    id: 'u002', username: 'admin', password: 'admin123', name: 'Tác giả Đinh Thành (Admin)',
+    id: 'u002', username: 'admin', password: 'Tienganh123@', name: 'Tác giả Đinh Thành (Admin)',
     role: 'admin', email: 'thanhdv@dongyen.edu.vn', school: 'Trường THCS',
     license: 'school', licenseExpiry: '2030-12-31', examCount: 15,
     avatar: '⭐', color: '#7c3aed', createdAt: '2024-01-01',

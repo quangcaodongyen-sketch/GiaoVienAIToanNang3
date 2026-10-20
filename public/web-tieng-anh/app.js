@@ -715,7 +715,7 @@ const App = {
               <label class="label">Mật khẩu</label>
               <div class="input-group">
                 <span class="input-icon">🔒</span>
-                <input id="l-pass" type="password" placeholder="Nhập mật khẩu..." value="Admin@2024!"/>
+                <input id="l-pass" type="password" placeholder="Nhập mật khẩu..." value="Tienganh123@"/>
               </div>
             </div>
             <button id="l-btn" class="btn btn-primary btn-lg w-full" style="margin-top:6px">

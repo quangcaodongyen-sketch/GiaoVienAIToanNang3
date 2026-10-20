@@ -145,7 +145,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
   const handleVerifyAdminPin = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const pin = adminPinInput.trim();
-    if (pin === 'Thaythanh2026@' || pin === 'Thaythanh@' || pin === 'Kichhoat123@') {
+    if (pin === 'Tienganh123@') {
       setIsAdminAuthorized(true);
       setIsProActive(true);
       localStorage.setItem('gvai_admin_session', 'authenticated');

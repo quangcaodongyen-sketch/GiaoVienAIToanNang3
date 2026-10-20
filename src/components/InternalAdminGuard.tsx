@@ -21,7 +21,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
     const pin = pinInput.trim();
-    if (pin === 'Thaythanh2026@' || pin === 'Thaythanh@' || pin === 'Kichhoat123@') {
+    if (pin === 'Tienganh123@') {
       localStorage.setItem('gvai_admin_session', 'authenticated');
       localStorage.setItem('gvai_unlimited_machine', 'true');
       onUnlocked();

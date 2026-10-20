@@ -70,18 +70,9 @@ class SystemMaintenanceService {
    */
   public verifyAdminPassword(password: string): boolean {
     const clean = password.trim();
-    const normalized = clean.toLowerCase();
     
-    const isValid = 
-      clean === 'Thaythanh2026@' ||
-      normalized === 'thaythanh2026@' ||
-      normalized === 'thaythanh2026' ||
-      clean === 'Kichhoat123@' ||
-      normalized === 'kichhoat123@' ||
-      normalized === 'kichhoat123' ||
-      clean === 'Kíchhoạt123@' ||
-      clean === 'Thaythanh@' ||
-      clean === 'Tiemgiang123@';
+    // MẬT KHẨU DUY NHẤT TOÀN HỆ THỐNG THEO QUY ĐỊNH CỦA THẦY ĐINH THÀNH: Tienganh123@
+    const isValid = clean === 'Tienganh123@';
 
     if (isValid) {
       if (typeof window !== 'undefined') {

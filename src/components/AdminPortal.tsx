@@ -91,9 +91,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
   // Đăng nhập Admin
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === 'Thaythanh2026@') {
+    if (systemMaintenanceService.verifyAdminPassword(pinInput)) {
       setIsAuthenticated(true);
       sessionStorage.setItem('gvai_admin_logged_in', 'true');
+      systemMaintenanceService.saveAdminSession();
       setPinError(false);
       showToast('Đăng nhập Quản trị viên thành công!');
     } else {

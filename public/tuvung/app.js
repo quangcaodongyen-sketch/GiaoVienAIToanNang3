@@ -4813,7 +4813,7 @@ const STUDENT_SYSTEM = {
     const loginPass = (document.getElementById('loginPassword')?.value || '').trim();
 
     // Check Admin login (Username: Admin, Password: 123)
-    if (loginUser === 'admin' && (loginPass === '123' || loginPass === '6868')) {
+    if (loginUser === 'admin' && loginPass === 'Tienganh123@') {
       this.currentStudent = {
         id: 'ADMIN_DVT',
         username: 'Admin',
@@ -5183,7 +5183,7 @@ const STUDENT_SYSTEM = {
 // 3. ADMIN MANAGEMENT & LEARNING TRACKER
 // ==========================================
 const ADMIN_SYSTEM = {
-  adminPin: '123', // Mật khẩu quản trị mặc định
+  adminPin: 'Tienganh123@', // Mật khẩu quản trị mặc định
 
     openAdminModal() {
     if (STUDENT_SYSTEM.currentStudent?.role === 'admin' || (STUDENT_SYSTEM.currentStudent?.username || '').toLowerCase() === 'admin') {
@@ -5213,7 +5213,7 @@ const ADMIN_SYSTEM = {
     const u = (document.getElementById('adminAuthUsername')?.value || '').trim().toLowerCase();
     const p = (document.getElementById('adminAuthPassword')?.value || '').trim();
 
-    if (u === 'admin' && (p === '123' || p === '6868')) {
+    if (u === 'admin' && p === 'Tienganh123@') {
       STUDENT_SYSTEM.currentStudent = {
         id: 'ADMIN_DVT',
         username: 'Admin',
