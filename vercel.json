@@ -83,5 +83,6 @@
       "source": "/((?!assets/|tuvung/|eng12_vocab/|.*\\..*).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "buildCommand": "NODE_OPTIONS=--max-old-space-size=4096 vite build"
 }
