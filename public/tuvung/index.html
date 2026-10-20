@@ -5423,6 +5423,52 @@ header, .app-header {
             Đã có tài khoản? <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">👉 Bấm vào đây để Đăng Nhập</a>
           </div>
         </form>
+
+        <!-- FORM 3: LẤY LẠI MẬT KHẨU QUA SỐ ĐIỆN THOẠI (QUÊN MẬT KHẨU) -->
+        <form id="authForgotForm" onsubmit="STUDENT_SYSTEM.submitForgotPassword(event)" onkeydown="event.stopPropagation()" style="display: none;">
+          <div style="background: rgba(14, 165, 233, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.15rem;">
+            <div style="color: #38bdf8; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>💡</span> CẤP LẠI MẬT KHẨU TỰ ĐỘNG
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.86rem; margin: 0; line-height: 1.5;">
+              Học sinh chỉ cần <strong>nhập chính xác Số điện thoại</strong> đã đăng ký, hệ thống sẽ xác thực và hiển thị lại Mật khẩu & Tên đăng nhập ngay lập tức cho em.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="forgotPhone">📱 Số Điện Thoại Đã Đăng Ký (*)</label>
+            <input type="tel" id="forgotPhone" class="form-control" placeholder="Ví dụ: 0915213717 hoặc số điện thoại của em/phụ huynh" onkeydown="event.stopPropagation()" required style="font-size: 1.05rem; letter-spacing: 0.5px;">
+          </div>
+
+          <!-- Khu vực hiển thị thông tin mật khẩu cấp lại nổi bật -->
+          <div id="forgotResultBox" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.15); border: 2px solid #34d399; border-radius: 14px; text-align: center;">
+            <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">🎉</div>
+            <div style="color: #34d399; font-weight: 900; font-size: 1.05rem; margin-bottom: 0.4rem;">TÌM THẤY TÀI KHOẢN CỦA EM!</div>
+            <div id="forgotResultStudentName" style="color: #ffffff; font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem;"></div>
+            
+            <div style="background: rgba(0, 0, 0, 0.4); padding: 0.85rem; border-radius: 10px; border: 1px dashed rgba(56, 189, 248, 0.5); margin-bottom: 0.85rem; text-align: left;">
+              <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 0.35rem;">
+                👤 Tên đăng nhập: <strong id="forgotResultUsername" style="color: #38bdf8; font-size: 1.05rem; letter-spacing: 0.5px;"></strong>
+              </div>
+              <div style="font-size: 0.88rem; color: #cbd5e1;">
+                🔒 Mật khẩu của em là: <strong id="forgotResultPassword" style="color: #facc15; font-size: 1.25rem; letter-spacing: 1px; background: rgba(250, 204, 21, 0.15); padding: 2px 8px; border-radius: 6px;"></strong>
+              </div>
+            </div>
+
+            <button type="button" onclick="STUDENT_SYSTEM.autoFillLoginFromForgot()" class="header-btn" style="width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; padding: 0.75rem; border-radius: 10px;">
+              👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG MẬT KHẨU NÀY
+            </button>
+          </div>
+
+          <button type="submit" id="btnSubmitForgot" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            🔍 TÌM LẠI MẬT KHẨU CỦA TÔI
+          </button>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.88rem;">
+            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #94a3b8; text-decoration: none;">← Quay lại Đăng nhập</a>
+            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">Đăng ký tài khoản mới</a>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -5590,51 +5636,7 @@ header, .app-header {
         </button>
       </form>
 
-        <!-- FORM 3: LẤY LẠI MẬT KHẨU QUA SỐ ĐIỆN THOẠI (QUÊN MẬT KHẨU) -->
-        <form id="authForgotForm" onsubmit="STUDENT_SYSTEM.submitForgotPassword(event)" onkeydown="event.stopPropagation()" style="display: none;">
-          <div style="background: rgba(14, 165, 233, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.15rem;">
-            <div style="color: #38bdf8; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem;">
-              <span>💡</span> CẤP LẠI MẬT KHẨU TỰ ĐỘNG
-            </div>
-            <p style="color: #cbd5e1; font-size: 0.86rem; margin: 0; line-height: 1.5;">
-              Học sinh chỉ cần <strong>nhập chính xác Số điện thoại</strong> đã đăng ký, hệ thống sẽ xác thực và hiển thị lại Mật khẩu & Tên đăng nhập ngay lập tức cho em.
-            </p>
-          </div>
-
-          <div class="form-group">
-            <label for="forgotPhone">📱 Số Điện Thoại Đã Đăng Ký (*)</label>
-            <input type="tel" id="forgotPhone" class="form-control" placeholder="Ví dụ: 0915213717 hoặc số điện thoại của em/phụ huynh" onkeydown="event.stopPropagation()" required style="font-size: 1.05rem; letter-spacing: 0.5px;">
-          </div>
-
-          <!-- Khu vực hiển thị thông tin mật khẩu cấp lại nổi bật -->
-          <div id="forgotResultBox" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.15); border: 2px solid #34d399; border-radius: 14px; text-align: center;">
-            <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">🎉</div>
-            <div style="color: #34d399; font-weight: 900; font-size: 1.05rem; margin-bottom: 0.4rem;">TÌM THẤY TÀI KHOẢN CỦA EM!</div>
-            <div id="forgotResultStudentName" style="color: #ffffff; font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem;"></div>
-            
-            <div style="background: rgba(0, 0, 0, 0.4); padding: 0.85rem; border-radius: 10px; border: 1px dashed rgba(56, 189, 248, 0.5); margin-bottom: 0.85rem; text-align: left;">
-              <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 0.35rem;">
-                👤 Tên đăng nhập: <strong id="forgotResultUsername" style="color: #38bdf8; font-size: 1.05rem; letter-spacing: 0.5px;"></strong>
-              </div>
-              <div style="font-size: 0.88rem; color: #cbd5e1;">
-                🔒 Mật khẩu của em là: <strong id="forgotResultPassword" style="color: #facc15; font-size: 1.25rem; letter-spacing: 1px; background: rgba(250, 204, 21, 0.15); padding: 2px 8px; border-radius: 6px;"></strong>
-              </div>
-            </div>
-
-            <button type="button" onclick="STUDENT_SYSTEM.autoFillLoginFromForgot()" class="header-btn" style="width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; padding: 0.75rem; border-radius: 10px;">
-              👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG MẬT KHẨU NÀY
-            </button>
-          </div>
-
-          <button type="submit" id="btnSubmitForgot" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
-            🔍 TÌM LẠI MẬT KHẨU CỦA TÔI
-          </button>
-
-          <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.88rem;">
-            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #94a3b8; text-decoration: none;">← Quay lại Đăng nhập</a>
-            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">Đăng ký tài khoản mới</a>
-          </div>
-        </form>
+        
     </div>
   </div>
 </div>

@@ -39,6 +39,11 @@
   <link rel="apple-touch-icon" href="icon-192.png">
 
   <!-- INLINE CRITICAL CSS - 100% BULLETPROOF NO 404 OR MIME TYPE ISSUES -->
+    <!-- Google Fonts Preconnect & Scientific Fonts (Lexend, Inter, Be Vietnam Pro) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
 /* ==============================================================================
    ENG 12 VOCAB MASTER - ULTRA VIBRANT GAMIFIED DESIGN SYSTEM
@@ -46,21 +51,23 @@
    Tác giả: Thầy giáo Đinh Văn Thành (THCS Đồng Yên)
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
 :root {
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Font chữ tiếng Anh đơn giản, khoa học, sư phạm chống nhầm chữ (Lexend / Inter / Segoe UI) */
+  --font-english: 'Lexend', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: 'Lexend', 'Inter', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-body: 'Inter', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Segoe UI', monospace;
 
-  /* Vibrant Gamified Palette */
-  --bg-dark: #080d1a;
-  --bg-surface: #0f172a;
-  --bg-card: rgba(26, 35, 60, 0.7);
-  --bg-card-hover: rgba(38, 51, 88, 0.85);
+  /* Vibrant Blue Pedagogical Palette - Chuẩn Xanh Dương Chữ Trắng Thầy Thành */
+  --bg-dark: #07172c;
+  --bg-surface: #0b2240;
+  --bg-card: rgba(14, 42, 77, 0.85);
+  --bg-card-hover: rgba(20, 58, 104, 0.95);
 
-  --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.45);
+  --primary: #0284c7;
+  --primary-glow: rgba(2, 132, 199, 0.45);
   
   --neon-violet: #8b5cf6;
   --neon-cyan: #06b6d4;
@@ -120,9 +127,13 @@ html, body {
 
 /* Dynamic Animated Background Mesh */
 .ambient-glow {
-  display: none !important;
-  opacity: 0 !important;
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(130px);
   pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  animation: floatOrb 14s infinite alternate ease-in-out;
 }
 
 .glow-1 {
@@ -208,29 +219,66 @@ html, body {
   transform: rotate(0deg) scale(1.08);
 }
 
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
+  position: relative;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
 .brand-info h1 {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 900;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #ec4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .brand-badge {
-  font-size: 0.7rem;
-  font-weight: 800;
+  font-size: 0.68rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #34d399;
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.18));
-  padding: 0.2rem 0.65rem;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  letter-spacing: 0.04em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  display: inline-block;
+  white-space: nowrap;
+  max-width: fit-content;
+  line-height: 1.2;
 }
+
 
 .header-actions {
   display: flex;
@@ -2164,7 +2212,40 @@ html, body {
   }
 }
 
-  
+
+
+/* ==============================================================================
+   ULTRA HIGH PERFORMANCE (60-120 FPS) ZERO-LAG OPTIMIZATION
+   Eliminate heavy 130px animated Gaussian blurs and replace with GPU-efficient body background
+   ============================================================================== */
+.ambient-glow {
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+body {
+  background-color: #080d1a !important;
+  background-image: 
+    radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(6, 182, 212, 0.12) 0%, transparent 45%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Lighten heavy backdrop blurs so mobile GPUs scroll at 60-120 FPS */
+.flashcard-3d-scene, .chant-card, .game-container, .vocab-card {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Hardware accelerated transitions */
+.btn-3d, .unit-pill, .match-tile, .letter-tile, .slot-box {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+
+
 /* ==============================================================================
    FULL VISIBILITY & NO TRUNCATION (HIỂN THỊ ĐỦ 100% TRÊN GIAO DIỆN)
    ============================================================================== */
@@ -2408,6 +2489,7 @@ html, body {
 }
 
 
+
 /* ==============================================================================
    CLICKABLE LESSON TITLE (BẤM VÀO TÊN BÀI HỌC ĐỌC DÕNG DẠC & PHÁT SÁNG)
    ============================================================================== */
@@ -2459,7 +2541,6 @@ html, body {
   border-color: #818cf8 !important;
   box-shadow: 0 0 16px rgba(99, 102, 241, 0.5) !important;
 }
-
 
 /* ==============================================================================
    ENG 6-12 VOCAB MASTER - NEW STYLES (MULTI-GRADE, REGISTRATION, ADMIN, CERT)
@@ -3041,325 +3122,6 @@ html, body {
 }
 
 
-/* ==============================================================================
-   TEACHER CHATBOX WIDGET (THẦY ĐINH VĂN THÀNH & HỌC SINH)
-   ============================================================================== */
-#teacherChatWidgetContainer {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 99999;
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
-}
-
-#teacherChatFloatingBtn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #0284c7, #6366f1);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-radius: 9999px;
-  padding: 8px 18px 8px 10px;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  outline: none;
-}
-
-#teacherChatFloatingBtn:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.chat-btn-avatar {
-  position: relative;
-  width: 38px;
-  height: 38px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-online-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 11px;
-  height: 11px;
-  background: #10b981;
-  border: 2px solid #0f172a;
-  border-radius: 50%;
-}
-
-.chat-btn-text {
-  font-weight: 800;
-  font-size: 0.95rem;
-  letter-spacing: 0.3px;
-}
-
-.chat-unread-badge {
-  background: #ef4444;
-  color: white;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 9999px;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
-  animation: pulse-badge 2s infinite;
-}
-
-@keyframes pulse-badge {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-}
-
-#teacherChatWindow {
-  position: fixed;
-  bottom: 84px;
-  right: 24px;
-  width: 380px;
-  max-width: calc(100vw - 32px);
-  height: 540px;
-  max-height: calc(100vh - 110px);
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 30px rgba(99, 102, 241, 0.2);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 100000;
-  backdrop-filter: blur(16px);
-  animation: chatSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes chatSlideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.chat-win-header {
-  background: linear-gradient(135deg, #1e1b4b, #312e81);
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.chat-win-teacher-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.chat-teacher-avatar {
-  width: 38px;
-  height: 38px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1.5px solid #eab308;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-}
-
-.chat-teacher-name {
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #ffffff;
-}
-
-.chat-teacher-status {
-  font-size: 0.72rem;
-  color: #34d399;
-  font-weight: 600;
-}
-
-.chat-win-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.chat-action-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.chat-action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.chat-zalo-banner {
-  background: rgba(0, 104, 255, 0.15);
-  border-bottom: 1px solid rgba(0, 104, 255, 0.3);
-  padding: 7px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.76rem;
-  color: #cbd5e1;
-}
-
-.chat-zalo-link-btn {
-  background: #0068ff;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 0.73rem;
-}
-
-.chat-messages-stream {
-  flex: 1;
-  overflow-y: auto;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: rgba(15, 23, 42, 0.95);
-}
-
-.chat-bubble {
-  max-width: 84%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.88rem;
-  line-height: 1.45;
-  word-break: break-word;
-  position: relative;
-}
-
-.chat-bubble.teacher {
-  align-self: flex-start;
-  background: #1e293b;
-  color: #f1f5f9;
-  border-bottom-left-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.chat-bubble.teacher .bubble-author {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #fbbf24;
-  margin-bottom: 3px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.chat-bubble.student {
-  align-self: flex-end;
-  background: linear-gradient(135deg, #0284c7, #4f46e5);
-  color: #ffffff;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
-}
-
-.chat-bubble.student .bubble-author {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 3px;
-  text-align: right;
-}
-
-.chat-bubble .bubble-time {
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 4px;
-  text-align: right;
-}
-
-.chat-quick-suggestions {
-  padding: 6px 12px;
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  background: rgba(30, 41, 59, 0.5);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.chat-quick-suggestions::-webkit-scrollbar {
-  display: none;
-}
-
-.chat-quick-suggestions button {
-  white-space: nowrap;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 0.74rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.chat-quick-suggestions button:hover {
-  background: rgba(99, 102, 241, 0.25);
-  color: #ffffff;
-  border-color: #6366f1;
-}
-
-.chat-input-footer {
-  padding: 10px 14px;
-  background: #1e293b;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chat-input-footer input {
-  flex: 1;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  padding: 9px 12px;
-  color: white;
-  font-size: 0.88rem;
-  outline: none;
-}
-
-.chat-input-footer input:focus {
-  border-color: #38bdf8;
-}
-
-.chat-input-footer button {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-}
-
-.chat-input-footer button:hover {
-  transform: scale(1.06);
-}
-
 
 /* ==============================================================================
    5 GIAO DIỆN HỌC TẬP CHUẨN SƯ PHẠM & ĐỘ TƯƠNG PHẢN CAO (WCAG AAA HIGH CONTRAST)
@@ -3657,56 +3419,6 @@ body {
 .theme-option-item.active .theme-check {
   display: inline-block;
 }
-
-
-.header-avatar-circle {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid var(--accent-theme, #38bdf8);
-  background: var(--bg-card, #1e293b);
-  flex-shrink: 0;
-  box-shadow: 0 0 8px var(--primary-glow);
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.header-avatar-circle:hover {
-  transform: scale(1.15);
-}
-.header-avatar-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.preset-av-btn {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.05);
-  transition: all 0.16s ease;
-}
-.preset-av-btn:hover {
-  transform: scale(1.18);
-  border-color: var(--accent-theme, #38bdf8);
-  box-shadow: 0 0 10px var(--primary-glow);
-}
-.preset-av-btn.active {
-  border-color: #facc15;
-  box-shadow: 0 0 14px rgba(250, 204, 21, 0.7);
-  transform: scale(1.12);
-}
-
 
 /* ==============================================================================
    SCIENTIFIC GRADE & UNIT STYLES (CHUẨN GIÁO DỤC BỘ GD&ĐT)
@@ -4185,33 +3897,216 @@ body {
 }
 
 
-/* ==========================================================================
-   AUTH LOCK: BẮT BUỘC HỌC SINH ĐĂNG KÝ & ĐĂNG NHẬP MỚI ĐƯỢC HỌC
-   ========================================================================== */
-body.auth-locked-mode main,
-body.auth-locked-mode .app-header,
-body.auth-locked-mode .tab-navigation,
-body.auth-locked-mode .unit-selector-wrapper,
-body.auth-locked-mode .quick-nav-bar {
-  filter: blur(8px) saturate(0.5) brightness(0.65) !important;
-  pointer-events: none !important;
-  user-select: none !important;
-  transition: filter 0.35s ease, opacity 0.35s ease !important;
+/* ==============================================================================
+   THẦY GIÁO ĐINH VĂN THÀNH - GIAO DIỆN XANH DƯƠNG CHỦ ĐẠO & CHỮ TRẮNG TƯƠNG PHẢN
+   ============================================================================== */
+:root {
+  --text-pure: #ffffff !important;
+  --text-main: #f8fafc !important;
 }
 
-body.auth-locked-mode #studentRegisterModalOverlay {
-  z-index: 99999 !important;
+body {
+  background-color: #07172c !important;
+  color: #ffffff !important;
 }
 
-.auth-lock-banner {
-  background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(16,185,129,0.2));
-  border: 1px solid rgba(99,102,241,0.4);
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.15rem;
+/* Header xanh navy trang trọng */
+header, .app-header {
+  background: rgba(11, 34, 64, 0.92) !important;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Unit Pill thanh thoát, nền xanh đậm, chữ trắng tương phản */
+.unit-pill {
+  background: rgba(14, 42, 77, 0.85) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.25) !important;
+  color: #ffffff !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.unit-pill:hover {
+  background: rgba(20, 58, 104, 0.95) !important;
+  border-color: #38bdf8 !important;
+  transform: translateY(-2px);
+}
+
+.unit-pill.active {
+  background: linear-gradient(135deg, #0284c7, #1d4ed8) !important;
+  border-color: #7dd3fc !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.6) !important;
+}
+
+.unit-pill.active .pill-u-num {
+  color: #ffffff !important;
+}
+
+.unit-pill.active .pill-word-badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* Badge % hoàn thành trên Unit Pill */
+.pill-word-badge.has-progress {
+  background: rgba(16, 185, 129, 0.25) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Thanh lộ trình % hoàn thiện mini dưới đáy Unit Pill */
+.unit-pill-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.unit-pill-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Tab điều hướng xanh dương */
+.mode-tab-btn.active {
+  background: linear-gradient(135deg, #0284c7, #2563eb) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.5) !important;
+}
+
+/* Nút bấm nổi bật + Chữ trắng */
+.header-btn, .btn-primary {
+  background: rgba(14, 42, 77, 0.8) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.header-btn:hover, .btn-primary:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+}
+
+/* Hiệu ứng bay +10 Điểm vàng óng rực rỡ */
+.floating-xp {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.45rem !important;
+  color: #facc15 !important;
+  text-shadow: 0 2px 12px rgba(250, 204, 21, 0.8), 0 0 24px rgba(0, 0, 0, 0.9) !important;
+  animation: floatUpFade 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.35rem;
+}
+
+
+/* ==============================================================================
+   FONT CHỮ TIẾNG ANH CHUẨN SƯ PHẠM KHOA HỌC - RÕ RÀNG, DỄ ĐỌC (LEXEND & INTER)
+   Tác giả: Thầy giáo Đinh Văn Thành
+   ============================================================================== */
+.card-word-title,
+#quizPromptWord,
+#blitzWord,
+#chantWordMain,
+.quiz-opt-btn,
+.match-tile,
+.slot-box,
+.scramble-tile,
+.hangman-slot,
+.hangman-key,
+.vocab-word-text,
+.unit-pill-title-en,
+.unit-title-display span,
+.test-word-prompt {
+  font-family: var(--font-english) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.015em !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Thẻ Flashcard Từ Vựng Chính: Chữ trắng tinh khiết, nét chữ thanh thoát chuẩn SGK */
+.card-word-title {
+  font-size: 2.85rem !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.02em !important;
+  color: #ffffff !important;
+  line-height: 1.25 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Phiên âm IPA rõ ràng, dễ nhìn từng ký tự phiên âm */
+.card-ipa-text,
+#quizPromptIpa,
+.ipa-badge {
+  font-family: 'JetBrains Mono', 'Segoe UI', 'Arial Unicode MS', sans-serif !important;
+  font-size: 1.22rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  color: #38bdf8 !important;
+}
+
+/* Nghĩa Tiếng Việt chân phương, dễ hiểu */
+.card-meaning-title,
+.chant-meaning-main,
+.scramble-meaning,
+.blitz-meaning,
+.quiz-meaning {
+  font-family: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+
+/* ==============================================================================
+   CHUẨN HÓA BIỂU TƯỢNG MEDIA SVG - KHẮC PHỤC TRIỆT ĐỂ LỖI FONT / Ô VUÔNG
+   ============================================================================== */
+.media-icon {
+  width: 1.25em;
+  height: 1.25em;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.btn-chant-play {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.btn-chant-play .btn-chant-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+}
+
+.chant-nav-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chant-nav-circle-btn .media-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.fc-icon-btn .media-icon {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 </style>
@@ -4223,6 +4118,71 @@ body.auth-locked-mode #studentRegisterModalOverlay {
     } catch(e){}
   </script>
 
+<style>
+/* BEAUTIFUL CIRCULAR AVATAR IN HEADER & PROFILE */
+.header-avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50% !important;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0f172a;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.header-avatar-circle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+  border-color: #60a5fa;
+}
+.header-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.header-avatar-circle span {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+/* AVATAR CROP MODAL STYLES */
+.crop-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+  background: #090d16;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.crop-container:active {
+  cursor: grabbing;
+}
+.crop-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.crop-guide-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+</style>
 </head>
 <body>
   <!-- Ambient background lighting -->
@@ -4382,6 +4342,9 @@ body.auth-locked-mode #studentRegisterModalOverlay {
         <button class="mode-tab-btn" data-tab="tab-listen" role="tab" title="Lắng nghe & chọn từ chuẩn">
           🎧 <span>Luyện Nghe</span>
         </button>
+                <button class="mode-tab-btn" data-tab="tab-online-exam" role="tab" style="background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(239,68,68,0.25)); border-color: rgba(245,158,11,0.5); color: #fbbf24; font-weight: 900;" title="Làm bài thi thử Giữa kỳ & Cuối kỳ chuẩn cấu trúc Bộ GD&ĐT (Nghe, Nói, Đọc, Viết & Trắc nghiệm)">
+          📝 <span>Đề Giữa Kỳ / Cuối Kỳ</span>
+        </button>
         <button class="mode-tab-btn" data-tab="tab-minitest" role="tab" style="background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(6,182,212,0.25)); border-color: rgba(16,185,129,0.5); color: #34d399; font-weight: 800;" title="Kiểm tra 15 phút & Cấp giấy khen điện tử">
           🏆 <span>Test 15p</span>
         </button>
@@ -4414,7 +4377,7 @@ body.auth-locked-mode #studentRegisterModalOverlay {
             
             <div class="fc-top-actions">
               <button class="fc-icon-btn" id="fcShuffleBtn" title="Xáo trộn thứ tự từ">🔀</button>
-              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)">▶️</button>
+              <button class="fc-icon-btn" id="fcAutoPlayBtn" title="Tự động phát trình chiếu (Auto-Play)"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
               <button class="fc-icon-btn" id="fcVoiceSettingBtn" title="Đổi giọng đọc US / UK">🗣️</button>
             </div>
           </div>
@@ -4571,11 +4534,11 @@ body.auth-locked-mode #studentRegisterModalOverlay {
           <!-- Console & Beat Controls -->
           <div class="chant-console">
             <div class="chant-playback-row">
-              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước">⏮️</button>
+              <button class="chant-nav-circle-btn" id="chantPrevBtn" title="Từ trước"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
               <button class="btn-chant-play" id="chantPlayBtn">
-                <span>▶️ BẮT ĐẦU ĐỐI ĐÁP</span>
+                <span class="btn-chant-text"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> BẮT ĐẦU ĐỐI ĐÁP</span>
               </button>
-              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo">⏭️</button>
+              <button class="chant-nav-circle-btn" id="chantNextBtn" title="Từ tiếp theo"><svg class="media-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
             </div>
 
             <div class="chant-settings-grid">
@@ -5158,6 +5121,62 @@ body.auth-locked-mode #studentRegisterModalOverlay {
         </div>
       </section>
 
+    
+      <!-- ==================== TAB KIỂM TRA ĐỀ GIỮA KỲ & CUỐI KỲ ONLINE ==================== -->
+      <div class="tab-pane" id="tab-online-exam" role="tabpanel">
+        <div class="exam-header-banner" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #38bdf8; border-radius: 20px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 8px 30px rgba(0,0,0,0.4); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
+          <div style="flex: 1; min-width: 280px;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+              <span style="background: #e11d48; color: white; font-weight: 900; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Chuẩn GDPT 2018</span>
+              <span id="examGradeTitle" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">TIẾNG ANH GLOBAL SUCCESS</span>
+            </div>
+            <h2 id="examMainHeading" style="font-size: 1.4rem; font-weight: 900; color: #ffffff; margin: 0 0 0.35rem 0;">Đề Kiểm Tra Định Kỳ Online (Đủ 4 Kỹ Năng)</h2>
+            <p style="font-size: 0.82rem; color: #94a3b8; margin: 0;">Gồm Part A (Listening), Part B (Language & Grammar), Part C (Reading), Part D (Writing & Speaking). Đề sinh ngẫu nhiên vô vàn mã đề khác nhau bám sát đề thi thật.</p>
+          </div>
+
+          <!-- Controls: Chọn loại đề, Đổi đề ngẫu nhiên, Nút Admin Tải Đề Word -->
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <select id="examTypeSelect" onchange="ONLINE_EXAM_SYSTEM.generateExam()" style="background: #1e293b; color: #f8fafc; border: 1px solid #38bdf8; padding: 0.6rem 0.85rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; outline: none;">
+              <option value="giua-ky-1">Đề Giữa Học Kỳ 1</option>
+              <option value="cuoi-ky-1">Đề Cuối Học Kỳ 1</option>
+              <option value="giua-ky-2">Đề Giữa Học Kỳ 2</option>
+              <option value="cuoi-ky-2">Đề Cuối Học Kỳ 2</option>
+            </select>
+
+            <button type="button" onclick="ONLINE_EXAM_SYSTEM.generateExam()" class="header-btn" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 800; padding: 0.6rem 1.1rem; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(37,99,235,0.4);">
+              <span>🎲 Đổi Đề Khác</span>
+            </button>
+
+            <!-- Nút Tải Đề Word chỉ hiện với Admin -->
+            <button type="button" id="adminDownloadWordBtn" onclick="ONLINE_EXAM_SYSTEM.downloadWordDoc()" style="display: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 900; padding: 0.6rem 1.15rem; border-radius: 12px; border: none; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(16,185,129,0.4);" title="Chỉ Thầy Đinh Thành (Admin) mới có quyền tải đề Word & Đáp án về">
+              <span>📥 Tải Đề Word + Đáp Án (Admin)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Exam Paper Container -->
+        <div id="examPaperContainer" style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 1.75rem; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+          <!-- Dynamic exam content injected here -->
+        </div>
+
+        <!-- Action submit bar -->
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button type="button" id="submitExamBtn" onclick="ONLINE_EXAM_SYSTEM.submitExam()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 900; font-size: 1.05rem; padding: 0.85rem 2.2rem; border-radius: 16px; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(245,158,11,0.4); display: flex; align-items: center; gap: 8px;">
+            <span>🚀 NỘP BÀI THI & CHẤM ĐIỂM NGAY</span>
+          </button>
+        </div>
+
+        <!-- Result Modal / Card -->
+        <div id="examResultCard" style="display:none; margin-top: 2rem; background: linear-gradient(135deg, #0f172a, #1e293b); border: 2px solid #10b981; border-radius: 20px; padding: 1.5rem; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;" id="examResultEmoji">🎉</div>
+          <h3 id="examResultScore" style="font-size: 1.8rem; font-weight: 900; color: #34d399; margin: 0 0 0.5rem 0;">Điểm số: 10 / 10</h3>
+          <p id="examResultFeedback" style="font-size: 0.95rem; color: #cbd5e1; margin-bottom: 1rem;">Xuất sắc! Em đã hoàn thành xuất sắc đề kiểm tra.</p>
+          <button type="button" onclick="ONLINE_EXAM_SYSTEM.generateExam()" style="background: #2563eb; color: white; font-weight: 800; padding: 0.6rem 1.25rem; border-radius: 12px; border: none; cursor: pointer;">
+            Làm Đề Khác Tiếp Tục
+          </button>
+        </div>
+      </div>
+
     </main>
 
     <!-- Modal: QR Code to open on Mobile -->
@@ -5240,12 +5259,15 @@ body.auth-locked-mode #studentRegisterModalOverlay {
 
       <div class="custom-modal-body">
         <!-- Tab Switcher -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
-          <button type="button" id="tabAuthLoginBtn" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.92rem; font-weight: 800; background: #6366f1; color: white;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.35rem; margin-bottom: 1.25rem; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          <button type="button" id="tabAuthLoginBtn" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="padding: 0.6rem 0.2rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 800; background: #0284c7; color: white;">
             🔑 ĐĂNG NHẬP
           </button>
-          <button type="button" id="tabAuthRegBtn" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.92rem; font-weight: 600; background: rgba(255,255,255,0.06); color: #94a3b8;">
-            📝 ĐĂNG KÝ MỚI
+          <button type="button" id="tabAuthRegBtn" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="padding: 0.6rem 0.2rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: rgba(255,255,255,0.06); color: #94a3b8;">
+            📝 ĐĂNG KÝ
+          </button>
+          <button type="button" id="tabAuthForgotBtn" onclick="STUDENT_SYSTEM.switchAuthTab('forgot')" style="padding: 0.6rem 0.2rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: rgba(255,255,255,0.06); color: #94a3b8;">
+            🆘 QUÊN MK?
           </button>
         </div>
 
@@ -5259,7 +5281,10 @@ body.auth-locked-mode #studentRegisterModalOverlay {
             <input type="text" id="loginUsername" class="form-control" placeholder="Ví dụ: thanh8a1 hoặc 0915213717" onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group">
-            <label for="loginPassword">🔒 Mật Khẩu (*)</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label for="loginPassword" style="margin-bottom: 0;">🔒 Mật Khẩu (*)</label>
+              <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('forgot')" style="color: #38bdf8; font-size: 0.82rem; font-weight: 700; text-decoration: underline;">Quên mật khẩu?</a>
+            </div>
             <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu của bạn..." onkeydown="event.stopPropagation()" required>
           </div>
           <button type="submit" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(99,102,241,0.4);">
@@ -5301,9 +5326,81 @@ body.auth-locked-mode #studentRegisterModalOverlay {
               </select>
             </div>
           </div>
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label for="regClassSelect">🏫 Chọn Lớp Học Sẵn (*)</label>
+              <select id="regClassSelect" class="form-control" style="background: #1e293b; color: white; font-weight: 700;" onchange="STUDENT_SYSTEM.onClassSelectChange(this.value)" onkeydown="event.stopPropagation()">
+                <option value="">-- Bấm chọn lớp có sẵn --</option>
+                <optgroup label="Khối 6">
+                  <option value="6A1">Lớp 6A1 (Trường chính)</option>
+                  <option value="6A2">Lớp 6A2 (Trường chính)</option>
+                  <option value="6A3">Lớp 6A3 (Trường chính)</option>
+                  <option value="6A4">Lớp 6A4 (Trường chính)</option>
+                  <option value="6A5">Lớp 6A5 (Trường chính)</option>
+                  <option value="6B1">Lớp 6B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B2">Lớp 6B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B3">Lớp 6B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B4">Lớp 6B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B5">Lớp 6B5 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="6B6">Lớp 6B6 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 7">
+                  <option value="7A1">Lớp 7A1 (Trường chính)</option>
+                  <option value="7A2">Lớp 7A2 (Trường chính)</option>
+                  <option value="7A3">Lớp 7A3 (Trường chính)</option>
+                  <option value="7A4">Lớp 7A4 (Trường chính)</option>
+                  <option value="7A5">Lớp 7A5 (Trường chính)</option>
+                  <option value="7B1">Lớp 7B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B2">Lớp 7B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B3">Lớp 7B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B4">Lớp 7B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="7B5">Lớp 7B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 8">
+                  <option value="8A1">Lớp 8A1 (Trường chính)</option>
+                  <option value="8A2">Lớp 8A2 (Trường chính)</option>
+                  <option value="8A3">Lớp 8A3 (Trường chính)</option>
+                  <option value="8A4">Lớp 8A4 (Trường chính)</option>
+                  <option value="8A5">Lớp 8A5 (Trường chính)</option>
+                  <option value="8B1">Lớp 8B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B2">Lớp 8B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B3">Lớp 8B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B4">Lớp 8B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="8B5">Lớp 8B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối 9">
+                  <option value="9A1">Lớp 9A1 (Trường chính)</option>
+                  <option value="9A2">Lớp 9A2 (Trường chính)</option>
+                  <option value="9A3">Lớp 9A3 (Trường chính)</option>
+                  <option value="9A4">Lớp 9A4 (Trường chính)</option>
+                  <option value="9A5">Lớp 9A5 (Trường chính)</option>
+                  <option value="9B1">Lớp 9B1 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B2">Lớp 9B2 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B3">Lớp 9B3 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B4">Lớp 9B4 (Phân hiệu Vĩnh Phúc)</option>
+                  <option value="9B5">Lớp 9B5 (Phân hiệu Vĩnh Phúc)</option>
+                </optgroup>
+                <optgroup label="Khối Cấp 3 THPT & Trường Khác">
+                  <option value="10A1">Lớp 10A1 (THPT)</option>
+                  <option value="11A1">Lớp 11A1 (THPT)</option>
+                  <option value="12A1">Lớp 12A1 (THPT)</option>
+                  <option value="OTHER">✍️ Tự nhập lớp khác...</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label for="regClassName">📝 Tên Lớp Cụ Thể (*)</label>
+              <input type="text" id="regClassName" class="form-control" placeholder="Ví dụ: 7A1, 8B2..." oninput="STUDENT_SYSTEM.onClassInput(this.value)" onkeydown="event.stopPropagation()" required>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="regSchool">🏢 Trường Đang Theo Học (*)</label>
-            <input type="text" id="regSchool" class="form-control" placeholder="Ví dụ: Trường THCS Đồng Yên" onkeydown="event.stopPropagation()" required>
+            <label for="regSchoolSelect">🏢 Trường Đang Theo Học (*)</label>
+            <select id="regSchoolSelect" class="form-control" style="background: #1e293b; color: white; margin-bottom: 0.5rem; font-weight: 700;" onchange="STUDENT_SYSTEM.onSchoolSelectChange(this.value)" onkeydown="event.stopPropagation()">
+              <option value="Trường THCS Đồng Yên">Trường THCS Đồng Yên (Trường chính)</option>
+              <option value="Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)">Trường THCS Đồng Yên (Phân hiệu Vĩnh Phúc)</option>
+              <option value="OTHER">✍️ Trường khác / Tự nhập tên trường...</option>
+            </select>
+            <input type="text" id="regSchool" class="form-control" value="Trường THCS Đồng Yên" placeholder="Tên trường học của em..." onkeydown="event.stopPropagation()" required>
           </div>
           <div class="form-group">
             <label for="regPhone">📱 Số Điện Thoại (*)</label>
@@ -5324,6 +5421,52 @@ body.auth-locked-mode #studentRegisterModalOverlay {
           </button>
           <div style="text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #94a3b8;">
             Đã có tài khoản? <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">👉 Bấm vào đây để Đăng Nhập</a>
+          </div>
+        </form>
+
+        <!-- FORM 3: LẤY LẠI MẬT KHẨU QUA SỐ ĐIỆN THOẠI (QUÊN MẬT KHẨU) -->
+        <form id="authForgotForm" onsubmit="STUDENT_SYSTEM.submitForgotPassword(event)" onkeydown="event.stopPropagation()" style="display: none;">
+          <div style="background: rgba(14, 165, 233, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.15rem;">
+            <div style="color: #38bdf8; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>💡</span> CẤP LẠI MẬT KHẨU TỰ ĐỘNG
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.86rem; margin: 0; line-height: 1.5;">
+              Học sinh chỉ cần <strong>nhập chính xác Số điện thoại</strong> đã đăng ký, hệ thống sẽ xác thực và hiển thị lại Mật khẩu & Tên đăng nhập ngay lập tức cho em.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="forgotPhone">📱 Số Điện Thoại Đã Đăng Ký (*)</label>
+            <input type="tel" id="forgotPhone" class="form-control" placeholder="Ví dụ: 0915213717 hoặc số điện thoại của em/phụ huynh" onkeydown="event.stopPropagation()" required style="font-size: 1.05rem; letter-spacing: 0.5px;">
+          </div>
+
+          <!-- Khu vực hiển thị thông tin mật khẩu cấp lại nổi bật -->
+          <div id="forgotResultBox" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.15); border: 2px solid #34d399; border-radius: 14px; text-align: center;">
+            <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">🎉</div>
+            <div style="color: #34d399; font-weight: 900; font-size: 1.05rem; margin-bottom: 0.4rem;">TÌM THẤY TÀI KHOẢN CỦA EM!</div>
+            <div id="forgotResultStudentName" style="color: #ffffff; font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem;"></div>
+            
+            <div style="background: rgba(0, 0, 0, 0.4); padding: 0.85rem; border-radius: 10px; border: 1px dashed rgba(56, 189, 248, 0.5); margin-bottom: 0.85rem; text-align: left;">
+              <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 0.35rem;">
+                👤 Tên đăng nhập: <strong id="forgotResultUsername" style="color: #38bdf8; font-size: 1.05rem; letter-spacing: 0.5px;"></strong>
+              </div>
+              <div style="font-size: 0.88rem; color: #cbd5e1;">
+                🔒 Mật khẩu của em là: <strong id="forgotResultPassword" style="color: #facc15; font-size: 1.25rem; letter-spacing: 1px; background: rgba(250, 204, 21, 0.15); padding: 2px 8px; border-radius: 6px;"></strong>
+              </div>
+            </div>
+
+            <button type="button" onclick="STUDENT_SYSTEM.autoFillLoginFromForgot()" class="header-btn" style="width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; padding: 0.75rem; border-radius: 10px;">
+              👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG MẬT KHẨU NÀY
+            </button>
+          </div>
+
+          <button type="submit" id="btnSubmitForgot" class="header-btn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; font-weight: 800; font-size: 1.05rem; padding: 0.85rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            🔍 TÌM LẠI MẬT KHẨU CỦA TÔI
+          </button>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.88rem;">
+            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('login')" style="color: #94a3b8; text-decoration: none;">← Quay lại Đăng nhập</a>
+            <a href="javascript:void(0)" onclick="STUDENT_SYSTEM.switchAuthTab('register')" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">Đăng ký tài khoản mới</a>
           </div>
         </form>
       </div>
@@ -5492,6 +5635,8 @@ body.auth-locked-mode #studentRegisterModalOverlay {
           🔓 ĐĂNG NHẬP ADMIN VÀO HỆ THỐNG
         </button>
       </form>
+
+        
     </div>
   </div>
 </div>
@@ -5910,6 +6055,46 @@ body.auth-locked-mode #studentRegisterModalOverlay {
       </div>
     </div>
   </div>
+
+
+<!-- ==================== MODAL CĂN CHỈNH KÉO DỊCH AVATAR HÌNH TRÒN ==================== -->
+<div class="custom-modal-overlay" id="avatarCropModalOverlay" style="display:none; z-index:10001;">
+  <div class="custom-modal-card" style="max-width: 450px; text-align: center; border-radius: 24px; border: 2px solid #38bdf8; background: #0f172a; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+    <div class="custom-modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1rem 1.25rem;">
+      <h2 style="font-size: 1.1rem; color: #38bdf8; font-weight: 800; display:flex; align-items:center; gap:8px; margin:0;">
+        <span>🎯 Căn Chỉnh Khung Ảnh Tròn</span>
+      </h2>
+      <button class="custom-modal-close" onclick="AVATAR_CROPPER.close()">✕</button>
+    </div>
+    <div class="custom-modal-body" style="padding: 1.25rem;">
+      <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 1rem;">
+        👆 <b>Dùng chuột hoặc ngón tay chạm kéo ảnh</b> dịch chuyển vào giữa khung tròn. Dùng thanh trượt bên dưới để Phóng to / Thu nhỏ ảnh cho vừa vặn nhất!
+      </p>
+
+      <!-- Canvas container -->
+      <div class="crop-container" id="cropContainer" title="Kéo giữ chuột để dịch chuyển ảnh">
+        <canvas id="cropCanvas" width="320" height="320"></canvas>
+        <div class="crop-guide-overlay"></div>
+      </div>
+
+      <!-- Zoom Slider -->
+      <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+        <span style="font-size: 1rem; color: #94a3b8;">🔍-</span>
+        <input type="range" id="cropZoomSlider" min="0.5" max="3" step="0.05" value="1" style="width: 60%; cursor: pointer;" oninput="AVATAR_CROPPER.onZoomChange(this.value)">
+        <span style="font-size: 1.1rem; color: #38bdf8;">🔍+</span>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" class="form-btn-secondary" onclick="AVATAR_CROPPER.close()" style="flex: 1; padding: 0.7rem; border-radius: 12px; font-weight: 700; cursor: pointer;">
+          Hủy Bỏ
+        </button>
+        <button type="button" class="form-btn-primary" onclick="AVATAR_CROPPER.applyCrop()" style="flex: 1.5; padding: 0.7rem; border-radius: 12px; font-weight: 800; background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);">
+          ✓ Lưu Làm Ảnh Đại Diện
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
