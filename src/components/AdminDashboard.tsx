@@ -52,7 +52,7 @@ import {
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { licenseService, LicenseRecord } from '../services/licenseService';
-import AdminStudentGradebook from './AdminStudentGradebook';
+import { AdminStudentGradebook } from './AdminStudentGradebook';
 import { activityTrackingService, MachineProfile, ActivityLogItem, RegistrationRequest, BlockedMachineItem, isAdminMachine, AppQuotaStatItem, EcosystemQuotaSummary, AppInstalledMachineDetail } from '../services/activityTrackingService';
 import { generateEd25519Key } from '../services/nlsKeyService';
 import { generateExamLicenseKey } from '../services/taodeKeyService';
