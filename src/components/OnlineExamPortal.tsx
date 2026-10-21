@@ -19,7 +19,7 @@ import {
   Headphones
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
-import { OFFICIAL_MIDTERM_EXAMS_DATA } from '../data/officialMidtermExams';
+import { OFFICIAL_MIDTERM_EXAMS_DATA, OFFICIAL_ALL_TERMS_EXAMS_DATA } from '../data/officialMidtermExams';
 
 export interface ExamQuestion {
   part: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -99,8 +99,11 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
-      setIsPlayingAudio(false);
     }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlayingAudio(false);
     buildExam(selectedGrade, examType, selectedExamIndex);
   }, [selectedGrade, examType, selectedExamIndex]);
 
@@ -109,20 +112,79 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, []);
 
-  const handleTogglePlayAudio = () => {
-    if (!audioRef.current) return;
-    if (isPlayingAudio) {
-      audioRef.current.pause();
+  const playSpeechFallback = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !currentExam?.audioScript) {
       setIsPlayingAudio(false);
-    } else {
+      return;
+    }
+    window.speechSynthesis.cancel();
+    
+    // Loai bo hoan toan ten nhan vat ("Nam:", "Mai:", "Phong:", "Lan:") theo yeu cau cua nguoi dung
+    const cleanLines = currentExam.audioScript
+      .split('\n')
+      .map(line => line.replace(/^[A-Za-z0-9\s'.-]+:\s*/, '').trim())
+      .filter(line => line.length > 0);
+      
+    if (cleanLines.length === 0) {
+      setIsPlayingAudio(false);
+      return;
+    }
+    
+    let currentIndex = 0;
+    setIsPlayingAudio(true);
+    
+    const speakNext = () => {
+      if (currentIndex >= cleanLines.length) {
+        setIsPlayingAudio(false);
+        return;
+      }
+      
+      const utter = new SpeechSynthesisUtterance(cleanLines[currentIndex]);
+      utter.lang = 'en-US';
+      utter.rate = Math.max(0.7, playbackSpeed * 0.88); // Toc do chuan, cham rai de hoc sinh de nghe
+      // 1 giong nam (tram), 1 giong nu (thanh) thay phien nhau de phan biet
+      utter.pitch = currentIndex % 2 === 0 ? 0.9 : 1.18;
+      
+      utter.onend = () => {
+        currentIndex++;
+        setTimeout(speakNext, 380);
+      };
+      
+      utter.onerror = () => {
+        setIsPlayingAudio(false);
+      };
+      
+      window.speechSynthesis.speak(utter);
+    };
+    
+    speakNext();
+  };
+
+  const handleTogglePlayAudio = () => {
+    if (isPlayingAudio) {
+      if (audioRef.current) audioRef.current.pause();
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    if (audioRef.current && currentExam?.audioUrl) {
       audioRef.current.play().then(() => {
         setIsPlayingAudio(true);
       }).catch(err => {
-        console.warn('Audio play error:', err);
+        console.warn('Audio MP3 play error, falling back to Web Speech API:', err);
+        playSpeechFallback();
       });
+    } else {
+      playSpeechFallback();
     }
   };
 
@@ -133,7 +195,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     }
   };
 
-  // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS
+  // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS (320 MÃ ĐỀ ĐỘC LẬP)
   const buildExam = (grade: number, type: string, examIdx: number) => {
     setIsSubmitted(false);
     setUserAnswers({});
@@ -141,8 +203,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     setShowAudioScript(false);
     setIsPlayingAudio(false);
 
-    const gradeExams = OFFICIAL_MIDTERM_EXAMS_DATA[grade];
-    if (gradeExams && type === 'giua-ky-1') {
+    const termData = OFFICIAL_ALL_TERMS_EXAMS_DATA[type] || OFFICIAL_ALL_TERMS_EXAMS_DATA['giua-ky-1'];
+    const gradeExams = termData ? termData[String(grade)] : undefined;
+    
+    if (gradeExams) {
       const availableCodes = Object.keys(gradeExams).sort();
       if (availableCodes.length > 0) {
         const targetCode = availableCodes[examIdx % availableCodes.length];
@@ -167,7 +231,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           setCurrentExam({
             grade,
             examType: type as any,
-            typeTitle: `BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KỲ I — LỚP ${grade}`,
+            typeTitle: offExam.typeTitle,
             examCode: `MÃ ĐỀ ${targetCode}`,
             durationMinutes: offExam.durationMinutes || 60,
             totalQuestions: convertedQuestions.length,
@@ -344,11 +408,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Lấy danh sách mã đề hiện có cho khối lớp và đợt thi được chọn
-  const gradeExams = OFFICIAL_MIDTERM_EXAMS_DATA[selectedGrade];
-  const currentAvailableCodes = (gradeExams && examType === 'giua-ky-1') 
-    ? Object.keys(gradeExams).sort() 
-    : [];
+  // Lấy danh sách mã đề hiện có cho khối lớp và đợt thi được chọn (320 mã đề sẵn sàng)
+  const termData = OFFICIAL_ALL_TERMS_EXAMS_DATA[examType] || OFFICIAL_ALL_TERMS_EXAMS_DATA['giua-ky-1'];
+  const gradeExams = termData ? termData[String(selectedGrade)] : undefined;
+  const currentAvailableCodes = gradeExams ? Object.keys(gradeExams).sort() : [];
   const hasOfficialForCurrent = currentAvailableCodes.length > 0;
 
   const answeredCount = Object.keys(userAnswers).length;
@@ -418,10 +481,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
             <div className="grid grid-cols-2 sm:flex sm:items-center gap-1.5 sm:gap-2">
               {[
-                { id: 'giua-ky-1', label: 'Giữa HK1 (80 Mã Đề Có Sẵn)', active: true },
-                { id: 'cuoi-ky-1', label: 'Cuối HK1 (Chờ đề)', active: false },
-                { id: 'giua-ky-2', label: 'Giữa HK2 (Chờ đề)', active: false },
-                { id: 'cuoi-ky-2', label: 'Cuối HK2 (Chờ đề)', active: false }
+                { id: 'giua-ky-1', label: 'Giữa HK1 (80 Đề Có Sẵn)', active: true },
+                { id: 'cuoi-ky-1', label: 'Cuối HK1 (80 Đề Có Sẵn)', active: true },
+                { id: 'giua-ky-2', label: 'Giữa HK2 (80 Đề Có Sẵn)', active: true },
+                { id: 'cuoi-ky-2', label: 'Cuối HK2 (80 Đề Có Sẵn)', active: true }
               ].map(term => (
                 <button
                   key={term.id}
