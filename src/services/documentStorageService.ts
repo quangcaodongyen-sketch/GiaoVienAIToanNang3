@@ -877,7 +877,7 @@ class DocumentStorageService {
     // 2. Tệp lưu trong IndexedDB hoặc Local Base64
     let content = file.dataBase64;
     if (!content) {
-      content = await idbGetFileContent(file.id);
+      content = (await idbGetFileContent(file.id)) || undefined;
     }
 
     if (!content && file.downloadUrl) {

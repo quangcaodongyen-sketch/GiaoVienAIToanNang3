@@ -417,10 +417,11 @@ class StudentGradebookService {
       sub.studentId !== idOrIdentifier &&
       (sub.studentCode || '').toLowerCase() !== target
     );
-    if (this.activeStudent && (
-      this.activeStudent.id === idOrIdentifier || 
-      (this.activeStudent.username || '').toLowerCase() === target ||
-      (this.activeStudent.studentCode || '').toLowerCase() === target
+    const curActive = this.getActiveStudent();
+    if (curActive && (
+      curActive.id === idOrIdentifier || 
+      (curActive.username || '').toLowerCase() === target ||
+      (curActive.studentCode || '').toLowerCase() === target
     )) {
       this.setActiveStudent(null);
     }

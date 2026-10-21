@@ -873,8 +873,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           appName: effectiveAppName,
           packageType: pkg,
           status: 'APPROVED',
-          createdAt: targetReq?.createdAt || new Date().toLocaleString('vi-VN'),
-          firstActivatedAt: targetReq?.firstActivatedAt || targetReq?.createdAt || new Date().toLocaleString('vi-VN'),
+          createdAt: (targetReq as any)?.createdAt || new Date().toLocaleString('vi-VN'),
+          firstActivatedAt: (targetReq as any)?.firstActivatedAt || (targetReq as any)?.createdAt || new Date().toLocaleString('vi-VN'),
           expiryDateStr: expDateStr,
           daysRemaining: durationDays
         }
@@ -892,7 +892,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
               packageType: pkg,
               reviewedBy: reviewer,
               reviewedAt: new Date().toLocaleString('vi-VN'),
-              firstActivatedAt: r.firstActivatedAt || r.createdAt || new Date().toLocaleString('vi-VN'),
+              firstActivatedAt: (r as any).firstActivatedAt || r.createdAt || new Date().toLocaleString('vi-VN'),
               daysRemaining: durationDays,
               expiryDateStr: expDateStr
             };

@@ -109,6 +109,8 @@ export interface RegistrationRequest {
   daysRemaining?: number;
   expiryDateStr?: string;
   isLifetime?: boolean;
+  licenseKey?: string;
+  firstActivatedAt?: string;
 }
 
 export interface BlockedMachineItem {

@@ -404,7 +404,7 @@ export const HsgEnglishPreparationPortal: React.FC = () => {
       const filtered = allFiles.filter(f => 
         f.name.toLowerCase().includes('hsg') || 
         f.name.toLowerCase().includes('học sinh giỏi') ||
-        f.description.toLowerCase().includes('hsg') ||
+        (f.description && f.description.toLowerCase().includes('hsg')) ||
         f.folderId === 'folder-de-kiem-tra-ma-tran'
       );
       setHsgDocList(filtered.length > 0 ? filtered : allFiles.slice(0, 6));

@@ -1,11 +1,12 @@
 // DỮ LIỆU ĐỀ KIỂM TRA CHÍNH THỨC TOÀN DIỆN CẢ NĂM HỌC (320 MÃ ĐỀ THI ĐỘC LẬP)
 // Chuẩn Công văn 7991/BGDĐT & Chương trình GDPT 2018 Bộ SGK Global Success
-// Tác giả bản quyền: Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717) - Trường THCS Đồng Yên
+// Tác giả bản quyền phần mềm: Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717) - Trường THCS Đồng Yên
 // Gồm:
 // - Giữa HK1 (80 Mã đề: 601-620, 701-720, 801-820, 901-920)
 // - Cuối HK1 (80 Mã đề: 601-620, 701-720, 801-820, 901-920)
 // - Giữa HK2 (80 Mã đề: 601-620, 701-720, 801-820, 901-920)
 // - Cuối HK2 (80 Mã đề: 601-620, 701-720, 801-820, 901-920)
+// Kiến trúc nạp dữ liệu: Lazy Load qua JSON tĩnh tối ưu bộ nhớ, xây dựng tức thì và chống tràn RAM khi Build
 
 export interface OfficialExamQuestion {
   part: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -40,17 +41,38 @@ export interface OfficialMidtermExam {
   questions: OfficialExamQuestion[];
 }
 
-import { GK1_EXAMS_DATA } from './officialExams_gk1';
-import { CK1_EXAMS_DATA } from './officialExams_ck1';
-import { GK2_EXAMS_DATA } from './officialExams_gk2';
-import { CK2_EXAMS_DATA } from './officialExams_ck2';
+export type TermExamsData = Record<string, Record<string, OfficialMidtermExam>>;
 
-export const OFFICIAL_ALL_TERMS_EXAMS_DATA: Record<string, Record<string, Record<string, OfficialMidtermExam>>> = {
-  'giua-ky-1': GK1_EXAMS_DATA,
-  'cuoi-ky-1': CK1_EXAMS_DATA,
-  'giua-ky-2': GK2_EXAMS_DATA,
-  'cuoi-ky-2': CK2_EXAMS_DATA
-};
+// Cache in-memory sau khi nạp JSON
+const termCache: Record<string, TermExamsData> = {};
 
-// Tương thích ngược với các hàm gọi cũ
-export const OFFICIAL_MIDTERM_EXAMS_DATA: any = GK1_EXAMS_DATA;
+export async function loadTermExams(term: string): Promise<TermExamsData> {
+  if (termCache[term] && Object.keys(termCache[term]).length > 0) {
+    return termCache[term];
+  }
+
+  const map: Record<string, string> = {
+    'giua-ky-1': 'gk1',
+    'cuoi-ky-1': 'ck1',
+    'giua-ky-2': 'gk2',
+    'cuoi-ky-2': 'ck2'
+  };
+
+  const key = map[term] || 'gk1';
+  try {
+    const res = await fetch(`/data/officialExams_${key}.json`);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data: TermExamsData = await res.json();
+    termCache[term] = data;
+    return data;
+  } catch (error) {
+    console.error("Failed to load term exams for " + term, error);
+    return {};
+  }
+}
+
+// Đối tượng tương thích ngược
+export const OFFICIAL_ALL_TERMS_EXAMS_DATA: Record<string, TermExamsData> = termCache;
+export const OFFICIAL_MIDTERM_EXAMS_DATA: any = {};

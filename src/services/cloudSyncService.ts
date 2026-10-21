@@ -244,8 +244,8 @@ ${JSON.stringify(payloadData, null, 2)}
                 if (item.status === 'APPROVED' || item.status === 'REJECTED') {
                   results[existingIdx].status = item.status;
                 }
-                if (item.licenseKey && !results[existingIdx].licenseKey) {
-                  results[existingIdx].licenseKey = item.licenseKey;
+                if ((item as any).licenseKey && !results[existingIdx].licenseKey) {
+                  results[existingIdx].licenseKey = (item as any).licenseKey;
                 }
                 if (item.key && !results[existingIdx].licenseKey) {
                   results[existingIdx].licenseKey = item.key;

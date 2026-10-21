@@ -20,7 +20,7 @@ import {
   Headphones
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
-import { OFFICIAL_MIDTERM_EXAMS_DATA, OFFICIAL_ALL_TERMS_EXAMS_DATA } from '../data/officialMidtermExams';
+import { loadTermExams, TermExamsData } from '../data/officialMidtermExams';
 
 export interface ExamQuestion {
   part: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -53,6 +53,16 @@ export interface GeneratedExam {
   questions: ExamQuestion[];
 }
 
+export interface RankStandardTT22 {
+    rankLevel: 'XUAT_SAC' | 'GIOI' | 'KHA' | 'DAT' | 'CHUA_DAT';
+    levelTitle: string; // Tên mức theo TT 22
+    badgeText: string;  // Huy hiệu hiển thị
+    ruleNote: string;   // Căn cứ Thông tư 22/2021/TT-BGDĐT
+    feedback: string;   // Lời nhận xét sư phạm
+    bannerBg: string;   // Màu nền gradient
+    iconType: 'trophy' | 'award' | 'check' | 'alert';
+  }
+
 interface OnlineExamPortalProps {
   onGoToLeaderboard?: () => void;
 }
@@ -66,15 +76,8 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  export interface RankStandardTT22 {
-    rankLevel: 'XUAT_SAC' | 'GIOI' | 'KHA' | 'DAT' | 'CHUA_DAT';
-    levelTitle: string; // Tên mức theo TT 22
-    badgeText: string;  // Huy hiệu hiển thị
-    ruleNote: string;   // Căn cứ Thông tư 22/2021/TT-BGDĐT
-    feedback: string;   // Lời nhận xét sư phạm
-    bannerBg: string;   // Màu nền gradient
-    iconType: 'trophy' | 'award' | 'check' | 'alert';
-  }
+  const [examDataByTerm, setExamDataByTerm] = useState<Record<string, TermExamsData>>({});
+  const [isLoadingExams, setIsLoadingExams] = useState<boolean>(true);
 
   const [scoreResult, setScoreResult] = useState<{
     score: number;
@@ -110,6 +113,20 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+    setIsLoadingExams(true);
+    loadTermExams(examType).then(data => {
+      if (isMounted) {
+        setExamDataByTerm(prev => ({ ...prev, [examType]: data }));
+        setIsLoadingExams(false);
+      }
+    }).catch(() => {
+      if (isMounted) setIsLoadingExams(false);
+    });
+    return () => { isMounted = false; };
+  }, [examType]);
+
+  useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -117,8 +134,11 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       window.speechSynthesis.cancel();
     }
     setIsPlayingAudio(false);
-    buildExam(selectedGrade, examType, selectedExamIndex);
-  }, [selectedGrade, examType, selectedExamIndex]);
+    const curData = examDataByTerm[examType];
+    if (curData && Object.keys(curData).length > 0) {
+      buildExam(selectedGrade, examType, selectedExamIndex, curData);
+    }
+  }, [selectedGrade, examType, selectedExamIndex, examDataByTerm]);
 
   useEffect(() => {
     return () => {
@@ -227,14 +247,14 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   };
 
   // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS (320 MÃ ĐỀ ĐỘC LẬP)
-  const buildExam = (grade: number, type: string, examIdx: number) => {
+  const buildExam = (grade: number, type: string, examIdx: number, dataForTerm?: TermExamsData) => {
     setIsSubmitted(false);
     setUserAnswers({});
     setScoreResult(null);
     setShowAudioScript(false);
     setIsPlayingAudio(false);
 
-    const termData = OFFICIAL_ALL_TERMS_EXAMS_DATA[type] || OFFICIAL_ALL_TERMS_EXAMS_DATA['giua-ky-1'];
+    const termData = dataForTerm || examDataByTerm[type];
     const gradeExams = termData ? termData[String(grade)] : undefined;
     
     if (gradeExams) {
@@ -315,8 +335,8 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       } else if (userAns === rightAns) {
         isQCorrect = true;
       } else if (q.options) {
-        const userIdx = q.options.findIndex(o => o.trim().toLowerCase() === userAns);
-        const rightIdx = q.options.findIndex(o => o.trim().toLowerCase() === rightAns);
+        const userIdx = q.options.findIndex((o: any) => o.trim().toLowerCase() === userAns);
+        const rightIdx = q.options.findIndex((o: any) => o.trim().toLowerCase() === rightAns);
         if (userIdx !== -1 && userIdx === rightIdx) {
           isQCorrect = true;
         } else if (q.correctLetter && userAns === q.correctLetter.toLowerCase()) {
@@ -443,7 +463,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   };
 
   // Lấy danh sách mã đề hiện có cho khối lớp và đợt thi được chọn (320 mã đề sẵn sàng)
-  const termData = OFFICIAL_ALL_TERMS_EXAMS_DATA[examType] || OFFICIAL_ALL_TERMS_EXAMS_DATA['giua-ky-1'];
+  const termData = examDataByTerm[examType];
   const gradeExams = termData ? termData[String(selectedGrade)] : undefined;
   const currentAvailableCodes = gradeExams ? Object.keys(gradeExams).sort() : [];
   const hasOfficialForCurrent = currentAvailableCodes.length > 0;
@@ -553,7 +573,12 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               </span>
             </div>
 
-            {hasOfficialForCurrent ? (
+            {isLoadingExams ? (
+              <div className="text-xs sm:text-sm text-sky-200 bg-sky-500/20 p-3 rounded-xl border border-sky-400/30 flex items-center gap-2">
+                <RotateCw className="w-4 h-4 animate-spin text-sky-300" />
+                <span>Đang nạp nhanh ngân hàng 20 mã đề thi chính thức...</span>
+              </div>
+            ) : hasOfficialForCurrent ? (
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2">
                 {currentAvailableCodes.map((codeStr, idx) => {
                   const isSelected = selectedExamIndex === idx;
@@ -582,6 +607,13 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           </div>
         </div>
       </div>
+
+      {isLoadingExams && !currentExam && (
+        <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <RotateCw className="w-8 h-8 animate-spin text-sky-600 mx-auto" />
+          <p className="font-bold text-slate-700 text-base">Đang mở đề thi chuẩn Bộ GD&ĐT... Xin chờ giây lát!</p>
+        </div>
+      )}
 
       {/* THANH TRẠNG THÁI & TIẾN ĐỘ THỜI GIAN THỰC (STICKY MOBILE ACCESSIBLE) */}
       {currentExam && (
@@ -963,7 +995,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
                   {/* Danh sách các câu hỏi trong Part */}
                   <div className="space-y-3 sm:space-y-4">
-                    {partQuestions.map((q) => {
+                    {group.questions.map((q: any) => {
                       const userAns = (userAnswers[q.id] || '').trim().toLowerCase();
                       const rightAns = (q.correct || '').trim().toLowerCase();
                       const isAnswered = Boolean(userAns && userAns.length > 0);
@@ -973,8 +1005,8 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                         if (userAns === rightAns) {
                           isCorrect = true;
                         } else if (q.options) {
-                          const userIdx = q.options.findIndex(o => o.trim().toLowerCase() === userAns);
-                          const rightIdx = q.options.findIndex(o => o.trim().toLowerCase() === rightAns);
+                          const userIdx = q.options.findIndex((o: any) => o.trim().toLowerCase() === userAns);
+                          const rightIdx = q.options.findIndex((o: any) => o.trim().toLowerCase() === rightAns);
                           if (userIdx !== -1 && userIdx === rightIdx) {
                             isCorrect = true;
                           } else if (q.correctLetter && userAns === q.correctLetter.toLowerCase()) {
@@ -1045,7 +1077,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                           {/* CÁC LỰA CHỌN TRẮC NGHIỆM - NÚT TO RÕ CHUẨN ĐIỆN THOẠI (min-h-[50px]) */}
                           {q.options && q.options.length > 0 && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 mt-3 sm:mt-4">
-                              {q.options.map((opt, optIdx) => {
+                              {q.options.map((opt: any, optIdx: number) => {
                                 const letters = ['A', 'B', 'C', 'D'];
                                 const letter = letters[optIdx] || 'A';
                                 

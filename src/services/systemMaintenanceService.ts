@@ -95,6 +95,13 @@ class SystemMaintenanceService {
   /**
    * Đăng xuất quyền Admin trên trình duyệt này
    */
+  public saveAdminSession(): void {
+    try {
+      sessionStorage.setItem(ADMIN_SESSION_TEMP_KEY, 'true');
+      localStorage.setItem(ADMIN_SESSION_STORAGE_KEY, 'authenticated');
+    } catch (e) {}
+  }
+
   public logoutAdminSession(): void {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(ADMIN_SESSION_TEMP_KEY);

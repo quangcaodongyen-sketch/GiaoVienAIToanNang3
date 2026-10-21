@@ -1,4 +1,4 @@
-import vocabularyService, { VocabItem, UnitInfo } from '../services/vocabularyService';
+import vocabularyService, { UnitInfo } from '../services/vocabularyService';
 import audioPronunciationService, { VoiceAccent } from '../services/audioPronunciationService';
 import { IpaChartPronunciationModal } from './IpaChartPronunciationModal';
 import React, { useState, useEffect } from 'react';
