@@ -757,40 +757,90 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           )}
 
-          {/* DANH SÁCH CÂU HỎI THEO TỪNG PHẦN - CHỮ TO RÕ RÀNG */}
+          {/* DANH SÁCH CÂU HỎI THEO TỪNG PHẦN - CHUẨN ĐỀ THI MẪU CÔNG VĂN 7991 */}
           <div className="p-3.5 sm:p-6 space-y-6 sm:space-y-8">
-            {['A', 'B', 'C', 'D'].map((partKey) => {
-              const partQuestions = currentExam.questions.filter(q => q.part === partKey);
-              if (partQuestions.length === 0) return null;
+            {(() => {
+              // Tách văn bản bài đọc thành 2 đoạn riêng biệt chuẩn đề thi mẫu:
+              // 1. Đoạn văn điền từ (Cloze Text) cho Part 4
+              // 2. Đoạn văn đọc hiểu (Reading Passage) cho Part 5
+              let clozePassage = '';
+              let readingPassage = '';
+              if (currentExam.passageText) {
+                const raw = currentExam.passageText;
+                if (raw.includes('ĐOẠN VĂN ĐỌC HIỂU')) {
+                  const parts = raw.split(/📖?\s*ĐOẠN VĂN ĐỌC HIỂU.*?:?/);
+                  clozePassage = parts[0].replace(/^📖?\s*ĐOẠN VĂN ĐIỀN TỪ.*?:?\s*/, '').trim();
+                  readingPassage = (parts[1] || '').trim();
+                } else {
+                  readingPassage = raw.trim();
+                }
+              }
 
-              const firstQ = partQuestions[0];
+              // Nhóm các câu hỏi theo đúng từng Part độc lập (Part 1, 2, 3, 4, 5, 6, 7)
+              const distinctPartGroups: {
+                partTitle: string;
+                partInstruction: string;
+                passageSnippet?: string;
+                passageTitle?: string;
+                questions: ExamQuestion[];
+              }[] = [];
 
-              return (
-                <div key={partKey} className="space-y-3 sm:space-y-4">
-                  {/* Tiêu đề Part */}
+              currentExam.questions.forEach(q => {
+                let group = distinctPartGroups.find(g => g.partTitle === q.partTitle);
+                if (!group) {
+                  let snippet: string | undefined = undefined;
+                  let pTitle: string | undefined = undefined;
+
+                  const titleLower = q.partTitle.toLowerCase();
+                  // Part 4: Reading Cloze (Điền từ - Câu 23 đến 27) -> CHỈ HIỂN THỊ ĐOẠN VĂN ĐIỀN TỪ
+                  if (titleLower.includes('cloze') || titleLower.includes('part 4') || (q.qNumber >= 23 && q.qNumber <= 27)) {
+                    snippet = clozePassage;
+                    pTitle = 'ĐOẠN VĂN ĐIỀN TỪ (CLOZE TEXT): Đọc kỹ đoạn văn và chọn từ thích hợp điền vào các chỗ trống (23) - (27)';
+                  }
+                  // Part 5: Reading Comprehension (Đọc hiểu - Câu 28 đến 32) -> CHỈ HIỂN THỊ ĐOẠN VĂN ĐỌC HIỂU
+                  else if (titleLower.includes('comprehension') || titleLower.includes('part 5') || (q.qNumber >= 28 && q.qNumber <= 32)) {
+                    snippet = readingPassage;
+                    pTitle = 'ĐOẠN VĂN ĐỌC HIỂU (READING COMPREHENSION): Đọc đoạn văn sau và chọn câu trả lời đúng cho các câu (28) - (32)';
+                  }
+
+                  group = {
+                    partTitle: q.partTitle,
+                    partInstruction: q.partInstruction,
+                    passageSnippet: snippet,
+                    passageTitle: pTitle,
+                    questions: []
+                  };
+                  distinctPartGroups.push(group);
+                }
+                group.questions.push(q);
+              });
+
+              return distinctPartGroups.map((group, groupIdx) => (
+                <div key={groupIdx} className="space-y-3 sm:space-y-4">
+                  {/* Tiêu đề Part riêng biệt chuẩn Đề thi mẫu */}
                   <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-between gap-2">
                     <div>
                       <h4 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                        {firstQ.partTitle}
+                        {group.partTitle}
                       </h4>
                       <div className="text-xs sm:text-sm text-slate-600 italic mt-0.5">
-                        {firstQ.partInstruction}
+                        {group.partInstruction}
                       </div>
                     </div>
                     <span className="px-2.5 py-1 rounded-lg bg-white text-slate-800 font-extrabold text-xs sm:text-sm border border-slate-200 shadow-2xs shrink-0">
-                      {partQuestions.length} câu
+                      {group.questions.length} câu
                     </span>
                   </div>
 
-                  {/* Đoạn văn đọc hiểu nếu có ở Part C */}
-                  {partKey === 'C' && currentExam.passageText && (
+                  {/* Đoạn văn riêng biệt của Part tương ứng (Tuyệt đối không gộp 2 đoạn văn cùng lúc!) */}
+                  {group.passageSnippet && (
                     <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-amber-50/80 border border-amber-200 text-xs sm:text-base leading-relaxed text-slate-800 shadow-2xs">
                       <div className="font-black text-amber-900 mb-1.5 flex items-center gap-1.5 text-sm sm:text-base">
                         <BookOpen className="w-4 h-4 text-amber-700" />
-                        <span>VĂN BẢN ĐỌC HIỂU (READING PASSAGE & CLOZE TEXT):</span>
+                        <span>{group.passageTitle}</span>
                       </div>
                       <div className="whitespace-pre-line font-medium text-slate-700 mt-2 font-sans leading-relaxed">
-                        {currentExam.passageText}
+                        {group.passageSnippet}
                       </div>
                     </div>
                   )}
@@ -955,8 +1005,8 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                     })}
                   </div>
                 </div>
-              );
-            })}
+              ));
+            })()}
 
             {/* PHẦN E: VIẾT ĐOẠN VĂN (WRITING PRODUCTION) */}
             {currentExam.sampleWriting && (
