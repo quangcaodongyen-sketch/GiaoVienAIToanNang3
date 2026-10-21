@@ -1383,7 +1383,7 @@ const App = {
       <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px">
         <div>
           <div class="section-title" style="font-size:20px;font-weight:900;color:#1e3a8a">✍️ PHÒNG THI TRỰC TUYẾN – BÀI KIỂM TRA GIỮA KỲ 1 ONLINE</div>
-          <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">Đề thi chuẩn Công văn 7991/BGDĐT (Khối 6 & Khối 8 đủ 6 mã đề) – Bấm nút để làm bài trực tiếp trên máy tính hoặc điện thoại</div>
+          <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">Đề thi chuẩn Công văn 7991/BGDĐT (Khối 6: 2 mã đề 601, 602 & Khối 8: 2 mã đề 801, 802) – Bấm nút để làm bài trực tiếp trên máy tính hoặc điện thoại</div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn ${filter === 'all' ? 'btn-primary' : 'btn-outline'}" onclick="App.setStudentExamFilter('all')" style="font-weight:700">

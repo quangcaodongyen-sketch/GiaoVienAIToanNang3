@@ -5123,30 +5123,32 @@ header, .app-header {
       <div class="tab-pane" id="tab-online-exam" role="tabpanel">
         <div class="exam-header-banner" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #38bdf8; border-radius: 20px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 8px 30px rgba(0,0,0,0.4); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
           <div style="flex: 1; min-width: 280px;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
-              <span style="background: #e11d48; color: white; font-weight: 900; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Chuẩn GDPT 2018</span>
-              <span id="examGradeTitle" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">TIẾNG ANH GLOBAL SUCCESS</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <span style="background: #e11d48; color: white; font-weight: 900; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Chuẩn GDPT 2018 & CV 7991</span>
+              <span id="examGradeTitle" style="color: #38bdf8; font-weight: 800; font-size: 0.95rem;">TRƯỜNG THCS ĐỒNG YÊN – NĂM HỌC 2026 - 2027</span>
             </div>
-            <h2 id="examMainHeading" style="font-size: 1.4rem; font-weight: 900; color: #ffffff; margin: 0 0 0.35rem 0;">Đề Kiểm Tra Định Kỳ Online (Đủ 4 Kỹ Năng)</h2>
-            <p style="font-size: 0.82rem; color: #94a3b8; margin: 0;">Gồm Part A (Listening), Part B (Language & Grammar), Part C (Reading), Part D (Writing & Speaking). Đề sinh ngẫu nhiên vô vàn mã đề khác nhau bám sát đề thi thật.</p>
+            <h2 id="examMainHeading" style="font-size: 1.35rem; font-weight: 900; color: #ffffff; margin: 0 0 0.35rem 0;">4 Đề Kiểm Tra Chính Thức Giữa Học Kỳ I (Online 100%)</h2>
+            <p style="font-size: 0.82rem; color: #94a3b8; margin: 0; line-height: 1.5;">Bám sát 100% cấu trúc đề thi chính thức của Thầy Đinh Văn Thành. Chỉ gồm đúng 4 mã đề: <b>Lớp 6 (Mã 601, 602)</b> &amp; <b>Lớp 8 (Mã 801, 802)</b> kèm file nghe chuẩn từng Part.</p>
           </div>
 
-          <!-- Controls: Chọn loại đề, Đổi đề ngẫu nhiên, Nút Admin Tải Đề Word -->
-          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <select id="examTypeSelect" onchange="ONLINE_EXAM_SYSTEM.generateExam()" style="background: #1e293b; color: #f8fafc; border: 1px solid #38bdf8; padding: 0.6rem 0.85rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; outline: none;">
-              <option value="giua-ky-1">Đề Giữa Học Kỳ 1</option>
-              <option value="cuoi-ky-1">Đề Cuối Học Kỳ 1</option>
-              <option value="giua-ky-2">Đề Giữa Học Kỳ 2</option>
-              <option value="cuoi-ky-2">Đề Cuối Học Kỳ 2</option>
-            </select>
-
-            <button type="button" onclick="ONLINE_EXAM_SYSTEM.generateExam()" class="header-btn" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 800; padding: 0.6rem 1.1rem; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(37,99,235,0.4);">
-              <span>🎲 Đổi Đề Khác</span>
+          <!-- Controls: 4 Nút Chọn Trực Tiếp Mã Đề -->
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="exam-code-btn active" id="btn_code_601" onclick="ONLINE_EXAM_SYSTEM.selectExam('601')" style="background: #2563eb; color: #fff; border: 1.5px solid #60a5fa; padding: 0.6rem 1.05rem; border-radius: 12px; font-weight: 900; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">
+              📘 Lớp 6 - Mã 601
+            </button>
+            <button type="button" class="exam-code-btn" id="btn_code_602" onclick="ONLINE_EXAM_SYSTEM.selectExam('602')" style="background: #1e293b; color: #cbd5e1; border: 1.5px solid rgba(255,255,255,0.15); padding: 0.6rem 1.05rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; transition: all 0.2s;">
+              📘 Lớp 6 - Mã 602
+            </button>
+            <button type="button" class="exam-code-btn" id="btn_code_801" onclick="ONLINE_EXAM_SYSTEM.selectExam('801')" style="background: #1e293b; color: #cbd5e1; border: 1.5px solid rgba(255,255,255,0.15); padding: 0.6rem 1.05rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; transition: all 0.2s;">
+              📗 Lớp 8 - Mã 801
+            </button>
+            <button type="button" class="exam-code-btn" id="btn_code_802" onclick="ONLINE_EXAM_SYSTEM.selectExam('802')" style="background: #1e293b; color: #cbd5e1; border: 1.5px solid rgba(255,255,255,0.15); padding: 0.6rem 1.05rem; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; transition: all 0.2s;">
+              📗 Lớp 8 - Mã 802
             </button>
 
             <!-- Nút Tải Đề Word chỉ hiện với Admin -->
-            <button type="button" id="adminDownloadWordBtn" onclick="ONLINE_EXAM_SYSTEM.downloadWordDoc()" style="display: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 900; padding: 0.6rem 1.15rem; border-radius: 12px; border: none; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(16,185,129,0.4);" title="Chỉ Thầy Đinh Thành (Admin) mới có quyền tải đề Word & Đáp án về">
-              <span>📥 Tải Đề Word + Đáp Án (Admin)</span>
+            <button type="button" id="adminDownloadWordBtn" onclick="ONLINE_EXAM_SYSTEM.downloadWordDoc()" style="display: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 900; padding: 0.6rem 1.15rem; border-radius: 12px; border: none; cursor: pointer; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(16,185,129,0.4);" title="Chỉ Thầy Đinh Thành (Admin) mới có quyền tải đề Word & Đáp án về">
+              <span>📥 Tải Đề Word (Admin)</span>
             </button>
           </div>
         </div>
@@ -5243,8 +5245,9 @@ header, .app-header {
 
   <!-- Scripts: Direct Bulletproof Sequential Loading (NO document.write) -->
   <script src="confetti.browser.min.js"></script>
-  <script src="vocabulary_data.js?v=20261015_multigrade_v4"></script></script>
-  <script src="app.js?v=20261015_multigrade_v4"></script></script>
+  <script src="vocabulary_data.js?v=20261022_v5"></script>
+  <script src="online_midterm_exams_data.js?v=20261022_official_4_exams"></script>
+  <script src="app.js?v=20261022_official_4_exams"></script>
 
     <!-- MODAL 1: ĐĂNG NHẬP & ĐĂNG KÝ HỌC SINH -->
   <div class="custom-modal-overlay" id="studentRegisterModalOverlay">

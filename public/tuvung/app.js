@@ -7640,534 +7640,384 @@ if (typeof document !== 'undefined') {
 // 📑 ONLINE EXAM SYSTEM (HỆ THỐNG ĐỀ THI GIỮA KỲ / CUỐI KỲ CHUẨN BGD&ĐT)
 // ==============================================================================
 const ONLINE_EXAM_SYSTEM = {
-  currentQuestions: [],
+  currentExam: null,
+  activeExamCode: '601',
   userAnswers: {},
-  examMeta: {},
+  studentWritingText: '',
+  showRubric: false,
 
   init() {
     this.updateAdminWordBtnVisibility();
+    this.selectExam(this.activeExamCode || '601');
   },
 
   updateAdminWordBtnVisibility() {
     const btn = document.getElementById('adminDownloadWordBtn');
     if (!btn) return;
-    const isAdm = STUDENT_SYSTEM.currentStudent && (
+    const isAdm = typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent && (
       STUDENT_SYSTEM.currentStudent.role === 'admin' ||
-      (STUDENT_SYSTEM.currentStudent.username || '').toLowerCase() === 'admin'
+      (STUDENT_SYSTEM.currentStudent.username || '').toLowerCase() === 'admin' ||
+      (STUDENT_SYSTEM.currentStudent.name || '').includes('Thầy Thành')
     );
     btn.style.display = isAdm ? 'inline-flex' : 'none';
   },
 
-  getGrade() {
-    return (window.CURRENT_GRADE || (STUDENT_SYSTEM.currentStudent && STUDENT_SYSTEM.currentStudent.grade) || 7);
+  getAllExams() {
+    if (typeof ONLINE_MIDTERM_EXAMS !== 'undefined' && Array.isArray(ONLINE_MIDTERM_EXAMS)) {
+      return ONLINE_MIDTERM_EXAMS;
+    }
+    if (typeof window !== 'undefined' && Array.isArray(window.ONLINE_MIDTERM_EXAMS)) {
+      return window.ONLINE_MIDTERM_EXAMS;
+    }
+    return [];
   },
 
-  generateExam() {
-    this.updateAdminWordBtnVisibility();
-    const grade = this.getGrade();
-    const examTypeElem = document.getElementById('examTypeSelect');
-    const examType = examTypeElem ? examTypeElem.value : 'giua-ky-1';
-    
-    const typeLabel = examType.includes('giua-ky-1') ? 'KIỂM TRA GIỮA HỌC KỲ I'
-                    : examType.includes('cuoi-ky-1') ? 'KIỂM TRA CUỐI HỌC KỲ I'
-                    : examType.includes('giua-ky-2') ? 'KIỂM TRA GIỮA HỌC KỲ II'
-                    : 'KIỂM TRA CUỐI HỌC KỲ II';
+  selectExam(code) {
+    this.activeExamCode = String(code);
+    this.userAnswers = {};
+    this.studentWritingText = '';
+    this.showRubric = false;
 
-    const examTitle = document.getElementById('examGradeTitle');
-    if (examTitle) examTitle.textContent = `TIẾNG ANH LỚP ${grade} - GLOBAL SUCCESS - NĂM HỌC 2026 - 2027`;
-    
-    const heading = document.getElementById('examMainHeading');
-    if (heading) heading.textContent = `ĐỀ ${typeLabel} - MÃ ĐỀ: TA${grade}-${Math.floor(100 + Math.random() * 900)}`;
-
-    this.examMeta = {
-      grade: grade,
-      typeLabel: typeLabel,
-      code: `TA${grade}-${Math.floor(100 + Math.random() * 900)}`,
-      time: '45 phút (không kể thời gian giao đề)'
-    };
-
-    // Get current vocab pool from current grade
-    const gradeData = (window.VOCAB_DATA && window.VOCAB_DATA[grade]) || [];
-    let pool = [];
-    gradeData.forEach(u => {
-      if (u.words) pool = pool.concat(u.words);
-    });
-    if (pool.length < 15 && window.VOCAB_DATA && window.VOCAB_DATA[7]) {
-      window.VOCAB_DATA[7].forEach(u => { if (u.words) pool = pool.concat(u.words); });
-    }
-
-    // Shuffle pool
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-
-    // Construct Questions for 4 Parts:
-    // PART A. LISTENING (4 questions)
-    // PART B. LANGUAGE & PRONUNCIATION (8 questions)
-    // PART C. READING COMPREHENSION (4 questions)
-    // PART D. WRITING (4 questions)
-    const questions = [];
-
-    // Part A: Listening
-    for (let i = 0; i < 4; i++) {
-      const w = shuffled[i % shuffled.length] || { word: 'community', meaning: 'cộng đồng' };
-      const distractors = shuffled.filter(x => x.word !== w.word).slice(0, 3).map(x => x.word);
-      while (distractors.length < 3) distractors.push('example', 'activity', 'environment');
-      const opts = [w.word, ...distractors.slice(0, 3)].sort(() => Math.random() - 0.5);
-      questions.push({
-        part: 'A',
-        partTitle: 'PART A. LISTENING (2.0 points)',
-        id: `q_${questions.length + 1}`,
-        qNumber: questions.length + 1,
-        type: 'listen',
-        text: `Listen to the audio recording and choose the correct word you hear:`,
-        audioWord: w.word,
-        options: opts,
-        correct: w.word,
-        explanation: `Từ phát âm là: ${w.word} (${w.meaning})`
-      });
-    }
-
-    // Part B: Pronunciation & Grammar
-    // 2 pronunciation questions
-    for (let i = 0; i < 2; i++) {
-      const w = shuffled[(i + 4) % shuffled.length];
-      const opts = [w.word, 'beautiful', 'important', 'technology'].sort(() => Math.random() - 0.5);
-      questions.push({
-        part: 'B',
-        partTitle: 'PART B. LANGUAGE FOCUS & GRAMMAR (4.0 points)',
-        id: `q_${questions.length + 1}`,
-        qNumber: questions.length + 1,
-        type: 'choice',
-        text: `Choose the word whose underlined part is pronounced differently or has different stress pattern:`,
-        options: opts,
-        correct: opts[0],
-        explanation: `Đáp án đúng là ${opts[0]}.`
-      });
-    }
-
-    // 6 vocabulary & grammar questions
-    for (let i = 0; i < 6; i++) {
-      const w = shuffled[(i + 6) % shuffled.length] || { word: 'volunteer', meaning: 'tình nguyện viên', example: 'She is a ...' };
-      const distractors = shuffled.filter(x => x.word !== w.word).slice(0, 3).map(x => x.word);
-      while (distractors.length < 3) distractors.push('volunteer', 'interest', 'hobby');
-      const opts = [w.word, ...distractors.slice(0, 3)].sort(() => Math.random() - 0.5);
-
-      const sentence = (w.example && w.example.includes(w.word))
-        ? w.example.replace(new RegExp(w.word, 'gi'), '__________')
-        : `Many students love to participate in __________ activities to help people in need.`;
-
-      questions.push({
-        part: 'B',
-        partTitle: 'PART B. LANGUAGE FOCUS & GRAMMAR (4.0 points)',
-        id: `q_${questions.length + 1}`,
-        qNumber: questions.length + 1,
-        type: 'choice',
-        text: `Choose the best option to complete the sentence: <br><i>"${sentence}"</i>`,
-        options: opts,
-        correct: w.word,
-        explanation: `Từ cần điền là "${w.word}" với nghĩa là "${w.meaning}".`
-      });
-    }
-
-    // Part C: Reading Comprehension (4 questions)
-    const passage = `Community service is when you work for free to help other people in your neighborhood or school. Volunteering can help teenagers develop teamwork, communication skills, and empathy. Many students in Viet Nam join green clubs, plant trees, donate warm clothes and clean up neighborhood parks during weekends. These meaningful actions not only protect the environment but also bring happiness to people in difficult situations.`;
-
-    const readQuestions = [
-      { q: "What is community service according to the passage?", opts: ["Working for free to help other people", "Working for high salary", "Studying for exams only", "Playing video games at home"], a: "Working for free to help other people" },
-      { q: "What skills can volunteering help teenagers develop?", opts: ["Teamwork, communication and empathy", "Selfish habits", "Computer hacking skills", "Driving large cars"], a: "Teamwork, communication and empathy" },
-      { q: "What do Vietnamese students do during weekends?", opts: ["Plant trees and clean up parks", "Travel abroad", "Stay up late watching movies", "Buy expensive toys"], a: "Plant trees and clean up parks" },
-      { q: "What is the best title for the reading passage?", opts: ["Benefits of Community Service and Volunteering", "How to Play Football", "Traveling Around the World", "The History of Computers"], a: "Benefits of Community Service and Volunteering" }
-    ];
-
-    readQuestions.forEach(rq => {
-      questions.push({
-        part: 'C',
-        partTitle: 'PART C. READING COMPREHENSION (2.0 points)',
-        passage: passage,
-        id: `q_${questions.length + 1}`,
-        qNumber: questions.length + 1,
-        type: 'choice',
-        text: rq.q,
-        options: rq.opts.sort(() => Math.random() - 0.5),
-        correct: rq.a,
-        explanation: `Căn cứ theo thông tin trong bài đọc: "${rq.a}".`
-      });
-    });
-
-    // Part D: Writing (4 questions)
-    const writeItems = [
-      { orig: "I love listening to English music in my free time.", prompt: "Rearrange words to make a meaningful sentence: [listening / in / free / I / music / time / love / my / English / to].", correct: "I love listening to English music in my free time." },
-      { orig: "She has donated warm clothes to poor children for 3 years.", prompt: "Rewrite the sentence beginning with 'She started...':", opts: ["She started donating warm clothes to poor children 3 years ago.", "She started donate warm clothes to poor children 3 years ago.", "She start to donating clothes 3 years.", "She has started since 3 years."], correct: "She started donating warm clothes to poor children 3 years ago." },
-      { orig: "If we don't protect forests, animals will lose their homes.", prompt: "Rewrite using 'Unless':", opts: ["Unless we protect forests, animals will lose their homes.", "Unless we don't protect forests, animals lose homes.", "Unless we protect, animals will not lose homes.", "Unless protect forests, animals lose."], correct: "Unless we protect forests, animals will lose their homes." },
-      { orig: "Cycling is more healthy than traveling by car.", prompt: "Rewrite using 'Traveling by car is not...':", opts: ["Traveling by car is not as healthy as cycling.", "Traveling by car is not healthy than cycling.", "Traveling by car is more healthy than cycling.", "Traveling by car is not so healthier as cycling."], correct: "Traveling by car is not as healthy as cycling." }
-    ];
-
-    writeItems.forEach(wi => {
-      if (wi.opts) {
-        questions.push({
-          part: 'D',
-          partTitle: 'PART D. WRITING & SPEAKING (2.0 points)',
-          id: `q_${questions.length + 1}`,
-          qNumber: questions.length + 1,
-          type: 'choice',
-          text: wi.prompt,
-          options: wi.opts.sort(() => Math.random() - 0.5),
-          correct: wi.correct,
-          explanation: `Câu viết lại chính xác là: "${wi.correct}".`
-        });
-      } else {
-        questions.push({
-          part: 'D',
-          partTitle: 'PART D. WRITING & SPEAKING (2.0 points)',
-          id: `q_${questions.length + 1}`,
-          qNumber: questions.length + 1,
-          type: 'input',
-          text: wi.prompt,
-          correct: wi.correct,
-          explanation: `Đáp án đúng là: "${wi.correct}".`
-        });
+    // Cập nhật trạng thái Active trên 4 nút chọn mã đề
+    ['601', '602', '801', '802'].forEach(c => {
+      const btn = document.getElementById(`btn_code_${c}`);
+      if (btn) {
+        if (c === this.activeExamCode) {
+          btn.style.background = '#2563eb';
+          btn.style.borderColor = '#60a5fa';
+          btn.style.color = '#ffffff';
+          btn.style.boxShadow = '0 4px 14px rgba(37,99,235,0.5)';
+        } else {
+          btn.style.background = '#1e293b';
+          btn.style.borderColor = 'rgba(255,255,255,0.15)';
+          btn.style.color = '#cbd5e1';
+          btn.style.boxShadow = 'none';
+        }
       }
     });
 
-    this.currentQuestions = questions;
-    this.userAnswers = {};
+    const exams = this.getAllExams();
+    let found = exams.find(e => String(e.examCode) === this.activeExamCode);
+    if (!found && exams.length > 0) {
+      found = exams[0];
+      this.activeExamCode = String(found.examCode);
+    }
+    this.currentExam = found || null;
+
+    // Cập nhật tiêu đề trên banner
+    const heading = document.getElementById('examMainHeading');
+    if (heading && this.currentExam) {
+      heading.textContent = `BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KỲ I – TIẾNG ANH ${this.currentExam.grade} (MÃ ĐỀ: ${this.currentExam.examCode})`;
+    }
+
+    // Ẩn bảng kết quả cũ
+    const resCard = document.getElementById('examResultCard');
+    if (resCard) resCard.style.display = 'none';
 
     this.renderExamPaper();
-
-    // Hide result card
-    const res = document.getElementById('examResultCard');
-    if (res) res.style.display = 'none';
-  },
-
-  playQuestionAudio(word) {
-    if (!word) return;
-    if (typeof VOCAB_AUDIO !== 'undefined' && VOCAB_AUDIO.speak) {
-      // Tận dụng giọng đọc bản ngữ chuẩn Natural/Neural của Smart Listening với tốc độ 0.78x chậm rãi, rõ chữ
-      VOCAB_AUDIO.speak(word, 0.78, 'en-US');
-    } else if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(word.trim());
-      u.lang = 'en-US';
-      u.rate = 0.78;
-      try {
-        const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
-        const best = voices.find(v => v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Google') || v.name.includes('Jenny') || v.name.includes('Ava'));
-        if (best) u.voice = best;
-      } catch (e) {}
-      window.speechSynthesis.speak(u);
-    }
+    this.updateAdminWordBtnVisibility();
   },
 
   renderExamPaper() {
     const container = document.getElementById('examPaperContainer');
     if (!container) return;
 
-    let html = `
-      <div style="border-bottom: 2px dashed rgba(255,255,255,0.2); padding-bottom: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-        <div>
-          <div style="font-weight: 800; font-size: 0.9rem; color: #94a3b8;">PHÒNG GD&ĐT / TRƯỜNG THCS ........</div>
-          <div style="font-weight: 900; font-size: 1.15rem; color: #ffffff;">ĐỀ KIỂM TRA ĐỊNH KỲ NĂM HỌC 2026 - 2027</div>
-          <div style="font-size: 0.85rem; color: #38bdf8;">Môn: TIẾNG ANH - LỚP ${this.examMeta.grade} | Thời gian: ${this.examMeta.time}</div>
+    if (!this.currentExam) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">⏳</div>
+          <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">Đang tải dữ liệu đề thi chính thức...</h3>
+          <p style="font-size: 0.9rem;">Vui lòng bấm chọn lại mã đề ở phía trên.</p>
         </div>
-        <div style="text-align: right; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 0.75rem; color: #94a3b8;">MÃ ĐỀ THI:</div>
-          <div style="font-weight: 900; font-size: 1.25rem; color: #f59e0b;">${this.examMeta.code}</div>
+      `;
+      return;
+    }
+
+    const exam = this.currentExam;
+
+    let html = `
+      <!-- Header Thông tin Đề thi chuẩn Công văn 7991 -->
+      <div style="border-bottom: 2px dashed rgba(255,255,255,0.2); padding-bottom: 1.25rem; margin-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="font-weight: 800; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
+            UBND HUYỆN BẮC QUANG – PHÒNG GD&ĐT / TRƯỜNG THCS ĐỒNG YÊN
+          </div>
+          <div style="font-weight: 900; font-size: 1.3rem; color: #ffffff; margin-top: 4px;">
+            BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KỲ I – NĂM HỌC 2026 - 2027
+          </div>
+          <div style="font-size: 0.95rem; color: #38bdf8; margin-top: 4px; font-weight: 700;">
+            Môn: TIẾNG ANH ${exam.grade} (Global Success) | Thời gian làm bài: ${exam.examTime || 60} phút
+          </div>
+        </div>
+        <div style="text-align: center; background: rgba(255,255,255,0.06); padding: 0.75rem 1.25rem; border-radius: 14px; border: 1.5px solid rgba(56,189,248,0.4); min-width: 140px;">
+          <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">MÃ ĐỀ THI:</div>
+          <div style="font-weight: 900; font-size: 1.75rem; color: #f59e0b; letter-spacing: 0.05em;">${exam.examCode}</div>
         </div>
       </div>
     `;
 
-    let currentPart = '';
-    this.currentQuestions.forEach((q, idx) => {
-      if (q.part !== currentPart) {
-        currentPart = q.part;
-        html += `
-          <div style="margin-top: 1.5rem; margin-bottom: 1rem; padding: 0.6rem 1rem; background: rgba(56, 189, 248, 0.12); border-left: 4px solid #38bdf8; border-radius: 8px;">
-            <h3 style="margin: 0; font-size: 1.05rem; font-weight: 900; color: #38bdf8;">${q.partTitle}</h3>
-          </div>
-        `;
-        if (q.part === 'C' && q.passage) {
-          html += `
-            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.7; color: #e2e8f0; font-style: italic;">
-              <b>Read the following passage and mark the letter A, B, C, or D on your answer sheet:</b><br><br>
-              ${q.passage}
-            </div>
-          `;
-        }
-      }
-
+    // Render từng Section (Part 1 -> Part 8)
+    (exam.sections || []).forEach(sec => {
+      // 1. Tiêu đề từng Part
       html += `
-        <div class="exam-q-item" id="exam_card_${q.id}" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.65rem;">
-            <div style="font-weight: 800; font-size: 0.95rem; color: #ffffff;">
-              <span style="color: #38bdf8;">Question ${q.qNumber}:</span> ${q.text}
-            </div>
-            ${q.type === 'listen' ? `
-              <button type="button" onclick="ONLINE_EXAM_SYSTEM.playQuestionAudio('${q.audioWord}')" style="background: #0284c7; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; shrink-0;">
-                🔊 Nghe lại
-              </button>
-            ` : ''}
-          </div>
+        <div style="margin-top: 2rem; margin-bottom: 1rem; padding: 0.75rem 1.25rem; background: rgba(56, 189, 248, 0.12); border-left: 5px solid #38bdf8; border-radius: 10px;">
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 900; color: #38bdf8;">${sec.name || sec.title}</h3>
+        </div>
       `;
 
-      if (q.type === 'choice' || q.type === 'listen') {
-        const letters = ['A', 'B', 'C', 'D'];
-        html += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.65rem;">`;
-        q.options.forEach((opt, optIdx) => {
-          const l = letters[optIdx];
+      // 2. Nếu là Part 1: Chèn Audio Player Hội Thoại
+      if (sec.id === 'sec_1' || (sec.name && sec.name.includes('Part 1'))) {
+        const audioUrl = exam.audioUrlPart1 || 'audio/g' + exam.grade + '_gk1_part1.mp3';
+        html += `
+          <div style="background: rgba(37,99,235,0.15); border: 2px solid #3b82f6; border-radius: 16px; padding: 14px 18px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
+            <div style="flex: 1; min-width: 240px;">
+              <div style="font-weight: 900; color: #93c5fd; font-size: 1.02rem; display: flex; align-items: center; gap: 8px;">
+                🎧 BÀI NGHE PART 1 (Hội thoại - Dialogue)
+              </div>
+              <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 3px;">
+                Bấm nút Play để nghe hội thoại và làm các câu hỏi từ 1 đến 5 (Nghe 2 lần)
+              </div>
+            </div>
+            <div>
+              <audio controls controlsList="nodownload" src="${audioUrl}" style="height: 40px; outline: none; border-radius: 20px;"></audio>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Nếu là Part 2: Chèn Audio Player Độc Thoại
+      if (sec.id === 'sec_2' || (sec.name && sec.name.includes('Part 2'))) {
+        const audioUrl = exam.audioUrlPart2 || 'audio/g' + exam.grade + '_gk1_part2.mp3';
+        html += `
+          <div style="background: rgba(16,185,129,0.15); border: 2px solid #10b981; border-radius: 16px; padding: 14px 18px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
+            <div style="flex: 1; min-width: 240px;">
+              <div style="font-weight: 900; color: #6ee7b7; font-size: 1.02rem; display: flex; align-items: center; gap: 8px;">
+                🎧 BÀI NGHE PART 2 (Độc thoại - Monologue)
+              </div>
+              <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 3px;">
+                Bấm nút Play để nghe bài nói và làm các câu hỏi từ 6 đến 10 (Nghe 2 lần)
+              </div>
+            </div>
+            <div>
+              <audio controls controlsList="nodownload" src="${audioUrl}" style="height: 40px; outline: none; border-radius: 20px;"></audio>
+            </div>
+          </div>
+        `;
+      }
+
+      // 4. Nếu có đoạn văn (Part 4 Cloze hoặc Part 5 Reading)
+      if (sec.passage && sec.passage.trim()) {
+        html += `
+          <div style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; font-size: 0.96rem; line-height: 1.8; color: #f1f5f9; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);">
+            ${sec.passage.replace(/\n/g, '<br>')}
+          </div>
+        `;
+      }
+
+      // 5. Nếu là Part 8 (Tự luận Viết)
+      if (sec.skill === 'writing' && sec.type === 'writing') {
+        html += `
+          <div style="background: rgba(30, 41, 59, 0.7); border: 1.5px solid rgba(168, 85, 247, 0.4); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="font-weight: 800; color: #c084fc; font-size: 1.05rem; margin-bottom: 0.75rem;">
+              📝 YÊU CẦU ĐỀ BÀI (WRITING TASK):
+            </div>
+            <div style="font-size: 0.98rem; line-height: 1.7; color: #f1f5f9; margin-bottom: 1.25rem;">
+              ${(sec.prompt || '').replace(/\n/g, '<br>')}
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-weight: 700; color: #94a3b8; font-size: 0.88rem; margin-bottom: 0.5rem;">
+                ✍️ Em hãy gõ bài viết tiếng Anh vào khung dưới đây:
+              </label>
+              <textarea id="studentWritingInput" placeholder="Write your paragraph here (about 50-80 words)..."
+                oninput="ONLINE_EXAM_SYSTEM.studentWritingText = this.value"
+                style="width: 100%; min-height: 160px; background: #0f172a; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 14px; color: #fff; font-size: 0.95rem; line-height: 1.7; outline: none; font-family: inherit; transition: border 0.2s;"
+                onfocus="this.style.borderColor='#a855f7'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">${this.studentWritingText || ''}</textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" onclick="ONLINE_EXAM_SYSTEM.toggleRubric()" style="background: rgba(168, 85, 247, 0.2); border: 1px solid #a855f7; color: #e9d5ff; font-weight: 800; font-size: 0.85rem; padding: 0.55rem 1rem; border-radius: 10px; cursor: pointer;">
+                📖 ${this.showRubric ? 'Ẩn Bài Viết Mẫu & Thang Điểm' : 'Xem Bài Viết Mẫu & Thang Điểm (Rubric)'}
+              </button>
+            </div>
+
+            <div id="writingRubricBox" style="display: ${this.showRubric ? 'block' : 'none'}; margin-top: 1rem; padding: 1.25rem; background: rgba(15, 23, 42, 0.95); border-radius: 12px; border: 1px solid #a855f7;">
+              <div style="font-weight: 800; color: #34d399; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                🌟 BÀI VIẾT MẪU THAM KHẢO (SAMPLE WRITING):
+              </div>
+              <div style="font-style: italic; color: #e2e8f0; line-height: 1.7; margin-bottom: 1rem; font-size: 0.92rem;">
+                "${sec.modelWriting || exam.sampleWritingText || ''}"
+              </div>
+              <div style="font-weight: 800; color: #f59e0b; margin-bottom: 0.35rem; font-size: 0.85rem;">
+                ⚖️ TIÊU CHÍ CHẤM ĐIỂM (RUBRIC):
+              </div>
+              <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.6;">
+                ${sec.rubric || exam.writingRubric || '1. Ý tưởng mở đoạn (0.25đ) | 2. Thân đoạn phát triển ý (0.25đ) | 3. Từ vựng phong phú (0.25đ) | 4. Ngữ pháp & chính tả chuẩn (0.25đ).'}
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 6. Render các câu hỏi trắc nghiệm (Sections 1-7)
+      (sec.questions || []).forEach(q => {
+        const qNum = q.num || '';
+        const savedAns = this.userAnswers[q.id] || '';
+
+        html += `
+          <div class="exam-q-item" id="exam_card_${q.id}" style="background: rgba(30, 41, 59, 0.6); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.15rem 1.35rem; margin-bottom: 1.15rem; transition: border 0.2s;">
+            <div style="font-weight: 800; font-size: 0.98rem; color: #ffffff; line-height: 1.6; margin-bottom: 0.85rem;">
+              <span style="color: #38bdf8; font-weight: 900;">Question ${qNum}:</span> ${q.content || q.text}
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem;">
+        `;
+
+        (q.options || []).forEach((opt, optIdx) => {
+          const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
+          const cleanText = opt.replace(/^[A-D]\.\s*/, '');
+          const isChecked = savedAns === letter;
+
           html += `
-            <label style="display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.9rem; color: #e2e8f0; transition: all 0.2s;">
-              <input type="radio" name="opt_${q.id}" value="${opt.replace(/"/g, '&quot;')}" onchange="ONLINE_EXAM_SYSTEM.setAnswer('${q.id}', this.value)" style="cursor: pointer;">
-              <span style="font-weight: 800; color: #38bdf8;">${l}.</span>
-              <span>${opt}</span>
+            <label style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 12px; background: ${isChecked ? 'rgba(37,99,235,0.25)' : 'rgba(15, 23, 42, 0.7)'}; border: 1.5px solid ${isChecked ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; cursor: pointer; font-size: 0.92rem; color: #f1f5f9; transition: all 0.2s;">
+              <input type="radio" name="opt_${q.id}" value="${letter}" ${isChecked ? 'checked' : ''}
+                onchange="ONLINE_EXAM_SYSTEM.setAnswer('${q.id}', '${letter}')" style="cursor: pointer; width: 18px; height: 18px; accent-color: #3b82f6;">
+              <span style="font-weight: 900; color: #38bdf8; min-width: 22px;">${letter}.</span>
+              <span style="flex: 1;">${cleanText}</span>
             </label>
           `;
         });
-        html += `</div>`;
-      } else if (q.type === 'input') {
+
         html += `
-          <div style="margin-top: 0.5rem;">
-            <input type="text" class="form-control" placeholder="Gõ câu trả lời của em vào đây..." oninput="ONLINE_EXAM_SYSTEM.setAnswer('${q.id}', this.value)" style="width: 100%; background: #0f172a; border: 1px solid #38bdf8; color: white; padding: 0.75rem; border-radius: 10px; font-size: 0.9rem;">
+            </div>
+            <div id="explanation_${q.id}" style="display: none; margin-top: 0.85rem; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.88rem; line-height: 1.6;"></div>
           </div>
         `;
-      }
-
-      html += `
-          <div id="explanation_${q.id}" style="display: none; margin-top: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.5;"></div>
-        </div>
-      `;
+      });
     });
 
     container.innerHTML = html;
   },
 
-  setAnswer(qId, val) {
-    this.userAnswers[qId] = val.trim();
+  setAnswer(qId, letter) {
+    this.userAnswers[qId] = letter;
+  },
+
+  toggleRubric() {
+    this.showRubric = !this.showRubric;
+    const box = document.getElementById('writingRubricBox');
+    if (box) box.style.display = this.showRubric ? 'block' : 'none';
   },
 
   submitExam() {
-    let score = 0;
-    const total = this.currentQuestions.length;
+    if (!this.currentExam) return;
 
-    this.currentQuestions.forEach(q => {
-      const userAns = (this.userAnswers[q.id] || '').toLowerCase().replace(/\s+/g, ' ');
-      const correctAns = (q.correct || '').toLowerCase().replace(/\s+/g, ' ');
+    let correctCount = 0;
+    let totalQuestions = 0;
 
-      const isCorrect = userAns === correctAns;
-      if (isCorrect) score++;
+    (this.currentExam.sections || []).forEach(sec => {
+      if (sec.type === 'writing' || sec.skill === 'writing') return;
+      (sec.questions || []).forEach(q => {
+        totalQuestions++;
+        const userChoice = (this.userAnswers[q.id] || '').trim().toUpperCase();
+        const correctChoice = (q.answer || '').trim().toUpperCase();
+        const isCorrect = userChoice && userChoice === correctChoice;
 
-      const expBox = document.getElementById(`explanation_${q.id}`);
-      const card = document.getElementById(`exam_card_${q.id}`);
+        if (isCorrect) correctCount++;
 
-      if (card) {
-        card.style.borderColor = isCorrect ? '#10b981' : '#ef4444';
-      }
+        const card = document.getElementById(`exam_card_${q.id}`);
+        const expBox = document.getElementById(`explanation_${q.id}`);
 
-      if (expBox) {
-        expBox.style.display = 'block';
-        if (isCorrect) {
-          expBox.style.background = 'rgba(16, 185, 129, 0.15)';
-          expBox.style.color = '#34d399';
-          expBox.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-          expBox.innerHTML = `✓ <b>Chính xác! (+0.5đ)</b> — ${q.explanation}`;
-        } else {
-          expBox.style.background = 'rgba(239, 68, 68, 0.15)';
-          expBox.style.color = '#f87171';
-          expBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-          expBox.innerHTML = `✗ <b>Chưa đúng!</b> Đáp án chuẩn: <b style="color:white;">${q.correct}</b>. <br>${q.explanation}`;
+        if (card) {
+          card.style.borderColor = isCorrect ? '#10b981' : '#ef4444';
+          card.style.background = isCorrect ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)';
         }
-      }
+
+        if (expBox) {
+          expBox.style.display = 'block';
+          if (isCorrect) {
+            expBox.style.background = 'rgba(16, 185, 129, 0.15)';
+            expBox.style.color = '#34d399';
+            expBox.style.border = '1.5px solid rgba(16, 185, 129, 0.4)';
+            expBox.innerHTML = `✓ <b>Chính xác! (+0.25đ)</b> — Đáp án đúng: <b>${correctChoice}</b>. ${q.explanation || ''}`;
+          } else {
+            expBox.style.background = 'rgba(239, 68, 68, 0.15)';
+            expBox.style.color = '#f87171';
+            expBox.style.border = '1.5px solid rgba(239, 68, 68, 0.4)';
+            expBox.innerHTML = `✗ <b>Chưa đúng!</b> Đáp án chuẩn: <b style="color:white;font-size:1.05rem">${correctChoice}</b>. <br>${q.explanation || ''}`;
+          }
+        }
+      });
     });
 
-    const scaledScore = ((score / total) * 10).toFixed(1);
+    // Điểm trắc nghiệm: 36 câu * 0.25 = 9.0 điểm
+    const mcScore = (correctCount * 0.25).toFixed(2);
+    const hasWriting = (this.studentWritingText || '').trim().length > 10;
+    const writingStatusText = hasWriting ? 'Em đã hoàn thành bài viết tự luận (Part 8).' : 'Em chưa viết bài tự luận Part 8.';
 
-    // Show result
     const resCard = document.getElementById('examResultCard');
     const resScore = document.getElementById('examResultScore');
     const resFeed = document.getElementById('examResultFeedback');
     const resEmoji = document.getElementById('examResultEmoji');
 
-    if (resCard) {
+    if (resCard && resScore && resFeed) {
       resCard.style.display = 'block';
-      resScore.textContent = `Điểm Số Của Em: ${scaledScore} / 10 Điểm (${score}/${total} câu đúng)`;
-      if (scaledScore >= 8) {
-        resEmoji.textContent = '🌟🎉';
-        resFeed.textContent = 'Xuất sắc! Em nắm rất chắc kiến thức và hoàn thành xuất sắc bài kiểm tra.';
-        if (STUDENT_SYSTEM.showRewardConfetti) STUDENT_SYSTEM.showRewardConfetti();
-        if (STUDENT_SYSTEM.playCorrect) STUDENT_SYSTEM.playCorrect();
-      } else if (scaledScore >= 5) {
-        resEmoji.textContent = '👏';
-        resFeed.textContent = 'Khá tốt! Em hãy ôn lại một số câu sai để lần sau đạt điểm 10 tuyệt đối nhé.';
+      resScore.textContent = `Điểm Trắc Nghiệm: ${mcScore} / 9.0 Điểm (${correctCount}/${totalQuestions} Câu đúng)`;
+      
+      let emoji = '🎉';
+      let feedback = '';
+      if (correctCount >= 32) {
+        emoji = '🏆';
+        feedback = `Xuất sắc! Em làm đúng ${correctCount}/${totalQuestions} câu trắc nghiệm. ${writingStatusText} Hãy đối chiếu bài viết mẫu để hoàn thiện nhé!`;
+      } else if (correctCount >= 24) {
+        emoji = '👏';
+        feedback = `Rất tốt! Em đạt ${correctCount}/${totalQuestions} câu đúng. ${writingStatusText} Hãy xem kĩ các câu bị sai ở trên để rút kinh nghiệm!`;
       } else {
-        resEmoji.textContent = '💪';
-        resFeed.textContent = 'Em cần chăm chỉ ôn lại từ vựng và ngữ pháp. Hãy bấm "Đổi Đề Khác" để rèn luyện tiếp nhé!';
+        emoji = '💪';
+        feedback = `Cố gắng lên! Em làm đúng ${correctCount}/${totalQuestions} câu. Hãy nghe lại audio và xem lại kiến thức ngữ pháp nhé!`;
       }
-      resCard.scrollIntoView({ behavior: 'smooth' });
-    }
 
-    // Add XP to student
-    
-    // AUTO RECORD SCORE INTO GRADEBOOK SỔ ĐIỂM
-    try {
-      const subKey = 'gvai_gradebook_submissions_v3_dongyen';
-      let subs = [];
-      const subRaw = localStorage.getItem(subKey);
-      if (subRaw) subs = JSON.parse(subRaw);
+      if (resEmoji) resEmoji.textContent = emoji;
+      resFeed.innerHTML = feedback;
 
-      if (STUDENT_SYSTEM.currentStudent) {
-        const stu = STUDENT_SYSTEM.currentStudent;
-        const className = (stu.className || '7A1').toUpperCase();
-        const scoreNum = parseFloat(scaledScore) || 0;
-        let rankLvl = 'CAN_CO_GANG';
-        if (scoreNum >= 9.0) rankLvl = 'XUAT_SAC';
-        else if (scoreNum >= 8.0) rankLvl = 'GIOI';
-        else if (scoreNum >= 6.5) rankLvl = 'KHA';
-        else if (scoreNum >= 5.0) rankLvl = 'DAT';
+      // Cuộn êm đến kết quả
+      resCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        const newSub = {
-          id: 'sub-' + Date.now().toString(36),
-          studentId: stu.id,
-          studentCode: 'HS' + className.replace(/\s+/g, '') + '-' + (stu.id.slice(-4)),
-          studentName: stu.fullName,
-          classId: 'cls-' + className.toLowerCase().replace(/\s+/g, ''),
-          className: className,
-          grade: parseInt(stu.grade) || 7,
-          testType: 'online_quiz',
-          unitNumber: 1,
-          unitTitle: this.examMeta.typeLabel || 'Đề Kiểm Tra Định Kỳ',
-          testTitle: `Đề ${this.examMeta.typeLabel || 'Định Kỳ'} (${this.examMeta.code || 'TA'})`,
-          score: scoreNum,
-          correctCount: score,
-          totalQuestions: total,
-          timeSpentSeconds: 600,
-          submittedAt: new Date().toISOString(),
-          rankLevel: rankLvl,
-          teacherFeedback: 'Hệ thống tự động chấm điểm bài làm trực tuyến.',
-          feedbackDate: new Date().toISOString()
-        };
-        subs.unshift(newSub);
-        localStorage.setItem(subKey, JSON.stringify(subs));
+      // Bắn pháo hoa
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
-    } catch (errSub) {
-      console.warn('Submission sync error:', errSub);
-    }
-
-    if (STUDENT_SYSTEM.addXP) {
-      STUDENT_SYSTEM.addXP(Math.round(score * 5));
     }
   },
 
   downloadWordDoc() {
-    // SECURITY CHECK: ONLY ADMIN CAN DOWNLOAD WORD FILE
-    const isAdm = STUDENT_SYSTEM.currentStudent && (
-      STUDENT_SYSTEM.currentStudent.role === 'admin' ||
-      (STUDENT_SYSTEM.currentStudent.username || '').toLowerCase() === 'admin'
-    );
-
-    if (!isAdm) {
-      alert('Chức năng tải file Word Đề thi & Đáp án chỉ dành riêng cho Giáo viên / Admin (Thầy Đinh Thành)!');
-      return;
-    }
-
-    let docContent = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head>
-        <meta charset='utf-8'>
-        <title>${this.examMeta.heading || 'De_Kiem_Tra_Tieng_Anh'}</title>
-        <style>
-          body { font-family: 'Times New Roman', serif; font-size: 13pt; line-height: 1.25; margin: 0.6in 0.6in; }
-          .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-          .header-table td { text-align: center; vertical-align: top; }
-          h2, h3 { text-align: center; font-size: 13pt; font-weight: bold; margin: 4px 0; }
-          .part-title { font-weight: bold; font-size: 13pt; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase; }
-          .question { margin-bottom: 10px; text-align: justify; }
-          .options { margin-left: 20px; margin-bottom: 8px; }
-          .answer-key { margin-top: 30px; page-break-before: always; }
-          table.answers { width: 100%; border-collapse: collapse; margin-top: 10px; }
-          table.answers td, table.answers th { border: 1px solid black; padding: 6px; text-align: center; font-size: 12pt; }
-        </style>
-      </head>
-      <body>
-        <table class="header-table">
-          <tr>
-            <td style="width: 45%;">
-              <b>UBND HUYỆN BẮC QUANG</b><br>
-              <b>TRƯỜNG THCS ........</b><br>
-              <i>(Đề thi có ${Math.ceil(this.currentQuestions.length / 8)} trang)</i>
-            </td>
-            <td style="width: 55%;">
-              <b>KIỂM TRA ĐỊNH KỲ NĂM HỌC 2026 - 2027</b><br>
-              <b>MÔN: TIẾNG ANH - LỚP ${this.examMeta.grade}</b><br>
-              <i>Thời gian làm bài: 45 phút (Không kể thời gian phát đề)</i><br>
-              <b>Mã đề thi: ${this.examMeta.code}</b>
-            </td>
-          </tr>
-        </table>
-
-        <div style="margin-bottom: 15px; border-bottom: 1px solid black; padding-bottom: 5px;">
-          Họ và tên thí sinh: ............................................................................ Lớp: ................. SBD: .................
-        </div>
-    `;
-
-    let currentPart = '';
-    this.currentQuestions.forEach(q => {
-      if (q.part !== currentPart) {
-        currentPart = q.part;
-        docContent += `<div class="part-title">${q.partTitle}</div>`;
-        if (q.part === 'C' && q.passage) {
-          docContent += `<div style="font-style: italic; margin-bottom: 10px; text-align: justify;">${q.passage}</div>`;
-        }
-      }
-
-      docContent += `<div class="question"><b>Question ${q.qNumber}:</b> ${q.text.replace(/<br>/g, ' ').replace(/<[^>]+>/g, '')}</div>`;
-      if (q.options && q.options.length) {
-        const letters = ['A', 'B', 'C', 'D'];
-        docContent += `<div class="options">`;
-        q.options.forEach((opt, idx) => {
-          docContent += `&nbsp;&nbsp;&nbsp;&nbsp;<b>${letters[idx]}.</b> ${opt} &nbsp;&nbsp;&nbsp;&nbsp;`;
-        });
-        docContent += `</div>`;
-      }
-    });
-
-    // Answer Key Section
-    docContent += `
-      <div class="answer-key">
-        <h2>ĐÁP ÁN & HƯỚNG DẪN CHẤM CHI TIẾT</h2>
-        <h3>MÔN TIẾNG ANH LỚP ${this.examMeta.grade} - MÃ ĐỀ: ${this.examMeta.code}</h3>
-        <p><i>(Chuẩn thang điểm 10.0 - Công văn 7991/BGDĐT)</i></p>
-
-        <table class="answers">
-          <tr>
-            <th>Câu</th>
-            <th>Đáp án</th>
-            <th>Điểm</th>
-            <th>Giải thích chi tiết</th>
-          </tr>
-    `;
-
-    this.currentQuestions.forEach(q => {
-      docContent += `
-        <tr>
-          <td><b>${q.qNumber}</b></td>
-          <td style="color: red; font-weight: bold;">${q.correct}</td>
-          <td>0.5</td>
-          <td style="text-align: left;">${q.explanation || ''}</td>
-        </tr>
-      `;
-    });
-
-    docContent += `
-        </table>
-      </div>
-      </body>
-      </html>
-    `;
-
-    const blob = new Blob(['\ufeff' + docContent], { type: 'application/msword' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `De_Kiem_Tra_Tieng_Anh_${this.examMeta.grade}_MaDe_${this.examMeta.code}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    alert(`Đề thi Word gốc của Mã đề ${this.activeExamCode} đã được lưu trữ sẵn trong thư mục Desktop Thầy Thành: C:\\Users\\Admin\\Desktop\\Đề KT Tiếng Anh\\Upload web`);
   }
 };
+
+// Tự động kích hoạt khi URL có tham số tab=exam hoặc hash #tab-online-exam
+if (typeof window !== 'undefined') {
+  window.ONLINE_EXAM_SYSTEM = ONLINE_EXAM_SYSTEM;
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hash = window.location.hash;
+      const tabParam = urlParams.get('tab');
+      const examParam = urlParams.get('exam');
+
+      if (tabParam === 'exam' || tabParam === 'online-exam' || hash === '#tab-online-exam' || examParam) {
+        setTimeout(() => {
+          if (typeof switchTab === 'function') {
+            switchTab('tab-online-exam');
+          }
+          if (examParam && typeof ONLINE_EXAM_SYSTEM !== 'undefined') {
+            ONLINE_EXAM_SYSTEM.selectExam(examParam);
+          }
+        }, 300);
+      }
+    } catch (e) {
+      console.warn("Auto tab switch error:", e);
+    }
+  });
+}

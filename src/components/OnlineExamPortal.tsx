@@ -625,32 +625,37 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
             <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-2">
               {[
-                { grade: 6, label: 'Lớp 6', count: '20 đề' },
-                { grade: 7, label: 'Lớp 7', count: '20 đề' },
-                { grade: 8, label: 'Lớp 8', count: '20 đề' },
-                { grade: 9, label: 'Lớp 9', count: '20 đề' },
-              ].map(({ grade, label, count }) => (
-                <button
-                  key={grade}
-                  type="button"
-                  onClick={() => {
-                    setSelectedGrade(grade);
-                    setSelectedExamIndex(0);
-                  }}
-                  className={`py-2 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1 active:scale-95 ${
-                    selectedGrade === grade
-                      ? 'bg-amber-400 text-blue-950 shadow-md ring-2 ring-white/80 scale-102'
-                      : 'bg-white/10 text-white hover:bg-white/20'
-                  }`}
-                >
-                  <span>{label}</span>
-                  <span className={`text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedGrade === grade ? 'bg-blue-950 text-amber-300' : 'bg-emerald-500 text-white'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              ))}
+                { grade: 6, label: 'Lớp 6' },
+                { grade: 7, label: 'Lớp 7' },
+                { grade: 8, label: 'Lớp 8' },
+                { grade: 9, label: 'Lớp 9' },
+              ].map(({ grade, label }) => {
+                const count = (examDataByTerm[examType] && examDataByTerm[examType][String(grade)])
+                  ? Object.keys(examDataByTerm[examType][String(grade)]).length
+                  : 0;
+                return (
+                  <button
+                    key={grade}
+                    type="button"
+                    onClick={() => {
+                      setSelectedGrade(grade);
+                      setSelectedExamIndex(0);
+                    }}
+                    className={`py-2 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1 active:scale-95 ${
+                      selectedGrade === grade
+                        ? 'bg-amber-400 text-blue-950 shadow-md ring-2 ring-white/80 scale-102'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    <span>{label}</span>
+                    <span className={`text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold ${
+                      selectedGrade === grade ? 'bg-blue-950 text-amber-300' : (count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-500 text-white')
+                    }`}>
+                      {count > 0 ? `${count} mã đề` : 'Chờ đề'}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
