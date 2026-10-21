@@ -7839,11 +7839,20 @@ const ONLINE_EXAM_SYSTEM = {
   },
 
   playQuestionAudio(word) {
-    if ('speechSynthesis' in window) {
+    if (!word) return;
+    if (typeof VOCAB_AUDIO !== 'undefined' && VOCAB_AUDIO.speak) {
+      // Tận dụng giọng đọc bản ngữ chuẩn Natural/Neural của Smart Listening với tốc độ 0.78x chậm rãi, rõ chữ
+      VOCAB_AUDIO.speak(word, 0.78, 'en-US');
+    } else if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(word);
+      const u = new SpeechSynthesisUtterance(word.trim());
       u.lang = 'en-US';
-      u.rate = 0.9;
+      u.rate = 0.78;
+      try {
+        const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+        const best = voices.find(v => v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Google') || v.name.includes('Jenny') || v.name.includes('Ava'));
+        if (best) u.voice = best;
+      } catch (e) {}
       window.speechSynthesis.speak(u);
     }
   },

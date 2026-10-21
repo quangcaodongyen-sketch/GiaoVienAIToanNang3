@@ -32,7 +32,11 @@ export interface OfficialMidtermExam {
   schoolName: string;
   teacherName: string;
   audioUrl: string;
+  audioUrlPart1?: string;
+  audioUrlPart2?: string;
   audioScript: string;
+  audioScriptPart1?: string;
+  audioScriptPart2?: string;
   clozeText?: string;
   readingText?: string;
   passageText: string;

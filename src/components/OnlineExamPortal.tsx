@@ -47,7 +47,11 @@ export interface GeneratedExam {
   totalQuestions: number;
   passageText: string;
   audioUrl?: string;
+  audioUrlPart1?: string;
+  audioUrlPart2?: string;
   audioScript?: string;
+  audioScriptPart1?: string;
+  audioScriptPart2?: string;
   sampleWriting?: string;
   writingRubric?: string;
   questions: ExamQuestion[];
@@ -93,6 +97,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
   const [showAudioScript, setShowAudioScript] = useState<boolean>(false);
+  const [currentPlayingPart, setCurrentPlayingPart] = useState<'part1' | 'part2' | 'all'>('part1');
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [copiedEssayId, setCopiedEssayId] = useState<string | null>(null);
 
@@ -141,6 +146,30 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   }, [selectedGrade, examType, selectedExamIndex, examDataByTerm]);
 
   useEffect(() => {
+    // Kích hoạt nạp sẵn danh sách giọng đọc bản ngữ trực tuyến
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
+    }
+
+    // Khởi tạo audioRef dự phòng
+    if (typeof window !== 'undefined' && !audioRef.current) {
+      const a = new Audio();
+      a.onended = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIndex(-1);
+      };
+      a.onerror = () => {
+        setIsPlayingAudio(false);
+        setCurrentLineIndex(-1);
+      };
+      audioRef.current = a;
+    }
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -151,6 +180,76 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     };
   }, []);
 
+  // ==============================================================================
+  // HỆ THỐNG ÂM THANH BÀI NGHE AI BẢN NGỮ (SMART LISTENING PRO STANDARD)
+  // - 2 giọng đối thoại Nam & Nữ luân phiên chuẩn Microsoft Natural / Neural
+  // - Tuyệt đối KHÔNG đọc tên nhân vật hoặc tiêu đề
+  // - Tốc độ chuẩn sư phạm 0.78x (chậm rãi, tròn vành rõ chữ, dễ nghe cho học sinh)
+  // ==============================================================================
+  const playChimeTone = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.12); // E5
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } catch (e) {}
+  };
+
+  const getBestDialogueVoice = (isMale: boolean): SpeechSynthesisVoice | null => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith('en'));
+    if (voices.length === 0) return null;
+
+    const malePriorities = [
+      'andrew online (natural)', 'guy online (natural)', 'ryan online (natural)',
+      'google uk english male', 'google us english', 'andrew', 'guy', 'ryan', 'daniel', 'david'
+    ];
+    const femalePriorities = [
+      'ava online (natural)', 'jenny online (natural)', 'libby online (natural)',
+      'aria online (natural)', 'google us english', 'jenny', 'ava', 'libby', 'aria', 'samantha', 'zira'
+    ];
+
+    const targetList = isMale ? malePriorities : femalePriorities;
+
+    for (const name of targetList) {
+      const match = voices.find(v => v.name.toLowerCase().includes(name));
+      if (match) return match;
+    }
+
+    // Fallback: Tìm bất kỳ giọng Natural/Neural nào theo giới tính
+    const naturalVoice = voices.find(v => {
+      const n = v.name.toLowerCase();
+      const isNat = n.includes('natural') || n.includes('neural') || n.includes('online');
+      if (!isNat) return false;
+      return isMale ? (n.includes('male') || n.includes('andrew') || n.includes('guy') || n.includes('ryan'))
+                    : (n.includes('female') || n.includes('ava') || n.includes('jenny') || n.includes('libby'));
+    });
+    if (naturalVoice) return naturalVoice;
+
+    // Fallback nếu không có Natural riêng biệt
+    const anyNatural = voices.find(v => {
+      const n = v.name.toLowerCase();
+      return n.includes('natural') || n.includes('neural') || n.includes('online');
+    });
+    if (anyNatural) return anyNatural;
+
+    if (voices.length >= 2) {
+      return isMale ? voices[0] : voices[1];
+    }
+    return voices[0] || null;
+  };
+
   const playSpeechFallback = () => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || !currentExam?.audioScript) {
       setIsPlayingAudio(false);
@@ -158,19 +257,21 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       return;
     }
     window.speechSynthesis.cancel();
+    playChimeTone();
     
-    // Loai bo triet de 100% ten nhan vat ("Nam:", "Mai:", "Linda:", "Mi:", "Hi Nam!", "Hi Mai!", v.v.)
+    // Loại bỏ triệt để 100% tên nhân vật & tiêu đề ("Part 1:", "Nam:", "Mai:", "Linda:", "Mi:", "Hi Nam!", "Hi Mai!", v.v.)
     const cleanLines = currentExam.audioScript
       .split('\n')
       .map(line => {
         let clean = line
+          .replace(/^[•\s\t*-]+/, '')
+          .replace(/^(Transcript\s+bài\s+nghe\s+)?(Part|Phần|Track)\s*\d+[^:\n]*:\s*/i, '')
           .replace(/^[A-Za-z0-9\s'.-]+:\s*/, '')
-          .replace(/^(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David|Speaker\s*\w*|Person\s*\w*|Boy|Girl|Man|Woman|Interviewer|Interviewee|Teacher|Student\s*\w*)[,\s:.-]+/i, '')
-          .replace(/^(Hi|Hello|Good morning|Good afternoon)\s+(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David)[!.,\s]*/i, '')
+          .replace(/^(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David|Jason|Hannah|Mark|Trang|Doctor|Nick|Speaker\s*\w*|Person\s*\w*|Boy|Girl|Man|Woman|Interviewer|Interviewee|Teacher|Student)\s*[:–-]\s*/i, '')
           .trim();
         return clean;
       })
-      .filter(line => line.length > 0);
+      .filter(line => line.length > 0 && !line.toLowerCase().includes('transcript bài nghe') && !line.toLowerCase().startsWith('part ') && !line.toLowerCase().startsWith('phần '));
       
     if (cleanLines.length === 0) {
       setIsPlayingAudio(false);
@@ -192,29 +293,34 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       setCurrentLineIndex(currentIndex);
       const utter = new SpeechSynthesisUtterance(cleanLines[currentIndex]);
       utter.lang = 'en-US';
-      utter.rate = Math.max(0.7, playbackSpeed * 0.88); // Toc do doc chuan, cham rai de hoc sinh de nghe
       
-      // 1 giong nam (tram), 1 giong nu (thanh) thay phien nhau chuân quoc te
-      utter.pitch = currentIndex % 2 === 0 ? 0.90 : 1.18;
+      // Tốc độ chuẩn sư phạm cho học sinh THCS: 0.78x nhân với hệ số điều chỉnh của học sinh
+      // Giúp học sinh nghe rõ từng nguyên âm, phụ âm đuôi, nối âm mà không bị nuốt âm
+      const baseRate = 0.78;
+      utter.rate = Math.max(0.60, Math.min(1.10, playbackSpeed * baseRate));
+      utter.volume = 1.0;
+      
+      // Luân phiên 1 giọng nam (ấm áp, đĩnh đạc) và 1 giọng nữ (trong trẻo, tự nhiên)
+      const isMaleTurn = currentIndex % 2 === 0;
+      utter.pitch = isMaleTurn ? 0.98 : 1.02; // Cao độ tự nhiên, không biến dạng giọng
       
       try {
-        const voices = window.speechSynthesis.getVoices();
-        const enVoices = voices.filter(v => v.lang.startsWith('en'));
-        if (enVoices.length >= 2) {
-          utter.voice = currentIndex % 2 === 0 ? enVoices[0] : enVoices[1];
-        } else if (enVoices.length === 1) {
-          utter.voice = enVoices[0];
+        const bestVoice = getBestDialogueVoice(isMaleTurn);
+        if (bestVoice) {
+          utter.voice = bestVoice;
         }
-      } catch (e) {
-        // Fallback pitch
-      }
+      } catch (e) {}
       
       utter.onend = () => {
         currentIndex++;
-        setTimeout(speakNext, 380);
+        // Khoảng dừng 480ms tự nhiên giữa 2 lượt đối thoại
+        setTimeout(speakNext, 480);
       };
       
-      utter.onerror = () => {
+      utter.onerror = (e) => {
+        if (e.error !== 'canceled') {
+          console.warn('SpeechSynthesis error:', e);
+        }
         setIsPlayingAudio(false);
         setCurrentLineIndex(-1);
       };
@@ -230,12 +336,28 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       setIsPlayingAudio(false);
       setCurrentLineIndex(-1);
       return;
     }
 
-    // Luon su dung AI Voice engine doc truc tiep loi thoai, tuyet doi khong doc ten nhan vat
+    // Nếu đề thi có sẵn file audio mp3 (chuẩn phòng thu), ưu tiên phát audioRef
+    if (currentExam?.audioUrl && audioRef.current) {
+      audioRef.current.src = currentExam.audioUrl;
+      audioRef.current.playbackRate = playbackSpeed;
+      audioRef.current.play().then(() => {
+        setIsPlayingAudio(true);
+      }).catch(err => {
+        console.warn('Audio play error, falling back to AI Neural Speech:', err);
+        playSpeechFallback();
+      });
+      return;
+    }
+
+    // Mặc định sử dụng AI Voice engine bản ngữ đối thoại luân phiên (Nam/Nữ)
     playSpeechFallback();
   };
 
@@ -288,7 +410,11 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             totalQuestions: convertedQuestions.length,
             passageText: offExam.passageText,
             audioUrl: offExam.audioUrl,
+            audioUrlPart1: offExam.audioUrlPart1,
+            audioUrlPart2: offExam.audioUrlPart2,
             audioScript: offExam.audioScript,
+            audioScriptPart1: offExam.audioScriptPart1,
+            audioScriptPart2: offExam.audioScriptPart2,
             writingRubric: offExam.writingRubric,
             sampleWriting: offExam.sampleWritingText,
             questions: convertedQuestions
@@ -565,7 +691,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               <span className="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" />
                 {hasOfficialForCurrent 
-                  ? `3. Chọn 1 trong 20 mã đề ôn luyện (Khối ${selectedGrade}):`
+                  ? `3. Chọn mã đề thi ôn luyện (Khối ${selectedGrade} - ${currentAvailableCodes.length} mã đề chuẩn):`
                   : 'Mã đề thi:'}
               </span>
               <span className="text-xs sm:text-sm text-amber-300 font-bold">
@@ -831,19 +957,49 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap">
-                  {/* NÚT BẬT / DỪNG PHÁT ÂM THANH */}
-                  <button
-                    type="button"
-                    onClick={handleTogglePlayAudio}
-                    className={`px-4 py-2 rounded-xl font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer ${
-                      isPlayingAudio 
-                        ? 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse' 
-                        : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white'
-                    }`}
-                  >
-                    {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    <span>{isPlayingAudio ? "⏸ Dừng nghe" : "▶ Bật nghe hội thoại"}</span>
-                  </button>
+                  {/* NÚT PHÁT AUDIO THEO TỪNG PART CHUẨN */}
+                  {currentExam.audioUrlPart1 && currentExam.audioUrlPart2 ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handlePlayPart('part1')}
+                        className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer ${
+                          isPlayingAudio && currentPlayingPart === 'part1'
+                            ? 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse ring-2 ring-rose-300'
+                            : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 text-white'
+                        }`}
+                      >
+                        {isPlayingAudio && currentPlayingPart === 'part1' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                        <span>{isPlayingAudio && currentPlayingPart === 'part1' ? "⏸ Dừng Part 1" : "🎧 Nghe Part 1 (Hội thoại)"}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handlePlayPart('part2')}
+                        className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer ${
+                          isPlayingAudio && currentPlayingPart === 'part2'
+                            ? 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse ring-2 ring-rose-300'
+                            : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 text-white'
+                        }`}
+                      >
+                        {isPlayingAudio && currentPlayingPart === 'part2' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                        <span>{isPlayingAudio && currentPlayingPart === 'part2' ? "⏸ Dừng Part 2" : "🎧 Nghe Part 2 (Độc thoại)"}</span>
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleTogglePlayAudio}
+                      className={`px-4 py-2 rounded-xl font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer ${
+                        isPlayingAudio 
+                          ? 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse' 
+                          : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white'
+                      }`}
+                    >
+                      {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      <span>{isPlayingAudio ? "⏸ Dừng nghe" : "▶ Bật nghe hội thoại"}</span>
+                    </button>
+                  )}
 
                   {/* Nút chỉnh tốc độ */}
                   <div className="flex items-center bg-white border border-sky-200 rounded-xl p-0.5 shadow-2xs">
@@ -979,6 +1135,60 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                       {group.questions.length} câu
                     </span>
                   </div>
+
+                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 1 */}
+                  {group.partTitle.toLowerCase().includes('part 1') && currentExam.audioUrlPart1 && (
+                    <div className="p-3 bg-gradient-to-r from-sky-50 via-blue-50 to-sky-100 border border-sky-300 rounded-xl flex items-center justify-between gap-3 shadow-2xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0">
+                          <Headphones className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs sm:text-sm font-black text-sky-950">File nghe chuẩn Part 1 (Hội thoại)</div>
+                          <div className="text-[11px] text-sky-800">Dành cho các câu hỏi 1 - 5</div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handlePlayPart('part1')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                          isPlayingAudio && currentPlayingPart === 'part1'
+                            ? 'bg-rose-600 text-white animate-pulse ring-2 ring-rose-300'
+                            : 'bg-sky-600 hover:bg-sky-700 text-white'
+                        }`}
+                      >
+                        {isPlayingAudio && currentPlayingPart === 'part1' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                        <span>{isPlayingAudio && currentPlayingPart === 'part1' ? "⏸ Tạm dừng" : "▶ Bật nghe Part 1"}</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 2 */}
+                  {group.partTitle.toLowerCase().includes('part 2') && currentExam.audioUrlPart2 && (
+                    <div className="p-3 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-100 border border-indigo-300 rounded-xl flex items-center justify-between gap-3 shadow-2xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
+                          <Headphones className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs sm:text-sm font-black text-indigo-950">File nghe chuẩn Part 2 (Độc thoại)</div>
+                          <div className="text-[11px] text-indigo-800">Dành cho các câu hỏi 6 - 10 (True / False)</div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handlePlayPart('part2')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                          isPlayingAudio && currentPlayingPart === 'part2'
+                            ? 'bg-rose-600 text-white animate-pulse ring-2 ring-rose-300'
+                            : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                        }`}
+                      >
+                        {isPlayingAudio && currentPlayingPart === 'part2' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                        <span>{isPlayingAudio && currentPlayingPart === 'part2' ? "⏸ Tạm dừng" : "▶ Bật nghe Part 2"}</span>
+                      </button>
+                    </div>
+                  )}
 
                   {/* Đoạn văn riêng biệt của Part tương ứng (Tuyệt đối không gộp 2 đoạn văn cùng lúc!) */}
                   {group.passageSnippet && (
