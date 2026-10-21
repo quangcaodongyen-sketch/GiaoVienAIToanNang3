@@ -127,27 +127,65 @@ const AudioEngine = {
       return false;
     }
 
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = rate; // Tốc độ điều chỉnh linh hoạt
-    utter.pitch = 1.0;
+    // Tách dòng và loại bỏ 100% tên nhân vật trước khi đọc
+    const cleanLines = text
+      .split('\n')
+      .map(line => {
+        return line
+          .replace(/^[A-Za-z0-9\s'.-]+:\s*/, '')
+          .replace(/^(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David|Speaker\s*\w*|Person\s*\w*|Boy|Girl|Man|Woman|Interviewer|Interviewee|Teacher|Student\s*\w*)[,\s:.-]+/i, '')
+          .replace(/^(Hi|Hello|Good morning|Good afternoon)\s+(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David)[!.,\s]*/i, '')
+          .trim();
+      })
+      .filter(line => line.length > 0);
 
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('English')));
-    if (enVoice) utter.voice = enVoice;
+    if (cleanLines.length === 0) {
+      this.speaking = false;
+      if (onEnd) onEnd();
+      return false;
+    }
 
+    let currentIndex = 0;
     this.speaking = true;
-    utter.onend = () => {
-      this.speaking = false;
-      if (onEnd) onEnd();
-    };
-    utter.onerror = () => {
-      this.speaking = false;
-      if (onEnd) onEnd();
+
+    const speakNext = () => {
+      if (currentIndex >= cleanLines.length) {
+        this.speaking = false;
+        if (onEnd) onEnd();
+        return;
+      }
+
+      const utter = new SpeechSynthesisUtterance(cleanLines[currentIndex]);
+      utter.lang = 'en-US';
+      utter.rate = rate;
+      // 1 giọng nam (trầm), 1 giọng nữ (thanh) thay phiên nhau
+      utter.pitch = currentIndex % 2 === 0 ? 0.90 : 1.18;
+
+      try {
+        const voices = window.speechSynthesis.getVoices();
+        const enVoices = voices.filter(v => v.lang.startsWith('en'));
+        if (enVoices.length >= 2) {
+          utter.voice = currentIndex % 2 === 0 ? enVoices[0] : enVoices[1];
+        } else if (enVoices.length === 1) {
+          utter.voice = enVoices[0];
+        }
+      } catch (e) {}
+
+      utter.onend = () => {
+        currentIndex++;
+        setTimeout(speakNext, 380);
+      };
+
+      utter.onerror = () => {
+        this.speaking = false;
+        if (onEnd) onEnd();
+      };
+
+      this.utterance = utter;
+      window.speechSynthesis.speak(utter);
     };
 
-    this.utterance = utter;
-    window.speechSynthesis.speak(utter);
+    speakNext();
     return true;
   },
 

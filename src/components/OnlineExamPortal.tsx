@@ -88,6 +88,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   } | null>(null);
 
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [currentLineIndex, setCurrentLineIndex] = useState<number>(-1);
   const [showAudioScript, setShowAudioScript] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [copiedEssayId, setCopiedEssayId] = useState<string | null>(null);
@@ -133,35 +134,60 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const playSpeechFallback = () => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || !currentExam?.audioScript) {
       setIsPlayingAudio(false);
+      setCurrentLineIndex(-1);
       return;
     }
     window.speechSynthesis.cancel();
     
-    // Loai bo hoan toan ten nhan vat ("Nam:", "Mai:", "Phong:", "Lan:") theo yeu cau cua nguoi dung
+    // Loai bo triet de 100% ten nhan vat ("Nam:", "Mai:", "Linda:", "Mi:", "Hi Nam!", "Hi Mai!", v.v.)
     const cleanLines = currentExam.audioScript
       .split('\n')
-      .map(line => line.replace(/^[A-Za-z0-9\s'.-]+:\s*/, '').trim())
+      .map(line => {
+        let clean = line
+          .replace(/^[A-Za-z0-9\s'.-]+:\s*/, '')
+          .replace(/^(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David|Speaker\s*\w*|Person\s*\w*|Boy|Girl|Man|Woman|Interviewer|Interviewee|Teacher|Student\s*\w*)[,\s:.-]+/i, '')
+          .replace(/^(Hi|Hello|Good morning|Good afternoon)\s+(Nam|Mai|Linda|Mi|Phong|Lan|Hoa|Tom|Peter|Mary|John|David)[!.,\s]*/i, '')
+          .trim();
+        return clean;
+      })
       .filter(line => line.length > 0);
       
     if (cleanLines.length === 0) {
       setIsPlayingAudio(false);
+      setCurrentLineIndex(-1);
       return;
     }
     
     let currentIndex = 0;
     setIsPlayingAudio(true);
+    setCurrentLineIndex(0);
     
     const speakNext = () => {
       if (currentIndex >= cleanLines.length) {
         setIsPlayingAudio(false);
+        setCurrentLineIndex(-1);
         return;
       }
       
+      setCurrentLineIndex(currentIndex);
       const utter = new SpeechSynthesisUtterance(cleanLines[currentIndex]);
       utter.lang = 'en-US';
-      utter.rate = Math.max(0.7, playbackSpeed * 0.88); // Toc do chuan, cham rai de hoc sinh de nghe
-      // 1 giong nam (tram), 1 giong nu (thanh) thay phien nhau de phan biet
-      utter.pitch = currentIndex % 2 === 0 ? 0.9 : 1.18;
+      utter.rate = Math.max(0.7, playbackSpeed * 0.88); // Toc do doc chuan, cham rai de hoc sinh de nghe
+      
+      // 1 giong nam (tram), 1 giong nu (thanh) thay phien nhau chuân quoc te
+      utter.pitch = currentIndex % 2 === 0 ? 0.90 : 1.18;
+      
+      try {
+        const voices = window.speechSynthesis.getVoices();
+        const enVoices = voices.filter(v => v.lang.startsWith('en'));
+        if (enVoices.length >= 2) {
+          utter.voice = currentIndex % 2 === 0 ? enVoices[0] : enVoices[1];
+        } else if (enVoices.length === 1) {
+          utter.voice = enVoices[0];
+        }
+      } catch (e) {
+        // Fallback pitch
+      }
       
       utter.onend = () => {
         currentIndex++;
@@ -170,6 +196,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       
       utter.onerror = () => {
         setIsPlayingAudio(false);
+        setCurrentLineIndex(-1);
       };
       
       window.speechSynthesis.speak(utter);
@@ -180,24 +207,16 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
   const handleTogglePlayAudio = () => {
     if (isPlayingAudio) {
-      if (audioRef.current) audioRef.current.pause();
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
       setIsPlayingAudio(false);
+      setCurrentLineIndex(-1);
       return;
     }
 
-    if (audioRef.current && currentExam?.audioUrl) {
-      audioRef.current.play().then(() => {
-        setIsPlayingAudio(true);
-      }).catch(err => {
-        console.warn('Audio MP3 play error, falling back to Web Speech API:', err);
-        playSpeechFallback();
-      });
-    } else {
-      playSpeechFallback();
-    }
+    // Luon su dung AI Voice engine doc truc tiep loi thoai, tuyet doi khong doc ten nhan vat
+    playSpeechFallback();
   };
 
   const handleChangePlaybackRate = (speed: number) => {
@@ -577,7 +596,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {currentExam.audioUrl && (
+            {currentExam.audioScript && (
               <button
                 type="button"
                 onClick={handleTogglePlayAudio}
@@ -761,75 +780,94 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           )}
 
-          {/* KHUNG PHÁT AUDIO BÀI NGHE CHUẨN ĐÃ LỌC SẠCH KHÔNG TẠP ÂM - MOBILE OPTIMIZED */}
-          {currentExam.audioUrl && (
-            <div className="mx-3 sm:mx-6 mt-4 p-4 rounded-2xl bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 border border-sky-200 space-y-3">
+          {/* KHUNG PHÁT ÂM THANH BÀI NGHE AI NATIVE - KHÔNG ĐỌC TÊN NHÂN VẬT - MOBILE OPTIMIZED */}
+          {currentExam.audioScript && (
+            <div className="mx-3 sm:mx-6 mt-4 p-4 rounded-2xl bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 border border-sky-200/80 shadow-xs space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white flex items-center justify-center shrink-0 shadow-md">
-                    <Headphones className="w-6 h-6" />
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Headphones className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-sm sm:text-base font-black text-sky-950 flex items-center gap-2 flex-wrap">
-                      <span>AUDIO BÀI NGHE CHÍNH THỨC</span>
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-extrabold">
-                        1 Giọng Nam + 1 Giọng Nữ
-                      </span>
-                    </div>
-                    <div className="text-xs sm:text-sm text-sky-800 leading-snug mt-0.5">
-                      Giọng bản ngữ đọc chậm, phát âm từng từ rõ ràng • Lặp lại 2 lần có khoảng nghỉ
-                    </div>
+                    <h4 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
+                      🎧 Âm thanh bài nghe hội thoại (AI Bản ngữ)
+                    </h4>
+                    <p className="text-xs text-sky-800 font-medium">
+                      2 giọng đối thoại luân phiên (1 Nam, 1 Nữ) · Tuyệt đối không đọc tên nhân vật
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="flex items-center bg-white rounded-xl border border-sky-200 p-0.5 text-xs font-bold">
-                    <span className="px-2 text-slate-500">Tốc độ:</span>
-                    <button
-                      type="button"
-                      onClick={() => handleChangePlaybackRate(0.85)}
-                      className={`px-2.5 py-1 rounded-lg transition ${playbackSpeed === 0.85 ? 'bg-sky-600 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-                    >
-                      0.85x Chậm
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChangePlaybackRate(1.0)}
-                      className={`px-2.5 py-1 rounded-lg transition ${playbackSpeed === 1.0 ? 'bg-sky-600 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-                    >
-                      1.0x Chuẩn
-                    </button>
+                  {/* NÚT BẬT / DỪNG PHÁT ÂM THANH */}
+                  <button
+                    type="button"
+                    onClick={handleTogglePlayAudio}
+                    className={`px-4 py-2 rounded-xl font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer ${
+                      isPlayingAudio 
+                        ? 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse' 
+                        : 'bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white'
+                    }`}
+                  >
+                    {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    <span>{isPlayingAudio ? "⏸ Dừng nghe" : "▶ Bật nghe hội thoại"}</span>
+                  </button>
+
+                  {/* Nút chỉnh tốc độ */}
+                  <div className="flex items-center bg-white border border-sky-200 rounded-xl p-0.5 shadow-2xs">
+                    {[0.75, 0.9, 1.0].map((spd) => (
+                      <button
+                        key={spd}
+                        type="button"
+                        onClick={() => handleChangePlaybackRate(spd)}
+                        className={`px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                          playbackSpeed === spd 
+                            ? 'bg-sky-600 text-white shadow-2xs' 
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        {spd}x
+                      </button>
+                    ))}
                   </div>
 
+                  {/* Nút xem Lời thoại Script */}
                   <button
                     type="button"
                     onClick={() => setShowAudioScript(!showAudioScript)}
-                    className="px-3 py-1.5 rounded-xl bg-white border border-sky-300 text-sky-800 hover:bg-sky-100 font-bold text-xs sm:text-sm transition cursor-pointer flex items-center gap-1"
+                    className="px-2.5 py-1.5 rounded-xl bg-white border border-sky-200 hover:bg-sky-50 text-xs font-bold text-sky-900 flex items-center gap-1 transition shadow-2xs cursor-pointer"
                   >
-                    <span>{showAudioScript ? 'Ẩn lời băng' : 'Xem lời băng'}</span>
+                    <span>{showAudioScript ? "Ẩn lời thoại" : "Xem lời thoại"}</span>
                     {showAudioScript ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* TRÌNH PHÁT AUDIO NATIVE HTML5 - TƯƠNG THÍCH 100% ĐIỆN THOẠI & IPHONE */}
-              <div className="pt-1">
-                <audio 
-                  ref={audioRef}
-                  controls 
-                  preload="metadata"
-                  src={currentExam.audioUrl} 
-                  onPlay={() => setIsPlayingAudio(true)}
-                  onPause={() => setIsPlayingAudio(false)}
-                  onEnded={() => setIsPlayingAudio(false)}
-                  className="w-full h-11 rounded-xl shadow-xs"
-                />
-              </div>
-
-              {/* Lời băng nghe Script */}
+              {/* Lời băng nghe Script với hiệu ứng đánh dấu câu đang nói */}
               {showAudioScript && currentExam.audioScript && (
-                <div className="mt-2 pt-3 border-t border-sky-200 text-xs sm:text-sm text-slate-700 bg-white p-4 rounded-xl whitespace-pre-line font-mono leading-relaxed shadow-inner">
-                  {currentExam.audioScript}
+                <div className="mt-2 pt-3 border-t border-sky-200 text-xs sm:text-sm text-slate-700 bg-white p-4 rounded-xl leading-relaxed shadow-inner space-y-2">
+                  <div className="text-xs font-black text-sky-900 uppercase tracking-wider mb-2">
+                    📜 Transcript bài nghe (Đối thoại tự nhiên, không đọc tên nhân vật):
+                  </div>
+                  {currentExam.audioScript.split('\n').filter(Boolean).map((line, lIdx) => (
+                    <div 
+                      key={lIdx}
+                      className={`p-2.5 rounded-xl transition-all flex items-start gap-2.5 ${
+                        currentLineIndex === lIdx
+                          ? 'bg-sky-100 text-sky-950 font-bold border-l-4 border-sky-600 shadow-2xs ring-1 ring-sky-300'
+                          : lIdx % 2 === 0
+                          ? 'text-slate-800 bg-slate-50/70 border border-slate-200/60'
+                          : 'text-slate-800 bg-blue-50/40 border border-blue-200/60'
+                      }`}
+                    >
+                      <span className={`text-[11px] font-black px-2 py-0.5 rounded-md shrink-0 shadow-2xs ${
+                        lIdx % 2 === 0 ? 'bg-sky-600 text-white' : 'bg-pink-600 text-white'
+                      }`}>
+                        {lIdx % 2 === 0 ? 'Giọng 1 (Nam)' : 'Giọng 2 (Nữ)'}
+                      </span>
+                      <span className="flex-1 leading-snug">{line}</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
