@@ -48,16 +48,16 @@ export const OFFICIAL_MIDTERM_EXAMS_DATA: Record<number, Record<string, Official
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -761,16 +761,16 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -1474,16 +1474,16 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -2187,16 +2187,16 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -2881,16 +2881,16 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -3594,16 +3594,16 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_6_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Linda:	Hi Mi! Welcome to my new house in the countryside.
-Mi:	Wow Linda, your house is so beautiful! How many rooms are there?
-Linda:	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
-Mi:	Which room do you like best?
-Linda:	I love my bedroom because it has a big window overlooking our fruit garden.
-Mi:	Is there a balcony upstairs?
-Linda:	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nữ, 1 Giọng Nam):
+Linda (Giọng Nữ):	Hi Peter! Welcome to my new house in the countryside.
+Peter (Giọng Nam):	Wow Linda, your house is so beautiful! How many rooms are there?
+Linda (Giọng Nữ):	There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.
+Peter (Giọng Nam):	Which room do you like best?
+Linda (Giọng Nữ):	I love my bedroom because it has a big window overlooking our fruit garden.
+Peter (Giọng Nam):	Is there a balcony upstairs?
+Linda (Giọng Nữ):	Yes! We often sit on the balcony in the evening to drink tea and look at the stars.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 My uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -4271,15 +4271,15 @@ My uncle lives in a cozy country house near the river. In front of the house, th
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -4983,15 +4983,15 @@ Adolescence is an exciting time when teenagers explore new interests and develop
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -5695,15 +5695,15 @@ Adolescence is an exciting time when teenagers explore new interests and develop
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -6407,15 +6407,15 @@ Adolescence is an exciting time when teenagers explore new interests and develop
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -7119,15 +7119,15 @@ Adolescence is an exciting time when teenagers explore new interests and develop
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
@@ -7831,15 +7831,15 @@ Adolescence is an exciting time when teenagers explore new interests and develop
       schoolName: 'TRƯỜNG THCS ĐỒNG YÊN',
       teacherName: 'Thầy Đinh Văn Thành',
       audioUrl: '/web-tieng-anh/audio/listening_8_gk1.mp3',
-      audioScript: `• Transcript bài nghe Part 1 (Hội thoại - Dialogue):
-Jason:	Hi Hannah! Did you join any school clubs this academic year?
-Hannah:	Yes! I joined the Photography Club and the IT Club.
-Jason:	Photography Club? That sounds fantastic! What do you photograph?
-Hannah:	We take pictures of campus life, nature, and historic architecture around town.
-Jason:	Does joining clubs help you cope with school pressure?
-Hannah:	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
+      audioScript: `🎧 Transcript bài nghe Part 1 (Hội thoại - 1 Giọng Nam, 1 Giọng Nữ):
+Jason (Giọng Nam):	Hi Hannah! Did you join any school clubs this academic year?
+Hannah (Giọng Nữ):	Yes! I joined the Photography Club and the IT Club.
+Jason (Giọng Nam):	Photography Club? That sounds fantastic! What do you photograph?
+Hannah (Giọng Nữ):	We take pictures of campus life, nature, and historic architecture around town.
+Jason (Giọng Nam):	Does joining clubs help you cope with school pressure?
+Hannah (Giọng Nữ):	Definitely! It helps me make supportive friends, improve teamwork, and unwind after classes.
 
-• Transcript bài nghe Part 2 (Độc thoại - Monologue):
+🎧 Transcript bài nghe Part 2 (Độc thoại):
 Adolescence is an exciting time when teenagers explore new interests and develop social skills. Participating in extracurricular school clubs offers a safe, friendly space to share common passions. When feeling stressed about homework or exams, talking with friends and teachers helps teenagers overcome challenges with confidence.`,
       writingRubric: `1. Topic sentence: 0.25 pt
 2. Supporting sentences: 0.25 pt
