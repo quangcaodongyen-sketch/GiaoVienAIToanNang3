@@ -65,6 +65,16 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  export interface RankStandardTT22 {
+    rankLevel: 'XUAT_SAC' | 'GIOI' | 'KHA' | 'DAT' | 'CHUA_DAT';
+    levelTitle: string; // Tên mức theo TT 22
+    badgeText: string;  // Huy hiệu hiển thị
+    ruleNote: string;   // Căn cứ Thông tư 22/2021/TT-BGDĐT
+    feedback: string;   // Lời nhận xét sư phạm
+    bannerBg: string;   // Màu nền gradient
+    iconType: 'trophy' | 'award' | 'check' | 'alert';
+  }
+
   const [scoreResult, setScoreResult] = useState<{
     score: number;
     correctCount: number;
@@ -73,6 +83,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     total: number;
     rankLevel: string;
     scaledScore: number;
+    rankInfo: RankStandardTT22;
   } | null>(null);
 
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
@@ -224,9 +235,69 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     });
 
     const scaledScore = Math.round((correctCount / currentExam.questions.length) * 100) / 10;
-    let rankLevel = 'DAT';
-    if (scaledScore >= 8.0) rankLevel = 'GIOI';
-    else if (scaledScore >= 6.5) rankLevel = 'KHA';
+    
+    // =========================================================================
+    // XẾP LOẠI KẾT QUẢ ĐÁNH GIÁ CHUẨN THÔNG TƯ 22/2021/TT-BGDĐT
+    // - Mức Tốt (Xuất sắc): 9.0 - 10.0 điểm
+    // - Mức Tốt (Giỏi): 8.0 - 8.9 điểm
+    // - Mức Khá: 6.5 - 7.9 điểm
+    // - Mức Đạt: 5.0 - 6.4 điểm
+    // - Mức Chưa đạt: Dưới 5.0 điểm (< 5.0 điểm, từ 0.0 đến 4.9 điểm)
+    // =========================================================================
+    let rankInfo: RankStandardTT22;
+
+    if (scaledScore >= 9.0) {
+      rankInfo = {
+        rankLevel: 'XUAT_SAC',
+        levelTitle: 'Mức Tốt (Xuất sắc)',
+        badgeText: 'Xuất sắc 🏆',
+        ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Tốt (Xuất sắc: 9.0 - 10.0đ)',
+        feedback: 'Khen ngợi: Em có năng lực tiếng Anh rất xuất sắc, làm bài cực kỳ cẩn thận và tự tin!',
+        bannerBg: 'bg-gradient-to-br from-emerald-600 via-teal-700 to-green-800 border-emerald-400',
+        iconType: 'trophy'
+      };
+    } else if (scaledScore >= 8.0) {
+      rankInfo = {
+        rankLevel: 'GIOI',
+        levelTitle: 'Mức Tốt (Giỏi)',
+        badgeText: 'Tốt (Giỏi) 🌟',
+        ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Tốt (8.0 - 8.9đ)',
+        feedback: 'Khen ngợi: Em nắm rất vững kiến thức trọng tâm, tiếp tục phát huy ở các bài thi tới nhé!',
+        bannerBg: 'bg-gradient-to-br from-emerald-600 via-teal-700 to-green-800 border-emerald-400',
+        iconType: 'trophy'
+      };
+    } else if (scaledScore >= 6.5) {
+      rankInfo = {
+        rankLevel: 'KHA',
+        levelTitle: 'Mức Khá',
+        badgeText: 'Khá 👍',
+        ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Khá (6.5 - 7.9đ)',
+        feedback: 'Khá tốt: Em đã hiểu bài khá tốt, rèn luyện thêm các câu hỏi vận dụng để đạt điểm cao hơn!',
+        bannerBg: 'bg-gradient-to-br from-blue-600 via-indigo-700 to-sky-800 border-blue-400',
+        iconType: 'award'
+      };
+    } else if (scaledScore >= 5.0) {
+      rankInfo = {
+        rankLevel: 'DAT',
+        levelTitle: 'Mức Đạt',
+        badgeText: 'Đạt 🎯',
+        ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Đạt (5.0 - 6.4đ)',
+        feedback: 'Đạt yêu cầu: Em đã hoàn thành yêu cầu cơ bản, cần củng cố thêm từ vựng và ngữ pháp nhé!',
+        bannerBg: 'bg-gradient-to-br from-amber-600 via-orange-600 to-yellow-700 border-amber-300',
+        iconType: 'check'
+      };
+    } else {
+      // Dưới 5.0 điểm (VD: 2.8 điểm) -> BẮT BUỘC XẾP MỨC CHƯA ĐẠT!
+      rankInfo = {
+        rankLevel: 'CHUA_DAT',
+        levelTitle: 'Mức Chưa đạt',
+        badgeText: 'Chưa đạt ⚠️ (Cần cố gắng)',
+        ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Dưới 5.0 điểm xếp Mức Chưa đạt',
+        feedback: 'Chưa đạt: Điểm số dưới 5.0. Em hãy xem kỹ lời giải chi tiết từng câu bên dưới để rút kinh nghiệm và làm lại đề nhé!',
+        bannerBg: 'bg-gradient-to-br from-rose-700 via-red-800 to-red-950 border-rose-500',
+        iconType: 'alert'
+      };
+    }
 
     setScoreResult({
       score: scaledScore,
@@ -234,19 +305,28 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       wrongCount,
       skippedCount,
       total: currentExam.questions.length,
-      rankLevel,
-      scaledScore
+      rankLevel: rankInfo.rankLevel,
+      scaledScore,
+      rankInfo
     });
     setIsSubmitted(true);
 
     if (activeStudent) {
-      studentGradebookService.saveExamResult(activeStudent.id, {
-        examTitle: `${currentExam.typeTitle} (${currentExam.examCode})`,
+      studentGradebookService.recordSubmission({
+        studentId: activeStudent.id,
+        studentCode: activeStudent.studentCode,
+        studentName: activeStudent.name,
+        classId: activeStudent.classId,
+        className: activeStudent.className,
+        grade: activeStudent.grade || selectedGrade,
+        testType: 'gk_ck_exam',
+        unitNumber: 0,
+        unitTitle: currentExam.examCode,
+        testTitle: `${currentExam.typeTitle} (${currentExam.examCode})`,
         score: scaledScore,
         correctCount,
         totalQuestions: currentExam.questions.length,
-        durationMinutes: currentExam.durationMinutes,
-        rankLevel
+        timeSpentSeconds: 0
       });
     }
 
@@ -531,49 +611,60 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           </div>
 
-          {/* KHUNG THÔNG BÁO KẾT QUẢ & CÔNG BỐ ĐIỂM SAU KHI NỘP BÀI */}
+          {/* KHUNG THÔNG BÁO KẾT QUẢ & CÔNG BỐ ĐIỂM SAU KHI NỘP BÀI - CHUẨN THÔNG TƯ 22/2021/TT-BGDĐT */}
           {isSubmitted && scoreResult && (
-            <div id="exam-result-banner" className={`p-4 sm:p-6 m-3 sm:m-6 rounded-2xl sm:rounded-3xl border text-white shadow-xl ${
-              scoreResult.score >= 8.0 
-                ? 'bg-gradient-to-br from-emerald-600 via-teal-700 to-green-800 border-emerald-400' 
-                : scoreResult.score >= 6.5
-                ? 'bg-gradient-to-br from-blue-600 via-indigo-700 to-sky-800 border-blue-400'
-                : 'bg-gradient-to-br from-amber-600 via-orange-700 to-red-800 border-amber-400'
-            }`}>
+            <div id="exam-result-banner" className={`p-4 sm:p-6 m-3 sm:m-6 rounded-2xl sm:rounded-3xl border text-white shadow-xl transition-all ${scoreResult.rankInfo.bannerBg}`}>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5 w-full sm:w-auto">
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
-                    <Trophy className="w-9 h-9 text-amber-300" />
+                <div className="flex items-start gap-3.5 w-full sm:w-auto">
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 shadow-inner mt-1">
+                    {scoreResult.rankInfo.iconType === 'trophy' && <Trophy className="w-9 h-9 text-amber-300" />}
+                    {scoreResult.rankInfo.iconType === 'award' && <Award className="w-9 h-9 text-sky-200" />}
+                    {scoreResult.rankInfo.iconType === 'check' && <CheckCircle2 className="w-9 h-9 text-amber-200" />}
+                    {scoreResult.rankInfo.iconType === 'alert' && <AlertCircle className="w-9 h-9 text-rose-200" />}
                   </div>
-                  <div className="space-y-0.5">
-                    <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90">
-                      KẾT QUẢ ĐÃ ĐƯỢC VÀO SỔ ĐIỂM
+                  <div className="space-y-1">
+                    <div className="text-xs sm:text-sm font-black uppercase tracking-wider text-white/90 flex items-center gap-2">
+                      <span>KẾT QUẢ ĐÃ ĐƯỢC VÀO SỔ ĐIỂM</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-white/25 border border-white/40">
+                        THÔNG TƯ 22/2021/TT-BGDĐT
+                      </span>
                     </div>
-                    <div className="text-2xl sm:text-4xl font-black tracking-tight text-white">
-                      {scoreResult.score} / 10.0 Điểm
+                    <div className="text-3xl sm:text-5xl font-black tracking-tight text-white flex items-baseline gap-2">
+                      <span>{scoreResult.score}</span>
+                      <span className="text-base sm:text-xl font-bold text-white/80">/ 10.0 Điểm</span>
                     </div>
                     <div className="text-xs sm:text-sm text-white/95 flex items-center gap-2 flex-wrap">
-                      <span>✓ Đúng: <strong>{scoreResult.correctCount}</strong> câu</span>
+                      <span>✓ Đúng: <strong>{scoreResult.correctCount}</strong>/{scoreResult.total} câu ({Math.round((scoreResult.correctCount / scoreResult.total) * 100)}%)</span>
                       <span>•</span>
                       <span>✗ Sai: <strong>{scoreResult.wrongCount}</strong> câu</span>
                       {scoreResult.skippedCount > 0 && (
                         <>
                           <span>•</span>
-                          <span className="text-amber-200 font-bold">⚠️ Bỏ qua: {scoreResult.skippedCount} câu</span>
+                          <span className="text-amber-200 font-extrabold">⚠️ Bỏ qua: {scoreResult.skippedCount} câu</span>
                         </>
                       )}
                       <span>•</span>
-                      <span>Xếp loại: <strong className="underline text-amber-200 font-extrabold">{scoreResult.rankLevel === 'GIOI' ? 'Giỏi 🌟' : scoreResult.rankLevel === 'KHA' ? 'Khá 👍' : 'Đạt'}</strong></span>
+                      <span>Xếp loại: <strong className="px-2.5 py-0.5 rounded-lg bg-white text-slate-900 font-black shadow-xs inline-block ml-1">{scoreResult.rankInfo.badgeText}</strong></span>
+                    </div>
+
+                    {/* DÒNG CĂN CỨ THÔNG TƯ 22 & LỜI PHÊ SƯ PHẠM */}
+                    <div className="mt-2.5 pt-2.5 border-t border-white/20 text-xs sm:text-sm space-y-1">
+                      <div className="text-white/90">
+                        <strong className="text-amber-200">📋 Căn cứ xếp loại:</strong> {scoreResult.rankInfo.ruleNote}
+                      </div>
+                      <div className="text-white/95 italic bg-black/15 p-2 rounded-xl border border-white/10">
+                        💬 <strong>Lời nhận xét của Thầy:</strong> "{scoreResult.rankInfo.feedback}"
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
                   {onGoToLeaderboard && (
                     <button
                       type="button"
                       onClick={onGoToLeaderboard}
-                      className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-white text-slate-900 font-black text-xs sm:text-sm hover:bg-amber-300 transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+                      className="flex-1 sm:flex-initial px-4 py-3 rounded-xl bg-white text-slate-900 font-black text-xs sm:text-sm hover:bg-amber-300 transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
                     >
                       <Award className="w-4 h-4 text-amber-600" />
                       <span>Xem Sổ Điểm Lớp</span>
@@ -582,7 +673,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   <button
                     type="button"
                     onClick={handleResetExam}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-black/20 hover:bg-black/30 text-white font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-1.5"
+                    className="flex-1 sm:flex-initial px-4 py-3 rounded-xl bg-black/25 hover:bg-black/35 text-white font-black text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-1.5 border border-white/20"
                   >
                     <RotateCw className="w-4 h-4" />
                     <span>Làm Lại Đề Này</span>

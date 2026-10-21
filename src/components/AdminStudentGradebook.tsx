@@ -268,7 +268,7 @@ export const AdminStudentGradebook: React.FC = () => {
       default:
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300">
-            Cần cố gắng
+            Chưa đạt
           </span>
         );
     }
@@ -498,7 +498,7 @@ export const AdminStudentGradebook: React.FC = () => {
                   <option value="GIOI">Giỏi (8 - 8.9)</option>
                   <option value="KHA">Khá (6.5 - 7.9)</option>
                   <option value="DAT">Đạt (5.0 - 6.4)</option>
-                  <option value="CAN_CO_GANG">Cần cố gắng (&lt; 5.0)</option>
+                  <option value="CAN_CO_GANG">Chưa đạt (&lt; 5.0)</option>
                 </select>
               </div>
             </div>

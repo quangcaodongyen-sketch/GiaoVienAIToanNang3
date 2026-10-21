@@ -807,7 +807,7 @@ class StudentGradebookService {
       else if (item.rankLevel === 'GIOI') rankText = 'Giỏi (8 - 8.9)';
       else if (item.rankLevel === 'KHA') rankText = 'Khá (6.5 - 7.9)';
       else if (item.rankLevel === 'DAT') rankText = 'Đạt (5.0 - 6.4)';
-      else rankText = 'Cần Cố Gắng (< 5.0)';
+      else rankText = 'Chưa Đạt (< 5.0)';
 
       return [
         index + 1,
