@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Award, 
+  Award,
+  Copy, 
   RotateCw, 
   Volume2, 
   Sparkles, 
@@ -89,6 +90,17 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [showAudioScript, setShowAudioScript] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
+  const [copiedEssayId, setCopiedEssayId] = useState<string | null>(null);
+
+  const handleCopySampleEssay = (qId: string, text: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedEssayId(qId);
+      setTimeout(() => {
+        setCopiedEssayId(null);
+      }, 4000);
+    }
+  };
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -264,18 +276,20 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     let wrongCount = 0;
     let skippedCount = 0;
 
+    let earnedPoints = 0;
     currentExam.questions.forEach(q => {
-      const userAns = (userAnswers[q.id] || '').trim().toLowerCase();
+      const rawAns = (userAnswers[q.id] || '').trim();
+      const userAns = rawAns.toLowerCase();
       const rightAns = (q.correct || '').trim().toLowerCase();
 
-      if (!userAns) {
+      if (!rawAns) {
         skippedCount++;
         return;
       }
 
       let isQCorrect = false;
       if (q.type === 'essay') {
-        const words = userAns.match(/\S+/g) || [];
+        const words = rawAns.match(/\S+/g) || [];
         if (words.length >= 15) {
           isQCorrect = true;
         }
@@ -293,12 +307,13 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
       if (isQCorrect) {
         correctCount++;
+        earnedPoints += (q.type === 'essay' ? 1.0 : 0.25);
       } else {
         wrongCount++;
       }
     });
 
-    const scaledScore = Math.round((correctCount / currentExam.questions.length) * 100) / 10;
+    const scaledScore = Math.min(10.0, Math.round(earnedPoints * 10) / 10);
     
     // =========================================================================
     // XẾP LOẠI KẾT QUẢ ĐÁNH GIÁ CHUẨN THÔNG TƯ 22/2021/TT-BGDĐT
@@ -962,7 +977,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                                 {isCorrect && (
                                   <span className="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-black bg-emerald-600 text-white flex items-center gap-1 shadow-xs">
                                     <Check className="w-4 h-4" />
-                                    <span>ĐÚNG (+0.25đ)</span>
+                                    <span>{q.type === 'essay' ? 'ĐÚNG (+1.0đ)' : 'ĐÚNG (+0.25đ)'}</span>
                                   </span>
                                 )}
                                 {isWrong && (
@@ -1043,15 +1058,80 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                             </div>
                           )}
 
-                          {/* LỜI GIẢI & CHỮA BÀI CHI TIẾT TỪNG CÂU 1 (HIỂN THỊ CHO TẤT CẢ CÂU: ĐÚNG, SAI VÀ BỎ QUA!) */}
-                          {isSubmitted && (
+                          {/* KHU VỰC NHẬP BÀI TỰ LUẬN VIẾT ĐOẠN VĂN (WRITING PRODUCTION) */}
+                          {q.type === 'essay' && (
+                            <div className="mt-3.5 sm:mt-4 space-y-3">
+                              <textarea
+                                rows={6}
+                                disabled={isSubmitted}
+                                value={userAnswers[q.id] || ''}
+                                onChange={(e) => handleSelectAnswer(q.id, e.target.value)}
+                                placeholder="Em hãy nhập bài viết đoạn văn tiếng Anh của mình vào đây (khoảng 60 - 80 từ)..."
+                                className="w-full p-3.5 sm:p-4 rounded-xl border border-slate-300 text-sm sm:text-base text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-sky-500 leading-relaxed font-sans"
+                              />
+                              <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <span>
+                                  📝 Số từ đã viết: <strong className="text-sky-700 font-black">{((userAnswers[q.id] || '').trim().match(/\S+/g) || []).length}</strong> từ
+                                </span>
+                                {currentExam.writingRubric && (
+                                  <span className="italic text-slate-500">
+                                    <strong>Tiêu chí chấm điểm:</strong> {currentExam.writingRubric}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* LỜI GIẢI VÀ BÀI VIẾT MẪU ĐẠT ĐIỂM TỐI ĐA CHO CÂU TỰ LUẬN VIẾT (WRITING ESSAY) */}
+                          {isSubmitted && q.type === 'essay' && (
+                            <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-sky-50 to-blue-50 border-2 border-indigo-200 text-slate-900 shadow-sm space-y-3.5">
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-indigo-200/80 pb-3">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles className="w-5 h-5 text-indigo-600 shrink-0" />
+                                  <span className="font-black text-indigo-950 text-sm sm:text-base tracking-tight">
+                                    ✍️ BÀI VIẾT MẪU ĐẠT ĐIỂM TỐI ĐA (1.0đ) ĐỂ EM CHÉP VÀO VỞ LUYỆN TẬP
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopySampleEssay(q.id, q.correct || '')}
+                                  className={`px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-xs cursor-pointer ${
+                                    copiedEssayId === q.id
+                                      ? 'bg-emerald-600 text-white'
+                                      : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                  }`}
+                                >
+                                  <Copy className="w-4 h-4" />
+                                  <span>{copiedEssayId === q.id ? '✓ Đã sao chép vào bộ nhớ!' : '📋 Sao chép bài viết mẫu'}</span>
+                                </button>
+                              </div>
+
+                              {/* BÀI MẪU NGUYÊN BẢN TIẾNG ANH */}
+                              <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-inner font-sans text-sm sm:text-base leading-relaxed text-slate-800">
+                                <span className="block text-xs font-black text-indigo-800 uppercase tracking-wider mb-1">
+                                  🇬🇧 Model Paragraph (Đoạn văn tiếng Anh chuẩn):
+                                </span>
+                                {q.correct}
+                              </div>
+
+                              {/* PHẦN DỊCH NGHĨA TIẾNG VIỆT VÀ TỪ VỰNG ĂN ĐIỂM */}
+                              {q.explanation && (
+                                <div className="pt-1 text-xs sm:text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+                                  {q.explanation}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* LỜI GIẢI & CHỮA BÀI CHI TIẾT TỪNG CÂU 1 (CHO CÁC CÂU TRẮC NGHIỆM, NGHE VÀ ĐỌC HIỂU) */}
+                          {isSubmitted && q.type !== 'essay' && (
                             <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300/80 text-xs sm:text-base text-amber-950 flex items-start gap-2.5 shadow-2xs">
                               <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                               <div className="leading-relaxed flex-1">
                                 <span className="font-extrabold text-amber-900 block mb-1 text-sm sm:text-base">
-                                  📖 Lời giải & Chữa bài chi tiết:
+                                  💡 Lời giải & Phân tích chi tiết của Giáo viên AI:
                                 </span>
-                                <div className="text-slate-800">
+                                <div className="text-slate-800 whitespace-pre-line leading-relaxed">
                                   {q.explanation ? (
                                     <span>{q.explanation}</span>
                                   ) : (
@@ -1070,51 +1150,6 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 </div>
               ));
             })()}
-
-            {/* PHẦN E: VIẾT ĐOẠN VĂN (WRITING PRODUCTION) */}
-            {currentExam.sampleWriting && (
-              <div className="space-y-3 pt-2">
-                <div className="p-3.5 sm:p-4 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-between">
-                  <div>
-                    <h4 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                      Part 8. Writing Production: Viết đoạn văn tiếng Anh (1.0 điểm)
-                    </h4>
-                    <div className="text-xs sm:text-sm text-slate-600 italic mt-0.5">
-                      Write a short paragraph of about 60 - 80 words about the topic.
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-md bg-white text-slate-800 font-extrabold text-xs sm:text-sm border border-slate-200">
-                    1.0 điểm
-                  </span>
-                </div>
-
-                <div className="p-4 rounded-2xl border border-slate-200 bg-white space-y-3">
-                  <textarea
-                    rows={5}
-                    disabled={isSubmitted}
-                    value={userAnswers['writing_essay'] || ''}
-                    onChange={(e) => handleSelectAnswer('writing_essay', e.target.value)}
-                    placeholder="Em hãy nhập bài viết đoạn văn tiếng Anh của mình vào đây (khoảng 60 - 80 từ)..."
-                    className="w-full p-3.5 sm:p-4 rounded-xl border border-slate-300 text-sm sm:text-base text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-sky-500 leading-relaxed font-sans"
-                  />
-
-                  {currentExam.writingRubric && (
-                    <div className="text-xs sm:text-sm text-slate-600 italic bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <strong>Tiêu chí chấm điểm:</strong> {currentExam.writingRubric}
-                    </div>
-                  )}
-
-                  {isSubmitted && (
-                    <div className="mt-3 p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs sm:text-base leading-relaxed text-slate-800">
-                      <span className="font-black text-blue-900 block mb-1.5 text-sm sm:text-base">
-                        🌟 Đoạn văn mẫu tham khảo đạt điểm tối đa (1.0đ):
-                      </span>
-                      {currentExam.sampleWriting}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* CHÂN TRANG: NÚT NỘP BÀI HOẶC LÀM LẠI - TO RÕ DỄ BẤM */}
