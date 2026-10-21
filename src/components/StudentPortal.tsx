@@ -607,7 +607,27 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard'>('vocab');
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard'>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      const rawPath = window.location.pathname.toLowerCase();
+      const rawHash = window.location.hash.toLowerCase();
+      if (
+        tabParam === 'exam' ||
+        tabParam === 'kiemtra' ||
+        tabParam === 'kiem-tra' ||
+        rawHash === '#exam' ||
+        rawHash === '#kiemtra' ||
+        rawHash === '#kiem-tra' ||
+        rawPath.endsWith('/kiemtra') ||
+        rawPath.endsWith('/kiem-tra')
+      ) {
+        return 'exam';
+      }
+    } catch (e) {}
+    return 'vocab';
+  });
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng

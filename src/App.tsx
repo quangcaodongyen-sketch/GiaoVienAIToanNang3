@@ -272,11 +272,16 @@ export default function App() {
       rawPath === '/students' ||
       rawPath === '/tuvung' ||
       rawPath === '/tu-vung' ||
+      rawPath === '/kiemtra' ||
+      rawPath === '/kiem-tra' ||
       rawHash === '#hocsinh' ||
       rawHash === '#hoc-sinh' ||
       rawHash === '#students' ||
       rawHash === '#tuvung' ||
       rawHash === '#tu-vung' ||
+      rawHash === '#kiemtra' ||
+      rawHash === '#kiem-tra' ||
+      rawHash === '#exam' ||
       rawHash === '#eng12_vocab'
     );
   };
