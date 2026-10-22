@@ -1,7 +1,8 @@
 // ================================================================
-// online_midterm_exams_data.js – 4 BÀI KIỂM TRA GIỮA HỌC KÌ I ONLINE CHUẨN XÁC
-// Khối 6 (Mã 601, 602) & Khối 8 (Mã 801, 802) bám sát tuyệt đối file Word của Thầy
-// Tác giả & Đơn vị: Thầy Đinh Văn Thành – TRƯỜNG THCS ĐỒNG YÊN (0915.213717)
+// online_midterm_exams_data.js – HỆ THỐNG ĐỀ KIỂM TRA GIỮA HỌC KÌ I ONLINE CHUẨN XÁC
+// Khối 6: ĐỦ 4 MÃ ĐỀ (Mã 601, 602, 603, 604) & Khối 8 (Mã 801) bám sát tuyệt đối chuẩn GDPT 2018 (CV 7991)
+// Tác giả & Đơn vị: Thầy Đinh Văn Thành – TRƯỜNG THCS ĐỒNG YÊN (Hotline/Zalo: 0915.213717)
+// Cơ chế thông minh: Tự động đảo câu hỏi & đáp án mỗi lần học sinh làm bài tránh học vẹt, học tủ
 // ================================================================
 
 var ONLINE_MIDTERM_EXAMS = [
@@ -823,6 +824,2395 @@ var ONLINE_MIDTERM_EXAMS = [
     "writingRubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
     "sampleWritingText": "I would like to tell you about my new school, Dong Yen Lower Secondary School. It is located in a quiet village with fresh air. The school has three modern buildings, twenty well-equipped classrooms, a large computer lab, and a green playground. My teachers are dedicated and enthusiastic, while my classmates are friendly and supportive. I always look forward to going to school every morning.",
     "finalScoreSummary": "III. TỔNG ĐIỂM BÀI KIỂM TRA GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7, 36 câu): 9,0 điểm (0.25đ/câu)\n- Viết tự luận (Part 8): 1,0 điểm.",
+    "publishedAt": "2026-10-22T06:00:00.000Z"
+  },
+  {
+    "id": "gk1_eng6_602",
+    "title": "BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KÌ I – TIẾNG ANH 6 (Mã đề 602)",
+    "grade": 6,
+    "term": "GK1",
+    "examCode": "602",
+    "examFormat": "cv7991",
+    "examTime": 60,
+    "examClass": "6A1",
+    "schoolName": "TRƯỜNG THCS ĐỒNG YÊN",
+    "teacherName": "Thầy Đinh Văn Thành",
+    "isOpen": true,
+    "audioTitle": "Audio Listening Đề thi Giữa kì 1 Tiếng Anh 6 (Mã đề 602)",
+    "audioUrl": "audio/g6_gk1_602_part1.mp3",
+    "audioUrlPart1": "audio/g6_gk1_602_part1.mp3",
+    "audioUrlPart2": "audio/g6_gk1_602_part2.mp3",
+    "audioScript": "Nick:\tHi Phong! Who is your best friend in class 6A?\nPhong:\tHello Nick! My best friend is Minh. He sits next to me in class.\nNick:\tWhat does he look like?\nPhong:\tHe is tall with short black hair and big brown eyes. He always has a cheerful smile.\nNick:\tWhat is he like?\nPhong:\tHe is very clever, sporty, and kind. He often helps me with difficult math homework.\nNick:\tWhat sports do you two play together?\nPhong:\tWe play football every Wednesday afternoon and cycle in the park on weekends.\n\nLan is my close friend at secondary school. She is twelve years old and has long black hair. Lan is an active and creative girl who loves drawing and reading comic books. She is also very caring and shares her snacks with classmates. Everyone in class likes Lan because she is always friendly and polite.",
+    "sections": [
+      {
+        "id": "sec_1",
+        "name": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "title": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_602_part1.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_1",
+            "num": "1",
+            "content": "Who is Phong's best friend in class 6A?",
+            "options": [
+              "A. Tom",
+              "B. Peter",
+              "C. Minh"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Minh)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_2",
+            "num": "2",
+            "content": "What does Minh look like?",
+            "options": [
+              "A. Tall with short black hair and brown eyes",
+              "B. Short with blond hair",
+              "C. Very old"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Tall with short black hair and brown eyes)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_3",
+            "num": "3",
+            "content": "How is Minh described in terms of personality?",
+            "options": [
+              "A. Quiet and angry",
+              "B. Lazy and rude",
+              "C. Clever, sporty, and kind"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Clever, sporty, and kind)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_4",
+            "num": "4",
+            "content": "What subject does Minh help Phong with?",
+            "options": [
+              "A. History homework",
+              "B. Art homework",
+              "C. Math homework"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Math homework)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_5",
+            "num": "5",
+            "content": "When do Phong and Minh play football together?",
+            "options": [
+              "A. Every Wednesday afternoon",
+              "B. Never",
+              "C. On Monday morning"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Every Wednesday afternoon)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_2",
+        "name": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "title": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_602_part2.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_6",
+            "num": "6",
+            "content": "Lan is twelve years old and has long black hair.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_7",
+            "num": "7",
+            "content": "Lan dislikes drawing and comic books.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_8",
+            "num": "8",
+            "content": "Lan is caring and shares snacks with classmates.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_9",
+            "num": "9",
+            "content": "Classmates dislike Lan because she is rude.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_10",
+            "num": "10",
+            "content": "Lan is friendly and polite to everyone.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_3",
+        "name": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "title": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "skill": "language",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_11",
+            "num": "11",
+            "content": "Peter is a ________ student. He learns things quickly and gets good marks in Maths.",
+            "options": [
+              "A. lazy",
+              "B. clever",
+              "C. noisy",
+              "D. boring"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (clever)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_12",
+            "num": "12",
+            "content": "There is a large wooden wardrobe ________ the bed and the desk in my bedroom.",
+            "options": [
+              "A. between",
+              "B. in front",
+              "C. under",
+              "D. among"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (between)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_13",
+            "num": "13",
+            "content": "There is a large bookshelf ________ the wall.",
+            "options": [
+              "A. under",
+              "B. between",
+              "C. against",
+              "D. in"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (against)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_14",
+            "num": "14",
+            "content": "The cat is sleeping peacefully ________ the sofa.",
+            "options": [
+              "A. under",
+              "B. among",
+              "C. between",
+              "D. at"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (under)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_15",
+            "num": "15",
+            "content": "Which word has the underlined part pronounced differently? house, round, cousin, mouth",
+            "options": [
+              "A. cousin",
+              "B. round",
+              "C. mouth",
+              "D. house"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (cousin)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_16",
+            "num": "16",
+            "content": "Kate is very kind. She always ________ her classmates with difficult exercises.",
+            "options": [
+              "A. helping",
+              "B. is helping",
+              "C. help",
+              "D. helps"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (helps)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_17",
+            "num": "17",
+            "content": "Teacher: Welcome to our new school year, class!' - Students: '________'",
+            "options": [
+              "A. Never mind.",
+              "B. Not at all.",
+              "C. Goodbye, see you later.",
+              "D. Good morning, teacher! We are excited."
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (Good morning, teacher! We are excited.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_18",
+            "num": "18",
+            "content": "Peter: Hello, David. What are you doing?' - David: '________'",
+            "options": [
+              "A. Yes, I like English.",
+              "B. I am twelve years old.",
+              "C. It is on Tuesday.",
+              "D. I am reading a book in the library."
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (I am reading a book in the library.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_19",
+            "num": "19",
+            "content": "My father ________ dinner in the kitchen at the moment.",
+            "options": [
+              "A. cooks",
+              "B. is cooking",
+              "C. cooked",
+              "D. cook"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (is cooking)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_20",
+            "num": "20",
+            "content": "Choose the word OPPOSITE in meaning to hard-working'.",
+            "options": [
+              "A. friendly",
+              "B. active",
+              "C. lazy",
+              "D. kind"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (lazy)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_21",
+            "num": "21",
+            "content": "There ________ three bedrooms and a living room in our apartment.",
+            "options": [
+              "A. is",
+              "B. have",
+              "C. are",
+              "D. has"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (are)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_22",
+            "num": "22",
+            "content": "In our school, there is a large ________ with many interesting books and magazines.",
+            "options": [
+              "A. kitchen",
+              "B. bathroom",
+              "C. bedroom",
+              "D. library"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (library)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_4",
+        "name": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "title": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "After regular classes, students at Quang Trung Secondary School join various interesting (23) ________. Those who like music can join the guitar club where they practice new (24) ________ together. Artistic students prefer the art club to draw landscapes and make paper crafts. For active students, the sports club provides training in football, table tennis, and badminton. Joining these activities helps students (25) ________ new friends and develop important social skills. Everyone feels relaxed and full of (26) ________ after an active afternoon with their school (27) ________.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_23",
+            "num": "23",
+            "content": "Choose the best answer for blank (23) in the passage.",
+            "options": [
+              "A. houses",
+              "B. clubs",
+              "C. buses",
+              "D. rooms"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (clubs)\n📖 Dịch nghĩa câu: Sau các giờ học chính khóa, học sinh trường THCS Quang Trung tham gia vào nhiều câu lạc bộ (clubs) thú vị khác nhau.\n🔍 Cấu trúc & Ngữ cảnh: Các câu tiếp theo trong bài đều miêu tả cụ thể: 'guitar club' (CLB đàn ghi-ta), 'art club' (CLB mỹ thuật), 'sports club' (CLB thể thao). Do đó danh từ khái quát ở ô trống này bắt buộc phải là 'clubs' (các câu lạc bộ).\n💡 Phân tích đáp án gây nhiễu: A. houses (những ngôi nhà); C. buses (xe buýt); D. rooms (các căn phòng) không phải là tổ chức hoạt động ngoại khóa sau giờ học của học sinh.\n👨‍🏫 Lời khuyên của Thầy giáo: Khi làm dạng bài Cloze Test, em hãy đọc lướt 1-2 câu tiếp theo để tìm manh mối từ vựng ('guitar club', 'art club') giúp chọn đúng từ ngay lập tức!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_24",
+            "num": "24",
+            "content": "Choose the best answer for blank (24) in the passage.",
+            "options": [
+              "A. sports",
+              "B. songs",
+              "C. games",
+              "D. books"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (songs)\n📖 Dịch nghĩa câu: Những bạn yêu thích âm nhạc có thể tham gia câu lạc bộ ghi-ta, nơi các bạn cùng nhau luyện tập những bài hát mới (new songs).\n🔍 Cấu trúc & Ngữ cảnh: Chủ ngữ là 'Those who like music' (những người thích âm nhạc) và 'guitar club' (câu lạc bộ đàn ghi-ta), do đó tân ngữ đi với động từ 'practice' (luyện tập) phải là 'songs' (các bài hát).\n💡 Phân tích đáp án gây nhiễu: A. sports (thể thao); C. games (trò chơi); D. books (sách vở) không liên quan trực tiếp đến việc chơi đàn ghi-ta và âm nhạc.\n👨‍🏫 Lời khuyên của Thầy giáo: Cặp từ 'music - guitar - songs' luôn đi liền với nhau trong trường nghĩa chủ đề âm nhạc và sở thích.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_25",
+            "num": "25",
+            "content": "Choose the best answer for blank (25) in the passage.",
+            "options": [
+              "A. buy",
+              "B. make",
+              "C. do",
+              "D. take"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (make)\n📖 Dịch nghĩa câu: Tham gia các hoạt động này giúp học sinh kết bạn mới (make new friends) và phát triển các kỹ năng xã hội quan trọng.\n🔍 Cấu trúc & Cụm từ cố định: Thành ngữ cố định (Collocation) vô cùng quan trọng: 'make friends' hoặc 'make new friends' (kết bạn, làm quen bạn mới). Cấu trúc: 'help sb (to) do sth' (giúp ai làm gì).\n💡 Phân tích đáp án gây nhiễu: Tiếng Anh KHÔNG dùng 'buy friends' (mua bạn bè), không dùng 'do friends' hay 'take friends'. Chỉ có duy nhất 'make friends' là chuẩn xác.\n👨‍🏫 Lời khuyên của Thầy giáo: Cụm từ 'make friends' là kiến thức trọng tâm bài Unit 1 Tiếng Anh 6 Global Success, các em nhất định phải học thuộc lòng nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_26",
+            "num": "26",
+            "content": "Choose the best answer for blank (26) in the passage.",
+            "options": [
+              "A. stress",
+              "B. energy",
+              "C. pollution",
+              "D. traffic"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (energy)\n📖 Dịch nghĩa câu: Mọi người đều cảm thấy thư giãn và tràn đầy năng lượng (full of energy) sau một buổi chiều năng động...\n🔍 Cấu trúc & Cụm từ cố định: Cụm tính từ miêu tả: 'full of energy' (tràn đầy năng lượng, dồi dào sức sống). Cặp tính từ đồng đẳng nối bằng 'and': 'relaxed and full of energy' (thư thái và tràn ngập năng lượng tích cực).\n💡 Phân tích đáp án gây nhiễu: A. stress (sự căng thẳng); C. pollution (ô nhiễm); D. traffic (giao thông) đều mang nghĩa tiêu cực, trái ngược với tâm trạng vui vẻ, thư giãn 'relaxed'.\n👨‍🏫 Lời khuyên của Thầy giáo: Em hãy chú ý từ nối 'and' nối hai từ cùng sắc thái: 'relaxed' (tích cực) thì từ đi sau cũng phải tích cực là 'energy'.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_27",
+            "num": "27",
+            "content": "Choose the best answer for blank (27) in the passage.",
+            "options": [
+              "A. farmers",
+              "B. mates",
+              "C. doctors",
+              "D. drivers"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (mates)\n📖 Dịch nghĩa câu: ...sau một buổi chiều năng động cùng bạn bè ở trường (school mates).\n🔍 Cấu trúc & Cụm từ ghép: Danh từ ghép 'school mates' hoặc 'schoolmates' (các bạn cùng trường). 'mate' là danh từ thân mật chỉ bạn bè (classmate: bạn cùng lớp; schoolmate: bạn cùng trường; roommate: bạn cùng phòng).\n💡 Phân tích đáp án gây nhiễu: A. farmers (những người nông dân); C. doctors (các bác sĩ); D. drivers (các tài xế lái xe) đều không phải là người học sinh cùng sinh hoạt CLB ở trường.\n👨‍🏫 Lời khuyên của Thầy giáo: 'School mates' là từ chỉ bạn bè cùng trường rất thân thiết và gần gũi trong môi trường học đường THCS.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_5",
+        "name": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "title": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "In the scenic countryside of Ninh Binh, my uncle owns a charming tiled-roof house surrounded by green limestone hills. The house has three interconnected rooms and a broad front veranda paved with red terracotta tiles. In front of the veranda sits a crystal-clear lotus pond where colourful carp swim leisurely. Behind the house, there is an orchard filled with sweet pomelo, guava, and banana trees. The morning air is fragrant with blooming flowers and the cheerful chirping of wild birds. Living in the countryside allows my uncle's family to enjoy organic homegrown vegetables and unpolluted air. It is our favourite retreat whenever city life becomes stressful.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_28",
+            "num": "28",
+            "content": "What sits in front of the front veranda?",
+            "options": [
+              "A. A crystal-clear lotus pond with carp",
+              "B. A busy highway",
+              "C. A large parking lot",
+              "D. A swimming pool"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (A crystal-clear lotus pond with carp)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_29",
+            "num": "29",
+            "content": "What is the text about?",
+            "options": [
+              "A. Building limestone hills",
+              "B. A charming countryside house in Ninh Binh",
+              "C. How to plant pomelo trees",
+              "D. City life in Hanoi"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (A charming countryside house in Ninh Binh)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_30",
+            "num": "30",
+            "content": "The word retreat' in paragraph 3 is closest in meaning to ________.",
+            "options": [
+              "A. an expensive office",
+              "B. a dangerous fight",
+              "C. a peaceful getaway",
+              "D. a hospital"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (a peaceful getaway)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_31",
+            "num": "31",
+            "content": "Why does the author love visiting the uncle's house?",
+            "options": [
+              "A. To go shopping at big malls",
+              "B. To enjoy organic food and unpolluted air",
+              "C. To play computer games all day",
+              "D. To avoid going to school forever"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (To enjoy organic food and unpolluted air)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_32",
+            "num": "32",
+            "content": "The word there' in paragraph 2 refers to ________.",
+            "options": [
+              "A. Under the water",
+              "B. Behind the house",
+              "C. On the roof",
+              "D. In the bedroom"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Behind the house)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_6",
+        "name": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "title": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "skill": "writing",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_33",
+            "num": "33",
+            "content": "Phong is taller than any student in his class.",
+            "options": [
+              "A. Phong is the tallest student in his class.",
+              "B. Phong is the tallest student at his class.",
+              "C. Phong are the tallest student in his class.",
+              "D. Phong is the tallest student in class his."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Phong is the tallest student in his class.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_34",
+            "num": "34",
+            "content": "John rides his bicycle to school every morning.",
+            "options": [
+              "A. John goes to school with bicycle every morning.",
+              "B. John goes to school by bicycle morning every.",
+              "C. John travels to school on foot every morning.",
+              "D. John goes to school by bicycle every morning."
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (John goes to school by bicycle every morning.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_7",
+        "name": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, C or D. (0.5 pt)",
+        "title": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, C or D. (0.5 pt)",
+        "skill": "writing",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_602_35",
+            "num": "35",
+            "content": "dinner / family / my / together / cooks / every / evening / .",
+            "options": [
+              "A. My family cooks dinner together every evening.",
+              "B. My family dinner cooks together every evening.",
+              "C. My family cooks dinner together evening every.",
+              "D. Family my cooks dinner together every evening."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (My family cooks dinner together every evening.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_602_36",
+            "num": "36",
+            "content": "school / does / your / brother / walk / every / to / morning / ?",
+            "options": [
+              "A. Does your brother walk to school every morning?",
+              "B. Your does brother walk to school every morning?",
+              "C. Does your walk brother to school every morning?",
+              "D. Does your brother walk to school morning every?"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Does your brother walk to school every morning?)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_8",
+        "name": "Part 8. Writing (1.0 pt)",
+        "title": "Part 8. Writing (1.0 pt)",
+        "skill": "writing",
+        "type": "writing",
+        "passage": "",
+        "prompt": "Part 8. Writing (1.0 pt) Write a paragraph (50-60 words) about your study corner at home.\nYou should write about: Where your study desk is placed; Things on the desk (lamp, books, computer, stationery); How you organize it to study effectively.",
+        "modelWriting": "My favourite place in my house is my study corner. My wooden desk is placed near a large window in my bedroom to get natural daylight. On the desk, there is a study lamp, some colourful notebooks, and a neat pencil case. I always keep my books organized on the bookshelf so that I can study effectively.",
+        "rubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+        "questions": []
+      }
+    ],
+    "writingRubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+    "sampleWritingText": "My favourite place in my house is my study corner. My wooden desk is placed near a large window in my bedroom to get natural daylight. On the desk, there is a study lamp, some colourful notebooks, and a neat pencil case. I always keep my books organized on the bookshelf so that I can study effectively.",
+    "finalScoreSummary": "III. TỔNG ĐIỂM BÀI KIỂM TRA GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7): 9,0 điểm\n- Viết tự luận (Part 8): 1,0 điểm.",
+    "publishedAt": "2026-10-22T06:00:00.000Z"
+  },
+  {
+    "id": "gk1_eng6_603",
+    "title": "BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KÌ I – TIẾNG ANH 6 (Mã đề 603)",
+    "grade": 6,
+    "term": "GK1",
+    "examCode": "603",
+    "examFormat": "cv7991",
+    "examTime": 60,
+    "examClass": "6A1",
+    "schoolName": "TRƯỜNG THCS ĐỒNG YÊN",
+    "teacherName": "Thầy Đinh Văn Thành",
+    "isOpen": true,
+    "audioTitle": "Audio Listening Đề thi Giữa kì 1 Tiếng Anh 6 (Mã đề 603)",
+    "audioUrl": "audio/g6_gk1_603_part1.mp3",
+    "audioUrlPart1": "audio/g6_gk1_603_part1.mp3",
+    "audioUrlPart2": "audio/g6_gk1_603_part2.mp3",
+    "audioScript": "An:\tHi Duy! How is your first week at our new secondary school?\nDuy:\tHello An! It is very exciting. Our school has a large library and modern science labs.\nAn:\tDo you like wearing our new school uniform?\nDuy:\tYes, I do. The blue uniform looks very smart and comfortable.\nAn:\tWhat is your favorite subject this term?\nDuy:\tI love English and Computer Science because we learn so many interesting things.\n\nThang Long Secondary School is a friendly school located in a quiet town. The school has twenty classrooms, a large sports field, and a green garden. Students wear uniforms from Monday to Saturday and participate in various outdoor activities. Teachers are very kind, helpful, and always encourage students to study hard.",
+    "sections": [
+      {
+        "id": "sec_1",
+        "name": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "title": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_603_part1.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_1",
+            "num": "1",
+            "content": "How does Duy feel about his first week at school?",
+            "options": [
+              "A. He dislikes it",
+              "B. It is boring",
+              "C. It is very exciting"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (It is very exciting)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_2",
+            "num": "2",
+            "content": "What facilities does Duy mention about the school?",
+            "options": [
+              "A. A cinema and a hotel",
+              "B. A shopping mall",
+              "C. A large library and science labs"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (A large library and science labs)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_3",
+            "num": "3",
+            "content": "What color is the school uniform?",
+            "options": [
+              "A. Yellow",
+              "B. Red",
+              "C. Blue"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Blue)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_4",
+            "num": "4",
+            "content": "What are Duy's favorite subjects?",
+            "options": [
+              "A. Music only",
+              "B. History only",
+              "C. English and Computer Science"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (English and Computer Science)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_5",
+            "num": "5",
+            "content": "Where do students wear uniforms?",
+            "options": [
+              "A. At home",
+              "B. Only on Sundays",
+              "C. At school from Monday to Saturday"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (At school from Monday to Saturday)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_2",
+        "name": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "title": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_603_part2.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_6",
+            "num": "6",
+            "content": "Thang Long Secondary School is located in a noisy industrial center.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_7",
+            "num": "7",
+            "content": "The school has twenty classrooms and a large sports field.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_8",
+            "num": "8",
+            "content": "Students never take part in outdoor activities.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_9",
+            "num": "9",
+            "content": "Teachers are kind, helpful, and supportive.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_10",
+            "num": "10",
+            "content": "Students wear uniforms on Sundays.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_3",
+        "name": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "title": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "skill": "language",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_11",
+            "num": "11",
+            "content": "Binh usually ________ his bicycle to school every morning.",
+            "options": [
+              "A. rode",
+              "B. rides",
+              "C. ride",
+              "D. is riding"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (rides)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_12",
+            "num": "12",
+            "content": "My father ________ dinner in the kitchen at the moment.",
+            "options": [
+              "A. is cooking",
+              "B. cook",
+              "C. cooked",
+              "D. cooks"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (is cooking)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_13",
+            "num": "13",
+            "content": "Hoa has big brown eyes and long wavy ________.",
+            "options": [
+              "A. ears",
+              "B. hair",
+              "C. cheeks",
+              "D. noses"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (hair)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_14",
+            "num": "14",
+            "content": "She has a ________ nose and chubby cheeks.",
+            "options": [
+              "A. tall",
+              "B. straight",
+              "C. curly",
+              "D. wavy"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (straight)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_15",
+            "num": "15",
+            "content": "In our school, there is a large ________ with many interesting books and magazines.",
+            "options": [
+              "A. kitchen",
+              "B. bedroom",
+              "C. library",
+              "D. bathroom"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (library)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_16",
+            "num": "16",
+            "content": "Duy: Hello, Binh. What are you doing?' - Binh: '________'",
+            "options": [
+              "A. It is on Tuesday.",
+              "B. I am reading a book in the library.",
+              "C. Yes, I like English.",
+              "D. I am twelve years old."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (I am reading a book in the library.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_17",
+            "num": "17",
+            "content": "Choose the word OPPOSITE in meaning to hard-working'.",
+            "options": [
+              "A. lazy",
+              "B. friendly",
+              "C. active",
+              "D. kind"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (lazy)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_18",
+            "num": "18",
+            "content": "There is a modern air-conditioner ________ the wall above the bed.",
+            "options": [
+              "A. in",
+              "B. on",
+              "C. at",
+              "D. to"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (on)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_19",
+            "num": "19",
+            "content": "Teacher: Welcome to our new school year, class!' - Students: '________'",
+            "options": [
+              "A. Never mind.",
+              "B. Good morning, teacher! We are excited.",
+              "C. Not at all.",
+              "D. Goodbye, see you later."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Good morning, teacher! We are excited.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_20",
+            "num": "20",
+            "content": "David is a ________ student. He learns things quickly and gets good marks in Maths.",
+            "options": [
+              "A. noisy",
+              "B. clever",
+              "C. boring",
+              "D. lazy"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (clever)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_21",
+            "num": "21",
+            "content": "Which word has the underlined part pronounced differently? house, round, cousin, mouth",
+            "options": [
+              "A. mouth",
+              "B. house",
+              "C. cousin",
+              "D. round"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (cousin)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_22",
+            "num": "22",
+            "content": "There ________ three bedrooms and a living room in our apartment.",
+            "options": [
+              "A. is",
+              "B. has",
+              "C. have",
+              "D. are"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (are)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_4",
+        "name": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "title": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "Last Sunday, I decided to rearrange all the furniture in my bedroom to make it more spacious. First, I pushed my single bed against the left (23) ________. Then, I placed my study table under the window so I can get natural (24) ________ while doing homework. Next, I hung a colourful world map and family photos on the empty (25) ________. My mother helped me clean the floor and wash the blue (26) ________. Now my bedroom looks fresh, bright, and very (27) ________.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_23",
+            "num": "23",
+            "content": "Choose the best answer for blank (23) in the passage.",
+            "options": [
+              "A. ceiling",
+              "B. pillow",
+              "C. curtain",
+              "D. wall"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (wall)\n📖 Dịch nghĩa câu: Đầu tiên, tôi đẩy chiếc giường đơn của mình kê sát vào bức tường (wall) bên trái.\n🔍 Cấu trúc & Giới từ vị trí: Cụm giới từ chỉ phương hướng và vị trí: 'against the wall' (kê sát, tựa vào bức tường). 'the left wall' là bức tường bên tay trái của căn phòng.\n💡 Phân tích đáp án gây nhiễu: A. ceiling (trần nhà); B. pillow (chiếc gối); C. curtain (tấm rèm) không thể đẩy giường kê sát vào như tường.\n👨‍🏫 Lời khuyên của Thầy giáo: Trong miêu tả nội thất phòng ngủ (Unit 2 My House), giường, tủ, giá sách thường được đặt 'against the wall' (sát tường) để tiết kiệm diện tích.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_24",
+            "num": "24",
+            "content": "Choose the best answer for blank (24) in the passage.",
+            "options": [
+              "A. daylight",
+              "B. darkness",
+              "C. rain",
+              "D. fog"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (daylight)\n📖 Dịch nghĩa câu: Sau đó, tôi đặt bàn học dưới cửa sổ để có thể đón nhận ánh sáng tự nhiên (natural daylight) khi làm bài tập về nhà.\n🔍 Cấu trúc & Cụm từ cố định: Cụm danh từ 'natural daylight' hoặc 'natural light' (ánh sáng tự nhiên ban ngày từ mặt trời qua cửa sổ). Đặt bàn học dưới cửa sổ (under the window) mục đích chính là đón ánh sáng tự nhiên.\n💡 Phân tích đáp án gây nhiễu: B. darkness (bóng tối - không ai học bài trong bóng tối); C. rain (mưa); D. fog (sương mù) đều không phù hợp.\n👨‍🏫 Lời khuyên của Thầy giáo: Nhớ cụm từ 'natural daylight' (ánh sáng ban ngày) rất tốt cho mắt khi ngồi học bài em nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_25",
+            "num": "25",
+            "content": "Choose the best answer for blank (25) in the passage.",
+            "options": [
+              "A. grass",
+              "B. space",
+              "C. ground",
+              "D. fence"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (space)\n📖 Dịch nghĩa câu: Tiếp theo, tôi treo một tấm bản đồ thế giới nhiều màu sắc và những bức ảnh gia đình lên khoảng trống (empty space) còn lại.\n🔍 Cấu trúc & Cụm từ: Cụm từ 'empty space' (khoảng trống, khoảng không gian còn trống trên tường). Động từ 'hung' (quá khứ của hang: treo) vật trang trí lên khoảng không gian trống.\n💡 Phân tích đáp án gây nhiễu: A. grass (bãi cỏ); C. ground (mặt đất); D. fence (hàng rào) đều là những thứ ở ngoài trời, không có trong phòng ngủ.\n👨‍🏫 Lời khuyên của Thầy giáo: 'Empty space' là khoảng không gian còn trống, một từ vựng miêu tả cách bài trí phòng rất quen thuộc.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_26",
+            "num": "26",
+            "content": "Choose the best answer for blank (26) in the passage.",
+            "options": [
+              "A. toasters",
+              "B. curtains",
+              "C. fridges",
+              "D. cookers"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (curtains)\n📖 Dịch nghĩa câu: Mẹ tôi giúp tôi lau sàn nhà và giặt sạch những tấm rèm cửa màu xanh (blue curtains).\n🔍 Cấu trúc & Từ vựng đồ dùng phòng ngủ: 'wash the blue curtains' (giặt rèm cửa sổ). Động từ 'wash' (giặt giũ bằng nước) chỉ áp dụng cho đồ vải như rèm cửa (curtains), chăn ga (sheets).\n💡 Phân tích đáp án gây nhiễu: A. toasters (máy nướng bánh mì); C. fridges (tủ lạnh); D. cookers (bếp nấu) đều là đồ gia dụng trong nhà bếp, không thể mang đi 'wash' giặt giũ trong phòng ngủ.\n👨‍🏫 Lời khuyên của Thầy giáo: Phân biệt đồ dùng trong phòng ngủ (curtains, bed, desk) với đồ dùng trong phòng bếp (cookers, fridge, toaster) là bẫy kinh điển trong bài thi Unit 2!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_27",
+            "num": "27",
+            "content": "Choose the best answer for blank (27) in the passage.",
+            "options": [
+              "A. messy",
+              "B. gloomy",
+              "C. narrow",
+              "D. comfortable"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (comfortable)\n📖 Dịch nghĩa câu: Giờ đây phòng ngủ của tôi trông thật tươi mới, sáng sủa và rất thoải mái, dễ chịu (very comfortable).\n🔍 Cấu trúc & Tính từ miêu tả: Cấu trúc liên kết tính từ: 'looks + Adj, Adj, and Adj' -> 'looks fresh, bright, and very comfortable'. Tính từ 'comfortable' (tiện nghi, thoải mái, dễ chịu) mang sắc thái tích cực.\n💡 Phân tích đáp án gây nhiễu: A. messy (bừa bộn); B. gloomy (u ám, tối tăm); C. narrow (chật hẹp) đều là tính từ mang nghĩa tiêu cực, trái ngược với kết quả sau khi dọn dẹp sạch sẽ.\n👨‍🏫 Lời khuyên của Thầy giáo: Khi phòng được dọn sạch, kê lại nội thất ngăn nắp thì luôn tạo cảm giác 'comfortable' (thoải mái)!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_5",
+        "name": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "title": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "Chi is known throughout our grade as a passionate animal protector and pet lover. At home, Chi cares for three rescue cats and a playful golden retriever puppy named Bap. She feeds them nutritious meals, takes Bap for daily walks in the park, and regularly cleans their sleeping quarters. At school, she founded the Young Animal Care' group to educate students on being responsible pet owners and protecting wildlife. Chi's compassion toward animals reflects her generous and empathetic nature, inspiring her peers to treat all living creatures with respect.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_28",
+            "num": "28",
+            "content": "What pets does Chi look after at home?",
+            "options": [
+              "A. Only goldfish",
+              "B. Two parrots and a snake",
+              "C. Ten rabbits and horses",
+              "D. Three rescue cats and a golden retriever puppy"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (Three rescue cats and a golden retriever puppy)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_29",
+            "num": "29",
+            "content": "The word compassion' in paragraph 3 is closest in meaning to ________.",
+            "options": [
+              "A. greed",
+              "B. cruelty",
+              "C. laziness",
+              "D. sympathy and deep care"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (sympathy and deep care)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_30",
+            "num": "30",
+            "content": "Binh has blue eyes and blond hair.",
+            "options": [
+              "A. Binh's eyes are blue and his hair are blond.",
+              "B. Binh's eyes are blue and his hair blond is.",
+              "C. Binh's eyes are blue and his hair is blond.",
+              "D. Eyes binh's are blue and his hair is blond."
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Binh's eyes are blue and his hair is blond.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_31",
+            "num": "31",
+            "content": "I love reading science books in my free time.",
+            "options": [
+              "A. My hobby is reading science books in my free time.",
+              "B. My hobby is reading science books in my time free.",
+              "C. My hobby is reading science books at my free time.",
+              "D. My hobby are reading science books in my free time."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (My hobby is reading science books in my free time.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_603_32",
+            "num": "32",
+            "content": "dinner / family / my / together / cooks / every / evening / .",
+            "options": [
+              "A. My family cooks dinner together every evening.",
+              "B. My family cooks dinner together evening every.",
+              "C. My family dinner cooks together every evening.",
+              "D. Family my cooks dinner together every evening."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (My family cooks dinner together every evening.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_6",
+        "name": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "title": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "skill": "writing",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_603_33",
+            "num": "33",
+            "content": "creative / is / very / she / paints / and / beautiful / pictures / .",
+            "options": [
+              "A. Is she very creative and paints beautiful pictures.",
+              "B. She is very creative and paints pictures beautiful.",
+              "C. She is very creative and paints beautiful pictures.",
+              "D. She are very creative and paints beautiful pictures."
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (She is very creative and paints beautiful pictures.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_8",
+        "name": "Part 8. Writing (1.0 pt)",
+        "title": "Part 8. Writing (1.0 pt)",
+        "skill": "writing",
+        "type": "writing",
+        "passage": "",
+        "prompt": "Part 8. Writing (1.0 pt) Write a paragraph (50-60 words) about a stilt house in Vietnam.\nYou should write about: Where stilt houses are found; Materials used to build them; The two levels of the house; Why highlanders live in stilt houses.",
+        "modelWriting": "A stilt house is a unique traditional dwelling of ethnic minorities in the mountainous regions of Vietnam. It is mainly made of natural wood, strong bamboo, and palm leaves. The house usually has two levels: the upper floor is for family living and sleeping, while the ground level keeps farming tools. Living on stilts protects people from wild animals and damp weather.",
+        "rubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+        "questions": []
+      }
+    ],
+    "writingRubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+    "sampleWritingText": "A stilt house is a unique traditional dwelling of ethnic minorities in the mountainous regions of Vietnam. It is mainly made of natural wood, strong bamboo, and palm leaves. The house usually has two levels: the upper floor is for family living and sleeping, while the ground level keeps farming tools. Living on stilts protects people from wild animals and damp weather.",
+    "finalScoreSummary": "III. TỔNG ĐIỂM BÀI KIỂM TRA GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7): 9,0 điểm\n- Viết tự luận (Part 8): 1,0 điểm.",
+    "publishedAt": "2026-10-22T06:00:00.000Z"
+  },
+  {
+    "id": "gk1_eng6_604",
+    "title": "BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KÌ I – TIẾNG ANH 6 (Mã đề 604)",
+    "grade": 6,
+    "term": "GK1",
+    "examCode": "604",
+    "examFormat": "cv7991",
+    "examTime": 60,
+    "examClass": "6A1",
+    "schoolName": "TRƯỜNG THCS ĐỒNG YÊN",
+    "teacherName": "Thầy Đinh Văn Thành",
+    "isOpen": true,
+    "audioTitle": "Audio Listening Đề thi Giữa kì 1 Tiếng Anh 6 (Mã đề 604)",
+    "audioUrl": "audio/g6_gk1_604_part1.mp3",
+    "audioUrlPart1": "audio/g6_gk1_604_part1.mp3",
+    "audioUrlPart2": "audio/g6_gk1_604_part2.mp3",
+    "audioScript": "Linda:\tHi Mi! Welcome to my new house in the countryside.\nMi:\tWow Linda, your house is so beautiful! How many rooms are there?\nLinda:\tThere are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.\nMi:\tWhich room do you like best?\nLinda:\tI love my bedroom because it has a big window overlooking our fruit garden.\nMi:\tIs there a balcony upstairs?\nLinda:\tYes! We often sit on the balcony in the evening to drink tea and look at the stars.\n\nMy uncle lives in a cozy country house near the river. In front of the house, there is a small pond with colorful fish and a flower garden. Behind the house, there is a vegetable garden where he grows fresh tomatoes and cabbages. The living room is bright with modern furniture, and the kitchen is always warm with delicious home-cooked meals.",
+    "sections": [
+      {
+        "id": "sec_1",
+        "name": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "title": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_604_part1.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_1",
+            "num": "1",
+            "content": "Where is Linda's new house located?",
+            "options": [
+              "A. In the countryside",
+              "B. On an island",
+              "C. In a crowded city"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (In the countryside)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_2",
+            "num": "2",
+            "content": "How many rooms are there in Linda's house?",
+            "options": [
+              "A. Six rooms",
+              "B. Ten rooms",
+              "C. Three rooms"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Six rooms)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_3",
+            "num": "3",
+            "content": "Which room does Linda like best?",
+            "options": [
+              "A. The bathroom",
+              "B. Her bedroom",
+              "C. The kitchen"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Her bedroom)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_4",
+            "num": "4",
+            "content": "What can Linda see from her bedroom window?",
+            "options": [
+              "A. A fruit garden",
+              "B. A busy street",
+              "C. A factory"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (A fruit garden)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_5",
+            "num": "5",
+            "content": "What do Linda and her family do on the balcony in the evening?",
+            "options": [
+              "A. Sit to drink tea and look at stars",
+              "B. Play computer games",
+              "C. Sleep outside"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Sit to drink tea and look at stars)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_2",
+        "name": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "title": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "skill": "listening",
+        "type": "mc",
+        "audioUrl": "audio/g6_gk1_604_part2.mp3",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_6",
+            "num": "6",
+            "content": "Linda's uncle lives in a country house near the river.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_7",
+            "num": "7",
+            "content": "There is a pond with colorful fish in front of the house.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_8",
+            "num": "8",
+            "content": "There are no vegetables grown behind the house.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_9",
+            "num": "9",
+            "content": "The living room is dark and has no furniture.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_10",
+            "num": "10",
+            "content": "The country house has a warm and cozy atmosphere.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_3",
+        "name": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "title": "Part 3. Choose A, B, C or D to complete the following sentences. (3.0 pts)",
+        "skill": "language",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_11",
+            "num": "11",
+            "content": "Do you often do your ________ right after coming home from school?",
+            "options": [
+              "A. football",
+              "B. housework",
+              "C. homework",
+              "D. judo"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (homework)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_12",
+            "num": "12",
+            "content": "David: Hello, Phong. What are you doing?' - Phong: '________'",
+            "options": [
+              "A. I am reading a book in the library.",
+              "B. I am twelve years old.",
+              "C. It is on Tuesday.",
+              "D. Yes, I like English."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (I am reading a book in the library.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_13",
+            "num": "13",
+            "content": "Students must wear their school ________ on Mondays and Fridays.",
+            "options": [
+              "A. shoes",
+              "B. bags",
+              "C. clothes",
+              "D. uniform"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (uniform)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_14",
+            "num": "14",
+            "content": "Kate is very kind. She always ________ her classmates with difficult exercises.",
+            "options": [
+              "A. is helping",
+              "B. help",
+              "C. helping",
+              "D. helps"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (helps)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_15",
+            "num": "15",
+            "content": "Choose the word OPPOSITE in meaning to hard-working'.",
+            "options": [
+              "A. kind",
+              "B. lazy",
+              "C. active",
+              "D. friendly"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (lazy)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_16",
+            "num": "16",
+            "content": "There is a modern air-conditioner ________ the wall above the bed.",
+            "options": [
+              "A. on",
+              "B. at",
+              "C. to",
+              "D. in"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (on)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_17",
+            "num": "17",
+            "content": "We keep food fresh and cold in the ________.",
+            "options": [
+              "A. fridge",
+              "B. wardrobe",
+              "C. cooker",
+              "D. sink"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (fridge)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_18",
+            "num": "18",
+            "content": "There ________ three bedrooms and a living room in our apartment.",
+            "options": [
+              "A. have",
+              "B. has",
+              "C. is",
+              "D. are"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (are)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_19",
+            "num": "19",
+            "content": "David's brother is very ________. He always shares his toys and snacks with everyone.",
+            "options": [
+              "A. selfish",
+              "B. generous",
+              "C. careless",
+              "D. shy"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (generous)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_20",
+            "num": "20",
+            "content": "Teacher: Welcome to our new school year, class!' - Students: '________'",
+            "options": [
+              "A. Never mind.",
+              "B. Good morning, teacher! We are excited.",
+              "C. Goodbye, see you later.",
+              "D. Not at all."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Good morning, teacher! We are excited.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_21",
+            "num": "21",
+            "content": "My father ________ dinner in the kitchen at the moment.",
+            "options": [
+              "A. cooks",
+              "B. cooked",
+              "C. cook",
+              "D. is cooking"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (is cooking)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_22",
+            "num": "22",
+            "content": "Which word has the underlined part pronounced differently? rubber, teacher, father, prefer",
+            "options": [
+              "A. teacher",
+              "B. father",
+              "C. prefer",
+              "D. rubber"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (prefer)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_4",
+        "name": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "title": "Part 4. Read and choose the best answer A, B, C or D to complete the passage. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "Duy is my closest classmate in grade 6. He is tall and has short black hair with a (23) ________ face. He is very (24) ________ because he always gets good marks in maths and science. Besides studying, Duy is also very (25) ________ and plays basketball every afternoon. He has a great sense of humour and tells (26) ________ stories that make everyone laugh. I am lucky to have such a (27) ________ friend.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_23",
+            "num": "23",
+            "content": "Choose the best answer for blank (23) in the passage.",
+            "options": [
+              "A. straight",
+              "B. tall",
+              "C. round",
+              "D. curly"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (round)\n📖 Dịch nghĩa câu: Cậu ấy cao ráo và có mái tóc đen ngắn cùng với một khuôn mặt tròn trịa (a round face).\n🔍 Cấu trúc & Tính từ miêu tả ngoại hình: Cụm danh từ 'a round face' (khuôn mặt tròn phúc hậu). Trong tiếng Anh, 'face' đi với các tính từ miêu tả hình dáng: round face (mặt tròn), oval face (mặt trái xoan), square face (mặt chữ điền).\n💡 Phân tích đáp án gây nhiễu: A. straight (thẳng - dùng cho tóc 'straight hair'); B. tall (cao - dùng cho người 'tall person'); D. curly (xoăn - dùng cho tóc 'curly hair'). Chỉ có 'round' miêu tả khuôn mặt.\n👨‍🏫 Lời khuyên của Thầy giáo: Hãy nhớ cặp tính từ: 'round face' (mặt tròn), 'straight hair' (tóc thẳng), 'curly hair' (tóc xoăn) trong Unit 3 My Friends.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_24",
+            "num": "24",
+            "content": "Choose the best answer for blank (24) in the passage.",
+            "options": [
+              "A. shy",
+              "B. clever",
+              "C. boring",
+              "D. lazy"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (clever)\n📖 Dịch nghĩa câu: Cậu ấy rất thông minh (clever) bởi vì cậu ấy luôn đạt điểm số cao ở môn Toán và Khoa học.\n🔍 Cấu trúc & Mệnh đề nguyên nhân: 'because he always gets good marks in maths and science' (bởi vì cậu ấy luôn được điểm cao) -> Chứng minh phẩm chất thông minh 'clever'.\n💡 Phân tích đáp án gây nhiễu: A. shy (nhút nhát); C. boring (nhàm chán); D. lazy (lười biếng) không phù hợp với việc học giỏi, đạt điểm cao.\n👨‍🏫 Lời khuyên của Thầy giáo: Dựa vào từ 'good marks' (điểm cao môn Toán, Khoa học), ta dễ dàng chọn ngay tính từ chỉ trí thông minh là 'clever'!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_25",
+            "num": "25",
+            "content": "Choose the best answer for blank (25) in the passage.",
+            "options": [
+              "A. quiet",
+              "B. clumsy",
+              "C. rude",
+              "D. sporty"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (sporty)\n📖 Dịch nghĩa câu: Ngoài việc học tập, Duy cũng rất năng động, yêu thể thao (sporty) và chơi bóng rổ mỗi buổi chiều.\n🔍 Cấu trúc & Tính từ chỉ sở thích: 'plays basketball every afternoon' (chơi bóng rổ mỗi buổi chiều) là bằng chứng rõ ràng cho tính từ 'sporty' (năng động, giỏi thể thao, mê thể thao).\n💡 Phân tích đáp án gây nhiễu: A. quiet (trầm tính, yên lặng); B. clumsy (vụng về lóng ngóng); C. rude (bất lịch sự, thô lỗ) đều sai hoàn toàn.\n👨‍🏫 Lời khuyên của Thầy giáo: 'plays basketball' -> liên kết trực tiếp với 'sporty' (thích chơi thể thao).",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_26",
+            "num": "26",
+            "content": "Choose the best answer for blank (26) in the passage.",
+            "options": [
+              "A. scary",
+              "B. sad",
+              "C. funny",
+              "D. serious"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (funny)\n📖 Dịch nghĩa câu: Cậu ấy rất có khiếu hài hước và kể những câu chuyện vui nhộn (funny stories) khiến mọi người bật cười.\n🔍 Cấu trúc & Cụm từ: 'a great sense of humour' (khiếu hài hước) và 'make everyone laugh' (khiến mọi người cười) -> Bắt buộc câu chuyện phải là 'funny stories' (những câu chuyện vui nhộn, hài hước).\n💡 Phân tích đáp án gây nhiễu: A. scary (đáng sợ, kinh dị); B. sad (buồn rầu); D. serious (nghiêm túc, nghiêm trọng) không thể làm mọi người bật cười vui vẻ.\n👨‍🏫 Lời khuyên của Thầy giáo: 'make everyone laugh' (làm mọi người cười) là từ khóa quyết định để chọn tính từ 'funny' (hài hước).",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_27",
+            "num": "27",
+            "content": "Choose the best answer for blank (27) in the passage.",
+            "options": [
+              "A. cold",
+              "B. kind",
+              "C. selfish",
+              "D. nervous"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (kind)\n📖 Dịch nghĩa câu: Tôi thật may mắn khi có được một người bạn tốt bụng (a kind friend) như vậy.\n🔍 Cấu trúc & Tính từ tích cực: Cấu trúc cảm thán: 'I am lucky to have such a + Adj + noun' (Tôi thật may mắn khi có được một người bạn... như vậy). 'kind' (tốt bụng, nhân hậu) là tính từ tích cực tổng kết phẩm chất của người bạn tốt.\n💡 Phân tích đáp án gây nhiễu: A. cold (lạnh lùng vô cảm); C. selfish (ích kỷ); D. nervous (lo lắng bồn chồn) đều mang nghĩa tiêu cực, không ai cảm thấy may mắn khi có bạn như vậy.\n👨‍🏫 Lời khuyên của Thầy giáo: Khi miêu tả người bạn tốt của mình, từ 'kind' (tốt bụng) luôn là từ đắt giá nhất để bộc lộ tình cảm chân thành.",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_5",
+        "name": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "title": "Part 5. Read the passage and choose the best answer A, B, C or D for each question. (1.25 pts)",
+        "skill": "reading",
+        "type": "mc",
+        "passage": "An Giang Secondary School is a famous boarding school located in the Mekong Delta region. More than five hundred students from nearby villages study and live here during the weekdays. The school has modern facilities, including twenty large classrooms, three computer rooms, and a well-equipped science laboratory. Outside, there is an expansive sports field where students play football, volleyball, and badminton every afternoon. All students wear their dark blue uniforms from Monday to Friday. Living at a boarding school helps students become more independent. They learn how to wash their own clothes, tidy their bedrooms, and manage their daily study time. In the evening, teachers organize study halls to help students with difficult homework exercises. An Giang Secondary School provides a warm, supportive community that prepares students well for the future.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_28",
+            "num": "28",
+            "content": "How many computer rooms does the school have?",
+            "options": [
+              "A. Five",
+              "B. Three",
+              "C. Twenty",
+              "D. Ten"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Three)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_29",
+            "num": "29",
+            "content": "What is the main topic of the passage?",
+            "options": [
+              "A. English classes in secondary schools",
+              "B. How to play football in the Mekong Delta",
+              "C. An Giang Secondary School and its student life",
+              "D. How to wash clothes in a boarding school"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (An Giang Secondary School and its student life)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_30",
+            "num": "30",
+            "content": "The word They' in paragraph 3 refers to ________.",
+            "options": [
+              "A. teachers",
+              "B. villages",
+              "C. classrooms",
+              "D. students"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (students)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_31",
+            "num": "31",
+            "content": "The word expansive' in paragraph 2 is closest in meaning to ________.",
+            "options": [
+              "A. crowded and dirty",
+              "B. large and wide",
+              "C. dark",
+              "D. very small"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (large and wide)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_32",
+            "num": "32",
+            "content": "Which of the following is NOT true according to the passage?",
+            "options": [
+              "A. Students wear dark blue uniforms.",
+              "B. Living at the school helps students become more independent.",
+              "C. Students play sports on the field in the afternoon.",
+              "D. Students go home every night after school."
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (Students go home every night after school.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_6",
+        "name": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "title": "Part 6. Sentence Transformation: Choose the correct sentence A, B, C or D that has the closest meaning. (0.5 pt)",
+        "skill": "writing",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_33",
+            "num": "33",
+            "content": "My favorite subject at school is English.",
+            "options": [
+              "A. I like English best of all subjects at school.",
+              "B. I only study English at school.",
+              "C. I dislike studying English at school.",
+              "D. English is not my favorite subject."
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (I like English best of all subjects at school.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_34",
+            "num": "34",
+            "content": "Does your school have twenty classrooms?",
+            "options": [
+              "A. Are there twenty classrooms in school your?",
+              "B. Are there twenty classrooms at your school?",
+              "C. There are twenty classrooms in your school?",
+              "D. Are there twenty classrooms in your school?"
+            ],
+            "answer": "D",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: D (Are there twenty classrooms in your school?)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_7",
+        "name": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, C or D. (0.5 pt)",
+        "title": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, C or D. (0.5 pt)",
+        "skill": "writing",
+        "type": "mc",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_604_35",
+            "num": "35",
+            "content": "dinner / family / my / together / cooks / every / evening / .",
+            "options": [
+              "A. Family my cooks dinner together every evening.",
+              "B. My family cooks dinner together every evening.",
+              "C. My family dinner cooks together every evening.",
+              "D. My family cooks dinner together evening every."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (My family cooks dinner together every evening.)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          },
+          {
+            "id": "q_604_36",
+            "num": "36",
+            "content": "often / how / you / do / play / school / sports / after / ?",
+            "options": [
+              "A. How often do you play sports after school?",
+              "B. Often how do you play sports after school?",
+              "C. How often do you play sports school after?",
+              "D. How often you do play sports after school?"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (How often do you play sports after school?)\n📌 Giải thích chi tiết: Dựa trên kiến thức trọng tâm SGK Tiếng Anh 6 Global Success và ngữ cảnh bài thi.\n💡 Lời khuyên của Thầy giáo: Em hãy đọc kĩ đề bài, chú ý cấu trúc ngữ pháp và từ vựng chìa khóa để đạt điểm tuyệt đối nhé!",
+            "trans": "",
+            "grammar": "",
+            "tense": "",
+            "clue": "",
+            "evidence": "",
+            "praise": "",
+            "encourage": ""
+          }
+        ]
+      },
+      {
+        "id": "sec_8",
+        "name": "Part 8. Writing (1.0 pt)",
+        "title": "Part 8. Writing (1.0 pt)",
+        "skill": "writing",
+        "type": "writing",
+        "passage": "",
+        "prompt": "Part 8. Writing (1.0 pt) Write a paragraph (50-60 words) describing your neighbourhood.\nYou should write about: Where you live; Houses and streets around; The people living nearby; What you like most about your neighbourhood.",
+        "modelWriting": "I live in a peaceful neighbourhood in the countryside of Dong Yen. The streets are clean, lined with green trees and lovely modern houses. There is a small park and a fresh grocery store nearby. The neighbours here are very friendly, warm-hearted, and always ready to help each other. I love the quiet atmosphere and fresh air in my neighbourhood.",
+        "rubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+        "questions": []
+      }
+    ],
+    "writingRubric": "1. Topic sentence: 0.25 pt | 2. Supporting sentences: 0.25 pt | 3. Range of vocabulary: 0.25 pt | 4. Accuracy (Grammar, spelling): 0.25 pt. Total: 1.0 point.",
+    "sampleWritingText": "I live in a peaceful neighbourhood in the countryside of Dong Yen. The streets are clean, lined with green trees and lovely modern houses. There is a small park and a fresh grocery store nearby. The neighbours here are very friendly, warm-hearted, and always ready to help each other. I love the quiet atmosphere and fresh air in my neighbourhood.",
+    "finalScoreSummary": "III. TỔNG ĐIỂM BÀI KIỂM TRA GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7): 9,0 điểm\n- Viết tự luận (Part 8): 1,0 điểm.",
     "publishedAt": "2026-10-22T06:00:00.000Z"
   },
   {

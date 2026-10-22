@@ -800,7 +800,7 @@ const PartAudioPlayer: React.FC<PartAudioPlayerProps> = ({ partTitle, partSubtit
 };
 
 export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeaderboard }) => {
-  const [selectedGrade, setSelectedGrade] = useState<number>(8);
+  const [selectedGrade, setSelectedGrade] = useState<number>(6);
   const [examType, setExamType] = useState<'giua-ky-1' | 'cuoi-ky-1' | 'giua-ky-2' | 'cuoi-ky-2'>('giua-ky-1');
   const [selectedExamIndex, setSelectedExamIndex] = useState<number>(0);
   const [currentExam, setCurrentExam] = useState<GeneratedExam | null>(null);
@@ -1627,7 +1627,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 <span>Đang nạp dữ liệu đề thi trực tuyến... Xin chờ giây lát.</span>
               </div>
             ) : hasOfficialForCurrent ? (
-              <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 {currentAvailableCodes.map((codeStr, idx) => {
                   const isSelected = selectedExamIndex === idx;
                   return (
@@ -1639,18 +1639,21 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                           handleResetExam();
                         } else {
                           setSelectedExamIndex(idx);
-                          setShuffleNotice(`🔄 Đã chuyển sang Mã đề ${codeStr} và tự động đảo câu hỏi & đáp án!`);
+                          setShuffleNotice(`🔄 Đã chuyển sang Mã đề ${codeStr} và tự động đảo ngẫu nhiên câu hỏi & đáp án!`);
                           setTimeout(() => setShuffleNotice(''), 4500);
                         }
                       }}
-                      className={`h-9 sm:h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center active:scale-90 ${
+                      className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center gap-2 active:scale-95 shadow-sm ${
                         isSelected
-                          ? 'bg-emerald-400 text-blue-950 ring-2 sm:ring-4 ring-white shadow-lg font-black scale-105'
-                          : 'bg-white/15 text-white hover:bg-white/25 hover:scale-102'
+                          ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-blue-950 ring-2 sm:ring-4 ring-white shadow-lg scale-105 font-black'
+                          : 'bg-white/15 text-white hover:bg-white/25 hover:scale-102 border border-white/20'
                       }`}
-                      title={`Làm bài Mã đề ${codeStr}`}
+                      title={`Làm bài Mã đề ${codeStr} (Tự động đảo câu hỏi & đáp án)`}
                     >
-                      {codeStr}
+                      <span>📘 Mã {codeStr}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold ${isSelected ? 'bg-blue-950/20 text-blue-950' : 'bg-black/25 text-amber-300'}`}>
+                        Tự đảo 🎲
+                      </span>
                     </button>
                   );
                 })}
@@ -1734,23 +1737,44 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               Hiện Chưa Có Mã Đề Thi Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Hệ thống hiện tại lưu trữ đúng 2 mã đề chuẩn Giữa Học Kỳ 1: <b>Lớp 6 (Mã 601)</b> và <b>Lớp 8 (Mã 801)</b> (Tự động đảo câu hỏi & đáp án mỗi lượt thi). Thầy giáo sẽ tự tạo các bộ đề còn lại và đưa lên hệ thống sau.
+              Hệ thống hiện tại lưu trữ <b>đầy đủ 4 mã đề chuẩn Giữa Học Kỳ 1 Lớp 6: Mã 601, Mã 602, Mã 603, Mã 604</b> và <b>Lớp 8 (Mã 801)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
             </p>
           </div>
-          <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
+          <div className="pt-2 flex items-center justify-center gap-2.5 flex-wrap">
             <button
               type="button"
               onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
             >
-              <span>📘 Làm bài Lớp 6 (Mã 601 - Tự đảo)</span>
+              <span>📘 Lớp 6 - Mã 601 (Tự đảo 🎲)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📗 Lớp 6 - Mã 602 (Tự đảo 🎲)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📙 Lớp 6 - Mã 603 (Tự đảo 🎲)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(3); }}
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-sky-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📕 Lớp 6 - Mã 604 (Tự đảo 🎲)</span>
             </button>
             <button
               type="button"
               onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
             >
-              <span>📙 Làm bài Lớp 8 (Mã 801 - Tự đảo)</span>
+              <span>🎓 Lớp 8 - Mã 801 (Tự đảo 🎲)</span>
             </button>
           </div>
         </div>
