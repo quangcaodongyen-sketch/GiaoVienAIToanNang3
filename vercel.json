@@ -137,16 +137,6 @@
       "permanent": true
     },
     {
-      "source": "/tuvung",
-      "destination": "/hocsinh",
-      "permanent": false
-    },
-    {
-      "source": "/tuvung/",
-      "destination": "/hocsinh",
-      "permanent": false
-    },
-    {
       "source": "/eng12_vocab",
       "destination": "/hocsinh",
       "permanent": false
@@ -188,6 +178,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/tuvung",
+      "destination": "/tuvung/index.html"
+    },
+    {
+      "source": "/tuvung/",
+      "destination": "/tuvung/index.html"
+    },
     {
       "source": "/hocsinh",
       "destination": "/index.html"
