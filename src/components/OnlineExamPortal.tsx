@@ -20,7 +20,7 @@ import {
   Headphones
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
-import { loadTermExams, TermExamsData } from '../data/officialMidtermExams';
+import { loadTermExams, TermExamsData, OfficialExamQuestion } from '../data/officialMidtermExams';
 
 export interface ExamQuestion {
   part: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -601,6 +601,121 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   };
 
   // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS
+  // Hàm hỗ trợ xáo trộn mảng ngẫu nhiên (Fisher-Yates)
+  const shuffleArrayHelper = <T,>(arr: T[]): T[] => {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+
+  // Hàm đảo các phương án lựa chọn và tự động cập nhật đáp án đúng (A, B, C, D)
+  const shufflePortalQuestionOptions = (q: OfficialExamQuestion): OfficialExamQuestion => {
+    if (!q.options || q.options.length <= 1) return { ...q };
+    // Không đảo câu hỏi True / False
+    if (q.options.some(o => /true|false|đúng|sai/i.test(o))) {
+      return { ...q };
+    }
+
+    const rawCorrect = (q.correct || '').trim();
+    const rawLetter = (q.correctLetter || '').trim().toUpperCase();
+    const letters = ['A', 'B', 'C', 'D', 'E'];
+
+    let correctContent = rawCorrect;
+    if (!correctContent && rawLetter) {
+      const idx = letters.indexOf(rawLetter);
+      if (idx !== -1 && q.options[idx]) {
+        correctContent = q.options[idx];
+      }
+    }
+
+    const shuffledOptions = shuffleArrayHelper(q.options);
+    const newIdx = shuffledOptions.findIndex(o => o.trim().toLowerCase() === correctContent.trim().toLowerCase());
+    const newLetter = newIdx !== -1 ? letters[newIdx] : rawLetter;
+
+    let newExplanation = q.explanation || '';
+    if (newLetter && rawLetter && newExplanation) {
+      newExplanation = newExplanation.replace(/🎯 ĐÁP ÁN ĐÚNG:\s*[A-Ea-e]/i, `🎯 ĐÁP ÁN ĐÚNG: ${newLetter}`);
+    }
+
+    return {
+      ...q,
+      options: shuffledOptions,
+      correct: correctContent,
+      correctLetter: newLetter,
+      explanation: newExplanation
+    };
+  };
+
+  // Hàm tạo danh sách câu hỏi xáo trộn thông minh chuẩn sư phạm chống học vẹt
+  const createShuffledPortalQuestions = (rawQuestions: OfficialExamQuestion[]): ExamQuestion[] => {
+    const partGroups: Record<string, OfficialExamQuestion[]> = {};
+    const partOrder: string[] = [];
+
+    rawQuestions.forEach(q => {
+      const p = q.part || 'A';
+      if (!partGroups[p]) {
+        partGroups[p] = [];
+        partOrder.push(p);
+      }
+      partGroups[p].push(q);
+    });
+
+    const finalQuestions: OfficialExamQuestion[] = [];
+
+    partOrder.forEach(p => {
+      const list = partGroups[p];
+      if (!list || list.length === 0) return;
+      const firstQ = list[0];
+      const pTitle = (firstQ.partTitle || '').toLowerCase();
+      const isPart2 = p === 'B' || pTitle.includes('part 2') || pTitle.includes('true');
+      const isPart1 = p === 'A' || pTitle.includes('part 1');
+      const isCloze = p === 'D' && pTitle.includes('part 4');
+      const isWritingEssay = firstQ.type === 'essay';
+
+      if (isWritingEssay) {
+        finalQuestions.push(...list);
+        return;
+      }
+
+      if (isPart2) {
+        // TUYỆT ĐỐI KHÔNG ĐẢO PART 2: Giữ nguyên 100% thứ tự câu hỏi và giữ nguyên đáp án A. True, B. False
+        finalQuestions.push(...list);
+        return;
+      }
+
+      if (isPart1 || isCloze) {
+        // Giữ nguyên thứ tự câu hỏi theo mạch nghe / ô trống đọc hiểu, nhưng ĐẢO CÁC PHƯƠNG ÁN LỰA CHỌN
+        list.forEach(q => {
+          finalQuestions.push(shufflePortalQuestionOptions(q));
+        });
+        return;
+      }
+
+      // Các phần còn lại (Part C, E, F, G): ĐẢO CẢ THỨ TỰ CÂU HỎI VÀ ĐẢO CẢ CÁC ĐÁP ÁN LỰA CHỌN
+      const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
+      finalQuestions.push(...shuffledList);
+    });
+
+    // Tự động đánh số lại câu hỏi từ 1 đến hết
+    return finalQuestions.map((q, idx) => ({
+      part: q.part,
+      partTitle: q.partTitle,
+      partInstruction: q.partInstruction,
+      qNumber: idx + 1,
+      id: q.id,
+      type: q.type,
+      text: q.text,
+      options: q.options,
+      correct: q.correct,
+      correctLetter: q.correctLetter,
+      explanation: q.explanation,
+      passage: q.passage
+    }));
+  };
+
   const buildExam = (grade: number, type: string, examIdx: number, dataForTerm?: TermExamsData) => {
     setIsSubmitted(false);
     setUserAnswers({});
@@ -618,20 +733,8 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
         const offExam = gradeExams[targetCode];
 
         if (offExam) {
-          const convertedQuestions: ExamQuestion[] = offExam.questions.map(q => ({
-            part: q.part,
-            partTitle: q.partTitle,
-            partInstruction: q.partInstruction,
-            qNumber: q.qNumber,
-            id: q.id,
-            type: q.type,
-            text: q.text,
-            options: q.options,
-            correct: q.correct,
-            correctLetter: q.correctLetter,
-            explanation: q.explanation,
-            passage: q.passage
-          }));
+          // Xáo trộn ngẫu nhiên câu hỏi & đáp án từng Part chống học vẹt (Tuyệt đối không đảo Part 2)
+          const convertedQuestions: ExamQuestion[] = createShuffledPortalQuestions(offExam.questions);
 
           setCurrentExam({
             grade,
