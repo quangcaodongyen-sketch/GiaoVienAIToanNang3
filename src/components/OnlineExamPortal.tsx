@@ -1154,7 +1154,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               Hiện Chưa Có Mã Đề Thi Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Hệ thống hiện tại lưu trữ đúng 4 mã đề chuẩn Giữa Học Kỳ 1: <b>Lớp 6 (Mã 601, 602)</b> và <b>Lớp 8 (Mã 801, 802)</b>. Thầy giáo sẽ tự tạo các bộ đề còn lại và đưa lên hệ thống sau.
+              Hệ thống hiện tại lưu trữ đúng 2 mã đề chuẩn Giữa Học Kỳ 1: <b>Lớp 6 (Mã 601)</b> và <b>Lớp 8 (Mã 801)</b> (Tự động đảo câu hỏi & đáp án mỗi lượt thi). Thầy giáo sẽ tự tạo các bộ đề còn lại và đưa lên hệ thống sau.
             </p>
           </div>
           <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
@@ -1163,14 +1163,14 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
             >
-              <span>📘 Làm bài Lớp 6 (Mã 601, 602)</span>
+              <span>📘 Làm bài Lớp 6 (Mã 601 - Tự đảo)</span>
             </button>
             <button
               type="button"
               onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
             >
-              <span>📙 Làm bài Lớp 8 (Mã 801, 802)</span>
+              <span>📙 Làm bài Lớp 8 (Mã 801 - Tự đảo)</span>
             </button>
           </div>
         </div>

@@ -7783,7 +7783,7 @@ const ONLINE_EXAM_SYSTEM = {
     this.showRubric = false;
 
     // Cập nhật trạng thái Active trên 4 nút chọn mã đề
-    ['601', '602', '801', '802'].forEach(c => {
+    ['601', '801'].forEach(c => {
       const btn = document.getElementById(`btn_code_${c}`);
       if (btn) {
         if (c === this.activeExamCode) {
