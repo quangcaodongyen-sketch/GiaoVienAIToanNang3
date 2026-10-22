@@ -600,7 +600,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     }
   };
 
-  // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS (320 MÃ ĐỀ ĐỘC LẬP)
+  // NẠP ĐỀ CHÍNH THỨC TỪ KHO DỮ LIỆU ĐƯỢC XUẤT TỪ APP TẠO ĐỀ TIẾNG ANH THCS
   const buildExam = (grade: number, type: string, examIdx: number, dataForTerm?: TermExamsData) => {
     setIsSubmitted(false);
     setUserAnswers({});
@@ -820,7 +820,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Lấy danh sách mã đề hiện có cho khối lớp và đợt thi được chọn (320 mã đề sẵn sàng)
+  // Lấy danh sách mã đề hiện có cho khối lớp và đợt thi được chọn
   const termData = examDataByTerm[examType];
   const gradeExams = termData ? termData[String(selectedGrade)] : undefined;
   const currentAvailableCodes = gradeExams ? Object.keys(gradeExams).sort() : [];
@@ -881,9 +881,9 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   >
                     <span>{label}</span>
                     <span className={`text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold ${
-                      selectedGrade === grade ? 'bg-blue-950 text-amber-300' : (count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-500 text-white')
+                      selectedGrade === grade ? 'bg-blue-950 text-amber-300' : (count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-600/80 text-slate-300')
                     }`}>
-                      {count > 0 ? `${count} mã đề` : 'Chờ đề'}
+                      {count > 0 ? `${count} mã đề` : '0 mã đề'}
                     </span>
                   </button>
                 );
@@ -898,31 +898,41 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
             <div className="grid grid-cols-2 sm:flex sm:items-center gap-1.5 sm:gap-2">
               {[
-                { id: 'giua-ky-1', label: 'Giữa HK1 (80 Đề Có Sẵn)', active: true },
-                { id: 'cuoi-ky-1', label: 'Cuối HK1 (80 Đề Có Sẵn)', active: true },
-                { id: 'giua-ky-2', label: 'Giữa HK2 (80 Đề Có Sẵn)', active: true },
-                { id: 'cuoi-ky-2', label: 'Cuối HK2 (80 Đề Có Sẵn)', active: true }
-              ].map(term => (
-                <button
-                  key={term.id}
-                  type="button"
-                  onClick={() => {
-                    setExamType(term.id as any);
-                    setSelectedExamIndex(0);
-                  }}
-                  className={`px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer text-center active:scale-95 ${
-                    examType === term.id
-                      ? 'bg-sky-500 text-white shadow-xs ring-2 ring-white/60'
-                      : 'bg-black/30 text-sky-200 hover:bg-black/50'
-                  }`}
-                >
-                  {term.label}
-                </button>
-              ))}
+                { id: 'giua-ky-1', name: 'Giữa HK1' },
+                { id: 'cuoi-ky-1', name: 'Cuối HK1' },
+                { id: 'giua-ky-2', name: 'Giữa HK2' },
+                { id: 'cuoi-ky-2', name: 'Cuối HK2' }
+              ].map(term => {
+                let termCount = 0;
+                const tData = examDataByTerm[term.id];
+                if (tData) {
+                  Object.values(tData).forEach(gMap => {
+                    termCount += Object.keys(gMap || {}).length;
+                  });
+                }
+                const label = `${term.name} (${termCount} mã đề)`;
+                return (
+                  <button
+                    key={term.id}
+                    type="button"
+                    onClick={() => {
+                      setExamType(term.id as any);
+                      setSelectedExamIndex(0);
+                    }}
+                    className={`px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer text-center active:scale-95 ${
+                      examType === term.id
+                        ? 'bg-sky-500 text-white shadow-xs ring-2 ring-white/60'
+                        : 'bg-black/30 text-sky-200 hover:bg-black/50'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* DÒNG 3: BẢNG 20 MÃ ĐỀ THI - MOBILE FIRST 5 CỘT GỌN GÀNG DỄ CHẠM */}
+          {/* DÒNG 3: BẢNG MÃ ĐỀ THI - MOBILE FIRST */}
           <div className="pt-2 border-t border-white/10 space-y-2">
             <div className="flex items-center justify-between flex-wrap gap-1">
               <span className="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
@@ -939,7 +949,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             {isLoadingExams ? (
               <div className="text-xs sm:text-sm text-sky-200 bg-sky-500/20 p-3 rounded-xl border border-sky-400/30 flex items-center gap-2">
                 <RotateCw className="w-4 h-4 animate-spin text-sky-300" />
-                <span>Đang nạp nhanh ngân hàng 20 mã đề thi chính thức...</span>
+                <span>Đang nạp dữ liệu đề thi trực tuyến... Xin chờ giây lát.</span>
               </div>
             ) : hasOfficialForCurrent ? (
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 sm:gap-2">
@@ -964,7 +974,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               </div>
             ) : (
               <div className="text-xs sm:text-sm text-amber-200 bg-amber-500/20 p-3 rounded-xl border border-amber-400/30">
-                Chưa có đề thi cho mục này — Hệ thống sẵn sàng tiếp nhận thêm file Word mới!
+                Hiện có 0 mã đề cho mục này — Thầy giáo sẽ tự tạo đề và đưa lên hệ thống sau!
               </div>
             )}
           </div>
@@ -1038,23 +1048,27 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           </div>
           <div className="max-w-xl mx-auto space-y-2">
             <h3 className="text-lg sm:text-xl font-black text-slate-800">
-              Đang Chờ Cập Nhật Đề Kiểm Tra Cho Mục Này
+              Hiện Chưa Có Mã Đề Thi Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Toàn bộ 80 mã đề chính thức Giữa Học Kỳ 1 (Lớp 6, 7, 8, 9) đã sẵn sàng để học sinh luyện làm bài và chấm điểm tự động.
+              Hệ thống hiện tại lưu trữ đúng 4 mã đề chuẩn Giữa Học Kỳ 1: <b>Lớp 6 (Mã 601, 602)</b> và <b>Lớp 8 (Mã 801, 802)</b>. Thầy giáo sẽ tự tạo các bộ đề còn lại và đưa lên hệ thống sau.
             </p>
           </div>
-          <div className="pt-2 flex items-center justify-center gap-2 flex-wrap">
-            {[6, 7, 8, 9].map(g => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => { setSelectedGrade(g); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer"
-              >
-                👉 Làm Đề Lớp {g} (20 Mã Đề)
-              </button>
-            ))}
+          <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📘 Làm bài Lớp 6 (Mã 601, 602)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>📙 Làm bài Lớp 8 (Mã 801, 802)</span>
+            </button>
           </div>
         </div>
       ) : (
