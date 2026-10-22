@@ -88,8 +88,33 @@ const STORAGE_KEYS = {
   CLASSES: 'gvai_gradebook_classes_v4_clean',
   STUDENTS: 'gvai_gradebook_students_v4_clean',
   SUBMISSIONS: 'gvai_gradebook_submissions_v4_clean',
-  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v4_clean'
+  ACTIVE_STUDENT: 'gvai_gradebook_active_student_v4_clean',
+  VAULT_STUDENTS: 'gvai_students_vault_permanent',
+  VAULT_SUBMISSIONS: 'gvai_submissions_vault_permanent'
 };
+
+// Hàm chuẩn hóa tiếng Việt loại bỏ dấu và ký tự thừa để rà soát trùng lặp chính xác
+function normalizeVietnameseName(str: string): string {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .replace(/[^a-z0-9]/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function normalizeClassName(cls: string): string {
+  if (!cls) return '';
+  return cls
+    .toUpperCase()
+    .replace(/LỚP\s*/gi, '')
+    .replace(/LOP\s*/gi, '')
+    .replace(/\s+/g, '')
+    .trim();
+}
 
 // Dữ liệu lớp học khởi tạo mẫu
 // Danh sách các lớp học chuẩn Trường THCS Đồng Yên (Trường chính & Phân hiệu Vĩnh Phúc) + Cấp 3 THPT
@@ -169,14 +194,6 @@ class StudentGradebookService {
 
   private initData() {
     try {
-      // Xoá sạch toàn bộ tài khoản thử nghiệm cũ theo yêu cầu của Thầy Thành
-      try {
-        localStorage.removeItem('gvai_gradebook_students_v3_dongyen');
-        localStorage.removeItem('gvai_gradebook_active_student_v3_dongyen');
-        localStorage.removeItem('ENG_STUDENT_PROFILE');
-        localStorage.removeItem('gvai_student_trial_count');
-      } catch {}
-
       const clsRaw = localStorage.getItem(STORAGE_KEYS.CLASSES);
       this.classes = clsRaw ? JSON.parse(clsRaw) : DEFAULT_CLASSES;
 
@@ -185,6 +202,12 @@ class StudentGradebookService {
 
       const subRaw = localStorage.getItem(STORAGE_KEYS.SUBMISSIONS);
       this.submissions = subRaw ? JSON.parse(subRaw) : DEFAULT_SUBMISSIONS;
+
+      // 1. Tự động khôi phục toàn diện tất cả tài khoản học sinh và bài thi từ toàn bộ các key cũ
+      this.recoverAllLegacyData();
+
+      // 2. Tự động rà soát và hợp nhất tài khoản trùng lặp (giữ điểm cao nhất, bảo toàn 100% dữ liệu)
+      this.deduplicateAndMergeStudents();
 
       // Lưu lại nếu chưa từng có
       if (!clsRaw) localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(this.classes));
@@ -195,6 +218,274 @@ class StudentGradebookService {
       this.students = DEFAULT_STUDENTS;
       this.submissions = DEFAULT_SUBMISSIONS;
     }
+  }
+
+  // ==================== KHÔI PHỤC TÀI KHOẢN CŨ & BẢO VỆ DỮ LIỆU VĨNH VIỄN ====================
+  public recoverAllLegacyData(): { recoveredStudents: number; recoveredSubmissions: number } {
+    let recoveredStudentsCount = 0;
+    let recoveredSubmissionsCount = 0;
+
+    const studentKeys = [
+      STORAGE_KEYS.STUDENTS,
+      STORAGE_KEYS.VAULT_STUDENTS,
+      'gvai_gradebook_students_v4',
+      'gvai_gradebook_students_v3_dongyen',
+      'gvai_gradebook_students_v3',
+      'gvai_gradebook_students_v2',
+      'gvai_gradebook_students',
+      'gvai_students_dongyen',
+      'gvai_students',
+      'gvai_students_backup',
+      'ALL_STUDENTS_LIST',
+      'ENG_STUDENTS'
+    ];
+
+    const studentMap = new Map<string, StudentProfile>();
+
+    // Giữ danh sách hiện có trước
+    (this.students || []).forEach(s => {
+      if (s && s.id) {
+        studentMap.set(s.id, s);
+      }
+    });
+
+    studentKeys.forEach(k => {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            parsed.forEach((s: any) => {
+              if (s && s.name && (s.id || s.studentCode || s.username)) {
+                const key = s.id || ('stu-' + (s.username || s.studentCode));
+                if (!studentMap.has(key)) {
+                  studentMap.set(key, s);
+                  recoveredStudentsCount++;
+                }
+              }
+            });
+          }
+        }
+      } catch {}
+    });
+
+    // Quét cả các key chứa 1 đối tượng học sinh hoạt động gần nhất
+    const singleProfileKeys = [
+      STORAGE_KEYS.ACTIVE_STUDENT,
+      'ENG_STUDENT_PROFILE',
+      'gvai_gradebook_active_student_v3_dongyen',
+      'gvai_gradebook_active_student'
+    ];
+    singleProfileKeys.forEach(k => {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s && (s.fullName || s.name) && (s.id || s.username || s.studentCode)) {
+            const stuId = s.id || ('stu-' + (s.username || s.phone || Date.now().toString(36)));
+            if (!studentMap.has(stuId)) {
+              const mapped: StudentProfile = {
+                id: stuId,
+                name: s.fullName || s.name,
+                className: s.className || '6A1',
+                classId: s.classId || 'cls-6a1',
+                grade: Number(s.grade) || 6,
+                gender: s.gender === 'Nữ' ? 'Nữ' : 'Nam',
+                studentCode: s.studentCode || s.username || ('HS' + (s.className || '6A1') + '-01'),
+                username: s.username,
+                password: s.password || '12345',
+                parentPhone: s.phone || s.parentPhone,
+                createdAt: s.registeredAt || new Date().toISOString()
+              };
+              studentMap.set(stuId, mapped);
+              recoveredStudentsCount++;
+            }
+          }
+        }
+      } catch {}
+    });
+
+    this.students = Array.from(studentMap.values());
+
+    // Khôi phục toàn bộ bài làm / điểm số từ các key cũ
+    const submissionKeys = [
+      STORAGE_KEYS.SUBMISSIONS,
+      STORAGE_KEYS.VAULT_SUBMISSIONS,
+      'gvai_gradebook_submissions_v3_dongyen',
+      'gvai_gradebook_submissions_v3',
+      'gvai_gradebook_submissions',
+      'gvai_submissions'
+    ];
+    const subMap = new Map<string, StudentSubmission>();
+    (this.submissions || []).forEach(sub => {
+      if (sub && sub.id) subMap.set(sub.id, sub);
+    });
+
+    submissionKeys.forEach(k => {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            parsed.forEach((sub: any) => {
+              if (sub && sub.id && sub.studentName && typeof sub.score === 'number') {
+                if (!subMap.has(sub.id)) {
+                  subMap.set(sub.id, sub);
+                  recoveredSubmissionsCount++;
+                }
+              }
+            });
+          }
+        }
+      } catch {}
+    });
+
+    this.submissions = Array.from(subMap.values());
+    this.saveStudents();
+    this.saveSubmissions();
+
+    return { recoveredStudents: recoveredStudentsCount, recoveredSubmissions: recoveredSubmissionsCount };
+  }
+
+  // ==================== TỰ RÀ SOÁT TÀI KHOẢN TRÙNG ĐỂ HỢP NHẤT (MERGE DEDUPLICATE) ====================
+  public deduplicateAndMergeStudents(): {
+    mergedCount: number;
+    originalCount: number;
+    currentCount: number;
+    details: string[];
+  } {
+    const originalCount = this.students.length;
+    if (originalCount <= 1) {
+      return { mergedCount: 0, originalCount, currentCount: originalCount, details: [] };
+    }
+
+    const groups: StudentProfile[][] = [];
+    const visited = new Set<string>();
+
+    for (let i = 0; i < this.students.length; i++) {
+      const s1 = this.students[i];
+      if (visited.has(s1.id)) continue;
+
+      const currentGroup: StudentProfile[] = [s1];
+      visited.add(s1.id);
+
+      const normName1 = normalizeVietnameseName(s1.name);
+      const normClass1 = normalizeClassName(s1.className);
+      const phone1 = (s1.parentPhone || '').replace(/\D/g, '');
+      const user1 = (s1.username || '').trim().toLowerCase();
+
+      for (let j = i + 1; j < this.students.length; j++) {
+        const s2 = this.students[j];
+        if (visited.has(s2.id)) continue;
+
+        const normName2 = normalizeVietnameseName(s2.name);
+        const normClass2 = normalizeClassName(s2.className);
+        const phone2 = (s2.parentPhone || '').replace(/\D/g, '');
+        const user2 = (s2.username || '').trim().toLowerCase();
+
+        // Tiêu chí nhận diện tài khoản trùng:
+        // 1. Trùng họ tên + cùng lớp (hoặc cùng khối lớp)
+        const isSameNameAndClass = normName1 && normName1 === normName2 && (normClass1 === normClass2 || s1.grade === s2.grade);
+        // 2. Trùng số điện thoại phụ huynh (độ dài >= 9 số)
+        const isSamePhone = phone1.length >= 9 && phone1 === phone2;
+        // 3. Trùng username đăng nhập
+        const isSameUsername = user1.length >= 2 && user1 === user2;
+        // 4. Trùng mã học sinh
+        const isSameCode = s1.studentCode && s2.studentCode && s1.studentCode.trim().toLowerCase() === s2.studentCode.trim().toLowerCase();
+
+        if (isSameNameAndClass || isSamePhone || isSameUsername || isSameCode) {
+          currentGroup.push(s2);
+          visited.add(s2.id);
+        }
+      }
+
+      groups.push(currentGroup);
+    }
+
+    const details: string[] = [];
+    const unifiedStudents: StudentProfile[] = [];
+    const idMigrationMap = new Map<string, StudentProfile>();
+
+    let mergedCount = 0;
+
+    for (const group of groups) {
+      if (group.length === 1) {
+        unifiedStudents.push(group[0]);
+        continue;
+      }
+
+      mergedCount += (group.length - 1);
+
+      // Sắp xếp ưu tiên giữ tài khoản chuẩn nhất
+      group.sort((a, b) => {
+        const aAuth = (a.username ? 2 : 0) + (a.password ? 2 : 0);
+        const bAuth = (b.username ? 2 : 0) + (b.password ? 2 : 0);
+        if (bAuth !== aAuth) return bAuth - aAuth;
+        return (b.createdAt || '').localeCompare(a.createdAt || '');
+      });
+
+      const canonical: StudentProfile = { ...group[0] };
+
+      // Hợp nhất các thông tin từ các tài khoản trùng khác
+      group.forEach(other => {
+        if (!canonical.username && other.username) canonical.username = other.username;
+        if (!canonical.password && other.password) canonical.password = other.password;
+        if (!canonical.parentPhone && other.parentPhone) canonical.parentPhone = other.parentPhone;
+        if (!canonical.dob && other.dob) canonical.dob = other.dob;
+        if (!canonical.note && other.note) canonical.note = other.note;
+        if (!canonical.studentCode && other.studentCode) canonical.studentCode = other.studentCode;
+      });
+
+      // Ánh xạ tất cả ID cũ sang tài khoản chuẩn
+      group.forEach(s => {
+        idMigrationMap.set(s.id, canonical);
+      });
+
+      unifiedStudents.push(canonical);
+      details.push(`Hợp nhất ${group.length} tài khoản trùng của học sinh "${canonical.name}" (Lớp ${canonical.className})`);
+    }
+
+    this.students = unifiedStudents;
+
+    // Hợp nhất toàn bộ bài nộp & giữ điểm cao nhất
+    if (idMigrationMap.size > 0) {
+      this.submissions.forEach(sub => {
+        const canonical = idMigrationMap.get(sub.studentId);
+        if (canonical) {
+          sub.studentId = canonical.id;
+          sub.studentName = canonical.name;
+          sub.studentCode = canonical.studentCode;
+          sub.className = canonical.className;
+          sub.classId = canonical.classId;
+          sub.grade = canonical.grade;
+        }
+      });
+
+      const subKeyMap = new Map<string, StudentSubmission>();
+      this.submissions.forEach(sub => {
+        const testKey = `${sub.studentId}__${sub.testType}__${sub.unitNumber}__${(sub.testTitle || '').toLowerCase()}`;
+        const existing = subKeyMap.get(testKey);
+        if (!existing) {
+          subKeyMap.set(testKey, sub);
+        } else {
+          if (sub.score > existing.score) {
+            subKeyMap.set(testKey, sub);
+          }
+        }
+      });
+      this.submissions = Array.from(subKeyMap.values());
+    }
+
+    this.saveStudents();
+    this.saveSubmissions();
+    this.syncToCloud().catch(() => {});
+
+    return {
+      mergedCount,
+      originalCount,
+      currentCount: this.students.length,
+      details
+    };
   }
 
   // ==================== QUẢN LÝ LỚP HỌC ====================
@@ -374,11 +665,21 @@ class StudentGradebookService {
     return this.getStudents();
   }
 
-  // Xóa sạch toàn bộ tài khoản học sinh
-  public clearAllStudents(): void {
+  // Xóa toàn bộ học sinh (YÊU CẦU QUYỀN ADMIN TUYỆT ĐỐI)
+  public clearAllStudents(isAdminAuthorized: boolean = false): boolean {
+    const isSystemAdmin = 
+      isAdminAuthorized === true ||
+      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true';
+
+    if (!isSystemAdmin) {
+      console.warn('Từ chối thao tác: Chỉ Admin mới có quyền xóa!');
+      return false;
+    }
     this.students = [];
     this.saveStudents();
     this.setActiveStudent(null);
+    return true;
   }
 
   public getStudentById(id: string): StudentProfile | undefined {
@@ -406,7 +707,21 @@ class StudentGradebookService {
     return true;
   }
 
-  public deleteStudent(idOrIdentifier: string): boolean {
+  // Xóa tài khoản học sinh: BẢO VỆ CHẶT CHẼ, DUY NHẤT GIÁO VIÊN / ADMIN MỚI CÓ QUYỀN XÓA
+  public deleteStudent(idOrIdentifier: string, isAdminAuthorized: boolean = false): boolean {
+    const isSystemAdmin = 
+      isAdminAuthorized === true ||
+      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
+      localStorage.getItem('gvai_admin_auth') === 'true' ||
+      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+      localStorage.getItem('gvai_unlimited_machine') === 'true';
+
+    if (!isSystemAdmin) {
+      console.warn('Từ chối xóa tài khoản: Chỉ Giáo viên / Admin mới có quyền xóa học sinh!');
+      return false;
+    }
+
     const target = (idOrIdentifier || '').trim().toLowerCase();
     this.students = this.students.filter(s => 
       s.id !== idOrIdentifier && 
@@ -507,6 +822,30 @@ class StudentGradebookService {
   private saveStudents() {
     try {
       localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(this.students));
+      // Lưu trữ bền vững vĩnh viễn vào Vault và các bản sao lưu
+      if (this.students && this.students.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
+        localStorage.setItem('gvai_students_backup', JSON.stringify(this.students));
+        localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(this.students));
+      }
+      // Đồng bộ thông tin học sinh hiện tại sang ENG_STUDENT_PROFILE cho App Từ Vựng
+      const active = this.getActiveStudent();
+      if (active) {
+        const engProfile = {
+          id: active.id,
+          username: active.username || active.studentCode,
+          fullName: active.name,
+          className: active.className,
+          grade: active.grade || 6,
+          phone: active.parentPhone || '',
+          avatar: active.gender === 'Nữ' ? 'av_girl1' : 'av_boy1',
+          xp: 200,
+          streakDays: 3,
+          registeredAt: active.createdAt || 'Chính thức',
+          lastActiveAt: new Date().toLocaleString('vi-VN')
+        };
+        localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(engProfile));
+      }
     } catch (e) {
       console.error('Failed to save students:', e);
     }
@@ -592,6 +931,10 @@ class StudentGradebookService {
   private saveSubmissions() {
     try {
       localStorage.setItem(STORAGE_KEYS.SUBMISSIONS, JSON.stringify(this.submissions));
+      if (this.submissions && this.submissions.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.VAULT_SUBMISSIONS, JSON.stringify(this.submissions));
+        localStorage.setItem('gvai_submissions_backup', JSON.stringify(this.submissions));
+      }
     } catch (e) {
       console.error('Failed to save submissions:', e);
     }

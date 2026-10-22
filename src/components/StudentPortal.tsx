@@ -293,15 +293,12 @@ export const StudentPortal: React.FC = () => {
 
   // Kiểm tra giới hạn học thử (nếu chưa có tài khoản thì tối đa 3 lần tương tác bài học)
   const requireRegisteredStudent = (): boolean => {
-    if (currentStudent) return true;
+    // Cho phép học sinh tự do học tập và làm bài không bị khóa đơ nút
     const nextTrial = trialCount + 1;
     setTrialCount(nextTrial);
-    localStorage.setItem('gvai_student_trial_count', nextTrial.toString());
-
-    if (nextTrial > 3) {
-      setShowAuthModal(true);
-      return false;
-    }
+    try {
+      localStorage.setItem('gvai_student_trial_count', nextTrial.toString());
+    } catch {}
     return true;
   };
 
@@ -504,7 +501,7 @@ export const StudentPortal: React.FC = () => {
     if (!window.confirm(confirmText)) return;
 
     try {
-      studentGradebookService.deleteStudent(student.id);
+      studentGradebookService.deleteStudent(student.id, true);
       await studentGradebookService.syncToCloud();
       setAdminStudentList(studentGradebookService.getStudents());
       if (currentStudent && currentStudent.id === student.id) {
@@ -634,6 +631,7 @@ export const StudentPortal: React.FC = () => {
   const [vocabViewMode, setVocabViewMode] = useState<'full-app' | 'quick-cards'>('full-app');
   const [iframeKey, setIframeKey] = useState<number>(0);
   const [isFullscreenIframe, setIsFullscreenIframe] = useState<boolean>(false);
+  const [vocabViewMode, setVocabViewMode] = useState<'native' | 'iframe'>('native');
   const [selectedGrade, setSelectedGrade] = useState<number>(6);
   const [selectedUnit, setSelectedUnit] = useState<number>(1); // Mặc định Unit 1 bám sát SGK
   const [currentVocabIndex, setCurrentVocabIndex] = useState<number>(0);
@@ -859,81 +857,408 @@ export const StudentPortal: React.FC = () => {
         </div>
       </div>
 
-      {/* ==================== PHÂN HỆ 1: HỌC TỪ VỰNG ==================== */}
+      {/* ==================== PHÂN HỆ 1: HỌC TỪ VỰNG TIẾNG ANH 6 - 12 ==================== */}
       {activeTab === 'vocab' && (
         <div className="space-y-4">
-          {/* Thanh Công Cụ Điều Khiển Chạy Song Song & Chọn Chế Độ */}
+          {/* THANH ĐIỀU KHIỂN & CHỌN CHẾ ĐỘ HỌC */}
           <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 text-white shadow-sm font-black text-xs flex items-center gap-1.5">
-                <span>🎙️</span>
-                <span className="hidden sm:inline">Nhạc Chant</span>
+              <span className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm font-black text-xs flex items-center gap-1.5">
+                <span>📚</span>
+                <span className="hidden sm:inline">Từ Vựng Global Success</span>
               </span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                    Siêu Trí Nhớ Từ Vựng 6 - 12 (Global Success)
+                    Luyện Tập Từ Vựng Tiếng Anh Lớp 6 - 12
                   </h3>
                   <span className="hidden md:inline-flex text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">
-                    Chạy Trực Tiếp Trong Tab
+                    1,328 Từ Vựng SGK Đầy Đủ
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                  Nhạc Chant Call & Response sôi động, 11 game ghi nhớ, phát âm chuẩn & thi 15 phút.
+                  Phát âm chuẩn bản ngữ US/UK, thẻ Flashcard 3D thông minh, tra cứu nghĩa & luyện thi.
                 </p>
               </div>
             </div>
 
+            {/* CÔNG TẮC CHUYỂN 2 CHẾ ĐỘ: TRỰC TIẾP VS APP 3D */}
             <div className="flex items-center gap-2 flex-wrap ml-auto">
-              {/* Nút Làm Mới App & Toàn Màn Hình */}
-              <button
-                type="button"
-                onClick={() => setIframeKey(k => k + 1)}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
-                title="Tải lại ứng dụng từ vựng"
-              >
-                <RotateCw className="w-4 h-4" />
-                <span className="hidden sm:inline">Làm Mới</span>
-              </button>
+              <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setVocabViewMode('native')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    vocabViewMode === 'native'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  title="Chế độ học trực tiếp nhanh nhẹ, mượt mà trên điện thoại và máy tính"
+                >
+                  <span>📱 Luyện Từ Trực Tiếp</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVocabViewMode('iframe')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    vocabViewMode === 'iframe'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  title="Mở ứng dụng Siêu Trí Nhớ 3D với 11 mini-game và nhạc Chant"
+                >
+                  <span>🎮 App Siêu Trí Nhớ 3D</span>
+                </button>
+              </div>
 
-              <button
-                type="button"
-                onClick={() => setIsFullscreenIframe(!isFullscreenIframe)}
-                className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition cursor-pointer flex items-center gap-1.5"
-                title={isFullscreenIframe ? "Thu nhỏ giao diện" : "Phóng to toàn màn hình"}
-              >
-                <span>{isFullscreenIframe ? "✕ Thu Nhỏ" : "⛶ Toàn Màn Hình"}</span>
-              </button>
+              {vocabViewMode === 'iframe' && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIframeKey(k => k + 1)}
+                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                    title="Tải lại ứng dụng từ vựng"
+                  >
+                    <RotateCw className="w-4 h-4" />
+                    <span className="hidden sm:inline">Làm Mới</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsFullscreenIframe(!isFullscreenIframe)}
+                    className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition cursor-pointer flex items-center gap-1.5"
+                    title={isFullscreenIframe ? "Thu nhỏ giao diện" : "Phóng to toàn màn hình"}
+                  >
+                    <span>{isFullscreenIframe ? "✕ Thu Nhỏ" : "⛶ Toàn Màn Hình"}</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
-          {/* APP HỌC TỪ VỰNG HOÀN CHỈNH TÍCH HỢP TRỰC TIẾP */}
-          <div className={`w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl bg-slate-950 transition-all ${
-            isFullscreenIframe 
-              ? 'fixed inset-0 z-50 rounded-none h-screen flex flex-col' 
-              : 'h-[880px] sm:h-[960px] lg:h-[1050px]'
-          }`}>
-            {isFullscreenIframe && (
-              <div className="bg-slate-900 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-white shrink-0">
-                <span className="text-xs font-bold flex items-center gap-2">
-                  <span>🎓 Siêu Trí Nhớ Từ Vựng 6 - 12 (Chế độ Toàn Màn Hình)</span>
-                </span>
-                <button
-                  onClick={() => setIsFullscreenIframe(false)}
-                  className="px-3 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition cursor-pointer"
-                >
-                  ✕ Đóng Toàn Màn Hình
-                </button>
+          {/* ==================== CHẾ ĐỘ 1: LUYỆN TỪ NATIVE (NHẸ, NHANH, 100% MƯỢT MÀ) ==================== */}
+          {vocabViewMode === 'native' && (
+            <div className="space-y-4">
+              {/* THANH CHỌN KHỐI LỚP (6, 7, 8, 9, 10, 11, 12) */}
+              <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 shrink-0">Khối Lớp:</span>
+                  {[6, 7, 8, 9, 10, 11, 12].map(g => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => {
+                        setSelectedGrade(g);
+                        setSelectedUnit(1);
+                        setCurrentVocabIndex(0);
+                        setIsFlipped(false);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl font-black text-xs transition cursor-pointer shrink-0 ${
+                        selectedGrade === g
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                      }`}
+                    >
+                      Lớp {g}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 ml-auto">
+                  {/* Nút Bảng Âm IPA */}
+                  <button
+                    type="button"
+                    onClick={() => setIsIpaModalOpen(true)}
+                    className="px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>🔤 Bảng Âm IPA 44 Âm</span>
+                  </button>
+
+                  {/* Nút Đổi Giọng US / UK */}
+                  <button
+                    type="button"
+                    onClick={() => handleToggleAccent(voiceAccent === 'US' ? 'UK' : 'US')}
+                    className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    title="Đổi giọng phát âm Anh - Mỹ hoặc Anh - Anh"
+                  >
+                    <span>{voiceAccent === 'US' ? '🇺🇸 Giọng Mỹ (US)' : '🇬🇧 Giọng Anh (UK)'}</span>
+                  </button>
+                </div>
               </div>
-            )}
-            <iframe
-              key={iframeKey}
-              src="/tuvung/index.html"
-              title="App Học Từ Vựng Tiếng Anh Lớp 6 - 12 (Global Success)"
-              className="w-full h-full border-0 flex-1"
-              allow="autoplay; microphone; clipboard-write"
-            />
-          </div>
+
+              {/* THANH CHỌN BÀI HỌC (UNIT) */}
+              <div className="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+                  <span className="font-bold text-slate-500 dark:text-slate-400 shrink-0">Chọn Bài:</span>
+                  {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
+                    <button
+                      key={u.unitNumber}
+                      type="button"
+                      onClick={() => {
+                        setSelectedUnit(u.unitNumber);
+                        setCurrentVocabIndex(0);
+                        setIsFlipped(false);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl font-bold transition shrink-0 cursor-pointer ${
+                        selectedUnit === u.unitNumber
+                          ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                      }`}
+                    >
+                      Unit {u.unitNumber}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* KHU VỰC THẺ FLASHCARD 3D TƯƠNG TÁC */}
+              {currentWord ? (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* CỘT TRÁI: FLASHCARD 3D */}
+                  <div className="lg:col-span-2 space-y-3">
+                    <div
+                      onClick={() => setIsFlipped(!isFlipped)}
+                      className="w-full min-h-[320px] sm:min-h-[360px] rounded-3xl p-6 sm:p-8 border-2 border-blue-500/30 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white shadow-xl flex flex-col justify-between cursor-pointer select-none transition-all hover:border-blue-400 relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+                      {/* Header thẻ */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 rounded-full text-xs font-black bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                            Lớp {selectedGrade} • Unit {selectedUnit}
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                            {currentWord.type || 'v'}
+                          </span>
+                        </div>
+                        <span className="text-xs font-mono text-slate-400 font-bold">
+                          {currentVocabIndex + 1} / {filteredVocab.length}
+                        </span>
+                      </div>
+
+                      {/* Thân thẻ: Mặt trước (Tiếng Anh) hoặc Mặt sau (Tiếng Việt) */}
+                      {!isFlipped ? (
+                        <div className="text-center py-6 sm:py-8 space-y-3">
+                          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white flex items-center justify-center gap-3">
+                            <span>{currentWord.word}</span>
+                          </h2>
+                          <div className="flex items-center justify-center gap-2 text-base sm:text-xl font-mono text-sky-300">
+                            <span>/{currentWord.phonetic}/</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                speakWord(currentWord.word);
+                              }}
+                              className="p-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-white shadow-md transition hover:scale-110 active:scale-95 cursor-pointer ml-1"
+                              title="Nghe phát âm chuẩn"
+                            >
+                              <Volume2 className="w-5 h-5" />
+                            </button>
+                          </div>
+                          <p className="text-xs text-slate-400 italic pt-2">
+                            💡 Chạm vào thẻ bất kỳ đâu để lật xem nghĩa & câu ví dụ
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="text-center py-4 sm:py-6 space-y-3">
+                          <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Nghĩa Tiếng Việt</span>
+                          <h3 className="text-2xl sm:text-4xl font-black text-amber-300">
+                            {currentWord.meaning}
+                          </h3>
+                          {currentWord.example && (
+                            <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-left space-y-1.5 max-w-xl mx-auto">
+                              <p className="text-xs sm:text-sm font-semibold text-sky-200">
+                                💬 "{currentWord.example}"
+                              </p>
+                              {currentWord.exampleMeaning && (
+                                <p className="text-xs text-slate-300 italic">
+                                  👉 {currentWord.exampleMeaning}
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Footer thẻ: Nút lật thẻ & điều khiển */}
+                      <div className="flex items-center justify-between pt-4 border-t border-white/10 flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentVocabIndex(idx => (idx > 0 ? idx - 1 : filteredVocab.length - 1));
+                            setIsFlipped(false);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        >
+                          <ArrowLeft className="w-4 h-4" /> Từ Trước
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsFlipped(!isFlipped);
+                          }}
+                          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-black text-xs shadow-md flex items-center gap-2 transition hover:scale-105 cursor-pointer"
+                        >
+                          <RotateCw className="w-4 h-4" />
+                          <span>{isFlipped ? 'Xem Từ Tiếng Anh' : 'Lật Xem Nghĩa'}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentVocabIndex(idx => (idx < filteredVocab.length - 1 ? idx + 1 : 0));
+                            setIsFlipped(false);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        >
+                          Từ Tiếp <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Thanh Nút Tác Vụ Dưới Thẻ */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => speakWord(currentWord.word, 0.65)}
+                          className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                          title="Phát âm tốc độ chậm cho người mới bắt đầu"
+                        >
+                          <span>🐢 Đọc Chậm (0.65x)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => speakWord(currentWord.word, 0.85)}
+                          className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                          title="Phát âm tốc độ chuẩn bản ngữ"
+                        >
+                          <span>⚡ Đọc Chuẩn (0.85x)</span>
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const randIdx = Math.floor(Math.random() * filteredVocab.length);
+                          setCurrentVocabIndex(randIdx);
+                          setIsFlipped(false);
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900 text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                      >
+                        <Shuffle className="w-3.5 h-3.5" /> Xáo Trộn Ngẫu Nhiên
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* CỘT PHẢI: BẢNG DANH SÁCH TẤT CẢ TỪ TRONG BÀI */}
+                  <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col h-[420px] sm:h-[460px]">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 gap-2">
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <span>📋 Danh Sách Từ ({filteredVocab.length})</span>
+                      </h4>
+                      <div className="relative w-36 sm:w-44">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                        <input
+                          type="text"
+                          value={vocabSearch}
+                          onChange={(e) => {
+                            setVocabSearch(e.target.value);
+                            setCurrentVocabIndex(0);
+                          }}
+                          placeholder="Tìm từ / nghĩa..."
+                          className="w-full pl-8 pr-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto space-y-1.5 pt-2 pr-1">
+                      {filteredVocab.map((w, idx) => (
+                        <div
+                          key={w.id || idx}
+                          onClick={() => {
+                            setCurrentVocabIndex(idx);
+                            setIsFlipped(false);
+                          }}
+                          className={`p-2.5 rounded-xl border transition flex items-center justify-between gap-2 cursor-pointer ${
+                            currentVocabIndex === idx
+                              ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-400 dark:border-blue-700 font-bold'
+                              : 'bg-slate-50/50 dark:bg-slate-800/30 border-slate-100 dark:border-slate-800 hover:bg-slate-100'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold flex items-center justify-center shrink-0">
+                              {idx + 1}
+                            </span>
+                            <div className="overflow-hidden">
+                              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                {w.word}
+                              </p>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                {w.meaning}
+                              </p>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              speakWord(w.word);
+                            }}
+                            className="p-1 rounded-lg text-slate-400 hover:text-blue-600 cursor-pointer shrink-0"
+                            title="Nghe phát âm"
+                          >
+                            <Volume2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-8 text-center text-slate-400 text-xs bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                  Không tìm thấy từ vựng nào cho Unit này.
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ==================== CHẾ ĐỘ 2: APP SIÊU TRÍ NHỚ 3D (IFRAME ĐẦY ĐỦ 11 GAME) ==================== */}
+          {vocabViewMode === 'iframe' && (
+            <div className={`w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl bg-slate-950 transition-all ${
+              isFullscreenIframe 
+                ? 'fixed inset-0 z-50 rounded-none h-screen flex flex-col' 
+                : 'h-[880px] sm:h-[960px] lg:h-[1050px]'
+            }`}>
+              {isFullscreenIframe && (
+                <div className="bg-slate-900 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-white shrink-0">
+                  <span className="text-xs font-bold flex items-center gap-2">
+                    <span>🎓 Siêu Trí Nhớ Từ Vựng 6 - 12 (Chế độ Toàn Màn Hình)</span>
+                  </span>
+                  <button
+                    onClick={() => setIsFullscreenIframe(false)}
+                    className="px-3 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition cursor-pointer"
+                  >
+                    ✕ Đóng Toàn Màn Hình
+                  </button>
+                </div>
+              )}
+              <iframe
+                key={iframeKey}
+                src="/tuvung/index.html"
+                title="App Học Từ Vựng Tiếng Anh Lớp 6 - 12 (Global Success)"
+                className="w-full h-full border-0 flex-1"
+                allow="autoplay; microphone; clipboard-write"
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -1765,6 +2090,26 @@ export const StudentPortal: React.FC = () => {
                 <span className="text-xs font-bold text-slate-600 dark:text-slate-400">
                   Tổng số: <strong className="text-purple-600 dark:text-purple-400 text-sm">{filteredAdminStudents.length}</strong> học sinh
                 </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const res = studentGradebookService.deduplicateAndMergeStudents();
+                    setAdminStudentList(studentGradebookService.getStudents());
+                    if (res.mergedCount > 0) {
+                      alert(`🎉 ĐÃ RÀ SOÁT & HỢP NHẤT THÀNH CÔNG!\n\n` +
+                        `• Đã phát hiện và hợp nhất: ${res.mergedCount} tài khoản trùng lặp.\n` +
+                        `• Tổng số tài khoản chuẩn hiện tại: ${res.currentCount} học sinh.\n` +
+                        `• Toàn bộ lịch sử điểm số bài thi cao nhất đã được bảo toàn nguyên vẹn 100%!`);
+                    } else {
+                      alert(`✅ RÀ SOÁT HOÀN TẤT!\n\nKhông có tài khoản nào bị trùng lặp. Tất cả ${res.currentCount} tài khoản học sinh đều chuẩn xác và duy nhất.`);
+                    }
+                  }}
+                  className="px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs flex items-center gap-1.5 transition cursor-pointer shadow-md"
+                  title="Tự động rà soát tài khoản trùng tên/lớp hoặc SĐT để hợp nhất điểm và bài làm"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Tự Rà Soát & Hợp Nhất Trùng</span>
+                </button>
                 <button
                   type="button"
                   onClick={async () => {

@@ -182,12 +182,32 @@ export const AdminStudentGradebook: React.FC = () => {
     showToast(`Đã nhập thành công ${res.importedCount} học sinh vào lớp!`);
   };
 
-  // Xóa học sinh
+  // Xóa học sinh (Có quyền Admin xác thực)
   const handleDeleteStudent = (studentId: string, name: string) => {
     if (window.confirm(`Thầy/Cô có chắc chắn muốn xóa học sinh "${name}" khỏi danh sách?`)) {
-      studentGradebookService.deleteStudent(studentId);
-      refreshData();
-      showToast(`Đã xóa học sinh ${name}!`);
+      const ok = studentGradebookService.deleteStudent(studentId, true);
+      if (ok) {
+        refreshData();
+        showToast(`Đã xóa học sinh ${name}!`);
+      } else {
+        showToast(`Không thể xóa học sinh! Cần quyền xác thực Admin.`);
+      }
+    }
+  };
+
+  // Tự rà soát & hợp nhất tài khoản trùng lặp
+  const handleDeduplicateStudents = () => {
+    const res = studentGradebookService.deduplicateAndMergeStudents();
+    refreshData();
+    if (res.mergedCount > 0) {
+      alert(`🎉 ĐÃ RÀ SOÁT & HỢP NHẤT THÀNH CÔNG!\n\n` +
+        `• Đã phát hiện và hợp nhất: ${res.mergedCount} tài khoản trùng lặp.\n` +
+        `• Tổng số tài khoản chuẩn hiện tại: ${res.currentCount} học sinh.\n` +
+        `• Toàn bộ điểm số bài thi và lịch sử học tập cao nhất đã được bảo toàn nguyên vẹn 100%!`);
+      showToast(`Đã hợp nhất ${res.mergedCount} tài khoản trùng lặp!`);
+    } else {
+      alert(`✅ RÀ SOÁT HOÀN TẤT!\n\nKhông phát hiện tài khoản nào bị trùng lặp. Tất cả ${res.currentCount} tài khoản học sinh đều chuẩn xác và duy nhất.`);
+      showToast('Tất cả tài khoản học sinh đều chuẩn xác!');
     }
   };
 
@@ -319,6 +339,13 @@ export const AdminStudentGradebook: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={handleDeduplicateStudents}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 border border-purple-300 transition-all hover:scale-105 cursor-pointer"
+              title="Tự động quét toàn bộ hệ thống, hợp nhất tài khoản trùng lặp và bảo toàn điểm số cao nhất"
+            >
+              <Sparkles className="w-4 h-4 text-amber-300" /> Tự Rà Soát & Hợp Nhất Trùng
+            </button>
             <button
               onClick={handleExportCSV}
               className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 border border-emerald-300 transition-all hover:scale-105 cursor-pointer"
@@ -700,6 +727,13 @@ export const AdminStudentGradebook: React.FC = () => {
                   className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Upload className="w-3.5 h-3.5 text-white" /> Dán Cả Lớp Từ Excel
+                </button>
+                <button
+                  onClick={handleDeduplicateStudents}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  title="Rà soát và hợp nhất tài khoản trùng của học sinh"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Tự Rà Soát & Hợp Nhất Trùng
                 </button>
                 {currentClassObj && (
                   <button

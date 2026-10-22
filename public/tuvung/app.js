@@ -24,20 +24,10 @@ function checkInappropriateText(text) {
 
 // Biến theo dõi lượt học thử của học sinh chưa đăng ký
 let TRIAL_ACTIONS_COUNT = 0;
-const MAX_TRIAL_ACTIONS = 5; // Cho phép xem thử 5 từ/lượt, sau đó bắt buộc đăng ký học
+const MAX_TRIAL_ACTIONS = 999999; // Mở khóa hoàn toàn cho học sinh tự do học tập và làm bài
 
 function checkTrialLimit() {
-  if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) {
-    return true; // Đã đăng ký/đăng nhập -> không giới hạn
-  }
-  TRIAL_ACTIONS_COUNT++;
-  if (TRIAL_ACTIONS_COUNT > MAX_TRIAL_ACTIONS) {
-    alert('⏳ EM ĐÃ DÙNG HẾT LƯỢT HỌC THỬ MIỄN PHÍ!\n\nĐể tiếp tục học từ vựng SGK, làm bài tập và đề kiểm tra trực tuyến, em vui lòng bấm Đăng ký tài khoản học sinh (hoàn toàn miễn phí) nhé!');
-    STUDENT_SYSTEM.canCloseModal = false;
-    STUDENT_SYSTEM.enforceAuthGate();
-    return false;
-  }
-  return true;
+  return true; // Tự do học tập không giới hạn
 }
 
 
@@ -1378,10 +1368,6 @@ function setupEventListeners() {
 
   // Universal Responsive Fast Tab Switcher
   window.activateTab = function(tabId) {
-    if (typeof STUDENT_SYSTEM !== 'undefined' && !STUDENT_SYSTEM.currentStudent) {
-      STUDENT_SYSTEM.enforceAuthGate();
-      return;
-    }
     if (!tabId) tabId = 'tab-flashcard';
     
     // 1. Update Buttons & Panes active state
@@ -4314,14 +4300,8 @@ const STUDENT_SYSTEM = {
 
 
   enforceAuthGate() {
-    if (this.currentStudent) {
-      document.body.classList.remove('auth-locked-mode');
-      return;
-    }
-    if (TRIAL_ACTIONS_COUNT >= MAX_TRIAL_ACTIONS) {
-      document.body.classList.add('auth-locked-mode');
-      this.openRegisterModal(false, 'register');
-    }
+    document.body.classList.remove('auth-locked-mode');
+    return;
   },
 
   openProfileModal() {
@@ -4580,12 +4560,52 @@ const STUDENT_SYSTEM = {
 
   loadStudent() {
     try {
-      const saved = localStorage.getItem('ENG_STUDENT_PROFILE');
+      let saved = localStorage.getItem('ENG_STUDENT_PROFILE');
+      if (!saved) {
+        const activeRaw = localStorage.getItem('gvai_gradebook_active_student_v4_clean') ||
+                          localStorage.getItem('gvai_gradebook_active_student_v3_dongyen') ||
+                          localStorage.getItem('gvai_gradebook_active_student');
+        if (activeRaw) {
+          const s = JSON.parse(activeRaw);
+          if (s) {
+            saved = JSON.stringify({
+              id: s.id || ('stu-' + (s.username || Date.now().toString(36))),
+              username: s.username || s.studentCode,
+              fullName: s.name || s.fullName,
+              className: s.className || '6A1',
+              grade: s.grade || (typeof CURRENT_GRADE !== 'undefined' ? CURRENT_GRADE : '6'),
+              phone: s.parentPhone || s.phone || '',
+              avatar: s.gender === 'Nữ' ? 'av_girl1' : 'av_boy1',
+              xp: 200,
+              streakDays: 3,
+              registeredAt: s.createdAt || 'Chính thức',
+              lastActiveAt: new Date().toLocaleString('vi-VN')
+            });
+            localStorage.setItem('ENG_STUDENT_PROFILE', saved);
+          }
+        }
+      }
+
       if (saved) {
         this.currentStudent = JSON.parse(saved);
-        if (this.currentStudent.grade && this.currentStudent.grade !== CURRENT_GRADE) {
-          switchGrade(this.currentStudent.grade, false);
+        if (this.currentStudent.grade && typeof CURRENT_GRADE !== 'undefined' && this.currentStudent.grade !== CURRENT_GRADE) {
+          if (typeof switchGrade === 'function') switchGrade(this.currentStudent.grade, false);
         }
+      } else {
+        // Mặc định tạo tài khoản học tập tự do để không bao giờ bị khóa nút
+        this.currentStudent = {
+          id: 'HS_GUEST',
+          username: 'hocsinhtudo',
+          fullName: 'Học sinh Tự do',
+          className: '6A1',
+          grade: typeof CURRENT_GRADE !== 'undefined' ? CURRENT_GRADE : '6',
+          phone: '',
+          avatar: 'av_boy1',
+          xp: 100,
+          streakDays: 1,
+          registeredAt: 'Tự do',
+          lastActiveAt: new Date().toLocaleString('vi-VN')
+        };
       }
     } catch (e) {
       console.error('Error loading student profile:', e);
