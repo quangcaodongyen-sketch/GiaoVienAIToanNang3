@@ -808,6 +808,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [shuffleNotice, setShuffleNotice] = useState<string>('');
   const [examDataByTerm, setExamDataByTerm] = useState<Record<string, TermExamsData>>({});
   const [isLoadingExams, setIsLoadingExams] = useState<boolean>(true);
 
@@ -1128,11 +1129,41 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     return copy;
   };
 
+  // Phân loại câu hỏi vào nhóm Part chuẩn (1 đến 8) theo chuẩn đề kiểm tra Tiếng Anh THCS
+  const getQuestionPartNumber = (q: OfficialExamQuestion): number => {
+    if (q.type === 'essay') return 8;
+    const title = (q.partTitle || '').toLowerCase();
+    const m = title.match(/part\s*(\d+)/i);
+    if (m) {
+      return parseInt(m[1], 10);
+    }
+    // Nhận diện True / False
+    if (q.options && q.options.some(o => /^(true|false|đúng|sai)$/i.test(o.trim()))) {
+      return 2;
+    }
+    if (title.includes('listen') || title.includes('nghe')) {
+      return 1;
+    }
+    if ((title.includes('passage') && title.includes('complete')) || title.includes('cloze')) {
+      return 4;
+    }
+    if (title.includes('passage') || title.includes('read') || title.includes('đọc')) {
+      return 5;
+    }
+    if (title.includes('transformation') || title.includes('closest meaning') || title.includes('viết lại')) {
+      return 6;
+    }
+    if (title.includes('reorder') || title.includes('sắp xếp')) {
+      return 7;
+    }
+    return 3;
+  };
+
   // Hàm đảo các phương án lựa chọn và tự động cập nhật đáp án đúng (A, B, C, D)
   const shufflePortalQuestionOptions = (q: OfficialExamQuestion): OfficialExamQuestion => {
     if (!q.options || q.options.length <= 1) return { ...q };
-    // Không đảo câu hỏi True / False
-    if (q.options.some(o => /true|false|đúng|sai/i.test(o))) {
+    // Tuyệt đối KHÔNG đảo câu hỏi True / False (Part 2)
+    if (q.options.some(o => /^(true|false|đúng|sai)$/i.test(o.trim()))) {
       return { ...q };
     }
 
@@ -1148,13 +1179,16 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       }
     }
 
-    const shuffledOptions = shuffleArrayHelper(q.options);
+    const shuffledOptions = shuffleArrayHelper([...q.options]);
     const newIdx = shuffledOptions.findIndex(o => o.trim().toLowerCase() === correctContent.trim().toLowerCase());
     const newLetter = newIdx !== -1 ? letters[newIdx] : rawLetter;
 
     let newExplanation = q.explanation || '';
-    if (newLetter && rawLetter && newExplanation) {
-      newExplanation = newExplanation.replace(/🎯 ĐÁP ÁN ĐÚNG:\s*[A-Ea-e]/i, `🎯 ĐÁP ÁN ĐÚNG: ${newLetter}`);
+    if (newLetter && newExplanation) {
+      newExplanation = newExplanation.replace(
+        /(?:🎯\s*)?(?:ĐÁP\s*ÁN\s*ĐÚNG|DAP\s*AN\s*DUNG|[?\s]*[?\s]*P\s*[?\s]*N\s*[?\s]*NG)\s*:\s*[A-Ea-e]/iu,
+        `🎯 ĐÁP ÁN ĐÚNG: ${newLetter}`
+      );
     }
 
     return {
@@ -1167,56 +1201,73 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   };
 
   // Hàm tạo danh sách câu hỏi xáo trộn thông minh chuẩn sư phạm chống học vẹt
+  // - Part 1 (Nghe MCQ Q1-Q5): Giữ nguyên thứ tự câu 1-5 theo luồng audio, ĐẢO PHƯƠNG ÁN LỰA CHỌN A, B, C
+  // - Part 2 (Nghe True/False Q6-Q10): TUYỆT ĐỐI KHÔNG ĐẢO thứ tự câu và KHÔNG ĐẢO True/False
+  // - Part 3 (Language Focus Q11-Q22): ĐẢO CẢ THỨ TỰ CÂU HỎI LẪN CÁC PHƯƠNG ÁN A, B, C, D
+  // - Part 4 (Cloze Reading Q23-Q27): Giữ nguyên thứ tự câu theo các ô trống (23)-(27), ĐẢO CÁC PHƯƠNG ÁN A, B, C, D
+  // - Part 5 (Reading Comprehension Q28-Q32): ĐẢO CẢ THỨ TỰ CÂU HỎI LẪN CÁC PHƯƠNG ÁN A, B, C, D
+  // - Part 6 (Sentence Transformation Q33-Q34): ĐẢO CẢ THỨ TỰ CÂU HỎI LẪN CÁC PHƯƠNG ÁN A, B, C, D
+  // - Part 7 (Reorder words Q35-Q36): ĐẢO CẢ THỨ TỰ CÂU HỎI LẪN CÁC PHƯƠNG ÁN A, B, C, D
+  // - Part 8 (Writing Production Q37): Giữ nguyên câu viết luận ở cuối cùng
   const createShuffledPortalQuestions = (rawQuestions: OfficialExamQuestion[]): ExamQuestion[] => {
-    const partGroups: Record<string, OfficialExamQuestion[]> = {};
-    const partOrder: string[] = [];
+    const partBuckets: Record<number, OfficialExamQuestion[]> = {
+      1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: []
+    };
 
     rawQuestions.forEach(q => {
-      const p = q.part || 'A';
-      if (!partGroups[p]) {
-        partGroups[p] = [];
-        partOrder.push(p);
+      const pNum = getQuestionPartNumber(q);
+      if (!partBuckets[pNum]) {
+        partBuckets[pNum] = [];
       }
-      partGroups[p].push(q);
+      partBuckets[pNum].push(q);
     });
 
     const finalQuestions: OfficialExamQuestion[] = [];
 
-    partOrder.forEach(p => {
-      const list = partGroups[p];
-      if (!list || list.length === 0) return;
-      const firstQ = list[0];
-      const pTitle = (firstQ.partTitle || '').toLowerCase();
-      const isPart2 = p === 'B' || pTitle.includes('part 2') || pTitle.includes('true');
-      const isPart1 = p === 'A' || pTitle.includes('part 1');
-      const isCloze = p === 'D' && pTitle.includes('part 4');
-      const isWritingEssay = firstQ.type === 'essay';
+    for (let pNum = 1; pNum <= 8; pNum++) {
+      const list = partBuckets[pNum];
+      if (!list || list.length === 0) continue;
 
-      if (isWritingEssay) {
-        finalQuestions.push(...list);
-        return;
-      }
-
-      if (isPart2) {
-        // TUYỆT ĐỐI KHÔNG ĐẢO PART 2: Giữ nguyên 100% thứ tự câu hỏi và giữ nguyên đáp án A. True, B. False
-        finalQuestions.push(...list);
-        return;
-      }
-
-      if (isPart1 || isCloze) {
-        // Giữ nguyên thứ tự câu hỏi theo mạch nghe / ô trống đọc hiểu, nhưng ĐẢO CÁC PHƯƠNG ÁN LỰA CHỌN
+      if (pNum === 1) {
+        // Part 1: Giữ thứ tự câu hỏi theo luồng băng nghe, đảo các phương án A, B, C
         list.forEach(q => {
           finalQuestions.push(shufflePortalQuestionOptions(q));
         });
-        return;
+      } else if (pNum === 2) {
+        // Part 2: Giữ nguyên tuyệt đối thứ tự câu và A. True, B. False
+        list.forEach(q => {
+          finalQuestions.push({ ...q });
+        });
+      } else if (pNum === 3) {
+        // Part 3 (Language Focus): Đảo ngẫu nhiên thứ tự câu hỏi & đảo ngẫu nhiên đáp án A, B, C, D
+        const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
+        finalQuestions.push(...shuffledList);
+      } else if (pNum === 4) {
+        // Part 4 (Cloze Passage): Giữ nguyên thứ tự câu theo vị trí các ô trống (23)-(27), đảo các phương án A, B, C, D
+        list.forEach(q => {
+          finalQuestions.push(shufflePortalQuestionOptions(q));
+        });
+      } else if (pNum === 5) {
+        // Part 5 (Reading Comprehension): Đảo ngẫu nhiên thứ tự câu hỏi & đảo ngẫu nhiên đáp án
+        const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
+        finalQuestions.push(...shuffledList);
+      } else if (pNum === 6) {
+        // Part 6 (Sentence Transformation): Đảo ngẫu nhiên thứ tự câu hỏi & đáp án
+        const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
+        finalQuestions.push(...shuffledList);
+      } else if (pNum === 7) {
+        // Part 7 (Reorder words): Đảo ngẫu nhiên thứ tự câu hỏi & đáp án
+        const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
+        finalQuestions.push(...shuffledList);
+      } else {
+        // Part 8 (Writing Essay): Giữ nguyên câu viết luận ở cuối cùng
+        list.forEach(q => {
+          finalQuestions.push({ ...q });
+        });
       }
+    }
 
-      // Các phần còn lại (Part C, E, F, G): ĐẢO CẢ THỨ TỰ CÂU HỎI VÀ ĐẢO CẢ CÁC ĐÁP ÁN LỰA CHỌN
-      const shuffledList = shuffleArrayHelper(list).map(q => shufflePortalQuestionOptions(q));
-      finalQuestions.push(...shuffledList);
-    });
-
-    // Tự động đánh số lại câu hỏi từ 1 đến hết
+    // Đánh số lại thứ tự câu hỏi từ 1 đến hết (qNumber: idx + 1)
     return finalQuestions.map((q, idx) => ({
       part: q.part,
       partTitle: q.partTitle,
@@ -1250,7 +1301,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
         const offExam = gradeExams[targetCode];
 
         if (offExam) {
-          // Xáo trộn ngẫu nhiên câu hỏi & đáp án từng Part chống học vẹt (Tuyệt đối không đảo Part 2)
+          // Xáo trộn ngẫu nhiên câu hỏi & đáp án từng Part chuẩn sư phạm chống học vẹt (Mỗi lần làm lại là 1 lần đảo)
           const convertedQuestions: ExamQuestion[] = createShuffledPortalQuestions(offExam.questions);
 
           setCurrentExam({
@@ -1437,6 +1488,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
   const handleResetExam = () => {
     buildExam(selectedGrade, examType, selectedExamIndex);
+    setShuffleNotice('🔄 Đề thi đã tự động đảo ngẫu nhiên câu hỏi & đáp án mới để em luyện tập!');
+    setTimeout(() => {
+      setShuffleNotice('');
+    }, 4500);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -1579,7 +1634,15 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                     <button
                       key={codeStr}
                       type="button"
-                      onClick={() => setSelectedExamIndex(idx)}
+                      onClick={() => {
+                        if (selectedExamIndex === idx) {
+                          handleResetExam();
+                        } else {
+                          setSelectedExamIndex(idx);
+                          setShuffleNotice(`🔄 Đã chuyển sang Mã đề ${codeStr} và tự động đảo câu hỏi & đáp án!`);
+                          setTimeout(() => setShuffleNotice(''), 4500);
+                        }
+                      }}
                       className={`h-9 sm:h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center active:scale-90 ${
                         isSelected
                           ? 'bg-emerald-400 text-blue-950 ring-2 sm:ring-4 ring-white shadow-lg font-black scale-105'
@@ -1736,6 +1799,19 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               </div>
             </div>
           </div>
+
+          {/* BANNER THÔNG BÁO TỰ ĐỘNG ĐẢO CÂU HỎI & ĐÁP ÁN CHỐNG HỌC VẸT */}
+          {shuffleNotice && (
+            <div className="mx-4 sm:mx-6 mt-3 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-teal-500/20 to-emerald-500/15 border border-emerald-500/30 text-emerald-900 text-xs sm:text-sm font-bold flex items-center justify-between gap-2 shadow-xs animate-pulse">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{shuffleNotice}</span>
+              </div>
+              <span className="text-[10px] sm:text-[11px] font-black uppercase text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-full shrink-0 border border-emerald-300">
+                Tự đảo chống học vẹt
+              </span>
+            </div>
+          )}
 
           {/* KHUNG THÔNG BÁO KẾT QUẢ & CÔNG BỐ ĐIỂM SAU KHI NỘP BÀI - CHUẨN THÔNG TƯ 22/2021/TT-BGDĐT */}
           {isSubmitted && scoreResult && (
