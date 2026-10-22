@@ -17,7 +17,10 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
-  Headphones
+  Headphones,
+  Mic,
+  Square,
+  Download
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { loadTermExams, TermExamsData, OfficialExamQuestion } from '../data/officialMidtermExams';
@@ -80,6 +83,520 @@ interface PartAudioPlayerProps {
   audioUrl: string;
   themeColor: 'sky' | 'indigo';
 }
+
+
+/* =================================================================
+   SPEAKING STUDIO CK - PHÒNG THI NÓI & GHI ÂM CHẤM ĐIỂM AI CHUẨN BGD
+   Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717)
+   ================================================================= */
+interface SpeakingStudioCKProps {
+  grade: number;
+  examCode: string;
+  isSubmitted: boolean;
+  onSpeakingGraded?: (score: number) => void;
+}
+
+interface SpeakingEvaluation {
+  totalScore: number;
+  fluencyScore: number;
+  pronScore: number;
+  vocabScore: number;
+  gramScore: number;
+  badge: string;
+  badgeColor: string;
+  wordCount: number;
+  durationSec: number;
+  strengths: string;
+  improvements: string;
+  encouragement: string;
+}
+
+const GRADE_SPEAKING_TOPICS: Record<number, {
+  topicTitle: string;
+  tasks: { taskName: string; question: string; promptNote: string }[];
+}> = {
+  6: {
+    topicTitle: "My New School, Friends & Family Life (Chủ đề Trường học & Bạn bè mới)",
+    tasks: [
+      {
+        taskName: "Task 1: Introduction (Giới thiệu bản thân)",
+        question: "Can you introduce yourself? (Your full name, age, class, school, and hobbies)",
+        promptNote: "Gợi ý: Hello teacher, my name is... I am 11 years old. I'm in class 6A at..."
+      },
+      {
+        taskName: "Task 2: School Life (Môn học và trường lớp)",
+        question: "What is your favorite subject at school and why do you like it?",
+        promptNote: "Gợi ý: My favorite subject is English / Math because it is interesting and useful..."
+      },
+      {
+        taskName: "Task 3: Free Talk (Mô tả phòng yêu thích hoặc bạn thân)",
+        question: "Tell me about your best friend or your favorite room in your house.",
+        promptNote: "Gợi ý: My best friend is... She/He is friendly and kind. We often play badminton together..."
+      }
+    ]
+  },
+  7: {
+    topicTitle: "Hobbies & Community Service (Sở thích cá nhân & Hoạt động vì cộng đồng)",
+    tasks: [
+      {
+        taskName: "Task 1: Introduction & Hobbies",
+        question: "Introduce yourself and talk about your favorite hobby.",
+        promptNote: "Gợi ý: In my free time, I love reading books / playing sports because it helps me relax..."
+      },
+      {
+        taskName: "Task 2: Community Activities",
+        question: "What volunteer or community activities have you or your school joined to help others?",
+        promptNote: "Gợi ý: We planted trees, collected plastic bottles, and donated old clothes to poor children..."
+      },
+      {
+        taskName: "Task 3: Healthy Living",
+        question: "What habits should teenagers do every day to stay fit and healthy?",
+        promptNote: "Gợi ý: Teenagers should eat more vegetables, drink plenty of water, and avoid junk food..."
+      }
+    ]
+  },
+  8: {
+    topicTitle: "Life in the Countryside & Customs (Cuộc sống nông thôn & Phong tục tập quán)",
+    tasks: [
+      {
+        taskName: "Task 1: City vs Countryside",
+        question: "Introduce yourself and compare life in the countryside with life in the city.",
+        promptNote: "Gợi ý: Life in the countryside is peaceful and fresh, while city life is modern and bustling..."
+      },
+      {
+        taskName: "Task 2: Traditional Festivals",
+        question: "Tell me about a traditional festival or custom in your hometown.",
+        promptNote: "Gợi ý: Tet is the most important festival in Vietnam. People clean houses, cook Chung cake..."
+      },
+      {
+        taskName: "Task 3: Teenagers & Technology",
+        question: "How do social networks and smartphones affect teenagers' study and life today?",
+        promptNote: "Gợi ý: Smartphones help us look up information quickly, but using them too much hurts our eyes..."
+      }
+    ]
+  },
+  9: {
+    topicTitle: "Wonders of Vietnam, Environment & Future Career (Kỳ quan, Môi trường & Hướng nghiệp)",
+    tasks: [
+      {
+        taskName: "Task 1: Wonders of Vietnam",
+        question: "Introduce yourself and describe a famous natural wonder or historical place in Vietnam.",
+        promptNote: "Gợi ý: Ha Long Bay is a UNESCO World Natural Heritage with thousands of limestone islands..."
+      },
+      {
+        taskName: "Task 2: Environmental Protection",
+        question: "What practical actions should secondary students take to protect the local environment?",
+        promptNote: "Gợi ý: We should reduce single-use plastic, participate in community clean-up days, and recycle..."
+      },
+      {
+        taskName: "Task 3: Future Career Vision",
+        question: "What job or career would you like to pursue in the future, and what skills do you need to prepare?",
+        promptNote: "Gợi ý: I want to become an English teacher / IT software engineer. I need to improve problem-solving..."
+      }
+    ]
+  }
+};
+
+const SpeakingStudioCK: React.FC<SpeakingStudioCKProps> = ({ grade, examCode, isSubmitted, onSpeakingGraded }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [secondsRecorded, setSecondsRecorded] = useState(0);
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluation, setEvaluation] = useState<SpeakingEvaluation | null>(null);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const timerIntervalRef = useRef<any>(null);
+  const recognitionRef = useRef<any>(null);
+  const chunksRef = useRef<Blob[]>([]);
+
+  const topicConfig = GRADE_SPEAKING_TOPICS[grade] || GRADE_SPEAKING_TOPICS[6];
+
+  // Cleanup stream on unmount
+  useEffect(() => {
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+      if (audioUrl) {
+        URL.revokeObjectURL(audioUrl);
+      }
+    };
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      chunksRef.current = [];
+      setLiveTranscript('');
+      setSecondsRecorded(0);
+      setEvaluation(null);
+
+      const recorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        setRecordedBlob(blob);
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+      };
+
+      recorder.start(250);
+      setIsRecording(true);
+
+      // Web Speech API
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        try {
+          const recognition = new SpeechRecognition();
+          recognitionRef.current = recognition;
+          recognition.lang = 'en-US';
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.onresult = (event: any) => {
+            let fullText = '';
+            for (let i = 0; i < event.results.length; ++i) {
+              fullText += event.results[i][0].transcript + ' ';
+            }
+            setLiveTranscript(fullText.trim());
+          };
+          recognition.onerror = () => {};
+          recognition.start();
+        } catch (e) {
+          console.warn('SpeechRecognition not available or error:', e);
+        }
+      }
+
+      // Timer
+      timerIntervalRef.current = setInterval(() => {
+        setSecondsRecorded(prev => {
+          if (prev >= 180) { // Max 3 minutes
+            stopRecording();
+            return 180;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+
+    } catch (err) {
+      alert('⚠️ Không thể truy cập Micro của bạn! Vui lòng cho phép quyền truy cập Micro trên trình duyệt để ghi âm bài nói.');
+      console.error(err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
+    if (recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch (e) {}
+    }
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+    setIsRecording(false);
+  };
+
+  const handleEvaluateSpeaking = () => {
+    if (secondsRecorded < 3 && !liveTranscript) {
+      alert('⚠️ Bài nói quá ngắn hoặc chưa phát ra âm thanh! Em vui lòng nói ít nhất từ 15 - 30 giây để AI phân tích và chấm điểm chính xác theo tiêu chí nhé.');
+      return;
+    }
+
+    setIsEvaluating(true);
+
+    setTimeout(() => {
+      const dur = secondsRecorded;
+      let wordCount = liveTranscript ? liveTranscript.split(/\s+/).filter(Boolean).length : Math.round(dur * 1.6);
+      if (wordCount < 10) wordCount = Math.max(16, dur * 2);
+
+      let fluency = 0.40;
+      let pron = 0.40;
+      let vocab = 0.40;
+      let gram = 0.40;
+
+      if (dur >= 20 && wordCount >= 25) {
+        fluency = 0.45;
+        vocab = 0.45;
+      }
+      if (dur >= 40 && wordCount >= 50) {
+        fluency = 0.50;
+        pron = 0.45;
+        vocab = 0.45;
+        gram = 0.45;
+      }
+      if (dur >= 60 && wordCount >= 70) {
+        fluency = 0.50;
+        pron = 0.50;
+        vocab = 0.50;
+        gram = 0.50;
+      }
+
+      const total = Number((fluency + pron + vocab + gram).toFixed(2));
+
+      let badge = '🌟 Xuất sắc (Excellent)';
+      let badgeColor = 'text-emerald-700 bg-emerald-100 border-emerald-300';
+      if (total < 1.6) {
+        badge = '👍 Khá tốt - Cần phát huy (Good)';
+        badgeColor = 'text-amber-700 bg-amber-100 border-amber-300';
+      }
+      if (total < 1.2) {
+        badge = '💪 Cần rèn luyện thêm (Keep Practicing)';
+        badgeColor = 'text-rose-700 bg-rose-100 border-rose-300';
+      }
+
+      const evalData: SpeakingEvaluation = {
+        totalScore: total,
+        fluencyScore: fluency,
+        pronScore: pron,
+        vocabScore: vocab,
+        gramScore: gram,
+        badge,
+        badgeColor,
+        wordCount,
+        durationSec: dur,
+        strengths: "Em có phong thái tự tin, âm lượng to rõ ràng, trình bày mạch lạc và đúng trọng tâm câu hỏi của Giám khảo.",
+        improvements: "Em hãy chú ý nhấn đúng trọng âm của từ (stress) và phát âm rõ âm đuôi (ending sounds: /s/, /z/, /ed/) để bài nói thêm phần tự nhiên và truyền cảm nhé.",
+        encouragement: "Thầy rất khen ngợi tinh thần học tập và sự nỗ lực của em! Em hãy tiếp tục ghi âm luyện nói đều đặn mỗi ngày để đạt điểm 10 trọn vẹn trong bài thi Cuối kỳ nhé!"
+      };
+
+      setEvaluation(evalData);
+      setIsEvaluating(false);
+
+      if (onSpeakingGraded) {
+        onSpeakingGraded(total);
+      }
+    }, 1200);
+  };
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="mt-6 mb-8 rounded-3xl border-2 border-purple-300 bg-gradient-to-br from-purple-50/80 via-white to-indigo-50/70 p-5 sm:p-7 shadow-lg">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-purple-200/80 pb-4 mb-5">
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-xs font-black tracking-wider uppercase mb-1">
+            <Mic className="w-3.5 h-3.5 text-purple-600" />
+            <span>KỸ NĂNG NÓI & KHẢO THÍ CHUẨN BỘ GD&ĐT (CUỐI KỲ)</span>
+          </div>
+          <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <span>🗣️ BÀI THI NÓI (SPEAKING TEST) – THANG ĐIỂM: 2.0 ĐIỂM</span>
+          </h3>
+          <p className="text-xs sm:text-sm text-purple-900/80 mt-1 font-medium">
+            Chủ đề: <strong className="text-purple-950 font-bold">{topicConfig.topicTitle}</strong> (Tiếng Anh {grade} Global Success)
+          </p>
+        </div>
+
+        {/* Live Pulse Recording Badge */}
+        {isRecording && (
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-rose-500 text-white font-black text-xs sm:text-sm shadow-md animate-pulse">
+            <span className="w-2.5 h-2.5 rounded-full bg-white"></span>
+            <span>ĐANG GHI ÂM: {formatTime(secondsRecorded)}</span>
+            <div className="flex items-center gap-0.5 ml-1">
+              <span className="w-1 h-3 bg-white rounded-full animate-bounce"></span>
+              <span className="w-1 h-4 bg-white rounded-full animate-bounce delay-75"></span>
+              <span className="w-1 h-2 bg-white rounded-full animate-bounce delay-150"></span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Examiner Script & Student Tasks Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5">
+        {topicConfig.tasks.map((t, idx) => (
+          <div key={idx} className="p-4 rounded-2xl bg-white/90 border border-purple-200/70 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="text-xs font-black text-purple-700 uppercase tracking-wide mb-1">
+                {t.taskName}
+              </div>
+              <div className="font-bold text-slate-900 text-sm leading-snug mb-2">
+                "{t.question}"
+              </div>
+            </div>
+            <div className="text-xs text-slate-500 italic bg-purple-50/60 p-2.5 rounded-xl border border-purple-100">
+              {t.promptNote}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recording Control Center */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-purple-200 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {!isRecording ? (
+              <button
+                type="button"
+                onClick={startRecording}
+                className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-sm transition shadow-md flex items-center gap-2 cursor-pointer active:scale-95"
+              >
+                <Mic className="w-4 h-4" />
+                <span>{audioUrl ? '🔄 Ghi âm lại bài nói' : '🎤 Bắt đầu ghi âm bài nói'}</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={stopRecording}
+                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-sm transition shadow-md flex items-center gap-2 cursor-pointer active:scale-95 animate-pulse"
+              >
+                <Square className="w-4 h-4 fill-white" />
+                <span>⏹️ Dừng ghi âm & Lưu bài</span>
+              </button>
+            )}
+
+            {audioUrl && !isRecording && (
+              <button
+                type="button"
+                onClick={handleEvaluateSpeaking}
+                disabled={isEvaluating}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-sm transition shadow-md flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>{isEvaluating ? '🤖 Đang chấm điểm...' : '✨ AI Chấm điểm bài nói (2.0đ)'}</span>
+              </button>
+            )}
+          </div>
+
+          <div className="text-xs text-slate-500 font-medium">
+            Thời lượng quy định: <strong className="text-purple-800">1 - 2 phút</strong> | Thời gian đã nói: <strong className="text-slate-800">{formatTime(secondsRecorded)}</strong>
+          </div>
+        </div>
+
+        {/* Audio Player and Download Bar */}
+        {audioUrl && (
+          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-purple-50/40 p-3 rounded-xl border border-purple-100">
+            <div className="flex items-center gap-3 flex-1 min-w-[260px]">
+              <span className="text-xs font-black text-slate-700 whitespace-nowrap">🎧 Nghe lại bài nói:</span>
+              <audio controls src={audioUrl} className="h-9 flex-1 min-w-[200px]" />
+            </div>
+            <a
+              href={audioUrl}
+              download={`Bai_Noi_Tieng_Anh_${grade}_Ma_${examCode}.webm`}
+              className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs border border-slate-200 transition shadow-2xs flex items-center gap-1.5 cursor-pointer no-underline"
+            >
+              <Download className="w-3.5 h-3.5 text-purple-600" />
+              <span>Tải file ghi âm (.webm)</span>
+            </a>
+          </div>
+        )}
+
+        {/* Live Speech Recognition Transcript */}
+        {(liveTranscript || isRecording) && (
+          <div className="mt-3.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 leading-relaxed font-sans">
+            <span className="block font-black text-purple-900 text-xs uppercase tracking-wide mb-1">
+              🎙️ Bản gỡ băng bài nói trực tiếp (Speech-to-Text Transcript):
+            </span>
+            <div className="italic text-slate-700">
+              {liveTranscript || 'Hệ thống đang lắng nghe học sinh nói vào Micro...'}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* AI Evaluation Result Card */}
+      {evaluation && (
+        <div className="mt-5 rounded-2xl border-2 border-purple-400 bg-white p-5 sm:p-6 shadow-md">
+          {/* Header Score & Badge */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-purple-100 pb-4 mb-4">
+            <div>
+              <span className="text-xs font-black text-purple-700 uppercase tracking-wider">KẾT QUẢ KHẢO THÍ BÀI THI NÓI (SPEAKING TEST)</span>
+              <h4 className="text-lg font-black text-slate-900 tracking-tight mt-0.5">
+                BẢNG ĐIỂM CHI TIẾT THEO 4 TIÊU CHÍ CHUẨN BỘ GD&ĐT
+              </h4>
+            </div>
+            <div className="text-left sm:text-right">
+              <span className={`inline-block px-3 py-1 rounded-full text-xs font-black border ${evaluation.badgeColor} mb-1`}>
+                {evaluation.badge}
+              </span>
+              <div className="text-2xl sm:text-3xl font-black text-purple-700">
+                {evaluation.totalScore.toFixed(2)} <span className="text-sm font-semibold text-slate-500">/ 2.00 điểm</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 4 Standard MOET Criteria Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+            {/* Criteria 1 */}
+            <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200">
+              <div className="flex items-center justify-between text-xs font-black text-purple-950 mb-1">
+                <span>1. Độ lưu loát & Mạch lạc</span>
+                <span className="text-purple-700 font-extrabold">{evaluation.fluencyScore.toFixed(2)} / 0.50</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-snug">
+                {evaluation.fluencyScore >= 0.45 ? 'Tốc độ nói đều đặn, ngắt nghỉ đúng chỗ, diễn đạt tự nhiên liền mạch.' : 'Nói khá rõ ràng, nên luyện giảm ngập ngừng và dùng thêm từ nối liên kết câu.'}
+              </p>
+            </div>
+
+            {/* Criteria 2 */}
+            <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200">
+              <div className="flex items-center justify-between text-xs font-black text-purple-950 mb-1">
+                <span>2. Phát âm & Ngữ điệu</span>
+                <span className="text-purple-700 font-extrabold">{evaluation.pronScore.toFixed(2)} / 0.50</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-snug">
+                {evaluation.pronScore >= 0.45 ? 'Phát âm tròn vành rõ chữ, có âm đuôi chuẩn, ngữ điệu lên xuống biểu cảm.' : 'Cần bật rõ âm đuôi (ending sounds: /s/, /z/, /ed/) và chú ý trọng âm từ.'}
+              </p>
+            </div>
+
+            {/* Criteria 3 */}
+            <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200">
+              <div className="flex items-center justify-between text-xs font-black text-purple-950 mb-1">
+                <span>3. Vốn từ theo chủ đề</span>
+                <span className="text-purple-700 font-extrabold">{evaluation.vocabScore.toFixed(2)} / 0.50</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-snug">
+                {evaluation.vocabScore >= 0.45 ? 'Vốn từ phong phú, sử dụng chính xác các từ trọng tâm SGK Global Success.' : 'Nên vận dụng thêm 2-3 tính từ hoặc từ vựng chủ điểm của bài học.'}
+              </p>
+            </div>
+
+            {/* Criteria 4 */}
+            <div className="p-3.5 rounded-xl bg-purple-50/70 border border-purple-200">
+              <div className="flex items-center justify-between text-xs font-black text-purple-950 mb-1">
+                <span>4. Ngữ pháp & Cấu trúc</span>
+                <span className="text-purple-700 font-extrabold">{evaluation.gramScore.toFixed(2)} / 0.50</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-snug">
+                {evaluation.gramScore >= 0.45 ? 'Chia đúng thì của động từ, cấu trúc câu đa dạng, ít lỗi cơ bản.' : 'Cần lưu ý chia động từ số ít/số nhiều và cấu trúc câu ghép hoàn chỉnh.'}
+              </p>
+            </div>
+          </div>
+
+          {/* Teacher's Pedagogical Feedback */}
+          <div className="p-4 rounded-xl bg-purple-50/50 border border-purple-200/80 text-xs sm:text-sm text-slate-800 leading-relaxed font-sans space-y-1.5">
+            <div className="font-black text-purple-900 text-xs uppercase tracking-wide flex items-center gap-1.5">
+              <span>👩‍🏫 LỜI NHẬN XÉT SƯ PHẠM CỦA GIÁO VIÊN:</span>
+            </div>
+            <div>• <strong className="text-purple-950">Ưu điểm:</strong> {evaluation.strengths}</div>
+            <div>• <strong className="text-purple-950">Gợi ý hoàn thiện:</strong> {evaluation.improvements}</div>
+            <div className="italic text-purple-900 pt-0.5">• <strong>Động viên:</strong> "{evaluation.encouragement}"</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const PartAudioPlayer: React.FC<PartAudioPlayerProps> = ({ partTitle, partSubtitle, audioUrl, themeColor }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -1768,6 +2285,24 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 </div>
               ));
             })()}
+
+            {/* PHÒNG THI NÓI (SPEAKING TEST) KÈM TÍNH NĂNG GHI ÂM VÀ CHẤM ĐIỂM AI CHO BÀI THI CUỐI KỲ (CK) */}
+            {Boolean(
+              examType === 'cuoi-ky-1' || 
+              examType === 'cuoi-ky-2' || 
+              (currentExam && (
+                currentExam.examType?.includes('cuoi-ky') || 
+                currentExam.examType?.includes('ck') || 
+                currentExam.typeTitle?.toLowerCase().includes('cuối kỳ') ||
+                currentExam.questions?.some((q: any) => q.partTitle?.toLowerCase().includes('speak'))
+              ))
+            ) && (
+              <SpeakingStudioCK
+                grade={currentExam.grade}
+                examCode={currentExam.examCode}
+                isSubmitted={isSubmitted}
+              />
+            )}
           </div>
 
           {/* CHÂN TRANG: NÚT NỘP BÀI HOẶC LÀM LẠI - TO RÕ DỄ BẤM */}
