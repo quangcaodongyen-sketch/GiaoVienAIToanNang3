@@ -7765,41 +7765,121 @@ const ONLINE_EXAM_SYSTEM = {
         </div>
       `;
 
-      // 2. Nếu là Part 1: Chèn Audio Player Hội Thoại
+      // 2. Nếu là Part 1: Chèn Audio Player Hội Thoại Kèm Thanh Trượt Tua Từng Từ
       if (sec.id === 'sec_1' || (sec.name && sec.name.includes('Part 1'))) {
         const audioUrl = exam.audioUrlPart1 || 'audio/g' + exam.grade + '_gk1_part1.mp3';
         html += `
-          <div style="background: rgba(37,99,235,0.15); border: 2px solid #3b82f6; border-radius: 16px; padding: 14px 18px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
-            <div style="flex: 1; min-width: 240px;">
-              <div style="font-weight: 900; color: #93c5fd; font-size: 1.02rem; display: flex; align-items: center; gap: 8px;">
-                🎧 BÀI NGHE PART 1 (Hội thoại - Dialogue)
+          <div class="part-audio-player-box" style="background: linear-gradient(135deg, rgba(37,99,235,0.18), rgba(30,58,138,0.28)); border: 2px solid #3b82f6; border-radius: 18px; padding: 16px 20px; margin-bottom: 1.5rem; box-shadow: 0 6px 24px rgba(0,0,0,0.3);">
+            <audio id="audioElement_P1" src="${audioUrl}" preload="metadata" ontimeupdate="ONLINE_EXAM_SYSTEM.onPartTimeUpdate('P1')" onloadedmetadata="ONLINE_EXAM_SYSTEM.onPartLoaded('P1')" onended="ONLINE_EXAM_SYSTEM.onPartEnded('P1')"></audio>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">🎧</div>
+                <div>
+                  <div style="font-weight: 900; color: #93c5fd; font-size: 1.05rem;">File nghe chuẩn Part 1 (Hội thoại - Dialogue)</div>
+                  <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">Dành cho các câu hỏi 1 - 5 (Nghe 2 lần) – Kéo thanh trượt để nghe lại từng từ</div>
+                </div>
               </div>
-              <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 3px;">
-                Bấm nút Play để nghe hội thoại và làm các câu hỏi từ 1 đến 5 (Nghe 2 lần)
+
+              <!-- Nút chỉnh tốc độ đọc -->
+              <div style="display: flex; align-items: center; gap: 4px; background: rgba(15,23,42,0.85); padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+                <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 800; padding: 0 4px;">Tốc độ:</span>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P1', 0.75)" id="btnSpeed_P1_075" style="background: transparent; border: none; color: #cbd5e1; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">0.75x</button>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P1', 0.9)" id="btnSpeed_P1_09" style="background: #2563eb; border: none; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">0.9x</button>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P1', 1.0)" id="btnSpeed_P1_10" style="background: transparent; border: none; color: #cbd5e1; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">1.0x</button>
               </div>
             </div>
-            <div>
-              <audio controls controlsList="nodownload" src="${audioUrl}" style="height: 40px; outline: none; border-radius: 20px;"></audio>
+
+            <!-- Thanh điều khiển & Thanh trượt Tua Từ -->
+            <div style="background: rgba(15,23,42,0.92); padding: 12px 16px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Nút Play / Pause -->
+                <button type="button" id="btnPlay_P1" onclick="ONLINE_EXAM_SYSTEM.togglePartAudio('P1')" style="width: 44px; height: 44px; border-radius: 12px; background: #2563eb; color: #fff; border: none; font-size: 1.25rem; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.4); shrink: 0; transition: all 0.2s;" title="Bật / Tạm dừng">
+                  ▶
+                </button>
+
+                <!-- Nút Lùi 5s -->
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.skipPartAudio('P1', -5)" style="background: rgba(255,255,255,0.1); color: #f1f5f9; border: 1px solid rgba(255,255,255,0.2); font-weight: 800; font-size: 0.82rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; shrink: 0; transition: all 0.2s;" title="Lùi lại 5 giây để nghe lại từ vừa phát">
+                  <span>⏪ Lùi 5s</span>
+                </button>
+
+                <!-- Thanh trượt điều khiển tua trực tiếp từng từ -->
+                <div style="flex: 1; display: flex; align-items: center; padding: 0 4px;">
+                  <input type="range" id="seekSlider_P1" min="0" max="100" value="0" step="0.2" oninput="ONLINE_EXAM_SYSTEM.seekPartAudio('P1', this.value)" style="width: 100%; height: 8px; border-radius: 4px; cursor: pointer; accent-color: #38bdf8;">
+                </div>
+
+                <!-- Nút Tiến 5s -->
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.skipPartAudio('P1', 5)" style="background: rgba(255,255,255,0.1); color: #f1f5f9; border: 1px solid rgba(255,255,255,0.2); font-weight: 800; font-size: 0.82rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; shrink: 0; transition: all 0.2s;" title="Tiến lên 5 giây">
+                  <span>Tiến 5s ⏩</span>
+                </button>
+              </div>
+
+              <!-- Chỉ dẫn & Hiển thị thời gian -->
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 800; color: #94a3b8; padding: 0 4px;">
+                <span id="timeCurrent_P1" style="color: #38bdf8; font-weight: 900;">00:00</span>
+                <span style="font-size: 0.78rem; color: #64748b;">👈 Kéo thanh trượt để nghe lại bất kỳ từ hoặc câu nào 👉</span>
+                <span id="timeDuration_P1" style="color: #cbd5e1;">00:00</span>
+              </div>
             </div>
           </div>
         `;
       }
 
-      // 3. Nếu là Part 2: Chèn Audio Player Độc Thoại
+      // 3. Nếu là Part 2: Chèn Audio Player Độc Thoại Kèm Thanh Trượt Tua Từng Từ
       if (sec.id === 'sec_2' || (sec.name && sec.name.includes('Part 2'))) {
         const audioUrl = exam.audioUrlPart2 || 'audio/g' + exam.grade + '_gk1_part2.mp3';
         html += `
-          <div style="background: rgba(16,185,129,0.15); border: 2px solid #10b981; border-radius: 16px; padding: 14px 18px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
-            <div style="flex: 1; min-width: 240px;">
-              <div style="font-weight: 900; color: #6ee7b7; font-size: 1.02rem; display: flex; align-items: center; gap: 8px;">
-                🎧 BÀI NGHE PART 2 (Độc thoại - Monologue)
+          <div class="part-audio-player-box" style="background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,78,59,0.28)); border: 2px solid #10b981; border-radius: 18px; padding: 16px 20px; margin-bottom: 1.5rem; box-shadow: 0 6px 24px rgba(0,0,0,0.3);">
+            <audio id="audioElement_P2" src="${audioUrl}" preload="metadata" ontimeupdate="ONLINE_EXAM_SYSTEM.onPartTimeUpdate('P2')" onloadedmetadata="ONLINE_EXAM_SYSTEM.onPartLoaded('P2')" onended="ONLINE_EXAM_SYSTEM.onPartEnded('P2')"></audio>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 4px 12px rgba(16,185,129,0.4);">🎧</div>
+                <div>
+                  <div style="font-weight: 900; color: #6ee7b7; font-size: 1.05rem;">File nghe chuẩn Part 2 (Độc thoại - Monologue)</div>
+                  <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">Dành cho các câu hỏi 6 - 10 (Nghe 2 lần) – Kéo thanh trượt để nghe lại từng từ</div>
+                </div>
               </div>
-              <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 3px;">
-                Bấm nút Play để nghe bài nói và làm các câu hỏi từ 6 đến 10 (Nghe 2 lần)
+
+              <!-- Nút chỉnh tốc độ đọc -->
+              <div style="display: flex; align-items: center; gap: 4px; background: rgba(15,23,42,0.85); padding: 4px 8px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+                <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 800; padding: 0 4px;">Tốc độ:</span>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P2', 0.75)" id="btnSpeed_P2_075" style="background: transparent; border: none; color: #cbd5e1; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">0.75x</button>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P2', 0.9)" id="btnSpeed_P2_09" style="background: #10b981; border: none; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">0.9x</button>
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.setPartSpeed('P2', 1.0)" id="btnSpeed_P2_10" style="background: transparent; border: none; color: #cbd5e1; font-weight: 800; font-size: 0.8rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;">1.0x</button>
               </div>
             </div>
-            <div>
-              <audio controls controlsList="nodownload" src="${audioUrl}" style="height: 40px; outline: none; border-radius: 20px;"></audio>
+
+            <!-- Thanh điều khiển & Thanh trượt Tua Từ -->
+            <div style="background: rgba(15,23,42,0.92); padding: 12px 16px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Nút Play / Pause -->
+                <button type="button" id="btnPlay_P2" onclick="ONLINE_EXAM_SYSTEM.togglePartAudio('P2')" style="width: 44px; height: 44px; border-radius: 12px; background: #10b981; color: #fff; border: none; font-size: 1.25rem; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 14px rgba(16,185,129,0.4); shrink: 0; transition: all 0.2s;" title="Bật / Tạm dừng">
+                  ▶
+                </button>
+
+                <!-- Nút Lùi 5s -->
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.skipPartAudio('P2', -5)" style="background: rgba(255,255,255,0.1); color: #f1f5f9; border: 1px solid rgba(255,255,255,0.2); font-weight: 800; font-size: 0.82rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; shrink: 0; transition: all 0.2s;" title="Lùi lại 5 giây để nghe lại từ vừa phát">
+                  <span>⏪ Lùi 5s</span>
+                </button>
+
+                <!-- Thanh trượt điều khiển tua trực tiếp từng từ -->
+                <div style="flex: 1; display: flex; align-items: center; padding: 0 4px;">
+                  <input type="range" id="seekSlider_P2" min="0" max="100" value="0" step="0.2" oninput="ONLINE_EXAM_SYSTEM.seekPartAudio('P2', this.value)" style="width: 100%; height: 8px; border-radius: 4px; cursor: pointer; accent-color: #34d399;">
+                </div>
+
+                <!-- Nút Tiến 5s -->
+                <button type="button" onclick="ONLINE_EXAM_SYSTEM.skipPartAudio('P2', 5)" style="background: rgba(255,255,255,0.1); color: #f1f5f9; border: 1px solid rgba(255,255,255,0.2); font-weight: 800; font-size: 0.82rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; shrink: 0; transition: all 0.2s;" title="Tiến lên 5 giây">
+                  <span>Tiến 5s ⏩</span>
+                </button>
+              </div>
+
+              <!-- Chỉ dẫn & Hiển thị thời gian -->
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 800; color: #94a3b8; padding: 0 4px;">
+                <span id="timeCurrent_P2" style="color: #34d399; font-weight: 900;">00:00</span>
+                <span style="font-size: 0.78rem; color: #64748b;">👈 Kéo thanh trượt để nghe lại bất kỳ từ hoặc câu nào 👉</span>
+                <span id="timeDuration_P2" style="color: #cbd5e1;">00:00</span>
+              </div>
             </div>
           </div>
         `;

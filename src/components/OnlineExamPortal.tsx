@@ -71,6 +71,217 @@ interface OnlineExamPortalProps {
   onGoToLeaderboard?: () => void;
 }
 
+// ==============================================================================
+// SUB-COMPONENT: BỘ PHÁT AUDIO NGHE THEO TỪNG PART CÓ THANH TRƯỢT TUA TỪNG TỪ
+// ==============================================================================
+interface PartAudioPlayerProps {
+  partTitle: string;
+  partSubtitle: string;
+  audioUrl: string;
+  themeColor: 'sky' | 'indigo';
+}
+
+const PartAudioPlayer: React.FC<PartAudioPlayerProps> = ({ partTitle, partSubtitle, audioUrl, themeColor }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(0.9);
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.load();
+    }
+  }, [audioUrl]);
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.playbackRate = speed;
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch(err => {
+        console.warn('Audio play error:', err);
+        setIsPlaying(false);
+      });
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+      if (!duration && audioRef.current.duration) {
+        setDuration(audioRef.current.duration);
+      }
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration || 0);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setCurrentTime(val);
+    if (audioRef.current) {
+      audioRef.current.currentTime = val;
+    }
+  };
+
+  const skipSeconds = (sec: number) => {
+    if (!audioRef.current) return;
+    const newTime = Math.max(0, Math.min(duration || 999, audioRef.current.currentTime + sec));
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const changeSpeed = (newSpeed: number) => {
+    setSpeed(newSpeed);
+    if (audioRef.current) {
+      audioRef.current.playbackRate = newSpeed;
+    }
+  };
+
+  const formatTime = (timeInSec: number) => {
+    if (isNaN(timeInSec)) return '00:00';
+    const m = Math.floor(timeInSec / 60);
+    const s = Math.floor(timeInSec % 60);
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+
+  const isSky = themeColor === 'sky';
+
+  return (
+    <div className={`p-3.5 sm:p-4 rounded-2xl border shadow-sm my-3 transition-all ${
+      isSky 
+        ? 'bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 border-sky-300' 
+        : 'bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-indigo-300'
+    }`}>
+      <audio
+        ref={audioRef}
+        src={audioUrl}
+        preload="metadata"
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={() => { setIsPlaying(false); setCurrentTime(0); }}
+      />
+      {/* Header Player */}
+      <div className="flex items-center justify-between gap-3 flex-wrap mb-2.5">
+        <div className="flex items-center gap-2.5">
+          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-xs ${
+            isSky ? 'bg-sky-600' : 'bg-indigo-600'
+          }`}>
+            <Headphones className="w-5 h-5" />
+          </div>
+          <div>
+            <div className={`text-xs sm:text-sm font-black ${isSky ? 'text-sky-950' : 'text-indigo-950'}`}>
+              {partTitle}
+            </div>
+            <div className={`text-[11px] sm:text-xs ${isSky ? 'text-sky-700' : 'text-indigo-700'}`}>
+              {partSubtitle}
+            </div>
+          </div>
+        </div>
+
+        {/* Speed Buttons */}
+        <div className="flex items-center gap-1 bg-white/90 p-1 rounded-xl border border-slate-200 shadow-2xs">
+          <span className="text-[10px] font-bold text-slate-500 px-1">Tốc độ:</span>
+          {[0.75, 0.9, 1.0].map(s => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => changeSpeed(s)}
+              className={`px-2 py-0.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                speed === s 
+                  ? (isSky ? 'bg-sky-600 text-white' : 'bg-indigo-600 text-white') 
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              {s === 0.75 ? '0.75x' : s === 0.9 ? '0.9x' : '1.0x'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Slider & Controls */}
+      <div className="bg-white/95 p-2.5 sm:p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+        <div className="flex items-center gap-2">
+          {/* Play/Pause Button */}
+          <button
+            type="button"
+            onClick={togglePlay}
+            className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-black shadow-md cursor-pointer shrink-0 transition active:scale-95 ${
+              isPlaying 
+                ? 'bg-rose-600 hover:bg-rose-700 ring-2 ring-rose-300' 
+                : (isSky ? 'bg-sky-600 hover:bg-sky-700 ring-2 ring-sky-300' : 'bg-indigo-600 hover:bg-indigo-700 ring-2 ring-indigo-300')
+            }`}
+            title={isPlaying ? "Tạm dừng" : "Bật nghe"}
+          >
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+          </button>
+
+          {/* Quick Rewind -5s button */}
+          <button
+            type="button"
+            onClick={() => skipSeconds(-5)}
+            className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center gap-1 cursor-pointer shrink-0 transition"
+            title="Lùi lại 5 giây để nghe lại từ vừa phát"
+          >
+            <span>⏪ -5s</span>
+          </button>
+
+          {/* Thanh trượt Seek Slider */}
+          <div className="flex-1 px-1 flex items-center">
+            <input
+              type="range"
+              min="0"
+              max={duration || 100}
+              step="0.2"
+              value={currentTime}
+              onChange={handleSeek}
+              className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+              style={{ accentColor: isSky ? '#0284c7' : '#4f46e5' }}
+            />
+          </div>
+
+          {/* Quick Forward +5s button */}
+          <button
+            type="button"
+            onClick={() => skipSeconds(5)}
+            className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-black text-xs flex items-center gap-1 cursor-pointer shrink-0 transition"
+            title="Tiến lên 5 giây"
+          >
+            <span>+5s ⏩</span>
+          </button>
+        </div>
+
+        {/* Time Progress Display */}
+        <div className="flex items-center justify-between text-xs font-extrabold text-slate-500 px-1">
+          <span className="text-sky-950 font-black">
+            ⏱️ {formatTime(currentTime)}
+          </span>
+          <span className="text-[11px] text-slate-400 hidden sm:inline">
+            👈 Kéo thanh trượt để nghe lại bất kỳ từ hoặc câu nào 👉
+          </span>
+          <span className="text-slate-700">
+            {formatTime(duration)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeaderboard }) => {
   const [selectedGrade, setSelectedGrade] = useState<number>(8);
   const [examType, setExamType] = useState<'giua-ky-1' | 'cuoi-ky-1' | 'giua-ky-2' | 'cuoi-ky-2'>('giua-ky-1');
@@ -359,6 +570,27 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
     // Mặc định sử dụng AI Voice engine bản ngữ đối thoại luân phiên (Nam/Nữ)
     playSpeechFallback();
+  };
+
+  
+  const handlePlayPart = (part: 'part1' | 'part2') => {
+    const url = part === 'part1' ? currentExam?.audioUrlPart1 : currentExam?.audioUrlPart2;
+    if (!url) return;
+    if (isPlayingAudio && currentPlayingPart === part) {
+      if (audioRef.current) audioRef.current.pause();
+      setIsPlayingAudio(false);
+      return;
+    }
+    if (audioRef.current) {
+      audioRef.current.src = url;
+      audioRef.current.playbackRate = playbackSpeed;
+      audioRef.current.play().then(() => {
+        setIsPlayingAudio(true);
+        setCurrentPlayingPart(part);
+      }).catch(err => {
+        console.warn('Play error:', err);
+      });
+    }
   };
 
   const handleChangePlaybackRate = (speed: number) => {
@@ -1141,58 +1373,24 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                     </span>
                   </div>
 
-                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 1 */}
+                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 1 KÈM THANH TRƯỢT TUA TỪNG TỪ */}
                   {group.partTitle.toLowerCase().includes('part 1') && currentExam.audioUrlPart1 && (
-                    <div className="p-3 bg-gradient-to-r from-sky-50 via-blue-50 to-sky-100 border border-sky-300 rounded-xl flex items-center justify-between gap-3 shadow-2xs">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0">
-                          <Headphones className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-xs sm:text-sm font-black text-sky-950">File nghe chuẩn Part 1 (Hội thoại)</div>
-                          <div className="text-[11px] text-sky-800">Dành cho các câu hỏi 1 - 5</div>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handlePlayPart('part1')}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                          isPlayingAudio && currentPlayingPart === 'part1'
-                            ? 'bg-rose-600 text-white animate-pulse ring-2 ring-rose-300'
-                            : 'bg-sky-600 hover:bg-sky-700 text-white'
-                        }`}
-                      >
-                        {isPlayingAudio && currentPlayingPart === 'part1' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                        <span>{isPlayingAudio && currentPlayingPart === 'part1' ? "⏸ Tạm dừng" : "▶ Bật nghe Part 1"}</span>
-                      </button>
-                    </div>
+                    <PartAudioPlayer
+                      partTitle="🎧 File nghe chuẩn Part 1 (Hội thoại - Dialogue)"
+                      partSubtitle="Dành cho các câu hỏi 1 - 5 (Nghe 2 lần) – Kéo thanh trượt để nghe lại từng từ"
+                      audioUrl={currentExam.audioUrlPart1}
+                      themeColor="sky"
+                    />
                   )}
 
-                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 2 */}
+                  {/* THANH PHÁT FILE NGHE RIÊNG BIỆT CHO PART 2 KÈM THANH TRƯỢT TUA TỪNG TỪ */}
                   {group.partTitle.toLowerCase().includes('part 2') && currentExam.audioUrlPart2 && (
-                    <div className="p-3 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-100 border border-indigo-300 rounded-xl flex items-center justify-between gap-3 shadow-2xs">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
-                          <Headphones className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-xs sm:text-sm font-black text-indigo-950">File nghe chuẩn Part 2 (Độc thoại)</div>
-                          <div className="text-[11px] text-indigo-800">Dành cho các câu hỏi 6 - 10 (True / False)</div>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handlePlayPart('part2')}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                          isPlayingAudio && currentPlayingPart === 'part2'
-                            ? 'bg-rose-600 text-white animate-pulse ring-2 ring-rose-300'
-                            : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                        }`}
-                      >
-                        {isPlayingAudio && currentPlayingPart === 'part2' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                        <span>{isPlayingAudio && currentPlayingPart === 'part2' ? "⏸ Tạm dừng" : "▶ Bật nghe Part 2"}</span>
-                      </button>
-                    </div>
+                    <PartAudioPlayer
+                      partTitle="🎧 File nghe chuẩn Part 2 (Độc thoại - Monologue)"
+                      partSubtitle="Dành cho các câu hỏi 6 - 10 (True / False) – Kéo thanh trượt để nghe lại từng từ"
+                      audioUrl={currentExam.audioUrlPart2}
+                      themeColor="indigo"
+                    />
                   )}
 
                   {/* Đoạn văn riêng biệt của Part tương ứng (Tuyệt đối không gộp 2 đoạn văn cùng lúc!) */}
