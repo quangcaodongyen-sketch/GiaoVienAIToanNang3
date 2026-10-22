@@ -1608,21 +1608,39 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
                           {/* LỜI GIẢI & CHỮA BÀI CHI TIẾT TỪNG CÂU 1 (CHO CÁC CÂU TRẮC NGHIỆM, NGHE VÀ ĐỌC HIỂU) */}
                           {isSubmitted && q.type !== 'essay' && (
-                            <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-300/80 text-xs sm:text-base text-amber-950 flex items-start gap-2.5 shadow-2xs">
-                              <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                              <div className="leading-relaxed flex-1">
-                                <span className="font-extrabold text-amber-900 block mb-1 text-sm sm:text-base">
-                                  💡 Lời giải & Phân tích chi tiết của Giáo viên AI:
-                                </span>
-                                <div className="text-slate-800 whitespace-pre-line leading-relaxed">
-                                  {q.explanation ? (
-                                    <span>{q.explanation}</span>
-                                  ) : (
-                                    <span>
-                                      Đáp án đúng chính xác là <strong>{q.correctLetter || q.correct}</strong>. Căn cứ vào quy tắc ngữ pháp và từ vựng trọng tâm trong chương trình GDPT 2018.
-                                    </span>
-                                  )}
+                            <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50/60 border border-amber-300 text-xs sm:text-base text-amber-950 shadow-2xs">
+                              <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-amber-200 flex-wrap">
+                                <div className="flex items-center gap-2">
+                                  <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+                                  <span className="font-extrabold text-amber-900 text-sm sm:text-base">
+                                    💡 Chữa bài & Phân tích chi tiết của Giáo viên:
+                                  </span>
                                 </div>
+                                {(isWrong || isSkipped) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setUserAnswers(prev => {
+                                        const next = { ...prev };
+                                        delete next[q.id];
+                                        return next;
+                                      });
+                                    }}
+                                    className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition shadow-xs flex items-center gap-1 cursor-pointer"
+                                  >
+                                    <RotateCw className="w-3.5 h-3.5" />
+                                    <span>Thử làm lại câu này</span>
+                                  </button>
+                                )}
+                              </div>
+                              <div className="text-slate-800 whitespace-pre-line leading-relaxed font-sans">
+                                {q.explanation ? (
+                                  <span>{q.explanation}</span>
+                                ) : (
+                                  <span>
+                                    Đáp án đúng chính xác là <strong>{q.correctLetter || q.correct}</strong>. Căn cứ vào quy tắc ngữ pháp và từ vựng trọng tâm trong chương trình GDPT 2018.
+                                  </span>
+                                )}
                               </div>
                             </div>
                           )}

@@ -8016,17 +8016,13 @@ const ONLINE_EXAM_SYSTEM = {
 
         if (expBox) {
           expBox.style.display = 'block';
-          if (isCorrect) {
-            expBox.style.background = 'rgba(16, 185, 129, 0.15)';
-            expBox.style.color = '#34d399';
-            expBox.style.border = '1.5px solid rgba(16, 185, 129, 0.4)';
-            expBox.innerHTML = `✓ <b>Chính xác! (+0.25đ)</b> — Đáp án đúng: <b>${correctChoice}</b>. ${q.explanation || ''}`;
-          } else {
-            expBox.style.background = 'rgba(239, 68, 68, 0.15)';
-            expBox.style.color = '#f87171';
-            expBox.style.border = '1.5px solid rgba(239, 68, 68, 0.4)';
-            expBox.innerHTML = `✗ <b>Chưa đúng!</b> Đáp án chuẩn: <b style="color:white;font-size:1.05rem">${correctChoice}</b>. <br>${q.explanation || ''}`;
-          }
+          expBox.style.background = isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.06)';
+          expBox.style.border = isCorrect ? '1.5px solid rgba(16, 185, 129, 0.4)' : '1.5px solid rgba(239, 68, 68, 0.35)';
+          expBox.style.borderRadius = '12px';
+          expBox.style.padding = '14px 16px';
+          expBox.style.marginTop = '10px';
+          expBox.style.color = '#1e293b';
+          expBox.innerHTML = this.renderPedagogicalExplanation(q, isCorrect, correctChoice);
         }
       });
     });
@@ -8058,6 +8054,13 @@ const ONLINE_EXAM_SYSTEM = {
         feedback = `Cố gắng lên! Em làm đúng ${correctCount}/${totalQuestions} câu. Hãy nghe lại audio và xem lại kiến thức ngữ pháp nhé!`;
       }
 
+      feedback += `
+        <div style="margin-top: 18px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button type="button" onclick="ONLINE_EXAM_SYSTEM.retryEntireExam()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 26px; border-radius: 9999px; font-weight: 800; font-size: 0.96rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16,185,129,0.4); transition: transform 0.15s ease;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+            🔄 LÀM LẠI ĐỀ NÀY LẦN NỮA ĐỂ BỨT PHÁ ĐIỂM SỐ
+          </button>
+        </div>
+      `;
       if (resEmoji) resEmoji.textContent = emoji;
       resFeed.innerHTML = feedback;
 
@@ -8068,6 +8071,106 @@ const ONLINE_EXAM_SYSTEM = {
       if (typeof confetti === 'function') {
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
+    }
+  },
+
+    renderPedagogicalExplanation(q, isCorrect, correctChoice) {
+    const trans = q.trans || '';
+    const grammar = q.grammar || '';
+    const tense = q.tense || '';
+    const clue = q.clue || '';
+    const evidence = q.evidence || '';
+    const praise = q.praise || '🎉 Xuất sắc! Em đã nắm rất vững kiến thức câu hỏi này!';
+    const encourage = q.encourage || '💪 Đừng nản lòng nhé! Em hãy đọc kĩ phân tích ngữ pháp bên dưới và bấm "Thử làm lại câu này" để ghi điểm nhé!';
+
+    return `
+      <div style="font-family: inherit; font-size: 0.92rem; line-height: 1.65; color: #1e293b;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <span style="font-weight: 800; font-size: 0.95rem; color: ${isCorrect ? '#059669' : '#dc2626'}; display: inline-flex; align-items: center; gap: 6px;">
+            ${isCorrect ? '✓ CHÍNH XÁC (+0.25đ)' : '✗ CHƯA ĐÚNG'} — Đáp án chuẩn: <span style="background: ${isCorrect ? '#d1fae5' : '#fee2e2'}; color: ${isCorrect ? '#065f46' : '#991b1b'}; padding: 2px 10px; border-radius: 6px; font-weight: 900; font-size: 1rem; border: 1px solid ${isCorrect ? '#a7f3d0' : '#fecaca'};">${correctChoice}</span>
+          </span>
+          ${!isCorrect ? `
+            <button type="button" onclick="ONLINE_EXAM_SYSTEM.retryQuestion('${q.id}')" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; border: none; padding: 5px 14px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(37,99,235,0.3); transition: all 0.15s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              🔄 Thử làm lại câu này
+            </button>
+          ` : ''}
+        </div>
+
+        <!-- Khung Động viên / Khen ngợi kịp thời của Thầy -->
+        <div style="margin: 8px 0 12px 0; padding: 10px 14px; border-radius: 8px; background: ${isCorrect ? 'rgba(16, 185, 129, 0.14)' : 'rgba(245, 158, 11, 0.15)'}; border-left: 4px solid ${isCorrect ? '#10b981' : '#f59e0b'}; font-size: 0.9rem; color: #0f172a;">
+          ${isCorrect ? `<b style="color: #047857;">Thầy khen ngợi:</b> ${praise}` : `<b style="color: #b45309;">Thầy động viên:</b> ${encourage}`}
+        </div>
+
+        <!-- Bảng Phân Tích Sư Phạm Chi Tiết 5 Thành Phần -->
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+          ${trans ? `<div style="margin-bottom: 7px;"><b style="color: #0284c7;">📌 Dịch nghĩa tiếng Việt:</b> <span style="color: #334155;">${trans}</span></div>` : ''}
+          ${grammar ? `<div style="margin-bottom: 7px;"><b style="color: #7c3aed;">📐 Cấu trúc ngữ pháp trọng tâm:</b> <span style="color: #334155;">${grammar}</span></div>` : ''}
+          ${tense ? `<div style="margin-bottom: 7px;"><b style="color: #d97706;">⏱️ Thì của câu:</b> <span style="color: #334155;">${tense}</span></div>` : ''}
+          ${clue ? `<div style="margin-bottom: 7px;"><b style="color: #059669;">💡 Dấu hiệu nhận biết:</b> <span style="color: #334155;">${clue}</span></div>` : ''}
+          ${evidence ? `<div style="margin-bottom: 3px;"><b style="color: #dc2626;">🔍 Dẫn chứng chi tiết:</b> <span style="color: #334155;">${evidence}</span></div>` : ''}
+          ${!trans && !grammar && q.explanation ? `<div style="white-space: pre-line; color: #334155;">${q.explanation}</div>` : ''}
+        </div>
+      </div>
+    `;
+  },
+
+  retryQuestion(qId) {
+    delete this.userAnswers[qId];
+    // Uncheck and enable radio inputs for this question
+    const inputs = document.querySelectorAll(`input[name="q_${qId}"]`);
+    inputs.forEach(inp => {
+      inp.checked = false;
+      inp.disabled = false;
+    });
+    // Restore normal card appearance
+    const card = document.getElementById(`exam_card_${qId}`);
+    if (card) {
+      card.style.borderColor = '#e2e8f0';
+      card.style.background = '#ffffff';
+    }
+    // Hide explanation box
+    const expBox = document.getElementById(`explanation_${qId}`);
+    if (expBox) {
+      expBox.style.display = 'none';
+      expBox.innerHTML = '';
+    }
+    // Scroll card into view smoothly
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  },
+
+  retryEntireExam() {
+    if (!confirm('Em có chắc chắn muốn làm lại đề thi này từ đầu để bứt phá điểm số cao hơn không?')) return;
+    this.userAnswers = {};
+    const allInputs = document.querySelectorAll(`input[type="radio"]`);
+    allInputs.forEach(inp => {
+      inp.checked = false;
+      inp.disabled = false;
+    });
+    (this.currentExam?.sections || []).forEach(sec => {
+      (sec.questions || []).forEach(q => {
+        const card = document.getElementById(`exam_card_${q.id}`);
+        if (card) {
+          card.style.borderColor = '#e2e8f0';
+          card.style.background = '#ffffff';
+        }
+        const expBox = document.getElementById(`explanation_${q.id}`);
+        if (expBox) {
+          expBox.style.display = 'none';
+          expBox.innerHTML = '';
+        }
+      });
+    });
+    const resCard = document.getElementById('examResultCard');
+    if (resCard) {
+      resCard.style.display = 'none';
+    }
+    const titleEl = document.getElementById('examCurrentTitle');
+    if (titleEl) {
+      titleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   },
 
