@@ -31,9 +31,11 @@ import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
+import { StudentForumView } from './StudentForumView';
+import { StudentMessageAdminView } from './StudentMessageAdminView';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { removeDiacritics } from '../services/appMatcher';
-import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
@@ -138,12 +140,13 @@ export const StudentPortal: React.FC = () => {
 
   const handleSelectRecoveredStudent = () => {
     if (!recoveredStudent) return;
-    studentGradebookService.setActiveStudent(recoveredStudent);
-    setCurrentStudent(recoveredStudent);
-    setShowAuthModal(false);
-    setSearchPhone('');
+    setLoginStudentInput(recoveredStudent.username || recoveredStudent.studentCode);
+    setAuthActiveTab('login');
+    setLoginPassInput('');
+    setLoginError('');
     setRecoveredStudent(null);
-    alert(`🎉 Đã đăng nhập vào tài khoản của em ${recoveredStudent.name} (${recoveredStudent.className}) thành công!`);
+    setSearchPhone('');
+    alert(`🔑 Đã tìm thấy tài khoản "${recoveredStudent.name}" (${recoveredStudent.className})! Em hãy nhập đúng Mật khẩu để đăng nhập.`);
   };
 
   const [regFullName, setRegFullName] = useState<string>('');
@@ -630,7 +633,55 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard'>(() => {
+  // Modal Admin Tải Tài Liệu Lên Cho Học Sinh
+  const [showAdminUploadModal, setShowAdminUploadModal] = useState<boolean>(false);
+  const [adminUploadTitle, setAdminUploadTitle] = useState<string>('');
+  const [adminUploadGrade, setAdminUploadGrade] = useState<string>('all');
+  const [adminUploadSubject, setAdminUploadSubject] = useState<string>('Tiếng Anh');
+  const [adminUploadDesc, setAdminUploadDesc] = useState<string>('');
+  const [adminUploadFile, setAdminUploadFile] = useState<File | null>(null);
+  const [adminUploadError, setAdminUploadError] = useState<string>('');
+
+  const handleAdminSubmitDoc = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAdminUploadError('');
+    if (!isAdminUnlocked && !systemMaintenanceService.isSessionAuthenticated()) {
+      alert('Vui lòng đăng nhập Admin để tải tài liệu lên!');
+      setShowAdminLoginModal(true);
+      return;
+    }
+    if (!adminUploadFile) {
+      setAdminUploadError('Vui lòng chọn tệp tài liệu cần tải lên!');
+      return;
+    }
+
+    setIsUploadingDoc(true);
+    try {
+      const fileName = adminUploadTitle.trim() || adminUploadFile.name;
+      const gradeText = adminUploadGrade === 'all' ? 'Toàn trường (Lớp 6-12)' : `Lớp ${adminUploadGrade}`;
+      const fullDesc = `[${adminUploadSubject} - ${gradeText}] ${adminUploadDesc.trim() || 'Tài liệu ôn tập chuẩn cấu trúc GDPT'}`;
+
+      await documentStorageService.uploadFile(
+        'folder-default',
+        adminUploadFile,
+        fullDesc,
+        'Admin Thầy Đinh Thành'
+      );
+
+      reloadDocList();
+      setShowAdminUploadModal(false);
+      setAdminUploadTitle('');
+      setAdminUploadDesc('');
+      setAdminUploadFile(null);
+      alert(`🎉 Đã tải lên tài liệu "${fileName}" thành công! Học sinh toàn trường có thể tải về ngay.`);
+    } catch (err: any) {
+      setAdminUploadError('Lỗi tải tệp: ' + (err?.message || 'Không thể lưu tệp'));
+    } finally {
+      setIsUploadingDoc(false);
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'forum' | 'messages'>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
@@ -648,13 +699,21 @@ export const StudentPortal: React.FC = () => {
       ) {
         return 'exam';
       }
+      if (tabParam === 'forum' || rawHash === '#forum') {
+        return 'forum';
+      }
+      if (tabParam === 'messages' || tabParam === 'message' || rawHash === '#messages') {
+        return 'messages';
+      }
+      if (tabParam === 'downloads' || rawHash === '#downloads') {
+        return 'downloads';
+      }
     } catch (e) {}
     return 'vocab';
   });
   const [copiedLink, setCopiedLink] = useState(false);
 
   // State Học Từ Vựng
-  const [vocabViewMode, setVocabViewMode] = useState<'full-app' | 'quick-cards'>('full-app');
   const [iframeKey, setIframeKey] = useState<number>(0);
   const [isFullscreenIframe, setIsFullscreenIframe] = useState<boolean>(false);
   const [vocabViewMode, setVocabViewMode] = useState<'native' | 'iframe'>('native');
@@ -914,6 +973,18 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('forum')}
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'forum'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md font-black border-2 border-indigo-300'
+                : 'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-400/30'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-indigo-300" />
+            <span>6. Diễn Đàn & Chat</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('downloads')}
             className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'downloads'
@@ -925,12 +996,71 @@ export const StudentPortal: React.FC = () => {
             <span>7. Tải Đề & Tài Liệu</span>
           </button>
 
+          <button
+            onClick={() => setActiveTab('messages')}
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'messages'
+                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-md font-black border-2 border-cyan-300'
+                : 'bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-400/30'
+            }`}
+          >
+            <Mail className="w-4 h-4 text-cyan-300" />
+            <span>8. Hòm Thư Admin</span>
+          </button>
+
           
         </div>
       </div>
 
+      {/* ==================== BẢO VỆ PHÂN HỆ HỌC TẬP & KIỂM TRA (YÊU CẦU ĐĂNG KÝ / ĐĂNG NHẬP HỌC SINH) ==================== */}
+      {!currentStudent && ['vocab', 'sgk', 'exam', 'quiz', 'leaderboard', 'hsg'].includes(activeTab) && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-blue-500/30 p-6 sm:p-10 text-center max-w-2xl mx-auto shadow-xl space-y-4 my-6 animate-in fade-in">
+          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto text-3xl shadow-lg shadow-blue-500/20">
+            🎓
+          </div>
+          <div>
+            <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs uppercase tracking-wider border border-blue-200 dark:border-blue-800">
+              Yêu Cầu Tài Khoản Học Sinh
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-2 mb-1">
+              Đăng Ký hoặc Đăng Nhập Để Vào Học & Làm Bài Kiểm Tra
+            </h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
+              Hệ thống học tập Trường THCS Đồng Yên yêu cầu mỗi học sinh tự đăng ký và đăng nhập tài khoản riêng của mình để làm bài tập SGK, kiểm tra trực tuyến, lưu điểm số và tham gia thi đua theo lớp.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthActiveTab('register');
+                setShowAuthModal(true);
+              }}
+              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>1. Đăng Ký Tài Khoản Học Mới</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthActiveTab('login');
+                setShowAuthModal(true);
+              }}
+              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700"
+            >
+              <User className="w-4 h-4 text-blue-600" />
+              <span>2. Đã Có Tài Khoản? Đăng Nhập</span>
+            </button>
+          </div>
+          <p className="text-[11px] text-slate-400">
+            * Học sinh có thể bấm tab "7. Tải Đề & Tài Liệu" để tải các tài liệu và đề cương miễn phí không cần đăng nhập.
+          </p>
+        </div>
+      )}
+
       {/* ==================== PHÂN HỆ 1: HỌC TỪ VỰNG TIẾNG ANH 6 - 12 ==================== */}
-      {activeTab === 'vocab' && (
+      {currentStudent && activeTab === 'vocab' && (
         <div className="space-y-4">
           {/* THANH ĐIỀU KHIỂN & CHỌN CHẾ ĐỘ HỌC */}
           <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
@@ -1335,22 +1465,22 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
-      {activeTab === 'sgk' && (
+      {currentStudent && activeTab === 'sgk' && (
         <TextbookExercisePortal />
       )}
 
       {/* ==================== PHÂN HỆ MỚI: ĐỀ KIỂM TRA GIỮA KỲ & CUỐI KỲ ONLINE (10 ĐỀ HOÁN ĐỔI) ==================== */}
-      {activeTab === 'exam' && (
+      {currentStudent && activeTab === 'exam' && (
         <OnlineExamPortal onGoToLeaderboard={() => setActiveTab('leaderboard')} />
       )}
 
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
-      {activeTab === 'quiz' && (
+      {currentStudent && activeTab === 'quiz' && (
         <OnlineQuizPortal />
       )}
 
       {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
-      {activeTab === 'leaderboard' && (
+      {currentStudent && activeTab === 'leaderboard' && (
         <StudentClassComparison 
           onStartExercise={() => setActiveTab('sgk')}
           onStartQuiz={() => setActiveTab('quiz')}
@@ -1388,17 +1518,21 @@ export const StudentPortal: React.FC = () => {
                     <span>Quản Lý / Xóa TK Học Sinh</span>
                   </button>
 
-                  <label className="cursor-pointer px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdminUploadTitle('');
+                      setAdminUploadDesc('');
+                      setAdminUploadFile(null);
+                      setAdminUploadError('');
+                      setShowAdminUploadModal(true);
+                    }}
+                    className="cursor-pointer px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5"
+                    title="Mở hộp thoại tải tài liệu mới lên cho học sinh toàn trường"
+                  >
                     <Upload className="w-4 h-4" />
-                    <span>{isUploadingDoc ? 'Đang tải lên...' : 'Đưa Tài Liệu Lên'}</span>
-                    <input
-                      type="file"
-                      multiple
-                      className="hidden"
-                      onChange={handleStudentUploadFile}
-                      disabled={isUploadingDoc}
-                    />
-                  </label>
+                    <span>Đưa Tài Liệu Lên (Admin)</span>
+                  </button>
 
                   <button
                     type="button"
@@ -1589,12 +1723,183 @@ export const StudentPortal: React.FC = () => {
               </div>
             </div>
           )}
+          {/* Modal Admin Tải Tài Liệu Lên Cho Học Sinh */}
+          {showAdminUploadModal && (
+            <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative animate-in fade-in zoom-in-95 duration-150">
+                <button
+                  type="button"
+                  onClick={() => setShowAdminUploadModal(false)}
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-500/20">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-black text-slate-900 dark:text-white">
+                      Admin Tải Tài Liệu Cho Học Sinh
+                    </h4>
+                    <p className="text-xs text-slate-500">
+                      Tài liệu sẽ xuất hiện ngay trong kho để học sinh toàn trường tải về
+                    </p>
+                  </div>
+                </div>
+
+                <form onSubmit={handleAdminSubmitDoc} className="space-y-3.5 text-xs">
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      📄 Chọn Tệp Tài Liệu (*):
+                    </label>
+                    <input
+                      type="file"
+                      required
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        setAdminUploadFile(file);
+                        if (file && !adminUploadTitle) {
+                          setAdminUploadTitle(file.name.replace(/\.[^/.]+$/, ''));
+                        }
+                      }}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      📌 Tiêu đề hiển thị (*):
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={adminUploadTitle}
+                      onChange={(e) => setAdminUploadTitle(e.target.value)}
+                      placeholder="VD: Đề cương ôn tập HK1 Tiếng Anh 7, Bảng động từ bất quy tắc..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Khối Lớp:
+                      </label>
+                      <select
+                        value={adminUploadGrade}
+                        onChange={(e) => setAdminUploadGrade(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                      >
+                        <option value="all">Toàn trường (Lớp 6 - 12)</option>
+                        <option value="6">Lớp 6</option>
+                        <option value="7">Lớp 7</option>
+                        <option value="8">Lớp 8</option>
+                        <option value="9">Lớp 9</option>
+                        <option value="10">Lớp 10</option>
+                        <option value="11">Lớp 11</option>
+                        <option value="12">Lớp 12</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Môn Học / Chuyên Mục:
+                      </label>
+                      <select
+                        value={adminUploadSubject}
+                        onChange={(e) => setAdminUploadSubject(e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                      >
+                        <option value="Tiếng Anh">Tiếng Anh</option>
+                        <option value="Toán học">Toán học</option>
+                        <option value="Ngữ văn">Ngữ văn</option>
+                        <option value="KHTN">KHTN (Lý - Hóa - Sinh)</option>
+                        <option value="Lịch sử & Địa lí">Lịch sử & Địa lí</option>
+                        <option value="Tin học">Tin học</option>
+                        <option value="Tổng hợp">Tài liệu tổng hợp</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      📝 Mô tả ngắn / Hướng dẫn học sinh:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={adminUploadDesc}
+                      onChange={(e) => setAdminUploadDesc(e.target.value)}
+                      placeholder="Hướng dẫn học sinh cách ôn tập, dạng bài trọng tâm..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white resize-none"
+                    />
+                  </div>
+
+                  {adminUploadError && (
+                    <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 text-rose-700 dark:text-rose-300 font-bold flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{adminUploadError}</span>
+                    </div>
+                  )}
+
+                  <div className="pt-2 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminUploadModal(false)}
+                      className="px-4 py-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold cursor-pointer"
+                    >
+                      Hủy bỏ
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isUploadingDoc}
+                      className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span>{isUploadingDoc ? 'Đang lưu tệp...' : 'Tải Lên Kho Tài Liệu'}</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       )}
       
       {/* ==================== PHÂN HỆ MỚI: ÔN THI HỌC SINH GIỎI THCS ==================== */}
-      {activeTab === 'hsg' && (
+      {currentStudent && activeTab === 'hsg' && (
         <HsgEnglishPreparationPortal />
+      )}
+
+      {/* ==================== PHÂN HỆ 6: DIỄN ĐÀN HỌC SINH (FORUM & CHAT ĐĂNG ẢNH) ==================== */}
+      {activeTab === 'forum' && (
+        <StudentForumView
+          currentStudent={currentStudent}
+          isAdmin={isAdminUnlocked}
+          onRequestAuth={() => {
+            setAuthActiveTab('login');
+            setShowAuthModal(true);
+          }}
+          onRequestAdminLogin={() => {
+            setShowAdminLoginModal(true);
+          }}
+        />
+      )}
+
+      {/* ==================== PHÂN HỆ 8: HÒM THƯ TIN NHẮN CHO ADMIN ==================== */}
+      {activeTab === 'messages' && (
+        <StudentMessageAdminView
+          currentStudent={currentStudent}
+          isAdmin={isAdminUnlocked}
+          onRequestAuth={() => {
+            setAuthActiveTab('login');
+            setShowAuthModal(true);
+          }}
+          onRequestAdminLogin={() => {
+            setShowAdminLoginModal(true);
+          }}
+        />
       )}
 
       
@@ -1970,20 +2275,26 @@ export const StudentPortal: React.FC = () => {
                       <p>🔒 <strong>Mật khẩu:</strong> <span className="font-mono font-bold text-slate-500 dark:text-slate-400 text-sm">•••••••• (Đã ẩn bảo mật)</span></p>
                     </div>
 
-                    <p className="text-[11px] text-emerald-800 dark:text-emerald-300 italic">
-                      💡 Mật khẩu học sinh được bảo vệ an toàn. Em chỉ cần bấm nút bên dưới là hệ thống sẽ tự động đăng nhập vào học ngay:
+                    <p className="text-[11px] text-emerald-800 dark:text-emerald-300">
+                      💡 Mật khẩu học sinh được bảo mật an toàn. Em hãy bấm nút dưới đây để chuyển sang ô Đăng Nhập và điền đúng Mật khẩu của mình nhé:
                     </p>
 
                     <button
                       type="button"
-                      onClick={() => {
-                        handleSelectRecoveredStudent();
-                        setShowAuthModal(false);
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                      onClick={handleSelectRecoveredStudent}
+                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      👉 ĐĂNG NHẬP VÀO HỌC NGAY BẰNG TÀI KHOẢN NÀY
+                      <span>👉 ĐIỀN TÊN ĐĂNG NHẬP & NHẬP MẬT KHẨU ĐỂ VÀO HỌC</span>
                     </button>
+
+                    <a
+                      href="https://zalo.me/0915213717"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 text-blue-700 dark:text-blue-300 text-center text-xs font-bold transition block border border-blue-200 dark:border-blue-800"
+                    >
+                      💬 Quên hẳn mật khẩu? Nhắn Thầy Thành (0915.213717) qua Zalo để cấp lại
+                    </a>
                   </div>
                 )}
 

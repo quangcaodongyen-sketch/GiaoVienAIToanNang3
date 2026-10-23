@@ -1103,10 +1103,13 @@ class StudentGradebookService {
   public getActiveStudent(): StudentProfile | null {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.ACTIVE_STUDENT);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.id) return parsed;
+      }
     } catch {}
-    // Mặc định chọn bạn đầu tiên của 7A1 để trải nghiệm mượt mà
-    return this.students.find(s => s.classId === 'cls-7a1') || this.students[0] || null;
+    // Tuyệt đối không tự ý gán tài khoản học sinh khác khi chưa đăng nhập
+    return null;
   }
 
   public setActiveStudent(student: StudentProfile | null) {
