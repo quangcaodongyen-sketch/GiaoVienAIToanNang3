@@ -1,0 +1,9 @@
+{
+  "appName": "Tạo Đề Tiếng Anh THCS Pro (CV 7991)",
+  "currentVersion": "3.9.0",
+  "latestVersion": "3.9.0",
+  "releaseDate": "24/10/2026",
+  "changelog": "✦ [24/10/2026 - v3.9.0] Cập nhật nâng cấp toàn diện cho giáo viên:\n✦ Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn Công văn 7991/BGDĐT\n✦ Tích hợp tính năng xuất Ma trận & Bản đặc tả độc lập 1-chạm\n✦ Tích hợp xuất Biên bản phản biện đề thi chuyên môn chuẩn quy định sư phạm\n✦ Tự động tương thích hoàn hảo Microsoft Word 2016-2024, không lỗi dãn dòng thưa chữ\n✦ Cung cấp bản cài đặt 1-Click tự động tích hợp Add-in Word và Shortcut Desktop.",
+  "websiteUrl": "https://dekiemtraso.com/",
+  "author": "Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên"
+}

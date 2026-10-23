@@ -1,12 +1,12 @@
 {
   "appId": "tao-de-tin-thcs",
-  "appName": "TẠO ĐỀ TIN HỌC THCS PRO 2026 – Phần Mềm Tạo Đề Kiểm Tra Môn Tin Học THCS (Lớp 6, 7, 8, 9)",
-  "currentVersion": "3.8.0",
-  "latestVersion": "3.8.0",
-  "releaseDate": "19/10/2026",
-  "changelog": "• Nâng cấp toàn diện ngân hàng câu hỏi 4 khối lớp 6, 7, 8, 9 SGK Kết nối tri thức với cuộc sống (1.200+ câu hỏi chuẩn GDPT 2018)\n• Cấu trúc đề chuẩn Công văn 7991/BGDĐT: 12 câu MCQ (3.0đ) + 2 câu Đúng/Sai 8 ý (2.0đ) + 4 câu Trả lời ngắn (2.0đ) + 2 câu Tự luận/Thực hành (3.0đ) = 10.0đ (45 phút)\n• Thuật toán phân bổ đáp án thông minh cân bằng hoàn hảo 3A - 3B - 3C - 3D (không quá 2 câu liên tiếp cùng đáp án)\n• Tự động trích xuất Biên bản duyệt đề, phản biện đề thi chuẩn 01 trang A4 theo Nghị định 30/2020/NĐ-CP và Công văn 7991\n• Tự động sinh Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn sư phạm\n• Xuất đồng thời 2 bản Word: Bản Giáo viên (có ma trận, đặc tả, đáp án đỏ không in đậm, barem chấm) và Bản Học sinh (sạch sẽ in được ngay)\n• Bổ sung tính năng tạo Đề cương 4 dạng bài tập (4 mức độ) và Bộ câu hỏi tương tự rèn luyện sâu\n• Giao diện Light/Dark hiện đại, bảng điều khiển cấu hình trực quan, bảo mật máy tính đa tầng",
+  "appName": "Tạo Đề Tin Học THCS Pro (CV 7991)",
+  "currentVersion": "3.9.0",
+  "latestVersion": "3.9.0",
+  "releaseDate": "24/10/2026",
+  "changelog": "✦ [24/10/2026 - v3.9.0] Cập nhật nâng cấp toàn diện cho giáo viên:\n✦ Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn Công văn 7991/BGDĐT\n✦ Tích hợp tính năng xuất Ma trận & Bản đặc tả độc lập 1-chạm\n✦ Tích hợp xuất Biên bản phản biện đề thi chuyên môn chuẩn quy định sư phạm\n✦ Tự động tương thích hoàn hảo Microsoft Word 2016-2024, không lỗi dãn dòng thưa chữ\n✦ Cung cấp bản cài đặt 1-Click tự động tích hợp Add-in Word và Shortcut Desktop.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
-  "websiteUrl": "https://dekiemtraso.com/#tao-de-tin",
+  "websiteUrl": "https://dekiemtraso.com/",
   "author": "Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên"
 }

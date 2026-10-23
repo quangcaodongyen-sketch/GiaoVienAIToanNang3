@@ -1,13 +1,13 @@
 {
   "appId": "exam-eng",
-  "appName": "Tạo Đề Kiểm Tra Tiếng Anh THCS Global Success (CV 7991)",
-  "currentVersion": "5.0.1",
-  "latestVersion": "5.0.1",
-  "releaseDate": "20/10/2026",
-  "changelog": "🚀 [20/10/2026 - v5.0.1] KHẮC PHỤC TRIỆT ĐỂ LỖI BIÊN DỊCH WORD VBA:\n• Sửa hoàn toàn lỗi 'Compile error in hidden module: Mod_TaoDe_TiengAnh_THCS', tương thích 100% Microsoft Word 32-bit & 64-bit (Office 2016-2024 / Office 365).\n• Tối ưu khởi động Word cực nhanh và mượt mà, sẵn sàng thanh công cụ Ribbon 📝 TẠO ĐỀ TIẾNG ANH THCS.\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717).\n\n🚀 [17/10/2026 - v5.0.0] NÂNG CẤP ĐỘT PHÁ - TỰ ĐỘNG CẬP NHẬT 1-CLICK & 10 MÃ ĐỀ:\n• MỖI LOẠI ĐỀ TỐI THIỂU 10 MÃ ĐỀ KHÁC NHAU: Hỗ trợ trọn bộ 10 mã đề (601-610, 701-710, 801-810, 901-910) cho tất cả các kỳ (GK1, CK1, GK2, CK2) của Lớp 6, 7, 8, 9.\n• XUẤT ĐỒNG THỜI FILE TỔNG HỢP & 10 FILE ĐỀ THI RIÊNG LẺ: Giúp Thầy/Cô dễ dàng in ấn và phát đề thi riêng cho từng học sinh trong phòng thi.\n• BẢNG ĐỐI CHIẾU ĐÁP ÁN SONG SONG CẢ 10 MÃ ĐỀ: Bảng ma trận 11 cột hiển thị đáp án song song cả 10 mã đề vừa khít trang giấy A4, cực kỳ thẩm mỹ, không lỗi dãn dòng.\n• TỰ ĐỘNG CẬP NHẬT 1-CLICK (AUTO-UPDATE 100%): Khi có thông báo bản mới, Thầy/Cô chỉ cần bấm 1 nút 'Đồng ý cập nhật', ứng dụng tự động tải về và tự cài đặt 100%, không cần bất kỳ thao tác thủ công nào.\n• THÔNG TIN TRƯỜNG TỰ ĐIỀN VÀ TỰ ĐỘNG LƯU: Để sẵn định dạng UBND XÃ ........................ / TRƯỜNG THCS ........................ để Thầy/Cô tự điền và hệ thống tự động ghi nhớ vĩnh viễn.\n• ĐỘC QUYỀN BÀI NGHE LISTENING CỐ ĐỊNH: Dùng chung một file âm thanh Audio phát trong phòng thi, các câu trắc nghiệm đảo vị trí chống gian lận.\n• Tác giả & Bản quyền: Thầy giáo Đinh Văn Thành (Tel/Zalo: 0915.213717).",
+  "appName": "Tạo Đề Tiếng Anh THCS Pro (CV 7991)",
+  "currentVersion": "3.9.0",
+  "latestVersion": "3.9.0",
+  "releaseDate": "24/10/2026",
+  "changelog": "✦ [24/10/2026 - v3.9.0] Cập nhật nâng cấp toàn diện cho giáo viên:\n✦ Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn Công văn 7991/BGDĐT\n✦ Tích hợp tính năng xuất Ma trận & Bản đặc tả độc lập 1-chạm\n✦ Tích hợp xuất Biên bản phản biện đề thi chuyên môn chuẩn quy định sư phạm\n✦ Tự động tương thích hoàn hảo Microsoft Word 2016-2024, không lỗi dãn dòng thưa chữ\n✦ Cung cấp bản cài đặt 1-Click tự động tích hợp Add-in Word và Shortcut Desktop.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Tác giả: Thầy giáo Đinh Văn Thành (Tel/zalo: 0915.213717) - THCS",
+  "author": "Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên",
   "version": "5.0.1"
 }
