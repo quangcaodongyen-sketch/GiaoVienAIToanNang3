@@ -538,9 +538,9 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300 font-medium pt-1 border-t border-emerald-500/20 font-mono">
-                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">15/10/2026 (Lúc 12:45:00)</span></div>
+                  <div>🕒 <strong>Đưa lên Web lúc:</strong> <span className="text-amber-300 font-bold">23/10/2026 (Lúc 15:30:00)</span></div>
                   <div>📦 <strong>Bộ cài PC chuẩn:</strong> <span className="text-cyan-300 font-bold">File .exe sạch mới 100% (91 MB)</span></div>
-                  <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã cập nhật giao diện mới nhất</span></div>
+                  <div>✨ <strong>Trạng thái:</strong> <span className="text-emerald-300 font-bold">Đã chuẩn hóa Phụ lục 3 & PPCT 2026 - 2027</span></div>
                 </div>
               </div>
 
@@ -550,7 +550,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
               <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-amber-950/70 border border-amber-500/50 text-xs text-slate-200 space-y-2 shadow-lg">
                 <div className="flex items-center gap-2 font-bold text-amber-400 text-sm">
                   <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-                  <span>ĐÃ NÂNG CẤP TOÀN DIỆN v5.0.0 PRO: CẤU TRÚC ĐỀ 4 PHẦN CHUẨN BỘ GD&ĐT & 78 BÀI HỌC SGK</span>
+                  <span>ĐÃ NÂNG CẤP TOÀN DIỆN v5.1.0 PRO: CẤU TRÚC ĐỀ 3 PHẦN CHUẨN BỘ GD&ĐT (CV 7991) & PPCT PHỤ LỤC 3</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-300">
                   <div className="flex items-start gap-1.5">
@@ -559,15 +559,15 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                   </div>
                   <div className="flex items-start gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Bộ Stepper [-] [count] [+]:</strong> Thoải mái tăng/giảm số câu TN & TL cho từng bài tùy ý.</span>
+                    <span><strong>Bộ Stepper [-] [count] [+]:</strong> Tự động phân bổ chuẩn % số tiết PPCT. Bài nhiều tiết lấy nhiều câu và điểm cao hơn, bài ít tiết (Bài 4 1 tiết: 0,25đ) lấy ít hơn.</span>
                   </div>
                   <div className="flex items-start gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Cấu trúc đề 4 phần chuẩn:</strong> Phần I (12 MCQ: 3.0đ), Phần II (2 câu Đúng/Sai bảng 3 cột: 2.0đ), Phần III (4 câu Trả lời ngắn: 2.0đ), Phần IV (2 bài Tự luận: 3.0đ).</span>
+                    <span><strong>Cấu trúc đề 3 phần chuẩn CV 7991:</strong> Phần I (12 câu MCQ: 3.0đ), Phần II (04 câu Đúng - Sai tư liệu: 4.0đ; 16 lệnh hỏi tính điểm bậc thang: 0.1đ - 0.25đ - 0.5đ - 1.0đ), Phần III (02 câu Tự luận: 3.0đ: Câu 17 - 1.0đ Thông hiểu; Câu 18 - 2.0đ Vận dụng). Tuyệt đối không có trắc nghiệm trả lời ngắn.</span>
                   </div>
                   <div className="flex items-start gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Xuất 2 bản song song:</strong> Bản Giáo viên (có đáp án đỏ RGB) & Bản Học sinh sạch 100% in ngay.</span>
+                    <span><strong>Xuất trọn gói 5 loại tài liệu:</strong> Bản Master (đáp án đỏ RGB, bảng đối chiếu song song), Bản Học sinh sạch 100%, Đề lẻ từng mã (601-606...), Khung Ma trận & Đặc tả độc lập (CV 7991), Biên bản thẩm định/phản biện đề.</span>
                   </div>
                 </div>
               </div>

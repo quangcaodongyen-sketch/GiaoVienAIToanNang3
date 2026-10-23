@@ -1,12 +1,12 @@
 {
   "appId": "taode-ls-thcs",
   "appName": "Tạo Đề Kiểm Tra Lịch Sử THCS Kết Nối Tri Thức (CV 7991)",
-  "currentVersion": "5.2.0",
-  "latestVersion": "5.2.0",
-  "releaseDate": "18/10/2026 (20:00)",
-  "changelog": "• [18/10/2026 - v5.2.0 PRO] Nâng cấp giao diện Xanh Navy Pro sang trọng, đẳng cấp đồng bộ chuẩn Tiếng Anh THCS, thanh tiêu đề Header tinh gọn thanh thoát.\n• Tích hợp tính năng & Nút bấm '📋 XUẤT BIÊN BẢN PHẢN BIỆN ĐỀ (WORD CHUẨN)': Xuất file Word Biên bản duyệt, phản biện đề kiểm tra định kỳ chuẩn thể thức văn bản Nghị định 30/2020/NĐ-CP và Công văn 7991/BGDĐT-GDTrH, gói gọn vừa vặn trong đúng 01 trang in A4.\n• Định dạng Phần II (Câu 13 đến 16 Đúng - Sai) vào bảng 3 cột chuẩn mẫu của Bộ và Sở GD&ĐT (Lệnh hỏi | Đúng | Sai; Bản Giáo viên có đáp án Đ/S đỏ, Bản Học sinh để trống 100% để làm bài).\n• Khống chế mặc định đoạn trích dẫn/dẫn nhập tư liệu lịch sử không vượt quá 7 dòng (đã kiểm định 100% câu hỏi đạt chuẩn).\n• Nâng cấp ngân hàng câu hỏi toàn diện 78 bài học chính khóa SGK Kết nối tri thức Lớp 6, 7, 8, 9; hỗ trợ sinh ngẫu nhiên phong phú từ 1 đến 24 mã đề độc lập, không trùng lặp.\n• Tự động xuất Bảng tổng hợp đáp án Đúng/Sai 17 cột (Mã đề + 16 ý hỏi của 4 câu) khi tạo nhiều mã đề, giúp thầy cô chấm 20-24 mã đề trên 1 trang duy nhất.\n• Đầy đủ 2 hình thức: Cài đặt tự động vào Word Ribbon (Cai_Dat_TaoDe_LS_THCS.exe) và Bản chạy trực tiếp Desktop không cần cài đặt.",
+  "currentVersion": "5.3.0",
+  "latestVersion": "5.3.0",
+  "releaseDate": "23/10/2026 (16:00)",
+  "changelog": "• [23/10/2026 - v5.3.0 PRO CHUẨN PHỤ LỤC 3 & PPCT] Cập nhật toàn diện đồng bộ theo chuẩn Bộ GD&ĐT (CV 7991) mới nhất:\n• Chuẩn hóa tuyệt đối theo Phụ lục 3 và thời lượng PPCT môn Lịch sử: Tỉ lệ số câu và phân bố điểm số tỉ lệ thuận chính xác theo số tiết học (bài 1 tiết chiếm 0,25đ / 1 câu trắc nghiệm; các bài trọng tâm 2-3 tiết được phân bổ điểm số tương xứng).\n• Cấu trúc 45 phút chuẩn 10,0 điểm: Phần I: 12 câu TN 4 lựa chọn (3,0đ, 100% Nhận biết, xáo trộn cân bằng đáp án 3A, 3B, 3C, 3D); Phần II: 4 câu Trắc nghiệm Đúng - Sai có đoạn tư liệu lịch sử (4,0đ, thang điểm bậc thang 0,1 - 0,25 - 0,5 - 1,0đ); Phần III: 2 câu Tự luận (3,0đ: Câu 1 Thông hiểu 1,0đ, Câu 2 Vận dụng 2,0đ).\n• Tích hợp tính năng mới: Nút '📊 XUẤT MA TRẬN & BẢN ĐẶC TẢ ĐỘC LẬP (CV 7991)' xuất file Word Ma trận 16 cột 3 tầng và Bản đặc tả chuẩn 100%, có khung ký duyệt của Ban Giám hiệu, Tổ chuyên môn và Giáo viên.\n• Tự động xuất trọn bộ hệ thống tệp tin: Bản Giáo viên Master, Bản Học sinh sạch 100%, Bản Ma trận & Đặc tả độc lập, và các bản đề lẻ theo từng mã đề.\n• Bộ cài đặt duy nhất All-in-One Cai_Dat_TaoDe_LS_THCS.exe tự động tích hợp Tab Ribbon Word và Shortcut Desktop.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_LS_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Lich_Su_THCS_Pass_123.zip",
-  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "websiteUrl": "https://dekiemtraso.com/",
   "author": "Tác giả: Thầy giáo Đinh Văn Thành (Tel/zalo: 0915.213717) - Trường THCS Đồng Yên"
 }

@@ -1076,57 +1076,87 @@ export function getTHCS8MonExamSuite(
             ]
           },
           {
-            title: 'PHẦN II. CÂU HỎI ĐÚNG - SAI CÓ ĐOẠN TƯ LIỆU',
+            title: 'PHẦN II. CÂU HỎI TRẮC NGHIỆM ĐÚNG - SAI CÓ ĐOẠN TƯ LIỆU',
             points: '4,0 điểm',
-            instruction: 'Đọc kĩ đoạn trích tư liệu lịch sử sau đây và chọn Đúng (Đ) hoặc Sai (S) cho từng ý a, b, c, d:',
-            passage: '“Năm 938, vua Nam Hán sai con trai là Vạn Vương Hoằng Tháo đem quân sang xâm lược nước ta... Ngô Quyền bàn với các tướng rằng: Hoằng Tháo là đứa trẻ dại, đem quân từ xa đến, quân lính mỏi mệt... Nếu ta sai người vạt nhọn cọc lớn, bịt sắt cắm ngầm trước ở cửa biển, khi thuyền giặc theo nước triều lên tiến vào trong hàng cọc, bấy giờ ta sẽ dốc toàn lực đánh quật lại, thế tất giặc phải tan vỡ!”\n(Theo Đại Việt sử ký toàn thư)',
+            instruction: 'Thí sinh trả lời từ câu 13 đến câu 16. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng (Đ) hoặc sai (S). (Thang điểm: Đúng 1 ý: 0,1đ; đúng 2 ý: 0,25đ; đúng 3 ý: 0,5đ; đúng 4 ý: 1,0đ):',
             questions: [
               {
-                num: 'Câu 13',
-                content: 'Dựa vào đoạn trích tư liệu trên, nhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                num: 'Câu 13 (1,0 điểm)',
+                content: 'Đọc đoạn tư liệu sau:\n“Năm 938, vua Nam Hán sai con trai là Vạn Vương Hoằng Tháo đem quân sang xâm lược nước ta... Ngô Quyền bàn với các tướng rằng: Hoằng Tháo là đứa trẻ dại, đem quân từ xa đến, quân lính mỏi mệt... Nếu ta sai người vạt nhọn cọc lớn, bịt sắt cắm ngầm trước ở cửa biển, khi thuyền giặc theo nước triều lên tiến vào trong hàng cọc, bấy giờ ta sẽ dốc toàn lực đánh quật lại, thế tất giặc phải tan vỡ!”\n(Theo Đại Việt sử ký toàn thư)\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
                          'a) Đoạn tư liệu phản ánh kế sách đánh giặc độc đáo của Ngô Quyền trong trận Bạch Đằng năm 938.\n' +
                          'b) Hoằng Tháo là một danh tướng lão luyện, dày dạn kinh nghiệm chiến trường phương Nam.\n' +
                          'c) Kế sách lợi dụng thủy triều và cắm cọc gỗ bịt sắt thể hiện nghệ thuật quân sự tài tình, sáng tạo của cha ông ta.\n' +
                          'd) Chiến thắng Bạch Đằng năm 938 đã kết thúc hơn 1000 năm Bắc thuộc, mở ra kỷ nguyên độc lập, tự chủ lâu dài cho dân tộc.',
                 options: ['a) Đúng', 'b) Sai', 'c) Đúng', 'd) Đúng'],
                 correctKey: 'a-Đ, b-S, c-Đ, d-Đ'
+              },
+              {
+                num: 'Câu 14 (1,0 điểm)',
+                content: 'Đọc đoạn tư liệu sau:\n“Mùa xuân năm Kỷ Dậu (1789), vua Quang Trung đại phá quân Thanh, tiến vào Thăng Long vào đúng ngày mùng 5 Tết. Áo bào sạm đen khói súng, người anh hùng áo vải Tây Sơn đã làm nên trang sử chói lọi, đập tan âm mưu xâm lược của 29 vạn quân Mãn Thanh.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Chiến thắng Ngọc Hồi - Đống Đa xuân Kỷ Dậu 1789 do Nguyễn Huệ - Quang Trung trực tiếp lãnh đạo.\n' +
+                         'b) Quân Tây Sơn tiến hành hành quân thần tốc, vừa đi vừa tuyển quân và tổ chức duyệt binh.\n' +
+                         'c) Cuộc kháng chiến chống quân Thanh kéo dài nhiều năm ròng rã trong thế giằng co.\n' +
+                         'd) Chiến thắng này đã bảo vệ vững chắc nền độc lập dân tộc và chủ quyền lãnh thổ của đất nước.',
+                options: ['a) Đúng', 'b) Đúng', 'c) Sai', 'd) Đúng'],
+                correctKey: 'a-Đ, b-Đ, c-S, d-Đ'
+              },
+              {
+                num: 'Câu 15 (1,0 điểm)',
+                content: 'Đọc đoạn tư liệu sau:\n“Nước Nga Xô viết sau chiến tranh phải đối mặt với muôn vàn khó khăn... Tháng 3-1921, Đảng Bôn-sê-vích Nga dưới sự lãnh đạo của V.I. Lê-nin đã quyết định chuyển từ Chính sách cộng sản thời chiến sang Chính sách kinh tế mới (NEP), khôi phục nền kinh tế quốc dân.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Chính sách kinh tế mới (NEP) được thông qua vào tháng 3-1921 do Lê-nin khởi xướng.\n' +
+                         'b) Nội dung quan trọng nhất của NEP trong nông nghiệp là thay chế độ trưng thu lương thực thừa bằng thuế lương thực.\n' +
+                         'c) NEP chỉ áp dụng trong lĩnh vực nông nghiệp, không liên quan đến thương nghiệp và công nghiệp.\n' +
+                         'd) Việc thực hiện NEP đã giúp nước Nga Xô viết nhanh chóng vượt qua khủng hoảng kinh tế - chính trị.',
+                options: ['a) Đúng', 'b) Đúng', 'c) Sai', 'd) Đúng'],
+                correctKey: 'a-Đ, b-Đ, c-S, d-Đ'
+              },
+              {
+                num: 'Câu 16 (1,0 điểm)',
+                content: 'Đọc đoạn tư liệu sau:\n“Ngày 28-1-1941, sau ba mươi năm bôn ba tìm đường cứu nước, người thanh niên yêu nước Nguyễn Ái Quốc đã trở về Tổ quốc qua cột mốc 108 (Cao Bằng)... Tháng 5-1941, Người chủ trì Hội nghị Trung ương 8, hoàn chỉnh chuyển hướng chỉ đạo chiến lược cách mạng, đặt nhiệm vụ giải phóng dân tộc lên hàng đầu.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Nguyễn Ái Quốc trở về Tổ quốc vào đầu năm 1941 sau 30 năm hoạt động ở nước ngoài.\n' +
+                         'b) Pác Bó (Cao Bằng) được chọn làm căn cứ địa đầu tiên để xây dựng lực lượng cách mạng.\n' +
+                         'c) Hội nghị Trung ương 8 (5-1941) chủ trương đặt nhiệm vụ đấu tranh giai cấp lên trước nhiệm vụ giải phóng dân tộc.\n' +
+                         'd) Mặt trận Việt Minh ra đời năm 1941 là biểu tượng của khối đại đoàn kết toàn dân tộc chuẩn bị cho Tổng khởi nghĩa.”',
+                options: ['a) Đúng', 'b) Đúng', 'c) Sai', 'd) Đúng'],
+                correctKey: 'a-Đ, b-Đ, c-S, d-Đ'
               }
             ]
           },
           {
-            title: 'PHẦN III. TỰ LUẬN LIÊN HỆ THỰC TIỄN',
+            title: 'PHẦN III. TỰ LUẬN (3,0 ĐIỂM)',
             points: '3,0 điểm',
             questions: [
               {
-                num: 'Câu 14',
-                points: '2,0 điểm',
-                content: 'Trình bày ý nghĩa lịch sử sâu sắc của chiến thắng Bạch Đằng năm 938. Vì sao nhà sử học Lê Văn Hưu đánh giá công đức của Ngô Quyền: "Ngô Quyền cứu dân khỏi cơn đắm đuối, mở mang bờ cõi, dựng lại nước nhà, công đức ấy thật vô lượng"?'
+                num: 'Câu 17',
+                points: '1,0 điểm',
+                content: 'Câu 17 (1,0 điểm). Dựa vào kiến thức lịch sử đã học, em hãy thực hiện yêu cầu sau:\nTrình bày nguyên nhân thắng lợi và ý nghĩa lịch sử sâu sắc của Cách mạng tháng Tám năm 1945 đối với dân tộc Việt Nam và phong trào giải phóng dân tộc trên thế giới.'
               },
               {
-                num: 'Câu 15',
-                points: '1,0 điểm',
-                content: 'Từ truyền thống yêu nước, bất khuất chống ngoại xâm của cha ông trong lịch sử, theo em thế hệ học sinh THCS hôm nay cần làm gì để góp phần xây dựng và bảo vệ chủ quyền biên giới, hải đảo thiêng liêng của Tổ quốc?'
+                num: 'Câu 18',
+                points: '2,0 điểm',
+                content: 'Câu 18 (2,0 điểm). Từ tiến trình lịch sử dựng nước và giữ nước oanh liệt của dân tộc ta:\na) Em hãy phân tích bài học kinh nghiệm sâu sắc về "lấy dân làm gốc", phát huy sức mạnh khối đại đoàn kết toàn dân tộc trong công cuộc bảo vệ Tổ quốc (1,0 điểm).\nb) Liên hệ trách nhiệm của bản thân thế hệ học sinh THCS hiện nay trong việc học tập, rèn luyện và đóng góp sức trẻ vào sự nghiệp bảo vệ chủ quyền biên giới, biển đảo thiêng liêng của Tổ quốc (1,0 điểm).'
               }
             ]
           }
         ],
         matrix: {
-          headers: ['Mạch kiến thức Lịch sử', 'Chủ đề đơn vị kiến thức', 'Nhận biết (TN)', 'Thông hiểu (Đ/S)', 'Vận dụng (TL)', 'Vận dụng cao (TL)', 'Tổng điểm', 'Tỉ lệ %'],
+          headers: ['Mạch kiến thức Lịch sử', 'Chủ đề đơn vị kiến thức (PPCT)', 'Phần I: TN 4 LC (NB)', 'Phần II: Đúng - Sai (TH)', 'Phần III: Tự luận (VD)', 'Phần III: Tự luận (VDC)', 'Tổng điểm', 'Tỉ lệ %'],
           rows: [
-            ['Lịch sử Thế giới', 'Tây Âu trung đại & Văn hóa Phục hưng', '3 câu (0,75đ)', '0', '0', '0', '0,75 điểm', '7,5%'],
-            ['Lịch sử Việt Nam (Cổ - Trung đại)', 'Khởi nghĩa thời Bắc thuộc & Chiến thắng Bạch Đằng 938', '5 câu (1,25đ)', 'Câu 13 (2,0đ)', 'Câu 14 (1,5đ)', '0', '4,75 điểm', '47,5%'],
-            ['Lịch sử Việt Nam (Các triều đại Lý - Trần - Lê)', 'Thời Lý, Trần, Khởi nghĩa Lam Sơn, Phong trào Tây Sơn', '4 câu (1,00đ)', 'Câu 13 (2,0đ)', '0', '0', '3,00 điểm', '30,0%'],
-            ['Vận dụng liên hệ thực tiễn', 'Bảo vệ chủ quyền biên cương và hải đảo Tổ quốc', '0', '0', 'Câu 14b (0,5đ)', 'Câu 15 (1,0đ)', '1,50 điểm', '15,0%'],
-            ['TỔNG ĐIỂM', 'Cấu trúc định dạng chuẩn CV 7991/BGDĐT', '3,0 điểm (30%)', '4,0 điểm (40%)', '2,0 điểm (20%)', '1,0 điểm (10%)', '10,0 điểm', '100%']
+            ['Lịch sử Thế giới', 'Tây Âu trung đại & Văn hóa Phục hưng', '3 câu (0,75đ)', 'Câu 15 (1,00đ)', '0', '0', '1,75 điểm', '17,5%'],
+            ['Lịch sử Việt Nam (Cổ - Trung đại)', 'Bắc thuộc, Bạch Đằng 938, Triều đại Lý - Trần', '5 câu (1,25đ)', 'Câu 13 (1,00đ)', '0', '0', '2,25 điểm', '22,5%'],
+            ['Lịch sử Việt Nam (Thời Lê sơ & Tây Sơn)', 'Khởi nghĩa Lam Sơn & Phong trào Tây Sơn', '4 câu (1,00đ)', 'Câu 14 (1,00đ)', '0', '0', '2,00 điểm', '20,0%'],
+            ['Lịch sử Việt Nam (Hiện đại) & Thực tiễn', 'Đường lối cứu nước, CMT8 & Bảo vệ chủ quyền', '0', 'Câu 16 (1,00đ)', 'Câu 17 (1,00đ) + Câu 18a (1,00đ)', 'Câu 18b (1,00đ)', '4,00 điểm', '40,0%'],
+            ['TỔNG ĐIỂM TOÀN BÀI', 'Chuẩn Công văn 7991/BGDĐT-GDTrH (45 phút)', '3,0 điểm (30%)', '4,0 điểm (40%)', '2,0 điểm (20%)', '1,0 điểm (10%)', '10,0 điểm', '100%']
           ]
         },
         specification: {
-          headers: ['TT', 'Mạch kiến thức', 'Đơn vị kiến thức', 'Mức độ & Yêu cầu cần đạt chuẩn CTGDPT 2018', 'Câu hỏi & Điểm'],
+          headers: ['TT', 'Mạch kiến thức', 'Đơn vị kiến thức', 'Mức độ & Yêu cầu cần đạt chuẩn CTGDPT 2018', 'Câu hỏi & Phân bố điểm'],
           rows: [
-            ['1', 'Lịch sử thế giới', 'Phong trào Văn hóa Phục hưng', 'Nhận biết cái nôi phong trào, danh nhân, tác phẩm tiêu biểu', 'Câu 1, 2, 3 (0,75 điểm)'],
-            ['2', 'Thời kỳ Bắc thuộc', 'Chiến thắng Bạch Đằng năm 938', 'Hiểu rõ hoàn cảnh, kế sách lợi dụng thủy triều cắm cọc ngầm, ý nghĩa bước ngoặt lịch sử', 'Câu 4, 13, 14 (4,75 điểm)'],
-            ['3', 'Thời Lý - Trần - Lê sơ', 'Đại Việt thời Lý - Trần và Lê sơ', 'Nhận biết các mốc son: Dời đô 1010, Nam quốc sơn hà, Ba lần đại thắng Nguyên - Mông, Khởi nghĩa Lam Sơn, Luật Hồng Đức', 'Câu 5, 6, 7, 8, 9, 10, 11, 12 (2,0 điểm)'],
-            ['4', 'Trách nhiệm công dân', 'Chủ quyền biên cương hải đảo', 'Vận dụng hiểu biết lịch sử vào liên hệ trách nhiệm tuổi trẻ trong bảo vệ chủ quyền đất nước', 'Câu 15 (1,0 điểm)']
+            ['1', 'Lịch sử thế giới', 'Phong trào Văn hóa Phục hưng & Nước Nga Xô viết', 'Nhận biết danh nhân, tác phẩm tiêu biểu; Hiểu và nhận định đúng sai về hoàn cảnh ra đời chính sách kinh tế mới (NEP)', 'Câu 1, 2, 3 (0,75đ) & Câu 15 (1,00đ)'],
+            ['2', 'Lịch sử Việt Nam cổ - trung đại', 'Thời kỳ Bắc thuộc, Chiến thắng Bạch Đằng 938 & Thời Lý - Trần', 'Nhận biết các mốc son lịch sử dân tộc; Đọc hiểu tư liệu lịch sử, phân tích kế sách cọc ngầm Bạch Đằng của Ngô Quyền', 'Câu 4, 5, 6, 7, 8 (1,25đ) & Câu 13 (1,00đ)'],
+            ['3', 'Lịch sử Việt Nam hậu kỳ trung đại', 'Khởi nghĩa Lam Sơn, Thời Lê sơ & Phong trào Tây Sơn', 'Nhận biết lãnh tụ Lam Sơn, vua Lê Thánh Tông; Đọc hiểu tư liệu chiến thắng Ngọc Hồi - Đống Đa đại phá quân Thanh', 'Câu 9, 10, 11, 12 (1,00đ) & Câu 14 (1,00đ)'],
+            ['4', 'Lịch sử Việt Nam hiện đại', 'Nguyễn Ái Quốc trở về Tổ quốc (1941) & Cách mạng tháng Tám (1945)', 'Đọc hiểu tư liệu Pác Bó và Hội nghị TƯ 8; Trình bày nguyên nhân thắng lợi và ý nghĩa lịch sử của Cách mạng tháng Tám', 'Câu 16 (1,00đ) & Câu 17 (1,00đ)'],
+            ['5', 'Vận dụng thực tiễn & Trách nhiệm', 'Bài học "lấy dân làm gốc" & Trách nhiệm chủ quyền biển đảo', 'Vận dụng bài học lịch sử về đại đoàn kết toàn dân tộc; Liên hệ trách nhiệm học sinh với chủ quyền thiêng liêng của Tổ quốc', 'Câu 18 (2,00đ gồm 2 ý a, b)']
           ]
         },
         answerGuide: {
@@ -1137,19 +1167,34 @@ export function getTHCS8MonExamSuite(
           ],
           essayGuide: [
             {
-              question: 'Câu 13 (Đúng - Sai có tư liệu)',
-              step: 'Mệnh đề a: Đúng (0.5đ)\nMệnh đề b: Sai (Vạn Vương Hoằng Tháo trẻ tuổi, kiêu căng, khinh địch) (0.5đ)\nMệnh đề c: Đúng (Nghệ thuật quân sự cắm cọc gỗ chông ngầm) (1.0đ)\nMệnh đề d: Đúng (Ý nghĩa lịch sử chấm dứt hơn 1000 năm Bắc thuộc) (1.0đ)',
-              point: '4,00 điểm'
-            },
-            {
-              question: 'Câu 14 (Ý nghĩa lịch sử chiến thắng Bạch Đằng)',
-              step: '1. Ý nghĩa: Tiêu diệt hoàn toàn quân Nam Hán, đập tan mưu đồ xâm lược; Chấm dứt vĩnh viễn hơn 10 thế kỷ Bắc thuộc của phong kiến phương Bắc; Khẳng định quyền làm chủ non sông, mở ra kỷ nguyên độc lập tự chủ lâu dài cho dân tộc (1.0đ).\n2. Nhận định Lê Văn Hưu: Ngô Quyền đã nối lại quốc thống, rửa sạch nỗi nhục mất nước ngàn năm, xứng đáng là vị "vua của các vua", mở đầu kỷ nguyên phục hưng rạng rỡ của đất nước (1.0đ).',
-              point: '2,00 điểm'
-            },
-            {
-              question: 'Câu 15 (Liên hệ trách nhiệm học sinh)',
-              step: '1. Nhận thức: Tự hào sâu sắc về truyền thống lịch sử kiên cường của dân tộc, trân trọng hòa bình độc lập hôm nay (0.25đ).\n2. Hành động học tập: Ra sức học tập tốt, rèn luyện đạo đức, nắm vững tri thức khoa học và ngoại ngữ (0.25đ).\n3. Trách nhiệm chủ quyền: Tích cực tìm hiểu lịch sử chủ quyền biển đảo Tổ quốc (Hoàng Sa, Trường Sa); Không chia sẻ thông tin xấu độc; Sẵn sàng đóng góp sức trẻ cho sự nghiệp bảo vệ quê hương đất nước (0.50đ).',
+              question: 'Câu 13 (Đúng - Sai: Chiến thắng Bạch Đằng năm 938)',
+              step: 'Thang điểm tính theo quy chuẩn Bộ GD&ĐT (Đúng 1 ý: 0,1đ; đúng 2 ý: 0,25đ; đúng 3 ý: 0,5đ; đúng 4 ý: 1,0đ):\n- Lệnh hỏi a) Đúng: Phản ánh kế sách độc đáo cắm cọc ngầm ở cửa biển.\n- Lệnh hỏi b) Sai: Hoằng Tháo là tướng trẻ, kiêu ngạo, ít kinh nghiệm thực chiến.\n- Lệnh hỏi c) Đúng: Kế sách cắm cọc bịt sắt kết hợp thủy triều thể hiện đỉnh cao nghệ thuật quân sự.\n- Lệnh hỏi d) Đúng: Chiến thắng lịch sử chấm dứt hơn 1000 năm Bắc thuộc, mở kỷ nguyên độc lập.',
               point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 14 (Đúng - Sai: Đại phá 29 vạn quân Thanh xuân 1789)',
+              step: 'Thang điểm tính theo quy chuẩn Bộ GD&ĐT (Đúng 1 ý: 0,1đ; đúng 2 ý: 0,25đ; đúng 3 ý: 0,5đ; đúng 4 ý: 1,0đ):\n- Lệnh hỏi a) Đúng: Vua Quang Trung trực tiếp tổng chỉ huy chiến dịch Ngọc Hồi - Đống Đa.\n- Lệnh hỏi b) Đúng: Nghệ thuật hành quân thần tốc, vừa đi vừa tuyển quân và tổ chức duyệt binh ở Nghệ An.\n- Lệnh hỏi c) Sai: Cuộc kháng chiến diễn ra thần tốc chỉ trong vòng 5 ngày đêm Tết Kỷ Dậu, không kéo dài giằng co.\n- Lệnh hỏi d) Đúng: Đập tan hoàn toàn dã tâm xâm lược của phong kiến Mãn Thanh, bảo vệ toàn vẹn lãnh thổ.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 15 (Đúng - Sai: Chính sách kinh tế mới NEP của nước Nga)',
+              step: 'Thang điểm tính theo quy chuẩn Bộ GD&ĐT (Đúng 1 ý: 0,1đ; đúng 2 ý: 0,25đ; đúng 3 ý: 0,5đ; đúng 4 ý: 1,0đ):\n- Lệnh hỏi a) Đúng: V.I. Lê-nin khởi xướng và được Đảng Bôn-sê-vích thông qua vào tháng 3-1921.\n- Lệnh hỏi b) Đúng: Thay thế chế độ trưng thu lương thực thừa bằng thuế lương thực là nội dung then chốt.\n- Lệnh hỏi c) Sai: NEP thực hiện toàn diện cả trong nông nghiệp, công nghiệp, thương nghiệp và tiền tệ.\n- Lệnh hỏi d) Đúng: Giúp nước Nga Xô viết phục hồi kinh tế và củng cố vững chắc chính quyền xô viết.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 16 (Đúng - Sai: Lãnh tụ Nguyễn Ái Quốc về nước 1941)',
+              step: 'Thang điểm tính theo quy chuẩn Bộ GD&ĐT (Đúng 1 ý: 0,1đ; đúng 2 ý: 0,25đ; đúng 3 ý: 0,5đ; đúng 4 ý: 1,0đ):\n- Lệnh hỏi a) Đúng: Ngày 28-1-1941, Người trở về Tổ quốc sau 30 năm bôn ba tìm đường cứu nước.\n- Lệnh hỏi b) Đúng: Pác Bó (Hà Quảng, Cao Bằng) là căn cứ địa đầu tiên của cách mạng giải phóng dân tộc.\n- Lệnh hỏi c) Sai: Hội nghị TƯ 8 (5-1941) chủ trương đặt nhiệm vụ giải phóng dân tộc lên trên hết, trước hết.\n- Lệnh hỏi d) Đúng: Mặt trận Việt Minh là khối đại đoàn kết toàn dân tộc chuẩn bị cho Tổng khởi nghĩa tháng Tám.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 17 (Tự luận: Nguyên nhân & Ý nghĩa Cách mạng tháng Tám 1945)',
+              step: '1. Nguyên nhân thắng lợi (0,5 điểm):\n- Nguyên nhân chủ quan: Truyền thống yêu nước nồng nàn; Sự lãnh đạo đúng đắn, sáng suốt của Đảng Cộng sản Đông Dương đứng đầu là Chủ tịch Hồ Chí Minh; Quá trình chuẩn bị chu đáo 15 năm (1930 - 1945); Khối liên minh công nông vững chắc.\n- Nguyên nhân khách quan: Thắng lợi vĩ đại của Hồng quân Liên Xô và phe Đồng minh tiêu diệt chủ nghĩa phát xít Nhật.\n2. Ý nghĩa lịch sử (0,5 điểm):\n- Đối với dân tộc: Phá tan xiềng xích thực dân Pháp hơn 80 năm và ách thống trị phát xít Nhật; Lật đổ chế độ phong kiến ngàn năm; Khai sinh nước Việt Nam Dân chủ Cộng hòa; Mở ra kỷ nguyên độc lập tự do.\n- Đối với quốc tế: Cổ vũ mạnh mẽ phong trào giải phóng dân tộc của các nước thuộc địa và phụ thuộc trên thế giới.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 18 (Tự luận: Bài học "Lấy dân làm gốc" & Trách nhiệm học sinh)',
+              step: 'a) Phân tích bài học "lấy dân làm gốc" trong bảo vệ Tổ quốc (1,0 điểm):\n- Trong lịch sử: Trần Hưng Đạo từng căn dặn "Khoan thư sức dân để làm kế sâu rễ bền gốc, đó là thượng sách giữ nước". Nguyễn Trãi đúc kết: "Chở thuyền là dân, lật thuyền cũng là dân". Bác Hồ khẳng định: "Dễ trăm lần không dân cũng chịu, khó vạn lần dân liệu cũng xong".\n- Sức mạnh đại đoàn kết toàn dân tộc là cội nguồn của mọi thắng lợi chống giặc ngoại xâm. Khi ý Đảng hợp lòng dân thì muôn người như một, tạo nên bức tường thành bảo vệ vững chắc non sông.\nb) Liên hệ trách nhiệm bản thân học sinh THCS hiện nay (1,0 điểm):\n- Về học tập và rèn luyện: Chăm chỉ học tập, rèn luyện đạo đức, trau dồi tri thức khoa học và hiểu biết sâu sắc về lịch sử dân tộc (0,35đ).\n- Về ý thức chủ quyền: Luôn ghi nhớ và bảo vệ chủ quyền thiêng liêng đối với hai quần đảo Hoàng Sa và Trường Sa; Tuân thủ pháp luật, không chia sẻ thông tin sai lệch về lịch sử và chủ quyền quốc gia trên mạng xã hội (0,35đ).\n- Về hành động cụ thể: Tích cực tham gia các phong trào đền ơn đáp nghĩa, yêu chuộng hòa bình, sẵn sàng cống hiến sức trẻ xây dựng và bảo vệ Tổ quốc Việt Nam giàu đẹp (0,30đ).',
+              point: '2,00 điểm'
             }
           ]
         }
