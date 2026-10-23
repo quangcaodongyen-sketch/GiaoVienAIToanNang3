@@ -1,0 +1,12 @@
+{
+  "appId": "taode-dia-thcs",
+  "appName": "Tạo Đề Kiểm Tra Địa Lí THCS Kết Nối Tri Thức (CV 7991)",
+  "currentVersion": "3.5.0",
+  "latestVersion": "3.5.0",
+  "releaseDate": "23/10/2026 (17:15)",
+  "changelog": "• [23/10/2026 - v3.5.0 PRO CHUẨN PHỤ LỤC 3 & PPCT] Cập nhật toàn diện đồng bộ theo chuẩn Bộ GD&ĐT (CV 7991) mới nhất:\n• Tự động chọn nội dung bài học theo đúng Phụ lục 3 và Phân phối chương trình (PPCT) chính thức của Bộ GD&ĐT (Lớp 6, 7, 8, 9).\n• Cấu trúc 45 phút chuẩn 10,0 điểm: Phần I: 12 câu TN 4 lựa chọn (3,0đ); Phần II: 3 câu TN Đúng - Sai (3,0đ, 12 ý lệnh hỏi); Phần III: 2 câu TN trả lời ngắn (1,0đ); Phần IV: 2 câu Tự luận (3,0đ: Thông hiểu 2,0đ, Vận dụng 1,0đ).\n• Tự động xuất file Word (.docx) bản Giáo viên (kèm Ma trận 16 cột 3 tầng, Bản đặc tả 8 cột có dòng Tổng, Đáp án đỏ) và Bản Học sinh sạch 100% kèm bảng điểm sư phạm.\n• Bộ cài đặt duy nhất All-in-One Cai_Dat_TaoDe_DIA_THCS.exe tự động tích hợp Tab Ribbon Word và Shortcut Desktop.",
+  "downloadUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  "zipUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  "websiteUrl": "https://dekiemtraso.com/",
+  "author": "Tác giả: Thầy giáo Đinh Văn Thành (Tel/zalo: 0915.213717) - Trường THCS ........"
+}

@@ -67,6 +67,10 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
     exe: 'https://drive.google.com/file/d/1RKZ3KQrO5wM0cBL2iGnOQ4M6e1lYseod/view?usp=sharing',
     zip: 'https://drive.google.com/file/d/1R22KTK7x1JIbGi_X9KNwBgErL3qitthk/view?usp=sharing'
   },
+  'tao-de-dia-li-thcs': {
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
+  },
   'tao-de-tin-thcs': {
     exe: 'https://drive.google.com/file/d/1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86/view?usp=sharing',
     zip: 'https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing'

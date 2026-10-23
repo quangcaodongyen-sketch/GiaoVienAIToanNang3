@@ -1200,6 +1200,234 @@ export function getTHCS8MonExamSuite(
         }
       };
 
+    case 'DIALI':
+    case 'DIA':
+      return {
+        subjectId: 'DIALI',
+        subjectName: 'Địa lí',
+        grade,
+        termCode,
+        termTitle,
+        examCode,
+        timeMinutes: 45,
+        schoolYear,
+        parentAgency,
+        schoolName,
+        parts: [
+          {
+            title: 'PHẦN I. CÂU HỎI TRẮC NGHIỆM NHIỀU LỰA CHỌN',
+            points: '3,0 điểm',
+            instruction: 'Khoanh tròn vào một chữ cái A, B, C hoặc D đứng trước phương án trả lời đúng (12 câu, mỗi câu 0,25 điểm):',
+            questions: [
+              {
+                num: 1,
+                content: 'Dân tộc nào sau đây phân bố chủ yếu ở khu vực Trung du và miền núi Bắc Bộ?',
+                options: ['A. Dân tộc Kinh', 'B. Dân tộc H Mông', 'C. Dân tộc Chăm', 'D. Dân tộc Khơ-me'],
+                correctKey: 'B'
+              },
+              {
+                num: 2,
+                content: 'Tính đến nay, quy mô dân số nước ta đứng thứ mấy trong khu vực Đông Nam Á?',
+                options: ['A. Thứ 1', 'B. Thứ 3', 'C. Thứ 5', 'D. Thứ 7'],
+                correctKey: 'B'
+              },
+              {
+                num: 3,
+                content: 'Vùng có mật độ dân số cao nhất nước ta hiện nay là vùng nào sau đây?',
+                options: ['A. Đồng bằng sông Hồng', 'B. Đồng bằng sông Cửu Long', 'C. Duyên hải miền Trung', 'D. Tây Nguyên'],
+                correctKey: 'A'
+              },
+              {
+                num: 4,
+                content: 'Đặc điểm nổi bật của nguồn lao động nước ta hiện nay là:',
+                options: ['A. Dồi dào, cần cù, sáng tạo nhưng thiếu lao động kỹ thuật cao', 'B. Tỉ lệ qua đào tạo đã chiếm tuyệt đại đa số', 'C. Phân bố rất đồng đều giữa các vùng miền', 'D. Tốc độ tăng lao động vượt xa tốc độ tăng dân số'],
+                correctKey: 'A'
+              },
+              {
+                num: 5,
+                content: 'Cây công nghiệp lâu năm quan trọng hàng đầu ở vùng Tây Nguyên nước ta là:',
+                options: ['A. Cây cao su', 'B. Cây cà phê', 'C. Cây hồ tiêu', 'D. Cây chè'],
+                correctKey: 'B'
+              },
+              {
+                num: 6,
+                content: 'Ngành thủy sản nước ta bao gồm hai lĩnh vực chính là:',
+                options: ['A. Khai thác và chế biến', 'B. Đánh bắt và nuôi trồng', 'C. Đánh bắt và xuất khẩu', 'D. Nuôi trồng và dịch vụ'],
+                correctKey: 'B'
+              },
+              {
+                num: 7,
+                content: 'Khoáng sản nhiên liệu có trữ lượng lớn và vai trò chiến lược ở thềm lục địa phía Nam nước ta là:',
+                options: ['A. Than đá', 'B. Dầu mỏ và khí tự nhiên', 'C. Bô-xít', 'D. Quặng sắt'],
+                correctKey: 'B'
+              },
+              {
+                num: 8,
+                content: 'Đặc điểm nổi bật của khí hậu nhiệt đới ẩm gió mùa ở Việt Nam là:',
+                options: ['A. Nhiệt độ cao quanh năm, mưa đều cả năm', 'B. Nhiệt độ trung bình năm cao, phân hóa thành 2 mùa mưa và khô rõ rệt', 'C. Lạnh quanh năm, lượng mưa thấp', 'D. Không chịu ảnh hưởng của các khối khí gió mùa'],
+                correctKey: 'B'
+              },
+              {
+                num: 9,
+                content: 'Nhóm đất chiếm diện tích lớn nhất trên vùng đồi núi nước ta là:',
+                options: ['A. Đất phù sa ngọt', 'B. Đất feralit trên các loại đá', 'C. Đất mùn thô trên núi cao', 'D. Đất cát pha ven biển'],
+                correctKey: 'B'
+              },
+              {
+                num: 10,
+                content: 'Hai đồng bằng châu thổ lớn nhất cung cấp lương thực chủ yếu cho cả nước là:',
+                options: ['A. Đồng bằng sông Hồng và Đồng bằng sông Cửu Long', 'B. Đồng bằng Thanh Hóa và Đồng bằng Nghệ An', 'C. Đồng bằng sông Cửu Long và Đồng bằng Bình - Trị - Thiên', 'D. Đồng bằng sông Mã và Đồng bằng sông Chu'],
+                correctKey: 'A'
+              },
+              {
+                num: 11,
+                content: 'Căn cứ vào Atlat Địa lí Việt Nam, trung tâm công nghiệp lớn nhất cả nước là:',
+                options: ['A. TP. Hồ Chí Minh', 'B. Hà Nội', 'C. Hải Phòng', 'D. Đà Nẵng'],
+                correctKey: 'A'
+              },
+              {
+                num: 12,
+                content: 'Biển Đông có ý nghĩa chiến lược vô cùng quan trọng đối với nước ta về mặt:',
+                options: ['A. Chỉ về mặt phát triển du lịch biển', 'B. Kinh tế, an ninh quốc phòng và giao thương quốc tế', 'C. Thu hút nguồn vốn viện trợ nhân đạo', 'D. Mở rộng địa giới hành chính đất liền'],
+                correctKey: 'B'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN II. CÂU HỎI TRẮC NGHIỆM ĐÚNG - SAI',
+            points: '3,0 điểm',
+            instruction: 'Thí sinh trả lời từ câu 13 đến câu 15. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng (Đ) hoặc sai (S) (Mỗi ý đúng được 0,25 điểm):',
+            questions: [
+              {
+                num: 'Câu 13 (1,0 điểm)',
+                content: 'Cho đoạn thông tin sau:\n“Nước ta có bờ biển dài trên 3.260 km, vùng đặc quyền kinh tế rộng khoảng 1 triệu km². Biển nước ta giàu tài nguyên sinh vật và khoáng sản, nằm trên các tuyến hàng hải quốc tế huyết mạch kết nối Ấn Độ Dương và Thái Bình Dương.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Nước ta có vùng biển rộng lớn với chiều dài bờ biển hơn 3.260 km.\n' +
+                         'b) Vùng biển nước ta hoàn toàn nghèo nàn về tài nguyên hải sản và khoáng sản đáy biển.\n' +
+                         'c) Vị trí địa lí của biển nước ta có ý nghĩa chiến lược về giao thương hàng hải quốc tế.\n' +
+                         'd) Việc bảo vệ vững chắc chủ quyền biển đảo là nhiệm vụ cấp bách của toàn Đảng, toàn quân và toàn dân.',
+                options: ['a) Đúng', 'b) Sai', 'c) Đúng', 'd) Đúng'],
+                correctKey: 'a-Đ, b-S, c-Đ, d-Đ'
+              },
+              {
+                num: 'Câu 14 (1,0 điểm)',
+                content: 'Cho thông tin về tình hình sản xuất lúa gạo nước ta:\n“Việt Nam là một trong những quốc gia xuất khẩu gạo hàng đầu thế giới. Nhờ áp dụng khoa học kỹ thuật, giống lúa mới năng suất cao và chuyển đổi cơ cấu mùa vụ linh hoạt, sản lượng lúa không ngừng tăng, đảm bảo an ninh lương thực quốc gia.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Sản xuất lúa gạo nước ta đã đáp ứng tốt nhu cầu trong nước và có vị thế xuất khẩu hàng đầu thế giới.\n' +
+                         'b) Năng suất lúa tăng chủ yếu do mở rộng tối đa diện tích đất canh tác lên vùng núi cao.\n' +
+                         'c) Ứng dụng tiến bộ khoa học kỹ thuật và giống lúa mới là nhân tố quyết định nâng cao năng suất và chất lượng lúa.\n' +
+                         'd) Đồng bằng sông Cửu Long và Đồng bằng sông Hồng là hai vựa lúa lớn nhất của cả nước.',
+                options: ['a) Đúng', 'b) Sai', 'c) Đúng', 'd) Đúng'],
+                correctKey: 'a-Đ, b-S, c-Đ, d-Đ'
+              },
+              {
+                num: 'Câu 15 (1,0 điểm)',
+                content: 'Cho thông tin về tài nguyên rừng ở nước ta:\n“Rừng nước ta có vai trò cực kỳ quan trọng đối với việc duy trì cân bằng sinh thái, phòng chống thiên tai (lũ quét, xói mòn đất, sạt lở) và cung cấp lâm sản quý giá cho đời sống và công nghiệp chế biến.”\n\nNhận định tính Đúng/Sai của các mệnh đề sau:\n' +
+                         'a) Rừng đầu nguồn có vai trò xung yếu trong việc giữ đất, điều tiết nguồn nước và hạn chế lũ lụt.\n' +
+                         'b) Nhà nước ta chủ trương khai thác triệt để toàn bộ rừng đặc dụng để phát triển công nghiệp gỗ xuất khẩu.\n' +
+                         'c) Độ che phủ rừng nước ta đang từng bước phục hồi nhờ các chính sách giao khoán và trồng rừng tích cực.\n' +
+                         'd) Việc bảo vệ và phát triển vốn rừng là giải pháp thích ứng bền vững với biến đổi khí hậu.',
+                options: ['a) Đúng', 'b) Sai', 'c) Đúng', 'd) Đúng'],
+                correctKey: 'a-Đ, b-S, c-Đ, d-Đ'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN III. CÂU HỎI TRẮC NGHIỆM TRẢ LỜI NGẮN (ĐIỀN SỐ)',
+            points: '1,0 điểm',
+            instruction: 'Thí sinh tính toán và ghi đáp án ngắn gọn (số hoặc đơn vị) vào ô trả lời (2 câu, mỗi câu 0,5 điểm):',
+            questions: [
+              {
+                num: 'Câu 16',
+                points: '0,5 điểm',
+                content: 'Câu 16 (0,5 điểm). Năm 2023, diện tích tự nhiên của nước ta là 331.345 km², dân số trung bình là 100,3 triệu người. Mật độ dân số nước ta năm 2023 là bao nhiêu người/km²? (Làm tròn đến hàng đơn vị).'
+              },
+              {
+                num: 'Câu 17',
+                points: '0,5 điểm',
+                content: 'Câu 17 (0,5 điểm). Năm 2023, tổng sản lượng lúa cả nước đạt 43,5 triệu tấn, trong đó vụ đông xuân đạt 20,2 triệu tấn. Tỉ trọng sản lượng lúa đông xuân chiếm bao nhiêu phần trăm trong tổng sản lượng lúa cả nước? (Làm tròn đến 1 chữ số thập phân).'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN IV. TỰ LUẬN (3,0 ĐIỂM)',
+            points: '3,0 điểm',
+            questions: [
+              {
+                num: 'Câu 18',
+                points: '2,0 điểm',
+                content: 'Câu 18 (2,0 điểm). Dựa vào kiến thức địa lí đã học, em hãy:\na) Phân tích các nhân tố tự nhiên (địa hình, đất đai, nguồn nước, khí hậu) ảnh hưởng đến sự phát triển và phân bố ngành nông nghiệp ở nước ta (1,0 điểm).\nb) Giải thích tại sao trong những năm gần đây, nước ta lại đẩy mạnh phát triển nông nghiệp hàng hóa ứng dụng công nghệ cao và nông nghiệp hữu cơ? (1,0 điểm).'
+              },
+              {
+                num: 'Câu 19',
+                points: '1,0 điểm',
+                content: 'Câu 19 (1,0 điểm). Là học sinh THCS, em hãy đề xuất 03 giải pháp hành động thiết thực của bản thân và gia đình nhằm góp phần bảo vệ tài nguyên môi trường biển đảo hoặc ứng phó với biến đổi khí hậu tại địa phương.'
+              }
+            ]
+          }
+        ],
+        matrix: {
+          headers: ['Mạch kiến thức Địa lí', 'Chủ đề đơn vị kiến thức (PPCT)', 'Phần I: TN 4 LC (NB)', 'Phần II: Đúng - Sai (TH)', 'Phần III: Trả lời ngắn (VD)', 'Phần IV: Tự luận (VD-VDC)', 'Tổng điểm', 'Tỉ lệ %'],
+          rows: [
+            ['Địa lí Dân cư & Lao động', 'Dân số, dân tộc, phân bố dân cư và việc làm', '4 câu (1,00đ)', '0', 'Câu 16 (0,50đ)', '0', '1,50 điểm', '15,0%'],
+            ['Địa lí Các ngành kinh tế', 'Nông nghiệp, lâm nghiệp, thủy sản và công nghiệp', '5 câu (1,25đ)', 'Câu 14, 15 (2,00đ)', 'Câu 17 (0,50đ)', 'Câu 18 (2,00đ)', '5,75 điểm', '57,5%'],
+            ['Biển đảo & Vấn đề môi trường', 'Vị trí chiến lược Biển Đông, tài nguyên và BĐKH', '3 câu (0,75đ)', 'Câu 13 (1,00đ)', '0', 'Câu 19 (1,00đ)', '2,75 điểm', '27,5%'],
+            ['TỔNG ĐIỂM TOÀN BÀI', 'Chuẩn Công văn 7991/BGDĐT-GDTrH (45 phút)', '3,0 điểm (30%)', '3,0 điểm (30%)', '1,0 điểm (10%)', '3,0 điểm (30%)', '10,0 điểm', '100%']
+          ]
+        },
+        specification: {
+          headers: ['TT', 'Mạch kiến thức', 'Đơn vị kiến thức', 'Mức độ & Yêu cầu cần đạt chuẩn CTGDPT 2018', 'Câu hỏi & Phân bố điểm'],
+          rows: [
+            ['1', 'Địa lí dân cư', 'Dân số và phân bố dân cư', 'Nhận biết đặc điểm phân bố các dân tộc, quy mô dân số; Vận dụng tính mật độ dân số', 'Câu 1, 2, 3, 4 (1,00đ) & Câu 16 (0,50đ)'],
+            ['2', 'Địa lí kinh tế', 'Nông nghiệp và thủy sản', 'Nhận biết cây trồng chủ lực, phân tích nhân tố tự nhiên ảnh hưởng nông nghiệp, tính tỉ trọng sản lượng lúa', 'Câu 5, 6, 7 (0,75đ), Câu 14 (1,00đ), Câu 17 (0,50đ), Câu 18 (2,00đ)'],
+            ['3', 'Địa lí tự nhiên & Môi trường', 'Khí hậu, đất đai và tài nguyên rừng', 'Nhận biết đất feralit, khí hậu nhiệt đới gió mùa; Đánh giá vai trò của rừng phòng hộ đầu nguồn', 'Câu 8, 9, 10, 11 (1,00đ) & Câu 15 (1,00đ)'],
+            ['4', 'Biển đảo Việt Nam', 'Chủ quyền Biển Đông & Bảo vệ tài nguyên', 'Nhận biết vị thế biển; Đọc hiểu tư liệu về biển đảo; Đề xuất giải pháp hành động bảo vệ môi trường biển', 'Câu 12 (0,25đ), Câu 13 (1,00đ) & Câu 19 (1,00đ)']
+          ]
+        },
+        answerGuide: {
+          mcqAnswers: [
+            { q: 1, ans: 'B' }, { q: 2, ans: 'B' }, { q: 3, ans: 'A' }, { q: 4, ans: 'A' },
+            { q: 5, ans: 'B' }, { q: 6, ans: 'B' }, { q: 7, ans: 'B' }, { q: 8, ans: 'B' },
+            { q: 9, ans: 'B' }, { q: 10, ans: 'A' }, { q: 11, ans: 'A' }, { q: 12, ans: 'B' }
+          ],
+          essayGuide: [
+            {
+              question: 'Câu 13 (Đúng - Sai: Vị thế chiến lược vùng biển Việt Nam)',
+              step: 'Thang điểm tính theo chuẩn Bộ GD&ĐT (Đúng mỗi ý 0,25đ):\n- Ý a) Đúng: Đường bờ biển nước ta dài trên 3.260 km, tiếp giáp vùng biển rộng khoảng 1 triệu km².\n- Ý b) Sai: Vùng biển nước ta giàu tài nguyên hải sản (ngư trường lớn) và khoáng sản dầu khí.\n- Ý c) Đúng: Nằm trên tuyến hàng hải huyết mạch Á - Âu, kết nối Ấn Độ Dương và Thái Bình Dương.\n- Ý d) Đúng: Bảo vệ toàn vẹn chủ quyền biển đảo là trách nhiệm thiêng liêng của toàn thể dân tộc.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 14 (Đúng - Sai: Sản xuất lúa gạo nước ta)',
+              step: 'Thang điểm tính theo chuẩn Bộ GD&ĐT (Đúng mỗi ý 0,25đ):\n- Ý a) Đúng: Việt Nam là quốc gia xuất khẩu gạo đứng hàng đầu thế giới.\n- Ý b) Sai: Năng suất tăng do thâm canh, giống lúa mới và khoa học kỹ thuật, không phải mở rộng lên núi cao.\n- Ý c) Đúng: Khoa học công nghệ và bộ giống cải tiến là đòn bẩy nâng cao chất lượng và năng suất.\n- Ý d) Đúng: Đồng bằng sông Cửu Long và Đồng bằng sông Hồng là 2 vựa lúa trọng điểm.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 15 (Đúng - Sai: Tài nguyên rừng và bảo vệ vốn rừng)',
+              step: 'Thang điểm tính theo chuẩn Bộ GD&ĐT (Đúng mỗi ý 0,25đ):\n- Ý a) Đúng: Rừng đầu nguồn điều tiết nước, giữ đất và chống xói mòn lũ quét.\n- Ý b) Sai: Rừng đặc dụng được bảo tồn nghiêm ngặt để giữ nguồn gen và đa dạng sinh học, tuyệt đối không khai thác trắng.\n- Ý c) Đúng: Các chương trình giao đất khoán rừng giúp nâng cao diện tích che phủ.\n- Ý d) Đúng: Trồng rừng và bảo vệ rừng là giải pháp then chốt giảm phát thải và chống biến đổi khí hậu.',
+              point: '1,00 điểm'
+            },
+            {
+              question: 'Câu 16 (Trả lời ngắn: Tính mật độ dân số)',
+              step: 'Công thức: Mật độ dân số = Dân số / Diện tích\n= 100.300.000 người / 331.345 km² ≈ 303 người/km².\nĐáp án: 303 người/km².',
+              point: '0,50 điểm'
+            },
+            {
+              question: 'Câu 17 (Trả lời ngắn: Tính tỉ trọng sản lượng lúa vụ đông xuân)',
+              step: 'Công thức: Tỉ trọng = (Sản lượng lúa đông xuân / Tổng sản lượng lúa) * 100%\n= (20,2 / 43,5) * 100% ≈ 46,4%.\nĐáp án: 46,4%.',
+              point: '0,50 điểm'
+            },
+            {
+              question: 'Câu 18 (Tự luận: Phân tích nhân tố tự nhiên ảnh hưởng nông nghiệp)',
+              step: 'a) Phân tích các nhân tố tự nhiên (1,0 điểm):\n- Địa hình và đất đai: Đồng bằng đất phù sa màu mỡ thuận lợi phát triển lúa nước, hoa màu; Vùng đồi núi đất feralit thích hợp trồng cây công nghiệp lâu năm, cây ăn quả và chăn nuôi gia súc lớn (0,5đ).\n- Khí hậu và nguồn nước: Khí hậu nhiệt đới ẩm gió mùa có mùa đông lạnh ở miền Bắc cho phép trồng cây cận nhiệt và ôn đới, tăng vụ; Mạng lưới sông ngòi dày đặc cung cấp nước tưới dồi dào (0,5đ).\nb) Giải thích đẩy mạnh nông nghiệp công nghệ cao và hữu cơ (1,0 điểm):\n- Nhằm nâng cao giá trị gia tăng, đáp ứng tiêu chuẩn khắt khe của thị trường xuất khẩu và tiêu dùng trong nước (0,5đ).\n- Bảo vệ môi trường sinh thái, duy trì độ phì của đất và thích ứng linh hoạt với biến đổi khí hậu (0,5đ).',
+              point: '2,00 điểm'
+            },
+            {
+              question: 'Câu 19 (Tự luận: Giải pháp học sinh bảo vệ môi trường biển đảo)',
+              step: '03 giải pháp hành động thiết thực của học sinh (1,0 điểm):\n1. Tích cực tham gia các phong trào làm sạch bờ biển, gom rác thải nhựa, không xả rác bừa bãi ra môi trường nước (0,35đ).\n2. Tiết kiệm năng lượng điện, nước tại trường học và gia đình; Tuyên truyền cho người thân sử dụng túi sinh học thay cho túi nilon khó phân hủy (0,35đ).\n3. Tìm hiểu kiến thức về chủ quyền biển đảo, tuyên truyền bạn bè về lòng tự hào và ý thức bảo vệ tài nguyên môi trường quê hương (0,30đ).',
+              point: '1,00 điểm'
+            }
+          ]
+        }
+      };
+
     default:
       return getTHCS8MonExamSuite('TOAN', grade, termCode, examCode);
   }
@@ -1575,7 +1803,8 @@ export function downloadTHCS8MonWordDoc(
     VAN: 'Ngu_Van',
     ENG: 'Tieng_Anh',
     KHTN: 'KHTN',
-    SUDIA: 'Lich_Su_Dia_Li',
+    DIALI: 'Dia_Li',
+  SUDIA: 'Lich_Su_Dia_Li',
     TIN: 'Tin_Hoc',
     GDCD: 'GDCD',
     CN: 'Cong_Nghe'

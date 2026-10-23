@@ -614,6 +614,11 @@ export default function App() {
         setShowTaoDeLichSuTHCSModal(true);
         webSecurityGuard.setActiveApp('tao-de-lichsu-thcs', 'Tạo Đề Lịch Sử THCS (CV 7991)');
       }
+      else if (hash === '#tao-de-diali' || hash === '#tao-de-dia-li-thcs' || hash === '#tao-de-diali-thcs' || hash === '#tao-de-dia') {
+        setThcs8MonSelectedSubject('DIALI');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-dia-li-thcs', 'Tạo Đề Địa Lí THCS (CV 7991)');
+      }
       else if (hash === '#tao-de-tin' || hash === '#tao-de-tin-thcs' || hash === '#tao-de-tinhoc-thcs') {
         setThcs8MonSelectedSubject('TIN');
         setShowTaoDeTHCS8MonModal(true);
@@ -907,6 +912,12 @@ export default function App() {
     if (app.id === 'tao-de-lich-su-thcs' || app.id === 'tao-de-lichsu-thcs' || app.url === '#tao-de-lichsu-thcs' || app.url === '#tao-de-lichsu') {
       e.preventDefault();
       setShowTaoDeLichSuTHCSModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-dia-li-thcs' || app.id === 'tao-de-diali-thcs' || app.url === '#tao-de-dia-li-thcs' || app.url === '#tao-de-diali') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('DIALI');
+      setShowTaoDeTHCS8MonModal(true);
       return;
     }
     if (app.id === 'tao-de-tin-thcs' || app.url === '#tao-de-tin') {

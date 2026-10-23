@@ -182,6 +182,19 @@ export const apps: AppCard[] = [
     order: 7.5
   },
   {
+    id: "tao-de-dia-li-thcs",
+    title: "TẠO ĐỀ ĐỊA LÍ THCS (CV 7991)",
+    description: "Tạo đề Địa lí THCS chuẩn Công văn 7991 (12 TN + 3 Đúng/Sai + 2 Điền số + 2 Tự luận), Ma trận 16 cột 3 tầng, Bản đặc tả 8 cột có dòng Tổng, tự động tạo theo Phụ lục 3 & PPCT SGK Kết nối tri thức.",
+    image: "/taode_diali_thcs.png",
+    url: "#tao-de-dia-li-thcs",
+    category: "ĐỀ THI CẤP THCS (CV 7991)",
+    levelBadge: "THCS",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 7.6
+  },
+  {
     id: "tao-de-gdcd-thcs",
     title: "TẠO ĐỀ GIÁO DỤC CÔNG DÂN THCS (CV 7991)",
     description: "Tạo đề kiểm tra Giáo dục công dân THCS trắc nghiệm và câu hỏi xử lý tình huống thực tế.",

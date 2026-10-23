@@ -357,6 +357,15 @@ export const EXAM_LICHSU_THCS_RESOURCES = {
 };
 
 
+// Cấu hình link tài nguyên Tạo Đề Địa Lí THCS Chuyên Sâu (CV 7991)
+export const EXAM_DIALI_THCS_RESOURCES = {
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  dotmUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  videoDirectUrl: "",
+  videoWatchUrl: ""
+};
+
 // CẤU HÌNH BẢNG GIÁ & CHƯƠNG TRÌNH KHUYẾN MẠI TOÀN HỆ THỐNG
 export const PRICING = {
   // Gói 1 Năm cho từng app

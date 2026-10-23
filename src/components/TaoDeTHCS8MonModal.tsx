@@ -24,7 +24,7 @@ import {
   GraduationCap,
   Crown
 } from 'lucide-react';
-import { BRAND, EXAM_7MON_RESOURCES, EXAM_LICHSU_THCS_RESOURCES } from '../config/brand';
+import { BRAND, EXAM_7MON_RESOURCES, EXAM_LICHSU_THCS_RESOURCES, EXAM_DIALI_THCS_RESOURCES } from '../config/brand';
 import { cloudSyncService } from '../services/cloudSyncService';
 import { webSecurityGuard } from '../services/webSecurityGuard';
 import {
@@ -179,6 +179,24 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     accentColor: 'from-teal-600 to-emerald-600',
     badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
   },
+  DIALI: {
+    key: 'DIALI',
+    name: 'Địa lí',
+    fullName: 'Môn Địa lí THCS',
+    icon: '🌍',
+    size: '76 MB',
+    desc: 'Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả và đề kiểm tra Địa lí 6, 7, 8, 9 chuẩn Công văn 7991 theo Phụ lục 3 & PPCT.',
+    highlights: [
+      'Tự động chọn nội dung bài học chuẩn 100% theo Phụ lục 3 & PPCT Bộ GD&ĐT',
+      'Cấu trúc CV 7991: 12 MCQ (3.0đ) + 3 Đúng/Sai (3.0đ) + 2 Trả lời ngắn (1.0đ) + 2 Tự luận (3.0đ)',
+      'Bám sát SGK Kết nối tri thức với cuộc sống (Lớp 6, 7, 8, 9) - Năm học 2026 - 2027',
+      'Tích hợp Add-in Word Ribbon và xuất song song Bản Giáo viên & Bản Học sinh'
+    ],
+    zipUrl: EXAM_DIALI_THCS_RESOURCES.fullZipUrl,
+    exeUrl: EXAM_DIALI_THCS_RESOURCES.exeUrl,
+    accentColor: 'from-sky-700 to-cyan-800',
+    badgeBg: 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+  },
   LICHSU: {
     key: 'LICHSU',
     name: 'Lịch sử',
@@ -198,7 +216,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
   }
 };
 
-const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'TIN', 'CN'];
+const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'DIALI', 'TIN', 'CN'];
 
 export const SUBJECT_HASH_MAP: Record<string, string> = {
   TOAN: '#tao-de-toan',
@@ -206,6 +224,7 @@ export const SUBJECT_HASH_MAP: Record<string, string> = {
   KHTN: '#tao-de-khtn',
   SUDIA: '#tao-de-sudia',
   LICHSU: '#tao-de-lichsu',
+  DIALI: '#tao-de-diali',
   TIN: '#tao-de-tin',
   GDCD: '#tao-de-gdcd',
   CN: '#tao-de-cn',
