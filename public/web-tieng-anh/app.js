@@ -2577,9 +2577,9 @@ const App = {
             const origAnsIdx = q.answer ? (q.answer.charCodeAt(0) - 65) : 0;
             const correctText = rawOpts[origAnsIdx] || rawOpts[0];
 
-            const shuffledRaw = [...rawOpts].reverse();
+            const shuffledRaw = shuffle(rawOpts);
             const newAnsIdx = shuffledRaw.indexOf(correctText);
-            const newAnsLetter = String.fromCharCode(65 + newAnsIdx);
+            const newAnsLetter = String.fromCharCode(65 + Math.max(0, newAnsIdx));
 
             q.options = shuffledRaw.map((txt, i) => `${String.fromCharCode(65 + i)}. ${txt}`);
             q.answer = newAnsLetter;

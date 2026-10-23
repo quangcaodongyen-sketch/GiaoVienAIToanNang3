@@ -1167,21 +1167,23 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       return { ...q };
     }
 
+    const clean = (s: string) => (s || '').replace(/^[A-E]\.\s*/i, '').trim().toLowerCase();
     const rawCorrect = (q.correct || '').trim();
     const rawLetter = (q.correctLetter || '').trim().toUpperCase();
     const letters = ['A', 'B', 'C', 'D', 'E'];
 
     let correctContent = rawCorrect;
-    if (!correctContent && rawLetter) {
+    if ((!correctContent || letters.includes(correctContent.toUpperCase())) && rawLetter) {
       const idx = letters.indexOf(rawLetter);
       if (idx !== -1 && q.options[idx]) {
         correctContent = q.options[idx];
       }
     }
 
+    const cleanTarget = clean(correctContent);
     const shuffledOptions = shuffleArrayHelper([...q.options]);
-    const newIdx = shuffledOptions.findIndex(o => o.trim().toLowerCase() === correctContent.trim().toLowerCase());
-    const newLetter = newIdx !== -1 ? letters[newIdx] : rawLetter;
+    const newIdx = shuffledOptions.findIndex(o => clean(o) === cleanTarget);
+    const newLetter = newIdx !== -1 ? letters[newIdx] : (rawLetter || 'A');
 
     let newExplanation = q.explanation || '';
     if (newLetter && newExplanation) {

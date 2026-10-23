@@ -457,6 +457,36 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
   const part3Raw = [...shuffledPhonetics.slice(0, 2), ...shuffledLang.slice(0, 10)];
 
   // Xây dựng Part 3 Mã đề 1
+  // Helper sinh câu hỏi trắc nghiệm xáo trộn ngẫu nhiên Fisher-Yates chuẩn sư phạm
+  function buildShuffledQuestion(
+    num: string,
+    stem: string,
+    options: string[],
+    correctAnswer: string,
+    shortAns?: string
+  ): { q: ExamQuestionMcq; ans: string } {
+    const cleanAns = correctAnswer.trim();
+    const rawOpts = options.map(o => o.trim());
+    if (!rawOpts.some(o => o.toLowerCase() === cleanAns.toLowerCase())) {
+      rawOpts.push(cleanAns);
+    }
+    const shuffled = shuffleArray(rawOpts);
+    const idx = shuffled.findIndex(o => o.toLowerCase() === cleanAns.toLowerCase());
+    const letter = String.fromCharCode(65 + Math.max(0, idx));
+    const ansLabel = shortAns || cleanAns;
+    return {
+      q: {
+        num,
+        stem,
+        options: shuffled,
+        correctAnswer: cleanAns,
+        correctLetter: letter
+      },
+      ans: `${letter} (${ansLabel})`
+    };
+  }
+
+  // PART 3: LANGUAGE FOCUS (12 CÂU: C11 - C22)
   const part3Questions1: ExamQuestionMcq[] = [];
   const part3Answers1: string[] = [];
 
@@ -466,201 +496,214 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
     const originalOpts = item[1];
     const correctVal = item[2];
 
-    const shuffledOpts = shuffleArray(originalOpts);
-    part3Questions1.push({
-      num: qNum,
-      stem,
-      options: shuffledOpts,
-      correctAnswer: correctVal
-    });
-
-    const correctIndex = shuffledOpts.indexOf(correctVal);
-    const correctLetter = String.fromCharCode(65 + (correctIndex >= 0 ? correctIndex : 0));
-    part3Answers1.push(`${correctLetter} (${correctVal})`);
+    const res = buildShuffledQuestion(qNum, stem, originalOpts, correctVal);
+    part3Questions1.push(res.q);
+    part3Answers1.push(res.ans);
   });
 
-  // Xây dựng Part 3 Mã đề 2 (Đảo vị trí phương án)
+  // Xây dựng Part 3 Mã đề 2 (Đảo thứ tự câu và hoán vị ngẫu nhiên phương án lựa chọn độc lập)
   const part3Questions2: ExamQuestionMcq[] = [];
   const part3Answers2: string[] = [];
+  const part3RawCode2 = shuffleArray([...part3Raw]);
 
-  part3Questions1.forEach((q) => {
-    const reversedOpts = [...q.options].reverse();
-    part3Questions2.push({
-      num: q.num,
-      stem: q.stem,
-      options: reversedOpts,
-      correctAnswer: q.correctAnswer
-    });
-    const correctIndex = reversedOpts.indexOf(q.correctAnswer || '');
-    const correctLetter = String.fromCharCode(65 + (correctIndex >= 0 ? correctIndex : 0));
-    part3Answers2.push(`${correctLetter} (${q.correctAnswer})`);
+  part3RawCode2.forEach((item, index) => {
+    const qNum = `${11 + index}.`;
+    const stem = item[0];
+    const originalOpts = item[1];
+    const correctVal = item[2];
+
+    const res = buildShuffledQuestion(qNum, stem, originalOpts, correctVal);
+    part3Questions2.push(res.q);
+    part3Answers2.push(res.ans);
   });
 
-  // PART 1 (Listen & Circle A, B, C) - 5 câu
-  const part1Questions1: ExamQuestionMcq[] = [
-    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Travelling abroad", "Playing computer games"], correctAnswer: "School life and daily hobbies" },
-    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the cinema", "At the airport"], correctAnswer: "In the school yard" },
-    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Once a year", "Never"], correctAnswer: "Every weekend" },
-    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "Money", "New toys"], correctAnswer: "Good health and relaxation" },
-    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Friday", "Wednesday"], correctAnswer: "Sunday" }
+  // PART 1 (Listen & Circle A, B, C) - 5 câu (C1 - C5)
+  const rawPart1 = [
+    { stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Travelling abroad", "Playing computer games"], correct: "School life and daily hobbies", short: "School life and daily hobbies" },
+    { stem: "Where does the dialogue take place?", options: ["In the school yard", "At the cinema", "At the airport"], correct: "In the school yard", short: "In the school yard" },
+    { stem: "How often do they take part in this activity?", options: ["Every weekend", "Once a year", "Never"], correct: "Every weekend", short: "Every weekend" },
+    { stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "Money", "New toys"], correct: "Good health and relaxation", short: "Good health and relaxation" },
+    { stem: "They will meet again next ________.", options: ["Sunday", "Friday", "Wednesday"], correct: "Sunday", short: "Sunday" }
   ];
 
-  const part1Questions2: ExamQuestionMcq[] = [
-    { num: "1.", stem: "What is the main topic of the conversation?", options: ["School life and daily hobbies", "Playing computer games", "Travelling abroad"], correctAnswer: "School life and daily hobbies" },
-    { num: "2.", stem: "Where does the dialogue take place?", options: ["In the school yard", "At the airport", "At the cinema"], correctAnswer: "In the school yard" },
-    { num: "3.", stem: "How often do they take part in this activity?", options: ["Every weekend", "Never", "Once a year"], correctAnswer: "Every weekend" },
-    { num: "4.", stem: "What benefit does this activity bring?", options: ["Good health and relaxation", "New toys", "Money"], correctAnswer: "Good health and relaxation" },
-    { num: "5.", stem: "They will meet again next ________.", options: ["Sunday", "Wednesday", "Friday"], correctAnswer: "Sunday" }
+  const part1Questions1: ExamQuestionMcq[] = [];
+  const part1Answers1: string[] = [];
+  rawPart1.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${idx + 1}.`, item.stem, item.options, item.correct, item.short);
+    part1Questions1.push(res.q);
+    part1Answers1.push(res.ans);
+  });
+
+  const part1Questions2: ExamQuestionMcq[] = [];
+  const part1Answers2: string[] = [];
+  rawPart1.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${idx + 1}.`, item.stem, item.options, item.correct, item.short);
+    part1Questions2.push(res.q);
+    part1Answers2.push(res.ans);
+  });
+
+  // PART 2 (Listen True/False) - 5 câu (C6 - C10) - Tuyệt đối giữ cố định A. True, B. False
+  const rawPart2 = [
+    { stem: "The green school campaign started last month.", correct: "A. True" },
+    { stem: "Students planted more than two hundred trees.", correct: "A. True" },
+    { stem: "They threw plastic bottles into the river.", correct: "B. False" },
+    { stem: "Recycling paper helps protect green forests.", correct: "A. True" },
+    { stem: "Joining community service makes students happy.", correct: "A. True" }
   ];
 
-  // PART 2 (Listen True/False) - 5 câu
-  const part2Questions1: ExamQuestionMcq[] = [
-    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"], correctAnswer: "B. False" },
-    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"], correctAnswer: "A. True" }
-  ];
+  const part2Questions1: ExamQuestionMcq[] = rawPart2.map((item, idx) => ({
+    num: `${6 + idx}.`,
+    stem: item.stem,
+    options: ["A. True", "B. False"],
+    correctAnswer: item.correct,
+    correctLetter: item.correct.startsWith("A") ? "A" : "B"
+  }));
+  const part2Answers1 = rawPart2.map(item => item.correct.startsWith("A") ? "A (True)" : "B (False)");
 
-  const part2Questions2: ExamQuestionMcq[] = [
-    { num: "6.", stem: "The green school campaign started last month.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "7.", stem: "Students planted more than two hundred trees.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "8.", stem: "They threw plastic bottles into the river.", options: ["A. True", "B. False"], correctAnswer: "B. False" },
-    { num: "9.", stem: "Recycling paper helps protect green forests.", options: ["A. True", "B. False"], correctAnswer: "A. True" },
-    { num: "10.", stem: "Joining community service makes students happy.", options: ["A. True", "B. False"], correctAnswer: "A. True" }
-  ];
+  const part2Questions2: ExamQuestionMcq[] = rawPart2.map((item, idx) => ({
+    num: `${6 + idx}.`,
+    stem: item.stem,
+    options: ["A. True", "B. False"],
+    correctAnswer: item.correct,
+    correctLetter: item.correct.startsWith("A") ? "A" : "B"
+  }));
+  const part2Answers2 = [...part2Answers1];
 
-  // PART 4 (Cloze reading) - 5 câu
+  // PART 4 (Cloze reading) - 5 câu (C23 - C27)
   const clozePassage = `Education is extremely important for secondary students. Every day, students attend classes to learn new academic subjects and practical (23) ________. Teachers always encourage students to work in teams (24) ________ they can help each other. In addition, students have access to (25) ________ large library with thousands of fascinating books. If students (26) ________ hard every day, they will achieve outstanding results and develop (27) ________.`;
 
-  const part4Questions1: ExamQuestionMcq[] = [
-    { num: "23.", stem: "", options: ["skills", "games", "candies"], correctAnswer: "skills" },
-    { num: "24.", stem: "", options: ["so that", "because of", "although"], correctAnswer: "so that" },
-    { num: "25.", stem: "", options: ["a", "an", "the"], correctAnswer: "a" },
-    { num: "26.", stem: "", options: ["study", "studied", "studying"], correctAnswer: "study" },
-    { num: "27.", stem: "", options: ["positively", "positive", "positivity"], correctAnswer: "positively" }
+  const rawPart4 = [
+    { stem: "", options: ["skills", "games", "candies"], correct: "skills", short: "skills" },
+    { stem: "", options: ["so that", "because of", "although"], correct: "so that", short: "so that" },
+    { stem: "", options: ["a", "an", "the"], correct: "a", short: "a" },
+    { stem: "", options: ["study", "studied", "studying"], correct: "study", short: "study" },
+    { stem: "", options: ["positively", "positive", "positivity"], correct: "positively", short: "positively" }
   ];
 
-  const part4Questions2: ExamQuestionMcq[] = [
-    { num: "23.", stem: "", options: ["games", "skills", "candies"], correctAnswer: "skills" },          // B
-    { num: "24.", stem: "", options: ["although", "because of", "so that"], correctAnswer: "so that" },   // C
-    { num: "25.", stem: "", options: ["an", "a", "the"], correctAnswer: "a" },                            // B
-    { num: "26.", stem: "", options: ["studied", "studying", "study"], correctAnswer: "study" },          // C
-    { num: "27.", stem: "", options: ["positive", "positively", "positivity"], correctAnswer: "positively" } // B
-  ];
+  const part4Questions1: ExamQuestionMcq[] = [];
+  const part4Answers1: string[] = [];
+  rawPart4.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${23 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part4Questions1.push(res.q);
+    part4Answers1.push(res.ans);
+  });
 
-  // PART 5 (Reading comprehension) - 5 câu
+  const part4Questions2: ExamQuestionMcq[] = [];
+  const part4Answers2: string[] = [];
+  rawPart4.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${23 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part4Questions2.push(res.q);
+    part4Answers2.push(res.ans);
+  });
+
+  // PART 5 (Reading comprehension) - 5 câu (C28 - C32)
   const compPassage = `Our secondary school is famous for its friendly atmosphere and high academic standards. The school has bright classrooms, modern computer laboratories, and a spacious green schoolyard. Students participate actively in volunteer clubs, tree planting days, and English speaking contests. Teachers always provide helpful guidance and encourage students to become responsible citizens.`;
 
-  const part5Questions1: ExamQuestionMcq[] = [
-    { num: "28.", stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Racing tracks", "Shopping centres"], correctAnswer: "Friendly atmosphere and high academic standards" },
-    { num: "29.", stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a cafeteria", "Only a swimming pool"], correctAnswer: "Bright classrooms and computer laboratories" },
-    { num: "30.", stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only video games", "Only watching TV"], correctAnswer: "Volunteer clubs and English speaking contests" },
-    { num: "31.", stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Give no homework", "Ignore students"], correctAnswer: "Provide guidance and encouragement" },
-    { num: "32.", stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To make money", "To build cars"], correctAnswer: "To develop responsible citizens" }
+  const rawPart5 = [
+    { stem: "What is our secondary school famous for?", options: ["Friendly atmosphere and high academic standards", "Racing tracks", "Shopping centres"], correct: "Friendly atmosphere and high academic standards", short: "Friendly atmosphere" },
+    { stem: "What facilities does the school have?", options: ["Bright classrooms and computer laboratories", "Only a cafeteria", "Only a swimming pool"], correct: "Bright classrooms and computer laboratories", short: "Bright classrooms" },
+    { stem: "Which activities do students participate in?", options: ["Volunteer clubs and English speaking contests", "Only video games", "Only watching TV"], correct: "Volunteer clubs and English speaking contests", short: "Volunteer clubs" },
+    { stem: "How do teachers help students?", options: ["Provide guidance and encouragement", "Give no homework", "Ignore students"], correct: "Provide guidance and encouragement", short: "Provide guidance" },
+    { stem: "What is the school's overall goal?", options: ["To develop responsible citizens", "To make money", "To build cars"], correct: "To develop responsible citizens", short: "To develop responsible" }
   ];
 
-  const part5Questions2: ExamQuestionMcq[] = [
-    { num: "28.", stem: "What facilities does the school have?", options: ["Only a cafeteria", "Bright classrooms and computer laboratories", "Only a swimming pool"], correctAnswer: "Bright classrooms and computer laboratories" }, // B
-    { num: "29.", stem: "What is our secondary school famous for?", options: ["Racing tracks", "Shopping centres", "Friendly atmosphere and high academic standards"], correctAnswer: "Friendly atmosphere and high academic standards" }, // C
-    { num: "30.", stem: "How do teachers help students?", options: ["Ignore students", "Provide guidance and encouragement", "Give no homework"], correctAnswer: "Provide guidance and encouragement" }, // B
-    { num: "31.", stem: "Which activities do students participate in?", options: ["Only watching TV", "Only video games", "Volunteer clubs and English speaking contests"], correctAnswer: "Volunteer clubs and English speaking contests" }, // C
-    { num: "32.", stem: "What is the school's overall goal?", options: ["To make money", "To develop responsible citizens", "To build cars"], correctAnswer: "To develop responsible citizens" } // B
-  ];
+  const part5Questions1: ExamQuestionMcq[] = [];
+  const part5Answers1: string[] = [];
+  rawPart5.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${28 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part5Questions1.push(res.q);
+    part5Answers1.push(res.ans);
+  });
 
-  // PART 6 (Transformation) - 2 câu
-  const part6Questions1: ExamQuestionMcq[] = [
+  // Mã đề 2: Hoán vị ngẫu nhiên cả thứ tự câu lẫn phương án lựa chọn
+  const rawPart5Code2 = shuffleArray([...rawPart5]);
+  const part5Questions2: ExamQuestionMcq[] = [];
+  const part5Answers2: string[] = [];
+  rawPart5Code2.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${28 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part5Questions2.push(res.q);
+    part5Answers2.push(res.ans);
+  });
+
+  // PART 6 (Transformation) - 2 câu (C33 - C34)
+  const rawPart6 = [
     {
-      num: "33.",
       stem: "Because it rained heavily, we stayed at home.",
       options: [
         "It rained heavily, so we stayed at home.",
         "Although it rained heavily, we went out.",
         "We stayed at home because so it rained."
       ],
-      correctAnswer: "It rained heavily, so we stayed at home."
+      correct: "It rained heavily, so we stayed at home.",
+      short: "It rained heavily, so we..."
     },
     {
-      num: "34.",
       stem: "My brother likes playing badminton very much.",
       options: [
         "My brother is interested in playing badminton.",
         "My brother hates playing badminton.",
         "My brother enjoys to play badminton."
       ],
-      correctAnswer: "My brother is interested in playing badminton."
+      correct: "My brother is interested in playing badminton.",
+      short: "My brother is interested in..."
     }
   ];
 
-  const part6Questions2: ExamQuestionMcq[] = [
-    {
-      num: "33.",
-      stem: "Because the weather was cold, we wore warm jackets.",
-      options: [
-        "Although the weather was cold, we wore T-shirts.",
-        "We wore warm jackets because so it was cold.",
-        "The weather was cold, so we wore warm jackets."
-      ],
-      correctAnswer: "The weather was cold, so we wore warm jackets." // C
-    },
-    {
-      num: "34.",
-      stem: "My sister enjoys collecting stamps in her spare time.",
-      options: [
-        "My sister dislikes collecting stamps in her spare time.",
-        "My sister is fond of collecting stamps in her spare time.",
-        "My sister hates stamps in her spare time."
-      ],
-      correctAnswer: "My sister is fond of collecting stamps in her spare time." // B
-    }
-  ];
+  const part6Questions1: ExamQuestionMcq[] = [];
+  const part6Answers1: string[] = [];
+  rawPart6.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${33 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part6Questions1.push(res.q);
+    part6Answers1.push(res.ans);
+  });
 
-  // PART 7 (Word order) - 2 câu
-  const part7Questions1: ExamQuestionMcq[] = [
+  const part6Questions2: ExamQuestionMcq[] = [];
+  const part6Answers2: string[] = [];
+  rawPart6.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${33 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part6Questions2.push(res.q);
+    part6Answers2.push(res.ans);
+  });
+
+  // PART 7 (Word order) - 2 câu (C35 - C36)
+  const rawPart7 = [
     {
-      num: "35.",
       stem: "eating / healthy / good / for / is / food / health.",
       options: [
         "Eating healthy food is good for health.",
         "Health is good for eating healthy food.",
         "Good for health is eating healthy food."
       ],
-      correctAnswer: "Eating healthy food is good for health."
+      correct: "Eating healthy food is good for health.",
+      short: "Eating healthy food..."
     },
     {
-      num: "36.",
       stem: "learning / helps / knowledge / English / us / broaden / our.",
       options: [
         "Learning English helps us broaden our knowledge.",
         "Our knowledge helps us broaden learning English.",
         "Broaden our knowledge helps learning English us."
       ],
-      correctAnswer: "Learning English helps us broaden our knowledge."
+      correct: "Learning English helps us broaden our knowledge.",
+      short: "Learning English helps..."
     }
   ];
 
-  const part7Questions2: ExamQuestionMcq[] = [
-    {
-      num: "35.",
-      stem: "doing / exercise / helps / stay / us / shape / in.",
-      options: [
-        "Shape in us stay helps doing exercise.",
-        "Doing exercise helps us stay in shape.",
-        "Us stay in shape helps doing exercise."
-      ],
-      correctAnswer: "Doing exercise helps us stay in shape." // B
-    },
-    {
-      num: "36.",
-      stem: "protecting / is / the / environment / duty / of / everyone.",
-      options: [
-        "Everyone of duty is the environment protecting.",
-        "The duty is protecting environment of everyone.",
-        "Protecting the environment is the duty of everyone."
-      ],
-      correctAnswer: "Protecting the environment is the duty of everyone." // C
-    }
-  ];
+  const part7Questions1: ExamQuestionMcq[] = [];
+  const part7Answers1: string[] = [];
+  rawPart7.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${35 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part7Questions1.push(res.q);
+    part7Answers1.push(res.ans);
+  });
+
+  const part7Questions2: ExamQuestionMcq[] = [];
+  const part7Answers2: string[] = [];
+  rawPart7.forEach((item, idx) => {
+    const res = buildShuffledQuestion(`${35 + idx}.`, item.stem, item.options, item.correct, item.short);
+    part7Questions2.push(res.q);
+    part7Answers2.push(res.ans);
+  });
 
   // PART 8 (Writing)
   const writingPrompt = `Write a paragraph (80-100 words) about a meaningful activity you participated in at school. You can use these cues:`;
@@ -678,27 +721,27 @@ export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
 
   const audioMonologue = `Community activities play a significant role in developing good moral character among secondary students. Last month, more than two hundred student volunteers took part in a green campaign. They planted trees along the main roads, cleaned up public parks, and collected used books for underprivileged children. These practical deeds inspire everyone to build a cleaner, greener, and happier hometown.`;
 
-  // BẢNG ĐÁP ÁN 4 CỘT (19 HÀNG)
+  // BẢNG ĐÁP ÁN 4 CỘT (18 HÀNG X 2 CỘT = 36 CÂU TRẮC NGHIỆM ĐƯỢC TÍNH TOÁN ĐỘNG CHÍNH XÁC 100%)
   const answerRows: ExamSuiteData['answerRows'] = [];
 
   const allAnsCode1: string[] = [
-    "A", "A", "A", "A", "A",
-    "A (True)", "A (True)", "B (False)", "A (True)", "A (True)",
+    ...part1Answers1,
+    ...part2Answers1,
     ...part3Answers1,
-    "A (skills)", "A (so that)", "A (a)", "A (study)", "A (positively)",
-    "A (Friendly atmosphere)", "A (Bright classrooms)", "A (Volunteer clubs)", "A (Provide guidance)", "A (To develop responsible)",
-    "A", "A",
-    "A", "A"
+    ...part4Answers1,
+    ...part5Answers1,
+    ...part6Answers1,
+    ...part7Answers1
   ];
 
   const allAnsCode2: string[] = [
-    "B", "C", "B", "C", "B",
-    "A (True)", "A (True)", "B (False)", "A (True)", "A (True)",
+    ...part1Answers2,
+    ...part2Answers2,
     ...part3Answers2,
-    "B (skills)", "C (so that)", "B (a)", "C (study)", "B (positively)",
-    "B (Bright classrooms)", "C (Friendly atmosphere)", "B (Provide guidance)", "C (Volunteer clubs)", "B (To develop responsible)",
-    "C (The weather was cold...)", "B (My sister is fond of...)",
-    "B (Doing exercise helps...)", "C (Protecting the environment...)"
+    ...part4Answers2,
+    ...part5Answers2,
+    ...part6Answers2,
+    ...part7Answers2
   ];
 
   const answerRowsCode2: ExamSuiteData['answerRows'] = [];
@@ -867,7 +910,10 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
           html += `<div style="margin-left: 16pt; margin-bottom: 2pt; font-size: 12pt;">`;
           q.options.forEach((opt, idx) => {
             const letter = String.fromCharCode(65 + idx);
-            const isCorrect = q.correctAnswer && (opt.trim() === q.correctAnswer.trim() || opt.startsWith(q.correctAnswer) || opt.includes(q.correctAnswer));
+            const isCorrect = Boolean(q.correctAnswer && (
+              opt.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase() || 
+              opt.toLowerCase().includes(q.correctAnswer.trim().toLowerCase())
+            ));
             const fullOpt = opt.startsWith(letter + '.') ? opt : `${letter}. ${opt}`;
             const cleanOpt = opt.startsWith(letter + '.') ? opt.slice(2).trim() : opt;
             html += `<span style="margin-right: 22pt;">${isCorrect ? `<b style="color: #FF0000;">${fullOpt}</b>` : `<b>${letter}. </b>${cleanOpt}`}</span>`;

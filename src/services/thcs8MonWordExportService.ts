@@ -379,20 +379,20 @@ export function getTHCS8MonExamSuite(
               {
                 num: 2,
                 content: 'Where are the students planning to plant new trees?',
-                options: ['A. In the botanical garden', 'B. Behind the school gym', 'C. In the central park', 'D. Around the playground'],
-                correctKey: 'B'
+                options: ['A. Behind the school gym', 'B. In the botanical garden', 'C. In the central park', 'D. Around the playground'],
+                correctKey: 'A'
               },
               {
                 num: 3,
                 content: 'How many members joined the voluntary project last week?',
-                options: ['A. 15 members', 'B. 25 members', 'C. 35 members', 'D. 50 members'],
-                correctKey: 'B'
+                options: ['A. 15 members', 'B. 35 members', 'C. 25 members', 'D. 50 members'],
+                correctKey: 'C'
               },
               {
                 num: 4,
                 content: 'What should students bring with them to the workshop?',
-                options: ['A. Notebooks and pens', 'B. Reusable water bottles', 'C. Old plastic bags', 'D. Laptops'],
-                correctKey: 'B'
+                options: ['A. Notebooks and pens', 'B. Old plastic bags', 'C. Laptops', 'D. Reusable water bottles'],
+                correctKey: 'D'
               }
             ]
           },
@@ -522,7 +522,7 @@ export function getTHCS8MonExamSuite(
         },
         answerGuide: {
           mcqAnswers: [
-            { q: 1, ans: 'B' }, { q: 2, ans: 'B' }, { q: 3, ans: 'B' }, { q: 4, ans: 'B' },
+            { q: 1, ans: 'B' }, { q: 2, ans: 'A' }, { q: 3, ans: 'C' }, { q: 4, ans: 'D' },
             { q: 5, ans: 'C' }, { q: 6, ans: 'C' }, { q: 7, ans: 'A' }, { q: 8, ans: 'C' },
             { q: 9, ans: 'B' }, { q: 10, ans: 'D' }, { q: 11, ans: 'A' }, { q: 12, ans: 'B' }
           ],
