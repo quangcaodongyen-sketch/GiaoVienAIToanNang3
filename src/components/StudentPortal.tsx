@@ -33,7 +33,7 @@ import { StudentClassComparison } from './StudentClassComparison';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { removeDiacritics } from '../services/appMatcher';
-import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus } from 'lucide-react';
+import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
@@ -259,14 +259,12 @@ export const StudentPortal: React.FC = () => {
       return;
     }
 
-    // Kiểm tra mật khẩu (hỗ trợ cả khớp chính xác, không phân biệt hoa thường dự phòng cho điện thoại, hoặc mật khẩu chung)
+    // Kiểm tra mật khẩu (khớp chính xác mật khẩu học sinh, hoặc mật khẩu Admin của Thầy Thành để hỗ trợ học sinh)
     const storedPass = (found.password || '').trim();
     const isPassCorrect = 
-      !storedPass || 
-      storedPass === inputPass || 
-      storedPass.toLowerCase() === inputPass.toLowerCase() ||
-      inputPass === 'Tienganh123@' ||
-      inputPass === '12345';
+      (storedPass && (storedPass === inputPass || storedPass.toLowerCase() === inputPass.toLowerCase())) ||
+      inputPass === 'Thaythanh2026@' ||
+      inputPass.toLowerCase() === 'thaythanh2026@';
 
     if (!isPassCorrect) {
       setLoginError('Mật khẩu không chính xác! Vui lòng nhập lại hoặc bấm "Quên MK?" bên dưới.');
@@ -466,22 +464,29 @@ export const StudentPortal: React.FC = () => {
   const [docList, setDocList] = useState<StorageFileItem[]>([]);
   const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(() => systemMaintenanceService.isSessionAuthenticated());
   const [showAdminLoginModal, setShowAdminLoginModal] = useState<boolean>(false);
+  const [adminInputUser, setAdminInputUser] = useState<string>('Admin');
   const [adminInputPass, setAdminInputPass] = useState<string>('');
   const [adminLoginError, setAdminLoginError] = useState<string>('');
   const [isUploadingDoc, setIsUploadingDoc] = useState<boolean>(false);
 
   // Quản lý & Xóa Tài khoản Học sinh (Quyền Admin)
   const [showAdminStudentModal, setShowAdminStudentModal] = useState<boolean>(false);
+  const [showStudentPasswords, setShowStudentPasswords] = useState<boolean>(false);
   const [adminStudentSearchQuery, setAdminStudentSearchQuery] = useState<string>('');
   const [adminStudentFilterClass, setAdminStudentFilterClass] = useState<string>('ALL');
   const [adminStudentList, setAdminStudentList] = useState<StudentProfile[]>(() => studentGradebookService.getStudents());
   const [isSyncingAdminStudents, setIsSyncingAdminStudents] = useState<boolean>(false);
 
   const handleOpenAdminStudentManager = async () => {
-    if (!isAdminUnlocked) {
+    if (!systemMaintenanceService.isSessionAuthenticated()) {
+      setIsAdminUnlocked(false);
+      setAdminInputUser('Admin');
+      setAdminInputPass('');
+      setAdminLoginError('');
       setShowAdminLoginModal(true);
       return;
     }
+    setIsAdminUnlocked(true);
     setIsSyncingAdminStudents(true);
     try {
       const refreshed = await studentGradebookService.syncFromCloud();
@@ -491,7 +496,24 @@ export const StudentPortal: React.FC = () => {
     setShowAdminStudentModal(true);
   };
 
+  const handleAdminLogout = () => {
+    if (window.confirm('Thầy/Cô có chắc chắn muốn đăng xuất quyền Quản trị viên (Admin) không?')) {
+      systemMaintenanceService.logoutAdminSession();
+      setIsAdminUnlocked(false);
+      setShowAdminStudentModal(false);
+      setAdminInputPass('');
+      setAdminLoginError('');
+      alert('Đã đăng xuất quyền Quản trị viên Admin thành công! Mọi tài khoản học sinh đã được bảo vệ.');
+    }
+  };
+
   const handleAdminDeleteStudent = async (student: StudentProfile) => {
+    if (!isAdminUnlocked && !systemMaintenanceService.isSessionAuthenticated()) {
+      alert('⚠️ Bạn không có quyền Admin để thực hiện thao tác này! Vui lòng đăng nhập tài khoản Admin.');
+      setShowAdminLoginModal(true);
+      return;
+    }
+
     const confirmText = `Thầy/Cô có CHẮC CHẮN muốn XÓA VĨNH VIỄN tài khoản của học sinh này không?\n\n` +
       `👤 Họ và tên: ${student.name}\n` +
       `🏫 Lớp: ${student.className}\n` +
@@ -501,7 +523,11 @@ export const StudentPortal: React.FC = () => {
     if (!window.confirm(confirmText)) return;
 
     try {
-      studentGradebookService.deleteStudent(student.id, true);
+      const ok = studentGradebookService.deleteStudent(student.id, true);
+      if (!ok) {
+        alert('⚠️ Thao tác xóa bị từ chối do thiếu quyền Admin hợp lệ!');
+        return;
+      }
       await studentGradebookService.syncToCloud();
       setAdminStudentList(studentGradebookService.getStudents());
       if (currentStudent && currentStudent.id === student.id) {
@@ -547,7 +573,7 @@ export const StudentPortal: React.FC = () => {
 
   const handleAdminVerify = (e: React.FormEvent) => {
     e.preventDefault();
-    if (systemMaintenanceService.verifyAdminPassword(adminInputPass)) {
+    if (systemMaintenanceService.verifyAdminCredentials(adminInputUser, adminInputPass)) {
       systemMaintenanceService.saveAdminSession();
       setIsAdminUnlocked(true);
       setShowAdminLoginModal(false);
@@ -557,9 +583,9 @@ export const StudentPortal: React.FC = () => {
         setAdminStudentList(stus);
       }).catch(() => {});
       setShowAdminStudentModal(true);
-      alert('Đăng nhập Quản trị viên thành công! Thầy/Cô có toàn quyền Quản lý & Xóa tài khoản học sinh, Tải lên và Xóa tài liệu.');
+      alert('🎉 Đăng nhập Quản trị viên (Admin) thành công! Thầy/Cô có toàn quyền Quản lý & Xóa tài khoản học sinh, Tải lên và Xóa tài liệu.');
     } else {
-      setAdminLoginError('Mật khẩu Admin không chính xác! Mật khẩu chuẩn: Tienganh123@');
+      setAdminLoginError('Tên đăng nhập hoặc Mật khẩu Quản trị không chính xác! Vui lòng kiểm tra lại.');
     }
   };
 
@@ -715,15 +741,38 @@ export const StudentPortal: React.FC = () => {
                   <span className="hidden sm:inline">Đăng Xuất</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleOpenAdminStudentManager}
-                  className="p-2 rounded-xl bg-purple-500/80 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
-                  title="Quản lý & Xóa tài khoản học sinh (Quyền Admin)"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Admin</span>
-                </button>
+                {isAdminUnlocked ? (
+                  <div className="flex items-center gap-1.5 ml-2">
+                    <button
+                      type="button"
+                      onClick={handleOpenAdminStudentManager}
+                      className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
+                      title="Mở bảng Quản lý & Xóa tài khoản học sinh (Quyền Admin)"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+                      <span className="hidden sm:inline">Quản Lý TK HS</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAdminLogout}
+                      className="p-2 sm:px-2 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm border border-slate-700"
+                      title="Đăng xuất quyền Admin"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Thoát Admin</span>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleOpenAdminStudentManager}
+                    className="p-2 rounded-xl bg-slate-800/80 hover:bg-purple-600 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm border border-slate-700 hover:border-purple-400"
+                    title="Đăng nhập Quản trị viên (Admin)"
+                  >
+                    <Lock className="w-3.5 h-3.5 text-amber-300" />
+                    <span className="hidden sm:inline">Admin</span>
+                  </button>
+                )}
               </>
             ) : (
               <div className="flex items-center gap-2.5">
@@ -744,15 +793,38 @@ export const StudentPortal: React.FC = () => {
                   <span>Đăng Ký / Đăng Nhập (Quên MK)</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleOpenAdminStudentManager}
-                  className="p-2 sm:px-3 sm:py-2 rounded-xl bg-purple-500/80 hover:bg-purple-600 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm border border-purple-400/30"
-                  title="Quản trị & Xóa tài khoản học sinh (Dành cho Admin/Giáo viên)"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-purple-200" />
-                  <span className="hidden sm:inline">Admin Quản Lý TK</span>
-                </button>
+                {isAdminUnlocked ? (
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleOpenAdminStudentManager}
+                      className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm border border-purple-400/40"
+                      title="Quản lý & Xóa tài khoản học sinh (Quyền Admin)"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+                      <span className="hidden sm:inline">Quản Lý TK HS</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAdminLogout}
+                      className="p-2 sm:px-2 rounded-xl bg-slate-800/90 hover:bg-rose-600 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm border border-slate-700"
+                      title="Đăng xuất quyền Admin"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Thoát Admin</span>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleOpenAdminStudentManager}
+                    className="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-800/80 hover:bg-purple-600 text-slate-300 hover:text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm border border-slate-700 hover:border-purple-400"
+                    title="Đăng nhập Quản trị viên (Admin - Thầy Đinh Thành) để quản lý tài khoản học sinh"
+                  >
+                    <Lock className="w-3.5 h-3.5 text-amber-300" />
+                    <span className="hidden sm:inline">Quản Trị Admin</span>
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -1302,8 +1374,8 @@ export const StudentPortal: React.FC = () => {
             <div className="flex items-center gap-2">
               {isAdminUnlocked ? (
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 text-xs font-bold">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800 text-xs font-bold">
+                    <ShieldCheck className="w-4 h-4 text-purple-600" />
                     <span>Quyền Admin</span>
                   </span>
 
@@ -1327,14 +1399,25 @@ export const StudentPortal: React.FC = () => {
                       disabled={isUploadingDoc}
                     />
                   </label>
+
+                  <button
+                    type="button"
+                    onClick={handleAdminLogout}
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-700 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 text-xs font-bold border border-slate-300 dark:border-slate-700 transition flex items-center gap-1 cursor-pointer"
+                    title="Đăng xuất quyền Admin"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Thoát Admin</span>
+                  </button>
                 </div>
               ) : (
                 <button
                   type="button"
-                  onClick={() => setShowAdminLoginModal(true)}
-                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 cursor-pointer"
+                  onClick={handleOpenAdminStudentManager}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-50 dark:bg-slate-800 dark:hover:bg-purple-950/40 text-slate-700 hover:text-purple-700 dark:text-slate-300 dark:hover:text-purple-300 text-xs font-bold transition flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 cursor-pointer"
+                  title="Đăng nhập Quản trị viên (Admin - Thầy Đinh Thành) để quản lý tài khoản học sinh"
                 >
-                  <Lock className="w-3.5 h-3.5 text-slate-500" />
+                  <Lock className="w-3.5 h-3.5 text-amber-500" />
                   <span>Quản Trị Admin</span>
                 </button>
               )}
@@ -1425,43 +1508,62 @@ export const StudentPortal: React.FC = () => {
             ))}
           </div>
 
-          {/* Modal Đăng Nhập Quyền Admin Để Đưa/Xóa Tài Liệu */}
+          {/* Modal Đăng Nhập Quyền Admin (Tên: Admin, MK: Thaythanh2026@) */}
           {showAdminLoginModal && (
-            <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative">
+            <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
+              <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative animate-in zoom-in-95 duration-150">
                 <button
                   onClick={() => setShowAdminLoginModal(false)}
-                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>
 
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
-                    <Lock className="w-5 h-5" />
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-11 h-11 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold shadow-md shadow-purple-500/20">
+                    <ShieldCheck className="w-6 h-6 text-amber-300" />
                   </div>
                   <div>
-                    <h4 className="text-base font-black text-slate-900 dark:text-white">Xác Thực Quyền Admin</h4>
-                    <p className="text-xs text-slate-500">Dành cho Giáo viên & Quản trị viên đưa/xóa tài liệu</p>
+                    <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                      Đăng Nhập Quản Trị Viên (Admin)
+                    </h4>
+                    <p className="text-xs text-slate-500">
+                      Chỉ dành cho Tác giả Thầy Đinh Thành ({BRAND.phone})
+                    </p>
                   </div>
                 </div>
 
                 <form onSubmit={handleAdminVerify} className="space-y-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                      Mật khẩu Quản trị Admin:
+                      Tên đăng nhập Admin:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={adminInputUser}
+                      onChange={(e) => setAdminInputUser(e.target.value)}
+                      placeholder="Nhập tên đăng nhập (Admin)..."
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 outline-hidden font-bold"
+                      autoFocus
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      Mật khẩu Quản trị:
                     </label>
                     <input
                       type="password"
+                      required
                       value={adminInputPass}
                       onChange={(e) => setAdminInputPass(e.target.value)}
                       placeholder="Nhập mật khẩu Admin..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                      autoFocus
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 outline-hidden font-mono"
                     />
                     {adminLoginError && (
-                      <p className="mt-1.5 text-xs text-rose-500 font-medium flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5" />
+                      <p className="mt-2 text-xs text-rose-500 font-bold flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/40 p-2.5 rounded-xl border border-rose-200 dark:border-rose-900/60">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
                         <span>{adminLoginError}</span>
                       </p>
                     )}
@@ -1471,15 +1573,16 @@ export const StudentPortal: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setShowAdminLoginModal(false)}
-                      className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                     >
                       Hủy bỏ
                     </button>
                     <button
                       type="submit"
-                      className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black shadow-xs transition cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-black shadow-md transition cursor-pointer flex items-center gap-1.5"
                     >
-                      Xác Nhận Quyền Admin
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>Đăng Nhập Quản Trị</span>
                     </button>
                   </div>
                 </form>
@@ -1860,12 +1963,16 @@ export const StudentPortal: React.FC = () => {
                       <span>ĐÃ TÌM THẤY TÀI KHOẢN HỌC SINH!</span>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 text-slate-800 dark:text-slate-200">
-                      <p>👤 <strong>Họ và tên:</strong> <span className="font-bold text-blue-600">{recoveredStudent.name}</span></p>
+                    <div className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-1.5 text-slate-800 dark:text-slate-200">
+                      <p>👤 <strong>Họ và tên:</strong> <span className="font-bold text-blue-600 dark:text-blue-400">{recoveredStudent.name}</span></p>
                       <p>🏫 <strong>Lớp học:</strong> <span className="font-bold">{recoveredStudent.className}</span></p>
-                      <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 text-sm">{recoveredStudent.username || recoveredStudent.studentCode}</span></p>
-                      <p>🔒 <strong>Mật khẩu:</strong> <span className="font-mono font-bold text-amber-600 text-sm">{recoveredStudent.password || 'Đã đặt riêng khi đăng ký'}</span></p>
+                      <p>🔑 <strong>Tên đăng nhập:</strong> <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-sm">{recoveredStudent.username || recoveredStudent.studentCode}</span></p>
+                      <p>🔒 <strong>Mật khẩu:</strong> <span className="font-mono font-bold text-slate-500 dark:text-slate-400 text-sm">•••••••• (Đã ẩn bảo mật)</span></p>
                     </div>
+
+                    <p className="text-[11px] text-emerald-800 dark:text-emerald-300 italic">
+                      💡 Mật khẩu học sinh được bảo vệ an toàn. Em chỉ cần bấm nút bên dưới là hệ thống sẽ tự động đăng nhập vào học ngay:
+                    </p>
 
                     <button
                       type="button"
@@ -2031,7 +2138,7 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* ==================== MODAL QUẢN LÝ & XÓA TÀI KHOẢN HỌC SINH (QUYỀN ADMIN) ==================== */}
-      {showAdminStudentModal && (
+      {showAdminStudentModal && isAdminUnlocked && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 relative animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col">
             {/* Header */}
@@ -2048,17 +2155,28 @@ export const StudentPortal: React.FC = () => {
                     </span>
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Thầy/Cô có toàn quyền xem mật khẩu, quản lý và XÓA vĩnh viễn tài khoản học sinh khỏi hệ thống & Cloud.
+                    Chỉ dành riêng cho Admin Thầy Đinh Thành ({BRAND.phone}) quản lý và XÓA tài khoản học sinh.
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowAdminStudentModal(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
-              >
-                <XCircle className="w-6 h-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleAdminLogout}
+                  className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  title="Đăng xuất quyền Admin"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Đăng Xuất Admin</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAdminStudentModal(false)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+              </div>
             </div>
 
             {/* Toolbar Tìm kiếm & Lọc Lớp */}
@@ -2086,10 +2204,19 @@ export const StudentPortal: React.FC = () => {
                 </select>
               </div>
 
-              <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
+              <div className="flex items-center gap-2.5 self-end sm:self-auto shrink-0 flex-wrap">
                 <span className="text-xs font-bold text-slate-600 dark:text-slate-400">
-                  Tổng số: <strong className="text-purple-600 dark:text-purple-400 text-sm">{filteredAdminStudents.length}</strong> học sinh
+                  Tổng: <strong className="text-purple-600 dark:text-purple-400 text-sm">{filteredAdminStudents.length}</strong> HS
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setShowStudentPasswords(!showStudentPasswords)}
+                  className="px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+                  title={showStudentPasswords ? "Ẩn mật khẩu để bảo vệ riêng tư" : "Hiện mật khẩu để hỗ trợ học sinh quên mật khẩu"}
+                >
+                  {showStudentPasswords ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  <span>{showStudentPasswords ? 'Ẩn MK' : 'Xem MK'}</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -2108,7 +2235,7 @@ export const StudentPortal: React.FC = () => {
                   title="Tự động rà soát tài khoản trùng tên/lớp hoặc SĐT để hợp nhất điểm và bài làm"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Tự Rà Soát & Hợp Nhất Trùng</span>
+                  <span className="hidden sm:inline">Rà Soát Trùng</span>
                 </button>
                 <button
                   type="button"
@@ -2122,7 +2249,7 @@ export const StudentPortal: React.FC = () => {
                   className="px-3 py-2 rounded-xl bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
                 >
                   <RotateCw className={`w-3.5 h-3.5 ${isSyncingAdminStudents ? 'animate-spin' : ''}`} />
-                  <span>{isSyncingAdminStudents ? 'Đang tải...' : 'Làm Mới Cloud'}</span>
+                  <span>{isSyncingAdminStudents ? '...' : 'Làm Mới Cloud'}</span>
                 </button>
               </div>
             </div>
@@ -2175,7 +2302,9 @@ export const StudentPortal: React.FC = () => {
                           Tên ĐN: <strong className="text-blue-600 dark:text-blue-400 font-bold">{s.username || s.studentCode}</strong>
                         </div>
                         <div>
-                          MK: <span className="bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded font-bold">{s.password || '12345'}</span>
+                          MK: <span className="bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded font-bold">
+                            {showStudentPasswords ? (s.password || 'Mật khẩu riêng') : '••••••••'}
+                          </span>
                         </div>
                         {s.parentPhone && (
                           <div className="text-[10px] text-slate-500">
@@ -2193,7 +2322,7 @@ export const StudentPortal: React.FC = () => {
             <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 shrink-0">
               <span className="flex items-center gap-1 text-[11px]">
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
-                <span>Mỗi thao tác xóa sẽ tự động đồng bộ ngay lên Cloud toàn trường.</span>
+                <span>Thao tác xóa yêu cầu phiên Admin hợp lệ và tự động đồng bộ Cloud.</span>
               </span>
               <button
                 type="button"

@@ -40,10 +40,11 @@ interface AdminPortalProps {
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
-  // Quản lý Đăng Nhập Admin (Mật khẩu chuẩn Thầy Thành: Thaythanh2026@)
+  // Quản lý Đăng Nhập Admin (Tên: Admin, Mật khẩu chuẩn Thầy Thành: Thaythanh2026@)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem('gvai_admin_logged_in') === 'true';
   });
+  const [userInput, setUserInput] = useState('Admin');
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
@@ -91,7 +92,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
   // Đăng nhập Admin
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (systemMaintenanceService.verifyAdminPassword(pinInput)) {
+    if (systemMaintenanceService.verifyAdminCredentials(userInput, pinInput) || systemMaintenanceService.verifyAdminPassword(pinInput)) {
       setIsAuthenticated(true);
       sessionStorage.setItem('gvai_admin_logged_in', 'true');
       systemMaintenanceService.saveAdminSession();
@@ -256,24 +257,42 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Mật khẩu Quản trị
+                Tên đăng nhập Admin:
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Nhập tên đăng nhập (Admin)..."
+                value={userInput}
+                onChange={e => {
+                  setUserInput(e.target.value);
+                  setPinError(false);
+                }}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                autoFocus
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Mật khẩu Quản trị:
               </label>
               <input
                 type="password"
+                required
                 placeholder="Nhập mật khẩu..."
                 value={pinInput}
                 onChange={e => {
                   setPinInput(e.target.value);
                   setPinError(false);
                 }}
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 dark:bg-slate-800 ${
+                className={`w-full px-4 py-2.5 rounded-xl border text-sm font-mono focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white ${
                   pinError ? 'border-red-500' : 'border-slate-300 dark:border-slate-700'
                 }`}
-                autoFocus
               />
               {pinError && (
                 <p className="text-xs text-red-500 font-semibold mt-1">
-                  Mật khẩu chưa chính xác! Vui lòng thử lại.
+                  Tên đăng nhập hoặc mật khẩu chưa chính xác! Vui lòng thử lại.
                 </p>
               )}
             </div>

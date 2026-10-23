@@ -42,9 +42,6 @@ class SystemMaintenanceService {
   /**
    * Kiểm tra người dùng hiện tại có phải là Admin đang đăng nhập hợp lệ không
    */
-    /**
-   * Alias tương thích cho việc kiểm tra phiên đăng nhập Admin
-   */
   public isSessionAuthenticated(): boolean {
     return this.isAdminSession();
   }
@@ -52,39 +49,32 @@ class SystemMaintenanceService {
   public isAdminSession(): boolean {
     if (typeof window === 'undefined') return false;
     
-    // 1. Kiểm tra session admin
+    // Kiểm tra session đăng nhập Admin (chỉ chấp nhận phiên đăng nhập hợp lệ trong sessionStorage)
     const isAuthSession = 
       sessionStorage.getItem(ADMIN_SESSION_TEMP_KEY) === 'true' ||
-      localStorage.getItem(ADMIN_SESSION_STORAGE_KEY) === 'authenticated' ||
-      localStorage.getItem('gvai_unlimited_machine') === 'true';
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true';
 
-    if (isAuthSession) return true;
-
-    // 2. Kiểm tra mã máy tính của Tác giả Đinh Thành
-    try {
-      const mid = localStorage.getItem('gvai_detected_machine_id') || 
-                  localStorage.getItem('gvai_machine_fingerprint') || '';
-      if (mid && (ADMIN_WHITELIST_MACHINES.includes(mid) || mid === 'GV-0DAD-F76C' || mid.includes('DVT'))) {
-        return true;
-      }
-    } catch {}
-
-    return false;
+    return isAuthSession;
   }
 
   /**
-   * Xác thực mật khẩu Quản trị viên
+   * Xác thực tài khoản Quản trị viên bằng Tên đăng nhập và Mật khẩu
+   * Chuẩn: Tên đăng nhập là "Admin", Mật khẩu: "Thaythanh2026@"
    */
-  public verifyAdminPassword(password: string): boolean {
-    const clean = password.trim();
-    
-    // MẬT KHẨU DUY NHẤT TOÀN HỆ THỐNG THEO QUY ĐỊNH CỦA THẦY ĐINH THÀNH: Tienganh123@
-    const isValid = clean === 'Tienganh123@';
+  public verifyAdminCredentials(username: string, password: string): boolean {
+    const cleanUser = (username || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+    const normPass = cleanPass.toLowerCase();
 
-    if (isValid) {
+    const isUserValid = cleanUser === 'admin';
+    const isPassValid = 
+      cleanPass === 'Thaythanh2026@' ||
+      normPass === 'thaythanh2026@' ||
+      normPass === 'thaythanh2026';
+
+    if (isUserValid && isPassValid) {
+      this.saveAdminSession();
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem(ADMIN_SESSION_TEMP_KEY, 'true');
-        localStorage.setItem(ADMIN_SESSION_STORAGE_KEY, 'authenticated');
         window.dispatchEvent(new CustomEvent('gvai_admin_auth_changed', { detail: { isAuthenticated: true } }));
       }
       return true;
@@ -93,19 +83,49 @@ class SystemMaintenanceService {
   }
 
   /**
-   * Đăng xuất quyền Admin trên trình duyệt này
+   * Xác thực mật khẩu Quản trị viên (Dành cho các form chỉ có ô mật khẩu)
+   */
+  public verifyAdminPassword(password: string): boolean {
+    const clean = (password || '').trim();
+    const normalized = clean.toLowerCase();
+    
+    // MẬT KHẨU CHUẨN THẦY THÀNH: Thaythanh2026@ (hỗ trợ Tienganh123@ dự phòng)
+    const isValid = 
+      clean === 'Thaythanh2026@' ||
+      normalized === 'thaythanh2026@' ||
+      normalized === 'thaythanh2026' ||
+      clean === 'Tienganh123@';
+
+    if (isValid) {
+      this.saveAdminSession();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('gvai_admin_auth_changed', { detail: { isAuthenticated: true } }));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Lưu phiên đăng nhập Admin an toàn vào sessionStorage
    */
   public saveAdminSession(): void {
     try {
-      sessionStorage.setItem(ADMIN_SESSION_TEMP_KEY, 'true');
-      localStorage.setItem(ADMIN_SESSION_STORAGE_KEY, 'authenticated');
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(ADMIN_SESSION_TEMP_KEY, 'true');
+        sessionStorage.setItem('gvai_admin_logged_in', 'true');
+        // Không lưu vĩnh viễn quyền Admin vào localStorage để tránh lộ trên máy dùng chung
+        localStorage.removeItem(ADMIN_SESSION_STORAGE_KEY);
+      }
     } catch (e) {}
   }
 
   public logoutAdminSession(): void {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(ADMIN_SESSION_TEMP_KEY);
+      sessionStorage.removeItem('gvai_admin_logged_in');
       localStorage.removeItem(ADMIN_SESSION_STORAGE_KEY);
+      localStorage.removeItem('gvai_unlimited_machine');
       window.dispatchEvent(new CustomEvent('gvai_admin_auth_changed', { detail: { isAuthenticated: false } }));
     }
   }

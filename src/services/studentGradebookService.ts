@@ -667,13 +667,14 @@ class StudentGradebookService {
 
   // Xóa toàn bộ học sinh (YÊU CẦU QUYỀN ADMIN TUYỆT ĐỐI)
   public clearAllStudents(isAdminAuthorized: boolean = false): boolean {
-    const isSystemAdmin = 
-      isAdminAuthorized === true ||
-      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
-      sessionStorage.getItem('gvai_admin_logged_in') === 'true';
+    const hasAdminSession = 
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
+      sessionStorage.getItem('gvai_admin_auth') === 'true';
+
+    const isSystemAdmin = isAdminAuthorized === true && hasAdminSession;
 
     if (!isSystemAdmin) {
-      console.warn('Từ chối thao tác: Chỉ Admin mới có quyền xóa!');
+      console.warn('Từ chối thao tác: Chỉ Admin đã đăng nhập mới có quyền xóa!');
       return false;
     }
     this.students = [];
@@ -707,18 +708,16 @@ class StudentGradebookService {
     return true;
   }
 
-  // Xóa tài khoản học sinh: BẢO VỆ CHẶT CHẼ, DUY NHẤT GIÁO VIÊN / ADMIN MỚI CÓ QUYỀN XÓA
+  // Xóa tài khoản học sinh: BẢO VỆ CHẶT CHẼ, DUY NHẤT GIÁO VIÊN / ADMIN ĐÃ ĐĂNG NHẬP MỚI CÓ QUYỀN XÓA
   public deleteStudent(idOrIdentifier: string, isAdminAuthorized: boolean = false): boolean {
-    const isSystemAdmin = 
-      isAdminAuthorized === true ||
-      localStorage.getItem('gvai_admin_session') === 'authenticated' ||
+    const hasAdminSession = 
       sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
-      localStorage.getItem('gvai_admin_auth') === 'true' ||
-      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
-      localStorage.getItem('gvai_unlimited_machine') === 'true';
+      sessionStorage.getItem('gvai_admin_auth') === 'true';
+
+    const isSystemAdmin = isAdminAuthorized === true && hasAdminSession;
 
     if (!isSystemAdmin) {
-      console.warn('Từ chối xóa tài khoản: Chỉ Giáo viên / Admin mới có quyền xóa học sinh!');
+      console.warn('Từ chối xóa tài khoản: Chỉ Giáo viên / Admin đã đăng nhập mới có quyền xóa học sinh!');
       return false;
     }
 

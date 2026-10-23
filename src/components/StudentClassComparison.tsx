@@ -51,14 +51,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
     const cls = studentGradebookService.getClasses();
     setClasses(cls);
     
-    let curStudent = studentGradebookService.getActiveStudent();
-    if (!curStudent && cls.length > 0) {
-      const classStus = studentGradebookService.getStudents(cls[0].id);
-      if (classStus.length > 0) {
-        curStudent = classStus[0];
-        studentGradebookService.setActiveStudent(curStudent);
-      }
-    }
+    const curStudent = studentGradebookService.getActiveStudent();
     setActiveStudent(curStudent);
 
     const cId = curStudent ? curStudent.classId : (cls[0]?.id || 'cls-7a1');
@@ -87,17 +80,6 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
     setLeaderboard(lb);
     const stats = studentGradebookService.getClassComparisonStats(cId);
     setClassStats(stats);
-
-    // Tự động chuyển activeStudent sang bạn đầu tiên của lớp đó nếu học sinh hiện tại khác lớp
-    if (!activeStudent || activeStudent.classId !== cId) {
-      const stus = studentGradebookService.getStudents(cId);
-      if (stus.length > 0) {
-        studentGradebookService.setActiveStudent(stus[0]);
-        setActiveStudent(stus[0]);
-        const subs = studentGradebookService.getSubmissions({ studentId: stus[0].id });
-        setStudentSubs(subs);
-      }
-    }
   };
 
   // Chọn học sinh cụ thể
@@ -145,25 +127,26 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-amber-300 font-black uppercase tracking-wider">Học Sinh Đang Luyện Tập:</span>
+              <span className="text-xs text-amber-300 font-black uppercase tracking-wider">
+                {activeStudent ? 'Học Sinh Đang Luyện Tập:' : 'Chế Độ Xem Chung:'}
+              </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-white/20 text-white border border-white/30 backdrop-blur-md">
-                Lớp {activeStudent?.className || '7A1'}
+                Lớp {activeStudent?.className || currentClassObj?.name || '7A1'}
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2 mt-0.5 tracking-tight">
-              {activeStudent?.name || 'Nguyễn Văn An'}
-              <span className="text-xs font-mono font-bold text-blue-200 bg-white/15 px-2 py-0.5 rounded-md">({activeStudent?.studentCode})</span>
+              {activeStudent ? activeStudent.name : 'Chưa đăng nhập tài khoản'}
+              {activeStudent?.studentCode && (
+                <span className="text-xs font-mono font-bold text-blue-200 bg-white/15 px-2 py-0.5 rounded-md">({activeStudent.studentCode})</span>
+              )}
             </h3>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 relative z-10">
-          <button
-            onClick={() => setShowSwitchModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-white text-blue-800 hover:bg-blue-50 font-black text-xs sm:text-sm shadow-md transition-all hover:scale-105 flex items-center gap-1.5 cursor-pointer border border-white/60"
-          >
-            <Users className="w-4 h-4 text-blue-700" /> Đổi Bạn Khác Trong Lớp
-          </button>
+          <span className="text-xs text-blue-100 italic hidden sm:inline">
+            {activeStudent ? 'Thứ hạng cập nhật theo điểm số thực tế' : 'Đăng nhập tài khoản để lưu điểm & xếp hạng'}
+          </span>
         </div>
       </div>
 
