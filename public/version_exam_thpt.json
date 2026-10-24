@@ -1,12 +1,12 @@
 {
   "appId": "taode-tienganh-thpt",
-  "appName": "Tạo Đề Kiểm Tra & Đề Cương Ôn Tập Tiếng Anh THPT",
+  "appName": "Tạo Đề Kiểm Tra & Đề Cương Ôn Tập Tiếng Anh THPT Global Success",
   "currentVersion": "4.0.0",
   "latestVersion": "4.0.0",
-  "releaseDate": "11/10/2026",
-  "changelog": "• [11/10/2026 - v4.0.0] Cập nhật bộ cài chuẩn mới nhất đưa lên web\n• Tác giả & Bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Lưu ý quan trọng: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA\n• Tối ưu định dạng văn bản đề thi và đáp án song song chuẩn Bộ GD&ĐT\n• Nâng cấp hệ thống bản quyền Ed25519 Pro và thanh công cụ Word Ribbon",
+  "releaseDate": "24/10/2026",
+  "changelog": "• Chuẩn hóa đề kiểm tra Giữa kỳ 1 THPT đủ 36 câu trắc nghiệm (9.0 điểm) + 1 câu Tự luận viết (1.0 điểm) = 10.0 điểm\n• Bổ sung hoàn chỉnh Part 7 gồm 4 câu (từ Câu 33 đến Câu 36: Sắp xếp trật tự câu / đoạn văn / lá thư)\n• Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột bám sát 100% mẫu quy định của Bộ GD&ĐT (Nghe 20%, Đọc 30%, Ngôn ngữ 30%, Viết 20%)\n• Tự động xuất song song 2 phiên bản: Bản Giáo viên (đáp án đỏ, rubric chấm, audio scripts) và Bản Học sinh (_HOC_SINH.docx sạch đẹp, in phát đề ngay)\n• Ngân hàng từ vựng & ngữ pháp bám sát SGK Global Success 10, 11, 12, gần gũi, độ khó vừa sức giúp học sinh làm bài tự tin\n• Bảng đối chiếu đáp án song song N cột sau cùng đề thi, căn chỉnh Tab Stops thẳng hàng tuyệt đối\n• Bộ cài đặt All-in-One 1-click tự động tích hợp Add-in Word Ribbon và Shortcut Desktop",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THPT.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THPT_Pass_123.zip",
-  "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS"
+  "websiteUrl": "https://giao-vien-ai-toan-nang3.vercel.app/",
+  "author": "Đinh Thành (Tel/zalo: 0915.213717) - THPT Đồng Yên"
 }
