@@ -759,16 +759,16 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <h4 className="text-base font-bold text-white flex items-center gap-2">
                       <span>Phần Mềm Tạo Đề Tiếng Anh THCS (Công Văn 7991)</span>
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                        v4.3.0 (Mới nhất - Từ vựng 100% SGK & Bản đặc tả Anh/Việt)
+                        v5.1.0 (Mới nhất 26/10/2026 - Tích hợp Nút Gỡ bỏ Tab Word & Native VBA)
                       </span>
                     </h4>
                     <p className="text-xs text-amber-300 font-medium mt-1 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Bản cập nhật đưa lên web: <strong>15/10/2026 (Lúc 19:35:00)</strong> - Từ vựng 100% SGK Global Success, Bản đặc tả Tiếng Việt/Tiếng Anh, Lưu Desktop & Chuẩn PPCT</span>
+                      <span>Bản cập nhật đưa lên web: <strong>26/10/2026</strong> - Tối ưu khởi chạy Native VBA Shell, Nút gỡ bỏ Tab này trực tiếp trên Word, Từ vựng 100% SGK Global Success</span>
                     </p>
                   </div>
                   <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">
-                    Dung lượng: ~125 MB (.ZIP) | ~77 MB (.EXE)
+                    Dung lượng: ~84 MB (.EXE) | ~83 MB (.ZIP)
                   </span>
                 </div>
 

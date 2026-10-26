@@ -48,11 +48,11 @@ export const NLS_RESOURCES = {
 
 // Cấu hình link tài nguyên của Tạo Đề Kiểm Tra Tiếng Anh Global Success THCS (CV 7991)
 export const EXAM_RESOURCES = {
-  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  exeWordUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  exeDesktopUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  dotmUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  fullZipUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
+  exeWordUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Chay_Tren_Word.exe",
+  exeDesktopUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
+  exeUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
+  dotmUrl: "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/TaoDe_TiengAnh_THCS.dotm",
   videoDirectUrl: "",
   videoWatchUrl: ""
 };
