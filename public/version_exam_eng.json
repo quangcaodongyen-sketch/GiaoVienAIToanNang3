@@ -1,13 +1,13 @@
 {
-  "appId": "exam-eng",
   "appName": "Tạo Đề Tiếng Anh THCS Pro (CV 7991)",
-  "currentVersion": "3.9.0",
-  "latestVersion": "3.9.0",
-  "releaseDate": "24/10/2026",
-  "changelog": "✦ [24/10/2026 - v3.9.0] Cập nhật nâng cấp toàn diện cho giáo viên:\n✦ Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn Công văn 7991/BGDĐT\n✦ Tích hợp tính năng xuất Ma trận & Bản đặc tả độc lập 1-chạm\n✦ Tích hợp xuất Biên bản phản biện đề thi chuyên môn chuẩn quy định sư phạm\n✦ Tự động tương thích hoàn hảo Microsoft Word 2016-2024, không lỗi dãn dòng thưa chữ\n✦ Cung cấp bản cài đặt 1-Click tự động tích hợp Add-in Word và Shortcut Desktop.",
+  "currentVersion": "3.9.1",
+  "latestVersion": "3.9.1",
+  "releaseDate": "26/10/2026",
+  "changelog": "• [26/10/2026 - v3.9.1] Cập nhật nâng cấp toàn diện cho giáo viên:\n• Tối ưu khởi chạy Add-in Word qua lệnh native VBA Shell, tương thích tuyệt đối mọi phiên bản Word 2016-2024\n• Khắc phục hoàn toàn lỗi mở Word không phản hồi do xung đột môi trường\n• Chuẩn hóa mã hóa ADODB.Stream hỗ trợ đường dẫn tiếng Việt có dấu\n• Tự động đồng bộ bộ cài đặt All-in-One tích hợp 1-Click vào Word và tạo icon Desktop\n• Chuẩn hóa ma trận 16 cột 3 tầng và bản đặc tả 7 cột Công văn 7991/BGDĐT",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_TiengAnh_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tieng_Anh_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên",
+  "author": "Đinh Thành (Tel/zalo: 0915.213717)",
+  "appId": "exam-eng",
   "version": "5.0.1"
 }

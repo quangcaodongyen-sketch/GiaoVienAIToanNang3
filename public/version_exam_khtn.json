@@ -1,12 +1,12 @@
 {
   "appId": "taode-khtn-thcs",
   "appName": "Tạo Đề Kiểm Tra Khoa Học Tự Nhiên THCS (CV 7991)",
-  "currentVersion": "4.0.0",
-  "latestVersion": "4.0.0",
-  "releaseDate": "11/10/2026",
-  "changelog": "• [v4.0.0 - Bản phát hành chính thức cho Giáo viên]\n• Cập nhật thông tin tác giả & bản quyền: Đinh Thành (Tel/zalo: 0915.213717)\n• Ghi chú chốt bảo vệ pháp lý: SẢN PHẨM ĐƯỢC TẠO RA GIÚP GV CÓ TÀI LIỆU THAM KHẢO TRONG CÔNG TÁC RA ĐỀ KIỂM TRA\n• Tối ưu định dạng văn bản các bài toán thực nghiệm tự luận rõ ràng, khoa học, dễ hiểu\n• Tùy chọn linh hoạt tạo tối đa 5 mã đề ngẫu nhiên chính xác tuyệt đối\n• Tích hợp thanh công cụ Word Ribbon độc lập và bảo mật bản quyền Ed25519 Pro",
+  "currentVersion": "4.1.0",
+  "latestVersion": "4.1.0",
+  "releaseDate": "25/10/2026",
+  "changelog": "• Bổ sung Hộp thoại Thông báo Bản cập nhật mới chuẩn Glassmorphism trong suốt sư phạm\n• Tích hợp bộ chọn 'Phạm vi bài học thực dạy' linh hoạt dùng chung toàn quốc (Toàn bộ khung PPCT hoặc Giới hạn bài đã học)\n• Thuật toán Động cơ Ma trận tự động cân bằng 10.0đ chuẩn Công văn 7991/BGDĐT\n• Vô hiệu hóa AutoExec trong Add-in Word: Khởi động Word mượt mà, không tự động mở app\n• Nâng cấp Bách khoa công thức Toán - Lí - Hóa chuyển đổi OMML native bù phân số sz=base_sz+2 không lệch cỡ chữ",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_TaoDe_KHTN_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_KHTN_THCS_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS"
+  "author": "Đinh Thành (Tel/zalo: 0915.213717)"
 }
