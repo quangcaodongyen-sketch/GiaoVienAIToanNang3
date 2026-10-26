@@ -7803,7 +7803,7 @@ const ONLINE_EXAM_SYSTEM = {
     this.showRubric = false;
 
     // Cập nhật trạng thái Active trên tất cả các nút chọn mã đề (Đủ 4 mã đề Lớp 6 + 2 mã đề Lớp 8 (801, 802))
-    ['601', '602', '603', '604', '801', '802'].forEach(c => {
+    ['601', '602', '603', '604', '801', '802', '803'].forEach(c => {
       const btn = document.getElementById(`btn_code_${c}`);
       if (btn) {
         if (c === this.activeExamCode) {

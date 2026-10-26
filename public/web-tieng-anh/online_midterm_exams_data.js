@@ -1,6 +1,6 @@
 // ================================================================
 // online_midterm_exams_data.js – 4 BÀI KIỂM TRA GIỮA HỌC KÌ I ONLINE CHUẨN XÁC
-// Khối 6 (Mã 601, 602) & Khối 8 (Mã 801, 802) bám sát tuyệt đối file Word của Thầy
+// Khối 6 (Mã 601, 602) & Khối 8 (Mã 801, 802, 803) bám sát tuyệt đối file Word của Thầy
 // Tác giả & Đơn vị: Thầy Đinh Văn Thành – TRƯỜNG THCS ĐỒNG YÊN (0915.213717)
 // ================================================================
 
@@ -2310,6 +2310,672 @@ var ONLINE_MIDTERM_EXAMS = [
     "sampleWritingText": "Life in the countryside during the harvest season holds a special charm for me because of its profound tranquility and wholesome environment. Firstly, the atmosphere is refreshing with golden paddy fields stretching like boundless carpets under the morning sun. Villagers wake up early to reap rice and load heavy grain carts with cheerful smiles. In the late afternoon, children happily fly colorful paper kites on grassy dikes or cycle along winding riverbanks. The air is always filled with the sweet fragrance of ripe rice and gentle breezes. Above all, I deeply love the hospitable farmers who always welcome visitors with genuine warmth.",
     "finalScoreSummary": "TỔNG ĐIỂM BÀI THI GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7, 36 câu): 9,0 điểm (0.25đ/câu)\n- Viết tự luận (Part 8): 1,0 điểm.",
     "publishedAt": "2026-10-26T16:00:00.000Z"
+  },
+  {
+    "id": "gk1_eng8_803",
+    "title": "BÀI KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KÌ I – TIẾNG ANH 8 (Mã đề 803)",
+    "grade": 8,
+    "term": "GK1",
+    "examCode": "803",
+    "examFormat": "cv7991",
+    "examTime": 60,
+    "examClass": "8A1",
+    "schoolName": "TRƯỜNG THCS ĐỒNG YÊN",
+    "teacherName": "Thầy Đinh Văn Thành",
+    "isOpen": true,
+    "audioTitle": "Listening Part 1 & Part 2 – Giữa Kì 1 Tiếng Anh 8 (Mã 803)",
+    "audioUrl": "/tuvung/audio/g8_gk1_803_part1.mp3",
+    "audioUrlPart1": "/tuvung/audio/g8_gk1_803_part1.mp3",
+    "audioUrlPart2": "/tuvung/audio/g8_gk1_803_part2.mp3",
+    "audioScript": "=== PART 1: DIALOGUE ===\nDavid: Hi Lan! How was your trip to your grandparents' village in Bac Giang?\nLan: Hi David! It was wonderful. We arrived right at harvest time.\nDavid: Harvest time? What did the rice fields look like?\nLan: The paddy fields were golden and vast, stretching as far as the eye could see! Farmers were using combine harvesters to cut rice.\nDavid: Did you fly kites in the evening?\nLan: Yes! Children flew kites along the river dyke while the autumn breeze was cool. Life there is so peaceful and hospitable.\n\n=== PART 2: MONOLOGUE ===\nLife in rural Vietnamese villages offers a quiet, unhurried pace that contrasts with crowded cities. In the countryside, village paths are shaded by green bamboo and lotus ponds. Neighbors know each other well and always lend a helping hand during festivals. Living close to nature brings fresh air, peace of mind, and simple joy.",
+    "sections": [
+      {
+        "id": "sec_1",
+        "partNumber": 1,
+        "title": "Part 1. Listen and circle the best answer A, B, or C. (1.25 pts)",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_1",
+            "num": "1",
+            "content": "Where did Lan go for her trip?",
+            "options": [
+              "A. To her grandparents' village in Bac Giang",
+              "B. To London",
+              "C. To a beach in Da Nang"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (To her grandparents' village in Bac Giang)\n📌 Dịch nghĩa: Lan đã đi đâu trong chuyến đi của mình? -> A. Về làng của ông bà ở Bắc Giang.\n🔍 Dẫn chứng: David: 'Hi Lan! How was your trip to your grandparents\\' village in Bac Giang?'\n🎉 Thầy khen: Xuất sắc! Bắt chuẩn địa điểm chuyến đi của bạn Lan ngay câu chào hỏi đầu tiên!\n💪 Lời khuyên: Chú ý nghe rõ tên địa danh 'Bac Giang' và cụm từ 'grandparents\\' village'.",
+            "trans": "Lan đi đâu? -> Về quê ông bà ở Bắc Giang.",
+            "grammar": "Cụm danh từ sở hữu: grandparents' village.",
+            "praise": "🎉 Quá siêu! Em nghe chi tiết địa điểm cực kỳ chuẩn xác!",
+            "encourage": "💪 David hỏi ngay câu mở đầu: 'your trip to your grandparents\\' village in Bac Giang'!"
+          },
+          {
+            "id": "q_803_2",
+            "num": "2",
+            "content": "When did Lan arrive in the village?",
+            "options": [
+              "A. Right at harvest time",
+              "B. In the middle of winter",
+              "C. During a storm"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Right at harvest time)\n📌 Dịch nghĩa: Lan đến làng vào thời điểm nào? -> A. Đúng vào vụ mùa thu hoạch (harvest time).\n🔍 Dẫn chứng: Lan: 'Hi David! It was wonderful. We arrived right at harvest time.'\n🎉 Thầy khen: Rất tốt! Bắt đúng từ khóa then chốt của bài 'harvest time'!\n💪 Lời khuyên: Cụm từ 'right at harvest time' có nghĩa là 'vào đúng lúc mùa gặt'.",
+            "trans": "Lan đến làng vào lúc nào? -> Đúng vào mùa gặt.",
+            "grammar": "Cụm trạng từ thời gian: right at harvest time.",
+            "praise": "🎉 Tuyệt vời! Em ghi nhớ từ khóa 'harvest time' của Unit 2 rất chắc!",
+            "encourage": "💪 Lan trả lời: 'We arrived right at harvest time'!"
+          },
+          {
+            "id": "q_803_3",
+            "num": "3",
+            "content": "How did the paddy fields look during harvest?",
+            "options": [
+              "A. Golden and vast",
+              "B. Small and dry",
+              "C. Flooded with dark water"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Golden and vast)\n📌 Dịch nghĩa: Các cánh đồng lúa trông như thế nào trong mùa gặt? -> A. Vàng óng và mênh mông bát ngát.\n🔍 Dẫn chứng: Lan: 'The paddy fields were golden and vast, stretching as far as the eye could see!'\n🎉 Thầy khen: Đỉnh cao! Cặp tính từ miêu tả cảnh đẹp 'golden and vast' được em nhận ra ngay!\n💪 Lời khuyên: 'golden' (vàng óng) và 'vast' (mênh mông, rộng lớn).",
+            "trans": "Cánh đồng trông ra sao? -> Vàng rực và mênh mông bát ngát.",
+            "grammar": "Tính từ miêu tả phong cảnh: golden and vast.",
+            "praise": "🎉 Rất xuất sắc! Hình ảnh cánh đồng lúa chín vàng bát ngát rất đẹp!",
+            "encourage": "💪 Lan miêu tả: 'The paddy fields were golden and vast'!"
+          },
+          {
+            "id": "q_803_4",
+            "num": "4",
+            "content": "What machine were farmers using to cut rice?",
+            "options": [
+              "A. Computers",
+              "B. Airplanes",
+              "C. Combine harvesters"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Combine harvesters)\n📌 Dịch nghĩa: Những người nông dân đang sử dụng loại máy móc nào để gặt lúa? -> C. Máy gặt đập liên hợp (Combine harvesters).\n🔍 Dẫn chứng: Lan: 'Farmers were using combine harvesters to cut rice.'\n🎉 Thầy khen: Giỏi lắm! 'Combine harvesters' là từ vựng máy móc nông nghiệp hiện đại của Unit 2!",
+            "trans": "Nông dân dùng máy gì gặt lúa? -> Máy gặt đập liên hợp (combine harvesters).",
+            "grammar": "Danh từ ghép chỉ máy móc: combine harvesters.",
+            "praise": "🎉 Chuẩn không cần chỉnh! Bắt trọn cụm từ 'combine harvesters'!",
+            "encourage": "💪 Để gặt lúa hiện đại nông dân dùng 'combine harvesters' em nhé!"
+          },
+          {
+            "id": "q_803_5",
+            "num": "5",
+            "content": "What did children do along the river dyke in the evening?",
+            "options": [
+              "A. Watched television",
+              "B. Flew kites in the cool breeze",
+              "C. Slept"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Flew kites in the cool breeze)\n📌 Dịch nghĩa: Trẻ em làm gì dọc theo con đê sông vào buổi chiều tối? -> B. Thả diều trong làn gió mát.\n🔍 Dẫn chứng: Lan: 'Children flew kites along the river dyke while the autumn breeze was cool.'\n🎉 Thầy khen: Quá tuyệt vời! Nắm bắt hoạt động tuổi thơ thả diều bên bờ đê rất chính xác!",
+            "trans": "Trẻ em làm gì buổi chiều muộn? -> Thả diều trong gió mát lành.",
+            "grammar": "Cụm hành động quá khứ: flew kites in the cool breeze.",
+            "praise": "🎉 Rất tốt! Hoàn thành xuất sắc 5 câu Listening Part 1!",
+            "encourage": "💪 Lan nói: 'Children flew kites along the river dyke'!"
+          }
+        ]
+      },
+      {
+        "id": "sec_2",
+        "partNumber": 2,
+        "title": "Part 2. Listen and circle the best answer A or B. (1.25 pts)",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_6",
+            "num": "6",
+            "content": "Life in rural villages is quiet and unhurried.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dịch nghĩa: Cuộc sống ở các ngôi làng nông thôn thì yên tĩnh và thong thả. -> Đúng.\n🔍 Dẫn chứng: 'Life in rural Vietnamese villages offers a quiet, unhurried pace that contrasts with crowded cities.'\n🎉 Thầy khen: Xuất sắc! Nhận diện tính từ 'quiet and unhurried' chuẩn xác 100%!",
+            "trans": "Cuộc sống làng quê yên tĩnh và không vội vã. -> Đúng.",
+            "grammar": "Cặp tính từ miêu tả: quiet and unhurried.",
+            "praise": "🎉 Giỏi lắm! Câu mở đầu Part 2 hoàn toàn khớp: True!",
+            "encourage": "💪 Bài đọc nói rõ: 'quiet, unhurried pace' -> True!"
+          },
+          {
+            "id": "q_803_7",
+            "num": "7",
+            "content": "Village paths are surrounded by concrete skyscrapers.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Dịch nghĩa: Những con đường làng được bao bọc bởi các tòa nhà chọc trời bằng bê tông. -> Sai.\n🔍 Dẫn chứng: 'In the countryside, village paths are shaded by green bamboo and lotus ponds.' (Đường làng rợp bóng tre xanh và ao sen, không có nhà chọc trời).\n🎉 Thầy khen: Tinh ý lắm! Ở làng quê chỉ có tre xanh và ao sen, làm sao có skyscrapers được!",
+            "trans": "Đường làng có nhà chọc trời bao quanh. -> Sai (chỉ có rặng tre và ao sen).",
+            "grammar": "Đối lập nông thôn vs đô thị: shaded by green bamboo vs concrete skyscrapers.",
+            "praise": "🎉 Nhận ra bẫy ngay lập tức! Rất đáng khen ngợi!",
+            "encourage": "💪 Làng quê có tre và ao sen chứ không có skyscrapers: False!"
+          },
+          {
+            "id": "q_803_8",
+            "num": "8",
+            "content": "Neighbors in the countryside are helpful and hospitable.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dịch nghĩa: Hàng xóm láng giềng ở nông thôn rất hay giúp đỡ và hiếu khách. -> Đúng.\n🔍 Dẫn chứng: 'Neighbors know each other well and always lend a helping hand during festivals.' và 'Life there is so peaceful and hospitable.'\n🎉 Thầy khen: Chuẩn xác! Tình làng nghĩa xóm 'helpful and hospitable' đúng tinh thần bài nghe!",
+            "trans": "Hàng xóm láng giềng tốt bụng và mến khách. -> Đúng.",
+            "grammar": "Cụm thành ngữ: lend a helping hand (sẵn lòng giúp đỡ).",
+            "praise": "🎉 Tuyệt vời! Em ghi nhớ rất sâu tính cách mến khách của người dân quê!",
+            "encourage": "💪 Dân làng luôn giúp đỡ nhau: True!"
+          },
+          {
+            "id": "q_803_9",
+            "num": "9",
+            "content": "Living close to nature provides fresh air and peace of mind.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dịch nghĩa: Sống gần gũi với thiên nhiên mang lại bầu không khí trong lành và sự thanh thản trong tâm hồn. -> Đúng.\n🔍 Dẫn chứng: 'Living close to nature brings fresh air, peace of mind, and simple joy.'\n🎉 Thầy khen: Bắt trọn câu kết của bài độc thoại Part 2 rất xuất sắc!",
+            "trans": "Sống gần thiên nhiên đem lại không khí sạch và sự thư thái. -> Đúng.",
+            "grammar": "Cụm danh từ: fresh air, peace of mind, simple joy.",
+            "praise": "🎉 Quá đỉnh! Em nghe chính xác từng chi tiết cuối bài!",
+            "encourage": "💪 Câu kết nói rõ 'brings fresh air, peace of mind': True!"
+          },
+          {
+            "id": "q_803_10",
+            "num": "10",
+            "content": "Combine harvesters make harvesting rice much slower.",
+            "options": [
+              "A. True",
+              "B. False"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Dịch nghĩa: Máy gặt đập liên hợp làm cho việc thu hoạch lúa chậm hơn nhiều. -> Sai.\n🔍 Giải thích: Máy móc hiện đại (combine harvesters) giúp gặt lúa nhanh hơn rất nhiều (much faster), chứ không phải chậm hơn (slower)!\n🎉 Thầy khen: Tư duy logic và hiểu bài cực tốt! Máy gặt giúp làm nhanh hơn nên 'slower' là sai!",
+            "trans": "Máy gặt đập liên hợp khiến gặt lúa chậm hơn. -> Sai (nó làm nhanh hơn nhiều).",
+            "grammar": "So sánh logic: combine harvesters make it much faster, not slower.",
+            "praise": "🎉 Rất thông minh! Em không bị đánh lừa bởi từ trái nghĩa 'slower'!",
+            "encourage": "💪 Máy móc hiện đại phải giúp gặt nhanh hơn chứ, chọn False là đúng!"
+          }
+        ]
+      },
+      {
+        "id": "sec_3",
+        "partNumber": 3,
+        "title": "Part 3. Choose A, B or C to complete the following sentences. (3.0 pts)",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_11",
+            "num": "11",
+            "content": "She learned the traditional Japanese art of paper folding called ________ in grade 6.",
+            "options": [
+              "A. orchard",
+              "B. origami",
+              "C. product"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (origami)\n📌 Dịch nghĩa: Bạn ấy đã học môn nghệ thuật gấp giấy truyền thống của Nhật Bản có tên là origami từ năm lớp 6.\n📐 Từ vựng Unit 1: 'origami' = nghệ thuật gấp giấy Nhật Bản.\n🎉 Thầy khen: Nhớ từ vựng sở thích 'origami' cực kỳ chuẩn xác!",
+            "trans": "Nghệ thuật gấp giấy Nhật Bản gọi là origami.",
+            "grammar": "Từ vựng: origami (nghệ thuật gấp giấy Nhật Bản).",
+            "praise": "🎉 Rất giỏi! Gấp giấy Nhật Bản chính là Origami!",
+            "encourage": "💪 'paper folding' của Nhật Bản chính là Origami em nhé!"
+          },
+          {
+            "id": "q_803_12",
+            "num": "12",
+            "content": "They ________ the annual village festival on the 15th of the lunar month.",
+            "options": [
+              "A. celebrate",
+              "B. celebrated",
+              "C. are celebrating"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (celebrated)\n📌 Dịch nghĩa: Họ đã tổ chức lễ hội làng hàng năm vào ngày 15 tháng âm lịch.\n📐 Thì Quá khứ đơn: Diễn tả sự kiện đã diễn ra, dùng động từ có quy tắc 'celebrated'.\n🎉 Thầy khen: Chia thì quá khứ đơn rất chuẩn xác!",
+            "trans": "Họ đã tổ chức lễ hội làng vào ngày 15 âm lịch.",
+            "grammar": "Thì Quá khứ đơn: V-ed (celebrated).",
+            "praise": "🎉 Quá chuẩn! Động từ 'celebrated' chuẩn xác!",
+            "encourage": "💪 Sự kiện lễ hội dùng thì quá khứ đơn: celebrated!"
+          },
+          {
+            "id": "q_803_13",
+            "num": "13",
+            "content": "Mother: You shouldn't spend too much time surfing social media.' - Teen: '________'",
+            "options": [
+              "A. No, I am not.",
+              "B. Social media is fun.",
+              "C. Yes, mom. I will balance my study and screen time."
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Yes, mom. I will balance my study and screen time.)\n📌 Dịch nghĩa: Mẹ: 'Con không nên dành quá nhiều thời gian lướt mạng xã hội.' - Con: 'Vâng mẹ, con sẽ cân bằng việc học và thời gian sử dụng màn hình ạ.'\n📐 Giao tiếp lịch sự: Tiếp thu lời khuyên của cha mẹ và hứa cân đối thời gian hợp lý.\n🎉 Thầy khen: Ứng xử giao tiếp rất thông minh và ngoan ngoãn!",
+            "trans": "Đáp lại lời khuyên bảo của mẹ một cách lễ phép.",
+            "grammar": "Cụm từ: balance study and screen time.",
+            "praise": "🎉 Xuất sắc! Câu trả lời vừa đúng ngữ cảnh vừa đúng văn phạm!",
+            "encourage": "💪 Lựa chọn C thể hiện sự lễ phép và đúng trọng tâm lời mẹ khuyên!"
+          },
+          {
+            "id": "q_803_14",
+            "num": "14",
+            "content": "A modern combine harvester cuts rice much ________ than workers with sickles.",
+            "options": [
+              "A. faster",
+              "B. more fast",
+              "C. fastly"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (faster)\n📌 Dịch nghĩa: Một chiếc máy gặt đập liên hợp hiện đại cắt lúa nhanh hơn nhiều so với những người thợ cầm liềm gặt.\n📐 So sánh hơn của trạng từ ngắn: 'fast' là trạng từ ngắn đặc biệt, dạng so sánh hơn là 'faster' (không có 'fastly' hay 'more fast'). 'Much' dùng làm từ nhấn mạnh mức độ chênh lệch.\n🎉 Thầy khen: Đỉnh cao! Nắm chắc dạng so sánh hơn đặc biệt của 'fast -> faster'!",
+            "trans": "Máy gặt hiện đại gặt nhanh hơn nhiều so với thợ dùng liềm.",
+            "grammar": "So sánh hơn trạng từ ngắn: much + faster than.",
+            "praise": "🎉 Quá siêu! Em không bị bẫy fastly hay more fast!",
+            "encourage": "💪 'fast' là trạng từ ngắn nên so sánh hơn là 'faster' em nhé!"
+          },
+          {
+            "id": "q_803_15",
+            "num": "15",
+            "content": "Joining school clubs helps students make friends and learn teamwork ________.",
+            "options": [
+              "A. books",
+              "B. skills",
+              "C. desks"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (skills)\n📌 Dịch nghĩa: Tham gia các câu lạc bộ ở trường giúp học sinh kết bạn và học các kỹ năng làm việc nhóm (teamwork skills).\n📐 Collocation: 'teamwork skills' (kỹ năng làm việc nhóm/hợp tác đồng đội).\n🎉 Thầy khen: Ghép cụm từ 'teamwork skills' cực kỳ chuẩn xác!",
+            "trans": "Học kỹ năng làm việc nhóm (teamwork skills).",
+            "grammar": "Collocation: teamwork skills.",
+            "praise": "🎉 Rất tốt! Kỹ năng làm việc nhóm là teamwork skills!",
+            "encourage": "💪 Đi với 'teamwork' phải là 'skills' (kỹ năng) chứ không thể là books hay desks!"
+          },
+          {
+            "id": "q_803_16",
+            "num": "16",
+            "content": "You can join the arts club, ________ you can choose the chess club.",
+            "options": [
+              "A. but",
+              "B. or",
+              "C. so"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (or)\n📌 Dịch nghĩa: Bạn có thể tham gia câu lạc bộ mỹ thuật, HOẶC (or) bạn có thể chọn câu lạc bộ cờ vua.\n📐 Liên từ lựa chọn: 'or' dùng để đưa ra sự chọn lựa giữa hai khả năng.\n🎉 Thầy khen: Chọn liên từ 'or' cho sự lựa chọn hoàn toàn chuẩn xác!",
+            "trans": "Bạn có thể tham gia CLB nghệ thuật, hoặc CLB cờ vua.",
+            "grammar": "Liên từ chỉ sự lựa chọn: 'or' (hoặc).",
+            "praise": "🎉 Giỏi lắm! Nắm vững cách dùng liên từ 'or'!",
+            "encourage": "💪 Có 2 lựa chọn thì nối bằng liên từ 'or' em nhé!"
+          },
+          {
+            "id": "q_803_17",
+            "num": "17",
+            "content": "Teacher: How is life in the countryside different from city life?' - Student: '________'",
+            "options": [
+              "A. I like living.",
+              "B. Cities have lots of cars.",
+              "C. Life in the countryside is more peaceful and the air is fresher."
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Life in the countryside is more peaceful and the air is fresher.)\n📌 Dịch nghĩa: Thầy giáo: 'Cuộc sống ở làng quê khác với thành phố thế nào?' - Học sinh: 'Cuộc sống nông thôn yên bình hơn và không khí trong lành hơn ạ.'\n📐 So sánh khác biệt: Sử dụng câu đối đáp so sánh hơn 'more peaceful and fresher'.\n🎉 Thầy khen: Trả lời đối đáp sư phạm rất chuẩn chỉnh và mạch lạc!",
+            "trans": "Cuộc sống ở quê yên bình hơn và không khí trong sạch hơn.",
+            "grammar": "Cấu trúc so sánh hơn: more peaceful / fresher.",
+            "praise": "🎉 Xuất sắc! Đối thoại giao tiếp rất lưu loát!",
+            "encourage": "💪 Phương án C nêu rõ được sự khác biệt giữa nông thôn và thành thị!"
+          },
+          {
+            "id": "q_803_18",
+            "num": "18",
+            "content": "Farmers in our commune ________ rice on vast terraced fields every year.",
+            "options": [
+              "A. cultivate",
+              "B. cultivated",
+              "C. are cultivating"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (cultivate)\n📌 Dịch nghĩa: Nông dân xã chúng tôi trồng lúa trên những cánh đồng bậc thang rộng lớn hàng năm.\n📐 Thì Hiện tại đơn với thói quen lặp lại: 'every year' -> Chủ ngữ số nhiều 'Farmers' đi với động từ nguyên thể 'cultivate'.\n🎉 Thầy khen: Bắt đúng dấu hiệu 'every year' và chia động từ nguyên mẫu rất chuẩn!",
+            "trans": "Nông dân xã tôi trồng lúa trên ruộng bậc thang mỗi năm.",
+            "grammar": "Hiện tại đơn diễn tả việc làm định kỳ hàng năm: cultivate.",
+            "praise": "🎉 Rất tốt! Dấu hiệu 'every year' chia 'cultivate' không thể sai!",
+            "encourage": "💪 Chủ ngữ số nhiều 'Farmers' + 'every year' -> chọn cultivate!"
+          },
+          {
+            "id": "q_803_19",
+            "num": "19",
+            "content": "Children in the countryside enjoy flying kites and herding ________ in the afternoon.",
+            "options": [
+              "A. tigers",
+              "B. cats",
+              "C. cattle"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (cattle)\n📌 Dịch nghĩa: Trẻ em vùng nông thôn thích thả diều và chăn gia súc (trâu bò) vào buổi chiều.\n📐 Cụm từ vựng: 'herd cattle' (chăn thả gia súc/trâu bò).\n🎉 Thầy khen: Cụm từ 'herding cattle' gắn liền với tuổi thơ làng quê được em chọn chính xác!",
+            "trans": "Trẻ em thích thả diều và chăn trâu bò.",
+            "grammar": "Collocation: herd cattle (chăn gia súc).",
+            "praise": "🎉 Giỏi lắm! Chăn trâu thả diều là 'herding cattle'!",
+            "encourage": "💪 Đi với 'herding' ở nông thôn chỉ có 'cattle' thôi nhé!"
+          },
+          {
+            "id": "q_803_20",
+            "num": "20",
+            "content": "Choose the word CLOSEST in meaning to leisure': Teens spend leisure time browsing social networks.'",
+            "options": [
+              "A. working hours",
+              "B. free time",
+              "C. study hours"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (free time)\n📌 Dịch nghĩa: Chọn từ GẦN NGHĨA NHẤT với từ 'leisure' (thời gian rảnh rỗi): Giới trẻ dành thời gian rảnh lướt mạng xã hội. -> B. free time (thời gian rảnh).\n📐 Từ đồng nghĩa Unit 1: 'leisure time' = 'free time' (thời gian nhàn rỗi/thư giãn).\n🎉 Thầy khen: Từ đồng nghĩa 'leisure = free time' em nắm trong lòng bàn tay!",
+            "trans": "Leisure time đồng nghĩa với free time (thời gian rảnh).",
+            "grammar": "Từ đồng nghĩa: leisure time = free time = spare time.",
+            "praise": "🎉 Quá xuất sắc! Nhận diện từ đồng nghĩa cực kỳ nhạy bén!",
+            "encourage": "💪 'Leisure time' chính là 'free time' (thời gian rảnh rỗi)!"
+          },
+          {
+            "id": "q_803_21",
+            "num": "21",
+            "content": "Farmers dry rice paddy ________ the wide concrete village courtyards.",
+            "options": [
+              "A. in",
+              "B. on",
+              "C. at"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (on)\n📌 Dịch nghĩa: Những người nông dân phơi thóc TRÊN (on) những khoảng sân làng rộng bằng bê tông.\n📐 Giới từ chỉ bề mặt phẳng: 'on the courtyards' (trên mặt sân/mặt sàn).\n🎉 Thầy khen: Dùng giới từ 'on' cho bề mặt sân phơi thóc hoàn toàn chính xác!",
+            "trans": "Phơi thóc TRÊN sân bê tông rộng lớn.",
+            "grammar": "Giới từ chỉ vị trí bề mặt: on the courtyards.",
+            "praise": "🎉 Chuẩn chỉ! Phơi thóc trên bề mặt sân thì dùng giới từ 'on'!",
+            "encourage": "💪 Bề mặt sân phẳng dùng giới từ 'on' em nhé!"
+          },
+          {
+            "id": "q_803_22",
+            "num": "22",
+            "content": "David loves ________ DIY models out of recycled paper in his leisure hours.",
+            "options": [
+              "A. made",
+              "B. makes",
+              "C. making"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (making)\n📌 Dịch nghĩa: David rất thích làm (making) các mô hình thủ công từ giấy tái chế vào thời gian rảnh.\n📐 Cấu trúc động từ sở thích: 'love / like / enjoy / fancy + V-ing'.\n🎉 Thầy khen: Quy tắc V-ing sau 'love' em thuộc làu làu!",
+            "trans": "David thích làm đồ thủ công DIY từ giấy tái chế.",
+            "grammar": "Quy tắc: love + V-ing.",
+            "praise": "🎉 Rất tốt! 'love' đi kèm danh động từ 'making'!",
+            "encourage": "💪 Sau 'love' luôn chia V-ing: making!"
+          }
+        ]
+      },
+      {
+        "id": "sec_4",
+        "partNumber": 4,
+        "title": "Part 4. Read and choose the best answer A, B or C to complete the passage. (1.25 pts)",
+        "passage": "Public speaking is frequently ranked as one of (23) ________ greatest fears confronting young adolescents. The trembling voice, racing heartbeat, and fear of making (24) ________ can feel overwhelming when standing before an audience. However, joining public speaking workshops helps (25) ________ overcome stage fright systematically through vocal warm-ups and positive visualization. Delivering a persuasive speech (26) ________ enthusiastic applause builds unshakeable self-esteem and communicative poise. Overcoming the fear of (27) ________ unlocks boundless potential in every young person.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_23",
+            "num": "23",
+            "content": "Choose the best answer for blank (23) in the passage: 'Public speaking is frequently ranked as one of (23) ________ greatest fears confronting young adolescents.'",
+            "options": [
+              "A. at",
+              "B. in",
+              "C. the"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (the)\n📌 Dịch nghĩa: Điền vào chỗ trống (23): Thuyết trình trước đám đông thường được xếp vào một trong NHỮNG (the) nỗi sợ lớn nhất đối với các bạn trẻ.\n📐 Mạo từ với so sánh nhất: 'one of THE greatest fears' (so sánh nhất 'greatest' bắt buộc có mạo từ 'the').\n🎉 Thầy khen: Bắt trọn quy tắc mạo từ 'the' trước tính từ so sánh nhất 'greatest'!",
+            "trans": "Một trong những nỗi sợ hãi lớn nhất: one of the greatest fears.",
+            "grammar": "Mạo từ xác định trước tính từ so sánh nhất: the greatest.",
+            "praise": "🎉 Quá xuất sắc! So sánh nhất luôn đi cùng 'the'!",
+            "encourage": "💪 Thấy 'greatest' (so sánh nhất) điền ngay mạo từ 'the' nhé!"
+          },
+          {
+            "id": "q_803_24",
+            "num": "24",
+            "content": "Choose the best answer for blank (24) in the passage: '...and fear of making (24) ________ can feel overwhelming when standing before an audience.'",
+            "options": [
+              "A. essential",
+              "B. mistakes",
+              "C. creative"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (mistakes)\n📌 Dịch nghĩa: Điền vào chỗ trống (24): ...và nỗi sợ mắc lỗi (making mistakes) có thể tạo cảm giác choáng ngợp khi đứng trước khán giả.\n📐 Collocation: 'make mistakes' (mắc sai lầm/phạm lỗi).\n🎉 Thầy khen: Cụm từ cố định 'make mistakes' là kiến thức cốt lõi!",
+            "trans": "Nỗi sợ mắc lỗi khi đứng nói trước đám đông: making mistakes.",
+            "grammar": "Collocation: make mistakes (mắc lỗi).",
+            "praise": "🎉 Tuyệt vời! Cụm từ 'make mistakes' chuẩn xác!",
+            "encourage": "💪 Đi với động từ 'making' chỉ có danh từ 'mistakes' (mắc lỗi)!"
+          },
+          {
+            "id": "q_803_25",
+            "num": "25",
+            "content": "Choose the best answer for blank (25) in the passage: 'However, joining public speaking workshops helps (25) ________ overcome stage fright systematically...'",
+            "options": [
+              "A. essential",
+              "B. teenagers",
+              "C. creative"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (teenagers)\n📌 Dịch nghĩa: Điền vào chỗ trống (25): Tuy nhiên, tham gia các buổi hội thảo thuyết trình giúp giới trẻ/thanh thiếu niên (teenagers) vượt qua nỗi sợ sân khấu một cách bài bản.\n📐 Cấu trúc: 'help somebody (teenagers) + V (inf)'.\n🎉 Thầy khen: Danh từ chỉ đối tượng 'teenagers' khớp hoàn hảo về mặt nghĩa và cấu trúc câu!",
+            "trans": "Giúp các bạn trẻ (teenagers) vượt qua nỗi sợ sân khấu.",
+            "grammar": "Cấu trúc: help + Object (teenagers) + do something.",
+            "praise": "🎉 Rất tốt! Chọn đối tượng thanh thiếu niên 'teenagers' cực chuẩn!",
+            "encourage": "💪 Sau 'helps' cần tân ngữ chỉ người: 'teenagers'!"
+          },
+          {
+            "id": "q_803_26",
+            "num": "26",
+            "content": "Choose the best answer for blank (26) in the passage: 'Delivering a persuasive speech (26) ________ enthusiastic applause builds unshakeable self-esteem...'",
+            "options": [
+              "A. at",
+              "B. to",
+              "C. in"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (to)\n📌 Dịch nghĩa: Điền vào chỗ trống (26): Trình bày một bài phát biểu thuyết phục TRONG TIẾNG VỖ TAY (to enthusiastic applause) nồng nhiệt giúp bồi đắp lòng tự trọng vững chắc.\n📐 Cụm giới từ: 'to enthusiastic applause' (trong tràng pháo tay cổ vũ nhiệt liệt).\n🎉 Thầy khen: Cụm từ nâng cao 'to enthusiastic applause' em làm rất chính xác!",
+            "trans": "Trình bày bài nói trong tràng pháo tay nồng nhiệt.",
+            "grammar": "Cụm thành ngữ giới từ: to applause (trong tiếng vỗ tay khen ngợi).",
+            "praise": "🎉 Xuất sắc! Nắm vững cụm giới từ nâng cao 'to applause'!",
+            "encourage": "💪 Cụm từ 'to enthusiastic applause' có nghĩa là trong tiếng vỗ tay tán thưởng!"
+          },
+          {
+            "id": "q_803_27",
+            "num": "27",
+            "content": "Choose the best answer for blank (27) in the passage: 'Overcoming the fear of (27) ________ unlocks boundless potential in every young person.'",
+            "options": [
+              "A. speaking",
+              "B. essential",
+              "C. creative"
+            ],
+            "answer": "A",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (speaking)\n📌 Dịch nghĩa: Điền vào chỗ trống (27): Vượt qua nỗi sợ nói trước đám đông (the fear of speaking) sẽ mở khóa tiềm năng vô hạn trong mỗi người trẻ.\n📐 Giới từ đi với V-ing: 'fear of + V-ing (speaking)' (nỗi sợ phát biểu/nói).\n🎉 Thầy khen: Chọn danh động từ 'speaking' hoàn thành bài đọc điền khuyết đạt điểm tuyệt đối!",
+            "trans": "Vượt qua nỗi sợ phát biểu trước công chúng: the fear of speaking.",
+            "grammar": "Cụm danh từ: fear of speaking.",
+            "praise": "🎉 Đỉnh cao! 'fear of speaking' chuẩn xác 100%!",
+            "encourage": "💪 Sau giới từ 'of' là danh động từ 'speaking' em nhé!"
+          }
+        ]
+      },
+      {
+        "id": "sec_5",
+        "partNumber": 5,
+        "title": "Part 5. Read the passage and choose the best answer A, B or C for each question. (1.25 pts)",
+        "passage": "Crafting bespoke herbal tea blends from dried botanical ingredients is a relaxing hobby that celebrates natural wellness. Teenagers can combine dried chamomile blossoms, fragrant peppermint leaves, soothing lavender, and dried ginger roots to create aromatic infusions. Each botanical ingredient offers distinct health benefits, such as soothing digestive discomfort or alleviating tension before bedtime. Brewing tea with a glass teapot allows you to admire the colourful unfurling of floral petals. Savoring hot herbal tea creates a tranquil moment of peaceful reflection.",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_28",
+            "num": "28",
+            "content": "Which of the following is TRUE according to the passage?",
+            "options": [
+              "A. Teachers strictly forbid students from developing any creative hobbies.",
+              "B. Engaging constructively in the art of making herbal tea blends brings positive benefits for students.",
+              "C. Students should spend 24 hours a day on computer screens without resting."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Engaging constructively in the art of making herbal tea blends...)\n📌 Dịch nghĩa: Khẳng định nào sau đây là ĐÚNG theo bài đọc? -> B. Tham gia vào nghệ thuật pha chế trà thảo mộc mang lại nhiều lợi ích tích cực cho học sinh.\n🔍 Dẫn chứng: Toàn bộ bài đọc nói về: 'Each botanical ingredient offers distinct health benefits... Savoring hot herbal tea creates a tranquil moment of peaceful reflection.'\n🎉 Thầy khen: Đọc hiểu và tổng hợp thông tin rất xuất sắc!",
+            "trans": "Pha chế và thưởng thức trà thảo mộc mang lại lợi ích thư giãn tích cực.",
+            "grammar": "Fact-finding: Xác định khẳng định đúng dựa trên ý toàn bài.",
+            "praise": "🎉 Quá giỏi! Em dễ dàng loại bỏ hai phương án sai vô lý A và C!",
+            "encourage": "💪 Đáp án B phản ánh chính xác thông điệp tích cực của bài đọc!"
+          },
+          {
+            "id": "q_803_29",
+            "num": "29",
+            "content": "According to the text, which of the following is highlighted?",
+            "options": [
+              "A. Teenagers should avoid all physical recreation activities",
+              "B. Teenagers can combine dried chamomile blossoms, fragrant peppermint leaves, soothing lavender, and dried ginger roots",
+              "C. Students must study alone without any guidance or support"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Teenagers can combine dried chamomile blossoms...)\n📌 Dịch nghĩa: Theo bài viết, chi tiết nào sau đây được nêu bật? -> B. Giới trẻ có thể kết hợp hoa cúc khô, lá bạc hà thơm, hoa oải hương và gừng khô.\n🔍 Dẫn chứng: 'Teenagers can combine dried chamomile blossoms, fragrant peppermint leaves, soothing lavender, and dried ginger roots to create aromatic infusions.'\n🎉 Thầy khen: So khớp chi tiết trong bài đọc cực kỳ tinh tế và chuẩn xác!",
+            "trans": "Các thành phần hoa quả thảo mộc được kết hợp để pha trà.",
+            "grammar": "Chi tiết bài đọc: combine dried chamomile blossoms, peppermint, lavender...",
+            "praise": "🎉 Rất tốt! Bắt đúng 100% chi tiết các nguyên liệu làm trà thảo mộc!",
+            "encourage": "💪 Câu thứ 2 của bài đọc nêu trọn vẹn chi tiết này: chọn B!"
+          },
+          {
+            "id": "q_803_30",
+            "num": "30",
+            "content": "What is the main topic of the passage?",
+            "options": [
+              "A. Commercial shopping centers and modern entertainment complexes",
+              "B. Technical guide for maintaining automobile and motorbike engines",
+              "C. The Art of Making Herbal Tea Blends"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (The Art of Making Herbal Tea Blends)\n📌 Dịch nghĩa: Chủ đề chính của đoạn văn là gì? -> C. Nghệ thuật pha chế các loại trà thảo mộc.\n🔍 Dẫn chứng: Câu mở đầu và xuyên suốt đoạn văn: 'Crafting bespoke herbal tea blends from dried botanical ingredients is a relaxing hobby...'\n🎉 Thầy khen: Bắt trúng tiêu đề và chủ đề bài đọc ngay từ câu chủ đề!",
+            "trans": "Chủ đề chính: Nghệ thuật pha chế các loại trà thảo mộc.",
+            "grammar": "Xác định chủ đề chính: Main topic of the reading passage.",
+            "praise": "🎉 Xuất sắc! Nhận diện chủ đề chính The Art of Making Herbal Tea Blends cực nhanh!",
+            "encourage": "💪 Cả bài đọc nói về việc pha chế trà thảo mộc, đáp án C là chính xác nhất!"
+          },
+          {
+            "id": "q_803_31",
+            "num": "31",
+            "content": "The word 'peaceful' in the passage is closest in meaning to ________.",
+            "options": [
+              "A. useless and meaningless",
+              "B. extremely harmful and bad",
+              "C. quiet, calm, and tranquil"
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (quiet, calm, and tranquil)\n📌 Dịch nghĩa: Từ 'peaceful' (yên bình, thanh thản) trong bài đọc gần nghĩa nhất với: -> C. quiet, calm, and tranquil (yên tĩnh, êm đềm và thanh bình).\n📐 Từ đồng nghĩa: 'peaceful' = 'calm' = 'tranquil' = 'serene'.\n🎉 Thầy khen: Vốn từ đồng nghĩa tiếng Anh xuất sắc!",
+            "trans": "Peaceful đồng nghĩa với quiet, calm và tranquil.",
+            "grammar": "Từ đồng nghĩa: peaceful = tranquil = calm.",
+            "praise": "🎉 Quá đỉnh! 'Peaceful' chính là 'quiet, calm, and tranquil'!",
+            "encourage": "💪 'Peaceful' có nghĩa là thanh bình, yên tĩnh: chọn C em nhé!"
+          },
+          {
+            "id": "q_803_32",
+            "num": "32",
+            "content": "The word 'They' or 'This' in the passage refers to ________.",
+            "options": [
+              "A. unrelated objects outside the school",
+              "B. the subject or people mentioned previously",
+              "C. an angry crowd in the market"
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (the subject or people mentioned previously)\n📌 Dịch nghĩa: Đại từ thay thế trong bài đọc quy chiếu về đối tượng hay người được nhắc đến trước đó.\n📐 Pronoun Reference: Đại từ chỉ định/nhân xưng luôn quy chiếu về sự vật/người đã xuất hiện trong ngữ cảnh phía trước.\n🎉 Thầy khen: Hiểu bản chất câu hỏi quy chiếu đại từ rất vững vàng!",
+            "trans": "Đại từ quy chiếu về đối tượng đã được đề cập trước đó.",
+            "grammar": "Quy chiếu đại từ: Reference to previously mentioned entity.",
+            "praise": "🎉 Rất tốt! Hoàn thành trọn vẹn 100% phần đọc hiểu!",
+            "encourage": "💪 Đại từ luôn chỉ về đối tượng được nhắc đến ở câu liền trước nhé!"
+          }
+        ]
+      },
+      {
+        "id": "sec_6",
+        "partNumber": 6,
+        "title": "Part 6. Sentence Transformation: Choose the correct sentence A, B or C that has the closest meaning. (0.5 pt)",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_33",
+            "num": "33",
+            "content": "Study hard, or you won't pass the entrance examination.",
+            "options": [
+              "A. If you don't study hard, you won't pass the examination entrance.",
+              "B. If you don't study hard, you won't pass the entrance examination.",
+              "C. If you won't study hard, you won't pass the entrance examination."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (If you don't study hard, you won't pass the entrance examination.)\n📌 Dịch nghĩa: Câu gốc: Hãy học tập chăm chỉ, nếu không bạn sẽ không đỗ kỳ thi tuyển sinh. -> B. Nếu bạn không học chăm chỉ, bạn sẽ không đỗ kỳ thi tuyển sinh.\n📐 Chuyển đổi câu mệnh lệnh với 'or' sang câu điều kiện loại 1: 'Imperative, or + S + will/won't + V' <=> 'If + S + don't/doesn't + V (Hiện tại đơn), S + won't + V (Tương lai đơn)'. Lưu ý mệnh đề If không dùng 'won't' (loại C) và cụm từ đúng là 'entrance examination' chứ không phải 'examination entrance' (loại A).\n🎉 Thầy khen: Phân biệt cấu trúc câu điều kiện loại 1 và cụm từ 'entrance examination' cực kỳ sắc bén!",
+            "trans": "Học chăm chỉ nếu không sẽ trượt = Nếu không học chăm, bạn sẽ không đỗ kỳ thi.",
+            "grammar": "Chuyển đổi: Imperative + or... <=> If + S + don't + V, S + won't + V.",
+            "praise": "🎉 Tuyệt chiêu ngữ pháp! Câu điều kiện loại 1 chuyển đổi cực chuẩn!",
+            "encourage": "💪 Mệnh đề If chia hiện tại đơn (don\\'t study), mệnh đề chính chia tương lai (won\\'t pass)!"
+          },
+          {
+            "id": "q_803_34",
+            "num": "34",
+            "content": "Peter speaks English more fluently than anyone in our class.",
+            "options": [
+              "A. No one speaks English worse than Peter.",
+              "B. Peter speaks English the most fluently in our class.",
+              "C. Peter speaks English less fluently than other students."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Peter speaks English the most fluently in our class.)\n📌 Dịch nghĩa: Câu gốc: Peter nói tiếng Anh lưu loát hơn bất kỳ ai trong lớp chúng tôi. -> B. Peter nói tiếng Anh lưu loát nhất lớp chúng tôi.\n📐 Chuyển đổi so sánh hơn sang so sánh nhất: 'S + V + more + adv + than anyone...' <=> 'S + V + THE MOST + adv + in...'.\n🎉 Thầy khen: Chuyển đổi so sánh hơn sang so sánh nhất 'more fluently than anyone <=> the most fluently' xuất sắc!",
+            "trans": "Peter nói tiếng Anh trôi chảy hơn bất kỳ ai = Peter nói tiếng Anh trôi chảy nhất lớp.",
+            "grammar": "So sánh nhất của trạng từ dài: the most fluently.",
+            "praise": "🎉 Quá siêu! Nắm chắc dạng so sánh nhất trạng từ dài 'the most fluently'!",
+            "encourage": "💪 Nói lưu loát hơn tất cả mọi người có nghĩa là nói lưu loát nhất: the most fluently!"
+          }
+        ]
+      },
+      {
+        "id": "sec_7",
+        "partNumber": 7,
+        "title": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B or C. (0.5 pt)",
+        "passage": "",
+        "prompt": "",
+        "questions": [
+          {
+            "id": "q_803_35",
+            "num": "35",
+            "content": "nomads / travel / across / plateaus / horses / on / .",
+            "options": [
+              "A. Nomads travel across plateaus horses on.",
+              "B. Nomads travel across plateaus on horses.",
+              "C. Travel nomads across plateaus on horses."
+            ],
+            "answer": "B",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (Nomads travel across plateaus on horses.)\n📌 Dịch nghĩa: Những người du mục di chuyển qua các cao nguyên trên lưng ngựa.\n📐 Trật tự câu chuẩn: Chủ ngữ 'Nomads' + Động từ 'travel' + Cụm nơi chốn 'across plateaus' + Cụm phương tiện 'on horses'.\n🎉 Thầy khen: Sắp xếp trật tự câu văn tiếng Anh cực kỳ chuẩn xác và mạch lạc!",
+            "trans": "Người du mục di chuyển bằng ngựa qua các cao nguyên.",
+            "grammar": "Trật tự câu: S + V + Prep phrase (place) + Prep phrase (manner/transport).",
+            "praise": "🎉 Rất tốt! Vị trí cụm từ 'on horses' đứng cuối câu rất chuẩn mực!",
+            "encourage": "💪 Trật tự câu: Chủ ngữ Nomads + travel across plateaus + on horses!"
+          },
+          {
+            "id": "q_803_36",
+            "num": "36",
+            "content": "balanced / lifestyle / empowers / teenagers / thrive / to / .",
+            "options": [
+              "A. Balanced lifestyle empowers teenagers thrive to.",
+              "B. Lifestyle balanced empowers teenagers to thrive.",
+              "C. Balanced lifestyle empowers teenagers to thrive."
+            ],
+            "answer": "C",
+            "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Balanced lifestyle empowers teenagers to thrive.)\n📌 Dịch nghĩa: Lối sống cân bằng tiếp sức cho thanh thiếu niên phát triển toàn diện.\n📐 Trật tự từ: Tính từ 'Balanced' đứng trước danh từ 'lifestyle'. Cấu trúc: 'empower somebody to do something' (empowers teenagers to thrive).\n🎉 Thầy khen: Hoàn thành câu trắc nghiệm số 36 với số điểm tuyệt đối 9.0/9.0!",
+            "trans": "Lối sống cân bằng giúp các bạn trẻ phát triển mạnh mẽ.",
+            "grammar": "Trật tự từ: Adj + Noun (Balanced lifestyle) + Verb + Object + to V.",
+            "praise": "🎉 Tuyệt đối xuất sắc! Trọn vẹn 36 câu trắc nghiệm ăn điểm tuyệt đối!",
+            "encourage": "💪 Tính từ đứng trước: Balanced lifestyle + empowers teenagers to thrive!"
+          }
+        ]
+      },
+      {
+        "id": "sec_8",
+        "partNumber": 8,
+        "title": "Part 8. Writing (1.0 pt)",
+        "passage": "",
+        "prompt": "Part 8. Writing (1.0 pt) Write a paragraph (80-100 words) about how teenagers can resist negative peer pressure.\nExamples of negative peer pressure; Why teenagers feel the urge to conform; The importance of self-confidence and personal values; Choosing supportive friends.",
+        "questions": []
+      }
+    ],
+    "writingRubric": "Task response: 0.25đ, Coherence & Cohesion: 0.25đ, Lexical resource: 0.25đ, Grammatical accuracy: 0.25đ. Tổng: 1.0 điểm.",
+    "sampleWritingText": "Resisting negative peer pressure is an essential skill for teenagers to maintain self-confidence and personal integrity. Firstly, young adolescents often feel an overwhelming urge to conform to risky behaviors, such as skipping classes or excessive screen time, just to gain acceptance from classmates. To overcome this, teenagers must cultivate strong personal values and have the courage to say \"no\" firmly when facing uncomfortable situations. Furthermore, choosing supportive friends who share positive goals and encourage healthy hobbies makes a tremendous difference. When teenagers feel secure in their identity and communicate openly with parents, peer pressure loses its grip.",
+    "finalScoreSummary": "TỔNG ĐIỂM BÀI THI GIỮA HỌC KỲ I: 10,0 ĐIỂM (100% Đề thi Viết trên giấy)\n- Trắc nghiệm khách quan (Parts 1-7, 36 câu): 9,0 điểm (0.25đ/câu)\n- Viết tự luận (Part 8): 1,0 điểm.",
+    "publishedAt": "2026-10-26T16:15:00.000Z"
   }
 ];
 
