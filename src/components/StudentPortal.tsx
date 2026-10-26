@@ -129,19 +129,6 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  // Tự động ghi nhận lịch sử khi học từ vựng
-  useEffect(() => {
-    if (currentStudent && activeTab === 'vocab') {
-      try {
-        studentGradebookService.recordCheckin(
-          currentStudent,
-          'Học từ vựng SGK',
-          `Unit ${selectedUnit} - Tiếng Anh Lớp ${selectedGrade}`
-        );
-      } catch {}
-    }
-  }, [selectedUnit, selectedGrade, activeTab, currentStudent]);
-
   const [trialCount, setTrialCount] = useState<number>(() => {
     return Number(localStorage.getItem('gvai_student_trial_count') || '0');
   });
@@ -786,6 +773,20 @@ export const StudentPortal: React.FC = () => {
     setSpeechRate(newRate);
     audioPronunciationService.setRate(newRate);
   };
+
+  // Tự động ghi nhận lịch sử khi học từ vựng
+  useEffect(() => {
+    if (currentStudent && activeTab === 'vocab') {
+      try {
+        studentGradebookService.recordCheckin(
+          currentStudent,
+          'Học từ vựng SGK',
+          `Unit ${selectedUnit} - Tiếng Anh Lớp ${selectedGrade}`
+        );
+      } catch {}
+    }
+  }, [selectedUnit, selectedGrade, activeTab, currentStudent]);
+
 
 
 
