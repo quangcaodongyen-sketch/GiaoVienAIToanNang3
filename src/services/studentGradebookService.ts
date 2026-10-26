@@ -70,6 +70,18 @@ export interface ClassLeaderboardItem {
   badges: string[];
 }
 
+export interface StudentCheckinLog {
+  id: string;
+  studentId: string;
+  studentCode: string;
+  studentName: string;
+  className: string;
+  grade: number;
+  action: string;
+  detail?: string;
+  timestamp: string;
+}
+
 export interface ClassComparisonStats {
   totalStudents: number;
   activeStudents: number;
@@ -90,7 +102,8 @@ const STORAGE_KEYS = {
   SUBMISSIONS: 'gvai_gradebook_submissions_v4_clean',
   ACTIVE_STUDENT: 'gvai_gradebook_active_student_v4_clean',
   VAULT_STUDENTS: 'gvai_students_vault_permanent',
-  VAULT_SUBMISSIONS: 'gvai_submissions_vault_permanent'
+  VAULT_SUBMISSIONS: 'gvai_submissions_vault_permanent',
+  CHECKIN_LOGS: 'gvai_gradebook_checkin_logs_v5_clean'
 };
 
 // Hàm chuẩn hóa tiếng Việt loại bỏ dấu và ký tự thừa để rà soát trùng lặp chính xác
@@ -186,6 +199,7 @@ class StudentGradebookService {
   private classes: ClassRoom[] = [];
   private students: StudentProfile[] = [];
   private submissions: StudentSubmission[] = [];
+  private checkinLogs: StudentCheckinLog[] = [];
 
   constructor() {
     this.initData();
@@ -200,6 +214,12 @@ class StudentGradebookService {
       const stuRaw = localStorage.getItem(STORAGE_KEYS.STUDENTS);
       this.students = stuRaw ? JSON.parse(stuRaw) : DEFAULT_STUDENTS;
 
+            try {
+        const logRaw = localStorage.getItem(STORAGE_KEYS.CHECKIN_LOGS);
+        this.checkinLogs = logRaw ? JSON.parse(logRaw) : [];
+      } catch {
+        this.checkinLogs = [];
+      }
       const subRaw = localStorage.getItem(STORAGE_KEYS.SUBMISSIONS);
       this.submissions = subRaw ? JSON.parse(subRaw) : DEFAULT_SUBMISSIONS;
 
@@ -869,6 +889,15 @@ class StudentGradebookService {
 
     this.submissions.unshift(newSub);
     this.saveSubmissions();
+    // Tự động ghi nhận lịch sử học tập công khai
+    try {
+      this.recordCheckin(
+        { id: newSub.studentId, studentCode: newSub.studentCode, name: newSub.studentName, className: newSub.className, grade: newSub.grade },
+        newSub.testType === 'online_quiz' ? 'Hoàn thành bài kiểm tra trắc nghiệm' : (newSub.testType === 'gk_ck_exam' ? 'Nộp bài thi GK-CK' : 'Hoàn thành bài tập SGK'),
+        `${newSub.testTitle} - Đạt ${newSub.score}/10 điểm (${newSub.correctCount}/${newSub.totalQuestions} câu đúng)`
+      );
+      this.syncToCloud().catch(() => {});
+    } catch {}
     return newSub;
   }
 
@@ -1123,6 +1152,155 @@ class StudentGradebookService {
   }
 
   // ==================== XUẤT SỔ ĐIỂM EXCEL (CSV UTF-8 CÓ DẤU) ====================
+  
+  // ==================== QUẢN LÝ LỊCH SỬ HỌC SINH VÀO HỌC (CHECK-IN LOGS) ====================
+  private saveCheckinLogs() {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CHECKIN_LOGS, JSON.stringify(this.checkinLogs.slice(0, 500)));
+    } catch {}
+  }
+
+  public recordCheckin(student: Partial<StudentProfile>, action: string, detail?: string): StudentCheckinLog {
+    const log: StudentCheckinLog = {
+      id: 'log-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+      studentId: student.id || ('stu-' + (student.name || 'guest')),
+      studentCode: student.studentCode || '',
+      studentName: student.name || 'Học sinh',
+      className: student.className || 'Toàn trường',
+      grade: student.grade || 12,
+      action,
+      detail: detail || '',
+      timestamp: new Date().toISOString()
+    };
+    this.checkinLogs.unshift(log);
+    if (this.checkinLogs.length > 500) {
+      this.checkinLogs = this.checkinLogs.slice(0, 500);
+    }
+    this.saveCheckinLogs();
+    return log;
+  }
+
+  public getCheckinLogs(limit = 100, classFilter?: string): StudentCheckinLog[] {
+    let list = [...this.checkinLogs];
+    if (classFilter && classFilter !== 'ALL' && classFilter !== 'all') {
+      const normCls = normalizeClassName(classFilter);
+      list = list.filter(l => normalizeClassName(l.className) === normCls);
+    }
+    return list.slice(0, limit);
+  }
+
+  public getPublicStudySummary() {
+    const todayStr = new Date().toDateString();
+    const todayLogs = this.checkinLogs.filter(l => {
+      try {
+        return new Date(l.timestamp).toDateString() === todayStr;
+      } catch {
+        return false;
+      }
+    });
+
+    const activeClassesMap = new Map<string, number>();
+    this.students.forEach(s => {
+      const cls = s.className || 'Chưa xếp lớp';
+      activeClassesMap.set(cls, (activeClassesMap.get(cls) || 0) + 1);
+    });
+
+    const topClasses = Array.from(activeClassesMap.entries())
+      .map(([className, studentCount]) => ({ className, studentCount }))
+      .sort((a, b) => b.studentCount - a.studentCount)
+      .slice(0, 5);
+
+    return {
+      totalStudents: this.students.length,
+      todayCheckinsCount: todayLogs.length,
+      totalSubmissionsCount: this.submissions.length,
+      totalClassesCount: activeClassesMap.size,
+      topClasses
+    };
+  }
+
+  // ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ====================
+  public quickAccessStudent(fullName: string, className: string, gradeInput?: number): StudentProfile {
+    const cleanName = fullName.trim().replace(/\s+/g, ' ');
+    let cleanCls = normalizeClassName(className) || '12A1';
+    if (!cleanCls) cleanCls = '12A1';
+
+    // Xác định khối lớp tự động (6 -> 12)
+    let grade = gradeInput || 12;
+    const matchGrade = cleanCls.match(/^(\d{1,2})/);
+    if (matchGrade && matchGrade[1]) {
+      const gNum = parseInt(matchGrade[1], 10);
+      if (gNum >= 6 && gNum <= 12) grade = gNum;
+    }
+
+    // Đảm bảo lớp học có trong danh sách
+    let targetClass = this.classes.find(c => normalizeClassName(c.name) === cleanCls);
+    if (!targetClass) {
+      targetClass = {
+        id: 'cls-' + cleanCls.toLowerCase().replace(/[^a-z0-9]/g, ''),
+        name: cleanCls,
+        grade: grade,
+        schoolYear: '2026 - 2027',
+        homeroomTeacher: 'Giáo viên bộ môn',
+        description: `Lớp ${cleanCls}`,
+        createdAt: new Date().toISOString()
+      };
+      this.classes.push(targetClass);
+      this.saveClasses();
+    }
+
+    // Tìm học sinh đã tồn tại theo Tên + Lớp
+    const normInputName = normalizeVietnameseName(cleanName);
+    let existing = this.students.find(s => {
+      const sNameNorm = normalizeVietnameseName(s.name);
+      const sClsNorm = normalizeClassName(s.className);
+      return sNameNorm === normInputName && (sClsNorm === cleanCls || s.classId === targetClass!.id);
+    });
+
+    if (existing) {
+      existing.grade = grade;
+      existing.className = cleanCls;
+      existing.classId = targetClass.id;
+      this.setActiveStudent(existing);
+      this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
+      this.saveStudents();
+      this.syncToCloud().catch(() => {});
+      return existing;
+    }
+
+    // Tạo hồ sơ học sinh mới ngay lập tức
+    const existingInClass = this.students.filter(s => normalizeClassName(s.className) === cleanCls).length;
+    const code = 'HS' + cleanCls.replace(/[^A-Za-z0-9]/g, '') + '-' + (existingInClass + 1).toString().padStart(2, '0');
+    
+    // Tạo username an toàn từ họ tên
+    const slug = cleanName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+
+    const newStudent: StudentProfile = {
+      id: 'stu-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000),
+      studentCode: code,
+      username: slug || code.toLowerCase(),
+      password: '12345',
+      name: cleanName,
+      classId: targetClass.id,
+      className: cleanCls,
+      grade: grade,
+      gender: 'Nam',
+      note: 'Vào học nhanh trực tiếp không cần đăng ký',
+      createdAt: new Date().toISOString()
+    };
+
+    this.students.push(newStudent);
+    this.saveStudents();
+    this.setActiveStudent(newStudent);
+    this.recordCheckin(newStudent, 'Vào học trực tuyến', `Bắt đầu buổi học mới tại Lớp ${cleanCls}`);
+    this.syncToCloud().catch(() => {});
+    return newStudent;
+  }
+
   public exportGradebookToCSV(classId?: string): string {
     const list = this.getSubmissions({ classId });
     const targetClass = classId && classId !== 'all' ? this.getClassById(classId) : null;

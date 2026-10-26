@@ -30,6 +30,7 @@ import { OnlineExamPortal } from './OnlineExamPortal';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
+import { StudentPublicTracking } from './StudentPublicTracking';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
@@ -101,6 +102,46 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 export const StudentPortal: React.FC = () => {
   // ==================== QUẢN LÝ TÀI KHOẢN HỌC SINH & ĐĂNG XUẤT / ĐĂNG KÝ ====================
   const [currentStudent, setCurrentStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
+  // ==================== VÀO HỌC NHANH CHỈ CẦN TÊN & LỚP (KHÔNG CẦN ĐĂNG KÝ) ====================
+  const [quickFullName, setQuickFullName] = useState<string>('');
+  const [quickClassName, setQuickClassName] = useState<string>('12A1');
+  const [quickError, setQuickError] = useState<string>('');
+
+  const handleQuickAccessSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setQuickError('');
+    const name = quickFullName.trim();
+    if (!name || name.length < 2) {
+      setQuickError('Vui lòng nhập đầy đủ Họ và tên học sinh (tối thiểu 2 ký tự)!');
+      return;
+    }
+    const cls = quickClassName.trim() || '12A1';
+    const student = studentGradebookService.quickAccessStudent(name, cls);
+    setCurrentStudent(student);
+    alert(`🎉 Chúc mừng em ${student.name} (Lớp ${student.className}) đã vào học thành công!`);
+  };
+
+  const handleSwitchOtherStudent = () => {
+    if (window.confirm('Em có chắc chắn muốn đổi bạn khác vào học không?')) {
+      studentGradebookService.setActiveStudent(null);
+      setCurrentStudent(null);
+      setQuickFullName('');
+    }
+  };
+
+  // Tự động ghi nhận lịch sử khi học từ vựng
+  useEffect(() => {
+    if (currentStudent && activeTab === 'vocab') {
+      try {
+        studentGradebookService.recordCheckin(
+          currentStudent,
+          'Học từ vựng SGK',
+          `Unit ${selectedUnit} - Tiếng Anh Lớp ${selectedGrade}`
+        );
+      } catch {}
+    }
+  }, [selectedUnit, selectedGrade, activeTab, currentStudent]);
+
   const [trialCount, setTrialCount] = useState<number>(() => {
     return Number(localStorage.getItem('gvai_student_trial_count') || '0');
   });
@@ -681,7 +722,7 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'forum' | 'messages'>(() => {
+  const [activeTab, setActiveTab] = useState<'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages'>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
@@ -792,12 +833,12 @@ export const StudentPortal: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={handleStudentLogout}
-                  className="ml-2 p-2 rounded-xl bg-rose-500/80 hover:bg-rose-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
-                  title="Đăng xuất tài khoản học sinh"
+                  onClick={handleSwitchOtherStudent}
+                  className="ml-2 px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black transition flex items-center gap-1 cursor-pointer shadow-sm"
+                  title="Đổi bạn khác vào học"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Đăng Xuất</span>
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Đổi Bạn Khác</span>
                 </button>
 
                 {isAdminUnlocked ? (
@@ -949,6 +990,18 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('tracking')}
+            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'tracking'
+                ? 'bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 shadow-md font-black border-2 border-emerald-300'
+                : 'bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-emerald-300" />
+            <span>📊 Thống Kê Vào Học</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('leaderboard')}
             className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'leaderboard'
@@ -1012,50 +1065,114 @@ export const StudentPortal: React.FC = () => {
         </div>
       </div>
 
-      {/* ==================== BẢO VỆ PHÂN HỆ HỌC TẬP & KIỂM TRA (YÊU CẦU ĐĂNG KÝ / ĐĂNG NHẬP HỌC SINH) ==================== */}
+      {/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}
       {!currentStudent && ['vocab', 'sgk', 'exam', 'quiz', 'leaderboard', 'hsg'].includes(activeTab) && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-blue-500/30 p-6 sm:p-10 text-center max-w-2xl mx-auto shadow-xl space-y-4 my-6 animate-in fade-in">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto text-3xl shadow-lg shadow-blue-500/20">
-            🎓
-          </div>
-          <div>
-            <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold text-xs uppercase tracking-wider border border-blue-200 dark:border-blue-800">
-              Yêu Cầu Tài Khoản Học Sinh
-            </span>
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-2 mb-1">
-              Đăng Ký hoặc Đăng Nhập Để Vào Học & Làm Bài Kiểm Tra
+        <div className="bg-gradient-to-br from-white via-blue-50/60 to-indigo-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl border-2 border-blue-500/40 p-6 sm:p-8 shadow-xl max-w-3xl mx-auto my-6 animate-in fade-in space-y-5">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 font-bold text-xs uppercase tracking-wider border border-blue-200 dark:border-blue-800">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Vào Học Nhanh - Không Cần Đăng Ký - Không Mật Khẩu</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              Ghi Họ & Tên và Lớp Để Vào Học Ngay!
             </h3>
-            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
-              Hệ thống học tập Trường THCS Đồng Yên yêu cầu mỗi học sinh tự đăng ký và đăng nhập tài khoản riêng của mình để làm bài tập SGK, kiểm tra trực tuyến, lưu điểm số và tham gia thi đua theo lớp.
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+              Em chỉ cần điền Họ và tên cùng Lớp học của mình là được mở khóa toàn bộ: Học từ vựng SGK, làm bài tập và thi trực tuyến ngay lập tức. Lịch sử vào học sẽ được tự động lưu lại!
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+
+          {/* Form 2 ô nhập liệu */}
+          <form onSubmit={handleQuickAccessSubmit} className="space-y-4 max-w-xl mx-auto">
+            {quickError && (
+              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-bold text-center">
+                ⚠️ {quickError}
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                👤 Họ và tên học sinh (*):
+              </label>
+              <input
+                type="text"
+                required
+                value={quickFullName}
+                onChange={(e) => {
+                  setQuickFullName(e.target.value);
+                  setQuickError('');
+                }}
+                placeholder="Ví dụ: Nguyễn Văn An, Trần Thu Hà..."
+                className="w-full px-4 py-3 rounded-2xl border-2 border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm sm:text-base font-bold focus:border-blue-600 focus:outline-hidden transition shadow-xs"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                  🏫 Lớp học (*):
+                </label>
+                <span className="text-[11px] text-slate-400">Bấm chọn nhanh hoặc gõ trực tiếp</span>
+              </div>
+              
+              <input
+                type="text"
+                required
+                value={quickClassName}
+                onChange={(e) => {
+                  setQuickClassName(e.target.value);
+                  setQuickError('');
+                }}
+                placeholder="Ví dụ: 12A1, 12A2, 11A, 10A, 9A, 6B..."
+                className="w-full px-4 py-3 rounded-2xl border-2 border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm sm:text-base font-bold focus:border-blue-600 focus:outline-hidden transition shadow-xs uppercase font-mono"
+              />
+
+              {/* Nút chọn nhanh các lớp */}
+              <div className="flex items-center gap-1.5 flex-wrap mt-2">
+                {['12A1', '12A2', '12A3', '11A1', '10A1', '9A1', '8A1', '7A1', '6A1'].map(cls => (
+                  <button
+                    key={cls}
+                    type="button"
+                    onClick={() => {
+                      setQuickClassName(cls);
+                      setQuickError('');
+                    }}
+                    className={`px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
+                      quickClassName.toUpperCase() === cls
+                        ? 'bg-blue-600 text-white font-black shadow-xs'
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {cls}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <button
-              type="button"
-              onClick={() => {
-                setAuthActiveTab('register');
-                setShowAuthModal(true);
-              }}
-              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+              type="submit"
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2 mt-4"
             >
-              <UserPlus className="w-4 h-4" />
-              <span>1. Đăng Ký Tài Khoản Học Mới</span>
+              <Sparkles className="w-5 h-5 text-amber-300" />
+              <span>🚀 Bắt Đầu Vào Học & Làm Bài Ngay</span>
             </button>
+          </form>
+
+          {/* Thống kê học sinh đang học tóm tắt bên dưới */}
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Hệ thống ghi nhận lịch sử vào học & bảng xếp hạng công khai toàn trường</span>
+            </span>
+
             <button
               type="button"
-              onClick={() => {
-                setAuthActiveTab('login');
-                setShowAuthModal(true);
-              }}
-              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-black text-xs sm:text-sm transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700"
+              onClick={() => setActiveTab('tracking')}
+              className="font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1"
             >
-              <User className="w-4 h-4 text-blue-600" />
-              <span>2. Đã Có Tài Khoản? Đăng Nhập</span>
+              <span>Xem Bảng Theo Dõi Vào Học Công Khai</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
-          <p className="text-[11px] text-slate-400">
-            * Học sinh có thể bấm tab "7. Tải Đề & Tài Liệu" để tải các tài liệu và đề cương miễn phí không cần đăng nhập.
-          </p>
         </div>
       )}
 
@@ -1477,6 +1594,14 @@ export const StudentPortal: React.FC = () => {
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
       {currentStudent && activeTab === 'quiz' && (
         <OnlineQuizPortal />
+      )}
+
+            {/* ==================== PHÂN HỆ THỐNG KÊ VÀO HỌC & THI ĐUA CÔNG KHAI ==================== */}
+      {activeTab === 'tracking' && (
+        <StudentPublicTracking 
+          onStartExam={() => setActiveTab('exam')}
+          onStartVocab={() => setActiveTab('vocab')}
+        />
       )}
 
       {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
