@@ -745,6 +745,32 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     // Quản lý Tài Liệu & Quyền Admin upload/xóa
   const [docList, setDocList] = useState<StorageFileItem[]>([]);
+
+  // Tự động phân chia và lọc tài liệu ôn tập theo đúng khối lớp của học sinh để tránh rối mắt
+  const displayDocList = React.useMemo(() => {
+    if (!currentStudent || !currentStudent.grade) return docList;
+    const grade = currentStudent.grade;
+    return docList.filter(d => {
+      const text = ((d.name || '') + ' ' + (d.description || '')).toLowerCase();
+      // Khớp khối lớp hiện tại của em
+      if (text.includes(`lớp ${grade}`) || text.includes(`khối ${grade}`) || text.includes(`anh ${grade}`)) return true;
+      // Khớp các khối khác thì ẩn đi
+      const otherGrades = [6, 7, 8, 9, 10, 11, 12].filter(g => g !== grade);
+      if (otherGrades.some(g => text.includes(`lớp ${g}`) || text.includes(`khối ${g}`) || text.includes(`anh ${g}`))) return false;
+      return true; // Tài liệu chung toàn trường / dùng chung
+    });
+  }, [docList, currentStudent?.grade]);
+
+  const displayMaterials = React.useMemo(() => {
+    if (!currentStudent || !currentStudent.grade) return DOWNLOADABLE_MATERIALS;
+    const grade = currentStudent.grade;
+    return DOWNLOADABLE_MATERIALS.filter(m => {
+      const gStr = (m.grade || '').toLowerCase();
+      if (gStr.includes(`lớp ${grade}`) || gStr.includes(`khối ${grade}`)) return true;
+      if (gStr.includes('6, 7, 8, 9') || gStr.includes('tổng hợp') || gStr.includes('toàn trường') || gStr.includes('thcs')) return true;
+      return false;
+    });
+  }, [currentStudent?.grade]);
   const [isAdminUnlocked, setIsAdminUnlocked] = useState<boolean>(() => systemMaintenanceService.isSessionAuthenticated());
   const [showAdminLoginModal, setShowAdminLoginModal] = useState<boolean>(false);
   const [adminInputUser, setAdminInputUser] = useState<string>('Admin');
@@ -1068,6 +1094,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     if (currentStudent && currentStudent.grade) {
       setSelectedGrade(currentStudent.grade);
       setSelectedUnit(1);
+      // Nếu học sinh khối khác (như lớp 6) đang ở tab đề cương lớp 8 thì tự động chuyển về trang từ vựng của khối mình
+      if (currentStudent.grade !== 8 && activeTab === 'decuong_e8') {
+        setActiveTab('vocab');
+      }
     }
   }, [currentStudent?.grade, currentStudent?.id]);
 
@@ -1317,21 +1347,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>1. Từ Vựng 3D Siêu Trí Nhớ</span>
+            <span>1. Từ Vựng {currentStudent?.grade ? `Lớp ${currentStudent.grade}` : '3D Siêu Trí Nhớ'}</span>
           </button>
 
-          <button
-            onClick={() => setActiveTab('decuong_e8')}
-            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'decuong_e8'
-                ? 'bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 text-slate-950 shadow-md font-black border-2 border-emerald-300'
-                : 'bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30'
-            }`}
-            title="Đề cương ôn tập Giữa Kỳ 1 Tiếng Anh 8 (Kèm Audio Part 1 & Part 2 và tự chấm điểm)"
-          >
-            <Sparkles className="w-4 h-4 text-emerald-300" />
-            <span>📖 Đề Cương GK1 Anh 8</span>
-          </button>
+          {(!currentStudent || currentStudent.grade === 8) && (
+            <button
+              onClick={() => setActiveTab('decuong_e8')}
+              className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'decuong_e8'
+                  ? 'bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 text-slate-950 shadow-md font-black border-2 border-emerald-300'
+                  : 'bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30'
+              }`}
+              title="Đề cương ôn tập Giữa Kỳ 1 Tiếng Anh 8 (Kèm Audio Part 1 & Part 2 và tự chấm điểm)"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-300" />
+              <span>📖 Đề Cương GK1 Anh 8</span>
+            </button>
+          )}
 
           <button
             onClick={() => setActiveTab('sgk')}
@@ -1342,7 +1374,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <BookMarked className="w-4 h-4" />
-            <span>2. Bài Tập SGK</span>
+            <span>2. Bài Tập SGK {currentStudent?.grade ? `Lớp ${currentStudent.grade}` : ''}</span>
           </button>
 
           <button
@@ -1354,7 +1386,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <FileText className="w-4 h-4 text-amber-300" />
-            <span>3. Kiểm Tra GK-CK</span>
+            <span>3. Đề Thi {currentStudent?.grade ? `Lớp ${currentStudent.grade}` : 'GK-CK'}</span>
           </button>
 
           <button
@@ -1366,7 +1398,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <Award className="w-4 h-4" />
-            <span>4. Ôn Từng Unit</span>
+            <span>4. Ôn Unit {currentStudent?.grade ? `Lớp ${currentStudent.grade}` : ''}</span>
           </button>
 
           <button
@@ -1387,7 +1419,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <Sparkles className="w-4 h-4 text-emerald-300" />
-            <span>📊 Điểm Danh & Sổ Lớp</span>
+            <span>📊 Điểm Danh {currentStudent?.className ? `Lớp ${currentStudent.className}` : '& Sổ Lớp'}</span>
           </button>
 
           <button
@@ -1399,7 +1431,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
           >
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span>5. Thi Đua & Sổ Điểm Lớp</span>
+            <span>5. Thi Đua {currentStudent?.className ? `Lớp ${currentStudent.className}` : '& Sổ Điểm'}</span>
           </button>
 
           <button
@@ -1774,7 +1806,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 8 ==================== */}
-      {currentStudent && activeTab === 'decuong_e8' && (
+      {currentStudent && (!currentStudent.grade || currentStudent.grade === 8) && activeTab === 'decuong_e8' && (
         <English8RevisionPortal
           student={currentStudent}
           onGoToExam={() => setActiveTab('exam')}
@@ -1789,50 +1821,53 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
       {currentStudent && activeTab === 'sgk' && (
-        <TextbookExercisePortal />
+        <TextbookExercisePortal studentGrade={currentStudent?.grade} />
       )}
 
       {/* ==================== PHÂN HỆ MỚI: ĐỀ KIỂM TRA GIỮA KỲ & CUỐI KỲ ONLINE (10 ĐỀ HOÁN ĐỔI) ==================== */}
       {currentStudent && activeTab === 'exam' && (
         <div className="space-y-4">
-          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-4 sm:p-5 rounded-3xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 border-emerald-400/40">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white text-emerald-800 flex items-center justify-center font-black text-xl shadow-sm shrink-0">
-                📖
-              </div>
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-100 text-[10px] font-black uppercase tracking-wider border border-emerald-300/30">
-                  Khuyên Dùng Trước Khi Làm Đề Thi
+          {(!currentStudent || currentStudent.grade === 8) && (
+            <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-4 sm:p-5 rounded-3xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 border-emerald-400/40">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-white text-emerald-800 flex items-center justify-center font-black text-xl shadow-sm shrink-0">
+                  📖
                 </div>
-                <h4 className="text-base sm:text-lg font-black text-white">
-                  Đề Cương Ôn Tập Giữa Kỳ 1 Tiếng Anh 8 (Kèm Audio & Tự Chấm Điểm)
-                </h4>
-                <p className="text-xs text-emerald-100/90">
-                  42 câu hỏi trọng tâm bám sát ma trận & đặc tả, kèm file nghe Part 1 & Part 2 và giải thích chi tiết.
-                </p>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-100 text-[10px] font-black uppercase tracking-wider border border-emerald-300/30">
+                    Khuyên Dùng Trước Khi Làm Đề Thi
+                  </div>
+                  <h4 className="text-base sm:text-lg font-black text-white">
+                    Đề Cương Ôn Tập Giữa Kỳ 1 Tiếng Anh 8 (Kèm Audio & Tự Chấm Điểm)
+                  </h4>
+                  <p className="text-xs text-emerald-100/90">
+                    42 câu hỏi trọng tâm bám sát ma trận & đặc tả, kèm file nghe Part 1 & Part 2 và giải thích chi tiết.
+                  </p>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('decuong_e8')}
+                className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-4 h-4 text-slate-900" />
+                <span>Vào Ôn Đề Cương Ngay</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setActiveTab('decuong_e8')}
-              className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer flex items-center gap-1.5"
-            >
-              <Sparkles className="w-4 h-4 text-slate-900" />
-              <span>Vào Ôn Đề Cương Ngay</span>
-            </button>
-          </div>
-          <OnlineExamPortal onGoToLeaderboard={() => setActiveTab('leaderboard')} />
+          )}
+          <OnlineExamPortal studentGrade={currentStudent?.grade} onGoToLeaderboard={() => setActiveTab('leaderboard')} />
         </div>
       )}
 
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
       {currentStudent && activeTab === 'quiz' && (
-        <OnlineQuizPortal />
+        <OnlineQuizPortal studentGrade={currentStudent?.grade} />
       )}
 
-            {/* ==================== PHÂN HỆ THỐNG KÊ VÀO HỌC & THI ĐUA CÔNG KHAI ==================== */}
+      {/* ==================== PHÂN HỆ THỐNG KÊ VÀO HỌC & THI ĐUA CÔNG KHAI ==================== */}
       {activeTab === 'tracking' && (
         <StudentPublicTracking 
+          defaultClass={currentStudent?.className}
           onStartExam={() => setActiveTab('exam')}
           onStartVocab={() => setActiveTab('vocab')}
         />
@@ -1841,11 +1876,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
       {activeTab === 'leaderboard' && (
         <StudentClassComparison 
+          defaultClassId={currentStudent?.classId}
+          defaultGrade={currentStudent?.grade}
           onStartExercise={() => setActiveTab('sgk')}
           onStartQuiz={() => setActiveTab('quiz')}
         />
       )}
-
       {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
       {activeTab === 'downloads' && (
         <div className="space-y-4">
@@ -1931,10 +1967,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </div>
           </div>
 
+          {/* Thông báo tự động lọc tài liệu theo khối lớp */}
+          {currentStudent && (
+            <div className="p-3 bg-blue-50/80 dark:bg-slate-800/80 rounded-2xl border border-blue-200 dark:border-slate-700 flex items-center gap-2.5 text-xs text-blue-900 dark:text-blue-200 font-bold">
+              <span className="p-1 rounded-lg bg-blue-600 text-white text-xs">🎯</span>
+              <span>Đang tự động hiển thị tài liệu &amp; đề thi phù hợp riêng cho <strong>Lớp {currentStudent.grade} ({currentStudent.className})</strong> để em dễ tìm bài nhất.</span>
+            </div>
+          )}
+
           {/* Danh sách tệp tin */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* 1. Các tệp từ Document Storage Service (Admin tải lên hoặc mặc định) */}
-            {docList.map(item => (
+            {displayDocList.map(item => (
               <div 
                 key={item.id}
                 className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition flex flex-col justify-between relative group"
@@ -1981,7 +2025,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             ))}
 
             {/* 2. Tài liệu cơ bản mặc định nếu kho chưa có */}
-            {docList.length === 0 && DOWNLOADABLE_MATERIALS.map(item => (
+            {displayDocList.length === 0 && displayMaterials.map(item => (
               <div 
                 key={item.id}
                 className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition flex flex-col justify-between"

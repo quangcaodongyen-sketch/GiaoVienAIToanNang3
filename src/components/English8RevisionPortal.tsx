@@ -6,15 +6,24 @@ import {
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 
-interface English8RevisionPortalProps {
+export interface English8RevisionPortalProps {
   currentStudent?: StudentProfile | null;
+  student?: StudentProfile | null;
   onGoToExams?: () => void;
+  onGoToExam?: () => void;
+  onGoToVocab?: () => void;
+  onCompleteSection?: (secTitle: string, pts: number) => void;
 }
 
 export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({ 
-  currentStudent,
-  onGoToExams 
+  currentStudent: propStudent,
+  student,
+  onGoToExams,
+  onGoToExam,
+  onGoToVocab,
+  onCompleteSection
 }) => {
+  const currentStudent = propStudent || student;
   const [activeTab, setActiveTab] = useState<'theory' | 'listening' | 'practice' | 'writing' | 'results'>('theory');
   const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
   const [showTapescript1, setShowTapescript1] = useState(false);
@@ -457,17 +466,19 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       try {
         studentGradebookService.recordSubmission({
           studentId: currentStudent.id,
+          studentCode: currentStudent.studentCode,
           studentName: currentStudent.name,
+          classId: currentStudent.classId,
           className: currentStudent.className,
           grade: 8,
-          subject: 'Tiếng Anh',
+          unitNumber: 0,
+          unitTitle: 'Đề Cương GK1',
           testTitle: `Đề Cương Ôn Tập GK1 (Lần ${attemptCount})`,
-          testType: 'regular_test',
+          testType: 'gk_ck_exam',
           score: scoreNum,
-          maxScore: 10,
-          completionTimeSeconds: 600,
           correctCount: correctCount,
-          totalQuestions: allItems.length
+          totalQuestions: allItems.length,
+          timeSpentSeconds: 600
         });
 
         studentGradebookService.recordPracticeMerit(

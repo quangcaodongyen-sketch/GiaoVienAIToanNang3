@@ -31,14 +31,18 @@ import {
 interface StudentClassComparisonProps {
   onStartExercise?: () => void;
   onStartQuiz?: () => void;
+  defaultClassId?: string;
+  defaultGrade?: number;
 }
 
 export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
   onStartExercise,
-  onStartQuiz
+  onStartQuiz,
+  defaultClassId,
+  defaultGrade
 }) => {
   const [classes, setClasses] = useState<ClassRoom[]>([]);
-  const [selectedClassId, setSelectedClassId] = useState<string>('cls-8a1');
+  const [selectedClassId, setSelectedClassId] = useState<string>(defaultClassId || 'cls-8a1');
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [leaderboard, setLeaderboard] = useState<ClassLeaderboardItem[]>([]);
   const [classStats, setClassStats] = useState<ClassComparisonStats | null>(null);

@@ -72,6 +72,7 @@ export interface RankStandardTT22 {
 
 interface OnlineExamPortalProps {
   onGoToLeaderboard?: () => void;
+  studentGrade?: number;
 }
 
 // ==============================================================================
@@ -799,8 +800,16 @@ const PartAudioPlayer: React.FC<PartAudioPlayerProps> = ({ partTitle, partSubtit
   );
 };
 
-export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeaderboard }) => {
-  const [selectedGrade, setSelectedGrade] = useState<number>(6);
+export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeaderboard, studentGrade }) => {
+  const [selectedGrade, setSelectedGrade] = useState<number>(() => {
+    return studentGrade || 8;
+  });
+
+  useEffect(() => {
+    if (studentGrade) {
+      setSelectedGrade(studentGrade);
+    }
+  }, [studentGrade]);
   const [examType, setExamType] = useState<'giua-ky-1' | 'cuoi-ky-1' | 'giua-ky-2' | 'cuoi-ky-2'>('giua-ky-1');
   const [selectedExamIndex, setSelectedExamIndex] = useState<number>(0);
   const [currentExam, setCurrentExam] = useState<GeneratedExam | null>(null);
@@ -1526,47 +1535,73 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           </div>
 
-          {/* DÒNG 1: CHỌN KHỐI LỚP (6, 7, 8, 9 ĐẦY ĐỦ 20 ĐỀ) */}
-          <div className="space-y-1.5 pt-2 border-t border-white/10">
-            <div className="text-xs sm:text-sm font-bold text-sky-200 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-amber-300" /> 
-              <span>1. Chọn khối lớp làm bài:</span>
+          {/* DÒNG 1: KHÓA ĐÚNG KHỐI LỚP CỦA HỌC SINH (HOẶC CHỌN KHỐI NẾU KHÁCH) */}
+          {studentGrade ? (
+            <div className="space-y-1.5 pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/20">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-9 h-9 rounded-xl bg-amber-400 text-blue-950 font-black text-base flex items-center justify-center shadow-sm">
+                    {studentGrade}
+                  </span>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                      <span>Đề Kiểm Tra Tiếng Anh Lớp {studentGrade}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500 text-white font-bold">
+                        Chuẩn Khối {studentGrade}
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-sky-200">
+                      Đã tự động khóa theo lớp của em ({currentAvailableCodes.length} mã đề thi chuẩn bám sát ma trận & đặc tả)
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-amber-300 hidden sm:inline">
+                  🎯 10 Mã Đề Hoán Đổi
+                </span>
+              </div>
             </div>
-            <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-2">
-              {[
-                { grade: 6, label: 'Lớp 6' },
-                { grade: 7, label: 'Lớp 7' },
-                { grade: 8, label: 'Lớp 8' },
-                { grade: 9, label: 'Lớp 9' },
-              ].map(({ grade, label }) => {
-                const count = (examDataByTerm[examType] && examDataByTerm[examType][String(grade)])
-                  ? Object.keys(examDataByTerm[examType][String(grade)]).length
-                  : 0;
-                return (
-                  <button
-                    key={grade}
-                    type="button"
-                    onClick={() => {
-                      setSelectedGrade(grade);
-                      setSelectedExamIndex(0);
-                    }}
-                    className={`py-2 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1 active:scale-95 ${
-                      selectedGrade === grade
-                        ? 'bg-amber-400 text-blue-950 shadow-md ring-2 ring-white/80 scale-102'
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
-                  >
-                    <span>{label}</span>
-                    <span className={`text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold ${
-                      selectedGrade === grade ? 'bg-blue-950 text-amber-300' : (count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-600/80 text-slate-300')
-                    }`}>
-                      {count > 0 ? `${count} mã đề` : '0 mã đề'}
-                    </span>
-                  </button>
-                );
-              })}
+          ) : (
+            <div className="space-y-1.5 pt-2 border-t border-white/10">
+              <div className="text-xs sm:text-sm font-bold text-sky-200 flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-amber-300" /> 
+                <span>1. Chọn khối lớp làm bài:</span>
+              </div>
+              <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-2">
+                {[
+                  { grade: 6, label: 'Lớp 6' },
+                  { grade: 7, label: 'Lớp 7' },
+                  { grade: 8, label: 'Lớp 8' },
+                  { grade: 9, label: 'Lớp 9' },
+                ].map(({ grade, label }) => {
+                  const count = (examDataByTerm[examType] && examDataByTerm[examType][String(grade)])
+                    ? Object.keys(examDataByTerm[examType][String(grade)]).length
+                    : 0;
+                  return (
+                    <button
+                      key={grade}
+                      type="button"
+                      onClick={() => {
+                        setSelectedGrade(grade);
+                        setSelectedExamIndex(0);
+                      }}
+                      className={`py-2 px-2 sm:px-4 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1 active:scale-95 ${
+                        selectedGrade === grade
+                          ? 'bg-amber-400 text-blue-950 shadow-md ring-2 ring-white/80 scale-102'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <span>{label}</span>
+                      <span className={`text-[10px] sm:text-xs px-1.5 py-0.2 rounded-full font-bold ${
+                        selectedGrade === grade ? 'bg-blue-950 text-amber-300' : (count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-600/80 text-slate-300')
+                      }`}>
+                        {count > 0 ? `${count} mã đề` : '0 mã đề'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* DÒNG 2: CHỌN ĐỢT THI */}
           <div className="space-y-1.5 pt-2 border-t border-white/10">

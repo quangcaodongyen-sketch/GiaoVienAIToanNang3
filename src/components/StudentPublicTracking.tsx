@@ -35,17 +35,25 @@ import {
 interface StudentPublicTrackingProps {
   onStartExam?: () => void;
   onStartVocab?: () => void;
+  defaultClass?: string;
 }
 
 export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
   onStartExam,
-  onStartVocab
+  onStartVocab,
+  defaultClass
 }) => {
   // Chế độ xem: 'attendance_roster' (Sổ điểm danh chính thức từng lớp) hoặc 'live_feed' (Nhật ký thời gian thực)
   const [activeTrackingMode, setActiveTrackingMode] = useState<'attendance_roster' | 'live_feed'>('attendance_roster');
 
-  // Lớp được chọn: 'ALL' hoặc '6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'
-  const [selectedClass, setSelectedClass] = useState<string>('ALL');
+  // Lớp được chọn: Mặc định theo lớp của học sinh nếu có, hoặc 'ALL'
+  const [selectedClass, setSelectedClass] = useState<string>(defaultClass || 'ALL');
+
+  useEffect(() => {
+    if (defaultClass) {
+      setSelectedClass(defaultClass);
+    }
+  }, [defaultClass]);
 
   // Bộ lọc trạng thái điểm danh: 'all', 'entered', 'not_entered'
   const [statusFilter, setStatusFilter] = useState<'all' | 'entered' | 'not_entered'>('all');
@@ -780,7 +788,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                               </span>
                             </div>
                             <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
-                              <span>Đã làm: <strong className="text-slate-700 dark:text-slate-300">{item.completedTestsCount} bài</strong></span>
+                              <span>Đã làm: <strong className="text-slate-700 dark:text-slate-300">{item.testsCount} bài</strong></span>
                               <span>•</span>
                               <span>ĐTB: <strong className="text-blue-600 dark:text-blue-400">{item.averageScore.toFixed(1)}đ</strong></span>
                             </div>

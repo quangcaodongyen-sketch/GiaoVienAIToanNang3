@@ -485,14 +485,16 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
-            {/* Tùy chọn mở xem khối khác */}
-            <button
-              type="button"
-              onClick={() => setAllowGradeSwitch(!allowGradeSwitch)}
-              className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-            >
-              {allowGradeSwitch ? '✕ Đóng chọn khối' : '🔄 Xem khối lớp khác'}
-            </button>
+            {/* Tùy chọn mở xem khối khác (chỉ dành cho khách/giáo viên chưa đăng nhập tài khoản học sinh) */}
+            {!currentStudent && (
+              <button
+                type="button"
+                onClick={() => setAllowGradeSwitch(!allowGradeSwitch)}
+                className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+              >
+                {allowGradeSwitch ? '✕ Đóng chọn khối' : '🔄 Xem khối lớp khác'}
+              </button>
+            )}
 
             {onOpenIpaModal && (
               <button
@@ -515,8 +517,8 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
         </div>
 
-        {/* Khung chuyển khối lớp mở rộng khi cần */}
-        {allowGradeSwitch && (
+        {/* Khung chuyển khối lớp mở rộng khi cần (chỉ hiện khi chưa đăng nhập học sinh) */}
+        {!currentStudent && allowGradeSwitch && (
           <div className="p-2.5 rounded-xl bg-blue-50/60 dark:bg-slate-800/60 border border-blue-200 dark:border-slate-700 flex items-center gap-2 flex-wrap text-xs animate-in fade-in">
             <span className="font-bold text-slate-600 dark:text-slate-300">Khối lớp:</span>
             {[6, 7, 8, 9, 10, 11, 12].map(g => (

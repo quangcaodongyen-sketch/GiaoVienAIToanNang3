@@ -102,9 +102,21 @@ const getQuestionTypeMeta = (q: SGKExerciseQuestion) => {
   return { label: 'Từ Vựng Chuyên Đề SGK', color: 'bg-indigo-500/15 text-indigo-800 dark:text-indigo-300 border-indigo-500/30', icon: '📖' };
 };
 
-export const TextbookExercisePortal: React.FC = () => {
+export interface TextbookExercisePortalProps {
+  studentGrade?: number;
+}
+
+export const TextbookExercisePortal: React.FC<TextbookExercisePortalProps> = ({ studentGrade }) => {
   // Navigation State
-  const [selectedGrade, setSelectedGrade] = useState<number>(6);
+  const [selectedGrade, setSelectedGrade] = useState<number>(() => {
+    return studentGrade || 8;
+  });
+
+  useEffect(() => {
+    if (studentGrade) {
+      setSelectedGrade(studentGrade);
+    }
+  }, [studentGrade]);
   const [selectedUnitNum, setSelectedUnitNum] = useState<number>(1);
   const [activeSectionId, setActiveSectionId] = useState<string>('getting_started');
   // Lấy thông tin học sinh đang làm bài
@@ -393,38 +405,54 @@ export const TextbookExercisePortal: React.FC = () => {
           </p>
         </div>
 
-        {/* BỘ LỌC CHỌN KHỐI LỚP */}
-        <div className="relative z-10 pt-2.5 border-t border-blue-500/30 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-blue-200 flex items-center gap-1">
-            <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Khối lớp:</span>
-          </span>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {[6, 7, 8, 9, 10, 11, 12].map(g => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => {
-                  setSelectedGrade(g);
-                  setSelectedUnitNum(1);
-                  handleSelectSection('getting_started');
-                }}
-                className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
-                  selectedGrade === g
-                    ? 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-md font-black scale-105'
-                    : 'bg-white/10 hover:bg-white/20 text-white'
-                }`}
-              >
-                <span>Lớp {g}</span>
-                {g <= 9 ? (
-                  <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-950/40 text-emerald-200 font-bold">THCS</span>
-                ) : (
-                  <span className="text-[10px] px-1 py-0.2 rounded bg-cyan-950/40 text-cyan-200 font-bold">THPT</span>
-                )}
-              </button>
-            ))}
+        {/* BỘ LỌC CHỌN KHỐI LỚP HOẶC KHÓA THEO LỚP HỌC SINH */}
+        {studentGrade ? (
+          <div className="relative z-10 pt-2.5 border-t border-blue-500/30 flex items-center justify-between text-xs flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-black text-xs shadow-xs">
+                Lớp {studentGrade}
+              </span>
+              <span className="text-white font-bold text-xs sm:text-sm">
+                Bài tập SGK Global Success dành riêng cho Khối {studentGrade}
+              </span>
+            </div>
+            <span className="text-emerald-200 text-xs font-bold">
+              ✨ Đầy đủ 7 phần luyện tập theo từng Unit
+            </span>
           </div>
-        </div>
+        ) : (
+          <div className="relative z-10 pt-2.5 border-t border-blue-500/30 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-blue-200 flex items-center gap-1">
+              <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Khối lớp:</span>
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {[6, 7, 8, 9, 10, 11, 12].map(g => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => {
+                    setSelectedGrade(g);
+                    setSelectedUnitNum(1);
+                    handleSelectSection('getting_started');
+                  }}
+                  className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                    selectedGrade === g
+                      ? 'bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 shadow-md font-black scale-105'
+                      : 'bg-white/10 hover:bg-white/20 text-white'
+                  }`}
+                >
+                  <span>Lớp {g}</span>
+                  {g <= 9 ? (
+                    <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-950/40 text-emerald-200 font-bold">THCS</span>
+                  ) : (
+                    <span className="text-[10px] px-1 py-0.2 rounded bg-cyan-950/40 text-cyan-200 font-bold">THPT</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* CHỌN UNIT THEO LỚP */}

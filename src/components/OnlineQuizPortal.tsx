@@ -76,9 +76,21 @@ const OPTION_THEMES = [
   }
 ];
 
-export const OnlineQuizPortal: React.FC = () => {
+export interface OnlineQuizPortalProps {
+  studentGrade?: number;
+}
+
+export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade }) => {
   // Navigation State
-  const [selectedGradeNum, setSelectedGradeNum] = useState<number>(6);
+  const [selectedGradeNum, setSelectedGradeNum] = useState<number>(() => {
+    return studentGrade || 8;
+  });
+
+  useEffect(() => {
+    if (studentGrade) {
+      setSelectedGradeNum(studentGrade);
+    }
+  }, [studentGrade]);
   const [selectedUnitNum, setSelectedUnitNum] = useState<number>(1);
   const [activeTest, setActiveTest] = useState<UnitQuizTest | null>(null);
 
@@ -902,41 +914,57 @@ export const OnlineQuizPortal: React.FC = () => {
               </p>
             </div>
 
-            {/* BẢNG CHỌN KHỐI LỚP (LỚP 6 - 12) */}
-            <div className="relative z-10 pt-2.5 border-t border-white/10 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-cyan-200 flex items-center gap-1">
-                <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Khối lớp:</span>
-              </span>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {[6, 7, 8, 9, 10, 11, 12].map(gNum => {
-                  const isSelected = selectedGradeNum === gNum;
-                  const isTHPT = gNum >= 10;
-                  return (
-                    <button
-                      key={gNum}
-                      type="button"
-                      onClick={() => {
-                        setSelectedGradeNum(gNum);
-                        setSelectedUnitNum(1);
-                      }}
-                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-md font-black scale-105'
-                          : 'bg-white/10 hover:bg-white/20 text-white'
-                      }`}
-                    >
-                      <span>Lớp {gNum}</span>
-                      <span className={`text-[10px] px-1 py-0.2 rounded font-bold ${
-                        isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-black/30 text-cyan-200'
-                      }`}>
-                        {isTHPT ? 'THPT' : 'THCS'}
-                      </span>
-                    </button>
-                  );
-                })}
+            {/* BẢNG CHỌN KHỐI LỚP HOẶC KHÓA THEO LỚP HỌC SINH */}
+            {studentGrade ? (
+              <div className="relative z-10 pt-2.5 border-t border-white/10 flex items-center justify-between text-xs flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-black text-xs shadow-xs">
+                    Lớp {studentGrade}
+                  </span>
+                  <span className="text-white font-bold text-xs sm:text-sm">
+                    Bài kiểm tra online dành riêng cho học sinh Khối {studentGrade}
+                  </span>
+                </div>
+                <span className="text-cyan-200 text-xs font-bold">
+                  ✨ Tổng số {currentGrade.units.length} Units theo SGK
+                </span>
               </div>
-            </div>
+            ) : (
+              <div className="relative z-10 pt-2.5 border-t border-white/10 flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold text-cyan-200 flex items-center gap-1">
+                  <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Khối lớp:</span>
+                </span>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {[6, 7, 8, 9, 10, 11, 12].map(gNum => {
+                    const isSelected = selectedGradeNum === gNum;
+                    const isTHPT = gNum >= 10;
+                    return (
+                      <button
+                        key={gNum}
+                        type="button"
+                        onClick={() => {
+                          setSelectedGradeNum(gNum);
+                          setSelectedUnitNum(1);
+                        }}
+                        className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-md font-black scale-105'
+                            : 'bg-white/10 hover:bg-white/20 text-white'
+                        }`}
+                      >
+                        <span>Lớp {gNum}</span>
+                        <span className={`text-[10px] px-1 py-0.2 rounded font-bold ${
+                          isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-black/30 text-cyan-200'
+                        }`}>
+                          {isTHPT ? 'THPT' : 'THCS'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* BƯỚC 2: CHỌN UNIT THEO KHỐI LỚP */}
