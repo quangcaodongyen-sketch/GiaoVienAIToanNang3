@@ -51,7 +51,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Many teenagers feel stressed because of schoolwork and exams.",
       options: ["A. True", "B. False"],
       correct: 0,
-      exp: "Đúng! Bài nghe nói rõ: 'Teenagers today often feel stressed because of schoolwork, exams and their busy schedules.'"
+      exp: "💡 Đúng: Bài nghe nhắc áp lực thi cử và bài vở (schoolwork, exams)."
     },
     {
       id: "rev_l1_2",
@@ -59,7 +59,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Taking short breaks can help teenagers relax.",
       options: ["A. True", "B. False"],
       correct: 0,
-      exp: "Đúng! Bài nghe khuyên: '...they should organise their time and take short breaks between study sessions.'"
+      exp: "💡 Đúng: Bài nghe khuyên nghỉ giải lao ngắn (short breaks) giữa các giờ học."
     },
     {
       id: "rev_l1_3",
@@ -67,7 +67,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Teenagers should spend all their free time studying.",
       options: ["A. True", "B. False"],
       correct: 1,
-      exp: "Sai (False)! Bài nghe nói: 'Teenagers should NOT spend all their free time studying because they need time to rest...'"
+      exp: "💡 Sai (Bẫy): Bài nghe nói KHÔNG NÊN (should not) dành toàn bộ thời gian học."
     },
     {
       id: "rev_l1_4",
@@ -75,7 +75,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Talking to trusted people can help teenagers deal with stress.",
       options: ["A. True", "B. False"],
       correct: 0,
-      exp: "Đúng! Bài nghe: 'When they have problems, talking to parents, teachers or trusted friends can help them feel better.'"
+      exp: "💡 Đúng: Khi gặp khó khăn, nên tâm sự với bố mẹ, thầy cô hoặc bạn bè."
     },
     {
       id: "rev_l1_5",
@@ -83,7 +83,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Having a balanced lifestyle can help teenagers feel better.",
       options: ["A. True", "B. False"],
       correct: 0,
-      exp: "Đúng! Lối sống cân bằng (nghỉ ngơi, học tập, thể thao) là yếu tố quan trọng cho sức khỏe thanh thiếu niên."
+      exp: "💡 Đúng: Lối sống cân bằng (nghỉ ngơi, học tập) giúp tinh thần tốt hơn."
     }
   ];
 
@@ -94,7 +94,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Where does the speaker live?",
       options: ["A. In a busy city.", "B. In a small village.", "C. Near a large shopping centre."],
       correct: 1,
-      exp: "Đáp án B! 'I live in a small village in the countryside. Life here is peaceful...'"
+      exp: "💡 Nghe chi tiết: Tác giả sống tại một ngôi làng nhỏ (a small village)."
     },
     {
       id: "rev_l2_7",
@@ -102,7 +102,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "What does the speaker's family grow on their farm?",
       options: ["A. Rice and vegetables.", "B. Flowers and coffee.", "C. Apples and oranges."],
       correct: 0,
-      exp: "Đáp án A! 'My family grows rice and vegetables on our farm.'"
+      exp: "💡 Nghe chi tiết: Gia đình trồng lúa và rau (rice and vegetables)."
     },
     {
       id: "rev_l2_8",
@@ -110,7 +110,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "How does the speaker's father drive the combine harvester?",
       options: ["A. More carelessly than other farmers.", "B. As carelessly as other farmers.", "C. More carefully than some other farmers."],
       correct: 2,
-      exp: "Đáp án C! 'He always drives it more carefully than some other farmers because safety is important.'"
+      exp: "💡 Nghe chi tiết: Bố lái máy gặt cẩn thận hơn người khác (more carefully than)."
     },
     {
       id: "rev_l2_9",
@@ -118,7 +118,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "What does the speaker like most about village life?",
       options: ["A. The noisy streets.", "B. The peaceful scenery.", "C. The crowded shopping centres."],
       correct: 1,
-      exp: "Đáp án B! 'I especially love the peaceful scenery, the green fields and the fresh air.'"
+      exp: "💡 Nghe chi tiết: Tác giả thích cảnh sắc thanh bình (peaceful scenery)."
     },
     {
       id: "rev_l2_10",
@@ -126,7 +126,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "What is the main idea of the talk?",
       options: ["A. The difficulties of living in a big city.", "B. The importance of modern technology at school.", "C. The speaker's life and experiences in the countryside."],
       correct: 2,
-      exp: "Đáp án C! Bài nói kể về cuộc sống và trải nghiệm của tác giả tại vùng quê thanh bình."
+      exp: "💡 Ý chính: Bài nói về cuộc sống và trải nghiệm tại miền quê thanh bình."
     }
   ];
 
@@ -139,7 +139,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "My sister is fond of ______ paper flowers in her free time.",
       options: ["A. make", "B. making", "C. to make"],
       correct: 1,
-      exp: "Cấu trúc be fond of + V-ing (thích làm gì đó). Đáp án: making."
+      exp: "💡 Cấu trúc: be fond of + V-ing (thích làm gì) ➔ Chọn 'making'."
     },
     {
       id: "rev_p_12",
@@ -148,7 +148,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Farmers use a ______ to harvest rice quickly on the fields.",
       options: ["A. combine harvester", "B. ferry", "C. lighthouse"],
       correct: 0,
-      exp: "'combine harvester' là máy gặt đập liên hợp giúp thu hoạch lúa nhanh."
+      exp: "💡 Từ vựng: 'combine harvester' = máy gặt đập liên hợp thu hoạch lúa."
     },
     {
       id: "rev_p_13",
@@ -157,7 +157,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "The villagers are very ______. They always welcome visitors warmly.",
       options: ["A. hospitable", "B. stressful", "C. addictive"],
       correct: 0,
-      exp: "'hospitable' nghĩa là hiếu khách, niềm nở chào đón khách ghé thăm."
+      exp: "💡 Từ vựng: 'hospitable' = hiếu khách, luôn niềm nở đón tiếp khách."
     },
     {
       id: "rev_p_14",
@@ -166,7 +166,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Lan usually finishes her homework ______ than her younger brother.",
       options: ["A. careful", "B. more carefully", "C. most carefully"],
       correct: 1,
-      exp: "Bổ nghĩa cho động từ 'finishes' trong so sánh hơn với 'than', dùng trạng từ dài: more carefully than."
+      exp: "💡 Ngữ pháp: V thường (finishes) + so sánh hơn trạng từ dài: 'more carefully than'."
     },
     {
       id: "rev_p_15",
@@ -175,7 +175,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Many teenagers feel ______ before an important exam.",
       options: ["A. pressure", "B. peer", "C. stressed"],
       correct: 2,
-      exp: "'feel stressed' nghĩa là cảm thấy căng thẳng/lo âu trước kỳ thi."
+      exp: "💡 Cụm từ: 'feel stressed' = cảm thấy căng thẳng, lo âu trước kỳ thi."
     },
     {
       id: "rev_p_16",
@@ -184,7 +184,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "My brother can run ______ than I can.",
       options: ["A. faster", "B. more fast", "C. fastest"],
       correct: 0,
-      exp: "'fast' là trạng từ ngắn đặc biệt, so sánh hơn là 'faster than'."
+      exp: "💡 Ngữ pháp: 'fast' là trạng từ ngắn đặc biệt ➔ so sánh hơn là 'faster than'."
     },
     {
       id: "rev_p_17",
@@ -193,7 +193,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "I prefer ______ models to playing computer games.",
       options: ["A. make", "B. making", "C. made"],
       correct: 1,
-      exp: "Cấu trúc prefer V-ing to V-ing (thích làm gì hơn làm gì). Đáp án: making."
+      exp: "💡 Cấu trúc: prefer V-ing to V-ing (thích cái này hơn cái kia) ➔ Chọn 'making'."
     },
     {
       id: "rev_p_18",
@@ -202,7 +202,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "I was tired, ______ I went to bed early last night.",
       options: ["A. but", "B. or", "C. so"],
       correct: 2,
-      exp: "Liên từ 'so' (vì vậy) chỉ kết quả: Tôi mệt, vì vậy tôi đi ngủ sớm."
+      exp: "💡 Liên từ: 'so' (vì vậy) chỉ kết quả: Bị mệt ➔ vì vậy đi ngủ sớm."
     },
     {
       id: "rev_p_19",
@@ -211,7 +211,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "My cousin speaks English ______ than he did last year.",
       options: ["A. well", "B. better", "C. best"],
       correct: 1,
-      exp: "'well' có dạng so sánh hơn bất quy tắc bắt buộc nhớ: better than."
+      exp: "💡 Bất quy tắc: So sánh hơn của 'well' là 'better than' (nói tiếng Anh tốt hơn)."
     },
     {
       id: "rev_p_20",
@@ -220,7 +220,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "You should not share your password online because it may put your ______ at risk.",
       options: ["A. account", "B. orchard", "C. crop"],
       correct: 0,
-      exp: "Cụm 'put your account at risk' (làm tài khoản mạng gặp nguy cơ rủi ro)."
+      exp: "💡 Cụm từ: 'put your account at risk' = làm tài khoản gặp nguy cơ/rủi ro."
     },
     {
       id: "rev_p_21",
@@ -229,7 +229,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Mai: “Would you like to join our origami club this afternoon?” - Nam: “______”",
       options: ["A. I'd love to.", "B. You look great.", "C. Never mind."],
       correct: 0,
-      exp: "Đáp lại lời mời 'Would you like to...?' bằng cách đồng ý: 'I'd love to' (Mình rất sẵn lòng)."
+      exp: "💡 Giao tiếp: Đáp lại lời mời 'Would you like...?' ➔ 'I\'d love to.' (Mình rất sẵn lòng)."
     },
     {
       id: "rev_p_22",
@@ -238,7 +238,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Hoa: “Your countryside photos are beautiful!” - Minh: “______”",
       options: ["A. Thanks. I'm glad you like them.", "B. Could you help me?", "C. I'm busy right now."],
       correct: 0,
-      exp: "Đáp lại lời khen bằng cảm ơn: 'Thanks. I'm glad you like them'."
+      exp: "💡 Giao tiếp: Đáp lại lời khen ➔ 'Thanks. I\'m glad you like them.' (Cảm ơn bạn)."
     },
     // Reading
     {
@@ -248,7 +248,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "What is the reading passage mainly about?",
       options: ["A. The history of social media.", "B. The benefits and risks of teenagers' online activities.", "C. How to become famous online."],
       correct: 1,
-      exp: "Bài đọc nói về lợi ích (benefits) và rủi ro (risks) khi thanh thiếu niên sử dụng Internet."
+      exp: "💡 Ý chính bài đọc: Cả lợi ích và nguy cơ (benefits and risks) khi dùng Internet."
     },
     {
       id: "rev_p_24",
@@ -257,7 +257,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "The word “They” in the first paragraph refers to ______.",
       options: ["A. teenagers", "B. websites", "C. English lessons"],
       correct: 0,
-      exp: "'They' thay thế cho danh từ 'teenagers' được nhắc ở câu trước."
+      exp: "💡 Từ thay thế: 'They' thay cho 'teenagers' ở câu liền trước."
     },
     {
       id: "rev_p_25",
@@ -266,7 +266,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "According to the passage, what can teenagers do online to improve their skills?",
       options: ["A. Stay up late every night.", "B. Compare with others.", "C. Watch English lessons."],
       correct: 2,
-      exp: "Đoạn 1 nêu: '...they can watch English lessons or join online groups...'"
+      exp: "💡 Dẫn chứng đoạn 1: Xem các bài học tiếng Anh (watch English lessons)."
     },
     {
       id: "rev_p_26",
@@ -275,7 +275,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Why can spending too much time online cause problems?",
       options: ["A. It always improves sleep.", "B. It may reduce sleep time and cause stress.", "C. It makes everyone famous."],
       correct: 1,
-      exp: "Đoạn 2 nêu: '...so they do not get enough sleep. Others may feel stressed...'"
+      exp: "💡 Dẫn chứng đoạn 2: Lướt mạng khuya làm thiếu ngủ và gây căng thẳng."
     },
     {
       id: "rev_p_27",
@@ -284,7 +284,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Which of the following is NOT mentioned as a safe and healthy online habit?",
       options: ["A. Protecting online accounts.", "B. Thinking carefully before posting.", "C. Sharing passwords with strangers."],
       correct: 2,
-      exp: "Chia sẻ mật khẩu cho người lạ là nguy hiểm, bài đọc KHÔNG BAO GIỜ khuyên làm điều này."
+      exp: "💡 Suy luận: Tuyệt đối KHÔNG BAO GIỜ chia sẻ mật khẩu cho người lạ."
     },
     // Cloze
     {
@@ -294,7 +294,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "They live near a large (28) ______ where they grow rice.",
       options: ["A. paddy field", "B. forum", "C. account"],
       correct: 0,
-      exp: "'paddy field' nghĩa là cánh đồng lúa, nơi trồng lúa ('grow rice')."
+      exp: "💡 Từ vựng: 'paddy field' = cánh đồng lúa, nơi trồng lúa (grow rice)."
     },
     {
       id: "rev_p_29",
@@ -303,7 +303,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Farmers work (29) ______ than machines did in the past.",
       options: ["A. careful", "B. more efficiently", "C. most efficient"],
       correct: 1,
-      exp: "Bổ nghĩa cho 'work' trong so sánh hơn với 'than', dùng 'more efficiently'."
+      exp: "💡 Ngữ pháp: Bổ nghĩa cho V thường 'work' ➔ so sánh hơn: 'more efficiently than'."
     },
     {
       id: "rev_p_30",
@@ -312,7 +312,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "My grandmother is very (30) ______ and always prepares delicious food for visitors.",
       options: ["A. hospitable", "B. stressful", "C. addictive"],
       correct: 0,
-      exp: "'hospitable' nghĩa là hiếu khách, tiếp đón khách chu đáo."
+      exp: "💡 Từ vựng: 'hospitable' = mến khách, hiếu khách, luôn nấu món ngon đãi khách."
     },
     {
       id: "rev_p_31",
@@ -321,7 +321,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "My cousin invited me (31) ______ fishing by the river.",
       options: ["A. go", "B. going", "C. to go"],
       correct: 2,
-      exp: "Cấu trúc invite someone + TO-V (mời ai đi đâu làm gì): to go."
+      exp: "💡 Cấu trúc: invite someone + to-V (mời ai cùng làm gì) ➔ Chọn 'to go'."
     },
     {
       id: "rev_p_32",
@@ -330,7 +330,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "We had a wonderful time together, (32) ______ the weather was quite hot.",
       options: ["A. but", "B. so", "C. or"],
       correct: 0,
-      exp: "Liên từ 'but' chỉ sự đối lập: thời gian tuyệt vời, nhưng (but) trời khá nóng."
+      exp: "💡 Liên từ: 'but' (nhưng) nối 2 vế đối lập: Rất vui nhưng thời tiết khá nóng."
     },
     // Transform & Reorder
     {
@@ -344,7 +344,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
         "C. Enjoys my sister making models in her free time."
       ],
       correct: 1,
-      exp: "Trật tự: S (My sister) + V (enjoys) + O (making models) + Time (in her free time)."
+      exp: "💡 Trật tự câu: S (My sister) + V (enjoys) + O (making models) + Time (in her free time)."
     },
     {
       id: "rev_p_34",
@@ -357,7 +357,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
         "C. My father drives more careful than I do."
       ],
       correct: 0,
-      exp: "Trật tự so sánh hơn: My father drives more carefully than I do."
+      exp: "💡 Cấu trúc so sánh hơn: S1 + V + more carefully than + S2."
     },
     {
       id: "rev_p_35",
@@ -370,7 +370,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
         "C. I dislike surfing the net in my free time."
       ],
       correct: 0,
-      exp: "'enjoy + V-ing' đồng nghĩa với 'be interested in + V-ing' (thích làm gì đó)."
+      exp: "💡 Đồng nghĩa: 'enjoy + V-ing' = 'be interested in + V-ing' (thích thú làm gì)."
     },
     {
       id: "rev_p_36",
@@ -383,7 +383,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
         "C. Lan studies harder than Mai, but she often gets worse marks."
       ],
       correct: 1,
-      exp: "Mai không học chăm bằng Lan => Lan học chăm hơn Mai (Lan studies harder than Mai), nên thường được điểm cao hơn."
+      exp: "💡 Viết lại câu: Mai không chăm bằng Lan ➔ Lan chăm hơn Mai (harder than)."
     }
   ];
 
@@ -908,7 +908,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                     </div>
                     {isSubmitted && (
                       <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                        <strong className="text-blue-600 dark:text-blue-400">💡 Chấm chữa của Thầy: </strong>
+                        <strong className="text-blue-600 dark:text-blue-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>
                     )}
@@ -1005,7 +1005,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                     </div>
                     {isSubmitted && (
                       <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                        <strong className="text-emerald-600 dark:text-emerald-400">💡 Chấm chữa của Thầy: </strong>
+                        <strong className="text-emerald-600 dark:text-emerald-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>
                     )}
@@ -1223,7 +1223,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                     </div>
                     {isSubmitted && (
                       <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                        <strong className="text-blue-600 dark:text-blue-400">💡 Chấm chữa của Thầy: </strong>
+                        <strong className="text-blue-600 dark:text-blue-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>
                     )}
@@ -1409,6 +1409,47 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                         : `⭐ Hoàn thành đề cương: +${lastMeritBonus || 10} điểm chuyên cần!`}
                     </span>
                   </div>
+
+                  {/* LỜI KHEN NGỢI & ĐỘNG VIÊN CỦA THẦY THÀNH DÀNH CHO HỌC SINH */}
+                  <div className={`p-4 rounded-2xl border-2 text-left max-w-2xl mx-auto shadow-sm ${
+                    parseFloat(totalScore10) >= 8.0
+                      ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/30 border-amber-300 dark:border-amber-700'
+                      : parseFloat(totalScore10) >= 5.0
+                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/30 border-blue-300 dark:border-blue-700'
+                      : 'bg-gradient-to-r from-rose-50 to-orange-50 dark:from-rose-950/40 dark:to-orange-950/30 border-rose-300 dark:border-rose-700'
+                  }`}>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-2xl shadow-sm shrink-0">
+                        {parseFloat(totalScore10) >= 8.0 ? '🌟' : parseFloat(totalScore10) >= 5.0 ? '👏' : '💪'}
+                      </div>
+                      <div className="space-y-1">
+                        <div className="text-xs font-black uppercase tracking-wide flex items-center gap-1.5">
+                          <span className={
+                            parseFloat(totalScore10) >= 8.0 ? 'text-amber-700 dark:text-amber-300' :
+                            parseFloat(totalScore10) >= 5.0 ? 'text-blue-700 dark:text-blue-300' :
+                            'text-rose-700 dark:text-rose-300'
+                          }>
+                            {parseFloat(totalScore10) >= 8.0 
+                              ? '🏆 Lời Khen Ngợi Đặc Biệt Từ Thầy Đinh Thành:' 
+                              : parseFloat(totalScore10) >= 5.0 
+                              ? '👏 Lời Động Viên Tiếp Tục Bứt Phá Từ Thầy Thành:' 
+                              : '💪 Lời Nhắn Nhủ Đồng Hành Cùng Em Từ Thầy Thành:'}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-relaxed italic">
+                          {parseFloat(totalScore10) >= 8.0 && (
+                            `"Thầy Thành rất tự hào về kết quả xuất sắc ${totalScore10}/10đ của em ${currentStudent?.name || ''}! Tinh thần tự giác và chăm chỉ này chắc chắn sẽ giúp em đạt điểm 10 rực rỡ trong kỳ thi chính thức!"`
+                          )}
+                          {parseFloat(totalScore10) >= 5.0 && parseFloat(totalScore10) < 8.0 && (
+                            `"Khá lắm em ơi (${totalScore10}/10đ)! Em đã nắm rất chắc nền tảng cơ bản rồi. Em hãy đọc kỹ phần giải thích ngắn gọn ở các câu sai bên dưới rồi bấm 'Làm lại lần ${attemptCount + 1}' để chạm mốc 9-10 điểm nhé!"`
+                          )}
+                          {parseFloat(totalScore10) < 5.0 && (
+                            `"Không sao cả em nhé! Mỗi lỗi sai hôm nay là một cơ hội để mình nhớ bài sâu hơn. Em đọc kỹ 'Bí kíp gỡ điểm' của Thầy ở từng câu sai bên dưới, rồi bấm 'Làm lại lần ${attemptCount + 1}' để gỡ điểm ngay nhé! Thầy luôn tin tưởng ở em!"`
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* 3 THỐNG KÊ CHI TIẾT */}
@@ -1576,13 +1617,28 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                           })}
                         </div>
 
-                        {/* Lời giải & chấm chữa của Thầy */}
-                        <div className="mt-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-1">
-                          <div className="font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
-                            <Lightbulb className="w-4 h-4 text-amber-500" />
-                            <span>Chấm chữa &amp; Hướng dẫn giải chi tiết:</span>
+                        {/* Lời giải & chấm chữa của Thầy - Giải thích ngắn gọn, dễ hiểu */}
+                        <div className={`mt-3 p-3.5 rounded-2xl border text-xs sm:text-sm leading-relaxed space-y-1.5 shadow-xs ${
+                          isCorrect
+                            ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200'
+                            : 'bg-amber-50/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700/80 text-amber-950 dark:text-amber-100 ring-2 ring-amber-400/20'
+                        }`}>
+                          <div className="font-bold flex items-center justify-between gap-2">
+                            <span className="flex items-center gap-1.5 font-black">
+                              <Lightbulb className={`w-4 h-4 shrink-0 ${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400 animate-pulse'}`} />
+                              <span>{isCorrect ? '✨ Lời giải chuẩn của Thầy:' : '💡 Bí kíp gỡ điểm & Giải thích ngắn gọn:'}</span>
+                            </span>
+                            {isCorrect ? (
+                              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-800/80 text-emerald-900 dark:text-emerald-100 font-black">
+                                🎉 Em làm đúng!
+                              </span>
+                            ) : (
+                              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-200 dark:bg-amber-800/80 text-amber-950 dark:text-amber-100 font-black">
+                                ⚠️ Cần nhớ để gỡ điểm
+                              </span>
+                            )}
                           </div>
-                          <p className="pl-5 italic text-slate-600 dark:text-slate-300">
+                          <p className={`pl-5 font-medium ${isCorrect ? 'text-emerald-800 dark:text-emerald-300' : 'text-amber-900 dark:text-amber-200 font-bold'}`}>
                             {item.exp}
                           </p>
                         </div>

@@ -150,11 +150,11 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
               <span>Hộp Thư Riêng Tư Trực Tuyến</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black mb-1">
-              GỬI TIN NHẮN CHO ADMIN — THẦY ĐINH THÀNH
+              NHẮN TIN CHO THẦY THÀNH — TRAO ĐỔI HỌC TẬP & HỎI BÀI
             </h3>
             <p className="text-blue-100 text-xs sm:text-sm max-w-2xl">
-              Học sinh có thể gửi thắc mắc bài tập, báo lỗi hoặc trao đổi riêng tư với Thầy Thành. 
-              Mọi tin nhắn được mã hóa bảo mật — chỉ Admin đăng nhập mới có quyền xem.
+              Học sinh có thể gửi câu hỏi bài tập khó, thắc mắc điểm số hoặc trao đổi riêng tư với Thầy Thành.
+              Mọi tin nhắn đều được gửi trực tiếp và Thầy sẽ đọc để giải đáp cho em.
             </p>
           </div>
 
@@ -162,7 +162,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
             {isAdmin ? (
               <span className="px-3.5 py-2 rounded-xl bg-amber-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md">
                 <ShieldCheck className="w-4 h-4 text-purple-900" />
-                <span>Admin Đang Trực Hòm Thư ({adminAllMessages.length} tin)</span>
+                <span>Thầy Thành Đang Trực Hòm Thư ({adminAllMessages.length} tin)</span>
               </span>
             ) : (
               <button
@@ -171,7 +171,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
                 className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
               >
                 <Lock className="w-3.5 h-3.5 text-amber-300" />
-                <span>Admin Đăng Nhập Xem Thư</span>
+                <span>Thầy Thành Đăng Nhập Xem Thư</span>
               </button>
             )}
           </div>
@@ -185,7 +185,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
             <div>
               <h4 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
                 <Inbox className="w-5 h-5 text-purple-600" />
-                <span>Hòm Thư Quản Trị Viên (Toàn Quyền Xem & Trả Lời)</span>
+                <span>Hòm Thư Của Thầy Thành (Toàn Quyền Xem & Trả Lời Học Sinh)</span>
               </h4>
               <p className="text-xs text-slate-500">
                 Thầy Đinh Thành ({BRAND.phone}) đang xem toàn bộ {adminAllMessages.length} tin nhắn gửi về từ học sinh.
@@ -364,7 +364,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
             </div>
             <div>
               <h4 className="text-base font-black text-slate-900 dark:text-white">
-                Gửi Tin Nhắn / Thắc Mắc Đến Thầy Giáo
+                Gửi Tin Nhắn / Thắc Mắc Đến Thầy Thành
               </h4>
               <p className="text-xs text-slate-500">
                 Thầy Đinh Thành sẽ đọc và trực tiếp giải đáp cho em qua hệ thống hoặc Zalo {BRAND.phone}.
@@ -457,7 +457,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
                   className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-md transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{isSending ? 'Đang gửi...' : 'Gửi Đến Thầy Thành'}</span>
+                  <span>{isSending ? 'Đang gửi...' : 'Gửi Đến Thầy Thành 🚀'}</span>
                 </button>
               </div>
             </form>
@@ -489,7 +489,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-blue-600" />
-              <span>Tin Nhắn Của Em ({studentMessages.length})</span>
+              <span>Tin Nhắn Em Đã Gửi Cho Thầy Thành ({studentMessages.length})</span>
             </h4>
             <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950 text-blue-600 font-bold">
               Bảo mật riêng tư
@@ -498,7 +498,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
 
           {studentMessages.length === 0 ? (
             <div className="text-center py-8 text-slate-400 text-xs">
-              Em chưa gửi tin nhắn nào. Khi có thắc mắc bài vở, hãy gửi tin nhắn cho Thầy ở khung bên cạnh nhé!
+              Em chưa gửi tin nhắn nào cho Thầy Thành. Khi gặp bài tập khó, cần giải thích bài học hoặc thắc mắc điểm số, em cứ tự nhiên nhắn cho Thầy ở khung bên cạnh nhé!
             </div>
           ) : (
             <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">

@@ -101,9 +101,99 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
   }
 ];
 
+interface WelcomeModalData {
+  isOpen: boolean;
+  studentName: string;
+  studentClass: string;
+  pointsAwarded: number;
+  totalPoints: number;
+  mascotEmoji: string;
+  badgeTitle: string;
+  cheerMessage: string;
+}
+
+const MOTIVATIONAL_QUOTES = [
+  "Thầy Thành rất tự hào về tinh thần tự giác của em! Mỗi ngày cố gắng một chút, thành quả sẽ khiến em bất ngờ! 🌟",
+  "Mỗi bài tập em vượt qua, mỗi từ vựng em ghi nhớ hôm nay đều là bước đệm vững chắc cho tương lai rực rỡ! 🚀",
+  "Sai một câu không sao cả, hiểu vì sao sai mới là học sinh bản lĩnh! Thầy luôn ở đây đồng hành cùng em! 💡",
+  "Kiến thức tích lũy như mưa dầm thấm lâu. Hôm nay em đã nỗ lực hơn hôm qua rất nhiều rồi đấy! Giữ vững phong độ nhé! 👏",
+  "Một giờ học tập say mê hôm nay sẽ đổi lại sự tự tin ngời sáng mai sau! Chúc em học thật vui và nhớ thật sâu! ✨",
+  "Tự giác học bài là chiếc chìa khóa vạn năng dẫn lối đến thành công. Thầy rất tự hào về tinh thần của em! 🎯",
+  "Đừng ngại câu hỏi khó, mỗi lần vượt qua thử thách là một lần bộ não em thông minh và mạnh mẽ hơn! 💪",
+  "Bí kíp của điểm cao rất đơn giản: Đọc kỹ đề - Làm cẩn thận - Ôn đều mỗi ngày. Em nhất định làm được! 🏆",
+  "Học tiếng Anh như một chuyến du lịch kỳ thú, mỗi từ mới là một chân trời rộng mở. Chúc em học vui say sưa! 🌈",
+  "Thầy Thành gửi lời khen ngợi đặc biệt đến sự chăm chỉ của em! Chúc em đạt điểm số cao nhất trong kỳ thi tới! ⭐",
+  "Chăm ngoan - Tự giác - Kiên trì: Ba người bạn tốt này sẽ giúp em chạm tới mọi ước mơ! 🦉",
+  "Mỗi nỗ lực hôm nay của em đều đang kiến tạo nên một tương lai ngời sáng. Thầy luôn tin tưởng ở em! 💖"
+];
+
 export const StudentPortal: React.FC = () => {
   // ==================== QUẢN LÝ TÀI KHOẢN HỌC SINH & ĐĂNG XUẤT / ĐĂNG KÝ ====================
   const [currentStudent, setCurrentStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
+  
+  // ==================== KHEN NGỢI & ĐỘNG VIÊN HỌC SINH + THÔNG BÁO CHÀO MỪNG NGỘ NGHĨNH ====================
+  const [welcomeModalData, setWelcomeModalData] = useState<WelcomeModalData | null>(null);
+  const [quoteIndex, setQuoteIndex] = useState<number>(0);
+  const [showCheerToast, setShowCheerToast] = useState<boolean>(false);
+  const [cheerToastMessage, setCheerToastMessage] = useState<string>('');
+
+  // Tự động luân chuyển câu động viên mỗi 18 giây
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setQuoteIndex(prev => (prev + 1) % MOTIVATIONAL_QUOTES.length);
+    }, 18000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleNextQuote = () => {
+    setQuoteIndex(prev => (prev + 1) % MOTIVATIONAL_QUOTES.length);
+  };
+
+  const handleGetTeacherCheer = () => {
+    const cheers = [
+      `🎉 Thầy Thành gửi lời khen ngợi: Em ${currentStudent?.name || 'học sinh chăm ngoan'} đang học rất chuyên cần! Hãy giữ vững phong độ nhé!`,
+      `⭐ Thầy Thành chúc em ${currentStudent?.name || 'em'} một buổi học tràn ngập niềm vui, làm bài nào đúng trọn vẹn bài đó!`,
+      `👏 Thầy rất tự hào về tinh thần tự giác của em! Sự kiên trì hôm nay chắc chắn sẽ nở hoa điểm 9, điểm 10 rực rỡ!`,
+      `💡 Thầy Thành nhắn nhủ: Gặp câu khó cứ bình tĩnh suy luận, xem kỹ giải thích của Thầy là hiểu ngay! Cố lên nhé!`,
+      `🚀 Em là một học sinh rất có ý thức tự học! Tiếp tục phát huy để trở thành tấm gương sáng của lớp nhé!`
+    ];
+    const msg = cheers[Math.floor(Math.random() * cheers.length)];
+    setCheerToastMessage(msg);
+    setShowCheerToast(true);
+    setTimeout(() => setShowCheerToast(false), 5000);
+  };
+
+  const triggerWelcomeModal = (student: StudentProfile, isReturn: boolean = true) => {
+    const mascots = ['🦉', '🐱', '🚀', '🌟', '🐼', '🦁', '🐝'];
+    const titles = [
+      'Chiến Binh Chăm Ngoan 🛡️',
+      'Ong Vàng Cần Mẫn 🐝',
+      'Thần Đồng Anh Ngữ ⚡',
+      'Siêu Sao Bứt Phá 🌟',
+      'Cú Vàng Thông Thái 🦉',
+      'Nhà Vô Địch Tương Lai 🏆'
+    ];
+    const cheers = [
+      `Thầy Thành rất vui khi thấy em ${student.name} chăm chỉ quay lại học bài hôm nay! Mỗi ngày tiến bộ một chút, thành công sẽ đến với em!`,
+      `Chào mừng em ${student.name} đã trở lại bàn học! Thầy Thành tin chắc hôm nay em sẽ ghi trọn điểm 10 rực rỡ!`,
+      `Tự giác học tập là phẩm chất tuyệt vời nhất! Thầy Thành gửi tặng em +5 điểm chuyên cần và chúc em có một buổi học thật say mê!`,
+      `Hoan hô tinh thần học tập của em ${student.name} (Lớp ${student.className})! Thầy luôn đồng hành và dõi theo từng bước tiến của em!`
+    ];
+    const randomMascot = mascots[Math.floor(Math.random() * mascots.length)];
+    const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+    const randomCheer = cheers[Math.floor(Math.random() * cheers.length)];
+
+    setWelcomeModalData({
+      isOpen: true,
+      studentName: student.name,
+      studentClass: student.className,
+      pointsAwarded: 5,
+      totalPoints: student.totalMeritPoints || 5,
+      mascotEmoji: randomMascot,
+      badgeTitle: randomTitle,
+      cheerMessage: randomCheer
+    });
+  };
   // ==================== VÀO HỌC NHANH & NHỚ THIẾT BỊ 1-CHẠM (KHÔNG CẦN ĐĂNG KÝ) ====================
   const [rememberedStudent, setRememberedStudent] = useState<{ id: string; name: string; className: string; grade: number; studentCode?: string } | null>(() => {
     try {
@@ -184,7 +274,7 @@ export const StudentPortal: React.FC = () => {
     const student = studentGradebookService.quickAccessStudent(finalName, cls);
     setCurrentStudent(student);
     saveStudentToDevice(student);
-    alert(`🎉 Chúc mừng em ${student.name} (Lớp ${student.className}) đã vào học thành công!\n⭐ Em được cộng +5 điểm chuyên cần hôm nay!`);
+    triggerWelcomeModal(student, false);
   };
 
   const handleOneTapLogin = (name: string, cls: string) => {
@@ -193,6 +283,7 @@ export const StudentPortal: React.FC = () => {
     const student = studentGradebookService.quickAccessStudent(name, cls);
     setCurrentStudent(student);
     saveStudentToDevice(student);
+    triggerWelcomeModal(student, true);
   };
 
   const handleSwitchOtherStudent = () => {
@@ -392,7 +483,7 @@ export const StudentPortal: React.FC = () => {
     setShowAuthModal(false);
     setLoginStudentInput('');
     setLoginPassInput('');
-    alert(`🎉 Chúc mừng em ${found.name} (Lớp ${found.className}) đã đăng nhập thành công!`);
+    triggerWelcomeModal(found, true);
   };
 
   const handleStudentLogout = () => {
@@ -1196,14 +1287,61 @@ export const StudentPortal: React.FC = () => {
                 ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-md font-black border-2 border-cyan-300'
                 : 'bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-400/30'
             }`}
+            title="Nhắn tin riêng tư hỏi bài và trao đổi học tập cùng Thầy Đinh Thành"
           >
             <Mail className="w-4 h-4 text-cyan-300" />
-            <span>8. Hòm Thư Admin</span>
+            <span>8. Nhắn Tin Thầy Thành</span>
           </button>
 
           
         </div>
       </div>
+
+      {/* ==================== GÓC ĐỘNG VIÊN & KHEN NGỢI TỪ THẦY THÀNH ==================== */}
+      {currentStudent && (
+        <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 dark:from-slate-900 dark:via-amber-950/20 dark:to-slate-900 border-2 border-amber-300 dark:border-amber-600/50 rounded-2xl p-3.5 sm:p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 text-left animate-in fade-in">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-400 text-slate-950 flex items-center justify-center text-xl shadow-sm shrink-0">
+              👨‍🏫
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-xs font-black text-amber-800 dark:text-amber-300 uppercase tracking-wide flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Thầy Thành Gửi Lời Động Viên Đến Em {currentStudent.name}:</span>
+                </span>
+                <span className="text-[10px] px-2 py-0.2 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-bold hidden sm:inline-block">
+                  ⭐ {currentStudent.totalMeritPoints || 5}đ Chuyên cần
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 italic leading-relaxed">
+                "{MOTIVATIONAL_QUOTES[quoteIndex]}"
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
+            <button
+              type="button"
+              onClick={handleNextQuote}
+              className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 border border-amber-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+              title="Xem lời động viên tiếp theo từ Thầy Thành"
+            >
+              <RotateCw className="w-3.5 h-3.5 text-amber-600" />
+              <span>Đổi Lời Chúc 🔄</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGetTeacherCheer}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-slate-950 text-xs font-black transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+              title="Bấm để nhận thêm lời khen ngợi động viên từ Thầy Thành"
+            >
+              <span>🎁 Nhận Thêm Lời Khen</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}
       {!currentStudent && ['vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8'].includes(activeTab) && (
@@ -1921,7 +2059,7 @@ export const StudentPortal: React.FC = () => {
         />
       )}
 
-      {/* ==================== PHÂN HỆ 8: HÒM THƯ TIN NHẮN CHO ADMIN ==================== */}
+      {/* ==================== PHÂN HỆ 8: NHẮN TIN CHO THẦY THÀNH ==================== */}
       {activeTab === 'messages' && (
         <StudentMessageAdminView
           currentStudent={currentStudent}
@@ -2794,6 +2932,120 @@ export const StudentPortal: React.FC = () => {
                 Đóng Cửa Sổ
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== MODAL CHÀO MỪNG TRỞ LẠI ĐẸP MẮT & NGỘ NGHĨNH ==================== */}
+      {welcomeModalData?.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border-4 border-amber-400 dark:border-amber-500 overflow-hidden transform transition-all animate-in zoom-in-95 duration-200 text-center">
+            {/* Radiant playful header */}
+            <div className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 p-6 text-white relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/20 rounded-full blur-xl pointer-events-none" />
+              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-yellow-300/30 rounded-full blur-xl pointer-events-none" />
+
+              {/* Bouncing Mascot */}
+              <div className="w-20 h-20 mx-auto mb-2 rounded-2xl bg-white/25 backdrop-blur-md border-2 border-white/40 flex items-center justify-center text-4xl shadow-lg animate-bounce">
+                {welcomeModalData.mascotEmoji}
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-yellow-100 text-xs font-black mb-1.5 border border-white/30">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <span>{welcomeModalData.badgeTitle}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black tracking-tight drop-shadow-sm">
+                HOAN HÔ! CHÀO MỪNG EM TRỞ LẠI! 🎉
+              </h3>
+              <p className="text-white/90 text-xs sm:text-sm font-medium mt-1">
+                Rất vui mừng khi lại được đồng hành học tập cùng em!
+              </p>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              {/* Student identification badge */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div className="text-left">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 block">Học sinh chăm ngoan:</span>
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    {welcomeModalData.studentName}
+                  </h4>
+                </div>
+                <div className="text-right">
+                  <span className="px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 text-xs font-black">
+                    Lớp {welcomeModalData.studentClass}
+                  </span>
+                </div>
+              </div>
+
+              {/* Attendance reward pill */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-100/90 via-amber-50 to-orange-100/80 dark:from-amber-950/40 dark:to-orange-950/30 border-2 border-amber-300 dark:border-amber-700/60 flex items-center gap-3 text-left">
+                <div className="w-12 h-12 rounded-xl bg-amber-400 text-slate-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-md">
+                  🎁
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-black text-amber-900 dark:text-amber-200 uppercase tracking-wide">
+                      Quà Tặng Chuyên Cần Hôm Nay:
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-xs font-black shadow-xs">
+                      +{welcomeModalData.pointsAwarded} Điểm ⭐
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                    Tổng điểm thi đua hiện tại của em: <strong className="text-amber-600 dark:text-amber-400 font-black">{welcomeModalData.totalPoints} điểm</strong>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Warm Teacher's quote */}
+              <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 text-xs sm:text-sm text-blue-950 dark:text-blue-200 italic leading-relaxed text-left flex items-start gap-2.5">
+                <span className="text-xl shrink-0">👨‍🏫</span>
+                <p>
+                  <strong>Thầy Đinh Thành:</strong> "{welcomeModalData.cheerMessage}"
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setWelcomeModalData(null)}
+                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-sm shadow-md transition transform hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>Bắt Đầu Học Ngay! 🚀</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setWelcomeModalData(null);
+                    setActiveTab('leaderboard');
+                  }}
+                  className="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <Trophy className="w-4 h-4 text-amber-500" />
+                  <span>Xem Bảng Thi Đua 🏆</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TOAST KHEN NGỢI TỪ THẦY THÀNH */}
+      {showCheerToast && (
+        <div className="fixed bottom-6 right-6 z-50 max-w-md bg-gradient-to-r from-amber-400 to-orange-400 text-slate-950 p-4 rounded-2xl shadow-2xl border-2 border-white flex items-start gap-3 animate-in slide-in-from-bottom duration-300">
+          <div className="w-10 h-10 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center text-2xl shrink-0">
+            🎉
+          </div>
+          <div className="text-left text-xs sm:text-sm">
+            <div className="font-black flex items-center gap-1.5 text-slate-900 mb-0.5">
+              <Sparkles className="w-4 h-4 text-purple-900" />
+              <span>Lời Khen Từ Thầy Đinh Thành</span>
+            </div>
+            <p className="font-semibold text-slate-950 leading-snug">
+              {cheerToastMessage}
+            </p>
           </div>
         </div>
       )}
