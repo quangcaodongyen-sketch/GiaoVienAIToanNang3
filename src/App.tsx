@@ -1199,7 +1199,7 @@ export default function App() {
                 title="Cổng Chào Mừng dekiemtraso.com: Lựa chọn Dành Cho GV / Dành Cho HS"
               >
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>Trang Chủ / Chọn Vai Trò</span>
+                <span>Trang Chủ</span>
               </button>
 
               {/* Nút 1: Kho Ứng Dụng Giáo Viên */}
@@ -1216,7 +1216,7 @@ export default function App() {
                 }`}
               >
                 <Layers className="w-4 h-4" />
-                <span>1. Dành Cho GV</span>
+                <span>Giáo Viên</span>
               </button>
 
               {/* Nút 2: Bảng Quản Trị Admin */}
@@ -1233,7 +1233,7 @@ export default function App() {
                 }`}
               >
                 <Crown className="w-4 h-4 text-amber-500" />
-                <span>2. Quản Trị Admin</span>
+                <span>Quản Trị</span>
               </button>
 
               {/* Nút 3: Dành Cho Học Sinh */}
@@ -1250,7 +1250,7 @@ export default function App() {
                 }`}
               >
                 <GraduationCap className="w-4 h-4 text-emerald-500" />
-                <span>3. Dành Cho Học Sinh</span>
+                <span>Học Sinh</span>
               </button>
             </div>
 
@@ -1349,7 +1349,7 @@ export default function App() {
                 }`}
               >
                 <Layers className="w-4 h-4 text-blue-500" />
-                <span>1. Kho Ứng Dụng Giáo Viên</span>
+                <span>Giáo Viên</span>
               </button>
 
               <button 
@@ -1363,7 +1363,7 @@ export default function App() {
                 }`}
               >
                 <Crown className="w-4 h-4 text-amber-500" />
-                <span>2. Bảng Quản Trị Admin</span>
+                <span>Quản Trị</span>
               </button>
 
               <button 
@@ -1377,7 +1377,7 @@ export default function App() {
                 }`}
               >
                 <GraduationCap className="w-4 h-4 text-emerald-500" />
-                <span>3. Dành Cho Học Sinh</span>
+                <span>Học Sinh</span>
               </button>
 
               <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">

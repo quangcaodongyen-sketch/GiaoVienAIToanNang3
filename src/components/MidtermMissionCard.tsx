@@ -55,18 +55,18 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="px-2.5 py-0.5 rounded-full bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                Nhiệm Vụ Trọng Tâm HK1
+              <span className="px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-200 border border-cyan-400/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                Học Kỳ 1
               </span>
-              <span className="text-xs text-amber-300 font-bold">
-                Thầy Đinh Văn Thành giao nhiệm vụ
+              <span className="text-xs text-slate-300">
+                Thầy Đinh Văn Thành
               </span>
             </div>
-            <h3 className="text-lg sm:text-2xl font-black text-white tracking-tight">
-              BẢNG GIAO NHIỆM VỤ ÔN TẬP KIỂM TRA GIỮA KỲ 1
+            <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+              Kế Hoạch Ôn Tập Giữa Kỳ 1
             </h3>
-            <p className="text-xs sm:text-sm text-blue-200/90 max-w-2xl mt-0.5">
-              Học sinh phải hoàn thành từ vựng Unit 1 - 3 ở tất cả dạng bài (nắm vững từ) và làm bài thi thử đề cương, giữa kỳ đạt chất lượng (không làm bừa).
+            <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
+              Hoàn thành từ vựng Unit 1 - 3 và làm bài ôn luyện đề cương, đề thi thử đạt chất lượng.
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-black text-sm text-cyan-300">Đánh Giá Sư Phạm Của Thầy Thành:</span>
+                  <span className="font-black text-sm text-cyan-300">Đánh Giá Tiến Độ:</span>
                   <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black border ${missionState.levelColor}`}>
                     {missionState.levelBadgeText}
                   </span>

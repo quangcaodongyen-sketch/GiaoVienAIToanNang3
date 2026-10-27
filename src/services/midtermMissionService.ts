@@ -200,7 +200,7 @@ export class MidtermMissionService {
       academicLevel: 'CHUA_HOAN_THANH',
       levelBadgeText: 'Chưa hoàn thành',
       levelColor: 'text-slate-500 bg-slate-100',
-      teacherEvaluation: 'Thầy Thành giao nhiệm vụ: Em hãy bắt đầu ôn từ vựng Unit 1 và làm đề cương ngay nhé!',
+      teacherEvaluation: 'Bắt đầu ôn tập: Hoàn thành từ vựng Unit 1 - 3 và làm bài đề cương, đề thi thử.',
       lastUpdatedAt: new Date().toISOString()
     };
 
@@ -387,29 +387,29 @@ export class MidtermMissionService {
 
     if (state.totalProgressPercent >= 90 && avgScore >= 8.5) {
       state.academicLevel = 'XUAT_SAC';
-      state.levelBadgeText = 'Xuất sắc 🏆';
+      state.levelBadgeText = 'Xuất sắc';
       state.levelColor = 'text-emerald-700 bg-emerald-100 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300';
-      state.teacherEvaluation = `Thầy Thành nhiệt liệt biểu dương em ${state.studentName}! Em đã chuẩn bị cực kỳ chu đáo cho kỳ thi Giữa Kỳ 1: Nắm chắc từ vựng 3 Unit và làm bài thi rất xuất sắc (${avgScore}đ). Thầy tin tưởng em chắc chắn sẽ đạt điểm 9-10 trong kỳ thi thật! 🌟`;
+      state.teacherEvaluation = `Hoàn thành 90%+ nhiệm vụ (${state.totalProgressPercent}%), điểm bài làm ${avgScore}đ. Nắm vững kiến thức trọng tâm.`;
     } else if (state.totalProgressPercent >= 75 && avgScore >= 7.5) {
       state.academicLevel = 'GIOI';
-      state.levelBadgeText = 'Tốt (Giỏi) 🌟';
+      state.levelBadgeText = 'Giỏi';
       state.levelColor = 'text-blue-700 bg-blue-100 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300';
-      state.teacherEvaluation = `Thầy Thành khen ngợi em ${state.studentName}! Em có tinh thần tự giác rất cao, đã hoàn thành phần lớn các nhiệm vụ với kết quả tốt. Hãy rà soát lại các câu còn sai sót để tự tin đạt điểm tối đa nhé! 👏`;
+      state.teacherEvaluation = `Tiến độ ${state.totalProgressPercent}%, điểm cao nhất ${avgScore}đ. Đạt kết quả tốt, tiếp tục ôn tập kỹ các phần còn lại.`;
     } else if (state.totalProgressPercent >= 50 && avgScore >= 6.0) {
       state.academicLevel = 'KHA';
-      state.levelBadgeText = 'Khá 👍';
+      state.levelBadgeText = 'Khá';
       state.levelColor = 'text-indigo-700 bg-indigo-100 border-indigo-300 dark:bg-indigo-950/60 dark:text-indigo-300';
-      state.teacherEvaluation = `Khá tốt! Em ${state.studentName} đã hoàn thành được ${state.totalProgressPercent}% nhiệm vụ ôn tập. Cần dành thêm thời gian luyện nốt các dạng bài từ vựng còn lại và làm lại đề thi để đạt điểm cao hơn nhé! 💪`;
+      state.teacherEvaluation = `Đã hoàn thành ${state.totalProgressPercent}% nhiệm vụ. Cần hoàn thành đủ các dạng bài từ vựng và luyện lại đề thi.`;
     } else if (state.totalProgressPercent >= 30 || avgScore >= 5.0) {
       state.academicLevel = 'DAT';
-      state.levelBadgeText = 'Đạt Yêu Cầu 🎯';
+      state.levelBadgeText = 'Đạt yêu cầu';
       state.levelColor = 'text-amber-800 bg-amber-100 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300';
-      state.teacherEvaluation = `Em ${state.studentName} đã bắt đầu ôn tập và đạt mức cơ bản (${state.totalProgressPercent}%). Tuy nhiên kỳ thi Giữa Kỳ 1 sắp tới, em cần tăng tốc hoàn thành nốt từ vựng Unit 1 - 3 và luyện đề thi nghiêm túc hơn nữa nhé! 📖`;
+      state.teacherEvaluation = `Tiến độ cơ bản (${state.totalProgressPercent}%). Cần hoàn thành tiếp từ vựng Unit 1 - 3 và làm bài đề cương.`;
     } else {
       state.academicLevel = 'CAN_CO_GANG';
-      state.levelBadgeText = 'Cần Nỗ Lực Thêm ⚠️';
+      state.levelBadgeText = 'Cần nỗ lực';
       state.levelColor = 'text-rose-700 bg-rose-100 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300';
-      state.teacherEvaluation = `Thầy Thành nhắc nhở nghiêm túc: Em mới chỉ hoàn thành ${state.totalProgressPercent}% nhiệm vụ ôn tập GK1. Em hãy vào học từ vựng Unit 1 - 3 ngay, làm nghiêm túc không chọn bừa và hoàn thành đề cương để Thầy cộng điểm chuyên cần nhé! ⏰`;
+      state.teacherEvaluation = `Tiến độ hiện tại: ${state.totalProgressPercent}%. Cần hoàn thành nhiệm vụ từ vựng và nộp bài thi thử theo quy định.`;
     }
 
     state.lastUpdatedAt = new Date().toISOString();

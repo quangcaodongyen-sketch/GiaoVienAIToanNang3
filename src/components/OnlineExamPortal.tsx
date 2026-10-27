@@ -1413,7 +1413,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
         levelTitle: 'Mức Tốt (Xuất sắc)',
         badgeText: 'Xuất sắc 🏆',
         ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Tốt (Xuất sắc: 9.0 - 10.0đ)',
-        feedback: 'Khen ngợi: Em có năng lực tiếng Anh rất xuất sắc, làm bài cực kỳ cẩn thận và tự tin!',
+        feedback: 'Đạt kết quả xuất sắc: Nắm rất vững kiến thức và làm bài chính xác.',
         bannerBg: 'bg-gradient-to-br from-emerald-600 via-teal-700 to-green-800 border-emerald-400',
         iconType: 'trophy'
       };

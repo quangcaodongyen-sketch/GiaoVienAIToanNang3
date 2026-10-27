@@ -515,7 +515,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
                     <span>Kết Quả Đánh Giá Tức Thì • 20 Câu Trắc Nghiệm</span>
                   </div>
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
-                    {submittedResult.score >= 9.0 ? '🌟 XUẤT SẮC TUYỆT VỜI!' :
+                    {submittedResult.score >= 9.0 ? 'XUẤT SẮC (9.0 - 10.0đ)' :
                      submittedResult.score >= 8.0 ? '🥇 THÀNH TÍCH RẤT GIỎI!' :
                      submittedResult.score >= 6.5 ? '🥈 KẾT QUẢ KHÁ TỐT!' :
                      submittedResult.score >= 5.0 ? '🥉 ĐẠT MỨC TRUNG BÌNH!' : '💪 HÃY CỐ GẮNG HƠN Ở LẦN SAU!'}

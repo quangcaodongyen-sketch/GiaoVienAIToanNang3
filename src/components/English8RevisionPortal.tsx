@@ -1454,7 +1454,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                             'text-rose-700 dark:text-rose-300'
                           }>
                             {parseFloat(totalScore10) >= 8.0 
-                              ? '🏆 Lời Khen Ngợi Đặc Biệt Từ Thầy Đinh Thành:' 
+                              ? 'Đánh Giá Kết Quả Bài Làm:' 
                               : parseFloat(totalScore10) >= 5.0 
                               ? '👏 Lời Động Viên Tiếp Tục Bứt Phá Từ Thầy Thành:' 
                               : '💪 Lời Nhắn Nhủ Đồng Hành Cùng Em Từ Thầy Thành:'}
