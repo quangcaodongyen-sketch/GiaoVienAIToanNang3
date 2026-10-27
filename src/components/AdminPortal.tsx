@@ -37,9 +37,10 @@ import { GraduationCap } from 'lucide-react';
 
 interface AdminPortalProps {
   onBackToHome?: () => void;
+  onSwitchToStudents?: () => void;
 }
 
-export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
+export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome, onSwitchToStudents }) => {
   // Quản lý Đăng Nhập Admin (Tên: Admin, Mật khẩu chuẩn Thầy Thành: Thaythanh2026@)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem('gvai_admin_logged_in') === 'true';
@@ -304,15 +305,28 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
               Đăng Nhập Quản Trị
             </button>
 
-            {onBackToHome && (
-              <button
-                type="button"
-                onClick={onBackToHome}
-                className="w-full py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-700 transition"
-              >
-                ← Quay lại Kho Ứng Dụng
-              </button>
-            )}
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              {onBackToHome && (
+                <button
+                  type="button"
+                  onClick={onBackToHome}
+                  className="py-2 px-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center justify-center gap-1 cursor-pointer"
+                  title="Quay lại Kho Ứng Dụng Giáo Viên"
+                >
+                  <span>👨‍🏫 Kho Giáo Viên</span>
+                </button>
+              )}
+              {onSwitchToStudents && (
+                <button
+                  type="button"
+                  onClick={onSwitchToStudents}
+                  className="py-2 px-2.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition flex items-center justify-center gap-1 cursor-pointer"
+                  title="Chuyển sang Cổng Học Sinh"
+                >
+                  <span>🎓 Cổng Học Sinh</span>
+                </button>
+              )}
+            </div>
           </form>
         </div>
       </div>
@@ -349,8 +363,32 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome }) => {
           </div>
         </div>
 
-        {/* NÚT ĐIỀU HƯỚNG 3 TAB CHÍNH */}
+        {/* NÚT ĐIỀU HƯỚNG CÁC PHÂN HỆ & 3 TAB ADMIN */}
         <div className="flex items-center gap-2 flex-wrap">
+          {onBackToHome && (
+            <button
+              type="button"
+              onClick={onBackToHome}
+              className="px-3 py-2 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300 transition flex items-center gap-1 cursor-pointer border border-blue-200 dark:border-blue-800"
+              title="Quay lại Kho Ứng Dụng Giáo Viên"
+            >
+              <span>👨‍🏫 Kho Giáo Viên</span>
+            </button>
+          )}
+
+          {onSwitchToStudents && (
+            <button
+              type="button"
+              onClick={onSwitchToStudents}
+              className="px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 transition flex items-center gap-1 cursor-pointer border border-emerald-200 dark:border-emerald-800"
+              title="Chuyển sang Cổng Học Sinh"
+            >
+              <span>🎓 Cổng Học Sinh</span>
+            </button>
+          )}
+
+          <div className="h-5 w-px bg-slate-300 dark:bg-slate-700 mx-1 hidden sm:block" />
+
           <button
             onClick={() => setAdminTab('students')}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${

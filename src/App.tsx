@@ -1345,6 +1345,77 @@ export default function App() {
             </div>
           )}
         </nav>
+
+        {/* CỔNG CHỌN NHANH 2 PHÂN HỆ: DÀNH CHO GV & DÀNH CHO HS + ĐĂNG NHẬP ADMIN (LUÔN HIỂN THỊ TRÊN MỌI THIẾT BỊ) */}
+        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-t border-b border-blue-500/25 py-2 px-3 sm:px-6 shadow-md transition-all">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
+              {/* Nút 1: DÀNH CHO GIÁO VIÊN */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('teachers');
+                  window.history.pushState(null, '', '/');
+                }}
+                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                  mainViewTab === 'teachers'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/40 ring-2 ring-blue-300 scale-102'
+                    : 'bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white border border-white/15'
+                }`}
+                title="Dành Cho Giáo Viên: Kho Tiện Ích & Phần Mềm Tạo Đề Kiểm Tra"
+              >
+                <span className="text-sm sm:text-base">👨‍🏫</span>
+                <span>DÀNH CHO GV</span>
+                {mainViewTab === 'teachers' && (
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse hidden sm:inline-block"></span>
+                )}
+              </button>
+
+              {/* Nút 2: DÀNH CHO HỌC SINH */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('students');
+                  window.history.pushState(null, '', '/hocsinh');
+                }}
+                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                  mainViewTab === 'students'
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-300 scale-102'
+                    : 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-emerald-200 border border-emerald-400/30'
+                }`}
+                title="Dành Cho Học Sinh: Học Từ Vựng Siêu Trí Nhớ, Thi Thử Online & Xem Điểm Danh Lớp"
+              >
+                <span className="text-sm sm:text-base">🎓</span>
+                <span>DÀNH CHO HS</span>
+                {mainViewTab === 'students' ? (
+                  <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse hidden sm:inline-block"></span>
+                ) : (
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping hidden sm:inline-block"></span>
+                )}
+              </button>
+            </div>
+
+            {/* Nút 3: ĐĂNG NHẬP ADMIN (Thầy Thành) */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('admin');
+                  window.history.pushState(null, '', '/admin');
+                }}
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  mainViewTab === 'admin'
+                    ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/40 ring-2 ring-amber-300 scale-102'
+                    : 'bg-amber-400/20 hover:bg-amber-400 text-amber-300 hover:text-slate-950 border border-amber-400/40'
+                }`}
+                title="Đăng Nhập Quản Trị Hệ Thống (Dành Cho Thầy Đinh Thành)"
+              >
+                <Crown className="w-3.5 h-3.5" />
+                <span>👑 Đăng Nhập Admin (Thầy Thành)</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1">
@@ -1367,13 +1438,38 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMainViewTab('students');
+                        window.history.pushState(null, '', '/hocsinh');
+                      }}
+                      className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-emerald-950/40 ring-2 ring-emerald-300/40 cursor-pointer"
+                      title="Chuyển sang Góc Học Sinh: Luyện Từ Vựng Siêu Trí Nhớ & Thi Thử Online"
+                    >
+                      <GraduationCap className="w-4 h-4 text-amber-300" />
+                      <span>🎓 Sang Cổng Học Sinh &rarr;</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMainViewTab('admin');
+                        window.history.pushState(null, '', '/admin');
+                      }}
+                      className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-amber-950/40 ring-2 ring-amber-300/40 cursor-pointer"
+                      title="Đăng Nhập Quản Trị Hệ Thống (Thầy Thành)"
+                    >
+                      <Crown className="w-4 h-4 text-slate-950" />
+                      <span>👑 Đăng Nhập Admin</span>
+                    </button>
 
                     <a
                       href={BRAND.zaloUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs transition flex items-center gap-1.5"
+                      className="px-3.5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold text-xs sm:text-sm transition flex items-center gap-1.5"
                     >
                       <MessageCircle className="w-4 h-4 text-teal-300" />
                       <span>Zalo Tư Vấn Pro</span>
@@ -1395,12 +1491,30 @@ export default function App() {
 
         {/* 2. PHÂN HỆ QUẢN TRỊ ADMIN (THẦY THÀNH) */}
         {mainViewTab === 'admin' && (
-          <AdminPortal onBackToHome={() => setMainViewTab('teachers')} />
+          <AdminPortal 
+            onBackToHome={() => {
+              setMainViewTab('teachers');
+              window.history.pushState(null, '', '/');
+            }} 
+            onSwitchToStudents={() => {
+              setMainViewTab('students');
+              window.history.pushState(null, '', '/hocsinh');
+            }}
+          />
         )}
 
         {/* 3. PHÂN HỆ DÀNH CHO HỌC SINH (TỪ VỰNG + THI ONLINE + TẢI ĐỀ) */}
         {mainViewTab === 'students' && (
-          <StudentPortal />
+          <StudentPortal 
+            onSwitchToTeachers={() => {
+              setMainViewTab('teachers');
+              window.history.pushState(null, '', '/');
+            }}
+            onOpenAdminPortal={() => {
+              setMainViewTab('admin');
+              window.history.pushState(null, '', '/admin');
+            }}
+          />
         )}
 
       </main>

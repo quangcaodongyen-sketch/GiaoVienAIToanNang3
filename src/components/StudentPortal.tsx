@@ -38,7 +38,7 @@ import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
 import { studentGradebookService, StudentProfile, validateEducationalStudentName } from '../services/studentGradebookService';
 import { removeDiacritics } from '../services/appMatcher';
-import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp } from 'lucide-react';
+import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp, Crown } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
@@ -127,7 +127,15 @@ const MOTIVATIONAL_QUOTES = [
   "Mỗi nỗ lực hôm nay của em đều đang kiến tạo nên một tương lai ngời sáng. Thầy luôn tin tưởng ở em! 💖"
 ];
 
-export const StudentPortal: React.FC = () => {
+export interface StudentPortalProps {
+  onSwitchToTeachers?: () => void;
+  onOpenAdminPortal?: () => void;
+}
+
+export const StudentPortal: React.FC<StudentPortalProps> = ({
+  onSwitchToTeachers,
+  onOpenAdminPortal
+}) => {
   // ==================== QUẢN LÝ TÀI KHOẢN HỌC SINH & ĐĂNG XUẤT / ĐĂNG KÝ ====================
   const [currentStudent, setCurrentStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
   
@@ -776,6 +784,12 @@ export const StudentPortal: React.FC = () => {
     reloadDocList();
     // Đồng bộ tài khoản học sinh từ Cloud khi mở trang (giúp điện thoại cập nhật ngay)
     studentGradebookService.syncFromCloud().catch(() => {});
+
+    const handleAuthChange = (e: any) => {
+      setIsAdminUnlocked(!!e?.detail?.isAuthenticated);
+    };
+    window.addEventListener('gvai_admin_auth_changed', handleAuthChange);
+    return () => window.removeEventListener('gvai_admin_auth_changed', handleAuthChange);
   }, []);
 
   const handleAdminVerify = (e: React.FormEvent) => {
@@ -1029,6 +1043,82 @@ export const StudentPortal: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* THANH ĐIỀU HƯỚNG NHANH CỔNG HỌC SINH: SANG KHO GV & ĐĂNG NHẬP ADMIN */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 mb-4 p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2">
+          {onSwitchToTeachers && (
+            <button
+              type="button"
+              onClick={onSwitchToTeachers}
+              className="px-3.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-black text-xs sm:text-sm border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-2 cursor-pointer shadow-2xs group"
+              title="Quay lại Kho Phần Mềm & Tiện Ích Dành Cho Giáo Viên"
+            >
+              <ArrowLeft className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:-translate-x-0.5 transition-transform" />
+              <span>👨‍🏫 Sang Kho Giáo Viên</span>
+            </button>
+          )}
+          <span className="text-xs font-bold text-slate-500 hidden sm:inline">
+            • Bạn đang ở: <strong className="text-emerald-600 dark:text-emerald-400">🎓 Dành Cho Học Sinh</strong>
+          </span>
+        </div>
+
+        {/* Nút Đăng Nhập / Quản Trị Admin (Thầy Thành) */}
+        <div className="flex items-center gap-2">
+          {isAdminUnlocked ? (
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700">
+              <span className="text-xs font-black text-amber-900 dark:text-amber-300 px-2 flex items-center gap-1">
+                <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <span>Admin Thầy Thành</span>
+              </span>
+              {onOpenAdminPortal && (
+                <button
+                  type="button"
+                  onClick={onOpenAdminPortal}
+                  className="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-xs cursor-pointer"
+                  title="Mở Bảng Quản Trị Hệ Thống Toàn Diện"
+                >
+                  <Crown className="w-3.5 h-3.5" />
+                  <span>Bảng Quản Trị</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleOpenAdminStudentManager}
+                className="px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center gap-1 shadow-xs cursor-pointer"
+                title="Quản lý & Xóa tài khoản học sinh"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+                <span className="hidden sm:inline">Quản Lý TK HS</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleAdminLogout}
+                className="px-2 py-1.5 rounded-lg bg-slate-200 hover:bg-rose-600 text-slate-700 hover:text-white dark:bg-slate-800 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
+                title="Đăng xuất quyền Admin"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Thoát</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setAdminInputUser('Admin');
+                setAdminInputPass('');
+                setAdminLoginError('');
+                setShowAdminLoginModal(true);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm border border-amber-300 transition-all flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer"
+              title="Đăng nhập Quản Trị Viên (Admin - Thầy Đinh Thành)"
+            >
+              <Crown className="w-4 h-4 text-slate-950" />
+              <span>👑 Đăng Nhập Admin (Thầy Thành)</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* HEADER GÓC HỌC SINH */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-400/40 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 relative overflow-hidden border border-blue-700/40">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -2490,19 +2580,36 @@ export const StudentPortal: React.FC = () => {
               </form>
             )}
 
-            {/* Link Admin quản lý & xóa tài khoản */}
-            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span>Dành cho Giáo viên & Quản trị:</span>
+            {/* Link Chuyển Phân Hệ Nhanh: Dành cho GV & Admin */}
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+              <div className="flex items-center gap-2">
+                <span>Dành cho GV:</span>
+                {onSwitchToTeachers && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAuthModal(false);
+                      onSwitchToTeachers();
+                    }}
+                    className="font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>👨‍🏫 Sang Kho Giáo Viên</span>
+                  </button>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => {
                   setShowAuthModal(false);
-                  handleOpenAdminStudentManager();
+                  setAdminInputUser('Admin');
+                  setAdminInputPass('');
+                  setAdminLoginError('');
+                  setShowAdminLoginModal(true);
                 }}
-                className="font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 cursor-pointer"
+                className="font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Quản trị & Xóa tài khoản HS (Admin)</span>
+                <Crown className="w-3.5 h-3.5" />
+                <span>👑 Đăng Nhập Admin (Thầy Thành)</span>
               </button>
             </div>
           </div>
@@ -2760,6 +2867,21 @@ export const StudentPortal: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {onOpenAdminPortal && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAdminStudentModal(false);
+                      onOpenAdminPortal();
+                    }}
+                    className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    title="Mở Bảng Quản Trị Hệ Thống Toàn Diện"
+                  >
+                    <Crown className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Bảng Quản Trị Hệ Thống &rarr;</span>
+                    <span className="sm:hidden">Admin Portal</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleAdminLogout}
