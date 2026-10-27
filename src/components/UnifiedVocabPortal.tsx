@@ -709,165 +709,165 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </span>
         </div>
 
-        {/* 12 Tabs Button Row */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+        {/* 12 Tabs Button Row - 3D TRANSLUCENT GLASS PILLS */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 text-xs no-scrollbar">
           {/* 1. Flashcard */}
           <button
             type="button"
             onClick={() => setCurrentMode('flashcard')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'flashcard'
-                ? 'bg-blue-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_4px_0_#1d4ed8,0_0_15px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-blue-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5 active:shadow-[0_1px_0_#cbd5e1]'
             }`}
           >
-            <span>🃏 1. Thẻ 3D</span>{missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>🃏 1. Thẻ 3D</span>{missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 2. Bài Chant */}
           <button
             type="button"
             onClick={() => setCurrentMode('chant')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'chant'
-                ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md font-black ring-2 ring-pink-400 animate-pulse'
-                : 'bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 hover:bg-pink-100 border border-pink-200 dark:border-pink-900'
+                ? 'bg-gradient-to-b from-pink-500 to-rose-600 text-white shadow-[0_4px_0_#be123c,0_0_18px_rgba(244,63,94,0.6),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-pink-300 ring-2 ring-pink-400/50'
+                : 'bg-pink-500/10 dark:bg-pink-950/40 backdrop-blur-md text-pink-700 dark:text-pink-300 border border-pink-300/60 dark:border-pink-800/60 shadow-[0_2.5px_0_#f472b6] dark:shadow-[0_2.5px_0_#831843] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#ec4899] active:translate-y-0.5'
             }`}
             title="Bài Chant Nhạc Beat Điệu Call & Response"
           >
-            <span>🎵 2. Bài Chant &amp; Beat</span>{missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>🎵 2. Bài Chant &amp; Beat</span>{missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 3. Ghép Cặp Từ */}
           <button
             type="button"
             onClick={() => setCurrentMode('match')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'match'
-                ? 'bg-emerald-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white shadow-[0_4px_0_#047857,0_0_15px_rgba(16,185,129,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-emerald-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
             <Puzzle className="w-3.5 h-3.5" />
-            <span>3. Ghép Cặp Từ</span>{missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>3. Ghép Cặp Từ</span>{missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 4. Xếp Chữ / Ghép Chữ */}
           <button
             type="button"
             onClick={() => setCurrentMode('scramble')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'scramble'
-                ? 'bg-indigo-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>🔤 4. Ghép Chữ</span>{missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>🔤 4. Ghép Chữ</span>{missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 5. Phản Xạ Nhanh */}
           <button
             type="button"
             onClick={() => setCurrentMode('blitz')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'blitz'
-                ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-amber-400 to-amber-500 text-slate-950 shadow-[0_4px_0_#b45309,0_0_15px_rgba(245,158,11,0.5),inset_0_1px_0_rgba(255,255,255,0.7)] -translate-y-0.5 border border-amber-300'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>⚡ 5. Phản Xạ 5s</span>{missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>⚡ 5. Phản Xạ 5s</span>{missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 6. Trắc Nghiệm */}
           <button
             type="button"
             onClick={() => setCurrentMode('quiz')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'quiz'
-                ? 'bg-blue-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-indigo-500 to-blue-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
             <Target className="w-3.5 h-3.5" />
-            <span>6. Trắc Nghiệm</span>{missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>6. Trắc Nghiệm</span>{missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 7. Luyện Nghe */}
           <button
             type="button"
             onClick={() => setCurrentMode('listen')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'listen'
-                ? 'bg-blue-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-[0_4px_0_#6b21a8,0_0_18px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-300 ring-2 ring-purple-400/40'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
             <Headphones className="w-3.5 h-3.5" />
-            <span>7. Luyện Nghe</span>{missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>7. Luyện Nghe</span>{missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 8. Luyện Gõ Từ */}
           <button
             type="button"
             onClick={() => setCurrentMode('spelling')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'spelling'
-                ? 'bg-blue-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-sky-500 to-blue-600 text-white shadow-[0_4px_0_#0369a1,0_0_15px_rgba(14,165,233,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-sky-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
             <Edit3 className="w-3.5 h-3.5" />
-            <span>8. Luyện Gõ</span>{missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>8. Luyện Gõ</span>{missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 9. Thám Tử Ô Chữ */}
           <button
             type="button"
             onClick={() => setCurrentMode('hangman')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'hangman'
-                ? 'bg-purple-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-purple-500 to-violet-600 text-white shadow-[0_4px_0_#581c87,0_0_15px_rgba(147,51,234,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>🕵️ 9. Ô Chữ Bí Mật</span>{missionState?.mission1.units[selectedUnit]?.modes['hangman']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>🕵️ 9. Ô Chữ Bí Mật</span>{missionState?.mission1.units[selectedUnit]?.modes['hangman']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 10. Ngữ Cảnh */}
           <button
             type="button"
             onClick={() => setCurrentMode('context')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'context'
-                ? 'bg-teal-600 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-teal-500 to-emerald-600 text-white shadow-[0_4px_0_#0f766e,0_0_15px_rgba(20,184,166,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-teal-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>📝 10. Ngữ Cảnh</span>{missionState?.mission1.units[selectedUnit]?.modes['context']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>📝 10. Ngữ Cảnh</span>{missionState?.mission1.units[selectedUnit]?.modes['context']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 11. Đánh Giá 15 Phút */}
           <button
             type="button"
             onClick={() => setCurrentMode('minitest')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
               currentMode === 'minitest'
-                ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
-                : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 border border-amber-200 dark:border-amber-800'
+                ? 'bg-gradient-to-b from-amber-400 to-orange-500 text-slate-950 shadow-[0_4px_0_#c2410c,0_0_18px_rgba(249,115,22,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] -translate-y-0.5 border border-amber-300 ring-2 ring-amber-400/50'
+                : 'bg-amber-500/10 dark:bg-amber-950/40 backdrop-blur-md text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60 shadow-[0_2.5px_0_#fbbf24] dark:shadow-[0_2.5px_0_#78350f] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#f59e0b] active:translate-y-0.5'
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
-            <span>11. Kiểm Tra 15P</span>{missionState?.mission1.units[selectedUnit]?.modes['minitest']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
+            <span>11. Kiểm Tra 15P</span>{missionState?.mission1.units[selectedUnit]?.modes['minitest']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 12. Tra Cứu */}
           <button
             type="button"
             onClick={() => setCurrentMode('list')}
-            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ml-auto ${
+            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ml-auto ${
               currentMode === 'list'
-                ? 'bg-slate-800 text-white shadow-sm font-black'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-gradient-to-b from-slate-700 to-slate-800 text-white shadow-[0_4px_0_#1e293b,0_0_15px_rgba(51,65,85,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] -translate-y-0.5 border border-slate-600'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
@@ -1088,54 +1088,84 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* DẠNG 2: TRẮC NGHIỆM 4 LỰA CHỌN */}
+      {/* DẠNG 6: TRẮC NGHIỆM (QUIZ) - 4 PHƯƠNG ÁN 3D NỔI TRONG SUỐT */}
       {currentMode === 'quiz' && (
-        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm max-w-2xl mx-auto">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
           {!quizFinished ? (
             <div className="space-y-6">
               <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span className="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-black">
-                  Câu hỏi {quizIndex + 1} / {filteredVocab.length}
+                <span className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-blue-700 dark:text-blue-300 font-black border border-blue-400/40 shadow-xs">
+                  🎯 Câu hỏi {quizIndex + 1} / {filteredVocab.length}
                 </span>
-                <span className="text-emerald-600 font-black">
+                <span className="text-emerald-600 dark:text-emerald-400 font-black flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                   Đúng: {quizScore} / {quizIndex + (quizSelectedOption ? 1 : 0)} câu
                 </span>
               </div>
 
               {currentQuizWord && (
-                <div className="text-center py-4 space-y-2">
-                  <div className="inline-flex items-center gap-2">
-                    <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+                <div className="text-center py-4 px-4 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-sky-500/15 backdrop-blur-md border border-indigo-200/80 dark:border-indigo-800/80 shadow-[0_4px_15px_rgba(99,102,241,0.1),inset_0_1px_0_rgba(255,255,255,0.7)] space-y-2">
+                  <div className="inline-flex items-center gap-2.5">
+                    <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight drop-shadow-xs">
                       {currentQuizWord.word}
                     </span>
                     <button
                       type="button"
                       onClick={() => speakWord(currentQuizWord.word)}
-                      className="p-2 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 hover:bg-blue-600 hover:text-white transition cursor-pointer"
+                      className="p-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white shadow-[0_3px_0_#1d4ed8,0_4px_10px_rgba(59,130,246,0.3)] hover:-translate-y-0.5 active:translate-y-0.5 transition cursor-pointer"
                     >
-                      <Volume2 className="w-5 h-5" />
+                      <Volume2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="text-sm font-mono text-slate-400">/{currentQuizWord.phonetic}/</div>
-                  <p className="text-xs text-slate-500 font-medium pt-1">
+                  <div className="text-sm font-mono font-bold text-sky-600 dark:text-sky-300">/{currentQuizWord.phonetic}/</div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold pt-1">
                     Chọn nghĩa tiếng Việt chính xác nhất của từ trên:
                   </p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-3">
+              {/* 4 PHƯƠNG ÁN TRẮC NGHIỆM 3D NỔI TRONG SUỐT */}
+              <div className="grid grid-cols-1 gap-3.5">
                 {quizOptions.map((opt, i) => {
                   const isSelected = quizSelectedOption === opt;
                   const isCorrect = opt === currentQuizWord?.meaning;
-                  let btnStyle = 'bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200';
+
+                  let optClasses = '';
 
                   if (quizSelectedOption !== null) {
                     if (isCorrect) {
-                      btnStyle = 'bg-emerald-500 text-white border-emerald-600 font-black shadow-md';
+                      optClasses = `
+                        bg-gradient-to-r from-emerald-500 to-teal-600 text-white
+                        border-2 border-emerald-300
+                        shadow-[0_5px_0_#059669,0_0_25px_rgba(16,185,129,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        font-black scale-[1.01]
+                      `;
                     } else if (isSelected) {
-                      btnStyle = 'bg-rose-500 text-white border-rose-600 font-black';
+                      optClasses = `
+                        bg-gradient-to-r from-rose-500 to-red-600 text-white
+                        border-2 border-rose-300
+                        shadow-[0_5px_0_#9f1239,0_0_25px_rgba(244,63,94,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        font-black animate-shake
+                      `;
                     } else {
-                      btnStyle = 'opacity-40 bg-slate-100 border-slate-200 text-slate-400';
+                      optClasses = `
+                        opacity-35 bg-slate-100/60 dark:bg-slate-800/40 border-2 border-slate-200 dark:border-slate-700
+                        text-slate-400 dark:text-slate-500 shadow-none scale-95
+                      `;
                     }
+                  } else {
+                    // Trạng thái chờ: KHỐI PHÍM 3D NỔI TRONG SUỐT (AMBER/INDIGO 3D GLASS)
+                    optClasses = `
+                      bg-gradient-to-r from-amber-400/15 via-orange-500/10 to-amber-500/20
+                      dark:from-amber-500/20 dark:via-orange-600/15 dark:to-amber-700/30
+                      backdrop-blur-md border-2 border-amber-300/80 dark:border-amber-400/50
+                      text-amber-950 dark:text-amber-100
+                      shadow-[0_5px_0_#d97706,0_8px_18px_-3px_rgba(217,119,6,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
+                      dark:shadow-[0_5px_0_#b45309,0_8px_18px_-3px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
+                      hover:-translate-y-0.5 hover:shadow-[0_7px_0_#d97706,0_12px_22px_-2px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
+                      hover:border-amber-400
+                      active:translate-y-0.5 active:shadow-[0_2px_0_#d97706]
+                    `;
                   }
 
                   return (
@@ -1144,19 +1174,19 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       type="button"
                       disabled={quizSelectedOption !== null}
                       onClick={() => handleQuizAnswer(opt)}
-                      className={`p-4 rounded-2xl border-2 text-left text-sm sm:text-base font-bold transition flex items-center justify-between cursor-pointer ${btnStyle}`}
+                      className={`p-4 rounded-2xl flex items-center justify-between text-left text-sm sm:text-base font-bold transition-all duration-200 cursor-pointer select-none ${optClasses}`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center font-black text-xs shrink-0">
+                        <span className="w-8 h-8 rounded-xl bg-gradient-to-b from-amber-500 to-orange-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-[0_2px_0_#c2410c,inset_0_1px_0_rgba(255,255,255,0.5)]">
                           {String.fromCharCode(65 + i)}
                         </span>
-                        <span>{opt}</span>
+                        <span className="leading-snug">{opt}</span>
                       </div>
                       {quizSelectedOption !== null && isCorrect && (
-                        <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-white shrink-0 drop-shadow-md" />
                       )}
                       {quizSelectedOption !== null && isSelected && !isCorrect && (
-                        <XCircle className="w-5 h-5 text-white shrink-0" />
+                        <XCircle className="w-5 h-5 text-white shrink-0 drop-shadow-md" />
                       )}
                     </button>
                   );
@@ -1213,30 +1243,36 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* DẠNG 3: LUYỆN NGHE CHỌN TỪ */}
+      {/* DẠNG 7: LUYỆN NGHE (LISTEN) - KHỐI 3D NỔI TRONG SUỐT (3D TRANSLUCENT GLASS) */}
       {currentMode === 'listen' && (
-        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm max-w-2xl mx-auto">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
           {!listenFinished ? (
             <div className="space-y-6">
               <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span className="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-black">
-                  Câu nghe {listenIndex + 1} / {filteredVocab.length}
+                <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-700 dark:text-purple-300 font-black border border-purple-400/40 shadow-xs">
+                  🎧 Câu nghe {listenIndex + 1} / {filteredVocab.length}
                 </span>
-                <span className="text-emerald-600 font-black">
+                <span className="text-emerald-600 dark:text-emerald-400 font-black flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                   Đúng: {listenScore} / {listenIndex + (listenSelectedOption ? 1 : 0)} câu
                 </span>
               </div>
 
               {currentListenWord && (
-                <div className="text-center py-4 space-y-3">
-                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-purple-500/20">
-                    <Headphones className="w-10 h-10 animate-pulse" />
+                <div className="text-center py-2 space-y-3">
+                  {/* Khối biểu tượng tai nghe 3D trong suốt phát quang */}
+                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 opacity-35 blur-xl animate-pulse"></div>
+                    <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-500/25 via-indigo-600/25 to-purple-700/35 backdrop-blur-md border-2 border-purple-300/60 dark:border-purple-400/50 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(147,51,234,0.35),inset_0_2px_0_rgba(255,255,255,0.7)]">
+                      <Headphones className="w-10 h-10 text-white drop-shadow-md animate-bounce" />
+                    </div>
                   </div>
                   
-                  <div className="flex items-center justify-center gap-2 pt-2">
+                  <div className="flex items-center justify-center gap-3 pt-1">
                     <button
                       type="button"
                       onClick={() => speakWord(currentListenWord.word)}
-                      className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-b from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-black text-xs shadow-[0_4px_0_#6b21a8,0_6px_15px_rgba(168,85,247,0.35),inset_0_1.5px_0_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#6b21a8] transition flex items-center gap-1.5 cursor-pointer"
                     >
                       <Volume2 className="w-4 h-4" />
                       <span>Bấm Để Nghe Lại</span>
@@ -1244,31 +1280,59 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     <button
                       type="button"
                       onClick={() => speakWord(currentListenWord.word, 0.65)}
-                      className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-b from-amber-400/20 to-amber-500/30 hover:bg-amber-500/30 backdrop-blur-md border border-amber-400/50 text-amber-900 dark:text-amber-200 font-bold text-xs shadow-[0_3px_0_#d97706,0_4px_10px_rgba(245,158,11,0.2),inset_0_1px_0_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#d97706] transition flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>🐢 Nghe Chậm</span>
                     </button>
                   </div>
-                  <p className="text-xs text-slate-500 font-medium">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     Em hãy lắng nghe và chọn từ tiếng Anh được phát âm:
                   </p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 4 Nút Lựa Chọn 3D NỔI TRONG SUỐT (3D SAPPHIRE GLASS BUTTONS) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {listenOptions.map((optWord, i) => {
                   const isSelected = listenSelectedOption === optWord;
                   const isCorrect = optWord === currentListenWord?.word;
-                  let btnStyle = 'bg-slate-50 dark:bg-slate-800/80 hover:bg-purple-50 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200';
+
+                  let optClasses = '';
 
                   if (listenSelectedOption !== null) {
                     if (isCorrect) {
-                      btnStyle = 'bg-emerald-500 text-white border-emerald-600 font-black shadow-md';
+                      optClasses = `
+                        bg-gradient-to-b from-emerald-500 to-emerald-600 text-white
+                        border-2 border-emerald-300
+                        shadow-[0_6px_0_#047857,0_0_25px_rgba(16,185,129,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        scale-[1.02] font-black
+                      `;
                     } else if (isSelected) {
-                      btnStyle = 'bg-rose-500 text-white border-rose-600 font-black';
+                      optClasses = `
+                        bg-gradient-to-b from-rose-500 to-red-600 text-white
+                        border-2 border-rose-300
+                        shadow-[0_6px_0_#9f1239,0_0_25px_rgba(244,63,94,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        animate-shake font-black
+                      `;
                     } else {
-                      btnStyle = 'opacity-40 bg-slate-100 border-slate-200 text-slate-400';
+                      optClasses = `
+                        opacity-35 bg-slate-100/60 dark:bg-slate-800/40 border-2 border-slate-200 dark:border-slate-700
+                        text-slate-400 dark:text-slate-500 shadow-none scale-95
+                      `;
                     }
+                  } else {
+                    // Trạng thái chờ: KHỐI PHÍM 3D NỔI TRONG SUỐT (SAPPHIRE GLASS 3D)
+                    optClasses = `
+                      bg-gradient-to-b from-sky-400/15 via-blue-500/10 to-indigo-600/20
+                      dark:from-sky-500/20 dark:via-blue-600/15 dark:to-indigo-700/30
+                      backdrop-blur-md border-2 border-sky-300/80 dark:border-sky-400/50
+                      text-sky-950 dark:text-sky-100
+                      shadow-[0_6px_0_#0284c7,0_10px_20px_-3px_rgba(2,132,199,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
+                      dark:shadow-[0_6px_0_#0369a1,0_10px_20px_-3px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
+                      hover:-translate-y-1 hover:shadow-[0_8px_0_#0284c7,0_14px_24px_-2px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
+                      hover:border-sky-400
+                      active:translate-y-1 active:shadow-[0_2px_0_#0284c7,0_4px_8px_rgba(2,132,199,0.2)]
+                    `;
                   }
 
                   return (
@@ -1277,18 +1341,18 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       type="button"
                       disabled={listenSelectedOption !== null}
                       onClick={() => handleListenAnswer(optWord)}
-                      className={`p-4 rounded-2xl border-2 text-center text-base font-black transition cursor-pointer ${btnStyle}`}
+                      className={`p-4 sm:p-5 rounded-2xl flex items-center justify-center text-center text-base sm:text-lg font-black tracking-wide transition-all duration-200 cursor-pointer select-none ${optClasses}`}
                     >
-                      {optWord}
+                      <span>{optWord}</span>
                     </button>
                   );
                 })}
               </div>
 
               {listenSelectedOption !== null && (
-                <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-center space-y-1">
-                  <div className="text-xs font-mono text-blue-600 dark:text-blue-400">/{currentListenWord?.phonetic}/</div>
-                  <div className="text-sm font-bold text-slate-900 dark:text-white">Nghĩa: {currentListenWord?.meaning}</div>
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500/15 to-indigo-500/15 backdrop-blur-md border border-sky-300/50 text-center space-y-1 shadow-sm animate-in fade-in">
+                  <div className="text-xs font-mono font-bold text-sky-700 dark:text-sky-300">/{currentListenWord?.phonetic}/</div>
+                  <div className="text-sm font-black text-slate-900 dark:text-white">Nghĩa: {currentListenWord?.meaning}</div>
                 </div>
               )}
 
@@ -1297,7 +1361,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   <button
                     type="button"
                     onClick={handleNextListen}
-                    className="px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-sm shadow-md transition flex items-center gap-2 cursor-pointer"
+                    className="px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-sm shadow-[0_4px_0_#4338ca,0_8px_20px_rgba(99,102,241,0.4),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#4338ca] transition flex items-center gap-2 cursor-pointer"
                   >
                     <span>{listenIndex < filteredVocab.length - 1 ? 'Câu Tiếp Theo' : 'Xem Kết Quả'}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -1513,9 +1577,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       )}
 
-      {/* DẠNG 5: LUYỆN GÕ CHÍNH TẢ (SPELLING) */}
+      {/* DẠNG 8: LUYỆN GÕ CHÍNH TẢ (SPELLING) - 3D TRANSLUCENT GLASS */}
       {currentMode === 'spelling' && (
-        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm max-w-2xl mx-auto">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
           {!spellFinished ? (
             <div className="space-y-6">
               <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
