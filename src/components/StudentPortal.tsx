@@ -1308,6 +1308,19 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   <div className="flex items-center gap-1.5">
                     <button
                       type="button"
+                      onClick={() => {
+                        setRosterClass('8A1');
+                        setRosterText('');
+                        setRosterMsg('');
+                        setShowRosterModal(true);
+                      }}
+                      className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm border border-emerald-400/40"
+                      title="Cập nhật sổ điểm danh sách học sinh các lớp Thầy dạy"
+                    >
+                      <span>📋 Sổ Điểm / DS Lớp</span>
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleOpenAdminStudentManager}
                       className="p-2 sm:px-2.5 sm:py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm border border-purple-400/40"
                       title="Quản lý & Xóa tài khoản học sinh (Quyền Admin)"
@@ -1464,18 +1477,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('downloads')}
-            className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'downloads'
-                ? 'bg-white text-blue-950 shadow-md font-black border-2 border-white'
-                : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
-            }`}
-          >
-            <Download className="w-4 h-4" />
-            <span>7. Tải Đề & Tài Liệu</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab('messages')}
             className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'messages'
@@ -1485,7 +1486,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             title="Nhắn tin riêng tư hỏi bài và trao đổi học tập cùng Thầy Đinh Thành"
           >
             <Mail className="w-4 h-4 text-cyan-300" />
-            <span>8. Nhắn Tin Thầy Thành</span>
+            <span>7. Nhắn Tin Thầy Thành</span>
           </button>
 
           
