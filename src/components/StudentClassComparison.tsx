@@ -44,7 +44,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
   const [classStats, setClassStats] = useState<ClassComparisonStats | null>(null);
   const [studentSubs, setStudentSubs] = useState<StudentSubmission[]>([]);
   // Chế độ xem: Cùng Lớp hoặc Toàn Trường
-  const [rankingScope, setRankingScope] = useState<'class' | 'school'>('class');
+  const [rankingScope, setRankingScope] = useState<'class' | 'school' | 'grade'>('class');
   // Tiêu chí xếp hạng: Điểm chuyên cần & thi đua hoặc Điểm bài thi
   const [rankingSortBy, setRankingSortBy] = useState<'merit' | 'score'>('merit');
   const [schoolGradeFilter, setSchoolGradeFilter] = useState<number>(0);
@@ -71,7 +71,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
   };
 
   const refreshLeaderboard = (
-    scope: 'class' | 'school',
+    scope: 'class' | 'school' | 'grade',
     cId: string,
     gradeFilter: number,
     sortBy: 'merit' | 'score'
@@ -87,8 +87,12 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
       setLeaderboard(lb);
       const stats = studentGradebookService.getClassComparisonStats(cId);
       setClassStats(stats);
+    } else if (scope === 'grade') {
+      const g = gradeFilter > 0 ? gradeFilter : (activeStudent?.grade || 8);
+      const lb = studentGradebookService.getSchoolLeaderboard(g, sortBy);
+      setLeaderboard(lb);
     } else {
-      const lb = studentGradebookService.getSchoolLeaderboard(gradeFilter > 0 ? gradeFilter : undefined, sortBy);
+      const lb = studentGradebookService.getSchoolLeaderboard(undefined, sortBy);
       setLeaderboard(lb);
     }
   };
@@ -139,34 +143,39 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* THANH ĐỊNH DANH HỌC SINH (GAM MÀU XANH SGK VÀ CHỮ TRẮNG NỔI BẬT) */}
+      {/* THANH ĐỊNH DANH HỌC SINH (HOẶC CHẾ ĐỘ XEM CÔNG KHAI TOÀN LỚP, TOÀN TRƯỜNG, THEO KHỐI) */}
       <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 border-2 border-blue-500/40 p-5 sm:p-6 rounded-3xl text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-radial from-white/10 to-transparent pointer-events-none" />
         <div className="flex items-center gap-3.5 relative z-10">
           <div className="w-13 h-13 rounded-2xl bg-amber-400 text-blue-950 flex items-center justify-center font-black text-2xl shadow-md shrink-0 border-2 border-amber-200">
-            {myRank === 1 ? '👑' : myRank === 2 ? '🥈' : myRank === 3 ? '🥉' : '🌟'}
+            {activeStudent ? (myRank === 1 ? '👑' : myRank === 2 ? '🥈' : myRank === 3 ? '🥉' : '🌟') : '📊'}
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-amber-300 font-black uppercase tracking-wider">
-                {activeStudent ? 'Học Sinh Đang Luyện Tập:' : 'Chế Độ Xem Chung:'}
+                {activeStudent ? 'Học Sinh Đang Luyện Tập:' : 'Chế Độ Xem Thống Kê Công Khai:'}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-white/20 text-white border border-white/30 backdrop-blur-md">
-                Lớp {activeStudent?.className || currentClassObj?.name || '7A1'}
+                {activeStudent ? `Lớp ${activeStudent.className}` : 'Dành Cho Giáo Viên, Phụ Huynh & Học Sinh'}
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2 mt-0.5 tracking-tight">
-              {activeStudent ? activeStudent.name : 'Chưa đăng nhập tài khoản'}
+              {activeStudent ? activeStudent.name : 'Biểu Thống Kê & Bảng Thi Đua Học Sinh'}
               {activeStudent?.studentCode && (
                 <span className="text-xs font-mono font-bold text-blue-200 bg-white/15 px-2 py-0.5 rounded-md">({activeStudent.studentCode})</span>
               )}
             </h3>
+            {!activeStudent && (
+              <p className="text-xs text-blue-100/90 mt-1">
+                Biểu thống kê đơn giản, công khai xem chung toàn lớp, toàn trường và theo khối. Ai cũng có thể theo dõi thi đua.
+              </p>
+            )}
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 relative z-10">
           <span className="text-xs text-blue-100 italic hidden sm:inline">
-            {activeStudent ? 'Thứ hạng cập nhật theo điểm số thực tế' : 'Đăng nhập tài khoản để lưu điểm & xếp hạng'}
+            {activeStudent ? 'Thứ hạng cập nhật theo điểm số thực tế' : 'Xem công khai không cần đăng nhập'}
           </span>
         </div>
       </div>
@@ -218,6 +227,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
       )}
 
       {/* THẺ ĐÁNH GIÁ VỊ TRÍ CỦA BẠN & SO SÁNH VỚI BẠN CÙNG LỚP (NỀN TRẮNG SÁNG, CHỮ RÕ NÉT) */}
+      {activeStudent && (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* THẺ THỨ HẠNG */}
         <div className="p-5 rounded-2xl bg-white border-2 border-blue-100 shadow-sm relative overflow-hidden">
@@ -302,6 +312,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
           </p>
         </div>
       </div>
+      )}
 
       {/* MỤC TIÊU HỌC TẬP PHẤN ĐẤU (NỀN TRẮNG SÁNG, TIẾN TRÌNH RÕ RÀNG) */}
       <div className="p-6 rounded-3xl bg-white border-2 border-blue-100 shadow-md space-y-4">
@@ -400,8 +411,10 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
             <div>
               <h4 className="text-base sm:text-lg font-black text-white">
                 {rankingScope === 'class' 
-                  ? `Bảng Vinh Danh & Thi Đua Lớp ${currentClassObj?.name || '8A1'}`
-                  : `Bảng Vinh Danh & Thi Đua Toàn Trường THCS Đồng Yên`}
+                  ? `Bảng Thống Kê & Thi Đua Lớp ${currentClassObj?.name || '8A1'}`
+                  : rankingScope === 'grade'
+                  ? `Bảng Thống Kê & Thi Đua Khối ${schoolGradeFilter || 8}`
+                  : `Bảng Thống Kê & Thi Đua Toàn Trường THCS Đồng Yên`}
               </h4>
               <p className="text-xs text-blue-100 font-medium">
                 So sánh thứ hạng thi đua chuyên cần và kết quả học tập cùng bạn bè trong lớp & toàn trường
@@ -411,8 +424,8 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
 
           {/* CÁC NÚT ĐIỀU KHIỂN & CHUYỂN ĐỔI CHẾ ĐỘ XEM */}
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Chuyển Cùng Lớp / Toàn Trường */}
-            <div className="flex p-1 bg-white/15 rounded-xl border border-white/20">
+            {/* Chuyển 3 chế độ xem: Toàn Lớp | Toàn Trường | Theo Khối */}
+            <div className="flex p-1 bg-white/15 rounded-xl border border-white/20 flex-wrap">
               <button
                 type="button"
                 onClick={() => setRankingScope('class')}
@@ -420,7 +433,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                   rankingScope === 'class' ? 'bg-amber-400 text-blue-950 shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
               >
-                👥 Cùng Lớp
+                👥 1. Toàn Lớp
               </button>
               <button
                 type="button"
@@ -429,7 +442,19 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                   rankingScope === 'school' ? 'bg-amber-400 text-blue-950 shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
               >
-                🏫 Toàn Trường
+                🏫 2. Toàn Trường
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRankingScope('grade');
+                  if (schoolGradeFilter === 0) setSchoolGradeFilter(8);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  rankingScope === 'grade' ? 'bg-amber-400 text-blue-950 shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+              >
+                📚 3. Theo Khối
               </button>
             </div>
 
@@ -457,7 +482,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
               </button>
             </div>
 
-            {rankingScope === 'class' ? (
+            {rankingScope === 'class' && (
               <select
                 value={selectedClassId}
                 onChange={(e) => handleSelectClass(e.target.value)}
@@ -467,20 +492,23 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                   <option key={c.id} value={c.id}>Lớp {c.name}</option>
                 ))}
               </select>
-            ) : (
-              <select
-                value={schoolGradeFilter}
-                onChange={(e) => setSchoolGradeFilter(Number(e.target.value))}
-                className="bg-white text-blue-950 px-3 py-1.5 rounded-xl border border-blue-200 text-xs font-black focus:outline-none cursor-pointer shadow-sm"
-              >
-                <option value={0}>Tất cả các khối</option>
-                <option value={6}>Khối 6</option>
-                <option value={8}>Khối 8</option>
-                <option value={9}>Khối 9</option>
-                <option value={10}>Khối 10</option>
-                <option value={11}>Khối 11</option>
-                <option value={12}>Khối 12</option>
-              </select>
+            )}
+
+            {rankingScope === 'grade' && (
+              <div className="flex items-center gap-1 overflow-x-auto">
+                {[6, 8, 9, 10, 11, 12].map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setSchoolGradeFilter(g)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition cursor-pointer ${
+                      schoolGradeFilter === g ? 'bg-amber-400 text-blue-950' : 'bg-white/20 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    Khối {g}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         </div>

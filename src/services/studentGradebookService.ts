@@ -119,7 +119,8 @@ const STORAGE_KEYS = {
   ACTIVE_STUDENT: 'gvai_gradebook_active_student_v4_clean',
   VAULT_STUDENTS: 'gvai_students_vault_permanent',
   VAULT_SUBMISSIONS: 'gvai_submissions_vault_permanent',
-  CHECKIN_LOGS: 'gvai_gradebook_checkin_logs_v5_clean'
+  CHECKIN_LOGS: 'gvai_gradebook_checkin_logs_v5_clean',
+  OFFICIAL_ROSTERS: 'gvai_gradebook_official_rosters_v2'
 };
 
 // Hàm chuẩn hóa tiếng Việt loại bỏ dấu và ký tự thừa để rà soát trùng lặp chính xác
@@ -143,6 +144,95 @@ function normalizeClassName(cls: string): string {
     .replace(/LOP\s*/gi, '')
     .replace(/\s+/g, '')
     .trim();
+}
+
+
+// ==================== BỘ LỌC TÊN HỌC SINH CHUẨN MỰC GIÁO DỤC ====================
+export interface NameValidationResult {
+  isValid: boolean;
+  cleanName: string;
+  errorMessage?: string;
+}
+
+export function validateEducationalStudentName(rawName: string, className?: string): NameValidationResult {
+  if (!rawName || typeof rawName !== 'string') {
+    return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập Họ và tên học sinh!' };
+  }
+
+  const trimmed = rawName.trim().replace(/\s+/g, ' ');
+  if (trimmed.length < 4) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh quá ngắn (tối thiểu 4 ký tự)!' };
+  }
+  if (trimmed.length > 45) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh không được vượt quá 45 ký tự!' };
+  }
+
+  // Chặn số
+  if (/\d/.test(trimmed)) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên thật của học sinh không được chứa chữ số!' };
+  }
+
+  // Chấp nhận chữ cái tiếng Việt và khoảng trắng
+  const vietnameseLetterRegex = /^[\p{L}\s]+$/u;
+  if (!vietnameseLetterRegex.test(trimmed)) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên chỉ được chứa chữ cái tiếng Việt và khoảng cách, không được chứa ký tự đặc biệt hay biểu tượng emoji!' };
+  }
+
+  // Bắt buộc tối thiểu 2 từ (Họ + Tên)
+  const words = trimmed.split(' ');
+  if (words.length < 2) {
+    return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập đầy đủ cả Họ và Tên (gồm tối thiểu 2 từ, ví dụ: Nguyễn Văn An), không nhập tên cụt 1 từ!' };
+  }
+
+  // Chuẩn hóa không dấu chữ thường để rà soát từ tục / spam
+  const norm = normalizeVietnameseName(trimmed);
+
+  // 1. Danh sách từ ngữ tục tĩu, phi giáo dục
+  const VULGAR_WORDS = [
+    'dm', 'dcm', 'vcl', 'cl', 'dit', 'lon', 'buoi', 'cac', 'dai', 'cho', 'may', 'tao',
+    'ngu', 'oc cho', 'dien', 'dam', 'sex', 'porn', 'vl', 'deo', 'de tien', 'thang',
+    'con me', 'me may', 'du ma', 'mat day', 'vo van', 'chet', 'giet', 'khung', 'dot',
+    'ham', 'buom', 'chim', 'cu', 'penis', 'vagina', 'bitch', 'fuck', 'shit', 'ass', 'idiot'
+  ];
+
+  for (const vw of VULGAR_WORDS) {
+    const regex = new RegExp(`(^|\\s)${vw}(\\s|$)`, 'i');
+    if (regex.test(norm)) {
+      return { isValid: false, cleanName: '', errorMessage: 'Tên học sinh chứa từ ngữ không phù hợp với chuẩn mực môi trường giáo dục!' };
+    }
+  }
+
+  // 2. Danh sách chuỗi spam mashing bàn phím vô nghĩa
+  const SPAM_PATTERNS = ['asdf', 'qwerty', 'zxcv', 'jkl;', 'test', 'demo', 'abcde', '1234', 'xxx', 'zzz', 'aaa', 'kkk', 'fake'];
+  for (const sp of SPAM_PATTERNS) {
+    if (norm.includes(sp)) {
+      return { isValid: false, cleanName: '', errorMessage: 'Tên học sinh không hợp lệ. Vui lòng nhập đúng Họ và tên thật của em để Thầy ghi nhận điểm chuyên cần và thi đua nhé!' };
+    }
+  }
+
+  // 3. Danh sách mạo danh hệ thống hoặc giáo viên
+  const IMPERSONATION_WORDS = [
+    'admin', 'administrator', 'root', 'mod', 'giao vien', 'thay co', 'thay giao',
+    'co giao', 'hieu truong', 'bo giao duc', 'so giao duc', 'chu nhiem', 'hacker', 'hoc sinh'
+  ];
+  for (const iw of IMPERSONATION_WORDS) {
+    const regex = new RegExp(`(^|\\s)${iw}(\\s|$)`, 'i');
+    if (regex.test(norm)) {
+      return { isValid: false, cleanName: '', errorMessage: 'Vui lòng sử dụng đúng Họ và tên thật của học sinh, không dùng danh xưng hệ thống hoặc chức danh giáo viên!' };
+    }
+  }
+
+  // 4. Kiểm tra lặp ký tự quá mức (ví dụ "aaaaaa", "hhhhhh")
+  if (/(.)\1{3,}/i.test(trimmed)) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên không hợp lệ do có quá nhiều ký tự lặp lại!' };
+  }
+
+  // Tự động chuẩn hóa viết hoa chữ cái đầu (Title Case: "nguyễn văn an" -> "Nguyễn Văn An")
+  const titleCased = words
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+
+  return { isValid: true, cleanName: titleCased };
 }
 
 // Dữ liệu lớp học khởi tạo mẫu
@@ -221,6 +311,154 @@ class StudentGradebookService {
     this.initData();
     this.syncFromCloud().catch(() => {});
   }
+
+    // Tải danh sách sổ điểm chính thức
+  // 
+  // ==================== QUẢN LÝ SỔ ĐIỂM & DANH SÁCH HỌC SINH CHÍNH THỨC ====================
+  private officialRosters: Record<string, string[]> = {};
+
+  private loadOfficialRosters() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.OFFICIAL_ROSTERS);
+      this.officialRosters = raw ? JSON.parse(raw) : {};
+    } catch {
+      this.officialRosters = {};
+    }
+  }
+
+  public getOfficialRoster(className: string): string[] {
+    const cleanCls = normalizeClassName(className);
+    if (!cleanCls) return [];
+    if (!this.officialRosters || Object.keys(this.officialRosters).length === 0) {
+      this.loadOfficialRosters();
+    }
+    return this.officialRosters[cleanCls] || [];
+  }
+
+  public saveOfficialRoster(className: string, names: string[]): { count: number; saved: string[] } {
+    const cleanCls = normalizeClassName(className);
+    if (!cleanCls) return { count: 0, saved: [] };
+
+    // Làm sạch và lọc tên
+    const cleanList: string[] = [];
+    const seen = new Set<string>();
+
+    names.forEach(n => {
+      const val = validateEducationalStudentName(n, cleanCls);
+      if (val.isValid && val.cleanName) {
+        const norm = normalizeVietnameseName(val.cleanName);
+        if (!seen.has(norm)) {
+          seen.add(norm);
+          cleanList.push(val.cleanName);
+        }
+      }
+    });
+
+    // Sắp xếp theo tên tiếng Việt
+    cleanList.sort((a, b) => {
+      const aParts = a.split(' ');
+      const bParts = b.split(' ');
+      const aLast = aParts[aParts.length - 1];
+      const bLast = bParts[bParts.length - 1];
+      return aLast.localeCompare(bLast, 'vi');
+    });
+
+    this.officialRosters[cleanCls] = cleanList;
+    try {
+      localStorage.setItem(STORAGE_KEYS.OFFICIAL_ROSTERS, JSON.stringify(this.officialRosters));
+      // Tự động tạo hồ sơ học sinh sẵn cho lớp
+      cleanList.forEach((name, idx) => {
+        const code = 'HS' + cleanCls.replace(/[^A-Za-z0-9]/g, '') + '-' + (idx + 1).toString().padStart(2, '0');
+        const existing = this.students.find(s => normalizeVietnameseName(s.name) === normalizeVietnameseName(name) && normalizeClassName(s.className) === cleanCls);
+        if (!existing) {
+          const gNum = parseInt(cleanCls.match(/^(\d{1,2})/)?.[1] || '8', 10);
+          this.students.push({
+            id: 'stu-roster-' + cleanCls.toLowerCase() + '-' + (idx + 1),
+            studentCode: code,
+            name: name,
+            classId: 'cls-' + cleanCls.toLowerCase(),
+            className: cleanCls,
+            grade: gNum >= 6 && gNum <= 12 ? gNum : 8,
+            gender: 'Nam',
+            createdAt: new Date().toISOString(),
+            attendancePoints: 0,
+            vocabPoints: 0,
+            examBonusPoints: 0,
+            practicePoints: 0,
+            studyTimeMinutes: 0,
+            totalMeritPoints: 0
+          });
+        }
+      });
+      this.saveStudents();
+    } catch {}
+
+    return { count: cleanList.length, saved: cleanList };
+  }
+
+  public deleteOfficialRoster(className: string): boolean {
+    const cleanCls = normalizeClassName(className);
+    if (this.officialRosters[cleanCls]) {
+      delete this.officialRosters[cleanCls];
+      try {
+        localStorage.setItem(STORAGE_KEYS.OFFICIAL_ROSTERS, JSON.stringify(this.officialRosters));
+      } catch {}
+      return true;
+    }
+    return false;
+  }
+
+  public getAllOfficialRosters(): Record<string, string[]> {
+    if (!this.officialRosters || Object.keys(this.officialRosters).length === 0) {
+      this.loadOfficialRosters();
+    }
+    return this.officialRosters;
+  }
+
+  public isTHPTClass(className: string): boolean {
+    const cleanCls = normalizeClassName(className);
+    const match = cleanCls.match(/^(\d{1,2})/);
+    if (match && match[1]) {
+      const gNum = parseInt(match[1], 10);
+      return gNum >= 10 && gNum <= 12;
+    }
+    return cleanCls.includes('THPT') || cleanCls.includes('10') || cleanCls.includes('11') || cleanCls.includes('12');
+  }
+
+  public verifyStudentInRoster(name: string, className: string): { allowed: boolean; matchedName?: string; reason?: string } {
+    const cleanCls = normalizeClassName(className);
+    
+    // Riêng cấp THPT tạm thời cho đăng ký tự do (miễn là tên đúng chuẩn giáo dục)
+    if (this.isTHPTClass(cleanCls)) {
+      const val = validateEducationalStudentName(name, cleanCls);
+      if (!val.isValid) {
+        return { allowed: false, reason: val.errorMessage };
+      }
+      return { allowed: true, matchedName: val.cleanName };
+    }
+
+    // Với các khối THCS Thầy dạy: Kiểm tra đối chiếu với Sổ điểm chính thức nếu đã cập nhật
+    const roster = this.getOfficialRoster(cleanCls);
+    if (roster && roster.length > 0) {
+      const normInput = normalizeVietnameseName(name);
+      const match = roster.find(rName => normalizeVietnameseName(rName) === normInput);
+      if (match) {
+        return { allowed: true, matchedName: match };
+      }
+      return {
+        allowed: false,
+        reason: `Tên "${name}" chưa có trong danh sách chính thức Lớp ${cleanCls}. Em vui lòng chọn đúng tên trong danh sách lớp hoặc nhờ Thầy Đinh Thành cập nhật sổ điểm nhé!`
+      };
+    }
+
+    // Nếu lớp chưa tải sổ điểm lên: Áp dụng bộ lọc tên giáo dục
+    const val = validateEducationalStudentName(name, cleanCls);
+    if (!val.isValid) {
+      return { allowed: false, reason: val.errorMessage };
+    }
+    return { allowed: true, matchedName: val.cleanName };
+  }
+
 
   private initData() {
     try {

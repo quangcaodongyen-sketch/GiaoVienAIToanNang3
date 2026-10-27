@@ -36,7 +36,7 @@ import { StudentPublicTracking } from './StudentPublicTracking';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
-import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName } from '../services/studentGradebookService';
 import { removeDiacritics } from '../services/appMatcher';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
@@ -161,17 +161,30 @@ export const StudentPortal: React.FC = () => {
   const handleQuickAccessSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setQuickError('');
-    const name = quickFullName.trim();
-    if (!name || name.length < 2) {
-      setQuickError('Vui lòng nhập đầy đủ Họ và tên học sinh (tối thiểu 2 ký tự)!');
+
+    const cls = quickClassName.trim() || '8A1';
+    const val = validateEducationalStudentName(quickFullName, cls);
+    if (!val.isValid) {
+      const msg = val.errorMessage || 'Họ và tên học sinh không hợp lệ!';
+      setQuickError(msg);
+      alert('⚠️ ' + msg);
       return;
     }
-    const cls = quickClassName.trim() || '8A1';
-    const student = studentGradebookService.quickAccessStudent(name, cls);
+
+    // Kiểm tra đối chiếu với Sổ điểm chính thức (Khối THCS Thầy dạy)
+    const verify = studentGradebookService.verifyStudentInRoster(val.cleanName, cls);
+    if (!verify.allowed) {
+      const msg = verify.reason || 'Tên học sinh không có trong danh sách chính thức!';
+      setQuickError(msg);
+      alert('⚠️ ' + msg);
+      return;
+    }
+
+    const finalName = verify.matchedName || val.cleanName;
+    const student = studentGradebookService.quickAccessStudent(finalName, cls);
     setCurrentStudent(student);
     saveStudentToDevice(student);
-    alert(`🎉 Chúc mừng em ${student.name} (Lớp ${student.className}) đã vào học thành công!
-⭐ Em được cộng +5 điểm chuyên cần hôm nay!`);
+    alert(`🎉 Chúc mừng em ${student.name} (Lớp ${student.className}) đã vào học thành công!\n⭐ Em được cộng +5 điểm chuyên cần hôm nay!`);
   };
 
   const handleOneTapLogin = (name: string, cls: string) => {
@@ -734,6 +747,49 @@ export const StudentPortal: React.FC = () => {
   };
 
   // Modal Admin Tải Tài Liệu Lên Cho Học Sinh
+  
+  // Modal Quản Lý & Cập Nhật Sổ Điểm / Danh Sách Học Sinh (Lớp Thầy Dạy)
+  const [showRosterModal, setShowRosterModal] = useState<boolean>(false);
+  const [rosterClass, setRosterClass] = useState<string>('8A1');
+  const [rosterText, setRosterText] = useState<string>('');
+  const [rosterMsg, setRosterMsg] = useState<string>('');
+
+  const handleSaveRoster = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRosterMsg('');
+    if (!rosterText.trim()) {
+      setRosterMsg('Vui lòng dán danh sách học sinh vào ô bên dưới!');
+      return;
+    }
+    // Tách dòng
+    const lines = rosterText.split(/[\r\n]+/);
+    const parsedNames: string[] = [];
+    lines.forEach(line => {
+      // Loại bỏ số thứ tự ở đầu ví dụ "1.", "1/", "1 -", "STT 1", v.v.
+      const cleaned = line.replace(/^(?:\d+[:.)\-\s/]+|stt\s*\d+[:.)\-\s/]+)/i, '').trim();
+      if (cleaned && cleaned.length >= 3) {
+        parsedNames.push(cleaned);
+      }
+    });
+
+    if (parsedNames.length === 0) {
+      setRosterMsg('Không tìm thấy tên học sinh hợp lệ nào từ văn bản đã dán!');
+      return;
+    }
+
+    const res = studentGradebookService.saveOfficialRoster(rosterClass, parsedNames);
+    setRosterMsg(`🎉 Đã cập nhật thành công sổ điểm Lớp ${rosterClass} gồm ${res.count} học sinh!`);
+    alert(`🎉 Đã lưu thành công ${res.count} học sinh vào sổ điểm chính thức Lớp ${rosterClass}!\nHọc sinh lớp này khi vào học sẽ được đối chiếu đúng danh sách, chặn hoàn toàn các tên ảo hoặc tên không đúng chuẩn giáo dục.`);
+    setRosterText('');
+  };
+
+  const handleClearRoster = (cls: string) => {
+    if (window.confirm(`Thầy có chắc chắn muốn xóa danh sách học sinh Lớp ${cls} không?`)) {
+      studentGradebookService.deleteOfficialRoster(cls);
+      setRosterMsg(`Đã xóa danh sách học sinh Lớp ${cls}.`);
+    }
+  };
+
   const [showAdminUploadModal, setShowAdminUploadModal] = useState<boolean>(false);
   const [adminUploadTitle, setAdminUploadTitle] = useState<string>('');
   const [adminUploadGrade, setAdminUploadGrade] = useState<string>('all');
@@ -1150,7 +1206,7 @@ export const StudentPortal: React.FC = () => {
       </div>
 
       {/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}
-      {!currentStudent && ['vocab', 'sgk', 'exam', 'quiz', 'leaderboard', 'hsg', 'decuong_e8'].includes(activeTab) && (
+      {!currentStudent && ['vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8'].includes(activeTab) && (
         <div className="bg-gradient-to-br from-white via-blue-50/60 to-indigo-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl border-2 border-blue-500/40 p-6 sm:p-8 shadow-xl max-w-3xl mx-auto my-6 animate-in fade-in space-y-5">
           
           {/* GỢI Ý 1-CHẠM VÀO HỌC LẠI NẾU ĐÃ CÓ BẢN LƯU TRÊN THIẾT BỊ NÀY */}
@@ -1247,6 +1303,52 @@ export const StudentPortal: React.FC = () => {
                 placeholder="Ví dụ: Nguyễn Văn An, Trần Thu Hà..."
                 className="w-full px-4 py-3 rounded-2xl border-2 border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm sm:text-base font-bold focus:border-blue-600 focus:outline-hidden transition shadow-xs"
               />
+
+              {/* CHỌN NHANH TÊN TRONG SỔ ĐIỂM CHÍNH THỨC CỦA LỚP NẾU ĐÃ ĐƯỢC THẦY CẬP NHẬT */}
+              {(() => {
+                const roster = studentGradebookService.getOfficialRoster(quickClassName);
+                if (roster && roster.length > 0) {
+                  return (
+                    <div className="mt-2 p-3 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-1.5 animate-in fade-in">
+                      <div className="flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-200">
+                        <span className="flex items-center gap-1.5">
+                          <span>📋</span>
+                          <span>Sổ điểm Lớp {quickClassName} ({roster.length} em):</span>
+                        </span>
+                        <span className="text-[11px] text-amber-700 dark:text-amber-300">Chạm để chọn tên em</span>
+                      </div>
+                      <div className="max-h-32 overflow-y-auto flex flex-wrap gap-1 pr-1">
+                        {roster.map((name, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => {
+                              setQuickFullName(name);
+                              setQuickError('');
+                            }}
+                            className={`px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
+                              quickFullName === name
+                                ? 'bg-blue-600 text-white shadow-xs font-black'
+                                : 'bg-white dark:bg-slate-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 border border-amber-200 dark:border-amber-700'
+                            }`}
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                if (studentGradebookService.isTHPTClass(quickClassName)) {
+                  return (
+                    <div className="mt-1.5 text-[11px] text-slate-500 flex items-center gap-1.5">
+                      <span>🏫</span>
+                      <span>Khối Cấp 3 THPT: Tạm thời cho phép học sinh đăng ký tự do với Họ và Tên thật chuẩn mực.</span>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
             </div>
 
             <div>
@@ -1398,7 +1500,7 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
-      {currentStudent && activeTab === 'leaderboard' && (
+      {activeTab === 'leaderboard' && (
         <StudentClassComparison 
           onStartExercise={() => setActiveTab('sgk')}
           onStartQuiz={() => setActiveTab('quiz')}
@@ -1426,6 +1528,20 @@ export const StudentPortal: React.FC = () => {
                     <ShieldCheck className="w-4 h-4 text-purple-600" />
                     <span>Quyền Admin</span>
                   </span>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRosterClass('8A1');
+                      setRosterText('');
+                      setRosterMsg('');
+                      setShowRosterModal(true);
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                    title="Cập nhật sổ điểm danh sách học sinh các lớp Thầy dạy (chặn hoàn toàn tên ảo, tên tục tĩu)"
+                  >
+                    <span>📋 Cập Nhật Sổ Điểm / DS Học Sinh</span>
+                  </button>
 
                   <button
                     type="button"
@@ -2367,7 +2483,124 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* ==================== MODAL QUẢN LÝ & XÓA TÀI KHOẢN HỌC SINH (QUYỀN ADMIN) ==================== */}
-      {showAdminStudentModal && isAdminUnlocked && (
+            {/* ==================== MODAL CẬP NHẬT SỔ ĐIỂM / DANH SÁCH HỌC SINH (LỚP THẦY DẠY) ==================== */}
+      {showRosterModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 relative animate-in fade-in zoom-in-95 duration-150 max-h-[92vh] overflow-y-auto space-y-4">
+            <button
+              type="button"
+              onClick={() => setShowRosterModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+            >
+              <XCircle className="w-6 h-6" />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white flex items-center justify-center font-black shadow-md text-xl shrink-0">
+                📋
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                  Cập Nhật Sổ Điểm & Danh Sách Học Sinh
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Dành riêng cho các lớp Thầy dạy • Chặn 100% tên ảo, tên vớ vẩn, sai với giáo dục
+                </p>
+              </div>
+            </div>
+
+            {rosterMsg && (
+              <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-bold">
+                {rosterMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleSaveRoster} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  🏫 Chọn Lớp Cần Cập Nhật Sổ Điểm (*):
+                </label>
+                <div className="flex gap-2 flex-wrap items-center">
+                  {['8A1', '8A2', '8A3', '8A4', '8A5', '8B1', '6A1', '9A1'].map(cls => (
+                    <button
+                      key={cls}
+                      type="button"
+                      onClick={() => setRosterClass(cls)}
+                      className={`px-3 py-1.5 rounded-xl font-bold text-xs transition cursor-pointer ${
+                        rosterClass === cls
+                          ? 'bg-emerald-600 text-white shadow-xs font-black'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                      }`}
+                    >
+                      {cls}
+                    </button>
+                  ))}
+                  <input
+                    type="text"
+                    value={rosterClass}
+                    onChange={(e) => setRosterClass(e.target.value.toUpperCase())}
+                    placeholder="Hoặc gõ lớp..."
+                    className="w-28 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-bold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                    📝 Dán Danh Sách Họ & Tên Học Sinh (*):
+                  </label>
+                  <span className="text-[11px] text-slate-400">Mỗi học sinh một dòng (Có thể copy từ Excel/Word)</span>
+                </div>
+                <textarea
+                  rows={8}
+                  required
+                  value={rosterText}
+                  onChange={(e) => setRosterText(e.target.value)}
+                  placeholder={`Ví dụ copy cột Họ và tên từ Excel:\n1. Nguyễn Văn An\n2. Trần Thị Bình\n3. Hoàng Minh Châu\n4. Đinh Quốc Đạt...`}
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs sm:text-sm font-mono focus:border-emerald-600 focus:outline-hidden"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 space-y-1">
+                <p className="font-bold text-slate-700 dark:text-slate-300">💡 Lưu ý quan trọng:</p>
+                <p>• Hệ thống sẽ tự động lọc bỏ số thứ tự, chuẩn hóa chữ hoa chữ thường chuẩn mực.</p>
+                <p>• Học sinh lớp này khi vào học chỉ cần bấm chọn đúng tên mình từ danh sách sổ điểm.</p>
+                <p>• Riêng các lớp cấp 3 THPT, học sinh tạm thời được đăng ký tự do.</p>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                {studentGradebookService.getOfficialRoster(rosterClass).length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => handleClearRoster(rosterClass)}
+                    className="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-bold transition cursor-pointer"
+                  >
+                    Xóa Danh Sách Lớp {rosterClass}
+                  </button>
+                )}
+                <div className="flex gap-2 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => setShowRosterModal(false)}
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs"
+                  >
+                    Đóng
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md shadow-emerald-500/20"
+                  >
+                    💾 Lưu Sổ Điểm Lớp {rosterClass}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+{showAdminStudentModal && isAdminUnlocked && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 relative animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col">
             {/* Header */}
