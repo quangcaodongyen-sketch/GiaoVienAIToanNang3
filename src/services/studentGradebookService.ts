@@ -30,6 +30,15 @@ export interface StudentProfile {
   parentPhone?: string;
   note?: string;
   createdAt: string;
+  // Hệ thống tích điểm chuyên cần & thi đua học sinh
+  attendancePoints?: number; // Điểm chuyên cần (đăng nhập: +5đ/ngày)
+  vocabPoints?: number;      // Điểm học từ vựng (+10đ/bài unit)
+  examBonusPoints?: number;  // Điểm thưởng bài thi GK (điểm thi x 10)
+  practicePoints?: number;   // Điểm làm đề cương & bài tập (+10đ/phần)
+  studyTimeMinutes?: number; // Thời gian tương tác học tập thực tế (phút)
+  timePoints?: number;       // Điểm cộng theo thời gian (+3đ mỗi 5 phút)
+  totalMeritPoints?: number; // Tổng điểm thi đua chuyên cần
+  lastLoginDate?: string;    // Ngày đăng nhập gần nhất (YYYY-MM-DD)
 }
 
 export interface StudentSubmission {
@@ -68,6 +77,13 @@ export interface ClassLeaderboardItem {
   recentTestTitle?: string;
   recentScore?: number;
   badges: string[];
+  attendancePoints?: number;
+  vocabPoints?: number;
+  examBonusPoints?: number;
+  practicePoints?: number;
+  studyTimeMinutes?: number;
+  timePoints?: number;
+  totalMeritPoints: number;
 }
 
 export interface StudentCheckinLog {
@@ -889,12 +905,27 @@ class StudentGradebookService {
 
     this.submissions.unshift(newSub);
     this.saveSubmissions();
-    // Tự động ghi nhận lịch sử học tập công khai
+    // Tự động cộng điểm chuyên cần & thi đua theo kết quả bài làm:
     try {
+      let meritBonus = 0;
+      if (newSub.testType === 'gk_ck_exam') {
+        meritBonus = Math.round(newSub.score * 10); // VD: 8.5đ -> +85 điểm chuyên cần
+        this.addStudentMeritPoints(newSub.studentId, {
+          examBonus: meritBonus,
+          reason: `Bài thi ${newSub.testTitle}: Đạt ${newSub.score}đ (+${meritBonus} điểm thi đua)`
+        });
+      } else {
+        meritBonus = Math.max(5, Math.round(newSub.score * 5)); // Bài tập SGK/ôn tập: +5 -> +50 điểm
+        this.addStudentMeritPoints(newSub.studentId, {
+          practice: meritBonus,
+          reason: `${newSub.testTitle}: Đạt ${newSub.score}đ (+${meritBonus} điểm chuyên cần)`
+        });
+      }
+
       this.recordCheckin(
         { id: newSub.studentId, studentCode: newSub.studentCode, name: newSub.studentName, className: newSub.className, grade: newSub.grade },
         newSub.testType === 'online_quiz' ? 'Hoàn thành bài kiểm tra trắc nghiệm' : (newSub.testType === 'gk_ck_exam' ? 'Nộp bài thi GK-CK' : 'Hoàn thành bài tập SGK'),
-        `${newSub.testTitle} - Đạt ${newSub.score}/10 điểm (${newSub.correctCount}/${newSub.totalQuestions} câu đúng)`
+        `${newSub.testTitle} - Đạt ${newSub.score}/10 điểm (+${meritBonus} điểm thi đua)`
       );
       this.syncToCloud().catch(() => {});
     } catch {}
@@ -996,6 +1027,19 @@ class StudentGradebookService {
       if (testsCount >= 5) badges.push('Chăm Chỉ Luyện Đề 📚');
       if (averageScore >= 8.5) badges.push('Thủ Khoa Khối 🏆');
 
+      const att = student.attendancePoints || 0;
+      const voc = student.vocabPoints || 0;
+      const exm = student.examBonusPoints || 0;
+      const prc = student.practicePoints || 0;
+      const tme = student.timePoints || 0;
+      const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
+        ? student.totalMeritPoints
+        : (att + voc + exm + prc + tme);
+
+      if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
+      if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
+      if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
+
       return {
         studentId: student.id,
         studentCode: student.studentCode,
@@ -1009,11 +1053,19 @@ class StudentGradebookService {
         rankLevel,
         recentTestTitle: recentSub?.testTitle,
         recentScore: recentSub?.score,
-        badges
+        badges,
+        attendancePoints: att,
+        vocabPoints: voc,
+        examBonusPoints: exm,
+        practicePoints: prc,
+        studyTimeMinutes: student.studyTimeMinutes || 0,
+        timePoints: tme,
+        totalMeritPoints: totalMerit
       };
     });
 
     items.sort((a, b) => {
+      if (b.totalMeritPoints !== a.totalMeritPoints) return b.totalMeritPoints - a.totalMeritPoints;
       if (b.averageScore !== a.averageScore) return b.averageScore - a.averageScore;
       if (b.highestScore !== a.highestScore) return b.highestScore - a.highestScore;
       return b.testsCount - a.testsCount;
@@ -1052,6 +1104,19 @@ class StudentGradebookService {
       if (testsCount >= 5) badges.push('Chăm Chỉ Luyện Đề 📚');
       if (averageScore >= 8.5) badges.push('Học Sinh Xuất Sắc 🏆');
 
+      const att = student.attendancePoints || 0;
+      const voc = student.vocabPoints || 0;
+      const exm = student.examBonusPoints || 0;
+      const prc = student.practicePoints || 0;
+      const tme = student.timePoints || 0;
+      const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
+        ? student.totalMeritPoints
+        : (att + voc + exm + prc + tme);
+
+      if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
+      if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
+      if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
+
       return {
         studentId: student.id,
         studentCode: student.studentCode,
@@ -1065,12 +1130,20 @@ class StudentGradebookService {
         rankLevel,
         recentTestTitle: recentSub?.testTitle,
         recentScore: recentSub?.score,
-        badges
+        badges,
+        attendancePoints: att,
+        vocabPoints: voc,
+        examBonusPoints: exm,
+        practicePoints: prc,
+        studyTimeMinutes: student.studyTimeMinutes || 0,
+        timePoints: tme,
+        totalMeritPoints: totalMerit
       };
     });
 
-    // Sắp xếp theo: Điểm trung bình giảm dần -> Điểm cao nhất giảm dần -> Số bài làm giảm dần
+    // Sắp xếp theo: Tổng điểm chuyên cần & thi đua giảm dần -> Điểm trung bình giảm dần
     items.sort((a, b) => {
+      if (b.totalMeritPoints !== a.totalMeritPoints) return b.totalMeritPoints - a.totalMeritPoints;
       if (b.averageScore !== a.averageScore) return b.averageScore - a.averageScore;
       if (b.highestScore !== a.highestScore) return b.highestScore - a.highestScore;
       return b.testsCount - a.testsCount;
@@ -1257,14 +1330,33 @@ class StudentGradebookService {
       return sNameNorm === normInputName && (sClsNorm === cleanCls || s.classId === targetClass!.id);
     });
 
+    const todayStr = new Date().toISOString().slice(0, 10);
     if (existing) {
       existing.grade = grade;
       existing.className = cleanCls;
       existing.classId = targetClass.id;
+      // Cộng 5 điểm chuyên cần mỗi ngày đăng nhập
+      if (existing.lastLoginDate !== todayStr) {
+        existing.attendancePoints = (existing.attendancePoints || 0) + 5;
+        existing.lastLoginDate = todayStr;
+        existing.totalMeritPoints = ((existing.attendancePoints || 0) + (existing.vocabPoints || 0) + (existing.examBonusPoints || 0) + (existing.practicePoints || 0) + (existing.timePoints || 0));
+        this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+5 điểm chuyên cần)`);
+      } else {
+        this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
+      }
       this.setActiveStudent(existing);
-      this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
       this.saveStudents();
       this.syncToCloud().catch(() => {});
+      // Lưu vào bộ nhớ thiết bị để gợi ý 1-chạm lần sau
+      try {
+        localStorage.setItem('DONGYEN_REMEMBERED_STUDENT', JSON.stringify({
+          id: existing.id,
+          name: existing.name,
+          className: existing.className,
+          grade: existing.grade,
+          studentCode: existing.studentCode
+        }));
+      } catch {}
       return existing;
     }
 
@@ -1290,8 +1382,25 @@ class StudentGradebookService {
       grade: grade,
       gender: 'Nam',
       note: 'Vào học nhanh trực tiếp không cần đăng ký',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      attendancePoints: 5,
+      vocabPoints: 0,
+      examBonusPoints: 0,
+      practicePoints: 0,
+      studyTimeMinutes: 0,
+      timePoints: 0,
+      totalMeritPoints: 5,
+      lastLoginDate: todayStr
     };
+    try {
+      localStorage.setItem('DONGYEN_REMEMBERED_STUDENT', JSON.stringify({
+        id: newStudent.id,
+        name: newStudent.name,
+        className: newStudent.className,
+        grade: newStudent.grade,
+        studentCode: newStudent.studentCode
+      }));
+    } catch {}
 
     this.students.push(newStudent);
     this.saveStudents();
@@ -1372,6 +1481,209 @@ class StudentGradebookService {
     this.saveStudents();
     this.saveSubmissions();
   }
+
+  // ==================== HỆ THỐNG TÍCH ĐIỂM CHUYÊN CẦN & THI ĐUA ====================
+
+  /**
+   * Cộng điểm chuyên cần / thi đua tổng hợp cho học sinh
+   */
+  public addStudentMeritPoints(studentId: string, options: {
+    attendance?: number;
+    vocab?: number;
+    examBonus?: number;
+    practice?: number;
+    timePoints?: number;
+    minutes?: number;
+    reason?: string;
+  }): StudentProfile | null {
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return null;
+
+    if (options.attendance) student.attendancePoints = (student.attendancePoints || 0) + options.attendance;
+    if (options.vocab) student.vocabPoints = (student.vocabPoints || 0) + options.vocab;
+    if (options.examBonus) student.examBonusPoints = (student.examBonusPoints || 0) + options.examBonus;
+    if (options.practice) student.practicePoints = (student.practicePoints || 0) + options.practice;
+    if (options.timePoints) student.timePoints = (student.timePoints || 0) + options.timePoints;
+    if (options.minutes) student.studyTimeMinutes = (student.studyTimeMinutes || 0) + options.minutes;
+
+    student.totalMeritPoints = 
+      (student.attendancePoints || 0) + 
+      (student.vocabPoints || 0) + 
+      (student.examBonusPoints || 0) + 
+      (student.practicePoints || 0) + 
+      (student.timePoints || 0);
+
+    this.saveStudents();
+
+    const active = this.getActiveStudent();
+    if (active && active.id === student.id) {
+      this.setActiveStudent(student);
+    }
+
+    if (options.reason) {
+      try {
+        this.recordCheckin(student, 'Tích điểm thi đua', options.reason);
+      } catch {}
+    }
+
+    return student;
+  }
+
+  /**
+   * 1. Điểm danh đăng nhập: +5 điểm chuyên cần
+   */
+  public recordDailyLogin(studentId: string): number {
+    const today = new Date().toISOString().slice(0, 10);
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return 0;
+    if (student.lastLoginDate !== today) {
+      student.lastLoginDate = today;
+      this.addStudentMeritPoints(studentId, {
+        attendance: 5,
+        reason: `Đăng nhập chuyên cần ngày ${today} (+5 điểm)`
+      });
+    }
+    return student.totalMeritPoints || 0;
+  }
+
+  /**
+   * 2. Hoàn thành 1 bài từ vựng: +10 điểm chuyên cần
+   */
+  public recordVocabUnitCompleted(studentId: string, unitNumber: number, grade: number): number {
+    const student = this.addStudentMeritPoints(studentId, {
+      vocab: 10,
+      reason: `Học xong từ vựng Unit ${unitNumber} - Lớp ${grade} (+10 điểm)`
+    });
+    return student?.totalMeritPoints || 0;
+  }
+
+  /**
+   * 3. Điểm bài thi giữa kỳ: Tùy theo điểm đạt được để cộng điểm vào tổng điểm
+   */
+  public recordExamScoreMerit(studentId: string, examTitle: string, score: number): number {
+    const bonus = Math.round(score * 10);
+    const student = this.addStudentMeritPoints(studentId, {
+      examBonus: bonus,
+      reason: `Điểm thi ${examTitle}: ${score}đ (+${bonus} điểm thi đua)`
+    });
+    return student?.totalMeritPoints || 0;
+  }
+
+  /**
+   * 4. Ôn tập đề cương và làm bài tập: +10 điểm chuyên cần
+   */
+  public recordPracticeMerit(studentId: string, sectionTitle: string, bonus: number = 10): number {
+    const student = this.addStudentMeritPoints(studentId, {
+      practice: bonus,
+      reason: `Ôn tập đề cương: ${sectionTitle} (+${bonus} điểm)`
+    });
+    return student?.totalMeritPoints || 0;
+  }
+
+  /**
+   * 5. Thời gian học và tương tác thời gian thực: Cứ mỗi 5 phút +3 điểm
+   */
+  public recordActiveStudyTime(studentId: string, minutes: number = 5): number {
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return 0;
+    const oldMinutes = student.studyTimeMinutes || 0;
+    const newMinutes = oldMinutes + minutes;
+    const oldBuckets = Math.floor(oldMinutes / 5);
+    const newBuckets = Math.floor(newMinutes / 5);
+    const pointsAwarded = (newBuckets - oldBuckets) * 3;
+
+    this.addStudentMeritPoints(studentId, {
+      minutes: minutes,
+      timePoints: pointsAwarded > 0 ? pointsAwarded : 0,
+      reason: pointsAwarded > 0 ? `Học tập tích cực (${newMinutes} phút) (+${pointsAwarded} điểm)` : undefined
+    });
+    return student.totalMeritPoints || 0;
+  }
+
+  /**
+   * Bảng xếp hạng toàn trường (School Leaderboard) để học sinh so sánh với bạn cùng lớp, cùng trường
+   */
+  public getSchoolLeaderboard(gradeFilter?: number, sortBy: 'merit' | 'score' = 'merit'): ClassLeaderboardItem[] {
+    let targetStudents = this.students;
+    if (gradeFilter && gradeFilter > 0) {
+      targetStudents = targetStudents.filter(s => s.grade === gradeFilter);
+    }
+
+    const items: ClassLeaderboardItem[] = targetStudents.map(student => {
+      const stuSubs = this.submissions.filter(s => s.studentId === student.id);
+      const testsCount = stuSubs.length;
+      const highestScore = testsCount > 0 ? Math.max(...stuSubs.map(s => s.score)) : 0;
+      const averageScore = testsCount > 0 
+        ? Math.round((stuSubs.reduce((acc, s) => acc + s.score, 0) / testsCount) * 10) / 10 
+        : 0;
+
+      let rankLevel: AcademicRank = 'CAN_CO_GANG';
+      if (averageScore >= 9.0) rankLevel = 'XUAT_SAC';
+      else if (averageScore >= 8.0) rankLevel = 'GIOI';
+      else if (averageScore >= 6.5) rankLevel = 'KHA';
+      else if (averageScore >= 5.0) rankLevel = 'DAT';
+
+      const att = student.attendancePoints || 0;
+      const voc = student.vocabPoints || 0;
+      const exm = student.examBonusPoints || 0;
+      const prc = student.practicePoints || 0;
+      const tme = student.timePoints || 0;
+      const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
+        ? student.totalMeritPoints
+        : (att + voc + exm + prc + tme);
+
+      const badges: string[] = [];
+      if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
+      if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
+      if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
+      if (highestScore === 10) badges.push('Điểm 10 Tuyệt Đối 🌟');
+      if (testsCount >= 3) badges.push('Chăm Chỉ Luyện Đề 📚');
+
+      return {
+        studentId: student.id,
+        studentCode: student.studentCode,
+        studentName: student.name,
+        className: student.className,
+        gender: student.gender,
+        rank: 0,
+        testsCount,
+        highestScore,
+        averageScore,
+        rankLevel,
+        recentTestTitle: stuSubs[0]?.testTitle,
+        recentScore: stuSubs[0]?.score,
+        badges,
+        attendancePoints: att,
+        vocabPoints: voc,
+        examBonusPoints: exm,
+        practicePoints: prc,
+        studyTimeMinutes: student.studyTimeMinutes || 0,
+        timePoints: tme,
+        totalMeritPoints: totalMerit
+      };
+    });
+
+    if (sortBy === 'merit') {
+      items.sort((a, b) => {
+        if (b.totalMeritPoints !== a.totalMeritPoints) return b.totalMeritPoints - a.totalMeritPoints;
+        if (b.averageScore !== a.averageScore) return b.averageScore - a.averageScore;
+        return b.testsCount - a.testsCount;
+      });
+    } else {
+      items.sort((a, b) => {
+        if (b.averageScore !== a.averageScore) return b.averageScore - a.averageScore;
+        if (b.totalMeritPoints !== a.totalMeritPoints) return b.totalMeritPoints - a.totalMeritPoints;
+        return b.testsCount - a.testsCount;
+      });
+    }
+
+    items.forEach((item, index) => {
+      item.rank = index + 1;
+    });
+
+    return items;
+  }
+
 }
 
 export const studentGradebookService = new StudentGradebookService();

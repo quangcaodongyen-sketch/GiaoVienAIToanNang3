@@ -38,11 +38,16 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
   onStartQuiz
 }) => {
   const [classes, setClasses] = useState<ClassRoom[]>([]);
-  const [selectedClassId, setSelectedClassId] = useState<string>('cls-7a1');
+  const [selectedClassId, setSelectedClassId] = useState<string>('cls-8a1');
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [leaderboard, setLeaderboard] = useState<ClassLeaderboardItem[]>([]);
   const [classStats, setClassStats] = useState<ClassComparisonStats | null>(null);
   const [studentSubs, setStudentSubs] = useState<StudentSubmission[]>([]);
+  // Chế độ xem: Cùng Lớp hoặc Toàn Trường
+  const [rankingScope, setRankingScope] = useState<'class' | 'school'>('class');
+  // Tiêu chí xếp hạng: Điểm chuyên cần & thi đua hoặc Điểm bài thi
+  const [rankingSortBy, setRankingSortBy] = useState<'merit' | 'score'>('merit');
+  const [schoolGradeFilter, setSchoolGradeFilter] = useState<number>(0);
 
   // Đổi học sinh trong modal hoặc selector
   const [showSwitchModal, setShowSwitchModal] = useState<boolean>(false);
@@ -54,14 +59,10 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
     const curStudent = studentGradebookService.getActiveStudent();
     setActiveStudent(curStudent);
 
-    const cId = curStudent ? curStudent.classId : (cls[0]?.id || 'cls-7a1');
+    const cId = curStudent ? curStudent.classId : (cls[0]?.id || 'cls-8a1');
     setSelectedClassId(cId);
 
-    const lb = studentGradebookService.getClassLeaderboard(cId);
-    setLeaderboard(lb);
-
-    const stats = studentGradebookService.getClassComparisonStats(cId);
-    setClassStats(stats);
+    refreshLeaderboard(rankingScope, cId, schoolGradeFilter, rankingSortBy);
 
     if (curStudent) {
       const subs = studentGradebookService.getSubmissions({ studentId: curStudent.id });
@@ -69,17 +70,37 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
     }
   };
 
+  const refreshLeaderboard = (
+    scope: 'class' | 'school',
+    cId: string,
+    gradeFilter: number,
+    sortBy: 'merit' | 'score'
+  ) => {
+    if (scope === 'class') {
+      let lb = studentGradebookService.getClassLeaderboard(cId);
+      if (sortBy === 'merit') {
+        lb.sort((a, b) => (b.totalMeritPoints || 0) - (a.totalMeritPoints || 0) || b.averageScore - a.averageScore);
+      } else {
+        lb.sort((a, b) => b.averageScore - a.averageScore || (b.totalMeritPoints || 0) - (a.totalMeritPoints || 0));
+      }
+      lb.forEach((it, idx) => { it.rank = idx + 1; });
+      setLeaderboard(lb);
+      const stats = studentGradebookService.getClassComparisonStats(cId);
+      setClassStats(stats);
+    } else {
+      const lb = studentGradebookService.getSchoolLeaderboard(gradeFilter > 0 ? gradeFilter : undefined, sortBy);
+      setLeaderboard(lb);
+    }
+  };
+
   useEffect(() => {
     loadData();
-  }, []);
+  }, [rankingScope, rankingSortBy, schoolGradeFilter]);
 
   // Khi chọn lớp khác
   const handleSelectClass = (cId: string) => {
     setSelectedClassId(cId);
-    const lb = studentGradebookService.getClassLeaderboard(cId);
-    setLeaderboard(lb);
-    const stats = studentGradebookService.getClassComparisonStats(cId);
-    setClassStats(stats);
+    refreshLeaderboard('class', cId, schoolGradeFilter, rankingSortBy);
   };
 
   // Chọn học sinh cụ thể
@@ -149,6 +170,52 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
           </span>
         </div>
       </div>
+
+      {/* THẺ TỔNG HỢP ĐIỂM CHUYÊN CẦN & THI ĐUA CỦA RIÊNG BẠN */}
+      {activeStudent && (
+        <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-5 sm:p-6 text-white shadow-xl border-2 border-amber-300/60 relative overflow-hidden">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase tracking-wider backdrop-blur-md mb-2">
+                <Sparkles className="w-4 h-4 text-amber-200" />
+                <span>Hệ Thống Tích Điểm Chuyên Cần & Thi Đua Thời Gian Thực</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                <span>⭐ Tổng Điểm Thi Đua Tích Lũy:</span>
+                <span className="text-3xl sm:text-4xl text-amber-100 font-black underline decoration-amber-300">
+                  {activeStudent.totalMeritPoints || 0} Điểm
+                </span>
+              </h3>
+              <p className="text-xs sm:text-sm text-amber-100/90 mt-1">
+                Tích điểm tự động: Đăng nhập mỗi ngày (+5đ) • Học xong bài từ vựng (+10đ) • Ôn đề cương & bài tập (+10đ) • Làm bài thi giữa kỳ (Điểm x 10) • Thời gian học tương tác (+3đ/5 phút)
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 bg-black/15 p-3 rounded-2xl backdrop-blur-md border border-white/20 text-center">
+              <div className="p-2 rounded-xl bg-white/10">
+                <span className="block text-[11px] text-amber-200 font-bold">⏰ Điểm Danh</span>
+                <span className="text-base sm:text-lg font-black text-white">+{activeStudent.attendancePoints || 0}đ</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/10">
+                <span className="block text-[11px] text-amber-200 font-bold">🧠 Học Từ Vựng</span>
+                <span className="text-base sm:text-lg font-black text-white">+{activeStudent.vocabPoints || 0}đ</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/10">
+                <span className="block text-[11px] text-amber-200 font-bold">📝 Ôn Đề Cương</span>
+                <span className="text-base sm:text-lg font-black text-white">+{activeStudent.practicePoints || 0}đ</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/10">
+                <span className="block text-[11px] text-amber-200 font-bold">🏆 Điểm Bài Thi</span>
+                <span className="text-base sm:text-lg font-black text-white">+{activeStudent.examBonusPoints || 0}đ</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/10 col-span-2 sm:col-span-1">
+                <span className="block text-[11px] text-amber-200 font-bold">⏱️ Tương Tác</span>
+                <span className="text-base sm:text-lg font-black text-white">{activeStudent.studyTimeMinutes || 0}p (+{activeStudent.timePoints || 0}đ)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* THẺ ĐÁNH GIÁ VỊ TRÍ CỦA BẠN & SO SÁNH VỚI BẠN CÙNG LỚP (NỀN TRẮNG SÁNG, CHỮ RÕ NÉT) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -325,32 +392,96 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
         </div>
       </div>
 
-      {/* BẢNG XẾP HẠNG THI ĐUA CẢ LỚP (LEADERBOARD) - HEADER XANH CHỮ TRẮNG */}
+      {/* BẢNG XẾP HẠNG THI ĐUA CẢ LỚP & TOÀN TRƯỜNG - HEADER XANH CHỮ TRẮNG */}
       <div className="rounded-3xl bg-white border-2 border-blue-200 shadow-xl overflow-hidden">
-        <div className="p-5 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 text-white flex flex-wrap items-center justify-between gap-4">
+        <div className="p-5 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-800 text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Trophy className="w-7 h-7 text-amber-300" />
+            <Trophy className="w-8 h-8 text-amber-300 shrink-0" />
             <div>
               <h4 className="text-base sm:text-lg font-black text-white">
-                Bảng Vinh Danh & Thi Đua Lớp {currentClassObj?.name} (Khối {currentClassObj?.grade})
+                {rankingScope === 'class' 
+                  ? `Bảng Vinh Danh & Thi Đua Lớp ${currentClassObj?.name || '8A1'}`
+                  : `Bảng Vinh Danh & Thi Đua Toàn Trường THCS Đồng Yên`}
               </h4>
               <p className="text-xs text-blue-100 font-medium">
-                Xem thứ hạng của mình và các bạn để cùng nhau thi đua tiến bộ trong học tập
+                So sánh thứ hạng thi đua chuyên cần và kết quả học tập cùng bạn bè trong lớp & toàn trường
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-white">Xem lớp khác:</span>
-            <select
-              value={selectedClassId}
-              onChange={(e) => handleSelectClass(e.target.value)}
-              className="bg-white text-blue-950 px-3.5 py-1.5 rounded-xl border border-blue-200 text-xs font-black focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer shadow-sm"
-            >
-              {classes.map(c => (
-                <option key={c.id} value={c.id}>Lớp {c.name}</option>
-              ))}
-            </select>
+          {/* CÁC NÚT ĐIỀU KHIỂN & CHUYỂN ĐỔI CHẾ ĐỘ XEM */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Chuyển Cùng Lớp / Toàn Trường */}
+            <div className="flex p-1 bg-white/15 rounded-xl border border-white/20">
+              <button
+                type="button"
+                onClick={() => setRankingScope('class')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  rankingScope === 'class' ? 'bg-amber-400 text-blue-950 shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+              >
+                👥 Cùng Lớp
+              </button>
+              <button
+                type="button"
+                onClick={() => setRankingScope('school')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  rankingScope === 'school' ? 'bg-amber-400 text-blue-950 shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+              >
+                🏫 Toàn Trường
+              </button>
+            </div>
+
+            {/* Chuyển tiêu chí sắp xếp: Điểm Chuyên Cần vs Điểm Bài Thi */}
+            <div className="flex p-1 bg-white/15 rounded-xl border border-white/20">
+              <button
+                type="button"
+                onClick={() => setRankingSortBy('merit')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  rankingSortBy === 'merit' ? 'bg-blue-600 text-white shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+                title="Xếp theo Tổng Điểm Chuyên Cần & Thi Đua"
+              >
+                ⭐ Điểm Chuyên Cần
+              </button>
+              <button
+                type="button"
+                onClick={() => setRankingSortBy('score')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  rankingSortBy === 'score' ? 'bg-blue-600 text-white shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+                title="Xếp theo Điểm Trung Bình Bài Kiểm Tra"
+              >
+                📊 Điểm Bài Thi
+              </button>
+            </div>
+
+            {rankingScope === 'class' ? (
+              <select
+                value={selectedClassId}
+                onChange={(e) => handleSelectClass(e.target.value)}
+                className="bg-white text-blue-950 px-3 py-1.5 rounded-xl border border-blue-200 text-xs font-black focus:outline-none cursor-pointer shadow-sm"
+              >
+                {classes.map(c => (
+                  <option key={c.id} value={c.id}>Lớp {c.name}</option>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={schoolGradeFilter}
+                onChange={(e) => setSchoolGradeFilter(Number(e.target.value))}
+                className="bg-white text-blue-950 px-3 py-1.5 rounded-xl border border-blue-200 text-xs font-black focus:outline-none cursor-pointer shadow-sm"
+              >
+                <option value={0}>Tất cả các khối</option>
+                <option value={6}>Khối 6</option>
+                <option value={8}>Khối 8</option>
+                <option value={9}>Khối 9</option>
+                <option value={10}>Khối 10</option>
+                <option value={11}>Khối 11</option>
+                <option value={12}>Khối 12</option>
+              </select>
+            )}
           </div>
         </div>
 
@@ -358,20 +489,21 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
           <table className="w-full text-left text-xs sm:text-sm text-slate-800">
             <thead className="bg-blue-50 text-blue-950 font-black uppercase text-[11px] tracking-wider border-b border-blue-100">
               <tr>
-                <th className="py-3.5 px-4 w-16 text-center">Thứ Hạng</th>
-                <th className="py-3.5 px-4">Họ và Tên Học Sinh</th>
-                <th className="py-3.5 px-4 text-center">Mã HS</th>
-                <th className="py-3.5 px-4 text-center">Số Bài Đã Làm</th>
-                <th className="py-3.5 px-4 text-center">Điểm Cao Nhất</th>
-                <th className="py-3.5 px-4 text-center">Điểm Trung Bình</th>
-                <th className="py-3.5 px-4 text-center">Xếp Loại</th>
-                <th className="py-3.5 px-4">Huy Hiệu Vinh Danh</th>
+                <th className="py-3.5 px-3 w-16 text-center">Thứ Hạng</th>
+                <th className="py-3.5 px-4">Học Sinh</th>
+                <th className="py-3.5 px-3 text-center">Lớp</th>
+                <th className="py-3.5 px-4 text-center bg-amber-100/70 text-amber-950">⭐ Điểm Chuyên Cần & Thi Đua</th>
+                <th className="py-3.5 px-3 text-center">Chi Tiết Tích Điểm</th>
+                <th className="py-3.5 px-3 text-center">Số Bài Thi</th>
+                <th className="py-3.5 px-3 text-center">Điểm TB</th>
+                <th className="py-3.5 px-3 text-center">Xếp Loại</th>
+                <th className="py-3.5 px-4">Huy Hiệu</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {leaderboard.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 px-4 text-center">
+                  <td colSpan={9} className="py-12 px-4 text-center">
                     <div className="max-w-md mx-auto space-y-3">
                       <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-xl font-bold">
                         👥
@@ -420,16 +552,33 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                         </p>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-center font-mono text-blue-700 font-bold">{item.studentCode}</td>
-                    <td className="py-3.5 px-4 text-center font-black text-emerald-700">{item.testsCount} bài</td>
-                    <td className="py-3.5 px-4 text-center font-black text-slate-900">
-                      {item.highestScore > 0 ? item.highestScore.toFixed(1) : '-'}
+                    <td className="py-3.5 px-3 text-center">
+                      <span className="px-2 py-0.5 rounded-lg bg-blue-100 text-blue-900 font-mono font-bold text-xs">
+                        {item.className}
+                      </span>
                     </td>
-                    <td className="py-3.5 px-4 text-center font-black text-amber-700 text-base">
+                    {/* CỘT TỔNG ĐIỂM CHUYÊN CẦN & THI ĐUA NỔI BẬT */}
+                    <td className="py-3.5 px-4 text-center bg-amber-50/50">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-sm shadow-xs">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                        <span>{item.totalMeritPoints || 0} điểm</span>
+                      </div>
+                    </td>
+                    {/* CHI TIẾT TÍCH ĐIỂM */}
+                    <td className="py-3.5 px-3 text-center">
+                      <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-slate-600">
+                        <span title="Điểm danh chuyên cần" className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">⏰+{item.attendancePoints || 0}</span>
+                        <span title="Học từ vựng" className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">🧠+{item.vocabPoints || 0}</span>
+                        <span title="Đề cương & bài tập" className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">📝+{item.practicePoints || 0}</span>
+                        <span title="Điểm bài thi GK" className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">🏆+{item.examBonusPoints || 0}</span>
+                      </div>
+                    </td>
+                    <td className="py-3.5 px-3 text-center font-black text-emerald-700">{item.testsCount} bài</td>
+                    <td className="py-3.5 px-3 text-center font-black text-amber-700 text-sm">
                       {item.averageScore > 0 ? item.averageScore.toFixed(1) : '-'}
                     </td>
-                    <td className="py-3.5 px-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                    <td className="py-3.5 px-3 text-center">
+                      <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
                         item.rankLevel === 'XUAT_SAC' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
                         item.rankLevel === 'GIOI' ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' :
                         item.rankLevel === 'KHA' ? 'bg-blue-100 text-blue-900 border border-blue-300' :
