@@ -2261,6 +2261,83 @@ class StudentGradebookService {
     ].join('\r\n');
   }
 
+  /**
+   * Đặt lại (reset) toàn bộ điểm thi đua, tiến độ học tập và bài thi đã test thử trên máy tính này
+   * Trả học sinh về trạng thái ban đầu sạch sẽ
+   */
+  public resetAllTestProgress(studentId?: string): { success: boolean; count: number } {
+    let affectedCount = 0;
+
+    if (studentId) {
+      const s = this.students.find(st => st.id === studentId);
+      if (s) {
+        s.attendancePoints = 0;
+        s.vocabPoints = 0;
+        s.examBonusPoints = 0;
+        s.practicePoints = 0;
+        s.studyTimeMinutes = 0;
+        s.timePoints = 0;
+        s.totalMeritPoints = 0;
+        s.lastLoginDate = undefined;
+        affectedCount = 1;
+
+        try {
+          localStorage.removeItem('MIDTERM_MISSION_EVAL_' + s.id);
+          localStorage.removeItem('gvai_dob_verified_' + s.id);
+        } catch {}
+      }
+      this.submissions = this.submissions.filter(sub => sub.studentId !== studentId);
+      this.checkinLogs = this.checkinLogs.filter(log => log.studentId !== studentId);
+    } else {
+      this.students.forEach(s => {
+        s.attendancePoints = 0;
+        s.vocabPoints = 0;
+        s.examBonusPoints = 0;
+        s.practicePoints = 0;
+        s.studyTimeMinutes = 0;
+        s.timePoints = 0;
+        s.totalMeritPoints = 0;
+        s.lastLoginDate = undefined;
+        affectedCount++;
+
+        try {
+          localStorage.removeItem('MIDTERM_MISSION_EVAL_' + s.id);
+          localStorage.removeItem('gvai_dob_verified_' + s.id);
+        } catch {}
+      });
+
+      try {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && (k.startsWith('MIDTERM_MISSION_EVAL_') || k.startsWith('gvai_dob_verified_'))) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+      } catch {}
+
+      this.submissions = [];
+      this.checkinLogs = [];
+    }
+
+    this.saveStudents();
+    this.saveSubmissions();
+    try {
+      localStorage.setItem(STORAGE_KEYS.CHECKIN_LOGS, JSON.stringify(this.checkinLogs));
+    } catch {}
+
+    const active = this.getActiveStudent();
+    if (active && (!studentId || active.id === studentId)) {
+      const updated = this.students.find(s => s.id === active.id);
+      if (updated) {
+        this.setActiveStudent(updated);
+      }
+    }
+
+    return { success: true, count: affectedCount };
+  }
+
   // Khôi phục dữ liệu mẫu ban đầu
   public resetToDefault() {
     this.classes = DEFAULT_CLASSES;
@@ -2687,3 +2764,10 @@ class StudentGradebookService {
 }
 
 export const studentGradebookService = new StudentGradebookService();
+
+// Gắn vào window để Thầy Đinh Thành có thể gọi trực tiếp bất kỳ lúc nào từ F12 Console
+if (typeof window !== 'undefined') {
+  (window as unknown as { resetDongYenTestData: (studentId?: string) => { success: boolean; count: number } }).resetDongYenTestData = (studentId?: string) => {
+    return studentGradebookService.resetAllTestProgress(studentId);
+  };
+}

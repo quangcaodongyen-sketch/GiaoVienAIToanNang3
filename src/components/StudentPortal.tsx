@@ -341,6 +341,30 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     triggerWelcomeModal(student, true);
   };
 
+  const handleResetCurrentStudentPoints = () => {
+    if (!currentStudent) return;
+    if (window.confirm(`Thầy/Cô có muốn đặt lại (reset) điểm của bạn "${currentStudent.name}" về ban đầu (0 điểm) không?`)) {
+      studentGradebookService.resetAllTestProgress(currentStudent.id);
+      const updated = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
+      if (updated) {
+        setCurrentStudent({ ...updated });
+      }
+      alert(`Đã đặt lại điểm của bạn "${currentStudent.name}" về 0đ thành công!`);
+    }
+  };
+
+  const handleResetAllTestPoints = () => {
+    if (window.confirm('Thầy/Cô có chắc chắn muốn đặt lại (reset) toàn bộ điểm số, bài nộp và tiến độ của TẤT CẢ các học sinh vừa test trên máy này về mặc định không?')) {
+      const res = studentGradebookService.resetAllTestProgress();
+      if (currentStudent) {
+        const updated = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
+        if (updated) setCurrentStudent({ ...updated });
+      }
+      alert(`Đã đặt lại điểm thành công cho ${res.count} học sinh trên máy này!`);
+      window.location.reload();
+    }
+  };
+
   const handleSwitchOtherStudent = () => {
     if (window.confirm('Em có chắc chắn muốn đổi bạn khác vào học không?')) {
       studentGradebookService.setActiveStudent(null);
@@ -1218,6 +1242,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <RotateCw className="w-3.5 h-3.5 text-cyan-300" />
                 <span>Đổi Bạn</span>
               </button>
+              <button
+                type="button"
+                onClick={handleResetCurrentStudentPoints}
+                className="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-200 hover:text-white text-xs font-bold transition cursor-pointer border border-rose-700/50 flex items-center gap-1"
+                title="Đặt lại (reset) điểm của bạn này về 0đ"
+              >
+                <RotateCw className="w-3.5 h-3.5 text-rose-300" />
+                <span>Reset Điểm</span>
+              </button>
             </div>
           ) : null}
         </div>
@@ -1873,6 +1906,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <span>🚀 VÀO HỌC NGAY (+5Đ)</span>
             </button>
           </form>
+
+          {/* Nút Reset toàn bộ điểm test trên máy */}
+          <div className="pt-2 pb-1 text-center">
+            <button
+              type="button"
+              onClick={handleResetAllTestPoints}
+              className="text-xs text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 font-semibold inline-flex items-center gap-1.5 transition underline cursor-pointer"
+              title="Khôi phục toàn bộ điểm số của tất cả các học sinh vừa test về ban đầu"
+            >
+              <span>🔄 Đặt lại (Reset) toàn bộ điểm test trên máy này về mặc định</span>
+            </button>
+          </div>
 
           {/* Thống kê học sinh đang học tóm tắt bên dưới */}
           <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
