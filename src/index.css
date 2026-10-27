@@ -39,3 +39,27 @@
 .animate-shimmer {
   animation: shimmer 2.5s infinite;
 }
+
+/* Floating score animation (+10 điểm bay lên) */
+@keyframes floatUpScore {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -15%) scale(0.6) rotate(-4deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25) rotate(2deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -85%) scale(1.15) rotate(-2deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -145%) scale(1.05) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -210%) scale(0.85) rotate(0deg);
+  }
+}

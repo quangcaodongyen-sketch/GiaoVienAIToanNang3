@@ -48,11 +48,137 @@ type PracticeMode =
   | 'minitest' 
   | 'list';
 
+
+// ==================== HỆ THỐNG ÂM THANH SƯ PHẠM & HIỆU ỨNG ĐIỂM THƯỞNG BAY LÊN ====================
+const playCorrectSound = () => {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+
+    // Hợp âm 4 nốt arpeggio thánh thót ngân vang: C5 (523Hz) -> E5 (659Hz) -> G5 (784Hz) -> C6 (1046Hz)
+    const freqs = [523.25, 659.25, 783.99, 1046.50];
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'triangle'; // Âm sắc chuông ấm áp trong trẻo
+      osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+
+      gain.gain.setValueAtTime(0, now + idx * 0.07);
+      gain.gain.linearRampToValueAtTime(0.28, now + idx * 0.07 + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.48);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + idx * 0.07);
+      osc.stop(now + idx * 0.07 + 0.52);
+    });
+
+    // Nốt chuông ngân cao tinh tế C7 (2093Hz)
+    const chime = ctx.createOscillator();
+    const chimeGain = ctx.createGain();
+    chime.type = 'sine';
+    chime.frequency.setValueAtTime(2093, now + 0.22);
+    chimeGain.gain.setValueAtTime(0, now + 0.22);
+    chimeGain.gain.linearRampToValueAtTime(0.12, now + 0.24);
+    chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+    chime.connect(chimeGain);
+    chimeGain.connect(ctx.destination);
+    chime.start(now + 0.22);
+    chime.stop(now + 0.7);
+  } catch (err) {
+    console.warn('Audio play error:', err);
+  }
+};
+
+const playWrongSound = () => {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(240, now);
+    osc.frequency.exponentialRampToValueAtTime(140, now + 0.22);
+
+    gain.gain.setValueAtTime(0.16, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.23);
+  } catch (e) {
+    // ignore
+  }
+};
+
+interface FloatingScore {
+  id: number;
+  text: string;
+  x: number;
+  y: number;
+}
+
 export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   currentStudent,
   onRewardMerit,
   onOpenIpaModal
 }) => {
+  // State hiệu ứng +10 điểm bay lên
+  const [floatingScores, setFloatingScores] = useState<FloatingScore[]>([]);
+
+  const triggerScorePopup = (
+    e?: React.MouseEvent | { clientX?: number; clientY?: number } | null,
+    text: string = '+10 Điểm! ⭐'
+  ) => {
+    playCorrectSound();
+
+    let posX = window.innerWidth / 2;
+    let posY = window.innerHeight / 2;
+
+    if (e && typeof e.clientX === 'number' && typeof e.clientY === 'number' && e.clientX > 0 && e.clientY > 0) {
+      posX = e.clientX;
+      posY = e.clientY;
+    }
+
+    posX = Math.max(90, Math.min(window.innerWidth - 90, posX));
+    posY = Math.max(60, Math.min(window.innerHeight - 60, posY));
+
+    const newScore: FloatingScore = {
+      id: Date.now() + Math.random(),
+      text,
+      x: posX,
+      y: posY
+    };
+
+    setFloatingScores(prev => [...prev, newScore]);
+
+    setTimeout(() => {
+      setFloatingScores(prev => prev.filter(item => item.id !== newScore.id));
+    }, 1300);
+
+    if (currentStudent) {
+      studentGradebookService.recordPracticeMerit(
+        currentStudent.id,
+        `Đúng từ vựng Unit ${selectedUnit}`,
+        10
+      );
+      if (onRewardMerit) {
+        onRewardMerit(`Đúng từ vựng Unit ${selectedUnit}`, 10);
+      }
+    }
+  };
+
   // TỰ ĐỘNG KHÓA KHỐI LỚP CHUẨN XÁC THEO LỚP CỦA HỌC SINH (VD: 8A1 -> LỚP 8, 6A2 -> LỚP 6)
   const deduceStudentGrade = (): number => {
     if (currentStudent?.grade && typeof currentStudent.grade === 'number' && currentStudent.grade >= 6 && currentStudent.grade <= 12) {
@@ -167,12 +293,15 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     return all.sort(() => 0.5 - Math.random());
   }, [currentQuizWord, filteredVocab]);
 
-  const handleQuizAnswer = (selectedMeaning: string) => {
+  const handleQuizAnswer = (selectedMeaning: string, e?: React.MouseEvent) => {
     if (quizSelectedOption !== null) return; // Đã chọn rồi
     setQuizSelectedOption(selectedMeaning);
     const isCorrect = selectedMeaning === currentQuizWord.meaning;
     if (isCorrect) {
       setQuizScore(s => s + 1);
+      triggerScorePopup(e, '+10 Điểm! ⭐');
+    } else {
+      playWrongSound();
     }
   };
 
@@ -245,11 +374,14 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     }
   }, [currentMode, listenIndex, currentListenWord, listenFinished]);
 
-  const handleListenAnswer = (selectedWord: string) => {
+  const handleListenAnswer = (selectedWord: string, e?: React.MouseEvent) => {
     if (listenSelectedOption !== null) return;
     setListenSelectedOption(selectedWord);
     if (selectedWord === currentListenWord.word) {
       setListenScore(s => s + 1);
+      triggerScorePopup(e, '+10 Điểm! ⭐');
+    } else {
+      playWrongSound();
     }
   };
 
@@ -344,7 +476,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     }
   }, [currentMode, selectedUnit, selectedGrade]);
 
-  const handleCardClick = (card: MatchCard) => {
+  const handleCardClick = (card: MatchCard, e?: React.MouseEvent) => {
     if (card.isMatched) return;
     if (matchWrongId) return;
 
@@ -372,7 +504,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
     // Kiểm tra khớp
     if (selectedFirstCard.wordId === card.wordId) {
-      // Đúng!
+      // Ghép chuẩn: Nổi âm thanh báo đúng và +10 điểm bay lên
+      triggerScorePopup(e, '+10 Điểm! ⭐');
+
       const newCards = matchCards.map(c => {
         if (c.wordId === card.wordId) {
           return { ...c, isMatched: true };
@@ -409,7 +543,8 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         }
       }
     } else {
-      // Sai: Báo đỏ tạm thời trong 800ms
+      // Ghép sai: Âm thanh báo sai nhẹ nhàng + Báo đỏ tạm thời trong 700ms
+      playWrongSound();
       setMatchWrongId(card.id);
       setTimeout(() => {
         setMatchWrongId(null);
@@ -440,8 +575,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       setSpellFeedback('correct');
       speakWord(currentSpellWord.word);
       setSpellScore(s => s + 1);
+      triggerScorePopup(null, '+10 Điểm! ⭐');
     } else {
       setSpellFeedback('wrong');
+      playWrongSound();
     }
   };
 
@@ -1173,7 +1310,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       key={i}
                       type="button"
                       disabled={quizSelectedOption !== null}
-                      onClick={() => handleQuizAnswer(opt)}
+                      onClick={(e) => handleQuizAnswer(opt, e)}
                       className={`p-4 rounded-2xl flex items-center justify-between text-left text-sm sm:text-base font-bold transition-all duration-200 cursor-pointer select-none ${optClasses}`}
                     >
                       <div className="flex items-center gap-3">
@@ -1340,7 +1477,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       key={i}
                       type="button"
                       disabled={listenSelectedOption !== null}
-                      onClick={() => handleListenAnswer(optWord)}
+                      onClick={(e) => handleListenAnswer(optWord, e)}
                       className={`p-4 sm:p-5 rounded-2xl flex items-center justify-center text-center text-base sm:text-lg font-black tracking-wide transition-all duration-200 cursor-pointer select-none ${optClasses}`}
                     >
                       <span>{optWord}</span>
@@ -1528,7 +1665,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     key={card.id}
                     type="button"
                     disabled={card.isMatched}
-                    onClick={() => handleCardClick(card)}
+                    onClick={(e) => handleCardClick(card, e)}
                     className={`min-h-[100px] sm:min-h-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center transition-all duration-200 cursor-pointer select-none font-bold ${cardClasses}`}
                   >
                     <span className={`text-[10px] font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${badgeClasses}`}>
@@ -2087,6 +2224,24 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
         </div>
       )}
+
+      {/* HIỆU ỨNG +10 ĐIỂM BAY LÊN KHI GHÉP CHUẨN HOẶC CHỌN ĐÁP ÁN ĐÚNG */}
+      {floatingScores.map(score => (
+        <div
+          key={score.id}
+          style={{
+            left: `${score.x}px`,
+            top: `${score.y}px`,
+            animation: 'floatUpScore 1.25s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards'
+          }}
+          className="fixed pointer-events-none z-[9999] select-none -translate-x-1/2 -translate-y-1/2"
+        >
+          <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 border-2 border-white text-slate-950 font-black text-base sm:text-xl shadow-[0_10px_25px_rgba(245,158,11,0.65),0_4px_0_#b45309,inset_0_2px_0_rgba(255,255,255,0.85)]">
+            <Sparkles className="w-5 h-5 text-slate-950 animate-spin" />
+            <span className="tracking-wider drop-shadow-xs">{score.text}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
