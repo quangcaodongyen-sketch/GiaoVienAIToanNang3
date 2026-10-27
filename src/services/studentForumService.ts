@@ -1,8 +1,93 @@
 // =========================================================================
 // DỊCH VỤ DIỄN ĐÀN HỌC SINH (STUDENT FORUM & CHAT CỘNG ĐỒNG)
-// HỖ TRỢ TRÒ CHUYỆN, ĐĂNG ẢNH, TỰ XÓA BÀI/ẢNH VI PHẠM & KIỂM DUYỆT ADMIN
+// HỖ TRỢ TRÒ CHUYỆN, ĐĂNG ẢNH, BÌNH LUẬN, THẢ CẢM XÚC FACEBOOK-STYLE ĐẸP MẮT
 // TÁC GIẢ BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH - ĐIỆN THOẠI / ZALO: 0915.213717
 // =========================================================================
+
+export type ReactionType = 'heart' | 'like' | 'clap' | 'genius' | 'star' | 'fire' | 'joy' | 'support';
+
+export interface ReactionDetail {
+  id: ReactionType;
+  label: string;
+  emoji: string;
+  color: string;
+  hoverBg: string;
+  badgeBg: string;
+}
+
+export const FORUM_REACTIONS: Record<ReactionType, ReactionDetail> = {
+  heart: {
+    id: 'heart',
+    label: 'Thả Tim',
+    emoji: '❤️',
+    color: 'text-rose-600',
+    hoverBg: 'hover:bg-rose-50 dark:hover:bg-rose-950/40',
+    badgeBg: 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+  },
+  like: {
+    id: 'like',
+    label: 'Thích',
+    emoji: '👍',
+    color: 'text-blue-600',
+    hoverBg: 'hover:bg-blue-50 dark:hover:bg-blue-950/40',
+    badgeBg: 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+  },
+  clap: {
+    id: 'clap',
+    label: 'Vỗ Tay',
+    emoji: '👏',
+    color: 'text-amber-600',
+    hoverBg: 'hover:bg-amber-50 dark:hover:bg-amber-950/40',
+    badgeBg: 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+  },
+  genius: {
+    id: 'genius',
+    label: 'Sáng Tạo',
+    emoji: '💡',
+    color: 'text-yellow-600',
+    hoverBg: 'hover:bg-yellow-50 dark:hover:bg-yellow-950/40',
+    badgeBg: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-950/60 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800'
+  },
+  star: {
+    id: 'star',
+    label: 'Ngôi Sao',
+    emoji: '🌟',
+    color: 'text-amber-500',
+    hoverBg: 'hover:bg-amber-50 dark:hover:bg-amber-950/40',
+    badgeBg: 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+  },
+  fire: {
+    id: 'fire',
+    label: 'Quyết Tâm',
+    emoji: '🔥',
+    color: 'text-orange-600',
+    hoverBg: 'hover:bg-orange-50 dark:hover:bg-orange-950/40',
+    badgeBg: 'bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800'
+  },
+  joy: {
+    id: 'joy',
+    label: 'Tuyệt Vời',
+    emoji: '😄',
+    color: 'text-emerald-600',
+    hoverBg: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/40',
+    badgeBg: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+  },
+  support: {
+    id: 'support',
+    label: 'Cố Lên',
+    emoji: '💪',
+    color: 'text-purple-600',
+    hoverBg: 'hover:bg-purple-50 dark:hover:bg-purple-950/40',
+    badgeBg: 'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200 dark:border-purple-800'
+  }
+};
+
+export interface ReactionRecord {
+  type: ReactionType;
+  studentName: string;
+  studentClass: string;
+  time: string;
+}
 
 export interface ForumComment {
   id: string;
@@ -13,6 +98,9 @@ export interface ForumComment {
   authorGender?: 'Nam' | 'Nữ';
   content: string;
   createdAt: string;
+  likes?: number;
+  likedBy?: string[];
+  reactions?: Record<string, ReactionType>;
 }
 
 export interface ForumPost {
@@ -25,8 +113,10 @@ export interface ForumPost {
   content: string;
   imageUrl?: string; // Ảnh đính kèm (base64 hoặc URL)
   createdAt: string;
-  likes: number;
-  likedBy: string[];
+  likes: number; // Tổng số lượt thả cảm xúc (hỗ trợ tương thích ngược)
+  likedBy: string[]; // Danh sách studentId đã thả cảm xúc
+  reactions?: Record<string, ReactionType>; // studentId -> ReactionType ('heart', 'like', 'star',...)
+  reactionUsers?: Record<string, ReactionRecord>; // Lưu tên & lớp để hiển thị danh sách người thả cảm xúc
   comments?: ForumComment[];
   isReported?: boolean;
   reportReason?: string;
@@ -45,10 +135,20 @@ const INITIAL_FORUM_POSTS: ForumPost[] = [
     authorClass: 'Giáo Viên THCS Đồng Yên',
     authorStudentCode: 'GV-ADMIN',
     authorGender: 'Nam',
-    content: 'Chào mừng các em học sinh đến với Diễn đàn Học tập & Giao lưu Trực tuyến Trường THCS Đồng Yên! 🎉 Các em có thể thoải mái trao đổi bài tập, hỏi phương pháp học Tiếng Anh, đăng ảnh học tập bổ ích và tương tác cùng bạn bè nhé. Lưu ý giữ gìn ngôn từ văn minh và lịch sự!',
+    content: 'Chào mừng các em học sinh đến với Diễn đàn Học tập & Giao lưu Trực tuyến Trường THCS Đồng Yên! 🎉 Các em có thể thoải mái trao đổi bài tập, hỏi phương pháp học Tiếng Anh, đăng ảnh học tập bổ ích, cùng nhau bình luận và thả các biểu cảm cảm xúc (Thả tim, Like, Vỗ tay, Sáng tạo, Ngôi sao, Cố lên...). Lưu ý giữ gìn ngôn từ văn minh và lịch sự!',
     createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
-    likes: 28,
-    likedBy: [],
+    likes: 38,
+    likedBy: ['stu-sample-1', 'stu-sample-2', 'stu-sample-3'],
+    reactions: {
+      'stu-sample-1': 'heart',
+      'stu-sample-2': 'star',
+      'stu-sample-3': 'clap'
+    },
+    reactionUsers: {
+      'stu-sample-1': { type: 'heart', studentName: 'Nguyễn Văn Minh', studentClass: '7A1', time: '1 ngày trước' },
+      'stu-sample-2': { type: 'star', studentName: 'Trần Thị Mai', studentClass: '7A1', time: '1 ngày trước' },
+      'stu-sample-3': { type: 'clap', studentName: 'Đinh Quốc Đạt', studentClass: '8A1', time: '20 giờ trước' }
+    },
     isPinned: true
   },
   {
@@ -60,8 +160,14 @@ const INITIAL_FORUM_POSTS: ForumPost[] = [
     authorGender: 'Nam',
     content: 'Các bạn ơi, bài tập Unit 3 phần "A closer look 2" có ai làm xong câu chia thì Hiện tại hoàn thành chưa? Cho mình hỏi cách phân biệt "since" và "for" với ạ!',
     createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-    likes: 12,
-    likedBy: [],
+    likes: 15,
+    likedBy: ['stu-sample-2'],
+    reactions: {
+      'stu-sample-2': 'genius'
+    },
+    reactionUsers: {
+      'stu-sample-2': { type: 'genius', studentName: 'Trần Thị Mai', studentClass: '7A1', time: '4 giờ trước' }
+    },
     comments: [
       {
         id: 'cmt-1',
@@ -71,7 +177,9 @@ const INITIAL_FORUM_POSTS: ForumPost[] = [
         authorClass: '7A1',
         authorGender: 'Nữ',
         content: '"Since" đi với mốc thời gian (VD: since 2020, since yesterday), còn "for" đi với khoảng thời gian (VD: for 3 years, for 2 hours) bạn nhé!',
-        createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
+        createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+        likes: 6,
+        likedBy: ['stu-sample-1']
       }
     ]
   }
@@ -157,6 +265,8 @@ class StudentForumService {
       createdAt: new Date().toISOString(),
       likes: 0,
       likedBy: [],
+      reactions: {},
+      reactionUsers: {},
       comments: []
     };
 
@@ -172,9 +282,9 @@ class StudentForumService {
     authorClass: string;
     authorGender?: 'Nam' | 'Nữ';
     content: string;
-  }): boolean {
+  }): ForumComment | null {
     const post = this.posts.find(p => p.id === postId);
-    if (!post) return false;
+    if (!post) return null;
 
     if (!post.comments) post.comments = [];
     const newComment: ForumComment = {
@@ -185,10 +295,105 @@ class StudentForumService {
       authorClass: commentData.authorClass,
       authorGender: commentData.authorGender || 'Nam',
       content: commentData.content.trim(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      likedBy: [],
+      reactions: {}
     };
 
     post.comments.push(newComment);
+    this.savePosts();
+    return newComment;
+  }
+
+  // Xóa bình luận: tác giả bình luận hoặc tác giả bài viết hoặc Admin
+  public deleteComment(postId: string, commentId: string, currentUserId: string, isAdmin: boolean = false): boolean {
+    const post = this.posts.find(p => p.id === postId);
+    if (!post || !post.comments) return false;
+
+    const cmt = post.comments.find(c => c.id === commentId);
+    if (!cmt) return false;
+
+    if (cmt.authorId !== currentUserId && post.authorId !== currentUserId && !isAdmin) {
+      return false;
+    }
+
+    post.comments = post.comments.filter(c => c.id !== commentId);
+    this.savePosts();
+    return true;
+  }
+
+  // Thả biểu cảm cảm xúc (Reaction) Facebook-style trên bài viết
+  public setReaction(
+    postId: string, 
+    studentId: string, 
+    studentName: string, 
+    studentClass: string, 
+    reactionType: ReactionType
+  ): { action: 'added' | 'changed' | 'removed'; currentType?: ReactionType; totalCount: number } {
+    const post = this.posts.find(p => p.id === postId);
+    if (!post) return { action: 'removed', totalCount: 0 };
+
+    if (!post.reactions) post.reactions = {};
+    if (!post.reactionUsers) post.reactionUsers = {};
+    if (!post.likedBy) post.likedBy = [];
+
+    const existing = post.reactions[studentId];
+
+    if (existing === reactionType) {
+      // Bấm lại đúng biểu cảm đang chọn -> Hủy biểu cảm
+      delete post.reactions[studentId];
+      delete post.reactionUsers[studentId];
+      post.likedBy = post.likedBy.filter(id => id !== studentId);
+      post.likes = Math.max(0, Object.keys(post.reactions).length);
+      this.savePosts();
+      return { action: 'removed', totalCount: post.likes };
+    }
+
+    // Đổi sang biểu cảm khác hoặc thả mới
+    post.reactions[studentId] = reactionType;
+    post.reactionUsers[studentId] = {
+      type: reactionType,
+      studentName,
+      studentClass,
+      time: 'Vừa xong'
+    };
+    if (!post.likedBy.includes(studentId)) {
+      post.likedBy.push(studentId);
+    }
+    post.likes = Object.keys(post.reactions).length;
+    this.savePosts();
+    return { 
+      action: existing ? 'changed' : 'added', 
+      currentType: reactionType, 
+      totalCount: post.likes 
+    };
+  }
+
+  // Tương thích ngược: toggleLike bài viết
+  public toggleLike(postId: string, studentId: string, studentName: string = 'Học sinh', studentClass: string = '8A1'): boolean {
+    const res = this.setReaction(postId, studentId, studentName, studentClass, 'heart');
+    return res.action !== 'removed';
+  }
+
+  // Thả tim cho bình luận
+  public toggleCommentLike(postId: string, commentId: string, studentId: string): boolean {
+    const post = this.posts.find(p => p.id === postId);
+    if (!post || !post.comments) return false;
+
+    const cmt = post.comments.find(c => c.id === commentId);
+    if (!cmt) return false;
+
+    if (!cmt.likedBy) cmt.likedBy = [];
+    const hasLiked = cmt.likedBy.includes(studentId);
+    if (hasLiked) {
+      cmt.likedBy = cmt.likedBy.filter(id => id !== studentId);
+      cmt.likes = Math.max(0, (cmt.likes || 1) - 1);
+    } else {
+      cmt.likedBy.push(studentId);
+      cmt.likes = (cmt.likes || 0) + 1;
+    }
+
     this.savePosts();
     return true;
   }
@@ -219,26 +424,6 @@ class StudentForumService {
     }
 
     post.imageUrl = undefined;
-    this.savePosts();
-    return true;
-  }
-
-  // Thả tim / Bỏ tim bài viết
-  public toggleLike(postId: string, studentId: string): boolean {
-    const post = this.posts.find(p => p.id === postId);
-    if (!post) return false;
-
-    if (!post.likedBy) post.likedBy = [];
-
-    const hasLiked = post.likedBy.includes(studentId);
-    if (hasLiked) {
-      post.likedBy = post.likedBy.filter(id => id !== studentId);
-      post.likes = Math.max(0, (post.likes || 1) - 1);
-    } else {
-      post.likedBy.push(studentId);
-      post.likes = (post.likes || 0) + 1;
-    }
-
     this.savePosts();
     return true;
   }
