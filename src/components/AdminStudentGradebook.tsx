@@ -195,21 +195,34 @@ export const AdminStudentGradebook: React.FC = () => {
     }
   };
 
-  // Tự rà soát & hợp nhất tài khoản trùng lặp
-  const handleDeduplicateStudents = () => {
-    const res = studentGradebookService.deduplicateAndMergeStudents();
+  // Lọc sạch tài khoản demo, đối chiếu và đồng nhất theo Sổ điểm 390 học sinh, cộng +15đ khuyến khích
+  const handlePurgeDemoAndSyncRoster = () => {
+    if (!window.confirm(
+      'THẦY/CÔ XÁC NHẬN RÀ SOÁT, LỌC HỌC SINH DEMO & ĐỒNG NHẤT SỔ ĐIỂM?\n\n' +
+      '1. Lọc và xóa sạch tất cả tài khoản demo, nick ảo, bài thi thử.\n' +
+      '2. Đối chiếu toàn bộ tài khoản cũ/mới với Sổ điểm chính thức (390 học sinh Khối 6 & Khối 8).\n' +
+      '3. Đồng nhất mỗi học sinh chỉ có đúng 1 tài khoản chính thống, bảo toàn 100% điểm cao nhất và lịch sử học tập.\n' +
+      '4. Tự động cộng +15 điểm khuyến khích ôn thi Giữa kỳ 1 cho tất cả học sinh.\n\n' +
+      'Thầy/Cô có muốn tiến hành ngay bây giờ không?'
+    )) return;
+
+    const res = studentGradebookService.purgeDemoAndSyncOfficialRoster({ grantEncouragementBonus: true });
     refreshData();
-    if (res.mergedCount > 0) {
-      alert(`🎉 ĐÃ RÀ SOÁT & HỢP NHẤT THÀNH CÔNG!\n\n` +
-        `• Đã phát hiện và hợp nhất: ${res.mergedCount} tài khoản trùng lặp.\n` +
-        `• Tổng số tài khoản chuẩn hiện tại: ${res.currentCount} học sinh.\n` +
-        `• Toàn bộ điểm số bài thi và lịch sử học tập cao nhất đã được bảo toàn nguyên vẹn 100%!`);
-      showToast(`Đã hợp nhất ${res.mergedCount} tài khoản trùng lặp!`);
-    } else {
-      alert(`✅ RÀ SOÁT HOÀN TẤT!\n\nKhông phát hiện tài khoản nào bị trùng lặp. Tất cả ${res.currentCount} tài khoản học sinh đều chuẩn xác và duy nhất.`);
-      showToast('Tất cả tài khoản học sinh đều chuẩn xác!');
-    }
+
+    alert(
+      `🎉 HOÀN TẤT LỌC DEMO & ĐỒNG NHẤT SỔ ĐIỂM CHÍNH THỨC!\n\n` +
+      `• Tổng số học sinh theo Sổ điểm: ${res.totalOfficialStudents} học sinh (10 lớp Khối 6 & Khối 8).\n` +
+      `• Đã lọc và xóa tài khoản ảo/demo: ${res.purgedDemoCount} tài khoản.\n` +
+      `• Đã đồng nhất tài khoản trùng lặp: ${res.mergedDuplicateCount} tài khoản.\n` +
+      `• Điểm thưởng khuyến khích ôn thi GK1: +${res.encouragementBonusGranted} điểm/học sinh.\n` +
+      `• Tổng số bài làm được bảo toàn: ${res.totalSubmissionsPreserved} bài thi.\n\n` +
+      `Toàn bộ hệ thống đã được đồng bộ chuẩn xác và an toàn tuyệt đối!`
+    );
+    showToast(`Đã lọc ${res.purgedDemoCount} demo, đồng nhất ${res.totalOfficialStudents} học sinh (+15đ)!`);
   };
+
+  // Giữ alias tương thích
+  const handleDeduplicateStudents = handlePurgeDemoAndSyncRoster;
 
   // Xóa lớp
   const handleDeleteClass = (classId: string, name: string) => {
@@ -340,11 +353,11 @@ export const AdminStudentGradebook: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <button
-              onClick={handleDeduplicateStudents}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 border border-purple-300 transition-all hover:scale-105 cursor-pointer"
-              title="Tự động quét toàn bộ hệ thống, hợp nhất tài khoản trùng lặp và bảo toàn điểm số cao nhất"
+              onClick={handlePurgeDemoAndSyncRoster}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2 border border-emerald-300 transition-all hover:scale-105 cursor-pointer"
+              title="Lọc sạch tài khoản demo, đồng nhất mỗi học sinh 1 tài khoản theo Sổ Điểm và tặng +15đ khuyến khích"
             >
-              <Sparkles className="w-4 h-4 text-amber-300" /> Tự Rà Soát & Hợp Nhất Trùng
+              <Sparkles className="w-4 h-4 text-amber-300" /> 🧹 Lọc Demo & Đồng Nhất Sổ Điểm (+15đ)
             </button>
             <button
               onClick={handleExportCSV}
@@ -729,11 +742,11 @@ export const AdminStudentGradebook: React.FC = () => {
                   <Upload className="w-3.5 h-3.5 text-white" /> Dán Cả Lớp Từ Excel
                 </button>
                 <button
-                  onClick={handleDeduplicateStudents}
-                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
-                  title="Rà soát và hợp nhất tài khoản trùng của học sinh"
+                  onClick={handlePurgeDemoAndSyncRoster}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  title="Lọc học sinh demo, đồng nhất 1 tài khoản/học sinh và cộng điểm khuyến khích"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" /> Tự Rà Soát & Hợp Nhất Trùng
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" /> 🧹 Lọc Demo & Đồng Nhất (+15đ)
                 </button>
                 {currentClassObj && (
                   <button

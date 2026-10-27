@@ -33,6 +33,7 @@ export interface ClassAttendanceStudentStatus {
   vocabPoints: number;
   examBonusPoints: number;
   practicePoints: number;
+  encouragementBonus?: number;
   submissionsCount: number;
   highestExamScore: number | null;
   lastActive: string | null;
@@ -83,6 +84,9 @@ export interface StudentProfile {
   timePoints?: number;       // Điểm cộng theo thời gian (+3đ mỗi 5 phút)
   totalMeritPoints?: number; // Tổng điểm thi đua chuyên cần
   lastLoginDate?: string;    // Ngày đăng nhập gần nhất (YYYY-MM-DD)
+  stt?: number;              // Số thứ tự theo sổ điểm chính thức
+  regularScore?: number | null; // Điểm ĐGtx từ sổ điểm chính thức
+  encouragementBonus?: number; // Điểm thưởng khuyến khích ôn thi GK1 (+15đ)
 }
 
 export interface StudentSubmission {
@@ -127,8 +131,20 @@ export interface ClassLeaderboardItem {
   practicePoints?: number;
   studyTimeMinutes?: number;
   timePoints?: number;
+  encouragementBonus?: number;
   totalMeritPoints: number;
 }
+export interface PurgeAndSyncRosterResult {
+  totalOfficialStudents: number;
+  totalOriginalCandidates: number;
+  purgedDemoCount: number;
+  mergedDuplicateCount: number;
+  encouragementBonusGranted: number;
+  totalSubmissionsPreserved: number;
+  purgedDemoNames: string[];
+  details: string[];
+}
+
 
 export interface StudentCheckinLog {
   id: string;
@@ -657,8 +673,8 @@ class StudentGradebookService {
       // 1. Tự động khôi phục toàn diện tất cả tài khoản học sinh và bài thi từ toàn bộ các key cũ
       this.recoverAllLegacyData();
 
-      // 2. Tự động rà soát và hợp nhất tài khoản trùng lặp (giữ điểm cao nhất, bảo toàn 100% dữ liệu)
-      this.deduplicateAndMergeStudents();
+      // 2. Tự động lọc sạch học sinh demo, đối chiếu và đồng nhất theo Sổ Điểm chính thức (390 học sinh), cộng điểm khuyến khích (+15đ)
+      this.purgeDemoAndSyncOfficialRoster({ grantEncouragementBonus: true });
 
       // Lưu lại nếu chưa từng có
       if (!clsRaw) localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(this.classes));
@@ -798,6 +814,377 @@ class StudentGradebookService {
     return { recoveredStudents: recoveredStudentsCount, recoveredSubmissions: recoveredSubmissionsCount };
   }
 
+  // ==================== LỌC SẠCH DEMO & ĐỒNG NHẤT SỔ ĐIỂM CHÍNH THỨC 390 HỌC SINH (+15Đ KHUYẾN KHÍCH) ====================
+  public purgeDemoAndSyncOfficialRoster(options?: {
+    grantEncouragementBonus?: boolean;
+    bonusAmount?: number;
+  }): PurgeAndSyncRosterResult {
+    const grantBonus = options?.grantEncouragementBonus !== false;
+    const bonusAmount = options?.bonusAmount ?? 15;
+
+    const DEMO_REGEX = /\b(demo|test|thử|học sinh ảo|tài khoản mẫu|mẫu|asdf|qwerty|fake|abcde|1234|admin|mod|quản trị|nguyễn văn a|bài test)\b/i;
+
+    // 1. Tải danh sách 390 học sinh chính thức từ officialStudentRoster.json
+    const rawRoster = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+    const allOfficial: OfficialStudentRosterItem[] = [];
+    const officialByCode = new Map<string, OfficialStudentRosterItem>();
+    const officialByKey = new Map<string, OfficialStudentRosterItem>();
+    const officialByNameOnly = new Map<string, OfficialStudentRosterItem[]>();
+
+    Object.entries(rawRoster).forEach(([rawCls, list]) => {
+      const cleanCls = normalizeClassName(rawCls);
+      (list || []).forEach(item => {
+        const standardItem: OfficialStudentRosterItem = {
+          stt: item.stt,
+          studentCode: String(item.studentCode).trim(),
+          name: item.name.trim(),
+          className: cleanCls,
+          grade: item.grade || (cleanCls.startsWith('6') ? 6 : 8),
+          dob: item.dob || '',
+          regularScore: item.regularScore ?? null,
+          midtermScore: item.midtermScore ?? null,
+          finalScore: item.finalScore ?? null,
+          termAvg: item.termAvg ?? null
+        };
+        allOfficial.push(standardItem);
+        officialByCode.set(standardItem.studentCode.toLowerCase(), standardItem);
+        const normN = normalizeVietnameseName(standardItem.name);
+        officialByKey.set(`${normN}__${cleanCls}`, standardItem);
+        const nameList = officialByNameOnly.get(normN) || [];
+        nameList.push(standardItem);
+        officialByNameOnly.set(normN, nameList);
+      });
+    });
+
+    // 2. Gom toàn bộ candidate accounts từ this.students và tất cả legacy storage keys
+    const candidateMap = new Map<string, StudentProfile>();
+    (this.students || []).forEach(s => {
+      if (s && s.id) candidateMap.set(s.id, s);
+    });
+
+    const legacyStudentKeys = [
+      STORAGE_KEYS.STUDENTS,
+      STORAGE_KEYS.VAULT_STUDENTS,
+      'gvai_gradebook_students_v4',
+      'gvai_gradebook_students_v3_dongyen',
+      'gvai_gradebook_students_v3',
+      'gvai_gradebook_students_v2',
+      'gvai_gradebook_students',
+      'gvai_students_dongyen',
+      'gvai_students',
+      'gvai_students_backup',
+      'ALL_STUDENTS_LIST',
+      'ENG_STUDENTS'
+    ];
+
+    legacyStudentKeys.forEach(k => {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) {
+          const list = JSON.parse(raw);
+          if (Array.isArray(list)) {
+            list.forEach((s: any) => {
+              if (s && s.id && !candidateMap.has(s.id)) {
+                candidateMap.set(s.id, s);
+              }
+            });
+          }
+        }
+      } catch {}
+    });
+
+    const candidateList = Array.from(candidateMap.values());
+    const totalOriginalCandidates = candidateList.length;
+
+    // 3. Phân loại tài khoản Demo vs Tài khoản chính thức
+    const purgedDemoIds = new Set<string>();
+    const purgedDemoNames: string[] = [];
+    const officialGroups = new Map<string, StudentProfile[]>(); // studentCode -> candidate profiles
+
+    candidateList.forEach(cand => {
+      const cName = (cand.name || '').trim();
+      const cUser = (cand.username || '').trim().toLowerCase();
+      const cCode = (cand.studentCode || '').trim().toLowerCase();
+      const cCls = normalizeClassName(cand.className || '');
+      const normN = normalizeVietnameseName(cName);
+
+      const hasDemoKeyword = 
+        DEMO_REGEX.test(cName) || 
+        DEMO_REGEX.test(cUser) || 
+        DEMO_REGEX.test(cCode) || 
+        DEMO_REGEX.test(cCls);
+
+      let matchedOfficial: OfficialStudentRosterItem | undefined = undefined;
+
+      if (!hasDemoKeyword) {
+        // Ưu tiên 1: Khớp mã học sinh chính thức
+        if (cCode && officialByCode.has(cCode)) {
+          matchedOfficial = officialByCode.get(cCode);
+        }
+        // Ưu tiên 2: Khớp Họ tên chuẩn hóa + Lớp
+        if (!matchedOfficial && officialByKey.has(`${normN}__${cCls}`)) {
+          matchedOfficial = officialByKey.get(`${normN}__${cCls}`);
+        }
+        // Ưu tiên 3: Khớp Họ tên duy nhất trên toàn khối 390 học sinh
+        if (!matchedOfficial && officialByNameOnly.has(normN)) {
+          const matches = officialByNameOnly.get(normN)!;
+          if (matches.length === 1) {
+            matchedOfficial = matches[0];
+          }
+        }
+      }
+
+      if (hasDemoKeyword || !matchedOfficial) {
+        purgedDemoIds.add(cand.id);
+        purgedDemoNames.push(cName || cand.id);
+      } else {
+        const grp = officialGroups.get(matchedOfficial.studentCode) || [];
+        grp.push(cand);
+        officialGroups.set(matchedOfficial.studentCode, grp);
+      }
+    });
+
+    // 4. Xây dựng danh sách 390 học sinh chuẩn mực theo Sổ Điểm chính thức (1 học sinh = 1 tài khoản)
+    const idMigrationMap = new Map<string, string>(); // oldId -> canonicalId
+    const cleanStudents: StudentProfile[] = [];
+    let mergedDuplicateCount = 0;
+    const details: string[] = [];
+
+    allOfficial.forEach(off => {
+      const candidates = officialGroups.get(off.studentCode) || [];
+
+      if (candidates.length > 1) {
+        mergedDuplicateCount += (candidates.length - 1);
+        details.push(`Đồng nhất ${candidates.length} tài khoản thành 1 cho học sinh ${off.name} (Lớp ${off.className}, SBD: ${off.studentCode})`);
+      }
+
+      // Xác định Canonical ID (ưu tiên ID đã có tài khoản/mật khẩu hoặc hoạt động)
+      let canonicalId: string;
+      if (candidates.length > 0) {
+        candidates.sort((a, b) => {
+          const aWeight = (a.username ? 2 : 0) + (a.password ? 2 : 0) + (a.totalMeritPoints ? 1 : 0);
+          const bWeight = (b.username ? 2 : 0) + (b.password ? 2 : 0) + (b.totalMeritPoints ? 1 : 0);
+          if (bWeight !== aWeight) return bWeight - aWeight;
+          return (a.createdAt || '').localeCompare(b.createdAt || '');
+        });
+        canonicalId = candidates[0].id;
+      } else {
+        canonicalId = `stu-${off.className.toLowerCase()}-${String(off.stt).padStart(2, '0')}`;
+      }
+
+      // Ánh xạ tất cả candidate ID về canonicalId
+      candidates.forEach(c => {
+        idMigrationMap.set(c.id, canonicalId);
+      });
+
+      // Hợp nhất điểm chuyên cần, thi đua và thời gian học
+      const att = Math.max(...candidates.map(c => c.attendancePoints || 0), 0);
+      const voc = Math.max(...candidates.map(c => c.vocabPoints || 0), 0);
+      const exm = Math.max(...candidates.map(c => c.examBonusPoints || 0), 0);
+      const prc = Math.max(...candidates.map(c => c.practicePoints || 0), 0);
+      const timePts = Math.max(...candidates.map(c => c.timePoints || 0), 0);
+      const studyMins = candidates.reduce((sum, c) => sum + (c.studyTimeMinutes || 0), 0);
+
+      // Điểm khuyến khích ôn thi Giữa kỳ 1 (+15 điểm)
+      const bonus = grantBonus ? bonusAmount : 15;
+      const totalMerit = att + voc + exm + prc + timePts + bonus;
+
+      // Tìm ngày đăng nhập gần nhất & ngày tạo
+      const validDates = candidates.map(c => c.lastLoginDate).filter(Boolean) as string[];
+      validDates.sort();
+      const lastLogin = validDates.length > 0 ? validDates[validDates.length - 1] : undefined;
+
+      const createdDates = candidates.map(c => c.createdAt).filter(Boolean) as string[];
+      createdDates.sort();
+      const createdAt = createdDates.length > 0 ? createdDates[0] : '2026-09-05T07:30:00Z';
+
+      // Thông tin đăng nhập chuẩn
+      const bestUser = candidates.find(c => c.username && !DEMO_REGEX.test(c.username))?.username || `hs${off.className.toLowerCase()}_${off.stt}`;
+      const bestPass = candidates.find(c => c.password)?.password || '12345';
+      const bestPhone = candidates.find(c => c.parentPhone)?.parentPhone || '';
+      const bestGender = candidates.find(c => c.gender)?.gender || 'Nam';
+
+      const canonicalProfile: StudentProfile = {
+        id: canonicalId,
+        studentCode: off.studentCode,
+        username: bestUser,
+        password: bestPass,
+        name: off.name,
+        classId: `cls-${off.className.toLowerCase()}`,
+        className: off.className,
+        grade: off.grade,
+        gender: bestGender,
+        dob: off.dob,
+        parentPhone: bestPhone,
+        note: 'Học sinh chính thức Trường THCS Đồng Yên',
+        createdAt,
+        attendancePoints: att,
+        vocabPoints: voc,
+        examBonusPoints: exm,
+        practicePoints: prc,
+        studyTimeMinutes: studyMins,
+        timePoints: timePts,
+        encouragementBonus: bonus,
+        totalMeritPoints: totalMerit,
+        lastLoginDate: lastLogin,
+        stt: off.stt,
+        regularScore: off.regularScore
+      };
+
+      cleanStudents.push(canonicalProfile);
+    });
+
+    this.students = cleanStudents;
+
+    // 5. Làm sạch & hợp nhất bài nộp (Student Submissions)
+    // - Xóa bỏ bài thi của học sinh demo
+    // - Chuyển studentId về canonical student
+    // - Giữ điểm cao nhất cho bài làm lặp lại
+    const subKeyMap = new Map<string, StudentSubmission>();
+
+    this.submissions.forEach(sub => {
+      if (!sub || !sub.id) return;
+      if (purgedDemoIds.has(sub.studentId) || DEMO_REGEX.test(sub.studentName || '')) {
+        return; // Bỏ qua bài thi demo
+      }
+
+      const canonicalId = idMigrationMap.get(sub.studentId) || sub.studentId;
+      const canonicalStudent = this.students.find(s => s.id === canonicalId);
+
+      if (!canonicalStudent) {
+        // Kiểm tra xem tên bài thi có trùng với học sinh nào trong sổ điểm không
+        const normSubName = normalizeVietnameseName(sub.studentName || '');
+        const normSubCls = normalizeClassName(sub.className || '');
+        const matched = this.students.find(s => 
+          normalizeVietnameseName(s.name) === normSubName && 
+          (normalizeClassName(s.className) === normSubCls || !normSubCls)
+        );
+        if (!matched) return;
+        sub.studentId = matched.id;
+        sub.studentName = matched.name;
+        sub.studentCode = matched.studentCode;
+        sub.className = matched.className;
+        sub.classId = matched.classId;
+        sub.grade = matched.grade;
+      } else {
+        sub.studentId = canonicalStudent.id;
+        sub.studentName = canonicalStudent.name;
+        sub.studentCode = canonicalStudent.studentCode;
+        sub.className = canonicalStudent.className;
+        sub.classId = canonicalStudent.classId;
+        sub.grade = canonicalStudent.grade;
+      }
+
+      // Giữ bài làm điểm cao nhất nếu làm nhiều lần
+      const subKey = `${sub.studentId}__${sub.testType}__${sub.unitNumber}__${(sub.testTitle || '').toLowerCase()}`;
+      const existing = subKeyMap.get(subKey);
+      if (!existing || sub.score > existing.score) {
+        subKeyMap.set(subKey, sub);
+      }
+    });
+
+    this.submissions = Array.from(subKeyMap.values());
+
+    // 6. Làm sạch nhật ký check-in (Checkin Logs)
+    if (this.checkinLogs && this.checkinLogs.length > 0) {
+      this.checkinLogs = this.checkinLogs
+        .filter(log => !purgedDemoIds.has(log.studentId) && !DEMO_REGEX.test(log.studentName || ''))
+        .map(log => {
+          const canonicalId = idMigrationMap.get(log.studentId) || log.studentId;
+          const canonical = this.students.find(s => s.id === canonicalId);
+          if (canonical) {
+            return {
+              ...log,
+              studentId: canonical.id,
+              studentCode: canonical.studentCode,
+              studentName: canonical.name,
+              className: canonical.className,
+              grade: canonical.grade
+            };
+          }
+          return log;
+        });
+    }
+
+    // 7. Đồng bộ & làm sạch nhiệm vụ học tập MidtermMissionService
+    try {
+      purgedDemoIds.forEach(demoId => {
+        localStorage.removeItem('MIDTERM_MISSION_EVAL_' + demoId);
+      });
+      idMigrationMap.forEach((canonicalId, oldId) => {
+        if (oldId !== canonicalId) {
+          const oldMission = localStorage.getItem('MIDTERM_MISSION_EVAL_' + oldId);
+          if (oldMission && !localStorage.getItem('MIDTERM_MISSION_EVAL_' + canonicalId)) {
+            localStorage.setItem('MIDTERM_MISSION_EVAL_' + canonicalId, oldMission);
+          }
+          localStorage.removeItem('MIDTERM_MISSION_EVAL_' + oldId);
+        }
+      });
+    } catch {}
+
+    // 8. Làm sạch phiên đăng nhập hiện tại nếu là demo
+    try {
+      const activeRaw = localStorage.getItem(STORAGE_KEYS.ACTIVE_STUDENT);
+      if (activeRaw) {
+        const active = JSON.parse(activeRaw);
+        if (active?.id && (purgedDemoIds.has(active.id) || DEMO_REGEX.test(active.name || ''))) {
+          localStorage.removeItem(STORAGE_KEYS.ACTIVE_STUDENT);
+        } else if (active?.id && idMigrationMap.has(active.id)) {
+          const canonical = this.students.find(s => s.id === idMigrationMap.get(active.id));
+          if (canonical) {
+            this.setActiveStudent(canonical);
+          }
+        }
+      }
+
+      const rememberedRaw = localStorage.getItem('DONGYEN_REMEMBERED_STUDENT');
+      if (rememberedRaw) {
+        const rem = JSON.parse(rememberedRaw);
+        if (rem?.id && (purgedDemoIds.has(rem.id) || DEMO_REGEX.test(rem.name || ''))) {
+          localStorage.removeItem('DONGYEN_REMEMBERED_STUDENT');
+        } else if (rem?.id && idMigrationMap.has(rem.id)) {
+          const canonical = this.students.find(s => s.id === idMigrationMap.get(rem.id));
+          if (canonical) {
+            localStorage.setItem('DONGYEN_REMEMBERED_STUDENT', JSON.stringify({
+              id: canonical.id,
+              name: canonical.name,
+              className: canonical.className,
+              grade: canonical.grade,
+              studentCode: canonical.studentCode
+            }));
+          }
+        }
+      }
+    } catch {}
+
+    // 9. Lưu trữ danh sách học sinh và bài thi sạch tuyệt đối vào bộ nhớ vĩnh viễn
+    this.saveStudents();
+    this.saveSubmissions();
+    try {
+      localStorage.setItem(STORAGE_KEYS.CHECKIN_LOGS, JSON.stringify(this.checkinLogs));
+    } catch {}
+
+    // Làm sạch toàn bộ các key legacy cũ để demo không bao giờ tự phục hồi
+    legacyStudentKeys.forEach(k => {
+      try {
+        localStorage.setItem(k, JSON.stringify(this.students));
+      } catch {}
+    });
+
+    this.syncToCloud().catch(() => {});
+
+    return {
+      totalOfficialStudents: this.students.length,
+      totalOriginalCandidates,
+      purgedDemoCount: purgedDemoIds.size,
+      mergedDuplicateCount,
+      encouragementBonusGranted: bonusAmount,
+      totalSubmissionsPreserved: this.submissions.length,
+      purgedDemoNames: Array.from(new Set(purgedDemoNames)),
+      details
+    };
+  }
+
   // ==================== TỰ RÀ SOÁT TÀI KHOẢN TRÙNG ĐỂ HỢP NHẤT (MERGE DEDUPLICATE) ====================
   public deduplicateAndMergeStudents(): {
     mergedCount: number;
@@ -805,137 +1192,12 @@ class StudentGradebookService {
     currentCount: number;
     details: string[];
   } {
-    const originalCount = this.students.length;
-    if (originalCount <= 1) {
-      return { mergedCount: 0, originalCount, currentCount: originalCount, details: [] };
-    }
-
-    const groups: StudentProfile[][] = [];
-    const visited = new Set<string>();
-
-    for (let i = 0; i < this.students.length; i++) {
-      const s1 = this.students[i];
-      if (visited.has(s1.id)) continue;
-
-      const currentGroup: StudentProfile[] = [s1];
-      visited.add(s1.id);
-
-      const normName1 = normalizeVietnameseName(s1.name);
-      const normClass1 = normalizeClassName(s1.className);
-      const phone1 = (s1.parentPhone || '').replace(/\D/g, '');
-      const user1 = (s1.username || '').trim().toLowerCase();
-
-      for (let j = i + 1; j < this.students.length; j++) {
-        const s2 = this.students[j];
-        if (visited.has(s2.id)) continue;
-
-        const normName2 = normalizeVietnameseName(s2.name);
-        const normClass2 = normalizeClassName(s2.className);
-        const phone2 = (s2.parentPhone || '').replace(/\D/g, '');
-        const user2 = (s2.username || '').trim().toLowerCase();
-
-        // Tiêu chí nhận diện tài khoản trùng:
-        // 1. Trùng họ tên + cùng lớp (hoặc cùng khối lớp)
-        const isSameNameAndClass = normName1 && normName1 === normName2 && (normClass1 === normClass2 || s1.grade === s2.grade);
-        // 2. Trùng số điện thoại phụ huynh (độ dài >= 9 số)
-        const isSamePhone = phone1.length >= 9 && phone1 === phone2;
-        // 3. Trùng username đăng nhập
-        const isSameUsername = user1.length >= 2 && user1 === user2;
-        // 4. Trùng mã học sinh
-        const isSameCode = s1.studentCode && s2.studentCode && s1.studentCode.trim().toLowerCase() === s2.studentCode.trim().toLowerCase();
-
-        if (isSameNameAndClass || isSamePhone || isSameUsername || isSameCode) {
-          currentGroup.push(s2);
-          visited.add(s2.id);
-        }
-      }
-
-      groups.push(currentGroup);
-    }
-
-    const details: string[] = [];
-    const unifiedStudents: StudentProfile[] = [];
-    const idMigrationMap = new Map<string, StudentProfile>();
-
-    let mergedCount = 0;
-
-    for (const group of groups) {
-      if (group.length === 1) {
-        unifiedStudents.push(group[0]);
-        continue;
-      }
-
-      mergedCount += (group.length - 1);
-
-      // Sắp xếp ưu tiên giữ tài khoản chuẩn nhất
-      group.sort((a, b) => {
-        const aAuth = (a.username ? 2 : 0) + (a.password ? 2 : 0);
-        const bAuth = (b.username ? 2 : 0) + (b.password ? 2 : 0);
-        if (bAuth !== aAuth) return bAuth - aAuth;
-        return (b.createdAt || '').localeCompare(a.createdAt || '');
-      });
-
-      const canonical: StudentProfile = { ...group[0] };
-
-      // Hợp nhất các thông tin từ các tài khoản trùng khác
-      group.forEach(other => {
-        if (!canonical.username && other.username) canonical.username = other.username;
-        if (!canonical.password && other.password) canonical.password = other.password;
-        if (!canonical.parentPhone && other.parentPhone) canonical.parentPhone = other.parentPhone;
-        if (!canonical.dob && other.dob) canonical.dob = other.dob;
-        if (!canonical.note && other.note) canonical.note = other.note;
-        if (!canonical.studentCode && other.studentCode) canonical.studentCode = other.studentCode;
-      });
-
-      // Ánh xạ tất cả ID cũ sang tài khoản chuẩn
-      group.forEach(s => {
-        idMigrationMap.set(s.id, canonical);
-      });
-
-      unifiedStudents.push(canonical);
-      details.push(`Hợp nhất ${group.length} tài khoản trùng của học sinh "${canonical.name}" (Lớp ${canonical.className})`);
-    }
-
-    this.students = unifiedStudents;
-
-    // Hợp nhất toàn bộ bài nộp & giữ điểm cao nhất
-    if (idMigrationMap.size > 0) {
-      this.submissions.forEach(sub => {
-        const canonical = idMigrationMap.get(sub.studentId);
-        if (canonical) {
-          sub.studentId = canonical.id;
-          sub.studentName = canonical.name;
-          sub.studentCode = canonical.studentCode;
-          sub.className = canonical.className;
-          sub.classId = canonical.classId;
-          sub.grade = canonical.grade;
-        }
-      });
-
-      const subKeyMap = new Map<string, StudentSubmission>();
-      this.submissions.forEach(sub => {
-        const testKey = `${sub.studentId}__${sub.testType}__${sub.unitNumber}__${(sub.testTitle || '').toLowerCase()}`;
-        const existing = subKeyMap.get(testKey);
-        if (!existing) {
-          subKeyMap.set(testKey, sub);
-        } else {
-          if (sub.score > existing.score) {
-            subKeyMap.set(testKey, sub);
-          }
-        }
-      });
-      this.submissions = Array.from(subKeyMap.values());
-    }
-
-    this.saveStudents();
-    this.saveSubmissions();
-    this.syncToCloud().catch(() => {});
-
+    const res = this.purgeDemoAndSyncOfficialRoster({ grantEncouragementBonus: true });
     return {
-      mergedCount,
-      originalCount,
-      currentCount: this.students.length,
-      details
+      mergedCount: res.mergedDuplicateCount,
+      originalCount: res.totalOriginalCandidates,
+      currentCount: res.totalOfficialStudents,
+      details: res.details
     };
   }
 
@@ -1447,9 +1709,10 @@ class StudentGradebookService {
       const exm = student.examBonusPoints || 0;
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
+      const enc = student.encouragementBonus ?? 15;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme);
+        : (att + voc + exm + prc + tme + enc);
 
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
       if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
@@ -1524,9 +1787,10 @@ class StudentGradebookService {
       const exm = student.examBonusPoints || 0;
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
+      const enc = student.encouragementBonus ?? 15;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme);
+        : (att + voc + exm + prc + tme + enc);
 
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
       if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
@@ -1751,12 +2015,30 @@ class StudentGradebookService {
       existing.className = cleanCls;
       existing.classId = targetClass.id;
       // Cộng 5 điểm chuyên cần mỗi ngày đăng nhập
+      if (existing.encouragementBonus === undefined) {
+        existing.encouragementBonus = 15;
+      }
       if (existing.lastLoginDate !== todayStr) {
         existing.attendancePoints = (existing.attendancePoints || 0) + 5;
         existing.lastLoginDate = todayStr;
-        existing.totalMeritPoints = ((existing.attendancePoints || 0) + (existing.vocabPoints || 0) + (existing.examBonusPoints || 0) + (existing.practicePoints || 0) + (existing.timePoints || 0));
+        existing.totalMeritPoints = (
+          (existing.attendancePoints || 0) + 
+          (existing.vocabPoints || 0) + 
+          (existing.examBonusPoints || 0) + 
+          (existing.practicePoints || 0) + 
+          (existing.timePoints || 0) + 
+          (existing.encouragementBonus || 15)
+        );
         this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+5 điểm chuyên cần)`);
       } else {
+        existing.totalMeritPoints = (
+          (existing.attendancePoints || 0) + 
+          (existing.vocabPoints || 0) + 
+          (existing.examBonusPoints || 0) + 
+          (existing.practicePoints || 0) + 
+          (existing.timePoints || 0) + 
+          (existing.encouragementBonus || 15)
+        );
         this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
       }
       this.setActiveStudent(existing);
@@ -1804,7 +2086,8 @@ class StudentGradebookService {
       practicePoints: 0,
       studyTimeMinutes: 0,
       timePoints: 0,
-      totalMeritPoints: 5,
+      encouragementBonus: 15,
+      totalMeritPoints: 20,
       lastLoginDate: todayStr
     };
     try {
@@ -1926,7 +2209,8 @@ class StudentGradebookService {
       (student.vocabPoints || 0) + 
       (student.examBonusPoints || 0) + 
       (student.practicePoints || 0) + 
-      (student.timePoints || 0);
+      (student.timePoints || 0) +
+      (student.encouragementBonus ?? 15);
 
     this.saveStudents();
 
@@ -2043,9 +2327,10 @@ class StudentGradebookService {
       const exm = student.examBonusPoints || 0;
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
+      const enc = student.encouragementBonus ?? 15;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme);
+        : (att + voc + exm + prc + tme + enc);
 
       const badges: string[] = [];
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
@@ -2153,12 +2438,15 @@ class StudentGradebookService {
       const profile = studentProfileMap.get(key) || (item.studentCode ? studentProfileMap.get(item.studentCode.trim().toLowerCase()) : undefined);
       const studentSubs = subMap.get(key) || [];
 
-      // Học sinh được tính là đã vào học nếu có tài khoản học sinh, có điểm chuyên cần > 0, hoặc có bài nộp
+      // Học sinh được tính là đã vào học nếu có hoạt động thực tế (đã đăng nhập, chuyên cần, thời gian học, bài nộp)
       const hasEntered = Boolean(
         profile && (
-          (profile.totalMeritPoints && profile.totalMeritPoints > 0) ||
-          profile.lastLoginDate ||
-          (profile.attendancePoints && profile.attendancePoints > 0) ||
+          Boolean(profile.lastLoginDate) ||
+          ((profile.attendancePoints || 0) > 0) ||
+          ((profile.studyTimeMinutes || 0) > 0) ||
+          ((profile.vocabPoints || 0) > 0) ||
+          ((profile.practicePoints || 0) > 0) ||
+          ((profile.examBonusPoints || 0) > 0) ||
           studentSubs.length > 0
         )
       );
@@ -2187,6 +2475,7 @@ class StudentGradebookService {
         vocabPoints: profile?.vocabPoints || 0,
         examBonusPoints: profile?.examBonusPoints || 0,
         practicePoints: profile?.practicePoints || 0,
+        encouragementBonus: profile?.encouragementBonus ?? 15,
         submissionsCount: studentSubs.length,
         highestExamScore: highestScore,
         lastActive: profile?.lastLoginDate || (studentSubs[0]?.submittedAt ? new Date(studentSubs[0].submittedAt).toLocaleDateString('vi-VN') : null)
