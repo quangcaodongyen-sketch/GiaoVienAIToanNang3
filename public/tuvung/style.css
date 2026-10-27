@@ -815,13 +815,15 @@ html, body {
 
 /* English Tiles - Neon Cyan / Indigo Glow */
 .match-tile[data-type="en"] {
-  background: linear-gradient(145deg, rgba(30, 41, 75, 0.88), rgba(20, 25, 55, 0.95));
-  border: 2px solid rgba(56, 189, 248, 0.4);
+  background: linear-gradient(145deg, rgba(14, 165, 233, 0.22), rgba(30, 58, 138, 0.45));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 2px solid rgba(56, 189, 248, 0.75);
   color: #ffffff;
   font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 800;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 0 #0284c7, 0 12px 24px -4px rgba(2, 132, 199, 0.4), inset 0 1.5px 0 rgba(255, 255, 255, 0.6);
 }
 .match-tile[data-type="en"]::before {
   content: '🇬🇧 EN';
@@ -837,13 +839,15 @@ html, body {
 
 /* Vietnamese Tiles - Neon Amber / Emerald Glow */
 .match-tile[data-type="vi"] {
-  background: linear-gradient(145deg, rgba(40, 35, 25, 0.88), rgba(25, 25, 20, 0.95));
-  border: 2px solid rgba(251, 191, 36, 0.4);
-  color: #fef08a;
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.22), rgba(194, 65, 12, 0.45));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 2px solid rgba(251, 191, 36, 0.75);
+  color: #ffffff;
   font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-weight: 700;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  font-size: 0.95rem;
+  font-weight: 800;
+  box-shadow: 0 6px 0 #d97706, 0 12px 24px -4px rgba(217, 119, 6, 0.4), inset 0 1.5px 0 rgba(255, 255, 255, 0.6);
 }
 .match-tile[data-type="vi"]::before {
   content: '🇻🇳 VI';

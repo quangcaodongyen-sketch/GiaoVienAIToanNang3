@@ -1333,43 +1333,130 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       )}
 
-      {/* DẠNG 4: NỐI CẶP TỪ (MATCHING) */}
+      {/* DẠNG 4: NỐI CẶP TỪ (MATCHING) - 2 LOẠI MÀU SẮC 3D NỔI TRONG SUỐT (ENGLISH & TIẾNG VIỆT) */}
       {currentMode === 'match' && (
-        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm max-w-3xl mx-auto space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-5 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-4xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
-              <h4 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Puzzle className="w-5 h-5 text-indigo-500" />
-                <span>Nối Cặp Từ Tiếng Anh Với Nghĩa Tiếng Việt</span>
-              </h4>
-              <p className="text-xs text-slate-500">
-                Nhấp vào 1 từ tiếng Anh và 1 nghĩa tiếng Việt tương ứng để ghép cặp
+              <div className="flex items-center gap-2">
+                <span className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 shadow-xs">
+                  <Puzzle className="w-5 h-5" />
+                </span>
+                <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                  Nối Cặp Từ Tiếng Anh Với Nghĩa Tiếng Việt
+                </h4>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
+                <span>Nhấp vào 1 từ tiếng Anh và 1 nghĩa tiếng Việt tương ứng để ghép cặp</span>
+                <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+                <span className="inline-flex items-center gap-1.5 font-bold">
+                  <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shadow-[0_0_8px_#38bdf8]"></span>
+                  <span className="text-sky-600 dark:text-sky-400">Tiếng Anh (Xanh Lam 3D)</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#fbbf24] ml-1"></span>
+                  <span className="text-amber-600 dark:text-amber-400">Tiếng Việt (Cam Hổ Phách 3D)</span>
+                </span>
               </p>
             </div>
-            <button
-              type="button"
-              onClick={initMatchGame}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
-            >
-              <RotateCw className="w-3.5 h-3.5" />
-              <span>Đổi Ván Mới</span>
-            </button>
+
+            <div className="flex items-center gap-3">
+              {/* Tiến độ ghép */}
+              <div className="px-3.5 py-1.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-xs font-black text-slate-700 dark:text-slate-300 flex items-center gap-2 shadow-xs">
+                <span>🧩 Đã ghép:</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-black">
+                  {matchCards.filter(c => c.isMatched).length / 2} / {matchCards.length > 0 ? matchCards.length / 2 : 6}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={initMatchGame}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-b from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white text-xs font-black shadow-[0_3px_0_#3730a3,0_4px_10px_rgba(79,70,229,0.3)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#3730a3] transition cursor-pointer flex items-center gap-1.5"
+              >
+                <RotateCw className="w-3.5 h-3.5" />
+                <span>Đổi Ván Mới</span>
+              </button>
+            </div>
           </div>
 
           {!matchFinished ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
               {matchCards.map(card => {
                 const isSelected = selectedFirstCard?.id === card.id;
                 const isWrong = matchWrongId === card.id;
+                const isWord = card.type === 'word';
 
-                let cardStyle = 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-blue-400';
+                let cardClasses = '';
+                let badgeClasses = '';
 
                 if (card.isMatched) {
-                  cardStyle = 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 opacity-60 cursor-default';
-                } else if (isSelected) {
-                  cardStyle = 'bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-300 scale-102';
+                  // Đã ghép đúng: Xanh ngọc lục bảo trong suốt hoàn thành
+                  cardClasses = `
+                    bg-emerald-500/10 dark:bg-emerald-950/20
+                    border-2 border-emerald-400/40 dark:border-emerald-500/30
+                    text-emerald-800 dark:text-emerald-300
+                    shadow-[0_2px_0_#059669,inset_0_1px_0_rgba(255,255,255,0.4)]
+                    opacity-40 cursor-default scale-[0.98]
+                  `;
+                  badgeClasses = 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-400/40';
                 } else if (isWrong) {
-                  cardStyle = 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-300 animate-shake';
+                  // Ghép sai: Đỏ Ruby phát sáng rung lắc
+                  cardClasses = `
+                    bg-gradient-to-b from-rose-500 to-red-600 text-white
+                    border-2 border-rose-300
+                    shadow-[0_6px_0_#9f1239,0_0_25px_rgba(244,63,94,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                    ring-4 ring-rose-400/70 animate-shake scale-[1.03] z-10
+                  `;
+                  badgeClasses = 'bg-rose-700/60 text-white border-rose-300/50';
+                } else if (isSelected) {
+                  // Đang chọn: Phát hào quang 3D nổi bật
+                  if (isWord) {
+                    cardClasses = `
+                      bg-gradient-to-b from-sky-500 to-blue-600 text-white
+                      border-2 border-sky-200
+                      shadow-[0_7px_0_#0369a1,0_0_30px_rgba(56,189,248,0.8),inset_0_2px_0_rgba(255,255,255,0.8)]
+                      ring-4 ring-sky-300/80 -translate-y-1.5 scale-[1.04] z-10
+                    `;
+                    badgeClasses = 'bg-white/25 text-white border-white/40';
+                  } else {
+                    cardClasses = `
+                      bg-gradient-to-b from-amber-500 to-orange-600 text-white
+                      border-2 border-amber-200
+                      shadow-[0_7px_0_#c2410c,0_0_30px_rgba(249,115,22,0.8),inset_0_2px_0_rgba(255,255,255,0.8)]
+                      ring-4 ring-amber-300/80 -translate-y-1.5 scale-[1.04] z-10
+                    `;
+                    badgeClasses = 'bg-white/25 text-white border-white/40';
+                  }
+                } else {
+                  // Trạng thái bình thường: 2 LOẠI MÀU SẮC 3D NỔI TRONG SUỐT
+                  if (isWord) {
+                    // MÀU 1: TIẾNG ANH (Xanh Dương Tri Thức 3D Glass)
+                    cardClasses = `
+                      bg-gradient-to-b from-sky-400/20 via-blue-500/15 to-indigo-600/25
+                      dark:from-sky-500/25 dark:via-blue-600/20 dark:to-indigo-700/35
+                      backdrop-blur-md border-2 border-sky-300/80 dark:border-sky-400/50
+                      text-sky-950 dark:text-sky-100
+                      shadow-[0_6px_0_#0284c7,0_10px_20px_-3px_rgba(2,132,199,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
+                      dark:shadow-[0_6px_0_#0369a1,0_10px_20px_-3px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
+                      hover:-translate-y-1 hover:shadow-[0_8px_0_#0284c7,0_14px_24px_-2px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
+                      hover:border-sky-400
+                      active:translate-y-1 active:shadow-[0_2px_0_#0284c7,0_4px_8px_rgba(2,132,199,0.2)]
+                    `;
+                    badgeClasses = 'bg-sky-500/20 text-sky-800 dark:text-sky-200 border-sky-400/50';
+                  } else {
+                    // MÀU 2: TIẾNG VIỆT (Cam Hổ Phách Rực Rỡ 3D Glass)
+                    cardClasses = `
+                      bg-gradient-to-b from-amber-400/20 via-orange-500/15 to-rose-500/25
+                      dark:from-amber-500/25 dark:via-orange-600/20 dark:to-rose-700/35
+                      backdrop-blur-md border-2 border-amber-300/80 dark:border-amber-400/50
+                      text-amber-950 dark:text-amber-100
+                      shadow-[0_6px_0_#d97706,0_10px_20px_-3px_rgba(217,119,6,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
+                      dark:shadow-[0_6px_0_#b45309,0_10px_20px_-3px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
+                      hover:-translate-y-1 hover:shadow-[0_8px_0_#d97706,0_14px_24px_-2px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
+                      hover:border-amber-400
+                      active:translate-y-1 active:shadow-[0_2px_0_#d97706,0_4px_8px_rgba(217,119,6,0.2)]
+                    `;
+                    badgeClasses = 'bg-amber-500/20 text-amber-800 dark:text-amber-200 border-amber-400/50';
+                  }
                 }
 
                 return (
@@ -1378,14 +1465,20 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     type="button"
                     disabled={card.isMatched}
                     onClick={() => handleCardClick(card)}
-                    className={`min-h-[90px] sm:min-h-[105px] p-3 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition cursor-pointer select-none font-bold text-xs sm:text-sm ${cardStyle}`}
+                    className={`min-h-[100px] sm:min-h-[115px] p-3 rounded-2xl flex flex-col items-center justify-between text-center transition-all duration-200 cursor-pointer select-none font-bold ${cardClasses}`}
                   >
-                    <span className="text-[10px] font-mono uppercase tracking-wider mb-1 opacity-70">
-                      {card.type === 'word' ? '🇬🇧 English' : '🇻🇳 Tiếng Việt'}
+                    <span className={`text-[10px] font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full border inline-flex items-center gap-1 ${badgeClasses}`}>
+                      {isWord ? '🇬🇧 English' : '🇻🇳 Tiếng Việt'}
                     </span>
-                    <span className="line-clamp-2">{card.text}</span>
-                    {card.isMatched && (
-                      <Check className="w-4 h-4 text-emerald-600 mt-1" />
+                    <span className={`line-clamp-2 my-auto px-1 ${isWord ? 'font-black text-sm sm:text-base tracking-wide' : 'font-bold text-xs sm:text-sm leading-snug'}`}>
+                      {card.text}
+                    </span>
+                    {card.isMatched ? (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
+                        <Check className="w-3.5 h-3.5" /> Đã khớp
+                      </span>
+                    ) : (
+                      <span className="h-3.5"></span>
                     )}
                   </button>
                 );
