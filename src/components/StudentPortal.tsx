@@ -142,6 +142,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 }) => {
   // ==================== QUẢN LÝ TÀI KHOẢN HỌC SINH & ĐĂNG XUẤT / ĐĂNG KÝ ====================
   const [currentStudent, setCurrentStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());
+
+  // Tự động đồng bộ học sinh khi Admin chuyển đổi chế độ Thử Nghiệm Vai Trò Học Sinh
+  useEffect(() => {
+    const handleActiveChange = (e: any) => {
+      const stu = e?.detail !== undefined ? e.detail : studentGradebookService.getActiveStudent();
+      setCurrentStudent(stu);
+    };
+    window.addEventListener('gvai_active_student_changed', handleActiveChange);
+    return () => window.removeEventListener('gvai_active_student_changed', handleActiveChange);
+  }, []);
   
   // ==================== KHEN NGỢI & ĐỘNG VIÊN HỌC SINH + THÔNG BÁO CHÀO MỪNG NGỘ NGHĨNH ====================
   const [welcomeModalData, setWelcomeModalData] = useState<WelcomeModalData | null>(null);
@@ -1165,60 +1175,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           </span>
         </div>
 
-        {/* Nút Đăng Nhập / Quản Trị Admin (Thầy Thành) */}
+        {/* Chỉ dẫn sư phạm tinh gọn */}
         <div className="flex items-center gap-2">
-          {isAdminUnlocked ? (
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700">
-              <span className="text-xs font-black text-amber-900 dark:text-amber-300 px-2 flex items-center gap-1">
-                <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Admin Thầy Thành</span>
-              </span>
-              {onOpenAdminPortal && (
-                <button
-                  type="button"
-                  onClick={onOpenAdminPortal}
-                  className="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-xs cursor-pointer"
-                  title="Mở Bảng Quản Trị Hệ Thống Toàn Diện"
-                >
-                  <Crown className="w-3.5 h-3.5" />
-                  <span>Bảng Quản Trị</span>
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={handleOpenAdminStudentManager}
-                className="px-2.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center gap-1 shadow-xs cursor-pointer"
-                title="Quản lý & Xóa tài khoản học sinh"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
-                <span className="hidden sm:inline">Quản Lý TK HS</span>
-              </button>
-              <button
-                type="button"
-                onClick={handleAdminLogout}
-                className="px-2 py-1.5 rounded-lg bg-slate-200 hover:bg-rose-600 text-slate-700 hover:text-white dark:bg-slate-800 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
-                title="Đăng xuất quyền Admin"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Thoát</span>
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                setAdminInputUser('Admin');
-                setAdminInputPass('');
-                setAdminLoginError('');
-                setShowAdminLoginModal(true);
-              }}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm border border-amber-300 transition-all flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer"
-              title="Đăng nhập Quản Trị Viên (Admin - Thầy Đinh Thành)"
-            >
-              <Crown className="w-4 h-4 text-slate-950" />
-              <span>👑 Đăng Nhập Admin (Thầy Thành)</span>
-            </button>
-          )}
+          <span className="text-xs font-bold text-slate-400 hidden sm:inline">
+            Học tập & Ôn thi hoàn toàn miễn phí 100%
+          </span>
         </div>
       </div>
 
@@ -1257,50 +1218,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <RotateCw className="w-3.5 h-3.5 text-amber-400" />
                 <span>Đổi Bạn</span>
               </button>
-              {isAdminUnlocked && (
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRosterClass('8A1');
-                      setRosterText('');
-                      setRosterMsg('');
-                      setShowRosterModal(true);
-                    }}
-                    className="px-2.5 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold"
-                  >
-                    📋 Sổ Điểm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleOpenAdminStudentManager}
-                    className="p-1.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold"
-                  >
-                    Admin
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
             <div className="flex items-center gap-2 text-xs">
               <span className="text-slate-400">Chưa đăng nhập học sinh</span>
-              {isAdminUnlocked ? (
-                <button
-                  type="button"
-                  onClick={handleOpenAdminStudentManager}
-                  className="px-2.5 py-1 rounded-lg bg-purple-700 text-white font-bold"
-                >
-                  Admin
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleOpenAdminStudentManager}
-                  className="px-2 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white font-bold"
-                >
-                  Admin
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setShowAuthModal(true)}
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                title="Đăng nhập để lưu điểm thi và xếp hạng thi đua"
+              >
+                <span>🔑 ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
+              </button>
             </div>
           )}
         </div>
@@ -2050,73 +1979,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <p className="text-xs text-slate-500">Giáo viên và học sinh tải về miễn phí. Admin có quyền tải lên và xóa tài liệu.</p>
             </div>
 
-            {/* Khu vực quyền Admin */}
+            {/* Khu vực đưa tài liệu lên (Dành cho Admin) */}
             <div className="flex items-center gap-2">
-              {isAdminUnlocked ? (
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800 text-xs font-bold">
-                    <ShieldCheck className="w-4 h-4 text-purple-600" />
-                    <span>Quyền Admin</span>
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRosterClass('8A1');
-                      setRosterText('');
-                      setRosterMsg('');
-                      setShowRosterModal(true);
-                    }}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer"
-                    title="Cập nhật sổ điểm danh sách học sinh các lớp Thầy dạy (chặn hoàn toàn tên ảo, tên tục tĩu)"
-                  >
-                    <span>📋 Cập Nhật Sổ Điểm / DS Học Sinh</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleOpenAdminStudentManager}
-                    className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <User className="w-4 h-4" />
-                    <span>Quản Lý / Xóa TK Học Sinh</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAdminUploadTitle('');
-                      setAdminUploadDesc('');
-                      setAdminUploadFile(null);
-                      setAdminUploadError('');
-                      setShowAdminUploadModal(true);
-                    }}
-                    className="cursor-pointer px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5"
-                    title="Mở hộp thoại tải tài liệu mới lên cho học sinh toàn trường"
-                  >
-                    <Upload className="w-4 h-4" />
-                    <span>Đưa Tài Liệu Lên (Admin)</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleAdminLogout}
-                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-700 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-400 text-xs font-bold border border-slate-300 dark:border-slate-700 transition flex items-center gap-1 cursor-pointer"
-                    title="Đăng xuất quyền Admin"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Thoát Admin</span>
-                  </button>
-                </div>
-              ) : (
+              {isAdminUnlocked && (
                 <button
                   type="button"
-                  onClick={handleOpenAdminStudentManager}
-                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-50 dark:bg-slate-800 dark:hover:bg-purple-950/40 text-slate-700 hover:text-purple-700 dark:text-slate-300 dark:hover:text-purple-300 text-xs font-bold transition flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 cursor-pointer"
-                  title="Đăng nhập Quản trị viên (Admin - Thầy Đinh Thành) để quản lý tài khoản học sinh"
+                  onClick={() => {
+                    setAdminUploadTitle('');
+                    setAdminUploadDesc('');
+                    setAdminUploadFile(null);
+                    setAdminUploadError('');
+                    setShowAdminUploadModal(true);
+                  }}
+                  className="cursor-pointer px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5"
+                  title="Mở hộp thoại tải tài liệu mới lên cho học sinh toàn trường"
                 >
-                  <Lock className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Quản Trị Admin</span>
+                  <Upload className="w-4 h-4" />
+                  <span>Đưa Tài Liệu Lên (Admin)</span>
                 </button>
               )}
             </div>

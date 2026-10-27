@@ -57,6 +57,7 @@ import { systemMaintenanceService } from './services/systemMaintenanceService';
 import { getAppShareUrl, copyToClipboard, syncBrowserHash } from './utils/shareUtils';
 import { TeacherCatalog } from './components/TeacherCatalog';
 import { AdminPortal } from './components/AdminPortal';
+import { MasterAdminBar } from './components/MasterAdminBar';
 import { StudentPortal } from './components/StudentPortal';
 import { WelcomeRoleGateway } from './components/WelcomeRoleGateway';
 
@@ -1027,6 +1028,26 @@ export default function App() {
         </div>
       )}
 
+      {/* MASTER ADMIN TOP BAR DÀNH CHO ADMIN THẦY THÀNH (QUẢN TRỊ TOÀN WEB & THỬ NGHIỆM VAI TRÒ HỌC SINH) */}
+      {isAdminSession && (
+        <MasterAdminBar
+          currentTab={mainViewTab}
+          onNavigateTab={(tab) => {
+            setMainViewTab(tab);
+            if (tab === 'admin') window.history.pushState(null, '', '/admin');
+            else if (tab === 'students') window.history.pushState(null, '', '/hocsinh');
+            else if (tab === 'teachers') window.history.pushState(null, '', '/giaovien');
+            else window.history.pushState(null, '', '/');
+          }}
+          onAdminLogout={() => {
+            systemMaintenanceService.logoutAdminSession();
+            setIsAdminSession(false);
+            setMainViewTab('welcome');
+            window.history.pushState(null, '', '/');
+          }}
+        />
+      )}
+
       {/* TOP ANNOUNCEMENT & UTILITIES BAR - TÊN MIỀN DEKIEMTRASO.COM & TÙY BIẾN GIAO DIỆN */}
       <div className={`${t.topbarBg} ${t.topbarText} text-[11px] sm:text-xs py-2 px-3 sm:px-4 border-b ${t.topbarBorder} transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
@@ -1219,22 +1240,24 @@ export default function App() {
                 <span>Giáo Viên</span>
               </button>
 
-              {/* Nút 2: Bảng Quản Trị Admin */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMainViewTab('admin');
-                  window.history.pushState(null, '', '/admin');
-                }}
-                className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
-                  mainViewTab === 'admin'
-                    ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Crown className="w-4 h-4 text-amber-500" />
-                <span>Quản Trị</span>
-              </button>
+              {/* Nút 2: Bảng Quản Trị Admin (Chỉ hiển thị khi đã đăng nhập Admin) */}
+              {isAdminSession && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMainViewTab('admin');
+                    window.history.pushState(null, '', '/admin');
+                  }}
+                  className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                    mainViewTab === 'admin'
+                      ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Crown className="w-4 h-4 text-amber-500" />
+                  <span>Quản Trị</span>
+                </button>
+              )}
 
               {/* Nút 3: Dành Cho Học Sinh */}
               <button
@@ -1352,19 +1375,21 @@ export default function App() {
                 <span>Giáo Viên</span>
               </button>
 
-              <button 
-                onClick={() => {
-                  setMainViewTab('admin');
-                  window.history.pushState(null, '', '/admin');
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
-                  mainViewTab === 'admin' ? 'bg-amber-500 text-slate-950 font-black' : 'hover:bg-amber-50 text-slate-800 dark:text-slate-200'
-                }`}
-              >
-                <Crown className="w-4 h-4 text-amber-500" />
-                <span>Quản Trị</span>
-              </button>
+              {isAdminSession && (
+                <button 
+                  onClick={() => {
+                    setMainViewTab('admin');
+                    window.history.pushState(null, '', '/admin');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
+                    mainViewTab === 'admin' ? 'bg-amber-500 text-slate-950 font-black' : 'hover:bg-amber-50 text-slate-800 dark:text-slate-200'
+                  }`}
+                >
+                  <Crown className="w-4 h-4 text-amber-500" />
+                  <span>Quản Trị</span>
+                </button>
+              )}
 
               <button 
                 onClick={() => {

@@ -1900,6 +1900,9 @@ class StudentGradebookService {
       } else {
         localStorage.removeItem(STORAGE_KEYS.ACTIVE_STUDENT);
       }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('gvai_active_student_changed', { detail: student }));
+      }
     } catch {}
   }
 
