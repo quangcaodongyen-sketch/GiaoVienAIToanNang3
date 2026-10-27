@@ -36,17 +36,13 @@ interface UnifiedVocabPortalProps {
 
 type PracticeMode = 
   | 'flashcard' 
-  | 'chant' 
   | 'match' 
-  | 'scramble' 
-  | 'blitz' 
   | 'quiz' 
   | 'listen' 
   | 'spelling' 
-  | 'hangman' 
-  | 'context' 
-  | 'minitest' 
-  | 'list';
+  | 'chant' 
+  | 'scramble' 
+  | 'blitz';
 
 
 // ==================== HỆ THỐNG ÂM THANH SƯ PHẠM & HIỆU ỨNG ĐIỂM THƯỞNG BAY LÊN ====================
@@ -794,7 +790,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
               <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0">🎯 Nhiệm Vụ GK1</span>
               <div>
                 <span className="font-bold text-slate-800 dark:text-slate-200">
-                  Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/11 dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
+                  Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/{missionState?.mission1.units[selectedUnit]?.totalRequiredModes || 8} dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
                 </span>
                 <span className="text-slate-500 dark:text-slate-400 block text-[11px]">
                   🛡️ Chống học chống đối: Chỉ tính % khi em làm đúng từ (đạt độ chính xác từ 60% trở lên).
@@ -839,176 +835,126 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         <div className="flex items-center justify-between gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 flex-wrap">
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>Đầy Đủ 12 Dạng Bài Tập Luyện Từ Vựng Toàn Diện:</span>
+            <span>Các Dạng Bài Tập Luyện Từ Vựng Toàn Diện (Hiển thị đầy đủ):</span>
           </span>
           <span className="text-[11px] text-blue-600 dark:text-blue-400">
             Khối Lớp {selectedGrade} • Unit {selectedUnit} ({filteredVocab.length} từ)
           </span>
         </div>
 
-        {/* 12 Tabs Button Row - 3D TRANSLUCENT GLASS PILLS */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 text-xs no-scrollbar">
+        {/* THANH CHỌN CÁC DẠNG BÀI TẬP TỪ VỰNG - HIỂN THỊ ĐẦY ĐỦ, NGẮN GỌN TRÊN 1 MÀN HÌNH */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 pt-1 text-xs">
           {/* 1. Flashcard */}
           <button
             type="button"
             onClick={() => setCurrentMode('flashcard')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
               currentMode === 'flashcard'
                 ? 'bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_4px_0_#1d4ed8,0_0_15px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-blue-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5 active:shadow-[0_1px_0_#cbd5e1]'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>🃏 1. Thẻ 3D</span>{missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            <span>🃏 1. Thẻ Nhớ</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
-          {/* 2. Bài Chant */}
+          {/* 2. Ghép Cặp Từ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('match')}
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
+              currentMode === 'match'
+                ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
+            }`}
+          >
+            <span>🧩 2. Ghép Cặp</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+          </button>
+
+          {/* 3. Trắc Nghiệm */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('quiz')}
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
+              currentMode === 'quiz'
+                ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white shadow-[0_4px_0_#065f46,0_0_15px_rgba(16,185,129,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-emerald-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
+            }`}
+          >
+            <span>🎯 3. Trắc Nghiệm</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+          </button>
+
+          {/* 4. Luyện Nghe */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('listen')}
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
+              currentMode === 'listen'
+                ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-[0_4px_0_#6b21a8,0_0_18px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-300 ring-2 ring-purple-400/40'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
+            }`}
+          >
+            <span>🎧 4. Luyện Nghe</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+          </button>
+
+          {/* 5. Luyện Gõ Từ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('spelling')}
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
+              currentMode === 'spelling'
+                ? 'bg-gradient-to-b from-sky-500 to-blue-600 text-white shadow-[0_4px_0_#0369a1,0_0_15px_rgba(14,165,233,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-sky-400'
+                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
+            }`}
+          >
+            <span>✍️ 5. Luyện Gõ</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+          </button>
+
+          {/* 6. Bài Chant */}
           <button
             type="button"
             onClick={() => setCurrentMode('chant')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
               currentMode === 'chant'
                 ? 'bg-gradient-to-b from-pink-500 to-rose-600 text-white shadow-[0_4px_0_#be123c,0_0_18px_rgba(244,63,94,0.6),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-pink-300 ring-2 ring-pink-400/50'
                 : 'bg-pink-500/10 dark:bg-pink-950/40 backdrop-blur-md text-pink-700 dark:text-pink-300 border border-pink-300/60 dark:border-pink-800/60 shadow-[0_2.5px_0_#f472b6] dark:shadow-[0_2.5px_0_#831843] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#ec4899] active:translate-y-0.5'
             }`}
             title="Bài Chant Nhạc Beat Điệu Call & Response"
           >
-            <span>🎵 2. Bài Chant &amp; Beat</span>{missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            <span>🎵 6. Bài Chant</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
-          {/* 3. Ghép Cặp Từ */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('match')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'match'
-                ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white shadow-[0_4px_0_#047857,0_0_15px_rgba(16,185,129,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-emerald-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <Puzzle className="w-3.5 h-3.5" />
-            <span>3. Ghép Cặp Từ</span>{missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 4. Xếp Chữ / Ghép Chữ */}
+          {/* 7. Xếp Chữ */}
           <button
             type="button"
             onClick={() => setCurrentMode('scramble')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
               currentMode === 'scramble'
-                ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
+                ? 'bg-gradient-to-b from-indigo-600 to-blue-700 text-white shadow-[0_4px_0_#1e1b4b,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
                 : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>🔤 4. Ghép Chữ</span>{missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            <span>🔤 7. Xếp Chữ</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
 
-          {/* 5. Phản Xạ Nhanh */}
+          {/* 8. Phản Xạ 5 Giây */}
           <button
             type="button"
             onClick={() => setCurrentMode('blitz')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
+            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
               currentMode === 'blitz'
-                ? 'bg-gradient-to-b from-amber-400 to-amber-500 text-slate-950 shadow-[0_4px_0_#b45309,0_0_15px_rgba(245,158,11,0.5),inset_0_1px_0_rgba(255,255,255,0.7)] -translate-y-0.5 border border-amber-300'
+                ? 'bg-gradient-to-b from-amber-500 to-orange-600 text-white shadow-[0_4px_0_#c2410c,0_0_18px_rgba(249,115,22,0.6),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-amber-300 ring-2 ring-amber-400/50'
                 : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
             }`}
           >
-            <span>⚡ 5. Phản Xạ 5s</span>{missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 6. Trắc Nghiệm */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('quiz')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'quiz'
-                ? 'bg-gradient-to-b from-indigo-500 to-blue-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <Target className="w-3.5 h-3.5" />
-            <span>6. Trắc Nghiệm</span>{missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 7. Luyện Nghe */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('listen')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'listen'
-                ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-[0_4px_0_#6b21a8,0_0_18px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-300 ring-2 ring-purple-400/40'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <Headphones className="w-3.5 h-3.5" />
-            <span>7. Luyện Nghe</span>{missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 8. Luyện Gõ Từ */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('spelling')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'spelling'
-                ? 'bg-gradient-to-b from-sky-500 to-blue-600 text-white shadow-[0_4px_0_#0369a1,0_0_15px_rgba(14,165,233,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-sky-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>8. Luyện Gõ</span>{missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 9. Thám Tử Ô Chữ */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('hangman')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'hangman'
-                ? 'bg-gradient-to-b from-purple-500 to-violet-600 text-white shadow-[0_4px_0_#581c87,0_0_15px_rgba(147,51,234,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <span>🕵️ 9. Ô Chữ Bí Mật</span>{missionState?.mission1.units[selectedUnit]?.modes['hangman']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 10. Ngữ Cảnh */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('context')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'context'
-                ? 'bg-gradient-to-b from-teal-500 to-emerald-600 text-white shadow-[0_4px_0_#0f766e,0_0_15px_rgba(20,184,166,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-teal-400'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <span>📝 10. Ngữ Cảnh</span>{missionState?.mission1.units[selectedUnit]?.modes['context']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 11. Đánh Giá 15 Phút */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('minitest')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ${
-              currentMode === 'minitest'
-                ? 'bg-gradient-to-b from-amber-400 to-orange-500 text-slate-950 shadow-[0_4px_0_#c2410c,0_0_18px_rgba(249,115,22,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] -translate-y-0.5 border border-amber-300 ring-2 ring-amber-400/50'
-                : 'bg-amber-500/10 dark:bg-amber-950/40 backdrop-blur-md text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60 shadow-[0_2.5px_0_#fbbf24] dark:shadow-[0_2.5px_0_#78350f] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#f59e0b] active:translate-y-0.5'
-            }`}
-          >
-            <Trophy className="w-3.5 h-3.5" />
-            <span>11. Kiểm Tra 15P</span>{missionState?.mission1.units[selectedUnit]?.modes['minitest']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-          </button>
-
-          {/* 12. Tra Cứu */}
-          <button
-            type="button"
-            onClick={() => setCurrentMode('list')}
-            className={`px-3.5 py-2 rounded-xl font-black transition-all duration-200 flex items-center gap-1.5 shrink-0 cursor-pointer select-none ml-auto ${
-              currentMode === 'list'
-                ? 'bg-gradient-to-b from-slate-700 to-slate-800 text-white shadow-[0_4px_0_#1e293b,0_0_15px_rgba(51,65,85,0.5),inset_0_1px_0_rgba(255,255,255,0.4)] -translate-y-0.5 border border-slate-600'
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-            }`}
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>12. Tra Cứu ({filteredVocab.length})</span>
+            <span>⚡ 8. Phản Xạ</span>
+            {missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
           </button>
         </div>
       </div>
@@ -1984,213 +1930,6 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       )}
 
-      {/* DẠNG 9: THÁM TỬ Ô CHỮ BÍ MẬT (HANGMAN) */}
-      {currentMode === 'hangman' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-purple-200 dark:border-purple-900/50 shadow-lg overflow-hidden space-y-3">
-          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🕵️</span>
-              <div>
-                <h4 className="font-black text-sm sm:text-base">
-                  Thám Tử Ô Chữ Bí Mật (Hangman) • Tiếng Anh Lớp {selectedGrade}
-                </h4>
-                <p className="text-xs text-purple-100">
-                  Unit {selectedUnit} • Đoán từng chữ cái tiếng Anh dựa trên gợi ý nghĩa và phát âm
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleRewardUnitCompletion}
-                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>+10đ Chuyên Cần</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="h-[750px] w-full">
-            <iframe
-              key={`hangman_${selectedGrade}_${selectedUnit}_${iframeKey}`}
-              src={getGameUrl('tab-hangman')}
-              title="Hangman Word Detective Game"
-              className="w-full h-full border-0"
-              allow="autoplay; microphone; clipboard-write"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* DẠNG 10: BÀI TẬP NGỮ CẢNH (CONTEXT SENTENCES) */}
-      {currentMode === 'context' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-teal-200 dark:border-teal-900/50 shadow-lg overflow-hidden space-y-3">
-          <div className="bg-gradient-to-r from-teal-600 to-emerald-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">📝</span>
-              <div>
-                <h4 className="font-black text-sm sm:text-base">
-                  Bài Tập Điền Từ Vào Ngữ Cảnh (Context Sentences) • Tiếng Anh Lớp {selectedGrade}
-                </h4>
-                <p className="text-xs text-teal-100">
-                  Unit {selectedUnit} • Đọc câu văn hoàn chỉnh và điền từ vựng chuẩn ngữ pháp vào chỗ trống
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleRewardUnitCompletion}
-                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>+10đ Chuyên Cần</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="h-[750px] w-full">
-            <iframe
-              key={`context_${selectedGrade}_${selectedUnit}_${iframeKey}`}
-              src={getGameUrl('tab-context')}
-              title="Context Sentences Game"
-              className="w-full h-full border-0"
-              allow="autoplay; microphone; clipboard-write"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* DẠNG 11: ĐÁNH GIÁ 15 PHÚT & GIẤY KHEN (MINI TEST) */}
-      {currentMode === 'minitest' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-amber-300 dark:border-amber-900/60 shadow-lg overflow-hidden space-y-3">
-          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-slate-950 flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🏆</span>
-              <div>
-                <h4 className="font-black text-sm sm:text-base">
-                  Kiểm Tra Đánh Giá Nhanh 15 Phút &amp; Cấp Giấy Khen • Tiếng Anh Lớp {selectedGrade}
-                </h4>
-                <p className="text-xs font-semibold text-amber-950">
-                  Unit {selectedUnit} • 10-15 câu trắc nghiệm tốc độ, chấm điểm tức thì và xuất giấy khen danh dự
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleRewardUnitCompletion}
-                className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-amber-300 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>+10đ Chuyên Cần</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="h-[750px] w-full">
-            <iframe
-              key={`minitest_${selectedGrade}_${selectedUnit}_${iframeKey}`}
-              src={getGameUrl('tab-minitest')}
-              title="Mini Test 15 Phút & Giấy Khen"
-              className="w-full h-full border-0"
-              allow="autoplay; microphone; clipboard-write"
-            />
-          </div>
-        </div>
-      )}
-
-      {currentMode === 'list' && (
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div>
-              <h4 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-amber-500" />
-                <span>Bảng Tra Cứu Toàn Bộ Từ Vựng Unit {selectedUnit} (Tiếng Anh {selectedGrade})</span>
-              </h4>
-              <p className="text-xs text-slate-500">
-                Tổng cộng {filteredVocab.length} từ vựng chuẩn SGK Global Success
-              </p>
-            </div>
-
-            <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-              <input
-                type="text"
-                value={vocabSearch}
-                onChange={(e) => setVocabSearch(e.target.value)}
-                placeholder="Tìm từ vựng hoặc nghĩa..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-800 dark:text-slate-200">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 uppercase text-[11px] font-black tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-700">
-                <tr>
-                  <th className="py-3 px-3 w-12 text-center">STT</th>
-                  <th className="py-3 px-4">Từ Tiếng Anh</th>
-                  <th className="py-3 px-3 text-center">Phát Âm</th>
-                  <th className="py-3 px-3 text-center">Từ Loại</th>
-                  <th className="py-3 px-4">Nghĩa Tiếng Việt</th>
-                  <th className="py-3 px-4">Câu Ví Dụ Minh Họa</th>
-                  <th className="py-3 px-3 text-center">Học</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredVocab.map((item, idx) => (
-                  <tr key={item.id || idx} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                    <td className="py-3 px-3 text-center font-mono text-slate-400 font-bold">{idx + 1}</td>
-                    <td className="py-3 px-4 font-black text-sm text-slate-900 dark:text-white">{item.word}</td>
-                    <td className="py-3 px-3 text-center font-mono text-blue-600 dark:text-blue-400">/{item.phonetic}/</td>
-                    <td className="py-3 px-3 text-center">
-                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px]">
-                        {item.type || 'v'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">{item.meaning}</td>
-                    <td className="py-3 px-4 text-slate-500 italic text-[11px] max-w-xs">
-                      <div>"{item.example}"</div>
-                      {item.exampleMeaning && <div className="text-slate-400 text-[10px]">👉 {item.exampleMeaning}</div>}
-                    </td>
-                    <td className="py-3 px-3 text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => speakWord(item.word)}
-                          className="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition cursor-pointer"
-                          title="Nghe phát âm"
-                        >
-                          <Volume2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setCardIndex(idx);
-                            setCurrentMode('flashcard');
-                            setIsFlipped(false);
-                          }}
-                          className="px-2 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-[10px] hover:bg-amber-200 transition cursor-pointer"
-                          title="Học từ này trên Thẻ 3D"
-                        >
-                          Thẻ 3D
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* ==================== 5. KHU VỰC 11 MINI-GAME 3D & NHẠC CHANT (MỞ RỘNG KHI CẦN) ==================== */}
       {show3dMiniGames && (
         <div className="w-full rounded-3xl overflow-hidden border-2 border-indigo-400/50 shadow-2xl bg-slate-950 mt-4 animate-in fade-in">
           <div className="bg-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-800 text-white shrink-0">

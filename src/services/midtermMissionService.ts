@@ -85,16 +85,13 @@ export interface MidtermMissionState {
 
 export const VOCAB_MODES_CONFIG = [
   { id: 'flashcard', title: 'Thẻ Ghi Nhớ 3D & Phát Âm', icon: '🃏', minPassReq: 'Xem & nghe tối thiểu 70% từ' },
-  { id: 'chant', title: 'Bài Chant & Karaoke Nhịp Điệu', icon: '🎵', minPassReq: 'Luyện nhịp điệu & phản xạ từ' },
   { id: 'match', title: 'Nối Cặp Từ - Nghĩa', icon: '🧩', minPassReq: 'Ghép đúng toàn bộ với sai < 40%' },
-  { id: 'scramble', title: 'Xếp Chữ / Ghép Chữ', icon: '🔤', minPassReq: 'Ghép đúng >= 60% từ' },
-  { id: 'blitz', title: 'Phản Xạ Nhanh 5s Đúng/Sai', icon: '⚡', minPassReq: 'Phản xạ đúng >= 60%' },
   { id: 'quiz', title: 'Trắc Nghiệm Từ Vựng 4 Lựa Chọn', icon: '🎯', minPassReq: 'Đúng >= 60% số câu hỏi' },
   { id: 'listen', title: 'Luyện Nghe Chọn Đáp Án', icon: '🎧', minPassReq: 'Nghe hiểu đúng >= 60%' },
   { id: 'spelling', title: 'Luyện Gõ Chính Tả', icon: '✍️', minPassReq: 'Gõ chuẩn xác >= 60% từ' },
-  { id: 'hangman', title: 'Thám Tử Ô Chữ Bí Mật', icon: '🕵️', minPassReq: 'Đoán đúng ô chữ' },
-  { id: 'context', title: 'Điền Từ Vào Ngữ Cảnh', icon: '📝', minPassReq: 'Đúng ngữ cảnh >= 60%' },
-  { id: 'minitest', title: 'Kiểm Tra Đánh Giá 15 Phút', icon: '🏆', minPassReq: 'Đạt điểm >= 6.0/10' },
+  { id: 'chant', title: 'Bài Chant & Karaoke Nhịp Điệu', icon: '🎵', minPassReq: 'Luyện nhịp điệu & phản xạ từ' },
+  { id: 'scramble', title: 'Xếp Chữ / Ghép Chữ', icon: '🔤', minPassReq: 'Ghép đúng >= 60% từ' },
+  { id: 'blitz', title: 'Phản Xạ Nhanh 5s Đúng/Sai', icon: '⚡', minPassReq: 'Phản xạ đúng >= 60%' },
 ];
 
 const STORAGE_PREFIX = 'MIDTERM_MISSION_EVAL_';
