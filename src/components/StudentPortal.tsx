@@ -29,6 +29,7 @@ import {
 import { BRAND } from '../config/brand';
 import { OnlineExamPortal } from './OnlineExamPortal';
 import { English8RevisionPortal } from './English8RevisionPortal';
+import { English6RevisionPortal } from './English6RevisionPortal';
 import { UnifiedVocabPortal } from './UnifiedVocabPortal';
 import { MidtermMissionCard } from './MidtermMissionCard';
 import { midtermMissionService } from '../services/midtermMissionService';
@@ -1036,7 +1037,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     }
   };
 
-  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8'>(() => {
+  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e6'>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
@@ -1094,8 +1095,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     if (currentStudent && currentStudent.grade) {
       setSelectedGrade(currentStudent.grade);
       setSelectedUnit(1);
-      // Nếu học sinh khối khác (như lớp 6) đang ở tab đề cương lớp 8 thì tự động chuyển về trang từ vựng của khối mình
-      if (currentStudent.grade !== 8 && activeTab === 'decuong_e8') {
+      // Tự động đồng bộ tab đề cương theo đúng khối lớp của học sinh
+      if (currentStudent.grade === 6 && activeTab === 'decuong_e8') {
+        setActiveTab('decuong_e6');
+      } else if (currentStudent.grade === 8 && activeTab === 'decuong_e6') {
+        setActiveTab('decuong_e8');
+      } else if (currentStudent.grade !== 6 && currentStudent.grade !== 8 && (activeTab === 'decuong_e8' || activeTab === 'decuong_e6')) {
         setActiveTab('vocab');
       }
     }
@@ -1334,9 +1339,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         {/* 3. Đề Cương & Bài Tập */}
         <button
           type="button"
-          onClick={() => setActiveTab((!currentStudent || currentStudent.grade === 8) ? 'decuong_e8' : 'sgk')}
+          onClick={() => {
+            if (currentStudent?.grade === 6) {
+              setActiveTab('decuong_e6');
+            } else if (!currentStudent || currentStudent.grade === 8) {
+              setActiveTab('decuong_e8');
+            } else {
+              setActiveTab('sgk');
+            }
+          }}
           className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            ['decuong_e8', 'sgk', 'hsg'].includes(activeTab)
+            ['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)
               ? 'bg-blue-600 text-white shadow-sm font-black'
               : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
@@ -1389,8 +1402,21 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       </div>
 
       {/* THANH CHUYỂN NHANH PHỤ (SUB-NAV) KHI Ở CÁC PHÂN HỆ CÓ NHIỀU MỤC */}
-      {['decuong_e8', 'sgk', 'hsg'].includes(activeTab) && (
-        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 w-fit text-xs font-bold">
+      {['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) && (
+        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 w-fit text-xs font-bold flex-wrap">
+          {(!currentStudent || currentStudent.grade === 6) && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('decuong_e6')}
+              className={`px-3 py-1.5 rounded-lg transition ${
+                activeTab === 'decuong_e6'
+                  ? 'bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-300 shadow-xs font-black'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              📖 Đề Cương GK1 Anh 6
+            </button>
+          )}
           {(!currentStudent || currentStudent.grade === 8) && (
             <button
               type="button"
@@ -1535,7 +1561,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onGoToDecuong={() => {
-            setActiveTab('decuong_e8');
+            if (currentStudent?.grade === 6) {
+              setActiveTab('decuong_e6');
+            } else {
+              setActiveTab('decuong_e8');
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onGoToExam={() => {
@@ -1545,7 +1575,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         />
       )}
 {/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}
-      {!currentStudent && ['missions', 'vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8'].includes(activeTab) && (
+      {!currentStudent && ['missions', 'vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8', 'decuong_e6'].includes(activeTab) && (
         <div className="bg-gradient-to-br from-white via-blue-50/60 to-indigo-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl border-2 border-blue-500/40 p-6 sm:p-8 shadow-xl max-w-3xl mx-auto my-6 animate-in fade-in space-y-5">
           
           {/* GỢI Ý 1-CHẠM VÀO HỌC LẠI NẾU ĐÃ CÓ BẢN LƯU TRÊN THIẾT BỊ NÀY */}
@@ -1916,6 +1946,20 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 8 ==================== */}
       {currentStudent && (!currentStudent.grade || currentStudent.grade === 8) && activeTab === 'decuong_e8' && (
         <English8RevisionPortal
+          student={currentStudent}
+          onGoToExam={() => setActiveTab('exam')}
+          onGoToVocab={() => setActiveTab('vocab')}
+          onCompleteSection={(secTitle, pts) => {
+            studentGradebookService.recordPracticeMerit(currentStudent.id, secTitle, pts);
+            const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
+            if (fresh) setCurrentStudent({ ...fresh });
+          }}
+        />
+      )}
+
+      {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 6 ==================== */}
+      {currentStudent && (!currentStudent.grade || currentStudent.grade === 6) && activeTab === 'decuong_e6' && (
+        <English6RevisionPortal
           student={currentStudent}
           onGoToExam={() => setActiveTab('exam')}
           onGoToVocab={() => setActiveTab('vocab')}

@@ -2906,6 +2906,634 @@
           "sampleAnswer": "I live in a peaceful neighbourhood in the countryside of Dong Yen. The streets are clean, lined with green trees and lovely modern houses. There is a small park and a fresh grocery store nearby. The neighbours here are very friendly, warm-hearted, and always ready to help each other. I love the quiet atmosphere and fresh air in my neighbourhood."
         }
       ]
+    },
+    "605": {
+      "grade": 6,
+      "examType": "giua-ky-1",
+      "typeTitle": "Đề Kiểm Tra Đánh Giá Giữa Học Kỳ 1 - Tiếng Anh 6",
+      "examCode": "605",
+      "durationMinutes": 60,
+      "schoolName": "TRƯỜNG THCS ĐỒNG YÊN",
+      "teacherName": "Thầy giáo Đinh Văn Thành",
+      "audioUrl": "/audio/g6_gk1_605_part1.mp3",
+      "audioUrlPart1": "/audio/g6_gk1_605_part1.mp3",
+      "audioUrlPart2": "/audio/g6_gk1_605_part2.mp3",
+      "audioScriptPart1": "My name is Mi and I live in a lovely town house with my parents and brother. Our house has six rooms: a living room, a kitchen, three bedrooms and two bathrooms. My favourite room is my bedroom because it has a big window looking over a green garden. In my bedroom, there is a comfortable bed, a study desk with a bookshelf, and a blue wardrobe. I always keep my room clean and tidy every day. After school, I usually sit by the window to read my favourite comic books or do my homework. I really love my cozy room because it brings me peace and happiness.",
+      "audioScriptPart2": "An: Hi Phong, how is your first week at your new secondary school?\nPhong: Hello An! It is exciting. The school has a big library and a large playground.\nAn: What is your favourite subject?\nPhong: I like English and Science the most. The teachers are very friendly.\nAn: Do you play sports after school with your new friends?\nPhong: Yes, we often play football or badminton in the schoolyard.\nAn: That sounds wonderful! How do you go to school every day?\nPhong: I ride my bicycle because my house is quite near the school.\nAn: Do you want to join the English club with me this Friday?\nPhong: That would be great! I will meet you at the school gate after class.",
+      "passageText": "Part 4: Nam's country house & Part 5: Lan - my closest classmate.",
+      "clozeText": "Nam lives with his grandparents in a quiet country house in a peaceful village...",
+      "readingText": "Lan is my closest classmate at Dong Yen Secondary School. She has a round face, friendly brown eyes...",
+      "writingRubric": "Tiêu chí chấm điểm đoạn văn (1.0 điểm): Đúng chủ đề và cấu trúc (0.25đ), Từ vựng và ngữ pháp chính xác (0.5đ), Tính mạch lạc và độ dài 40-60 từ (0.25đ).",
+      "sampleWritingText": "My new secondary school is Dong Yen Secondary School. It is a large and beautiful school surrounded by green trees. There are twenty modern classrooms, a computer room and a big library. The teachers are helpful and caring. My new classmates are very friendly. In our free time, we often play badminton in the schoolyard. I really love my new school because it is a wonderful place to study and grow.",
+      "questions": [
+        {
+          "part": "A",
+          "partTitle": "Part 1. Listen and decide if each statement is True (A) or False (B). (1.25 pts)",
+          "partInstruction": "Listen to the recording about Mi's house and choose True (A) or False (B).",
+          "qNumber": 1,
+          "id": "g6_gk1_605_q1",
+          "type": "choice",
+          "text": "Mi lives in a lovely town house with her family.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correct": "True",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dẫn chứng: Mi nói: \"My name is Mi and I live in a lovely town house with my parents and brother.\""
+        },
+        {
+          "part": "A",
+          "partTitle": "Part 1. Listen and decide if each statement is True (A) or False (B). (1.25 pts)",
+          "partInstruction": "Listen to the recording about Mi's house and choose True (A) or False (B).",
+          "qNumber": 2,
+          "id": "g6_gk1_605_q2",
+          "type": "choice",
+          "text": "There are five rooms in Mi's house.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correct": "False",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Dẫn chứng: Trong bài nghe có 6 phòng: \"Our house has six rooms: a living room, a kitchen, three bedrooms and two bathrooms.\""
+        },
+        {
+          "part": "A",
+          "partTitle": "Part 1. Listen and decide if each statement is True (A) or False (B). (1.25 pts)",
+          "partInstruction": "Listen to the recording about Mi's house and choose True (A) or False (B).",
+          "qNumber": 3,
+          "id": "g6_gk1_605_q3",
+          "type": "choice",
+          "text": "The living room is Mi's favourite room in her house.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correct": "False",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (False)\n📌 Dẫn chứng: Phòng yêu thích của Mi là phòng ngủ: \"My favourite room is my bedroom because it has a big window...\""
+        },
+        {
+          "part": "A",
+          "partTitle": "Part 1. Listen and decide if each statement is True (A) or False (B). (1.25 pts)",
+          "partInstruction": "Listen to the recording about Mi's house and choose True (A) or False (B).",
+          "qNumber": 4,
+          "id": "g6_gk1_605_q4",
+          "type": "choice",
+          "text": "Her bedroom has a window looking over a green garden.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correct": "True",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dẫn chứng: \"...because it has a big window looking over a green garden.\""
+        },
+        {
+          "part": "A",
+          "partTitle": "Part 1. Listen and decide if each statement is True (A) or False (B). (1.25 pts)",
+          "partInstruction": "Listen to the recording about Mi's house and choose True (A) or False (B).",
+          "qNumber": 5,
+          "id": "g6_gk1_605_q5",
+          "type": "choice",
+          "text": "Mi always cleans and tidies her bedroom every day.",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correct": "True",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (True)\n📌 Dẫn chứng: \"I always keep my room clean and tidy every day.\""
+        },
+        {
+          "part": "B",
+          "partTitle": "Part 2. Listen to the conversation between Phong and An and circle the best answer A, B, or C. (1.25 pts)",
+          "partInstruction": "Listen to the conversation and circle the best answer A, B, or C.",
+          "qNumber": 6,
+          "id": "g6_gk1_605_q6",
+          "type": "choice",
+          "text": "What are An and Phong talking about?",
+          "options": [
+            "Computer games and movies",
+            "Phong's new school life",
+            "A summer holiday trip"
+          ],
+          "correct": "Phong's new school life",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B\n📌 Dẫn chứng: An hỏi: \"Hi Phong, how is your first week at your new secondary school?\" -> Hai bạn nói về cuộc sống trường học mới."
+        },
+        {
+          "part": "B",
+          "partTitle": "Part 2. Listen to the conversation between Phong and An and circle the best answer A, B, or C. (1.25 pts)",
+          "partInstruction": "Listen to the conversation and circle the best answer A, B, or C.",
+          "qNumber": 7,
+          "id": "g6_gk1_605_q7",
+          "type": "choice",
+          "text": "What facilities does Phong's new secondary school have?",
+          "options": [
+            "A big library and a large playground",
+            "A swimming pool and cinema",
+            "A sports stadium"
+          ],
+          "correct": "A big library and a large playground",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 Dẫn chứng: Phong nói: \"The school has a big library and a large playground.\""
+        },
+        {
+          "part": "B",
+          "partTitle": "Part 2. Listen to the conversation between Phong and An and circle the best answer A, B, or C. (1.25 pts)",
+          "partInstruction": "Listen to the conversation and circle the best answer A, B, or C.",
+          "qNumber": 8,
+          "id": "g6_gk1_605_q8",
+          "type": "choice",
+          "text": "Which subjects does Phong like the most?",
+          "options": [
+            "History and Art",
+            "Maths and Music",
+            "English and Science"
+          ],
+          "correct": "English and Science",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C\n📌 Dẫn chứng: Phong nói: \"I like English and Science the most.\""
+        },
+        {
+          "part": "B",
+          "partTitle": "Part 2. Listen to the conversation between Phong and An and circle the best answer A, B, or C. (1.25 pts)",
+          "partInstruction": "Listen to the conversation and circle the best answer A, B, or C.",
+          "qNumber": 9,
+          "id": "g6_gk1_605_q9",
+          "type": "choice",
+          "text": "How are Phong's new teachers described?",
+          "options": [
+            "Very friendly and helpful",
+            "Strict and busy",
+            "Impatient"
+          ],
+          "correct": "Very friendly and helpful",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 Dẫn chứng: Phong nói: \"The teachers are very friendly.\""
+        },
+        {
+          "part": "B",
+          "partTitle": "Part 2. Listen to the conversation between Phong and An and circle the best answer A, B, or C. (1.25 pts)",
+          "partInstruction": "Listen to the conversation and circle the best answer A, B, or C.",
+          "qNumber": 10,
+          "id": "g6_gk1_605_q10",
+          "type": "choice",
+          "text": "What sports do Phong and his new friends play after school?",
+          "options": [
+            "Basketball",
+            "Table tennis",
+            "Football or badminton"
+          ],
+          "correct": "Football or badminton",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C\n📌 Dẫn chứng: \"Yes, we often play football or badminton in the schoolyard.\""
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 11,
+          "id": "g6_gk1_605_q11",
+          "type": "choice",
+          "text": "- Nam: \"What does your best friend look like?\" - Ba: \"____________________\"",
+          "options": [
+            "She is tall with long black hair.",
+            "She is very friendly.",
+            "She likes watching TV."
+          ],
+          "correct": "She is tall with long black hair.",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 'What does S look like?' dùng để hỏi về ngoại hình (tall, long black hair)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 12,
+          "id": "g6_gk1_605_q12",
+          "type": "choice",
+          "text": "Which of the following words does NOT belong to the topic of school things?",
+          "options": [
+            "pencil case",
+            "compass",
+            "cooker"
+          ],
+          "correct": "cooker",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (cooker: cái bếp/nồi nấu, thuộc chủ đề đồ dùng nhà bếp)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 13,
+          "id": "g6_gk1_605_q13",
+          "type": "choice",
+          "text": "The little dog is sleeping peacefully ________ the table.",
+          "options": [
+            "under",
+            "at",
+            "on"
+          ],
+          "correct": "under",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (under the table: ở dưới gầm bàn)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 14,
+          "id": "g6_gk1_605_q14",
+          "type": "choice",
+          "text": "Nam's family lives in a beautiful ________ house surrounded by trees and rice fields.",
+          "options": [
+            "country",
+            "city",
+            "flat"
+          ],
+          "correct": "country",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (country house: ngôi nhà ở nông thôn, bao quanh bởi đồng lúa)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 15,
+          "id": "g6_gk1_605_q15",
+          "type": "choice",
+          "text": "Students can read and borrow interesting books in the school ________.",
+          "options": [
+            "kitchen",
+            "library",
+            "bathroom"
+          ],
+          "correct": "library",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B (library: thư viện trường học là nơi đọc và mượn sách)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 16,
+          "id": "g6_gk1_605_q16",
+          "type": "choice",
+          "text": "Look! The children ________ football happily in the schoolyard now.",
+          "options": [
+            "are playing",
+            "is playing",
+            "plays"
+          ],
+          "correct": "are playing",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Dấu hiệu 'Look!' và 'now' -> thì Hiện tại tiếp diễn: S nhiều 'The children' + are playing)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 17,
+          "id": "g6_gk1_605_q17",
+          "type": "choice",
+          "text": "Hoa is very ________. She always helps her classmates with difficult exercises.",
+          "options": [
+            "helpful",
+            "shy",
+            "careless"
+          ],
+          "correct": "helpful",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (helpful: hay giúp đỡ bạn bè)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 18,
+          "id": "g6_gk1_605_q18",
+          "type": "choice",
+          "text": "- Tom: \"Let's go to the English club this afternoon!\" - Nam: \"________\"",
+          "options": [
+            "Great idea!",
+            "You're welcome.",
+            "He is reading books."
+          ],
+          "correct": "Great idea!",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A ('Great idea!': Ý kiến hay đấy! Đáp lại lời rủ rê 'Let's...')."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 19,
+          "id": "g6_gk1_605_q19",
+          "type": "choice",
+          "text": "Which word has the underlined part pronounced differently from the others?",
+          "options": [
+            "smart",
+            "sharp",
+            "apple"
+          ],
+          "correct": "apple",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C ('apple' phát âm là /æ/, trong khi 'smart' và 'sharp' phát âm là /ɑː/)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 20,
+          "id": "g6_gk1_605_q20",
+          "type": "choice",
+          "text": "Nam usually ________ his homework at 7 o'clock in the evening.",
+          "options": [
+            "does",
+            "do",
+            "is doing"
+          ],
+          "correct": "does",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Thì Hiện tại đơn chỉ thói quen với trạng từ 'usually', chủ ngữ số ít 'Nam' đi với 'does')."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 21,
+          "id": "g6_gk1_605_q21",
+          "type": "choice",
+          "text": "Listen! The English teacher ________ about the new grammar lesson.",
+          "options": [
+            "is speaking",
+            "speaks",
+            "are speaking"
+          ],
+          "correct": "is speaking",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A ('Listen!' là dấu hiệu Hiện tại tiếp diễn: S số ít 'The English teacher' + is speaking)."
+        },
+        {
+          "part": "C",
+          "partTitle": "Part 3. Choose the best answer A, B, or C to complete each sentence. (3.0 pts)",
+          "partInstruction": "Choose the best answer A, B, or C.",
+          "qNumber": 22,
+          "id": "g6_gk1_605_q22",
+          "type": "choice",
+          "text": "All students must wear their school ________ on Mondays and Fridays.",
+          "options": [
+            "uniform",
+            "bags",
+            "shoes"
+          ],
+          "correct": "uniform",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A ('school uniform': đồng phục trường học)."
+        },
+        {
+          "part": "D",
+          "partTitle": "Part 4. Read and choose the best answer A, B, or C to complete the passage. (1.25 pts)",
+          "partInstruction": "Read the passage and choose the correct option A, B, or C for each blank.",
+          "qNumber": 23,
+          "id": "g6_gk1_605_q23",
+          "type": "choice",
+          "text": "Nam lives with his grandparents in a quiet (23) ________ house in a peaceful village.",
+          "options": [
+            "country",
+            "city",
+            "apartment"
+          ],
+          "correct": "country",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Ngôi nhà ở làng quê: 'country house')."
+        },
+        {
+          "part": "D",
+          "partTitle": "Part 4. Read and choose the best answer A, B, or C to complete the passage. (1.25 pts)",
+          "partInstruction": "Read the passage and choose the correct option A, B, or C for each blank.",
+          "qNumber": 24,
+          "id": "g6_gk1_605_q24",
+          "type": "choice",
+          "text": "...three cozy bedrooms, and a modern (24) ________ with a large dining table.",
+          "options": [
+            "garage",
+            "hall",
+            "kitchen"
+          ],
+          "correct": "kitchen",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C (Có bàn ăn lớn: phòng bếp 'kitchen')."
+        },
+        {
+          "part": "D",
+          "partTitle": "Part 4. Read and choose the best answer A, B, or C to complete the passage. (1.25 pts)",
+          "partInstruction": "Read the passage and choose the correct option A, B, or C for each blank.",
+          "qNumber": 25,
+          "id": "g6_gk1_605_q25",
+          "type": "choice",
+          "text": "On the living room wall, his father hangs a wooden (25) ________ with many books and family photos.",
+          "options": [
+            "shelf",
+            "vase",
+            "clock"
+          ],
+          "correct": "shelf",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (wooden shelf: giá gỗ/kệ gỗ treo tường để sách và ảnh)."
+        },
+        {
+          "part": "D",
+          "partTitle": "Part 4. Read and choose the best answer A, B, or C to complete the passage. (1.25 pts)",
+          "partInstruction": "Read the passage and choose the correct option A, B, or C for each blank.",
+          "qNumber": 26,
+          "id": "g6_gk1_605_q26",
+          "type": "choice",
+          "text": "Behind the house, there is a green garden where his grandfather grows (26) ________ and vegetables.",
+          "options": [
+            "flowers",
+            "machines",
+            "cars"
+          ],
+          "correct": "flowers",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A (Trồng hoa và rau củ: 'grows flowers and vegetables')."
+        },
+        {
+          "part": "D",
+          "partTitle": "Part 4. Read and choose the best answer A, B, or C to complete the passage. (1.25 pts)",
+          "partInstruction": "Read the passage and choose the correct option A, B, or C for each blank.",
+          "qNumber": 27,
+          "id": "g6_gk1_605_q27",
+          "type": "choice",
+          "text": "Nam really loves his peaceful (27) ________ because it brings him joy and comfort.",
+          "options": [
+            "home",
+            "road",
+            "market"
+          ],
+          "correct": "home",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A ('his peaceful home': mái ấm/ngôi nhà yên bình)."
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 5. Read the passage and choose the best answer A, B, or C for each question. (1.25 pts)",
+          "partInstruction": "Read the passage about Lan and choose the best answer A, B, or C.",
+          "qNumber": 28,
+          "id": "g6_gk1_605_q28",
+          "type": "choice",
+          "text": "What does Lan look like?",
+          "options": [
+            "She is tall with short blond hair.",
+            "She has a round face, brown eyes, and long black hair.",
+            "She wears thick glasses."
+          ],
+          "correct": "She has a round face, brown eyes, and long black hair.",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B\n📌 Dẫn chứng: Câu 2 trong bài: \"She is a lovely girl with a round face, friendly brown eyes, and long black hair.\""
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 5. Read the passage and choose the best answer A, B, or C for each question. (1.25 pts)",
+          "partInstruction": "Read the passage about Lan and choose the best answer A, B, or C.",
+          "qNumber": 29,
+          "id": "g6_gk1_605_q29",
+          "type": "choice",
+          "text": "Why does Lan love learning English?",
+          "options": [
+            "Because she loves communicating with friends and singing English songs.",
+            "Because it has no homework.",
+            "Because she wants to travel alone."
+          ],
+          "correct": "Because she loves communicating with friends and singing English songs.",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 Dẫn chứng: \"...because she loves communicating with friends and singing English songs.\""
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 5. Read the passage and choose the best answer A, B, or C for each question. (1.25 pts)",
+          "partInstruction": "Read the passage about Lan and choose the best answer A, B, or C.",
+          "qNumber": 30,
+          "id": "g6_gk1_605_q30",
+          "type": "choice",
+          "text": "The word 'She' in line 2 refers to ________.",
+          "options": [
+            "Lan",
+            "The teacher",
+            "The author"
+          ],
+          "correct": "Lan",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A ('She' thay thế cho nhân vật chính 'Lan' được nhắc tới ở câu trước)."
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 5. Read the passage and choose the best answer A, B, or C for each question. (1.25 pts)",
+          "partInstruction": "Read the passage about Lan and choose the best answer A, B, or C.",
+          "qNumber": 31,
+          "id": "g6_gk1_605_q31",
+          "type": "choice",
+          "text": "How does Lan help her classmates when they struggle with lessons?",
+          "options": [
+            "She ignores their questions.",
+            "She tells the teacher to punish them.",
+            "She kindly sits down and explains everything step by step."
+          ],
+          "correct": "She kindly sits down and explains everything step by step.",
+          "correctLetter": "C",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: C\n📌 Dẫn chứng: \"Lan kindly sits down and explains everything step by step.\""
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 5. Read the passage and choose the best answer A, B, or C for each question. (1.25 pts)",
+          "partInstruction": "Read the passage about Lan and choose the best answer A, B, or C.",
+          "qNumber": 32,
+          "id": "g6_gk1_605_q32",
+          "type": "choice",
+          "text": "What does Lan dream of becoming in the future?",
+          "options": [
+            "A famous singer",
+            "An English teacher",
+            "A painter"
+          ],
+          "correct": "An English teacher",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B\n📌 Dẫn chứng: \"Lan dreams of becoming an English teacher at a secondary school in the future.\""
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 6. Sentence Transformation: Choose the correct sentence A, B, or C. (0.5 pt)",
+          "partInstruction": "Choose the sentence that has the closest meaning to the given sentence.",
+          "qNumber": 33,
+          "id": "g6_gk1_605_q33",
+          "type": "choice",
+          "text": "Does your house have four bedrooms?",
+          "options": [
+            "Are there four bedrooms in your house?",
+            "There are four bedrooms in your house?",
+            "Are there four bedrooms in house your?"
+          ],
+          "correct": "Are there four bedrooms in your house?",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 Chuyển đổi giữa 'Does S have...?' và 'Are there ... in S?'."
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 6. Sentence Transformation: Choose the correct sentence A, B, or C. (0.5 pt)",
+          "partInstruction": "Choose the sentence that has the closest meaning to the given sentence.",
+          "qNumber": 34,
+          "id": "g6_gk1_605_q34",
+          "type": "choice",
+          "text": "Linh has short curly hair.",
+          "options": [
+            "Linh's hair is short and curly.",
+            "Linh hair is short and curly.",
+            "Linh's hair are short and curly."
+          ],
+          "correct": "Linh's hair is short and curly.",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 'S + has + adj + hair' <=> 'S's hair is + adj'."
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, or C. (0.5 pt)",
+          "partInstruction": "Choose the correct sentence built from the given words.",
+          "qNumber": 35,
+          "id": "g6_gk1_605_q35",
+          "type": "choice",
+          "text": "students / are / creative / these / helpful / and / .",
+          "options": [
+            "Helpful and creative these students are.",
+            "These students are creative and helpful.",
+            "These students helpful and creative are."
+          ],
+          "correct": "These students are creative and helpful.",
+          "correctLetter": "B",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: B\n📌 Cấu trúc câu khẳng định: S (These students) + to be (are) + adj and adj (creative and helpful)."
+        },
+        {
+          "part": "E",
+          "partTitle": "Part 7. Reorder the words/phrases: Choose the correct sentence A, B, or C. (0.5 pt)",
+          "partInstruction": "Choose the correct sentence built from the given words.",
+          "qNumber": 36,
+          "id": "g6_gk1_605_q36",
+          "type": "choice",
+          "text": "doing / are / homework / you / your / now / ?",
+          "options": [
+            "Are you doing your homework now?",
+            "You are doing your homework now?",
+            "Are doing you your homework now?"
+          ],
+          "correct": "Are you doing your homework now?",
+          "correctLetter": "A",
+          "explanation": "🎯 ĐÁP ÁN ĐÚNG: A\n📌 Câu hỏi thì Hiện tại tiếp diễn: Are + you + V-ing (doing) + O (your homework) + adv (now)?"
+        }
+      ]
     }
   },
   "7": {},
