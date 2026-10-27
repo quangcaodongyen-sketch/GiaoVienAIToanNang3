@@ -503,7 +503,13 @@ class StudentGradebookService {
     if (!this.officialRosters || Object.keys(this.officialRosters).length === 0) {
       this.loadOfficialRosters();
     }
-    return this.officialRosters[cleanCls] || [];
+    const fromLoaded = this.officialRosters[cleanCls];
+    if (fromLoaded && fromLoaded.length > 0) return fromLoaded;
+    const rawData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+    if (rawData && rawData[cleanCls] && rawData[cleanCls].length > 0) {
+      return rawData[cleanCls].map(item => item.name);
+    }
+    return [];
   }
 
   public saveOfficialRoster(className: string, names: string[]): { count: number; saved: string[] } {
