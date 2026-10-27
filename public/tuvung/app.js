@@ -8433,6 +8433,20 @@ if (typeof window !== 'undefined') {
 
   window.addEventListener('DOMContentLoaded', () => {
     try {
+      const isIframe = (window.self !== window.top);
+      const urlParams = new URLSearchParams(window.location.search);
+      if (isIframe || urlParams.get('embedded') === '1' || urlParams.get('embed') === '1') {
+        document.documentElement.classList.add('is-embedded');
+        document.body.classList.add('is-embedded');
+        if (urlParams.has('tab') || !!urlParams.get('tab')) {
+          document.documentElement.classList.add('is-single-tab');
+          document.documentElement.classList.add('has-tab');
+          document.body.classList.add('is-single-tab');
+          document.body.classList.add('has-tab');
+        }
+      }
+    } catch (e) {}
+    try {
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash;
       const tabParam = urlParams.get('tab');
@@ -8482,13 +8496,16 @@ if (typeof window !== 'undefined') {
         if (!targetTab.startsWith('tab-')) {
           targetTab = 'tab-' + targetTab;
         }
+        if (typeof activateTab === 'function') {
+          activateTab(targetTab);
+        }
         setTimeout(() => {
           if (typeof activateTab === 'function') {
             activateTab(targetTab);
           } else if (typeof switchTab === 'function') {
             switchTab(targetTab);
           }
-        }, 350);
+        }, 150);
       } else if (examParam || hash === '#tab-online-exam') {
         setTimeout(() => {
           if (typeof activateTab === 'function') {

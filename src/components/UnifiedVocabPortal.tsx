@@ -132,6 +132,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     params.set('grade', String(selectedGrade));
     params.set('unit', String(selectedUnit));
     params.set('tab', tabId.startsWith('tab-') ? tabId : 'tab-' + tabId);
+    params.set('embedded', '1');
     if (currentStudent) {
       params.set('name', currentStudent.name);
       params.set('class', currentStudent.className);
@@ -1921,7 +1922,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <div className="h-[750px] sm:h-[880px] w-full">
             <iframe
               key={iframeKey}
-              src={`/tuvung/index.html?grade=${selectedGrade || currentStudent?.grade || 8}&class=${encodeURIComponent(currentStudent?.className || '')}&name=${encodeURIComponent(currentStudent?.name || '')}&v=${Date.now()}`}
+              src={`/tuvung/index.html?grade=${selectedGrade || currentStudent?.grade || 8}&class=${encodeURIComponent(currentStudent?.className || '')}&name=${encodeURIComponent(currentStudent?.name || '')}&embedded=1&v=${Date.now()}`}
               title="App Học Từ Vựng Tiếng Anh (Global Success)"
               className="w-full h-full border-0"
               allow="autoplay; microphone; clipboard-write"

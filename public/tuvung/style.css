@@ -4061,3 +4061,62 @@ header, .app-header {
   width: 1.2rem;
   height: 1.2rem;
 }
+
+
+/* ==============================================================================
+   EMBEDDED / IFRAME CLEAN MODE (CHUẨN HÓA KHÔNG GIAN BÀI HỌC CỔNG HỌC SINH)
+   Ẩn triệt để header, thanh chọn khối lớp, chọn bài, thanh mode trùng lặp
+   ============================================================================== */
+html.is-embedded body .app-header,
+html.is-embedded body .grade-scroll-bar,
+html.is-embedded body .unit-scroll-bar,
+html.is-embedded body .app-footer,
+html.is-embedded body .theme-dropdown-wrapper,
+html.is-embedded .app-header,
+html.is-embedded .grade-scroll-bar,
+html.is-embedded .unit-scroll-bar,
+html.is-embedded .app-footer,
+html.is-embedded .theme-dropdown-wrapper,
+body.is-embedded .app-header,
+body.is-embedded .grade-scroll-bar,
+body.is-embedded .unit-scroll-bar,
+body.is-embedded .app-footer,
+body.is-embedded .theme-dropdown-wrapper {
+  display: none !important;
+}
+
+html.is-single-tab body .modes-bar,
+html.has-tab body .modes-bar,
+html.is-embedded.has-tab body .modes-bar,
+html.is-single-tab .modes-bar,
+html.has-tab .modes-bar,
+html.is-embedded.has-tab .modes-bar,
+body.is-single-tab .modes-bar,
+body.has-tab .modes-bar,
+body.is-embedded.has-tab .modes-bar {
+  display: none !important;
+}
+
+html.is-embedded body .app-container,
+html.is-embedded .app-container,
+body.is-embedded .app-container {
+  min-height: auto !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+html.is-embedded body .main-content,
+html.is-embedded .main-content,
+body.is-embedded .main-content {
+  margin: 0.25rem auto !important;
+  padding: 0.25rem 0.5rem 1.5rem 0.5rem !important;
+  max-width: 100% !important;
+}
+
+html.is-embedded body .game-container,
+html.is-embedded .game-container,
+body.is-embedded .game-container {
+  margin-top: 0 !important;
+  padding-top: 0.5rem !important;
+}
+
