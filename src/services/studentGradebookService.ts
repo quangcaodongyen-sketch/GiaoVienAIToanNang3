@@ -2208,6 +2208,90 @@ class StudentGradebookService {
     };
   }
 
+  // =========================================================================
+  // XÁC THỰC DANH TÍNH HỌC SINH BẰNG NGÀY THÁNG NĂM SINH (DOB) CHUẨN SỔ ĐIỂM
+  // =========================================================================
+  public normalizeDob(dobStr: string): string {
+    if (!dobStr) return '';
+    const clean = dobStr.trim().replace(/[-.]/g, '/');
+    const mYmd = clean.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+    if (mYmd) {
+      return `${mYmd[3].padStart(2, '0')}/${mYmd[2].padStart(2, '0')}/${mYmd[1]}`;
+    }
+    const mDmy = clean.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (mDmy) {
+      return `${mDmy[1].padStart(2, '0')}/${mDmy[2].padStart(2, '0')}/${mDmy[3]}`;
+    }
+    return clean;
+  }
+
+  public getOfficialStudentDob(studentName: string, className: string): string {
+    const cleanCls = normalizeClassName(className);
+    const rosters = (officialRosterData as Record<string, OfficialStudentRosterItem[]>)[cleanCls] || [];
+    const normName = normalizeVietnameseName(studentName);
+    const matched = rosters.find(r => normalizeVietnameseName(r.name) === normName);
+    if (matched && matched.dob) {
+      return this.normalizeDob(matched.dob);
+    }
+    const stu = this.students.find(s => normalizeVietnameseName(s.name) === normName && normalizeClassName(s.className) === cleanCls);
+    if (stu && stu.dob) {
+      return this.normalizeDob(stu.dob);
+    }
+    return '';
+  }
+
+  public isStudentIdentityVerified(studentId: string): boolean {
+    if (!studentId) return false;
+    try {
+      return localStorage.getItem(`gvai_dob_verified_${studentId}`) === 'true' ||
+             sessionStorage.getItem(`gvai_dob_verified_${studentId}`) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  public setStudentIdentityVerified(studentId: string, verified: boolean = true): void {
+    if (!studentId) return;
+    try {
+      if (verified) {
+        localStorage.setItem(`gvai_dob_verified_${studentId}`, 'true');
+        sessionStorage.setItem(`gvai_dob_verified_${studentId}`, 'true');
+      } else {
+        localStorage.removeItem(`gvai_dob_verified_${studentId}`);
+        sessionStorage.removeItem(`gvai_dob_verified_${studentId}`);
+      }
+    } catch {}
+  }
+
+  public verifyStudentDob(student: StudentProfile, inputDob: string): { success: boolean; message: string } {
+    if (!student) return { success: false, message: 'Chưa có thông tin học sinh!' };
+    const normInput = this.normalizeDob(inputDob);
+    if (!normInput || normInput.length < 8) {
+      return { success: false, message: 'Vui lòng nhập đầy đủ ngày, tháng, năm sinh (ví dụ: 14/08/2013)!' };
+    }
+
+    const officialDob = this.getOfficialStudentDob(student.name, student.className) || this.normalizeDob(student.dob || '');
+
+    // Nếu học sinh đã có ngày sinh trong sổ điểm chính thức của Thầy Thành
+    if (officialDob) {
+      if (normInput === officialDob) {
+        this.setStudentIdentityVerified(student.id, true);
+        return { success: true, message: 'Xác thực danh tính học sinh thành công!' };
+      } else {
+        return { 
+          success: false, 
+          message: `Ngày tháng năm sinh "${normInput}" không trùng khớp với sổ điểm bộ môn của Lớp ${student.className}! Em vui lòng kiểm tra lại ngày sinh chính xác trên giấy khai sinh nhé.` 
+        };
+      }
+    }
+
+    // Trường hợp học sinh lớp mở rộng chưa có ngày sinh trong sổ điểm:
+    student.dob = normInput;
+    this.updateStudent(student.id, { dob: normInput });
+    this.setStudentIdentityVerified(student.id, true);
+    return { success: true, message: 'Đã lưu và xác thực ngày sinh thành công!' };
+  }
+
   public getOfficialClassesList(): Array<{ name: string; grade: number; totalStudents: number }> {
     const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
     return Object.entries(allData).map(([cls, list]) => {

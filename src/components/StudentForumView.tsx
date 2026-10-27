@@ -1,3 +1,4 @@
+import { StudentDobVerificationModal } from './StudentDobVerificationModal';
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   MessageSquare, 
@@ -112,6 +113,9 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
   onRequestAdminLogin
 }) => {
   const [posts, setPosts] = useState<ForumPost[]>([]);
+  const [showDobModal, setShowDobModal] = useState<boolean>(false);
+  const [dobActionTitle, setDobActionTitle] = useState<string>('đăng bài trên diễn đàn');
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
   const [newContent, setNewContent] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
@@ -183,6 +187,19 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
       alert('Em vui lòng nhập Họ tên và Lớp để đăng bài trên diễn đàn nhé!');
       onRequestAuth();
       return;
+    }
+
+    // YÊU CẦU BẮT BUỘC: Xác thực danh tính bằng ngày tháng năm sinh mới cho đăng bài
+    if (!isAdmin && currentStudent) {
+      if (!studentGradebookService.isStudentIdentityVerified(currentStudent.id)) {
+        setDobActionTitle('đăng bài viết mới trên diễn đàn');
+        setPendingAction(() => () => {
+          // Callback sau khi xác thực thành công sẽ tự động gửi bài
+          handleCreatePost(e);
+        });
+        setShowDobModal(true);
+        return;
+      }
     }
 
     const text = newContent.trim();
@@ -269,6 +286,18 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
       alert('Em vui lòng nhập Họ tên và Lớp để bình luận nhé!');
       onRequestAuth();
       return;
+    }
+
+    // YÊU CẦU BẮT BUỘC: Xác thực danh tính bằng ngày tháng năm sinh mới cho bình luận
+    if (!isAdmin && currentStudent) {
+      if (!studentGradebookService.isStudentIdentityVerified(currentStudent.id)) {
+        setDobActionTitle('gửi bình luận trên diễn đàn');
+        setPendingAction(() => () => {
+          handleSendComment(postId, customText);
+        });
+        setShowDobModal(true);
+        return;
+      }
     }
 
     if (checkInappropriateText(text)) {
@@ -923,6 +952,24 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
           </div>
         </div>
       )}
+      {/* Modal Xác Thực Danh Tính Bằng Ngày Tháng Năm Sinh */}
+      <StudentDobVerificationModal
+        isOpen={showDobModal}
+        student={currentStudent}
+        actionTitle={dobActionTitle}
+        onClose={() => {
+          setShowDobModal(false);
+          setPendingAction(null);
+        }}
+        onVerified={() => {
+          setShowDobModal(false);
+          if (pendingAction) {
+            const act = pendingAction;
+            setPendingAction(null);
+            setTimeout(() => act(), 150);
+          }
+        }}
+      />
     </div>
   );
 };

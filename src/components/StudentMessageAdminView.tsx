@@ -1,3 +1,5 @@
+import { studentGradebookService } from '../services/studentGradebookService';
+import { StudentDobVerificationModal } from './StudentDobVerificationModal';
 import React, { useState, useEffect } from 'react';
 import { 
   Mail, 
@@ -38,6 +40,7 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
   const [content, setContent] = useState<string>('');
   const [senderPhone, setSenderPhone] = useState<string>(currentStudent?.parentPhone || '');
   const [isSending, setIsSending] = useState<boolean>(false);
+  const [showDobModal, setShowDobModal] = useState<boolean>(false);
   const [sendSuccess, setSendSuccess] = useState<boolean>(false);
   const [sendError, setSendError] = useState<string>('');
 
@@ -82,6 +85,14 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
     if (!currentStudent) {
       onRequestAuth();
       return;
+    }
+
+    // YÊU CẦU BẮT BUỘC: Xác thực danh tính bằng ngày tháng năm sinh mới cho nhắn tin
+    if (!isAdmin && currentStudent) {
+      if (!studentGradebookService.isStudentIdentityVerified(currentStudent.id)) {
+        setShowDobModal(true);
+        return;
+      }
     }
 
     const text = content.trim();
@@ -542,6 +553,20 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
           )}
         </div>
       </div>
+      {/* Modal Xác Thực Danh Tính Bằng Ngày Tháng Năm Sinh */}
+      <StudentDobVerificationModal
+        isOpen={showDobModal}
+        student={currentStudent}
+        actionTitle="gửi tin nhắn cho Thầy Đinh Thành"
+        onClose={() => setShowDobModal(false)}
+        onVerified={() => {
+          setShowDobModal(false);
+          // Auto trigger send message
+          setTimeout(() => {
+            handleStudentSendMessage({ preventDefault: () => {} } as React.FormEvent);
+          }, 150);
+        }}
+      />
     </div>
   );
 };
