@@ -1219,19 +1219,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <span>Đổi Bạn</span>
               </button>
             </div>
-          ) : (
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-blue-200">Chưa đăng nhập học sinh</span>
-              <button
-                type="button"
-                onClick={() => setShowAuthModal(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
-                title="Đăng nhập để lưu điểm thi và xếp hạng thi đua"
-              >
-                <span>🔑 ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
-              </button>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -1570,7 +1558,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               🎁 HOÀN TOÀN MIỄN PHÍ 100% • KHÔNG THU HỌC PHÍ
             </div>
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-              ĐĂNG NHẬP HỌC MIỄN PHÍ
+              CHỌN TÊN VÀO HỌC MIỄN PHÍ
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
               Chương trình ôn tập trực tuyến do Thầy giáo Đinh Văn Thành xây dựng phi lợi nhuận phục vụ học sinh THCS Đồng Yên. Chọn Lớp và Họ Tên để bắt đầu:
@@ -1882,7 +1870,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2 mt-4"
             >
               <Sparkles className="w-5 h-5 text-amber-300" />
-              <span>🚀 ĐĂNG NHẬP HỌC MIỄN PHÍ (+5Đ)</span>
+              <span>🚀 VÀO HỌC NGAY (+5Đ)</span>
             </button>
           </form>
 
