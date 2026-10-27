@@ -1421,12 +1421,12 @@ export default function App() {
           )}
         </nav>
 
-        {/* CỔNG CHỌN NHANH 2 PHÂN HỆ: DÀNH CHO GV & DÀNH CHO HS + ĐĂNG NHẬP ADMIN (LUÔN HIỂN THỊ TRÊN MỌI THIẾT BỊ) */}
-        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-t border-b border-blue-500/25 py-2 px-3 sm:px-6 shadow-md transition-all">
+        {/* CỔNG CHỌN NHANH 2 PHÂN HỆ: DÀNH CHO GV & DÀNH CHO HS + ADMIN (TONE XANH DỊU MẮT, CHỮ TRẮNG TƯƠNG PHẢN CAO) */}
+        <div className="bg-[#0B1E36] border-t border-b border-blue-500/30 py-2 px-3 sm:px-6 shadow-md transition-all">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
               
-              {/* Nút 0: TRANG CHỦ / CHỌN VAI TRÒ */}
+              {/* Nút 0: TRANG CHỦ */}
               <button
                 type="button"
                 onClick={() => {
@@ -1434,12 +1434,12 @@ export default function App() {
                   window.history.pushState(null, '', '/');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'welcome'
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-300 scale-102'
-                    : 'bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white border border-white/15'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
                 }`}
-                title="Về Cổng Chào Mừng & Lựa Chọn Vai Trò dekiemtraso.com"
+                title="Về Cổng Chào Mừng dekiemtraso.com"
               >
                 <span>🏠</span>
                 <span className="hidden sm:inline">TRANG CHỦ</span>
@@ -1452,18 +1452,15 @@ export default function App() {
                   setMainViewTab('teachers');
                   window.history.pushState(null, '', '/giaovien');
                 }}
-                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
                   mainViewTab === 'teachers'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/40 ring-2 ring-blue-300 scale-102'
-                    : 'bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white border border-white/15'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
                 }`}
                 title="Dành Cho Giáo Viên: Kho Tiện Ích & Phần Mềm Tạo Đề Kiểm Tra"
               >
                 <span className="text-sm sm:text-base">👨‍🏫</span>
                 <span>DÀNH CHO GV</span>
-                {mainViewTab === 'teachers' && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse hidden sm:inline-block"></span>
-                )}
               </button>
 
               {/* Nút 2: DÀNH CHO HỌC SINH */}
@@ -1473,24 +1470,19 @@ export default function App() {
                   setMainViewTab('students');
                   window.history.pushState(null, '', '/hocsinh');
                 }}
-                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
                   mainViewTab === 'students'
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-300 scale-102'
-                    : 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-emerald-200 border border-emerald-400/30'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
                 }`}
-                title="Dành Cho Học Sinh: Học Từ Vựng Siêu Trí Nhớ, Thi Thử Online & Xem Điểm Danh Lớp"
+                title="Dành Cho Học Sinh: Học Từ Vựng, Thi Thử Online & Xem Điểm"
               >
                 <span className="text-sm sm:text-base">🎓</span>
-                <span>DÀNH CHO HS (HỌC MIỄN PHÍ)</span>
-                {mainViewTab === 'students' ? (
-                  <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse hidden sm:inline-block"></span>
-                ) : (
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping hidden sm:inline-block"></span>
-                )}
+                <span>DÀNH CHO HS</span>
               </button>
             </div>
 
-            {/* Nút 3: ĐĂNG NHẬP ADMIN (Thầy Thành) */}
+            {/* Nút 3: ADMIN (TỐI GIẢN - XANH DỊU MẮT - CHỮ TRẮNG) */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -1498,15 +1490,15 @@ export default function App() {
                   setMainViewTab('admin');
                   window.history.pushState(null, '', '/admin');
                 }}
-                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'admin'
-                    ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/40 ring-2 ring-amber-300 scale-102'
-                    : 'bg-amber-400/20 hover:bg-amber-400 text-amber-300 hover:text-slate-950 border border-amber-400/40'
+                    ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300'
+                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/50'
                 }`}
-                title="Đăng Nhập Quản Trị Hệ Thống (Dành Cho Thầy Đinh Thành)"
+                title="Quản trị hệ thống (Thầy Đinh Thành)"
               >
-                <Crown className="w-3.5 h-3.5" />
-                <span>👑 Đăng Nhập Admin (Thầy Thành)</span>
+                <Crown className="w-3.5 h-3.5 text-blue-300" />
+                <span>{isAdminSession ? 'Quản Trị Admin' : 'Admin'}</span>
               </button>
             </div>
           </div>

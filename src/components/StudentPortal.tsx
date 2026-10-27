@@ -1183,49 +1183,49 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       </div>
 
-      {/* HEADER GÓC HỌC SINH TINH GỌN, CHUYÊN NGHIỆP */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 text-white shadow-md mb-4">
+      {/* HEADER GÓC HỌC SINH TONE XANH DỊU MẮT, CHỮ TRẮNG TƯƠNG PHẢN CAO */}
+      <div className="bg-[#0B1E36] border border-blue-500/30 rounded-2xl p-4 sm:p-5 text-white shadow-md mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-lg sm:text-xl font-black tracking-tight text-white">
                 Góc Học Tập Trực Tuyến
               </h2>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 font-bold">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-500/25 text-cyan-200 border border-blue-400/30 font-bold">
                 THCS Đồng Yên
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-blue-200/90 mt-0.5">
               Ôn tập đề cương, luyện từ vựng & kiểm tra trực tuyến
             </p>
           </div>
 
-          {/* Student Profile Pill or Admin action */}
+          {/* Thẻ học sinh hiển thị đĩnh đạc, tone xanh chữ trắng */}
           {currentStudent ? (
             <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0F2A4A] border border-blue-400/40 text-white shadow-xs">
                 <span className="text-sm">{currentStudent.gender === 'Nữ' ? '👧' : '👦'}</span>
                 <span className="text-xs font-bold text-white">{currentStudent.name}</span>
-                <span className="text-[11px] text-blue-300 font-bold">Lớp {currentStudent.className}</span>
-                <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-amber-400 text-slate-950 font-black">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
+                <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
+                <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
               </div>
               <button
                 type="button"
                 onClick={handleSwitchOtherStudent}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer border border-slate-700 flex items-center gap-1"
+                className="px-2.5 py-1.5 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-blue-100 hover:text-white text-xs font-bold transition cursor-pointer border border-blue-700/50 flex items-center gap-1"
                 title="Đổi bạn học khác"
               >
-                <RotateCw className="w-3.5 h-3.5 text-amber-400" />
+                <RotateCw className="w-3.5 h-3.5 text-cyan-300" />
                 <span>Đổi Bạn</span>
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-400">Chưa đăng nhập học sinh</span>
+              <span className="text-blue-200">Chưa đăng nhập học sinh</span>
               <button
                 type="button"
                 onClick={() => setShowAuthModal(true)}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                 title="Đăng nhập để lưu điểm thi và xếp hạng thi đua"
               >
                 <span>🔑 ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
