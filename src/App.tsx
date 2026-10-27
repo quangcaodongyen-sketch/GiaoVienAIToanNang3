@@ -58,8 +58,9 @@ import { getAppShareUrl, copyToClipboard, syncBrowserHash } from './utils/shareU
 import { TeacherCatalog } from './components/TeacherCatalog';
 import { AdminPortal } from './components/AdminPortal';
 import { StudentPortal } from './components/StudentPortal';
+import { WelcomeRoleGateway } from './components/WelcomeRoleGateway';
 
-export type MainViewTab = 'teachers' | 'admin' | 'students';
+export type MainViewTab = 'welcome' | 'teachers' | 'admin' | 'students';
 export type ThemeMode = 'pedagogical' | 'dark-cyber' | 'emerald-sage' | 'royal-purple';
 export type ViewMode = 'grid' | 'compact';
 
@@ -263,6 +264,23 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Kiểm tra đường dẫn URL hoặc hash có thuộc Cổng Học Sinh hay không
+  const isTeacherRoute = () => {
+    const rawPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+    const rawHash = window.location.hash.toLowerCase();
+    return (
+      rawPath === '/giaovien' ||
+      rawPath === '/giao-vien' ||
+      rawPath === '/gv' ||
+      rawPath === '/teachers' ||
+      rawPath === '/apps' ||
+      rawHash === '#giaovien' ||
+      rawHash === '#giao-vien' ||
+      rawHash === '#gv' ||
+      rawHash === '#teachers' ||
+      rawHash === '#apps'
+    );
+  };
+
   const isStudentRoute = () => {
     const rawPath = window.location.pathname.toLowerCase().replace(/\/+$/, '');
     const rawHash = window.location.hash.toLowerCase();
@@ -292,26 +310,30 @@ export default function App() {
     return rawPath === '/admin' || rawHash === '#admin' || rawHash === '#quan-tri';
   };
 
-  // Quản lý 3 Phân Hệ Chính Của Website: Kho Giáo Viên | Quản Trị Admin | Góc Học Sinh
+  // Quản lý Phân Hệ Của Website dekiemtraso.com: Cổng Chào Mừng & Lựa Chọn | Kho Giáo Viên | Quản Trị Admin | Góc Học Sinh
   const [mainViewTab, setMainViewTab] = useState<MainViewTab>(() => {
     if (isAdminRoute()) return 'admin';
     if (isStudentRoute()) return 'students';
-    return 'teachers';
+    if (isTeacherRoute()) return 'teachers';
+    // Mặc định khi truy cập thẳng địa chỉ dekiemtraso.com: Hiển thị lời chào & 2 lựa chọn GV / HS
+    return 'welcome';
   });
 
-  // Tự động lắng nghe thay đổi URL (pathname, hash, popstate) và chuẩn hóa về link ngắn: dekiemtraso.com/hocsinh
+  // Tự động lắng nghe thay đổi URL (pathname, hash, popstate) và chuẩn hóa về link ngắn: dekiemtraso.com/hocsinh, /giaovien, /admin
   useEffect(() => {
     const syncCurrentRoute = () => {
       if (isAdminRoute()) {
         setMainViewTab('admin');
       } else if (isStudentRoute()) {
         setMainViewTab('students');
-        // Chuẩn hóa thanh địa chỉ thành /hocsinh gọn gàng, loại bỏ hash kỹ thuật #hoc-sinh
         if (window.location.pathname !== '/hocsinh' || window.location.hash) {
           window.history.replaceState(null, '', '/hocsinh');
         }
-      } else {
+      } else if (isTeacherRoute()) {
         setMainViewTab('teachers');
+      } else {
+        // Vào thẳng dekiemtraso.com (root '/') -> Hiển thị lời chào & 2 lựa chọn Dành cho GV / Dành cho HS
+        setMainViewTab('welcome');
       }
     };
 
@@ -1119,7 +1141,16 @@ export default function App() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Logo & Nhận diện thương hiệu */}
-            <a href="#apps" className="flex items-center gap-3 sm:gap-3.5 group">
+            <button 
+              type="button" 
+              onClick={() => {
+                setMainViewTab('welcome');
+                window.history.pushState(null, '', '/');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} 
+              className="flex items-center gap-3 sm:gap-3.5 group cursor-pointer text-left"
+              title="Trang chủ dekiemtraso.com: Cổng Chào Mừng & Lựa Chọn Phân Hệ"
+            >
               <div className="relative">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#0B1E36] via-[#123A63] to-[#2563EB] flex items-center justify-center text-white shadow-md shadow-blue-900/20 group-hover:scale-105 group-hover:shadow-blue-600/30 transition-all duration-300 ring-2 ring-blue-500/20">
                   <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-white transition-transform group-hover:-rotate-6" />
@@ -1148,25 +1179,44 @@ export default function App() {
                   </span>
                 </div>
               </div>
-            </a>
+            </button>
 
-            {/* Desktop Navigation 3 Trụ Cột Chính: Kho Giáo Viên | Quản Trị Admin | Dành Cho Học Sinh */}
+            {/* Desktop Navigation 4 Mục: Cổng Chào Mừng | Kho Giáo Viên | Quản Trị Admin | Dành Cho Học Sinh */}
             <div className="hidden lg:flex items-center gap-1.5 text-xs xl:text-sm font-bold">
+              {/* Nút 0: Cổng Chào Mừng & Lựa Chọn */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('welcome');
+                  window.history.pushState(null, '', '/');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                  mainViewTab === 'welcome'
+                    ? 'bg-indigo-600 text-white shadow-md font-black'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+                title="Cổng Chào Mừng dekiemtraso.com: Lựa chọn Dành Cho GV / Dành Cho HS"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>Trang Chủ / Chọn Vai Trò</span>
+              </button>
+
               {/* Nút 1: Kho Ứng Dụng Giáo Viên */}
               <button
                 type="button"
                 onClick={() => {
                   setMainViewTab('teachers');
-                  window.history.pushState(null, '', '/');
+                  window.history.pushState(null, '', '/giaovien');
                 }}
-                className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ${
                   mainViewTab === 'teachers'
                     ? 'bg-blue-600 text-white shadow-md font-black'
                     : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 <Layers className="w-4 h-4" />
-                <span>1. Kho Ứng Dụng Giáo Viên</span>
+                <span>1. Dành Cho GV</span>
               </button>
 
               {/* Nút 2: Bảng Quản Trị Admin */}
@@ -1350,12 +1400,32 @@ export default function App() {
         <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-t border-b border-blue-500/25 py-2 px-3 sm:px-6 shadow-md transition-all">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
+              
+              {/* Nút 0: TRANG CHỦ / CHỌN VAI TRÒ */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainViewTab('welcome');
+                  window.history.pushState(null, '', '/');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  mainViewTab === 'welcome'
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-300 scale-102'
+                    : 'bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white border border-white/15'
+                }`}
+                title="Về Cổng Chào Mừng & Lựa Chọn Vai Trò dekiemtraso.com"
+              >
+                <span>🏠</span>
+                <span className="hidden sm:inline">TRANG CHỦ</span>
+              </button>
+
               {/* Nút 1: DÀNH CHO GIÁO VIÊN */}
               <button
                 type="button"
                 onClick={() => {
                   setMainViewTab('teachers');
-                  window.history.pushState(null, '', '/');
+                  window.history.pushState(null, '', '/giaovien');
                 }}
                 className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
                   mainViewTab === 'teachers'
@@ -1419,6 +1489,27 @@ export default function App() {
       </header>
 
       <main className="flex-1">
+        {/* 0. CỔNG CHÀO MỪNG & LỰA CHỌN PHÂN HỆ DEKIEMTRASO.COM */}
+        {mainViewTab === 'welcome' && (
+          <WelcomeRoleGateway
+            onSelectTeachers={() => {
+              setMainViewTab('teachers');
+              window.history.pushState(null, '', '/giaovien');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onSelectStudents={() => {
+              setMainViewTab('students');
+              window.history.pushState(null, '', '/hocsinh');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onOpenAdmin={() => {
+              setMainViewTab('admin');
+              window.history.pushState(null, '', '/admin');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {/* 1. PHÂN HỆ KHO ỨNG DỤNG GIÁO VIÊN */}
         {mainViewTab === 'teachers' && (
           <>
