@@ -1710,11 +1710,11 @@ class StudentGradebookService {
   // ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ====================
   public quickAccessStudent(fullName: string, className: string, gradeInput?: number): StudentProfile {
     const cleanName = fullName.trim().replace(/\s+/g, ' ');
-    let cleanCls = normalizeClassName(className) || '12A1';
-    if (!cleanCls) cleanCls = '12A1';
+    let cleanCls = normalizeClassName(className) || '8A1';
+    if (!cleanCls) cleanCls = '8A1';
 
     // Xác định khối lớp tự động (6 -> 12)
-    let grade = gradeInput || 12;
+    let grade = gradeInput || 8;
     const matchGrade = cleanCls.match(/^(\d{1,2})/);
     if (matchGrade && matchGrade[1]) {
       const gNum = parseInt(matchGrade[1], 10);

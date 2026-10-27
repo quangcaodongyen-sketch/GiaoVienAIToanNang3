@@ -1981,7 +1981,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </button>
             </div>
           )}
-          <OnlineExamPortal studentGrade={currentStudent?.grade} onGoToLeaderboard={() => setActiveTab('leaderboard')} />
+          <OnlineExamPortal studentGrade={currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.match(/^\d{1,2}/)?.[0] || '8', 10)) : 8)} onGoToLeaderboard={() => setActiveTab('leaderboard')} />
         </div>
       )}
 

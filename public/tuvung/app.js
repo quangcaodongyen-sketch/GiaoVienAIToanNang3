@@ -3680,12 +3680,92 @@ function loadCustomVocab() {
 // ==============================================================================
 let CURRENT_SEMESTER_FILTER = 'all';
 
+function getActiveStudentGrade() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const qGrade = urlParams.get('grade');
+    if (qGrade && ['6','7','8','9','10','11','12'].includes(qGrade)) {
+      return qGrade;
+    }
+    if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) {
+      const s = STUDENT_SYSTEM.currentStudent;
+      if (s.className) {
+        const m = String(s.className).match(/^(\d{1,2})/);
+        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) return m[1];
+      }
+      if (s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) return String(s.grade);
+    }
+    const raw = localStorage.getItem('ENG_STUDENT_PROFILE') ||
+                localStorage.getItem('gvai_gradebook_active_student_v4_clean') ||
+                localStorage.getItem('gvai_gradebook_active_student_v3_dongyen') ||
+                localStorage.getItem('DONGYEN_REMEMBERED_STUDENT');
+    if (raw) {
+      const s = JSON.parse(raw);
+      if (s && s.className) {
+        const m = String(s.className).match(/^(\d{1,2})/);
+        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) return m[1];
+      }
+      if (s && s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) return String(s.grade);
+    }
+    const savedGrade = localStorage.getItem('ENG_SELECTED_GRADE');
+    if (savedGrade && ['6','7','8','9','10','11','12'].includes(savedGrade)) {
+      return savedGrade;
+    }
+  } catch (e) {}
+  return "8";
+}
+
 function initGradePills() {
   const container = document.getElementById('gradePillsContainer');
   if (!container) return;
 
   container.innerHTML = '';
 
+  const studentGrade = getActiveStudentGrade();
+  const student = (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) || null;
+  const isAdmin = student && (student.role === 'admin' || (student.username || '').toLowerCase() === 'admin');
+
+  // NẾU HỌC SINH Ở KHỐI LỚP NÀO THÌ CHỈ HIỂN THỊ CHƯƠNG TRÌNH KHỐI LỚP ĐÓ (KHÔNG HIỂN THỊ TẤT CẢ GÂY RỐI MẮT)
+  if (studentGrade && !isAdmin) {
+    if (CURRENT_GRADE !== studentGrade) {
+      CURRENT_GRADE = studentGrade;
+      if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA[CURRENT_GRADE]) {
+        VOCABULARY_DATA = ALL_VOCABULARY_DATA[CURRENT_GRADE];
+      }
+      try { localStorage.setItem('ENG_SELECTED_GRADE', CURRENT_GRADE); } catch (e) {}
+    }
+
+    const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[CURRENT_GRADE]) || { name: `Lớp ${CURRENT_GRADE}`, icon: "📘" };
+    const classStr = student?.className ? (student.className.toLowerCase().includes('lớp') ? student.className : `Lớp ${student.className}`) : `Lớp ${CURRENT_GRADE}`;
+
+    const studentGradeCard = document.createElement('div');
+    studentGradeCard.className = 'grade-single-student-block';
+    studentGradeCard.style.cssText = 'display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; padding: 4px 10px; flex-wrap: wrap; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px;';
+
+    studentGradeCard.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.15rem;">📚</span>
+        <span style="font-weight: 800; font-size: 0.85rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">
+          Chương Trình Tiếng Anh ${meta.name} (Global Success)
+        </span>
+        <span style="background: rgba(56, 189, 248, 0.25); border: 1px solid rgba(56, 189, 248, 0.5); color: #ffffff; padding: 2px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 800;">
+          Dành riêng cho ${classStr}
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="color: #94a3b8; font-size: 0.75rem; font-weight: 600;">Khối lớp học tập:</span>
+        <button type="button" class="grade-pill active" style="pointer-events: none; font-weight: 900; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: 1px solid #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); padding: 4px 12px; border-radius: 10px; font-size: 0.8rem;">
+          ⭐ Lớp ${CURRENT_GRADE}
+        </button>
+      </div>
+    `;
+
+    container.appendChild(studentGradeCard);
+    updateGradeUI();
+    return;
+  }
+
+  // Trường hợp Chưa đăng nhập học sinh hoặc là Admin: Hiển thị đầy đủ để chọn
   // Nhóm 1: CẤP THCS (Lớp 6, 7, 8, 9)
   const thcsWrapper = document.createElement('div');
   thcsWrapper.className = 'grade-group-block';
@@ -4585,8 +4665,19 @@ const STUDENT_SYSTEM = {
 
       if (saved) {
         this.currentStudent = JSON.parse(saved);
-        if (this.currentStudent.grade && typeof CURRENT_GRADE !== 'undefined' && this.currentStudent.grade !== CURRENT_GRADE) {
-          if (typeof switchGrade === 'function') switchGrade(this.currentStudent.grade, false);
+        if (this.currentStudent && this.currentStudent.className) {
+          const m = String(this.currentStudent.className).match(/^(\d{1,2})/);
+          if (m && m[1]) {
+            this.currentStudent.grade = m[1];
+          }
+        }
+        if (this.currentStudent && this.currentStudent.grade && typeof CURRENT_GRADE !== 'undefined') {
+          if (CURRENT_GRADE !== String(this.currentStudent.grade)) {
+            if (typeof switchGrade === 'function') switchGrade(String(this.currentStudent.grade), false);
+          }
+        }
+        if (typeof initGradePills === 'function') {
+          initGradePills();
         }
       } else {
         // Mặc định tạo tài khoản học tập tự do để không bao giờ bị khóa nút
@@ -5141,6 +5232,13 @@ const STUDENT_SYSTEM = {
         badge.style.boxShadow = '0 0 12px rgba(250, 204, 21, 0.5)';
       } else {
         nameSpan.textContent = `${this.currentStudent.fullName} (${classStr})`;
+      }
+
+      // Luôn cập nhật brand badge đúng theo khối lớp của học sinh (Không bao giờ lệch lớp)
+      const curStudentGrade = this.currentStudent.grade || (typeof CURRENT_GRADE !== 'undefined' ? CURRENT_GRADE : '8');
+      const topGradeBadge = document.getElementById('currentGradeBadge');
+      if (topGradeBadge) {
+        topGradeBadge.textContent = `TIẾNG ANH LỚP ${curStudentGrade}`;
       }
       badge.title = `${this.currentStudent.fullName} • ${classStr} • User: ${this.currentStudent.username || this.currentStudent.phone} • Bấm để xem Hồ sơ & Đổi Avatar`;
 
@@ -7614,10 +7712,10 @@ function startApp() {
   try { loadCustomVocab(); } catch (e) { console.error("loadCustomVocab error:", e); }
   try { loadProgress(); } catch (e) { console.error("loadProgress error:", e); }
   try { SpeechEngine.init(); } catch (e) { console.error("SpeechEngine.init error:", e); }
+  try { STUDENT_SYSTEM.init(); } catch (e) { console.error("STUDENT_SYSTEM error:", e); }
   try { initGradePills(); } catch (e) { console.error("initGradePills error:", e); }
   try { initUnitPills(); } catch (e) { console.error("initUnitPills error:", e); }
   try { setupEventListeners(); } catch (e) { console.error("setupEventListeners error:", e); }
-  try { STUDENT_SYSTEM.init(); } catch (e) { console.error("STUDENT_SYSTEM error:", e); }
   try { TEACHER_CHAT.init(); } catch (e) { console.error("TEACHER_CHAT error:", e); }
   try { WEAKWORDS_SYSTEM.init(); } catch (e) { console.error("WEAKWORDS_SYSTEM error:", e); }
   try { GAMIFICATION.init(); } catch (e) { console.error("GAMIFICATION error:", e); }
@@ -8364,9 +8462,13 @@ if (typeof window !== 'undefined') {
         }
       }
 
-      // 2. Tự động chọn đúng Khối lớp
-      if (gradeParam && typeof switchGrade === 'function') {
-        switchGrade(gradeParam);
+      // 2. Tự động chọn đúng Khối lớp và cập nhật giao diện chỉ hiển thị khối của học sinh
+      const resolvedG = gradeParam || (typeof getActiveStudentGrade === 'function' ? getActiveStudentGrade() : null);
+      if (resolvedG && typeof switchGrade === 'function') {
+        switchGrade(resolvedG, false);
+      }
+      if (typeof initGradePills === 'function') {
+        initGradePills();
       }
 
       // 3. Tự động chọn đúng Bài học (Unit)

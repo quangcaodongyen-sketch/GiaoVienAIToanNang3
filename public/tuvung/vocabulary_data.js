@@ -16973,9 +16973,37 @@ const ALL_VOCABULARY_DATA = {
   ]
 };
 
-// Cấu hình khối lớp mặc định
-let CURRENT_GRADE = (typeof localStorage !== 'undefined' && localStorage.getItem('ENG_SELECTED_GRADE')) || "12";
-if (!ALL_VOCABULARY_DATA[CURRENT_GRADE]) CURRENT_GRADE = "12";
+// Cấu hình khối lớp mặc định theo Học sinh đăng nhập hoặc THCS Đồng Yên (mặc định Khối 8 hoặc 6)
+let CURRENT_GRADE = "8";
+try {
+  const _urlParams = new URLSearchParams(window.location.search);
+  const _qGrade = _urlParams.get('grade');
+  if (_qGrade && ALL_VOCABULARY_DATA[_qGrade]) {
+    CURRENT_GRADE = String(_qGrade);
+  } else {
+    const _stuRaw = localStorage.getItem('ENG_STUDENT_PROFILE') ||
+                    localStorage.getItem('gvai_gradebook_active_student_v4_clean') ||
+                    localStorage.getItem('DONGYEN_REMEMBERED_STUDENT');
+    if (_stuRaw) {
+      const _stu = JSON.parse(_stuRaw);
+      if (_stu && _stu.className) {
+        const _m = String(_stu.className).match(/^(\d{1,2})/);
+        if (_m && ALL_VOCABULARY_DATA[_m[1]]) {
+          CURRENT_GRADE = _m[1];
+        }
+      } else if (_stu && _stu.grade && ALL_VOCABULARY_DATA[String(_stu.grade)]) {
+        CURRENT_GRADE = String(_stu.grade);
+      }
+    } else {
+      const _savedG = localStorage.getItem('ENG_SELECTED_GRADE');
+      if (_savedG && ALL_VOCABULARY_DATA[_savedG]) {
+        CURRENT_GRADE = _savedG;
+      }
+    }
+  }
+} catch (e) {}
+
+if (!ALL_VOCABULARY_DATA[CURRENT_GRADE]) CURRENT_GRADE = "8";
 
 // Biến tương thích ngược cho các module hiện tại
 let VOCABULARY_DATA = ALL_VOCABULARY_DATA[CURRENT_GRADE];

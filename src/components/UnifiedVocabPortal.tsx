@@ -53,17 +53,32 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   onRewardMerit,
   onOpenIpaModal
 }) => {
-  // TỰ ĐỘNG KHÓA KHỐI LỚP THEO LỚP CỦA HỌC SINH ĐỂ TRÁNH NHẦM LẪN
-  const studentGrade = currentStudent?.grade || 8;
+  // TỰ ĐỘNG KHÓA KHỐI LỚP CHUẨN XÁC THEO LỚP CỦA HỌC SINH (VD: 8A1 -> LỚP 8, 6A2 -> LỚP 6)
+  const deduceStudentGrade = (): number => {
+    if (currentStudent?.grade && typeof currentStudent.grade === 'number' && currentStudent.grade >= 6 && currentStudent.grade <= 12) {
+      return currentStudent.grade;
+    }
+    if (currentStudent?.className) {
+      const m = String(currentStudent.className).match(/^(\d{1,2})/);
+      if (m && m[1]) {
+        const g = parseInt(m[1], 10);
+        if (g >= 6 && g <= 12) return g;
+      }
+    }
+    return 8;
+  };
+
+  const studentGrade = deduceStudentGrade();
   const [selectedGrade, setSelectedGrade] = useState<number>(studentGrade);
   const [allowGradeSwitch, setAllowGradeSwitch] = useState<boolean>(false);
 
   // Đồng bộ lại khối lớp khi học sinh đăng nhập hoặc đổi học sinh
   useEffect(() => {
-    if (currentStudent && currentStudent.grade) {
-      setSelectedGrade(currentStudent.grade);
+    if (currentStudent) {
+      const g = deduceStudentGrade();
+      setSelectedGrade(g);
     }
-  }, [currentStudent?.grade, currentStudent?.id]);
+  }, [currentStudent?.grade, currentStudent?.className, currentStudent?.id]);
 
   // Danh sách Unit theo khối lớp
   const availableUnits: UnitInfo[] = useMemo(() => {
@@ -1906,8 +1921,8 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <div className="h-[750px] sm:h-[880px] w-full">
             <iframe
               key={iframeKey}
-              src="/tuvung/index.html"
-              title="App Học Từ Vựng Tiếng Anh Lớp 6 - 12 (Global Success)"
+              src={`/tuvung/index.html?grade=${selectedGrade || currentStudent?.grade || 8}&class=${encodeURIComponent(currentStudent?.className || '')}&name=${encodeURIComponent(currentStudent?.name || '')}&v=${Date.now()}`}
+              title="App Học Từ Vựng Tiếng Anh (Global Success)"
               className="w-full h-full border-0"
               allow="autoplay; microphone; clipboard-write"
             />
