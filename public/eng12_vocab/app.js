@@ -174,8 +174,8 @@ const STATE_CHANT = {
   currentWordIdx: 0,
   isPlaying: false,
   timerTimeout: null,
-  speakVi: true,
-  speakExample: true,
+  speakVi: false,
+  speakExample: false,
   loopAll: true,
   style: 'pop_funk',
   bpm: 110,
@@ -2975,21 +2975,21 @@ function runChantSequenceForCurrentWord() {
     if (wordEl) wordEl.classList.remove('highlight');
     if (meaningEl) meaningEl.classList.add('highlight');
     
-    // Speak meaning or word + meaning
-    if (STATE_CHANT.speakVi) {
-      speakVietnameseResponse(w.word, w.meaning);
-    } else {
-      SpeechEngine.speak(w.word, 0.78);
+    // LƯỢT 2: ĐỐI ĐÁP TIẾNG ANH THEO NHỊP (BỎ ĐỌC NGHĨA TIẾNG VIỆT)
+    if (badgeEl) {
+      badgeEl.className = 'chant-call-badge response';
+      badgeEl.textContent = '🤝 LƯỢT 2: RESPONSE (ĐỐI ĐÁP TIẾNG ANH)';
     }
+    SpeechEngine.speak(w.word, 0.78);
     
-    // Phase 3: CHEER (Sau 2.5s - Nhắc lại hoặc đọc ví dụ)
+    // Phase 3: CHEER (Đồng thanh nhắc lại từ tiếng Anh dứt khoát - BỎ ĐỌC CÂU VÍ DỤ)
     STATE_CHANT.timerTimeout = setTimeout(() => {
       if (!STATE_CHANT.isPlaying) return;
       STATE_CHANT.currentPhase = 'cheer';
       
       if (badgeEl) {
         badgeEl.className = 'chant-call-badge cheer';
-        badgeEl.textContent = '🌟 LƯỢT 3: CHEER (GHI NHỚ SÂU)';
+        badgeEl.textContent = '🌟 LƯỢT 3: CHEER (ĐỒNG THANH GHI NHỚ)';
       }
       if (card) {
         card.className = 'chant-card beat-pulse';
@@ -2997,22 +2997,19 @@ function runChantSequenceForCurrentWord() {
       if (wordEl) wordEl.classList.add('highlight');
       if (meaningEl) meaningEl.classList.add('highlight');
       
-      if (STATE_CHANT.speakExample && w.example) {
-        SpeechEngine.speak(w.example, 0.75);
-      } else {
-        SpeechEngine.speak(w.word, 0.78);
-      }
+      // Chỉ xướng từ tiếng Anh dứt khoát theo beat nhạc
+      SpeechEngine.speak(w.word, 0.78);
       
-      // Step to next word after groove delay (2.4s)
+      // Chuyển sang từ tiếp theo theo nhịp điệu (1.8s)
       STATE_CHANT.timerTimeout = setTimeout(() => {
         if (!STATE_CHANT.isPlaying) return;
         STATE_CHANT.currentWordIdx++;
         runChantSequenceForCurrentWord();
-      }, 2800);
+      }, 1800);
       
-    }, 2800);
+    }, 1800);
     
-  }, 1900);
+  }, 1700);
 }
 
 function speakVietnameseResponse(wordEn, meaningVi) {
