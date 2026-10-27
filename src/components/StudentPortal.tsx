@@ -1,7 +1,7 @@
 import vocabularyService, { UnitInfo } from '../services/vocabularyService';
 import audioPronunciationService, { VoiceAccent } from '../services/audioPronunciationService';
 import { IpaChartPronunciationModal } from './IpaChartPronunciationModal';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   GraduationCap, 
   BookOpen, 
@@ -23,7 +23,8 @@ import {
   Sparkles,
   FileText,
   Copy,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 import { BRAND } from '../config/brand';
 import { OnlineExamPortal } from './OnlineExamPortal';
@@ -239,6 +240,27 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
   const [quickError, setQuickError] = useState<string>('');
   const [show3dMiniGames, setShow3dMiniGames] = useState<boolean>(false);
+  const [quickAutocorrectNote, setQuickAutocorrectNote] = useState<{
+    original: string;
+    corrected: string;
+    isOfficial: boolean;
+  } | null>(null);
+
+  const handleQuickFullNameBlur = () => {
+    if (!quickFullName.trim()) {
+      setQuickAutocorrectNote(null);
+      return;
+    }
+    const res = studentGradebookService.standardizeStudentName(quickFullName, quickClassName);
+    if (res.changed) {
+      setQuickFullName(res.standardizedName);
+      setQuickAutocorrectNote({
+        original: res.originalName,
+        corrected: res.standardizedName,
+        isOfficial: res.isOfficialMatched
+      });
+    }
+  };
 
   const saveStudentToDevice = (student: StudentProfile) => {
     try {
@@ -261,7 +283,19 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     setQuickError('');
 
     const cls = quickClassName.trim() || '8A1';
-    const val = validateEducationalStudentName(quickFullName, cls);
+    // Tự động chuẩn hóa chính tả theo danh sách lớp của Thầy Thành
+    const std = studentGradebookService.standardizeStudentName(quickFullName, cls);
+    const cleanedInputName = std.standardizedName || quickFullName.trim();
+    if (std.changed) {
+      setQuickFullName(std.standardizedName);
+      setQuickAutocorrectNote({
+        original: std.originalName,
+        corrected: std.standardizedName,
+        isOfficial: std.isOfficialMatched
+      });
+    }
+
+    const val = validateEducationalStudentName(cleanedInputName, cls);
     if (!val.isValid) {
       const msg = val.errorMessage || 'Họ và tên học sinh không hợp lệ!';
       setQuickError(msg);
@@ -362,11 +396,41 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   };
 
   const [regFullName, setRegFullName] = useState<string>('');
+  const [nameAutocorrectNote, setNameAutocorrectNote] = useState<{
+    original: string;
+    corrected: string;
+    isOfficial: boolean;
+  } | null>(null);
   const [regUsername, setRegUsername] = useState<string>('');
   const [regUsernameUserEdited, setRegUsernameUserEdited] = useState<boolean>(false);
   const [regPassword, setRegPassword] = useState<string>('');
-  const [regClassName, setRegClassName] = useState<string>('7A1');
-  const [regGrade, setRegGrade] = useState<number>(7);
+  const [regClassName, setRegClassName] = useState<string>('8A1');
+  const [regGrade, setRegGrade] = useState<number>(8);
+
+  const officialSuggestions = useMemo(() => {
+    if (!regFullName.trim() || regFullName.trim().length < 1) return [];
+    return studentGradebookService.getOfficialNameSuggestions(regFullName, regClassName, 6);
+  }, [regFullName, regClassName]);
+
+  const handleFullNameBlur = () => {
+    if (!regFullName.trim()) {
+      setNameAutocorrectNote(null);
+      return;
+    }
+    const res = studentGradebookService.standardizeStudentName(regFullName, regClassName);
+    if (res.changed) {
+      setRegFullName(res.standardizedName);
+      if (!regUsernameUserEdited) {
+        const slug = removeDiacritics(res.standardizedName).toLowerCase().replace(/[^a-z0-9]/g, '');
+        setRegUsername(slug);
+      }
+      setNameAutocorrectNote({
+        original: res.originalName,
+        corrected: res.standardizedName,
+        isOfficial: res.isOfficialMatched
+      });
+    }
+  };
   const [regPhone, setRegPhone] = useState<string>('');
   const [regGender, setRegGender] = useState<'Nam' | 'Nữ'>('Nam');
   const [regError, setRegError] = useState<string>('');
@@ -631,19 +695,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         return;
       }
 
+      // Tự động chuẩn hóa chính tả họ tên học sinh theo danh sách lớp
+      const stdNameResult = studentGradebookService.standardizeStudentName(name, cleanCls);
+      const finalName = stdNameResult.standardizedName || name;
+      const finalCode = stdNameResult.officialItem ? stdNameResult.officialItem.studentCode : ('HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90));
+
       // Tạo mới hồ sơ học sinh
-      const code = 'HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90);
       const savedProfile = studentGradebookService.addStudent({
-        studentCode: code,
+        studentCode: finalCode,
         username: rawUser,
         password: pass,
-        name: name,
+        name: finalName,
         classId: 'cls-' + cleanCls.toLowerCase().replace(/\s+/g, ''),
         className: cleanCls,
         grade: regGrade,
         gender: regGender,
         parentPhone: cleanPhone,
-        note: 'Học sinh tự đăng ký trực tuyến'
+        note: stdNameResult.isOfficialMatched ? 'Học sinh chính thức theo Sổ điểm bộ môn' : 'Học sinh tự đăng ký trực tuyến'
       });
 
       // Đồng bộ ngay lên Cloud để điện thoại có thể đăng nhập ngay tức thì
@@ -1517,9 +1585,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                👤 Họ và tên học sinh (*):
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                  👤 Họ và tên học sinh (*):
+                </label>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span>Tự động sửa chính tả theo danh sách lớp</span>
+                </span>
+              </div>
               <input
                 type="text"
                 required
@@ -1527,15 +1601,45 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 onChange={(e) => {
                   setQuickFullName(e.target.value);
                   setQuickError('');
+                  setQuickAutocorrectNote(null);
                 }}
-                placeholder="Ví dụ: Nguyễn Văn An, Trần Thu Hà..."
+                onBlur={handleQuickFullNameBlur}
+                placeholder="Ví dụ: đặng gia bảo, nguyen thanh binh, vi gia bao..."
                 className="w-full px-4 py-3 rounded-2xl border-2 border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm sm:text-base font-bold focus:border-blue-600 focus:outline-hidden transition shadow-xs"
               />
+
+              {/* Thông báo tự động sửa chuẩn chính tả */}
+              {quickAutocorrectNote && (
+                <div className="mt-1.5 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-between gap-1.5 animate-fadeIn">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>
+                      {quickAutocorrectNote.isOfficial
+                        ? `✨ Đã tự động chuẩn hóa chính tả theo Danh sách lớp ${quickClassName}: "${quickAutocorrectNote.corrected}"`
+                        : `✨ Đã tự động viết hoa chuẩn tên riêng: "${quickAutocorrectNote.corrected}"`}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setQuickAutocorrectNote(null)}
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
 
               {/* CHỌN NHANH TÊN TRONG SỔ ĐIỂM CHÍNH THỨC CỦA LỚP NẾU ĐÃ ĐƯỢC THẦY CẬP NHẬT */}
               {(() => {
                 const roster = studentGradebookService.getOfficialRoster(quickClassName);
                 if (roster && roster.length > 0) {
+                  const filteredRoster = quickFullName.trim()
+                    ? roster.filter(name => {
+                        const q = removeDiacritics(quickFullName).toLowerCase().replace(/\s+/g, '');
+                        const n = removeDiacritics(name).toLowerCase().replace(/\s+/g, '');
+                        return n.includes(q);
+                      })
+                    : roster;
                   return (
                     <div className="mt-2 p-3 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-1.5 animate-in fade-in">
                       <div className="flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-200">
@@ -1543,16 +1647,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                           <span>📋</span>
                           <span>Sổ điểm Lớp {quickClassName} ({roster.length} em):</span>
                         </span>
-                        <span className="text-[11px] text-amber-700 dark:text-amber-300">Chạm để chọn tên em</span>
+                        <span className="text-[11px] text-amber-700 dark:text-amber-300">
+                          {quickFullName.trim() ? `Lọc thấy ${filteredRoster.length} em` : 'Chạm để chọn tên em'}
+                        </span>
                       </div>
                       <div className="max-h-32 overflow-y-auto flex flex-wrap gap-1 pr-1">
-                        {roster.map((name, i) => (
+                        {filteredRoster.map((name, i) => (
                           <button
                             key={i}
                             type="button"
                             onClick={() => {
                               setQuickFullName(name);
                               setQuickError('');
+                              setQuickAutocorrectNote({
+                                original: quickFullName,
+                                corrected: name,
+                                isOfficial: true
+                              });
                             }}
                             className={`px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
                               quickFullName === name
@@ -2238,9 +2349,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             {authActiveTab === 'register' && (
               <form onSubmit={handleRegisterSubmit} noValidate className="space-y-3.5 text-xs">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    👤 Họ và tên học sinh (*):
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-slate-700 dark:text-slate-300">
+                      👤 Họ và tên học sinh (*):
+                    </label>
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-amber-500" />
+                      <span>Tự động sửa chính tả theo danh sách lớp</span>
+                    </span>
+                  </div>
                   <input
                     type="text"
                     required
@@ -2249,17 +2366,74 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       const val = e.target.value;
                       setRegFullName(val);
                       setRegError('');
+                      setNameAutocorrectNote(null);
                       if (!regUsernameUserEdited) {
                         const slug = removeDiacritics(val).toLowerCase().replace(/[^a-z0-9]/g, '');
                         setRegUsername(slug);
                       }
                     }}
+                    onBlur={handleFullNameBlur}
                     autoCapitalize="words"
                     autoCorrect="off"
                     spellCheck={false}
-                    placeholder="Ví dụ: Đinh Quang Việt, Hoàng Yến Chi..."
+                    placeholder="Ví dụ: đặng gia bảo, nguyen thanh binh, vi gia bao..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
                   />
+
+                  {/* Thông báo tự động sửa chuẩn chính tả họ tên */}
+                  {nameAutocorrectNote && (
+                    <div className="mt-1.5 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-between gap-1.5 animate-fadeIn">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>
+                          {nameAutocorrectNote.isOfficial
+                            ? `✨ Đã tự động chuẩn hóa chính tả theo Danh sách lớp ${regClassName}: "${nameAutocorrectNote.corrected}"`
+                            : `✨ Đã tự động viết hoa chuẩn tên riêng: "${nameAutocorrectNote.corrected}"`}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setNameAutocorrectNote(null)}
+                        className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Gợi ý thông minh từ danh sách lớp Thầy Thành */}
+                  {officialSuggestions.length > 0 && (
+                    <div className="mt-2 p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/80">
+                      <div className="text-[11px] font-bold text-blue-700 dark:text-blue-300 mb-1.5 flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span>Gợi ý chuẩn danh sách lớp {regClassName} (Bấm để chọn nhanh chuẩn chính tả):</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {officialSuggestions.map(s => (
+                          <button
+                            key={s.studentCode}
+                            type="button"
+                            onClick={() => {
+                              setRegFullName(s.name);
+                              setNameAutocorrectNote({
+                                original: regFullName,
+                                corrected: s.name,
+                                isOfficial: true
+                              });
+                              if (!regUsernameUserEdited) {
+                                const slug = removeDiacritics(s.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+                                setRegUsername(slug);
+                              }
+                            }}
+                            className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 text-blue-800 dark:text-blue-200 hover:bg-blue-600 hover:text-white border border-blue-300 dark:border-blue-700 transition shadow-2xs cursor-pointer flex items-center gap-1"
+                          >
+                            <span>{s.name}</span>
+                            <span className="text-[10px] text-slate-400 font-normal">({s.studentCode.slice(-4)})</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

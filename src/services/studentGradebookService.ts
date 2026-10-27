@@ -191,11 +191,133 @@ function normalizeClassName(cls: string): string {
 }
 
 
+// ==================== TỰ ĐỘNG CHUẨN HÓA CHÍNH TẢ & ĐỐI CHIẾU DANH SÁCH LỚP ====================
+export function toVietnameseTitleCase(str: string): string {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .trim()
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map(w => {
+      if (!w) return '';
+      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
+export interface StandardizeStudentNameResult {
+  standardizedName: string;
+  isOfficialMatched: boolean;
+  officialItem?: OfficialStudentRosterItem;
+  originalName: string;
+  changed: boolean;
+}
+
+/**
+ * Tự động chuẩn hóa chính tả họ tên học sinh theo danh sách lớp của Thầy Thành:
+ * - Nếu học sinh viết thường (nguyen thanh binh, vi gia bao, hoang kim anh...) hoặc viết không dấu:
+ *   Hệ thống tự động đối chiếu danh sách lớp chính thức và sửa về chuẩn chính tả: "Nguyễn Thanh Bình", "Vi Gia Bảo"...
+ * - Nếu học sinh ngoài danh sách: Tự động viết hoa chuẩn danh từ riêng (Title Case): "Nguyễn Văn An"
+ */
+export function standardizeStudentName(rawName: string, className?: string): StandardizeStudentNameResult {
+  if (!rawName || typeof rawName !== 'string') {
+    return {
+      standardizedName: '',
+      isOfficialMatched: false,
+      originalName: rawName || '',
+      changed: false
+    };
+  }
+
+  const originalTrimmed = rawName.trim().replace(/\s+/g, ' ');
+  const normInput = normalizeVietnameseName(originalTrimmed);
+  const cleanCls = normalizeClassName(className || '');
+
+  // 1. Đối chiếu danh sách học sinh chính thức từ Sổ Điểm Thầy Đinh Văn Thành
+  const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+  let candidateRoster: OfficialStudentRosterItem[] = [];
+
+  if (cleanCls && allData[cleanCls]) {
+    candidateRoster = allData[cleanCls];
+  } else {
+    Object.values(allData).forEach(arr => candidateRoster.push(...arr));
+  }
+
+  // A. So khớp trong lớp chỉ định
+  for (const item of candidateRoster) {
+    const normOfficial = normalizeVietnameseName(item.name);
+    if (normInput === normOfficial) {
+      return {
+        standardizedName: item.name,
+        isOfficialMatched: true,
+        officialItem: item,
+        originalName: originalTrimmed,
+        changed: originalTrimmed !== item.name
+      };
+    }
+  }
+
+  // B. Nếu chưa tìm thấy trong lớp chỉ định, thử tìm trên toàn bộ các lớp của Thầy
+  if (cleanCls && allData[cleanCls]) {
+    for (const [clsKey, list] of Object.entries(allData)) {
+      if (clsKey === cleanCls) continue;
+      for (const item of list) {
+        if (normInput === normalizeVietnameseName(item.name)) {
+          return {
+            standardizedName: item.name,
+            isOfficialMatched: true,
+            officialItem: item,
+            originalName: originalTrimmed,
+            changed: originalTrimmed !== item.name
+          };
+        }
+      }
+    }
+  }
+
+  // 2. Nếu không nằm trong danh sách chính thức, tự động viết hoa chuẩn danh từ riêng tiếng Việt
+  const titleCased = toVietnameseTitleCase(originalTrimmed);
+  return {
+    standardizedName: titleCased,
+    isOfficialMatched: false,
+    originalName: originalTrimmed,
+    changed: originalTrimmed !== titleCased
+  };
+}
+
+/**
+ * Gợi ý nhanh danh sách học sinh chính thức theo lớp đang gõ để bấm chọn chuẩn 100%
+ */
+export function getOfficialNameSuggestions(query: string, className?: string, limit: number = 8): OfficialStudentRosterItem[] {
+  const cleanCls = normalizeClassName(className || '');
+  const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+  let list: OfficialStudentRosterItem[] = [];
+
+  if (cleanCls && allData[cleanCls]) {
+    list = allData[cleanCls];
+  } else {
+    Object.values(allData).forEach(arr => list.push(...arr));
+  }
+
+  const q = normalizeVietnameseName(query || '');
+  if (!q) {
+    return list.slice(0, limit);
+  }
+
+  const matches = list.filter(item => {
+    const n = normalizeVietnameseName(item.name);
+    return n.includes(q) || n.startsWith(q);
+  });
+
+  return matches.slice(0, limit);
+}
+
 // ==================== BỘ LỌC TÊN HỌC SINH CHUẨN MỰC GIÁO DỤC ====================
 export interface NameValidationResult {
   isValid: boolean;
   cleanName: string;
   errorMessage?: string;
+  isOfficialMatched?: boolean;
 }
 
 export function validateEducationalStudentName(rawName: string, className?: string): NameValidationResult {
@@ -271,12 +393,9 @@ export function validateEducationalStudentName(rawName: string, className?: stri
     return { isValid: false, cleanName: '', errorMessage: 'Họ và tên không hợp lệ do có quá nhiều ký tự lặp lại!' };
   }
 
-  // Tự động chuẩn hóa viết hoa chữ cái đầu (Title Case: "nguyễn văn an" -> "Nguyễn Văn An")
-  const titleCased = words
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ');
-
-  return { isValid: true, cleanName: titleCased };
+  // Tự động chuẩn hóa chính tả theo danh sách lớp hoặc Title Case
+  const std = standardizeStudentName(trimmed, className);
+  return { isValid: true, cleanName: std.standardizedName, isOfficialMatched: std.isOfficialMatched };
 }
 
 // Dữ liệu lớp học khởi tạo mẫu
@@ -1974,6 +2093,15 @@ class StudentGradebookService {
     return items;
   }
 
+
+  // ==================== TỰ ĐỘNG CHUẨN HÓA CHÍNH TẢ THEO DANH SÁCH LỚP ====================
+  public standardizeStudentName(rawName: string, className?: string): StandardizeStudentNameResult {
+    return standardizeStudentName(rawName, className);
+  }
+
+  public getOfficialNameSuggestions(query: string, className?: string, limit: number = 8): OfficialStudentRosterItem[] {
+    return getOfficialNameSuggestions(query, className, limit);
+  }
 
   // ==================== BÁO CÁO ĐIỂM DANH & ROSTER HỌC SINH TỪNG LỚP ====================
   public getOfficialRosterFull(className?: string): OfficialStudentRosterItem[] {
