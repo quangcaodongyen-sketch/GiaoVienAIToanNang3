@@ -33,7 +33,19 @@ interface UnifiedVocabPortalProps {
   onOpenIpaModal?: () => void;
 }
 
-type PracticeMode = 'flashcard' | 'quiz' | 'listen' | 'match' | 'spelling' | 'list';
+type PracticeMode = 
+  | 'flashcard' 
+  | 'chant' 
+  | 'match' 
+  | 'scramble' 
+  | 'blitz' 
+  | 'quiz' 
+  | 'listen' 
+  | 'spelling' 
+  | 'hangman' 
+  | 'context' 
+  | 'minitest' 
+  | 'list';
 
 export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   currentStudent,
@@ -84,6 +96,20 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
   // State Mini-game 3D & Chant iframe
   const [show3dMiniGames, setShow3dMiniGames] = useState<boolean>(false);
+  const [stageViewType, setStageViewType] = useState<'standard' | '3d'>('standard');
+
+  // Helper sinh URL đồng bộ cho mọi dạng bài tập trong hệ thống 3D & Chant
+  const getGameUrl = (tabId: string) => {
+    const params = new URLSearchParams();
+    params.set('grade', String(selectedGrade));
+    params.set('unit', String(selectedUnit));
+    params.set('tab', tabId.startsWith('tab-') ? tabId : 'tab-' + tabId);
+    if (currentStudent) {
+      params.set('name', currentStudent.name);
+      params.set('class', currentStudent.className);
+    }
+    return `/tuvung/index.html?${params.toString()}`;
+  };
   const [iframeKey, setIframeKey] = useState<number>(0);
 
   // ==================== STATE DẠNG 1: THẺ FLASHCARD 3D ====================
@@ -516,84 +542,183 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         )}
       </div>
 
-      {/* ==================== 3. THANH CHỌN CÁC DẠNG BÀI TẬP LUYỆN TẬP ==================== */}
-      <div className="bg-white dark:bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-1.5 overflow-x-auto">
-        <button
-          type="button"
-          onClick={() => setCurrentMode('flashcard')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            currentMode === 'flashcard'
-              ? 'bg-blue-600 text-white shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <span>🃏 1. Thẻ 3D</span>
-        </button>
+      {/* ==================== 3. THANH CHỌN ĐẦY ĐỦ 12 DẠNG BÀI TẬP TỪ VỰNG ==================== */}
+      <div className="bg-white dark:bg-slate-900 p-2 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+        <div className="flex items-center justify-between gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 flex-wrap">
+          <span className="flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <span>Đầy Đủ 12 Dạng Bài Tập Luyện Từ Vựng Toàn Diện:</span>
+          </span>
+          <span className="text-[11px] text-blue-600 dark:text-blue-400">
+            Khối Lớp {selectedGrade} • Unit {selectedUnit} ({filteredVocab.length} từ)
+          </span>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => setCurrentMode('quiz')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            currentMode === 'quiz'
-              ? 'bg-blue-600 text-white shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Target className="w-4 h-4" />
-          <span>2. Trắc Nghiệm</span>
-        </button>
+        {/* 12 Tabs Button Row */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+          {/* 1. Flashcard */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('flashcard')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'flashcard'
+                ? 'bg-blue-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <span>🃏 1. Thẻ 3D</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setCurrentMode('listen')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            currentMode === 'listen'
-              ? 'bg-blue-600 text-white shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Headphones className="w-4 h-4" />
-          <span>3. Luyện Nghe</span>
-        </button>
+          {/* 2. Bài Chant */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('chant')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'chant'
+                ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md font-black ring-2 ring-pink-400 animate-pulse'
+                : 'bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 hover:bg-pink-100 border border-pink-200 dark:border-pink-900'
+            }`}
+            title="Bài Chant Nhạc Beat Điệu Call & Response"
+          >
+            <span>🎵 2. Bài Chant &amp; Beat</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setCurrentMode('match')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            currentMode === 'match'
-              ? 'bg-blue-600 text-white shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Puzzle className="w-4 h-4" />
-          <span>4. Nối Cặp Từ</span>
-        </button>
+          {/* 3. Ghép Cặp Từ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('match')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'match'
+                ? 'bg-emerald-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <Puzzle className="w-3.5 h-3.5" />
+            <span>3. Ghép Cặp Từ</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setCurrentMode('spelling')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
-            currentMode === 'spelling'
-              ? 'bg-blue-600 text-white shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Edit3 className="w-4 h-4" />
-          <span>5. Luyện Gõ Từ</span>
-        </button>
+          {/* 4. Xếp Chữ / Ghép Chữ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('scramble')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'scramble'
+                ? 'bg-indigo-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <span>🔤 4. Ghép Chữ</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setCurrentMode('list')}
-          className={`px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shrink-0 cursor-pointer ml-auto ${
-            currentMode === 'list'
-              ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>📋 Toàn Bộ Từ ({filteredVocab.length})</span>
-        </button>
+          {/* 5. Phản Xạ Nhanh */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('blitz')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'blitz'
+                ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <span>⚡ 5. Phản Xạ 5s</span>
+          </button>
+
+          {/* 6. Trắc Nghiệm */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('quiz')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'quiz'
+                ? 'bg-blue-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <Target className="w-3.5 h-3.5" />
+            <span>6. Trắc Nghiệm</span>
+          </button>
+
+          {/* 7. Luyện Nghe */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('listen')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'listen'
+                ? 'bg-blue-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <Headphones className="w-3.5 h-3.5" />
+            <span>7. Luyện Nghe</span>
+          </button>
+
+          {/* 8. Luyện Gõ Từ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('spelling')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'spelling'
+                ? 'bg-blue-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <Edit3 className="w-3.5 h-3.5" />
+            <span>8. Luyện Gõ</span>
+          </button>
+
+          {/* 9. Thám Tử Ô Chữ */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('hangman')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'hangman'
+                ? 'bg-purple-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <span>🕵️ 9. Ô Chữ Bí Mật</span>
+          </button>
+
+          {/* 10. Ngữ Cảnh */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('context')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'context'
+                ? 'bg-teal-600 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <span>📝 10. Ngữ Cảnh</span>
+          </button>
+
+          {/* 11. Đánh Giá 15 Phút */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('minitest')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+              currentMode === 'minitest'
+                ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 border border-amber-200 dark:border-amber-800'
+            }`}
+          >
+            <Trophy className="w-3.5 h-3.5" />
+            <span>11. Kiểm Tra 15P</span>
+          </button>
+
+          {/* 12. Tra Cứu */}
+          <button
+            type="button"
+            onClick={() => setCurrentMode('list')}
+            className={`px-3 py-2 rounded-xl font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer ml-auto ${
+              currentMode === 'list'
+                ? 'bg-slate-800 text-white shadow-sm font-black'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>12. Tra Cứu ({filteredVocab.length})</span>
+          </button>
+        </div>
       </div>
 
       {/* ==================== 4. NỘI DUNG TỪNG DẠNG BÀI TẬP ==================== */}
@@ -1290,6 +1415,246 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* DẠNG 6: DANH MỤC TRA CỨU TOÀN BỘ TỪ */}
+      {/* DẠNG 2: BÀI CHANT & KARAOKE PLAYER (NHẠC BEAT CALL & RESPONSE) */}
+      {currentMode === 'chant' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-pink-200 dark:border-pink-900/50 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🎙️</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Bài Chant &amp; Karaoke Nhịp Điệu (Call &amp; Response) • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs text-pink-100">
+                  Unit {selectedUnit} • Nhạc beat sôi động, visualizer nhảy theo nhạc, học sinh đọc theo nhịp điệu
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`chant_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-chant')}
+              title="Bài Chant Tiếng Anh"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* DẠNG 4: XẾP CHỮ / GHÉP CHỮ (WORD SCRAMBLE) */}
+      {currentMode === 'scramble' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-indigo-200 dark:border-indigo-900/50 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🔤</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Xếp Chữ / Ghép Chữ (Word Scramble) • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs text-indigo-100">
+                  Unit {selectedUnit} • Ghép các chữ cái nhảy lung tung thành từ vựng tiếng Anh chuẩn xác
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`scramble_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-scramble')}
+              title="Word Scramble Game"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* DẠNG 5: PHẢN XẠ NHANH ĐÚNG/SAI (SPEED BLITZ) */}
+      {currentMode === 'blitz' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-amber-200 dark:border-amber-900/50 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-slate-950 flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">⚡</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Phản Xạ Nhanh 5 Giây (Speed Blitz Đúng / Sai) • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs font-semibold text-amber-950">
+                  Unit {selectedUnit} • Nhìn từ và nghĩa, phản xạ bấm Đúng hoặc Sai trong 5 giây đếm ngược
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-amber-300 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`blitz_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-blitz')}
+              title="Speed Blitz Game"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* DẠNG 9: THÁM TỬ Ô CHỮ BÍ MẬT (HANGMAN) */}
+      {currentMode === 'hangman' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-purple-200 dark:border-purple-900/50 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🕵️</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Thám Tử Ô Chữ Bí Mật (Hangman) • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs text-purple-100">
+                  Unit {selectedUnit} • Đoán từng chữ cái tiếng Anh dựa trên gợi ý nghĩa và phát âm
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`hangman_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-hangman')}
+              title="Hangman Word Detective Game"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* DẠNG 10: BÀI TẬP NGỮ CẢNH (CONTEXT SENTENCES) */}
+      {currentMode === 'context' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-teal-200 dark:border-teal-900/50 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-teal-600 to-emerald-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">📝</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Bài Tập Điền Từ Vào Ngữ Cảnh (Context Sentences) • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs text-teal-100">
+                  Unit {selectedUnit} • Đọc câu văn hoàn chỉnh và điền từ vựng chuẩn ngữ pháp vào chỗ trống
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`context_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-context')}
+              title="Context Sentences Game"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* DẠNG 11: ĐÁNH GIÁ 15 PHÚT & GIẤY KHEN (MINI TEST) */}
+      {currentMode === 'minitest' && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-amber-300 dark:border-amber-900/60 shadow-lg overflow-hidden space-y-3">
+          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-slate-950 flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🏆</span>
+              <div>
+                <h4 className="font-black text-sm sm:text-base">
+                  Kiểm Tra Đánh Giá Nhanh 15 Phút &amp; Cấp Giấy Khen • Tiếng Anh Lớp {selectedGrade}
+                </h4>
+                <p className="text-xs font-semibold text-amber-950">
+                  Unit {selectedUnit} • 10-15 câu trắc nghiệm tốc độ, chấm điểm tức thì và xuất giấy khen danh dự
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRewardUnitCompletion}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-amber-300 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>+10đ Chuyên Cần</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="h-[750px] w-full">
+            <iframe
+              key={`minitest_${selectedGrade}_${selectedUnit}_${iframeKey}`}
+              src={getGameUrl('tab-minitest')}
+              title="Mini Test 15 Phút & Giấy Khen"
+              className="w-full h-full border-0"
+              allow="autoplay; microphone; clipboard-write"
+            />
+          </div>
+        </div>
+      )}
+
       {currentMode === 'list' && (
         <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">

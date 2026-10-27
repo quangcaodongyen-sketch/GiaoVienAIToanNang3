@@ -8310,25 +8310,95 @@ const ONLINE_EXAM_SYSTEM = {
   }
 };
 
-// Tự động kích hoạt khi URL có tham số tab=exam hoặc hash #tab-online-exam
+// Tự động kích hoạt khi URL có tham số grade, unit, tab, name, class
 if (typeof window !== 'undefined') {
   window.ONLINE_EXAM_SYSTEM = ONLINE_EXAM_SYSTEM;
+
+  // Lắng nghe postMessage từ React parent app
+  window.addEventListener('message', (event) => {
+    try {
+      const data = event.data;
+      if (!data) return;
+      if (data.type === 'CHANGE_GRADE' && data.grade && typeof switchGrade === 'function') {
+        switchGrade(String(data.grade));
+      }
+      if (data.type === 'CHANGE_UNIT' && data.unit && typeof selectUnit === 'function') {
+        selectUnit(parseInt(data.unit), false);
+      }
+      if (data.type === 'ACTIVATE_TAB' && data.tab) {
+        const tabId = data.tab.startsWith('tab-') ? data.tab : 'tab-' + data.tab;
+        if (typeof activateTab === 'function') {
+          activateTab(tabId);
+        }
+      }
+    } catch (err) {
+      console.warn("postMessage handling error:", err);
+    }
+  });
+
   window.addEventListener('DOMContentLoaded', () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash;
       const tabParam = urlParams.get('tab');
       const examParam = urlParams.get('exam');
+      const gradeParam = urlParams.get('grade');
+      const unitParam = urlParams.get('unit');
+      const nameParam = urlParams.get('name') || urlParams.get('studentName');
+      const classParam = urlParams.get('class') || urlParams.get('className');
 
-      if (tabParam === 'exam' || tabParam === 'online-exam' || hash === '#tab-online-exam' || examParam) {
+      // 1. Tự động đồng bộ tài khoản học sinh (không bắt đăng ký phiền toái)
+      if (nameParam && typeof STUDENT_SYSTEM !== 'undefined') {
+        const cleanName = decodeURIComponent(nameParam);
+        const cleanClass = classParam ? decodeURIComponent(classParam) : '8A1';
+        STUDENT_SYSTEM.currentStudent = {
+          id: 'stu_' + Date.now().toString(36),
+          username: cleanName,
+          fullName: cleanName,
+          className: cleanClass,
+          grade: gradeParam || '8',
+          role: 'student',
+          xp: 150
+        };
+        localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(STUDENT_SYSTEM.currentStudent));
+        document.body.classList.remove('auth-locked-mode');
+        if (typeof STUDENT_SYSTEM.renderHeaderBadge === 'function') {
+          STUDENT_SYSTEM.renderHeaderBadge();
+        }
+      }
+
+      // 2. Tự động chọn đúng Khối lớp
+      if (gradeParam && typeof switchGrade === 'function') {
+        switchGrade(gradeParam);
+      }
+
+      // 3. Tự động chọn đúng Bài học (Unit)
+      if (unitParam && typeof selectUnit === 'function') {
+        selectUnit(parseInt(unitParam), false);
+      }
+
+      // 4. Tự động mở đúng Dạng bài tập (Chant, Match, Scramble, Blitz, Hangman...)
+      if (tabParam) {
+        let targetTab = tabParam;
+        if (!targetTab.startsWith('tab-')) {
+          targetTab = 'tab-' + targetTab;
+        }
         setTimeout(() => {
-          if (typeof switchTab === 'function') {
-            switchTab('tab-online-exam');
+          if (typeof activateTab === 'function') {
+            activateTab(targetTab);
+          } else if (typeof switchTab === 'function') {
+            switchTab(targetTab);
+          }
+        }, 350);
+      } else if (examParam || hash === '#tab-online-exam') {
+        setTimeout(() => {
+          if (typeof activateTab === 'function') {
+            activateTab('tab-online-exam');
           }
           if (examParam && typeof ONLINE_EXAM_SYSTEM !== 'undefined') {
             ONLINE_EXAM_SYSTEM.selectExam(examParam);
           }
-        }, 300);
+        }, 350);
       }
     } catch (e) {
       console.warn("Auto tab switch error:", e);
