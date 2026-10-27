@@ -30,6 +30,8 @@ import { BRAND } from '../config/brand';
 import { OnlineExamPortal } from './OnlineExamPortal';
 import { English8RevisionPortal } from './English8RevisionPortal';
 import { UnifiedVocabPortal } from './UnifiedVocabPortal';
+import { MidtermMissionCard } from './MidtermMissionCard';
+import { midtermMissionService } from '../services/midtermMissionService';
 import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
@@ -1245,6 +1247,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     <span>Lớp {currentStudent.className}</span>
                     <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-white/15 text-white font-mono">{currentStudent.studentCode}</span>
                     <span className="text-[11px] px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 font-black">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
+                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-cyan-400 text-slate-950 font-black" title="Tiến độ hoàn thành nhiệm vụ ôn tập Giữa Kỳ 1 của Thầy Thành">
+                      🎯 GK1: {midtermMissionService.getMissionState(currentStudent.id, currentStudent.name, currentStudent.className, currentStudent.grade || 8).totalProgressPercent}%
+                    </span>
                   </div>
                   <h4 className="text-sm font-black text-white line-clamp-1">{currentStudent.name}</h4>
                 </div>
@@ -1531,6 +1536,26 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </button>
           </div>
         </div>
+      )}
+
+      {/* ==================== BẢNG GIAO NHIỆM VỤ ÔN TẬP GIỮA KỲ 1 TỪ THẦY THÀNH ==================== */}
+      {currentStudent && (
+        <MidtermMissionCard
+          currentStudent={currentStudent}
+          onGoToVocabUnit={(u) => {
+            setSelectedUnit(u);
+            setActiveTab('vocab');
+            window.scrollTo({ top: 350, behavior: 'smooth' });
+          }}
+          onGoToDecuong={() => {
+            setActiveTab('decuong_e8');
+            window.scrollTo({ top: 350, behavior: 'smooth' });
+          }}
+          onGoToExam={() => {
+            setActiveTab('exam');
+            window.scrollTo({ top: 350, behavior: 'smooth' });
+          }}
+        />
       )}
 
       {/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}

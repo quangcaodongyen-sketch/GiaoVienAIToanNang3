@@ -23,6 +23,7 @@ import {
   Download
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { midtermMissionService } from '../services/midtermMissionService';
 import { loadTermExams, TermExamsData, OfficialExamQuestion } from '../data/officialMidtermExams';
 
 export interface ExamQuestion {
@@ -813,6 +814,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
   const [examType, setExamType] = useState<'giua-ky-1' | 'cuoi-ky-1' | 'giua-ky-2' | 'cuoi-ky-2'>('giua-ky-1');
   const [selectedExamIndex, setSelectedExamIndex] = useState<number>(0);
   const [currentExam, setCurrentExam] = useState<GeneratedExam | null>(null);
+  const [examStartTime, setExamStartTime] = useState<number>(() => Date.now());
   
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
@@ -1301,6 +1303,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     setScoreResult(null);
     setShowAudioScript(false);
     setIsPlayingAudio(false);
+    setExamStartTime(Date.now());
 
     const termData = dataForTerm || examDataByTerm[type];
     const gradeExams = termData ? termData[String(grade)] : undefined;
@@ -1469,7 +1472,21 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
     });
     setIsSubmitted(true);
 
+    const timeSpentSeconds = Math.max(1, Math.round((Date.now() - examStartTime) / 1000));
+
     if (activeStudent) {
+      // Ghi nhận chất lượng vào Nhiệm Vụ 2 Giữa Kỳ 1 của Thầy Thành (Chống làm bừa, yêu cầu >= 5.0đ và thời gian >= 90s)
+      midtermMissionService.recordExamPracticeQuality(
+        activeStudent.id,
+        activeStudent.name,
+        activeStudent.className,
+        activeStudent.grade || selectedGrade,
+        'midterm_exam',
+        scaledScore,
+        timeSpentSeconds,
+        `${currentExam.typeTitle} (${currentExam.examCode})`
+      );
+
       studentGradebookService.recordSubmission({
         studentId: activeStudent.id,
         studentCode: activeStudent.studentCode,
@@ -1484,7 +1501,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
         score: scaledScore,
         correctCount,
         totalQuestions: currentExam.questions.length,
-        timeSpentSeconds: 0
+        timeSpentSeconds: timeSpentSeconds
       });
     }
 

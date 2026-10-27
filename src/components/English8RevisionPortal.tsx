@@ -5,6 +5,7 @@ import {
   Sparkles, Lightbulb, FileText, Check, ArrowRight, ShieldCheck 
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { midtermMissionService } from '../services/midtermMissionService';
 
 export interface English8RevisionPortalProps {
   currentStudent?: StudentProfile | null;
@@ -485,6 +486,18 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
           currentStudent.id,
           `Đề Cương Ôn Tập GK1 - Lần ${attemptCount} (${scoreNum}đ)`,
           meritBonus
+        );
+
+        // Ghi nhận chất lượng vào Nhiệm Vụ 2 GK1 từ Thầy Thành
+        midtermMissionService.recordExamPracticeQuality(
+          currentStudent.id,
+          currentStudent.name,
+          currentStudent.className,
+          8,
+          'decuong',
+          scoreNum,
+          600,
+          `Đề Cương Ôn Tập GK1 (Lần ${attemptCount})`
         );
       } catch (err) {
         console.error('Lỗi khi ghi nhận điểm:', err);

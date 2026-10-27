@@ -26,6 +26,7 @@ import {
 import { vocabularyService, VocabItem, UnitInfo } from '../services/vocabularyService';
 import { audioPronunciationService, VoiceAccent } from '../services/audioPronunciationService';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { midtermMissionService, MidtermMissionState } from '../services/midtermMissionService';
 
 interface UnifiedVocabPortalProps {
   currentStudent: StudentProfile | null;
@@ -72,6 +73,18 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   const [selectedUnit, setSelectedUnit] = useState<number>(1);
   const [vocabSearch, setVocabSearch] = useState<string>('');
   const [currentMode, setCurrentMode] = useState<PracticeMode>('flashcard');
+
+  // Trạng thái Nhiệm Vụ Giữa Kỳ 1 của Thầy Thành (Theo dõi độ chính xác chống học chống đối)
+  const [missionUpdateTrigger, setMissionUpdateTrigger] = useState<number>(0);
+  const missionState = useMemo<MidtermMissionState | null>(() => {
+    if (!currentStudent) return null;
+    return midtermMissionService.getMissionState(
+      currentStudent.id,
+      currentStudent.name,
+      currentStudent.className,
+      currentStudent.grade || selectedGrade
+    );
+  }, [currentStudent, selectedGrade, missionUpdateTrigger]);
 
   // Danh sách từ vựng của Unit đang chọn
   const filteredVocab: VocabItem[] = useMemo(() => {
@@ -153,10 +166,30 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       setQuizSelectedOption(null);
     } else {
       setQuizFinished(true);
-      // Tích điểm khi hoàn thành bài
       if (currentStudent) {
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Trắc nghiệm từ vựng Unit ${selectedUnit} (${quizScore + 1}/${filteredVocab.length})`, 10);
+        const finalScore = quizScore;
+        const totalQ = filteredVocab.length;
+        const acc = Math.round((finalScore / totalQ) * 100);
+
+        // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
+        const qRes = midtermMissionService.recordVocabPracticeQuality(
+          currentStudent.id,
+          currentStudent.name,
+          currentStudent.className,
+          selectedGrade,
+          selectedUnit,
+          'quiz',
+          acc,
+          { score: finalScore, totalQuestions: totalQ }
+        );
+        setMissionUpdateTrigger(t => t + 1);
+
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Trắc nghiệm từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
         if (onRewardMerit) onRewardMerit(`Trắc nghiệm từ vựng Unit ${selectedUnit}`, 10);
+
+        if ([1, 2, 3].includes(selectedUnit)) {
+          setTimeout(() => alert(qRes.message), 200);
+        }
       }
     }
   };
@@ -211,8 +244,29 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     } else {
       setListenFinished(true);
       if (currentStudent) {
+        const finalScore = listenScore;
+        const totalQ = filteredVocab.length;
+        const acc = Math.round((finalScore / totalQ) * 100);
+
+        // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
+        const lRes = midtermMissionService.recordVocabPracticeQuality(
+          currentStudent.id,
+          currentStudent.name,
+          currentStudent.className,
+          selectedGrade,
+          selectedUnit,
+          'listen',
+          acc,
+          { score: finalScore, totalQuestions: totalQ }
+        );
+        setMissionUpdateTrigger(t => t + 1);
+
         studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện nghe từ vựng Unit ${selectedUnit}`, 10);
         if (onRewardMerit) onRewardMerit(`Luyện nghe từ vựng Unit ${selectedUnit}`, 10);
+
+        if ([1, 2, 3].includes(selectedUnit)) {
+          setTimeout(() => alert(lRes.message), 200);
+        }
       }
     }
   };
@@ -318,8 +372,24 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       if (newCards.every(c => c.isMatched)) {
         setMatchFinished(true);
         if (currentStudent) {
+          const mRes = midtermMissionService.recordVocabPracticeQuality(
+            currentStudent.id,
+            currentStudent.name,
+            currentStudent.className,
+            selectedGrade,
+            selectedUnit,
+            'match',
+            100,
+            { note: 'Hoàn thành ghép nối toàn bộ từ vựng' }
+          );
+          setMissionUpdateTrigger(t => t + 1);
+
           studentGradebookService.recordPracticeMerit(currentStudent.id, `Nối cặp từ vựng Unit ${selectedUnit}`, 10);
           if (onRewardMerit) onRewardMerit(`Nối cặp từ vựng Unit ${selectedUnit}`, 10);
+
+          if ([1, 2, 3].includes(selectedUnit)) {
+            setTimeout(() => alert(mRes.message), 200);
+          }
         }
       }
     } else {
@@ -370,8 +440,28 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     } else {
       setSpellFinished(true);
       if (currentStudent) {
+        const finalScore = spellScore;
+        const totalQ = filteredVocab.length;
+        const acc = Math.round((finalScore / totalQ) * 100);
+
+        const sRes = midtermMissionService.recordVocabPracticeQuality(
+          currentStudent.id,
+          currentStudent.name,
+          currentStudent.className,
+          selectedGrade,
+          selectedUnit,
+          'spelling',
+          acc,
+          { score: finalScore, totalQuestions: totalQ }
+        );
+        setMissionUpdateTrigger(t => t + 1);
+
         studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện gõ từ vựng Unit ${selectedUnit}`, 10);
         if (onRewardMerit) onRewardMerit(`Luyện gõ từ vựng Unit ${selectedUnit}`, 10);
+
+        if ([1, 2, 3].includes(selectedUnit)) {
+          setTimeout(() => alert(sRes.message), 200);
+        }
       }
     }
   };
@@ -394,12 +484,26 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     setSpellFinished(false);
   };
 
-  // Nút thưởng điểm hoàn thành bài
+  // Nút thưởng điểm hoàn thành bài & ghi nhận chất lượng dạng bài
   const handleRewardUnitCompletion = () => {
     if (currentStudent) {
+      // Ghi nhận chất lượng cho dạng bài hiện tại vào Nhiệm Vụ GK1
+      const acc = currentMode === 'minitest' ? 80 : 100;
+      const res = midtermMissionService.recordVocabPracticeQuality(
+        currentStudent.id,
+        currentStudent.name,
+        currentStudent.className,
+        selectedGrade,
+        selectedUnit,
+        currentMode,
+        acc,
+        { note: `Hoàn thành dạng bài ${currentMode}` }
+      );
+      setMissionUpdateTrigger(t => t + 1);
+
       const newTotal = studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
       if (onRewardMerit) onRewardMerit(`Học từ vựng Unit ${selectedUnit}`, 10);
-      alert(`🎉 Chúc mừng em ${currentStudent.name} đã hoàn thành bài từ vựng Unit ${selectedUnit} (Tiếng Anh ${selectedGrade})!\n⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua (Tổng điểm hiện tại: ${newTotal}đ)!`);
+      alert(`🎉 Chúc mừng em ${currentStudent.name} đã hoàn thành bài tập từ vựng Unit ${selectedUnit} (Tiếng Anh ${selectedGrade})!\n⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua (Tổng điểm hiện tại: ${newTotal}đ)!\n\n${res.message}`);
     } else {
       alert('Em hãy nhập Tên và Lớp ở trên để được ghi nhận điểm chuyên cần nhé!');
     }
@@ -461,27 +565,40 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs w-full sm:w-auto">
             <span className="font-bold text-slate-500 dark:text-slate-400 shrink-0">Chọn Bài:</span>
-            {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
-              <button
-                key={u.unitNumber}
-                type="button"
-                onClick={() => {
-                  setSelectedUnit(u.unitNumber);
-                  setCardIndex(0);
-                  setIsFlipped(false);
-                  handleRestartQuiz();
-                  handleRestartListen();
-                  handleSpellRestart();
-                }}
-                className={`px-3 py-1.5 rounded-xl font-bold transition shrink-0 cursor-pointer ${
-                  selectedUnit === u.unitNumber
-                    ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-                }`}
-              >
-                Unit {u.unitNumber}
-              </button>
-            ))}
+            {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => {
+              const uMission = missionState?.mission1.units[u.unitNumber];
+              const isGK1Target = [1, 2, 3].includes(u.unitNumber);
+              return (
+                <button
+                  key={u.unitNumber}
+                  type="button"
+                  onClick={() => {
+                    setSelectedUnit(u.unitNumber);
+                    setCardIndex(0);
+                    setIsFlipped(false);
+                    handleRestartQuiz();
+                    handleRestartListen();
+                    handleSpellRestart();
+                  }}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                    selectedUnit === u.unitNumber
+                      ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                  }`}
+                >
+                  <span>Unit {u.unitNumber}</span>
+                  {isGK1Target && uMission !== undefined && (
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-black ${
+                      uMission.unitPercent >= 100
+                        ? 'bg-emerald-500 text-slate-950'
+                        : (uMission.unitPercent > 0 ? 'bg-blue-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300')
+                    }`}>
+                      {uMission.unitPercent}%
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
@@ -516,6 +633,26 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             </button>
           </div>
         </div>
+
+        {/* Banner tiến độ nhiệm vụ GK1 cho Unit 1 - 3 */}
+        {[1, 2, 3].includes(selectedUnit) && (
+          <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-indigo-950/40 border border-blue-200 dark:border-indigo-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0">🎯 Nhiệm Vụ GK1</span>
+              <div>
+                <span className="font-bold text-slate-800 dark:text-slate-200">
+                  Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/11 dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
+                </span>
+                <span className="text-slate-500 dark:text-slate-400 block text-[11px]">
+                  🛡️ Chống học chống đối: Chỉ tính % khi em làm đúng từ (đạt độ chính xác từ 60% trở lên).
+                </span>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 font-black text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-600 shrink-0 self-start sm:self-auto text-[11px]">
+              {missionState?.mission1.units[selectedUnit]?.statusNote}
+            </span>
+          </div>
+        )}
 
         {/* Khung chuyển khối lớp mở rộng khi cần (chỉ hiện khi chưa đăng nhập học sinh) */}
         {!currentStudent && allowGradeSwitch && (
@@ -568,7 +705,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
             }`}
           >
-            <span>🃏 1. Thẻ 3D</span>
+            <span>🃏 1. Thẻ 3D</span>{missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 2. Bài Chant */}
@@ -582,7 +719,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
             title="Bài Chant Nhạc Beat Điệu Call & Response"
           >
-            <span>🎵 2. Bài Chant &amp; Beat</span>
+            <span>🎵 2. Bài Chant &amp; Beat</span>{missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 3. Ghép Cặp Từ */}
@@ -596,7 +733,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
           >
             <Puzzle className="w-3.5 h-3.5" />
-            <span>3. Ghép Cặp Từ</span>
+            <span>3. Ghép Cặp Từ</span>{missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 4. Xếp Chữ / Ghép Chữ */}
@@ -609,7 +746,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
             }`}
           >
-            <span>🔤 4. Ghép Chữ</span>
+            <span>🔤 4. Ghép Chữ</span>{missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 5. Phản Xạ Nhanh */}
@@ -622,7 +759,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
             }`}
           >
-            <span>⚡ 5. Phản Xạ 5s</span>
+            <span>⚡ 5. Phản Xạ 5s</span>{missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 6. Trắc Nghiệm */}
@@ -636,7 +773,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
           >
             <Target className="w-3.5 h-3.5" />
-            <span>6. Trắc Nghiệm</span>
+            <span>6. Trắc Nghiệm</span>{missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 7. Luyện Nghe */}
@@ -650,7 +787,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
           >
             <Headphones className="w-3.5 h-3.5" />
-            <span>7. Luyện Nghe</span>
+            <span>7. Luyện Nghe</span>{missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 8. Luyện Gõ Từ */}
@@ -664,7 +801,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
           >
             <Edit3 className="w-3.5 h-3.5" />
-            <span>8. Luyện Gõ</span>
+            <span>8. Luyện Gõ</span>{missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 9. Thám Tử Ô Chữ */}
@@ -677,7 +814,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
             }`}
           >
-            <span>🕵️ 9. Ô Chữ Bí Mật</span>
+            <span>🕵️ 9. Ô Chữ Bí Mật</span>{missionState?.mission1.units[selectedUnit]?.modes['hangman']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 10. Ngữ Cảnh */}
@@ -690,7 +827,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
             }`}
           >
-            <span>📝 10. Ngữ Cảnh</span>
+            <span>📝 10. Ngữ Cảnh</span>{missionState?.mission1.units[selectedUnit]?.modes['context']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 11. Đánh Giá 15 Phút */}
@@ -704,7 +841,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
-            <span>11. Kiểm Tra 15P</span>
+            <span>11. Kiểm Tra 15P</span>{missionState?.mission1.units[selectedUnit]?.modes['minitest']?.qualityPassed && <span className="text-[10px] bg-emerald-500 text-slate-950 font-black px-1 rounded-sm">✓</span>}
           </button>
 
           {/* 12. Tra Cứu */}
