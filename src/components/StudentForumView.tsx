@@ -106,6 +106,21 @@ const QUICK_FEEDBACK_STICKERS = [
   { label: '💪 Cùng cố gắng nhé!', text: '💪 Chúng mình cùng nhau cố gắng đạt điểm cao kỳ này nhé!' }
 ];
 
+// Lấy ID định danh ẩn danh của thiết bị để học sinh thả tim, like, cảm xúc không cần đăng nhập
+function getAnonymousReactionId(): string {
+  try {
+    const key = 'GVAI_FORUM_ANON_REACTION_ID';
+    let anonId = localStorage.getItem(key);
+    if (!anonId) {
+      anonId = 'anon_stu_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
+      localStorage.setItem(key, anonId);
+    }
+    return anonId;
+  } catch {
+    return 'anon_guest_student';
+  }
+}
+
 export const StudentForumView: React.FC<StudentForumViewProps> = ({
   currentStudent,
   isAdmin,
@@ -248,23 +263,23 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
     loadPosts();
   };
 
-  // Xử lý thả biểu cảm Facebook-style
+  // Xử lý thả biểu cảm Facebook-style (Học sinh thả tim, like, cảm xúc tự do KHÔNG CẦN ĐĂNG NHẬP)
   const handleReaction = (postId: string, reactionType: ReactionType) => {
-    if (!currentStudent && !isAdmin) {
-      alert('Em vui lòng nhập Họ tên và Lớp để thả cảm xúc nhé!');
-      onRequestAuth();
-      return;
-    }
-
-    const studentId = isAdmin ? 'admin-dinh-thanh' : (currentStudent?.id || 'guest');
-    const studentName = isAdmin ? 'Thầy Đinh Văn Thành' : (currentStudent?.name || 'Học sinh');
-    const studentClass = isAdmin ? 'Giáo Viên' : (currentStudent?.className || '8A1');
+    const studentId = isAdmin 
+      ? 'admin-dinh-thanh' 
+      : (currentStudent?.id || getAnonymousReactionId());
+    const studentName = isAdmin 
+      ? 'Thầy Đinh Văn Thành' 
+      : (currentStudent?.name || 'Học sinh ẩn danh');
+    const studentClass = isAdmin 
+      ? 'Giáo Viên' 
+      : (currentStudent?.className || 'THCS Đồng Yên');
 
     studentForumService.setReaction(postId, studentId, studentName, studentClass, reactionType);
     setHoveredReactionPostId(null);
     loadPosts();
 
-    // Thưởng điểm chuyên cần khi tương tác tích cực
+    // Thưởng điểm chuyên cần khi tương tác tích cực (nếu học sinh đã đăng nhập)
     if (currentStudent) {
       try {
         studentGradebookService.recordPracticeMerit(
@@ -342,13 +357,11 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
     loadPosts();
   };
 
-  // Thả tim cho bình luận
+  // Thả tim cho bình luận (Học sinh thả like KHÔNG CẦN ĐĂNG NHẬP)
   const handleLikeComment = (postId: string, commentId: string) => {
-    if (!currentStudent && !isAdmin) {
-      onRequestAuth();
-      return;
-    }
-    const studentId = isAdmin ? 'admin-dinh-thanh' : (currentStudent?.id || 'guest');
+    const studentId = isAdmin 
+      ? 'admin-dinh-thanh' 
+      : (currentStudent?.id || getAnonymousReactionId());
     studentForumService.toggleCommentLike(postId, commentId, studentId);
     loadPosts();
   };
@@ -520,7 +533,7 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
           </div>
         ) : (
           posts.map(post => {
-            const currentStudentId = isAdmin ? 'admin-dinh-thanh' : (currentStudent?.id || '');
+            const currentStudentId = isAdmin ? 'admin-dinh-thanh' : (currentStudent?.id || getAnonymousReactionId());
             const userReaction: ReactionType | undefined = post.reactions ? post.reactions[currentStudentId] : undefined;
             const hasReacted = Boolean(userReaction || (post.likedBy && post.likedBy.includes(currentStudentId)));
             const activeReactionConfig = userReaction ? FORUM_REACTIONS[userReaction] : (hasReacted ? FORUM_REACTIONS.heart : null);
