@@ -354,7 +354,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   });
   // Modal Đăng Nhập / Đăng Ký / Quên MK Tích Hợp All-In-One
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
-  const [authActiveTab, setAuthActiveTab] = useState<'register' | 'login' | 'forgot'>('register');
+  const [authActiveTab, setAuthActiveTab] = useState<'register' | 'login' | 'forgot'>('login');
   const [loginStudentInput, setLoginStudentInput] = useState<string>('');
   const [loginPassInput, setLoginPassInput] = useState<string>('');
   const [loginError, setLoginError] = useState<string>('');
@@ -527,29 +527,26 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       }
     }
 
+    // NẾU CHƯA TÌM THẤY TRONG DANH SÁCH: TỰ ĐỘNG TẠO/LẤY TỪ SỔ ĐIỂM CHÍNH THỨC CỦA THẦY THÀNH ĐỂ VÀO HỌC NGAY
+    // KHÔNG BẮT HỌC SINH ĐĂNG KÝ PHỨC TẠP!
     if (!found) {
-      const msg = `Không tìm thấy tài khoản "${inputVal}". Nếu em vừa đăng ký trên máy tính, vui lòng kiểm tra lại tên đăng nhập hoặc bấm tab "Đăng Ký Học" nhé!`;
-      setLoginError(msg);
-      alert('⚠️ ' + msg);
-      return;
+      found = studentGradebookService.quickAccessStudent(inputVal, regClassName || '8A1');
     }
 
     const inputPass = loginPassInput.trim();
-    if (!inputPass) {
-      setLoginError('Vui lòng nhập Mật khẩu để đăng nhập!');
-      return;
-    }
+    // Mật khẩu là tùy chọn: nếu học sinh nhập mật khẩu và tài khoản đã có mật khẩu, kiểm tra
+    if (inputPass && found.password && found.password.trim()) {
+      const storedPass = found.password.trim();
+      const isPassCorrect = 
+        storedPass === inputPass || 
+        storedPass.toLowerCase() === inputPass.toLowerCase() ||
+        inputPass === 'Thaythanh2026@' ||
+        inputPass.toLowerCase() === 'thaythanh2026@';
 
-    // Kiểm tra mật khẩu (khớp chính xác mật khẩu học sinh, hoặc mật khẩu Admin của Thầy Thành để hỗ trợ học sinh)
-    const storedPass = (found.password || '').trim();
-    const isPassCorrect = 
-      (storedPass && (storedPass === inputPass || storedPass.toLowerCase() === inputPass.toLowerCase())) ||
-      inputPass === 'Thaythanh2026@' ||
-      inputPass.toLowerCase() === 'thaythanh2026@';
-
-    if (!isPassCorrect) {
-      setLoginError('Mật khẩu không chính xác! Vui lòng nhập lại hoặc bấm "Quên MK?" bên dưới.');
-      return;
+      if (!isPassCorrect) {
+        setLoginError('Mật khẩu chưa đúng. Em có thể để trống ô mật khẩu để vào học ngay nhé!');
+        return;
+      }
     }
 
     studentGradebookService.setActiveStudent(found);
@@ -557,6 +554,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     setShowAuthModal(false);
     setLoginStudentInput('');
     setLoginPassInput('');
+    saveStudentToDevice(found);
     triggerWelcomeModal(found, true);
   };
 
@@ -2477,316 +2475,167 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </div>
             </div>
 
-            {/* TAB CHUYỂN ĐỔI 3 TRONG 1: ĐĂNG KÝ | ĐĂNG NHẬP | QUÊN MK */}
-            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-              <button
-                type="button"
-                onClick={() => setAuthActiveTab('register')}
-                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
-                  authActiveTab === 'register'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <span>📝 Đăng Ký Học</span>
-              </button>
-
+            {/* TAB CHUYỂN ĐỔI 2 TRONG 1: ĐĂNG NHẬP | QUÊN MK (KHÔNG CẦN ĐĂNG KÝ) */}
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setAuthActiveTab('login')}
-                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
+                className={`py-2.5 px-3 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                   authActiveTab === 'login'
                     ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <span>🔑 Đăng Nhập</span>
+                <span>🔑 Đăng Nhập Vào Học</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setAuthActiveTab('forgot')}
-                className={`py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1 ${
+                className={`py-2.5 px-3 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                   authActiveTab === 'forgot'
                     ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <span>🆘 Quên MK?</span>
+                <span>🆘 Quên MK / Tra Cứu</span>
               </button>
             </div>
 
             {/* ================= TAB 1: FORM ĐĂNG KÝ HỌC SINH MỚI ================= */}
-            {authActiveTab === 'register' && (
-              <form onSubmit={handleRegisterSubmit} noValidate className="space-y-3.5 text-xs">
+            {authActiveTab === 'login' && (
+              <form onSubmit={handleStudentLogin} className="space-y-3.5 text-xs">
+                {/* 1. CHỌN LỚP HỌC CỦA THẦY THÀNH */}
+                <div className="p-3 rounded-2xl bg-blue-50/60 dark:bg-slate-800/60 border border-blue-200 dark:border-slate-700 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <span>🏫</span>
+                      <span>1. Chọn Lớp Học Của Em:</span>
+                    </label>
+                    <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                      Lớp đang chọn: {regClassName}
+                    </span>
+                  </div>
+                  
+                  {/* Khối 8 */}
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 8 (THCS Đồng Yên):</div>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setRegClassName(cls);
+                            setRegGrade(8);
+                            setLoginStudentInput('');
+                            setLoginError('');
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
+                            regClassName === cls
+                              ? 'bg-blue-600 text-white border-blue-500 shadow-sm ring-2 ring-blue-300 dark:ring-blue-800 scale-102'
+                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-blue-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Khối 6 */}
+                  <div className="space-y-1 pt-1">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 6 (THCS Đồng Yên):</div>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setRegClassName(cls);
+                            setRegGrade(6);
+                            setLoginStudentInput('');
+                            setLoginError('');
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
+                            regClassName === cls
+                              ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm ring-2 ring-emerald-300 dark:ring-emerald-800 scale-102'
+                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-emerald-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. CHỌN TÊN HỌC SINH TỪ SỔ ĐIỂM (1 CHẠM VÀO HỌC NGAY) */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block font-bold text-slate-700 dark:text-slate-300">
+                      👤 2. Chọn Tên Học Sinh Lớp {regClassName} (*):
+                    </label>
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+                      {studentGradebookService.getOfficialRoster(regClassName).length} học sinh chính thức
+                    </span>
+                  </div>
+
+                  {studentGradebookService.getOfficialRoster(regClassName).length > 0 && (
+                    <div className="mb-2">
+                      <select
+                        value={loginStudentInput}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setLoginStudentInput(val);
+                          setLoginError('');
+                          if (val) {
+                            handleOneTapLogin(val, regClassName);
+                          }
+                        }}
+                        className="w-full px-3.5 py-2.5 rounded-xl border-2 border-blue-400 dark:border-blue-600 bg-blue-50/70 dark:bg-slate-800 text-blue-950 dark:text-blue-100 text-xs sm:text-sm font-black focus:ring-2 focus:ring-blue-500 outline-hidden cursor-pointer"
+                      >
+                        <option value="">👇 Bấm vào đây để chọn đúng Tên của em ({regClassName}) --</option>
+                        {studentGradebookService.getOfficialRoster(regClassName).map((name, i) => (
+                          <option key={i} value={name}>
+                            {i + 1}. {name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Hoặc gõ tìm kiếm họ tên */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={loginStudentInput}
+                      onChange={(e) => {
+                        setLoginStudentInput(e.target.value);
+                        setLoginError('');
+                      }}
+                      placeholder="Hoặc gõ họ tên em vào đây (ví dụ: Thanh Bình, Đặng Gia Bảo...)"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. MẬT KHẨU (KHÔNG BẮT BUỘC - ĐỂ TRỐNG ĐỂ VÀO HỌC NGAY) */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block font-bold text-slate-700 dark:text-slate-300">
-                      👤 Họ và tên học sinh (*):
+                      🔒 Mật khẩu (Không bắt buộc):
                     </label>
-                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-amber-500" />
-                      <span>Tự động sửa chính tả theo danh sách lớp</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">
+                      Chưa đặt mật khẩu thì để trống
                     </span>
                   </div>
                   <input
-                    type="text"
-                    required
-                    value={regFullName}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setRegFullName(val);
-                      setRegError('');
-                      setNameAutocorrectNote(null);
-                      if (!regUsernameUserEdited) {
-                        const slug = removeDiacritics(val).toLowerCase().replace(/[^a-z0-9]/g, '');
-                        setRegUsername(slug);
-                      }
-                    }}
-                    onBlur={handleFullNameBlur}
-                    autoCapitalize="words"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    placeholder="Ví dụ: đặng gia bảo, nguyen thanh binh, vi gia bao..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
-                  />
-
-                  {/* Thông báo tự động sửa chuẩn chính tả họ tên */}
-                  {nameAutocorrectNote && (
-                    <div className="mt-1.5 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-between gap-1.5 animate-fadeIn">
-                      <div className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>
-                          {nameAutocorrectNote.isOfficial
-                            ? `✨ Đã tự động chuẩn hóa chính tả theo Danh sách lớp ${regClassName}: "${nameAutocorrectNote.corrected}"`
-                            : `✨ Đã tự động viết hoa chuẩn tên riêng: "${nameAutocorrectNote.corrected}"`}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setNameAutocorrectNote(null)}
-                        className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Gợi ý thông minh từ danh sách lớp Thầy Thành */}
-                  {officialSuggestions.length > 0 && (
-                    <div className="mt-2 p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/80">
-                      <div className="text-[11px] font-bold text-blue-700 dark:text-blue-300 mb-1.5 flex items-center gap-1">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                        <span>Gợi ý chuẩn danh sách lớp {regClassName} (Bấm để chọn nhanh chuẩn chính tả):</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {officialSuggestions.map(s => (
-                          <button
-                            key={s.studentCode}
-                            type="button"
-                            onClick={() => {
-                              setRegFullName(s.name);
-                              setNameAutocorrectNote({
-                                original: regFullName,
-                                corrected: s.name,
-                                isOfficial: true
-                              });
-                              if (!regUsernameUserEdited) {
-                                const slug = removeDiacritics(s.name).toLowerCase().replace(/[^a-z0-9]/g, '');
-                                setRegUsername(slug);
-                              }
-                            }}
-                            className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 text-blue-800 dark:text-blue-200 hover:bg-blue-600 hover:text-white border border-blue-300 dark:border-blue-700 transition shadow-2xs cursor-pointer flex items-center gap-1"
-                          >
-                            <span>{s.name}</span>
-                            <span className="text-[10px] text-slate-400 font-normal">({s.studentCode.slice(-4)})</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      🔑 Tên đăng nhập (*):
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={regUsername}
-                      onChange={(e) => {
-                        setRegUsernameUserEdited(true);
-                        setRegUsername(e.target.value);
-                        setRegError('');
-                      }}
-                      onBlur={() => {
-                        if (regUsername) {
-                          setRegUsername(prev => removeDiacritics(prev).toLowerCase().replace(/[^a-z0-9_]/g, ''));
-                        }
-                      }}
-                      autoCapitalize="none"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      placeholder="vd: viet, dinhquangviet..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                    />
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Hệ thống tự gợi ý tên không dấu khi gõ Họ tên, em có thể tùy ý sửa</p>
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      🔒 Mật khẩu bảo mật (*):
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      value={regPassword}
-                      onChange={(e) => {
-                        setRegPassword(e.target.value);
-                        setRegError('');
-                      }}
-                      autoCapitalize="none"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      placeholder="Nhập mật khẩu riêng của em..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                    />
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Tự đặt mật khẩu an toàn (tối thiểu 4 ký tự)</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Khối Lớp:
-                    </label>
-                    <select
-                      value={regGrade}
-                      onChange={(e) => {
-                        const g = Number(e.target.value);
-                        setRegGrade(g);
-                        setRegClassName(`${g}A1`);
-                      }}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
-                    >
-                      <option value={6}>Lớp 6</option>
-                      <option value={7}>Lớp 7</option>
-                      <option value={8}>Lớp 8</option>
-                      <option value={9}>Lớp 9</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Lớp Học Sẵn:
-                    </label>
-                    <select
-                      value={regClassName}
-                      onChange={(e) => setRegClassName(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
-                    >
-                      {['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6'].map(suffix => (
-                        <option key={suffix} value={`${regGrade}${suffix}`}>
-                          {regGrade}{suffix} {suffix.startsWith('B') ? '(Phân hiệu VP)' : '(Trường chính)'}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Giới Tính:
-                    </label>
-                    <select
-                      value={regGender}
-                      onChange={(e) => setRegGender(e.target.value as 'Nam' | 'Nữ')}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-medium"
-                    >
-                      <option value="Nam">Nam</option>
-                      <option value="Nữ">Nữ</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    📱 Số điện thoại học sinh / phụ huynh (tùy chọn):
-                  </label>
-                  <input
-                    type="tel"
-                    value={regPhone}
-                    onChange={(e) => setRegPhone(e.target.value)}
-                    placeholder="Ví dụ: 0988123456 (dùng để tìm lại mật khẩu khi quên)..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
-                  />
-                </div>
-
-                {regError && (
-                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <span>{regError}</span>
-                  </div>
-                )}
-
-                <div className="pt-2 flex items-center justify-end gap-2">
-                  {currentStudent && (
-                    <button
-                      type="button"
-                      onClick={() => setShowAuthModal(false)}
-                      className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                    >
-                      Đóng
-                    </button>
-                  )}
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs shadow-md transition cursor-pointer"
-                  >
-                    Xác Nhận Đăng Ký Tài Khoản
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* ================= TAB 2: FORM ĐĂNG NHẬP HỌC SINH ================= */}
-            {authActiveTab === 'login' && (
-              <form onSubmit={handleStudentLogin} className="space-y-3.5 text-xs">
-                <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    👤 Tên Đăng Nhập / Họ và Tên / Mã Học Sinh (*):
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={loginStudentInput}
-                    onChange={(e) => {
-                      setLoginStudentInput(e.target.value);
-                      setLoginError('');
-                    }}
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    placeholder="Nhập Tên đăng nhập (vd: viet) hoặc Họ tên (vd: Việt)..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    🔒 Mật khẩu (*):
-                  </label>
-                  <input
                     type="password"
-                    required
                     value={loginPassInput}
                     onChange={(e) => setLoginPassInput(e.target.value)}
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    placeholder="Nhập mật khẩu của em..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
+                    placeholder="Nhập mật khẩu (nếu đã từng đặt, hoặc để trống để vào học)..."
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 outline-hidden font-mono"
                   />
                 </div>
 
@@ -2803,7 +2652,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     onClick={() => setAuthActiveTab('forgot')}
                     className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
                   >
-                    Quên mật khẩu? Bấm vào đây
+                    🆘 Quên MK / Tra cứu tài khoản
                   </button>
 
                   <div className="flex items-center gap-2">
@@ -2811,16 +2660,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowAuthModal(false)}
-                        className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                        className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                       >
                         Đóng
                       </button>
                     )}
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition cursor-pointer"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center gap-1.5"
                     >
-                      Đăng Nhập Vào Học
+                      <span>🚀 Đăng Nhập Vào Học</span>
                     </button>
                   </div>
                 </div>
@@ -2911,7 +2760,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     onClick={() => setAuthActiveTab('register')}
                     className="font-bold text-blue-600 hover:underline cursor-pointer"
                   >
-                    ← Chưa có tài khoản? Bấm Đăng ký
+                    ← Quay lại màn hình Đăng nhập
                   </button>
 
                   <button

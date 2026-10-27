@@ -5034,7 +5034,7 @@ const STUDENT_SYSTEM = {
       document.getElementById('loginUsername')?.focus();
       return;
     }
-    if (!loginPass) {
+    if (false && !loginPass) {
       alert('Vui lòng nhập Mật khẩu!');
       document.getElementById('loginPassword')?.focus();
       return;
