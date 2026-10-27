@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  BookOpen, Headphones, PenTool, Award, Trophy, Star, Volume2, 
+  Type, BookOpen, Headphones, PenTool, Award, Trophy, Star, Volume2, 
   RotateCw, CheckCircle2, XCircle, ChevronDown, ChevronUp, 
   Sparkles, Lightbulb, FileText, Check, ArrowRight, ShieldCheck 
 } from 'lucide-react';
@@ -48,6 +48,40 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
   const [lastMeritBonus, setLastMeritBonus] = useState<number>(0);
   const [reviewFilter, setReviewFilter] = useState<'all' | 'wrong' | 'correct'>('all');
   const [writingAwarded, setWritingAwarded] = useState<boolean>(false);
+
+  // ĐIỀU CHỈNH CỠ CHỮ TO RÕ THEO YÊU CẦU: Mặc định là 'large' (To rõ, dễ đọc)
+  const [fontSizeMode, setFontSizeMode] = useState<'normal' | 'large' | 'xlarge'>('large');
+
+  // Typography Scaling Helper Classes
+  const fsQuestion = fontSizeMode === 'xlarge'
+    ? 'text-lg sm:text-2xl font-bold leading-relaxed'
+    : fontSizeMode === 'large'
+      ? 'text-base sm:text-xl font-bold leading-relaxed'
+      : 'text-sm sm:text-base font-bold leading-relaxed';
+
+  const fsOption = fontSizeMode === 'xlarge'
+    ? 'text-base sm:text-lg py-3.5 sm:py-4 px-4 sm:px-5 font-semibold'
+    : fontSizeMode === 'large'
+      ? 'text-sm sm:text-base py-3 sm:py-3.5 px-3.5 sm:px-4 font-semibold'
+      : 'text-xs sm:text-sm py-2 px-3 font-medium';
+
+  const fsBody = fontSizeMode === 'xlarge'
+    ? 'text-base sm:text-lg leading-loose space-y-3'
+    : fontSizeMode === 'large'
+      ? 'text-sm sm:text-base leading-relaxed space-y-2'
+      : 'text-xs sm:text-sm leading-relaxed space-y-1.5';
+
+  const fsBadge = fontSizeMode === 'xlarge'
+    ? 'px-3 py-1 text-sm sm:text-base'
+    : fontSizeMode === 'large'
+      ? 'px-2.5 py-0.5 text-xs sm:text-sm'
+      : 'px-2 py-0.5 text-xs';
+
+  const fsExp = fontSizeMode === 'xlarge'
+    ? 'text-sm sm:text-base leading-relaxed p-3.5 sm:p-4'
+    : fontSizeMode === 'large'
+      ? 'text-xs sm:text-sm leading-relaxed p-3 sm:p-3.5'
+      : 'text-xs leading-normal p-2.5';
 
   // Audio elements
   const audioPart1Url = '/audio/g8_gk1_part1.mp3';
@@ -566,16 +600,59 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       {/* BANNER HEADER */}
       <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
         <div className="relative z-10 space-y-2">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider backdrop-blur-md">
-              TRƯỜNG THCS ĐỒNG YÊN • NĂM HỌC 2026 - 2027
-            </span>
-            <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
-              BÁM SÁT 100% ĐỀ KIỂM TRA GIỮA KỲ 1
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider">
-              LẦN LÀM BÀI: LẦN {attemptCount}
-            </span>
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider backdrop-blur-md">
+                TRƯỜNG THCS ĐỒNG YÊN • NĂM HỌC 2026 - 2027
+              </span>
+              <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
+                BÁM SÁT 100% ĐỀ KIỂM TRA GIỮA KỲ 1
+              </span>
+              <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider">
+                LẦN LÀM BÀI: LẦN {attemptCount}
+              </span>
+            </div>
+
+            {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}
+            <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-xs shadow-inner">
+              <span className="font-bold text-amber-300 flex items-center gap-1">
+                <Type className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Cỡ Chữ:</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('normal')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'normal'
+                    ? 'bg-white text-slate-900 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A Vừa
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('large')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'large'
+                    ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A+ To Rõ
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('xlarge')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'xlarge'
+                    ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A++ Cực To
+              </button>
+            </div>
           </div>
           <h2 className="text-xl sm:text-3xl font-black uppercase tracking-tight">
             📖 Đề Cương Ôn Tập &amp; Luyện Thi Trực Tuyến — Tiếng Anh 8
@@ -707,7 +784,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
               <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">LEISURE TIME (Thời Gian Rảnh Rỗi)</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
                 <h4 className="font-black text-blue-600 dark:text-blue-400">1. Từ vựng trọng tâm</h4>
                 <p>• <strong>origami</strong> (n): nghệ thuật gấp giấy Nhật Bản</p>
@@ -734,7 +812,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
               <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">LIFE IN THE COUNTRYSIDE (Cuộc Sống Ở Nông Thôn)</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
                 <h4 className="font-black text-emerald-600 dark:text-emerald-400">1. Từ vựng làng quê</h4>
                 <p>• <strong>harvest time</strong> (n): vụ mùa gặt hái</p>
@@ -762,7 +841,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
               <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">TEENAGERS (Thanh Thiếu Niên)</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
                 <h4 className="font-black text-purple-600 dark:text-purple-400">1. Đời sống học đường &amp; Mạng xã hội</h4>
                 <p>• <strong>peer pressure</strong> (n): áp lực bạn bè cùng trang lứa</p>
@@ -888,8 +968,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                           : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800')
                   }`}>
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <p className="font-bold text-sm text-slate-800 dark:text-white">
-                        <span className="inline-block px-2 py-0.5 rounded bg-blue-600 text-white text-xs mr-2 font-mono">Câu {item.num}</span>
+                      <p className={`font-bold ${fsQuestion} text-slate-900 dark:text-white`}>
+                        <span className={`inline-block ${fsBadge} rounded-xl bg-blue-600 text-white mr-2 font-mono font-black`}>Câu {item.num}</span>
                         {item.q}
                       </p>
                       {isSubmitted && (
@@ -931,7 +1011,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                       })}
                     </div>
                     {isSubmitted && (
-                      <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <div className={`mt-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 ${fsExp} text-slate-800 dark:text-slate-200`}>
                         <strong className="text-blue-600 dark:text-blue-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>
@@ -1019,7 +1099,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                             key={oIdx}
                             disabled={isSubmitted}
                             onClick={() => handleSelectOption(item.id, oIdx)}
-                            className={`p-2.5 rounded-xl text-xs font-bold text-left transition cursor-pointer flex items-center justify-between ${btnStyle}`}
+                            className={`rounded-xl sm:rounded-2xl ${fsOption} text-left transition cursor-pointer flex items-center justify-between ${btnStyle}`}
                           >
                             <span>{opt}</span>
                             {!isSubmitted && isSelected && <span>✓</span>}
@@ -1028,7 +1108,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                       })}
                     </div>
                     {isSubmitted && (
-                      <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <div className={`mt-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 ${fsExp} text-slate-800 dark:text-slate-200`}>
                         <strong className="text-emerald-600 dark:text-emerald-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>
@@ -1176,7 +1256,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
 
           {/* Reading Material if active */}
           {(practiceFilter === 'all' || practiceFilter === 'read') && (
-            <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm space-y-2 leading-relaxed">
+            <div className={`bg-slate-50 dark:bg-slate-800/60 p-6 sm:p-7 rounded-3xl border border-slate-200 dark:border-slate-700 ${fsBody}`}>
               <span className="px-2.5 py-0.5 rounded-md bg-blue-600 text-white text-xs font-bold">Bài Đọc Hiểu (Teenagers &amp; Online Activities)</span>
               <p>Many teenagers enjoy spending their free time online. <mark className="bg-amber-200 px-1 rounded font-bold">They</mark> can watch videos, browse websites, upload pictures and communicate with friends through social media. Online activities are entertaining and can also help teenagers learn new skills. For example, they can <strong>watch English lessons</strong> or join online groups to share ideas about their hobbies.</p>
               <p>However, spending too much time online may cause problems. Some teenagers stay up late using their phones, so they do not get enough sleep. Others may feel stressed when they compare themselves with people on social media. In addition, sharing personal information with strangers can be dangerous.</p>
@@ -1203,8 +1283,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                           : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800')
                   }`}>
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <p className="font-bold text-sm text-slate-800 dark:text-white">
-                        <span className="inline-block px-2 py-0.5 rounded bg-blue-600 text-white text-xs mr-2 font-mono">Câu {item.num}</span>
+                      <p className={`font-bold ${fsQuestion} text-slate-900 dark:text-white`}>
+                        <span className={`inline-block ${fsBadge} rounded-xl bg-blue-600 text-white mr-2 font-mono font-black`}>Câu {item.num}</span>
                         {item.q}
                       </p>
                       {isSubmitted && (
@@ -1237,7 +1317,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                             key={oIdx}
                             disabled={isSubmitted}
                             onClick={() => handleSelectOption(item.id, oIdx)}
-                            className={`p-2.5 rounded-xl text-xs font-bold text-left transition cursor-pointer flex items-center justify-between ${btnStyle}`}
+                            className={`rounded-xl sm:rounded-2xl ${fsOption} text-left transition cursor-pointer flex items-center justify-between ${btnStyle}`}
                           >
                             <span>{opt}</span>
                             {!isSubmitted && isSelected && <span>✓</span>}
@@ -1246,7 +1326,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                       })}
                     </div>
                     {isSubmitted && (
-                      <div className="mt-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <div className={`mt-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 ${fsExp} text-slate-800 dark:text-slate-200`}>
                         <strong className="text-blue-600 dark:text-blue-400">💡 Giải thích ngắn gọn: </strong>
                         <span>{item.exp}</span>
                       </div>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, Headphones, PenTool, Trophy, Star, Volume2, 
   RotateCw, CheckCircle2, ChevronDown, ChevronUp, 
-  Sparkles, Lightbulb, FileText, Check, ArrowRight, ShieldCheck 
+  Sparkles, Lightbulb, FileText, Check, ArrowRight, ShieldCheck,
+  Type
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { midtermMissionService } from '../services/midtermMissionService';
@@ -32,6 +33,9 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
   const [showSampleWriting, setShowSampleWriting] = useState(false);
   const [writingText, setWritingText] = useState('');
   const [practiceFilter, setPracticeFilter] = useState<'all' | 'lang' | 'read' | 'cloze' | 'trans'>('all');
+
+  // ĐIỀU CHỈNH CỠ CHỮ TO RÕ THEO YÊU CẦU: Mặc định là 'large' (To rõ, dễ đọc)
+  const [fontSizeMode, setFontSizeMode] = useState<'normal' | 'large' | 'xlarge'>('large');
 
   // Trạng thái Nộp bài & Chấm chữa & Làm lại nhiều lần
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -494,6 +498,37 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                             listeningP2.filter(i => userAnswers[i.id] !== undefined).length;
   const practiceAnswered = practiceQuestions.filter(i => userAnswers[i.id] !== undefined).length;
 
+  // Typography Scaling Helper Classes
+  const fsQuestion = fontSizeMode === 'xlarge'
+    ? 'text-lg sm:text-2xl font-bold leading-relaxed'
+    : fontSizeMode === 'large'
+      ? 'text-base sm:text-xl font-bold leading-relaxed'
+      : 'text-sm sm:text-base font-bold leading-relaxed';
+
+  const fsOption = fontSizeMode === 'xlarge'
+    ? 'text-base sm:text-lg py-3.5 sm:py-4 px-4 sm:px-5 font-semibold'
+    : fontSizeMode === 'large'
+      ? 'text-sm sm:text-base py-3 sm:py-3.5 px-3.5 sm:px-4 font-semibold'
+      : 'text-xs sm:text-sm py-2 px-3 font-medium';
+
+  const fsBody = fontSizeMode === 'xlarge'
+    ? 'text-base sm:text-lg leading-loose space-y-3'
+    : fontSizeMode === 'large'
+      ? 'text-sm sm:text-base leading-relaxed space-y-2'
+      : 'text-xs sm:text-sm leading-relaxed space-y-1.5';
+
+  const fsBadge = fontSizeMode === 'xlarge'
+    ? 'w-8 h-8 sm:w-9 sm:h-9 text-sm sm:text-base'
+    : fontSizeMode === 'large'
+      ? 'w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm'
+      : 'w-6 h-6 text-xs';
+
+  const fsExp = fontSizeMode === 'xlarge'
+    ? 'text-sm sm:text-base leading-relaxed'
+    : fontSizeMode === 'large'
+      ? 'text-xs sm:text-sm leading-relaxed'
+      : 'text-xs leading-normal';
+
   // Xử lý chọn đáp án
   const handleSelectOption = (qId: string, optIdx: number) => {
     if (isSubmitted) return;
@@ -642,27 +677,71 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* BANNER HEADER */}
       <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="relative z-10 space-y-2">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider backdrop-blur-md">
-              TRƯỜNG THCS ĐỒNG YÊN • NĂM HỌC 2026 - 2027
-            </span>
-            <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
-              BÁM SÁT 100% ĐỀ KIỂM TRA GIỮA KỲ 1
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider">
-              LẦN LÀM BÀI: LẦN {attemptCount}
-            </span>
+        <div className="relative z-10 space-y-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider backdrop-blur-md">
+                TRƯỜNG THCS ĐỒNG YÊN • NĂM HỌC 2026 - 2027
+              </span>
+              <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
+                BÁM SÁT 100% ĐỀ KIỂM TRA GIỮA KỲ 1
+              </span>
+              <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider">
+                LẦN LÀM BÀI: LẦN {attemptCount}
+              </span>
+            </div>
+
+            {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}
+            <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-xs shadow-inner">
+              <span className="font-bold text-amber-300 flex items-center gap-1">
+                <Type className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Cỡ Chữ:</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('normal')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'normal'
+                    ? 'bg-white text-slate-900 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A Vừa
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('large')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'large'
+                    ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A+ To Rõ
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontSizeMode('xlarge')}
+                className={`px-2 py-0.5 rounded-lg font-bold transition cursor-pointer ${
+                  fontSizeMode === 'xlarge'
+                    ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
+                    : 'text-white/80 hover:bg-white/10'
+                }`}
+              >
+                A++ Cực To
+              </button>
+            </div>
           </div>
+
           <h2 className="text-xl sm:text-3xl font-black uppercase tracking-tight">
             📖 Đề Cương Ôn Tập &amp; Luyện Thi Trực Tuyến — Tiếng Anh 6
           </h2>
           <p className="text-sm sm:text-base text-teal-100 max-w-3xl leading-relaxed">
-            Học sinh ôn tập lý thuyết Unit 1, 2, 3, luyện nghe Audio có lời thoại, làm bài tập trắc nghiệm có nộp bài &amp; chấm chữa đầy đủ. Có thể làm lại nhiều lần để gỡ điểm và tích lũy điểm chuyên cần.
+            Học sinh ôn tập lý thuyết Unit 1, 2, 3, luyện nghe Audio có lời thoại, làm bài tập trắc nghiệm chữ to rõ, nộp bài &amp; chấm chữa đầy đủ. Có thể làm lại nhiều lần để gỡ điểm và tích lũy điểm chuyên cần.
           </p>
 
           {/* Quick Stats Pill */}
-          <div className="pt-2 flex items-center gap-3 flex-wrap">
+          <div className="pt-1 flex items-center gap-3 flex-wrap">
             <div className="px-4 py-2 rounded-xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center gap-2 text-sm font-bold">
               <Star className="w-4 h-4 text-amber-300" />
               <span>Tiến độ: <strong>{answeredCount}/{allItems.length} câu</strong></span>
@@ -778,15 +857,15 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
       {activeTab === 'theory' && (
         <div className="space-y-6">
           {/* Unit 1 */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <span className="px-2.5 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-black text-xs">UNIT 1</span>
-              <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">MY NEW SCHOOL (Ngôi Trường Mới Của Tôi)</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <span className="px-3 py-1.5 rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-black text-xs sm:text-sm">UNIT 1</span>
+              <h3 className="text-lg sm:text-2xl font-black text-slate-800 dark:text-white uppercase">MY NEW SCHOOL (Ngôi Trường Mới Của Tôi)</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-teal-600 dark:text-teal-400">1. Từ vựng đồ dùng học tập</h4>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-teal-700 dark:text-teal-300 text-base sm:text-lg">1. Từ vựng đồ dùng học tập</h4>
                 <p>• <strong>compass</strong> (n): compa vẽ hình tròn</p>
                 <p>• <strong>school bag</strong> (n): cặp sách, ba lô</p>
                 <p>• <strong>pencil sharpener</strong> (n): gọt bút chì</p>
@@ -797,19 +876,19 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                 <p>• <strong>textbook</strong> (n): sách giáo khoa</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-teal-600 dark:text-teal-400">2. Cụm động từ kết hợp (Collocations)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-teal-700 dark:text-teal-300 text-base sm:text-lg">2. Cụm động từ kết hợp (Collocations)</h4>
                 <p>• <strong>play</strong> + sports/games/music (football, badminton, the piano...)</p>
                 <p>• <strong>do</strong> + homework / exercise / judo (hoạt động cá nhân, võ thuật)</p>
                 <p>• <strong>have</strong> + meals / lessons (breakfast, lunch, a science lesson...)</p>
                 <p>• <strong>study</strong> + subjects (English, maths, history, science...)</p>
-                <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 text-xs font-semibold">
+                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-semibold border border-amber-200 dark:border-amber-900">
                   💡 <em>Mẹo gỡ điểm:</em> Gặp "judo", "homework" chọn động từ <strong>do</strong>; gặp môn thể thao có bóng chọn <strong>play</strong>!
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 md:col-span-2">
-                <h4 className="font-black text-teal-600 dark:text-teal-400">3. Thì Hiện Tại Đơn (The Present Simple)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2.5 md:col-span-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-teal-700 dark:text-teal-300 text-base sm:text-lg">3. Thì Hiện Tại Đơn (The Present Simple)</h4>
                 <p>• <strong>Công thức:</strong> S + V(s/es) | S + don't / doesn't + V-inf | Do / Does + S + V-inf?</p>
                 <p>• <strong>Chủ ngữ số ít (He, She, It, danh từ số ít):</strong> Động từ thêm <em>-s</em> hoặc <em>-es</em>.</p>
                 <p>• <strong>Chủ ngữ số nhiều (I, We, You, They, danh từ số nhiều):</strong> Động từ giữ nguyên mẫu (V-inf).</p>
@@ -823,15 +902,15 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* Unit 2 */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <span className="px-2.5 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-black text-xs">UNIT 2</span>
-              <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">MY HOUSE (Ngôi Nhà Của Tôi)</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <span className="px-3 py-1.5 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-200 font-black text-xs sm:text-sm">UNIT 2</span>
+              <h3 className="text-lg sm:text-2xl font-black text-slate-800 dark:text-white uppercase">MY HOUSE (Ngôi Nhà Của Tôi)</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-indigo-600 dark:text-indigo-400">1. Từ vựng các kiểu nhà &amp; phòng ốc</h4>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-indigo-700 dark:text-indigo-300 text-base sm:text-lg">1. Từ vựng các kiểu nhà &amp; phòng ốc</h4>
                 <p>• <strong>town house</strong>: nhà phố</p>
                 <p>• <strong>country house</strong>: nhà ở vùng quê</p>
                 <p>• <strong>villa</strong>: biệt thự sân vườn</p>
@@ -842,37 +921,37 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                 <p>• <strong>dishwasher</strong>: máy rửa bát đĩa</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-indigo-600 dark:text-indigo-400">2. Giới từ chỉ vị trí (Prepositions of place)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-indigo-700 dark:text-indigo-300 text-base sm:text-lg">2. Giới từ chỉ vị trí (Prepositions of place)</h4>
                 <p>• <strong>in</strong> (trong) | <strong>on</strong> (trên mặt phẳng) | <strong>under</strong> (dưới gầm)</p>
                 <p>• <strong>behind</strong> (phía sau) | <strong>in front of</strong> (phía trước)</p>
                 <p>• <strong>next to</strong> (bên cạnh) | <strong>between ... and ...</strong> (ở giữa hai vật)</p>
-                <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-200 text-xs font-semibold">
+                <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 font-semibold border border-blue-200 dark:border-blue-900">
                   💡 <em>Ví dụ kinh điển:</em> The cat is sleeping <strong>under</strong> the table. / The dog is <strong>in front of</strong> the kennel.
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 md:col-span-2">
-                <h4 className="font-black text-indigo-600 dark:text-indigo-400">3. Sở Hữu Cách (Possessive Case)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2.5 md:col-span-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-indigo-700 dark:text-indigo-300 text-base sm:text-lg">3. Sở Hữu Cách (Possessive Case)</h4>
                 <p>• Thêm <strong>'s</strong> sau danh từ chỉ người số ít: <em>Nam's house</em> (ngôi nhà của Nam), <em>my mother's bag</em> (cặp của mẹ).</p>
                 <p>• Nếu danh từ số nhiều đã có tận cùng là <em>-s</em>: chỉ thêm dấu phẩy <strong>'</strong>: <em>the teachers' room</em>.</p>
                 <p>• <strong>Cấu trúc chuyển đổi câu tương đương gỡ điểm:</strong></p>
-                <p className="pl-3 font-semibold text-emerald-600 dark:text-emerald-400">• My house has 6 rooms. &lt;=&gt; There are 6 rooms in my house.</p>
-                <p className="pl-3 font-semibold text-emerald-600 dark:text-emerald-400">• Does your house have four bedrooms? &lt;=&gt; Are there four bedrooms in your house?</p>
+                <p className="pl-3 font-semibold text-emerald-700 dark:text-emerald-300">• My house has 6 rooms. &lt;=&gt; There are 6 rooms in my house.</p>
+                <p className="pl-3 font-semibold text-emerald-700 dark:text-emerald-300">• Does your house have four bedrooms? &lt;=&gt; Are there four bedrooms in your house?</p>
               </div>
             </div>
           </div>
 
           {/* Unit 3 */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <span className="px-2.5 py-1 rounded-lg bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300 font-black text-xs">UNIT 3</span>
-              <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase">MY FRIENDS (Những Người Bạn Của Tôi)</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <span className="px-3 py-1.5 rounded-xl bg-pink-100 dark:bg-pink-950/60 text-pink-800 dark:text-pink-200 font-black text-xs sm:text-sm">UNIT 3</span>
+              <h3 className="text-lg sm:text-2xl font-black text-slate-800 dark:text-white uppercase">MY FRIENDS (Những Người Bạn Của Tôi)</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-pink-600 dark:text-pink-400">1. Tính từ miêu tả tính cách &amp; ngoại hình</h4>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${fsBody}`}>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-pink-700 dark:text-pink-300 text-base sm:text-lg">1. Tính từ miêu tả tính cách &amp; ngoại hình</h4>
                 <p>• <strong>friendly</strong>: thân thiện, dễ mến</p>
                 <p>• <strong>kind</strong>: tốt bụng, hay giúp đỡ</p>
                 <p>• <strong>creative</strong>: sáng tạo, có nhiều ý tưởng mới</p>
@@ -883,23 +962,23 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                 <p>• <strong>curly black hair</strong>: mái tóc xoăn màu đen</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-                <h4 className="font-black text-pink-600 dark:text-pink-400">2. Thì Hiện Tại Tiếp Diễn (The Present Continuous)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-pink-700 dark:text-pink-300 text-base sm:text-lg">2. Thì Hiện Tại Tiếp Diễn (The Present Continuous)</h4>
                 <p>• <strong>Công thức:</strong> S + am / is / are + V-ing</p>
                 <p>• <strong>Ý nghĩa:</strong> Diễn tả hành động ĐANG XẢY RA ngay lúc nói.</p>
                 <p>• <strong>Dấu hiệu nhận biết:</strong> <em>now, right now, at present, at the moment, Look!, Listen!, Be quiet!</em></p>
-                <div className="p-2.5 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-800 dark:text-pink-200 text-xs font-semibold">
+                <div className="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-900 dark:text-pink-200 font-semibold border border-pink-200 dark:border-pink-900">
                   💡 <em>Ví dụ:</em> Be quiet! The baby <strong>is sleeping</strong> in the bedroom.
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 md:col-span-2">
-                <h4 className="font-black text-pink-600 dark:text-pink-400">3. Mẫu câu giao tiếp hàng ngày (Everyday English)</h4>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2.5 md:col-span-2 border border-slate-200/60 dark:border-slate-700/60">
+                <h4 className="font-black text-pink-700 dark:text-pink-300 text-base sm:text-lg">3. Mẫu câu giao tiếp hàng ngày (Everyday English)</h4>
                 <p>• <strong>Hỏi ngoại hình:</strong> "What does he / she look like?" &rarr; "He has short black hair and big eyes."</p>
                 <p>• <strong>Hỏi tính cách:</strong> "What is he / she like?" &rarr; "She is very kind, creative and helpful."</p>
                 <p>• <strong>Mượn đồ dùng học tập:</strong> "Can you pass/lend me your ruler, please?" &rarr; "Sure, here you are."</p>
                 <p>• <strong>Cấu trúc biến đổi miêu tả:</strong></p>
-                <p className="pl-3 font-semibold text-emerald-600 dark:text-emerald-400">• Linh has short curly hair. &lt;=&gt; Linh's hair is short and curly.</p>
+                <p className="pl-3 font-semibold text-emerald-700 dark:text-emerald-300">• Linh has short curly hair. &lt;=&gt; Linh's hair is short and curly.</p>
               </div>
             </div>
           </div>
@@ -912,7 +991,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           {/* THANH ĐIỀU HƯỚNG & NỘP BÀI NHANH */}
           <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:bg-slate-800/90 p-4 rounded-2xl border border-teal-200 dark:border-teal-900 flex items-center justify-between gap-3 flex-wrap shadow-xs">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="px-3 py-1 rounded-xl bg-teal-600 text-white text-xs font-black">
+              <span className="px-3 py-1 rounded-xl bg-teal-600 text-white text-xs sm:text-sm font-black">
                 Lần {attemptCount}
               </span>
               <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
@@ -929,10 +1008,10 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('practice')}
-                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 font-bold text-xs border border-slate-200 dark:border-slate-600 shadow-xs transition flex items-center gap-1 cursor-pointer"
+                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-600 shadow-xs transition flex items-center gap-1 cursor-pointer"
               >
                 <span>Sang Phần Trắc Nghiệm</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
               {!isSubmitted ? (
                 <button
@@ -947,7 +1026,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                 <button
                   type="button"
                   onClick={handleRetakeExam}
-                  className="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-xs transition flex items-center gap-1 cursor-pointer"
+                  className="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm shadow-xs transition flex items-center gap-1 cursor-pointer"
                 >
                   <RotateCw className="w-4 h-4" />
                   <span>Làm Lại Lần {attemptCount + 1}</span>
@@ -957,30 +1036,30 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* PART 1 */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <span className="px-2.5 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-black text-xs">
+                <span className="px-3 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-black text-xs sm:text-sm">
                   PART 1 • 1.25 ĐIỂM
                 </span>
-                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white mt-1">
+                <h3 className="text-base sm:text-xl font-black text-slate-800 dark:text-white mt-1.5 leading-snug">
                   Listen to Mi talking about her house and decide whether statements 1-5 are True (A) or False (B).
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowTapescript1(!showTapescript1)}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer"
               >
-                <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                <Lightbulb className="w-4 h-4 text-amber-500" />
                 <span>{showTapescript1 ? 'Ẩn Lời Thoại (Tapescript)' : 'Xem Lời Thoại (Tapescript)'}</span>
-                {showTapescript1 ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                {showTapescript1 ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
             </div>
 
             {/* Audio Player */}
-            <div className="p-4 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/60 flex flex-col sm:flex-row sm:items-center gap-3">
-              <div className="flex items-center gap-2 text-teal-800 dark:text-teal-200 font-bold text-xs shrink-0">
+            <div className="p-4 sm:p-5 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/60 flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex items-center gap-2 text-teal-800 dark:text-teal-200 font-bold text-sm shrink-0">
                 <Volume2 className="w-5 h-5 text-teal-600 animate-pulse" />
                 <span>File Audio Part 1:</span>
               </div>
@@ -992,48 +1071,48 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
 
             {/* Tapescript Collapsible */}
             {showTapescript1 && (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs sm:text-sm space-y-2">
-                <div className="font-bold text-amber-800 dark:text-amber-200 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-amber-600" />
+              <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-sm sm:text-base space-y-2.5">
+                <div className="font-bold text-amber-800 dark:text-amber-200 flex items-center gap-1.5 text-base">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
                   <span>Lời thoại tiếng Anh &amp; Dịch nghĩa chi tiết (Part 1):</span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 italic leading-relaxed">
+                <p className="text-slate-800 dark:text-slate-200 italic leading-relaxed">
                   "Hi, I'm Mi. I live in a town house in Hanoi. My house is quite big. There are six rooms in my house: a living room, a kitchen, four bedrooms, and two bathrooms. My favourite room is my bedroom because it has a big window and many beautiful pictures. I love my house because it is very cozy and comfortable."
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 text-xs pt-1 border-t border-amber-200/60 dark:border-amber-900/40">
+                <p className="text-slate-700 dark:text-slate-300 text-sm pt-2 border-t border-amber-200/60 dark:border-amber-900/40 leading-relaxed">
                   <em>Dịch: "Xin chào, mình là Mi. Mình sống trong một ngôi nhà phố ở Hà Nội. Nhà mình khá to. Có 6 phòng trong nhà: một phòng khách, một bếp, bốn phòng ngủ và hai phòng tắm. Phòng yêu thích của mình là phòng ngủ vì nó có cửa sổ to và nhiều bức tranh đẹp. Mình yêu ngôi nhà vì nó rất ấm cúng và tiện nghi."</em>
                 </p>
               </div>
             )}
 
             {/* Questions 1-5 */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-4 pt-2">
               {listeningP1.map(item => {
                 const isAnswered = userAnswers[item.id] !== undefined;
                 const isCorrect = userAnswers[item.id] === item.correct;
                 return (
                   <div 
                     key={item.id}
-                    className={`p-4 rounded-2xl border transition ${
+                    className={`p-4 sm:p-5 rounded-2xl border transition ${
                       isSubmitted
                         ? isCorrect
-                          ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800'
-                          : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-800'
+                          ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-400'
+                          : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-400'
                         : isAnswered
-                          ? 'bg-teal-50/40 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800'
-                          : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
+                          ? 'bg-teal-50/50 dark:bg-teal-950/20 border-teal-300'
+                          : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
                     }`}
                   >
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="flex items-start gap-3">
+                      <span className={`${fsBadge} rounded-xl bg-teal-600 text-white font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs`}>
                         {item.num}
                       </span>
-                      <div className="flex-1 space-y-2">
-                        <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">
+                      <div className="flex-1 space-y-3">
+                        <p className={`${fsQuestion} text-slate-900 dark:text-slate-100`}>
                           {item.q}
                         </p>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap">
                           {item.options.map((opt, oIdx) => {
                             const isChosen = userAnswers[item.id] === oIdx;
                             return (
@@ -1042,19 +1121,20 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                                 type="button"
                                 disabled={isSubmitted}
                                 onClick={() => handleSelectOption(item.id, oIdx)}
-                                className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                                className={`${fsOption} rounded-xl transition flex items-center gap-2 cursor-pointer ${
                                   isChosen
                                     ? isSubmitted
                                       ? oIdx === item.correct
-                                        ? 'bg-emerald-600 text-white shadow-sm font-black'
-                                        : 'bg-rose-600 text-white shadow-sm font-black'
-                                      : 'bg-teal-600 text-white shadow-sm font-black'
+                                        ? 'bg-emerald-600 text-white shadow-md font-black ring-2 ring-emerald-400'
+                                        : 'bg-rose-600 text-white shadow-md font-black ring-2 ring-rose-400'
+                                      : 'bg-teal-600 text-white shadow-md font-black ring-2 ring-teal-400'
                                     : isSubmitted && oIdx === item.correct
-                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-400 font-bold'
-                                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                                      ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-500 font-black'
+                                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 hover:border-teal-500 shadow-2xs'
                                 }`}
                               >
                                 <span>{opt}</span>
+                                {isChosen && !isSubmitted && <span>✓</span>}
                               </button>
                             );
                           })}
@@ -1062,8 +1142,8 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
 
                         {/* Giải thích sau khi nộp */}
                         {isSubmitted && (
-                          <div className={`mt-2 p-2.5 rounded-xl text-xs font-medium ${
-                            isCorrect ? 'bg-emerald-100/70 text-emerald-900' : 'bg-rose-100/70 text-rose-900'
+                          <div className={`mt-3 p-3.5 sm:p-4 rounded-xl ${fsExp} font-medium ${
+                            isCorrect ? 'bg-emerald-100/80 text-emerald-950 border border-emerald-300' : 'bg-rose-100/80 text-rose-950 border border-rose-300'
                           }`}>
                             <p>{item.exp}</p>
                           </div>
@@ -1077,30 +1157,30 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* PART 2 */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <span className="px-2.5 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-black text-xs">
+                <span className="px-3 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-black text-xs sm:text-sm">
                   PART 2 • 1.25 ĐIỂM
                 </span>
-                <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-white mt-1">
+                <h3 className="text-base sm:text-xl font-black text-slate-800 dark:text-white mt-1.5 leading-snug">
                   Listen to Phong and An talking about their school and choose the best answer A, B, or C.
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowTapescript2(!showTapescript2)}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer"
               >
-                <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                <Lightbulb className="w-4 h-4 text-amber-500" />
                 <span>{showTapescript2 ? 'Ẩn Lời Thoại (Tapescript)' : 'Xem Lời Thoại (Tapescript)'}</span>
-                {showTapescript2 ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                {showTapescript2 ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               </button>
             </div>
 
             {/* Audio Player */}
-            <div className="p-4 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/60 flex flex-col sm:flex-row sm:items-center gap-3">
-              <div className="flex items-center gap-2 text-teal-800 dark:text-teal-200 font-bold text-xs shrink-0">
+            <div className="p-4 sm:p-5 rounded-2xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/60 flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex items-center gap-2 text-teal-800 dark:text-teal-200 font-bold text-sm shrink-0">
                 <Volume2 className="w-5 h-5 text-teal-600 animate-pulse" />
                 <span>File Audio Part 2:</span>
               </div>
@@ -1112,12 +1192,12 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
 
             {/* Tapescript Collapsible */}
             {showTapescript2 && (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs sm:text-sm space-y-2">
-                <div className="font-bold text-amber-800 dark:text-amber-200 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-amber-600" />
+              <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-sm sm:text-base space-y-2.5">
+                <div className="font-bold text-amber-800 dark:text-amber-200 flex items-center gap-1.5 text-base">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
                   <span>Lời thoại tiếng Anh &amp; Dịch nghĩa chi tiết (Part 2):</span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 italic leading-relaxed">
+                <p className="text-slate-800 dark:text-slate-200 italic leading-relaxed">
                   "Phong: Hi An! Welcome to our school! I go to An Son Lower Secondary School. How do you feel about your new school?<br />
                   An: Oh, hi Phong! I really like it here. There are five clubs in our school: sports, music, art, science, and English.<br />
                   Phong: That's great! Which club do you want to join?<br />
@@ -1127,40 +1207,40 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                   Phong: Awesome! Let's play football in the school playground after school today!<br />
                   An: Sure, that sounds fun!"
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 text-xs pt-1 border-t border-amber-200/60 dark:border-amber-900/40">
+                <p className="text-slate-700 dark:text-slate-300 text-sm pt-2 border-t border-amber-200/60 dark:border-amber-900/40 leading-relaxed">
                   <em>Dịch: "Phong chào An và giới thiệu mình học ở trường THCS An Sơn. An chia sẻ trường có 5 câu lạc bộ và muốn tham gia CLB Tiếng Anh. Môn học yêu thích của An là Khoa học vì được làm thí nghiệm. Cuối cùng, hai bạn hẹn nhau cùng đá bóng ở sân trường sau giờ học."</em>
                 </p>
               </div>
             )}
 
             {/* Questions 6-10 */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-4 pt-2">
               {listeningP2.map(item => {
                 const isAnswered = userAnswers[item.id] !== undefined;
                 const isCorrect = userAnswers[item.id] === item.correct;
                 return (
                   <div 
                     key={item.id}
-                    className={`p-4 rounded-2xl border transition ${
+                    className={`p-4 sm:p-5 rounded-2xl border transition ${
                       isSubmitted
                         ? isCorrect
-                          ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800'
-                          : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-800'
+                          ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-400'
+                          : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-400'
                         : isAnswered
-                          ? 'bg-teal-50/40 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800'
-                          : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
+                          ? 'bg-teal-50/50 dark:bg-teal-950/20 border-teal-300'
+                          : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
                     }`}
                   >
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                    <div className="flex items-start gap-3">
+                      <span className={`${fsBadge} rounded-xl bg-teal-600 text-white font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs`}>
                         {item.num}
                       </span>
-                      <div className="flex-1 space-y-2">
-                        <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">
+                      <div className="flex-1 space-y-3">
+                        <p className={`${fsQuestion} text-slate-900 dark:text-slate-100`}>
                           {item.q}
                         </p>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                           {item.options.map((opt, oIdx) => {
                             const isChosen = userAnswers[item.id] === oIdx;
                             return (
@@ -1169,19 +1249,20 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                                 type="button"
                                 disabled={isSubmitted}
                                 onClick={() => handleSelectOption(item.id, oIdx)}
-                                className={`p-2.5 rounded-xl text-xs font-bold transition text-left cursor-pointer ${
+                                className={`${fsOption} rounded-xl transition text-left cursor-pointer flex items-center justify-between ${
                                   isChosen
                                     ? isSubmitted
                                       ? oIdx === item.correct
-                                        ? 'bg-emerald-600 text-white shadow-sm font-black'
-                                        : 'bg-rose-600 text-white shadow-sm font-black'
-                                      : 'bg-teal-600 text-white shadow-sm font-black'
+                                        ? 'bg-emerald-600 text-white shadow-md font-black ring-2 ring-emerald-400'
+                                        : 'bg-rose-600 text-white shadow-md font-black ring-2 ring-rose-400'
+                                      : 'bg-teal-600 text-white shadow-md font-black ring-2 ring-teal-400'
                                     : isSubmitted && oIdx === item.correct
-                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-400 font-bold'
-                                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                                      ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-500 font-black'
+                                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 hover:border-teal-500 shadow-2xs'
                                 }`}
                               >
                                 <span>{opt}</span>
+                                {isChosen && !isSubmitted && <span>✓</span>}
                               </button>
                             );
                           })}
@@ -1189,8 +1270,8 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
 
                         {/* Giải thích sau khi nộp */}
                         {isSubmitted && (
-                          <div className={`mt-2 p-2.5 rounded-xl text-xs font-medium ${
-                            isCorrect ? 'bg-emerald-100/70 text-emerald-900' : 'bg-rose-100/70 text-rose-900'
+                          <div className={`mt-3 p-3.5 sm:p-4 rounded-xl ${fsExp} font-medium ${
+                            isCorrect ? 'bg-emerald-100/80 text-emerald-950 border border-emerald-300' : 'bg-rose-100/80 text-rose-950 border border-rose-300'
                           }`}>
                             <p>{item.exp}</p>
                           </div>
@@ -1209,15 +1290,15 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
       {activeTab === 'practice' && (
         <div className="space-y-6">
           {/* THANH ĐIỀU HƯỚNG & NỘP BÀI NHANH */}
-          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:bg-slate-800/90 p-4 rounded-2xl border border-teal-200 dark:border-teal-900 flex items-center justify-between gap-3 flex-wrap shadow-xs">
+          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:bg-slate-800/90 p-4 sm:p-5 rounded-2xl border border-teal-200 dark:border-teal-900 flex items-center justify-between gap-3 flex-wrap shadow-xs">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="px-3 py-1 rounded-xl bg-teal-600 text-white text-xs font-black">
+              <span className="px-3.5 py-1.5 rounded-xl bg-teal-600 text-white text-xs sm:text-sm font-black">
                 Lần {attemptCount}
               </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+              <span className="text-xs sm:text-base font-bold text-slate-700 dark:text-slate-300">
                 Tiến độ: <strong className="text-teal-600 dark:text-teal-400">{answeredCount}/{allItems.length} câu</strong>
                 {isSubmitted && (
-                  <span className="ml-2 px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold">
+                  <span className="ml-2 px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold">
                     Đã chấm: {totalScore10}/10.0đ
                   </span>
                 )}
@@ -1229,7 +1310,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                 <button
                   type="button"
                   onClick={handleSubmitExam}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Nộp Bài &amp; Chấm Chữa</span>
@@ -1239,7 +1320,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                   <button
                     type="button"
                     onClick={() => setActiveTab('results')}
-                    className="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-1 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <Trophy className="w-4 h-4" />
                     <span>Xem Điểm ({totalScore10}đ)</span>
@@ -1247,7 +1328,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                   <button
                     type="button"
                     onClick={handleRetakeExam}
-                    className="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-xs transition flex items-center gap-1 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <RotateCw className="w-4 h-4" />
                     <span>Làm Lại Lần {attemptCount + 1}</span>
@@ -1258,44 +1339,44 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* Filter Bar */}
-          <div className="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-slate-400">Lọc phần thi:</span>
+          <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-2 flex-wrap">
+            <span className="text-xs sm:text-sm font-bold text-slate-500">Lọc phần thi:</span>
             <button
               onClick={() => setPracticeFilter('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                practiceFilter === 'all' ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                practiceFilter === 'all' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
               Tất cả ({practiceQuestions.length})
             </button>
             <button
               onClick={() => setPracticeFilter('lang')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                practiceFilter === 'lang' ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                practiceFilter === 'lang' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
               Language Focus (12 câu)
             </button>
             <button
               onClick={() => setPracticeFilter('cloze')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                practiceFilter === 'cloze' ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                practiceFilter === 'cloze' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
               Đọc Điền Từ (5 câu)
             </button>
             <button
               onClick={() => setPracticeFilter('read')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                practiceFilter === 'read' ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                practiceFilter === 'read' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
               Đọc Hiểu (5 câu)
             </button>
             <button
               onClick={() => setPracticeFilter('trans')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                practiceFilter === 'trans' ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                practiceFilter === 'trans' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
               Viết Lại &amp; Sắp Xếp (4 câu)
@@ -1303,33 +1384,33 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* List Questions */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {filteredPractice.map(item => {
               const isAnswered = userAnswers[item.id] !== undefined;
               const isCorrect = userAnswers[item.id] === item.correct;
               return (
                 <div 
                   key={item.id}
-                  className={`p-4 rounded-2xl border transition ${
+                  className={`p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition ${
                     isSubmitted
                       ? isCorrect
-                        ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800'
-                        : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-800'
+                        ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-400'
+                        : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-400'
                       : isAnswered
-                        ? 'bg-teal-50/40 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800'
-                        : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'
+                        ? 'bg-teal-50/50 dark:bg-teal-950/20 border-teal-300'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
                   }`}
                 >
-                  <div className="flex items-start gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="flex items-start gap-3.5">
+                    <span className={`${fsBadge} rounded-xl bg-teal-600 text-white font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs`}>
                       {item.num}
                     </span>
-                    <div className="flex-1 space-y-2">
-                      <p className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-relaxed whitespace-pre-line">
+                    <div className="flex-1 space-y-3.5">
+                      <p className={`${fsQuestion} text-slate-900 dark:text-slate-100 leading-relaxed whitespace-pre-line`}>
                         {item.q}
                       </p>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                         {item.options.map((opt, oIdx) => {
                           const isChosen = userAnswers[item.id] === oIdx;
                           return (
@@ -1338,19 +1419,20 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                               type="button"
                               disabled={isSubmitted}
                               onClick={() => handleSelectOption(item.id, oIdx)}
-                              className={`p-2.5 rounded-xl text-xs font-bold transition text-left cursor-pointer ${
+                              className={`${fsOption} rounded-xl sm:rounded-2xl transition text-left cursor-pointer flex items-center justify-between ${
                                 isChosen
                                   ? isSubmitted
                                     ? oIdx === item.correct
-                                      ? 'bg-emerald-600 text-white shadow-sm font-black'
-                                      : 'bg-rose-600 text-white shadow-sm font-black'
-                                    : 'bg-teal-600 text-white shadow-sm font-black'
+                                      ? 'bg-emerald-600 text-white shadow-md font-black ring-2 ring-emerald-400'
+                                      : 'bg-rose-600 text-white shadow-md font-black ring-2 ring-rose-400'
+                                    : 'bg-teal-600 text-white shadow-md font-black ring-2 ring-teal-400'
                                   : isSubmitted && oIdx === item.correct
-                                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-400 font-bold'
-                                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                                    ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-500 font-black'
+                                    : 'bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 hover:border-teal-500 shadow-2xs'
                               }`}
                             >
                               <span>{opt}</span>
+                              {isChosen && !isSubmitted && <span>✓</span>}
                             </button>
                           );
                         })}
@@ -1358,8 +1440,8 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
 
                       {/* Giải thích sau khi nộp */}
                       {isSubmitted && (
-                        <div className={`mt-2 p-2.5 rounded-xl text-xs font-medium ${
-                          isCorrect ? 'bg-emerald-100/70 text-emerald-900' : 'bg-rose-100/70 text-rose-900'
+                        <div className={`mt-3 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl ${fsExp} font-medium ${
+                          isCorrect ? 'bg-emerald-100/80 text-emerald-950 border border-emerald-300' : 'bg-rose-100/80 text-rose-950 border border-rose-300'
                         }`}>
                           <p>{item.exp}</p>
                         </div>
@@ -1377,28 +1459,28 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
       {activeTab === 'writing' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* CỘT TRÁI: KHUNG LUYỆN VIẾT CỦA HỌC SINH */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <span className="px-2.5 py-1 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-black text-xs">
+              <span className="px-3 py-1.5 rounded-lg bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-black text-xs sm:text-sm">
                 WRITING TASK • 1.0 ĐIỂM
               </span>
-              <span className="text-xs font-bold text-slate-500">
-                Số từ: <strong className={wordCount >= 40 && wordCount <= 70 ? 'text-emerald-600 text-sm' : 'text-amber-600 text-sm'}>{wordCount}</strong> / 40 - 60 từ
+              <span className="text-xs sm:text-sm font-bold text-slate-500">
+                Số từ: <strong className={wordCount >= 40 && wordCount <= 70 ? 'text-emerald-600 text-base' : 'text-amber-600 text-base'}>{wordCount}</strong> / 40 - 60 từ
               </span>
             </div>
 
             <div>
-              <h3 className="text-base font-black text-slate-800 dark:text-white">
+              <h3 className="text-base sm:text-xl font-black text-slate-800 dark:text-white leading-snug">
                 Đề bài: Write a paragraph (40-60 words) about your best friend or your house.
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
                 (Hãy viết một đoạn văn ngắn từ 40 - 60 từ miêu tả về người bạn thân nhất của em hoặc ngôi nhà nơi em đang sống).
               </p>
             </div>
 
             {/* Dàn ý gợi ý gỡ điểm */}
-            <div className="p-3.5 rounded-2xl bg-teal-50/60 dark:bg-teal-950/30 border border-teal-200/60 dark:border-teal-900/40 text-xs space-y-1.5">
-              <p className="font-bold text-teal-800 dark:text-teal-200">💡 4 Câu gợi ý gỡ điểm tuyệt đối:</p>
+            <div className={`p-4 rounded-2xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-900/40 ${fsBody} space-y-2`}>
+              <p className="font-black text-teal-800 dark:text-teal-200">💡 4 Câu gợi ý gỡ điểm tuyệt đối:</p>
               <p>1. <strong>Mở đoạn:</strong> My best friend is... / I live in a beautiful house in...</p>
               <p>2. <strong>Ngoại hình / Cấu trúc:</strong> He/She has... (round face, short hair...) / My house has six rooms...</p>
               <p>3. <strong>Tính cách / Điểm nổi bật:</strong> He/She is very kind, creative and helpful... / My favourite room is my bedroom because...</p>
@@ -1406,27 +1488,27 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
             </div>
 
             {/* Textarea */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <textarea
                 value={writingText}
                 onChange={e => setWritingText(e.target.value)}
                 rows={8}
                 placeholder="Nhập đoạn văn của em vào đây (bằng tiếng Anh)... Ví dụ: My best friend is Nam. He is twelve years old and studies with me in class 6A..."
-                className="w-full p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-slate-100 text-sm outline-none focus:ring-2 focus:ring-teal-500"
+                className={`w-full p-4 sm:p-5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-slate-100 ${fontSizeMode === 'xlarge' ? 'text-lg' : fontSizeMode === 'large' ? 'text-base' : 'text-sm'} outline-none focus:ring-2 focus:ring-teal-500 leading-relaxed`}
               />
 
               <div className="flex items-center justify-between gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setWritingText('')}
-                  className="text-xs text-slate-400 hover:text-slate-600 transition"
+                  className="text-xs sm:text-sm text-slate-400 hover:text-slate-600 transition"
                 >
                   Xóa viết lại
                 </button>
                 <button
                   type="button"
                   onClick={handleWritingSubmit}
-                  className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-3 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer"
                 >
                   <Check className="w-4 h-4" />
                   <span>Nộp Bài Đoạn Văn (+10 Điểm Chuyên Cần)</span>
@@ -1436,43 +1518,43 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           </div>
 
           {/* CỘT PHẢI: BÀI MẪU THAM KHẢO & DÀN Ý ĐIỂM 10 */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-black text-xs">
+              <span className="px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 font-black text-xs sm:text-sm">
                 BÀI MẪU CHUẨN ĐIỂM 10
               </span>
               <button
                 type="button"
                 onClick={() => setShowSampleWriting(!showSampleWriting)}
-                className="text-xs font-bold text-teal-600 hover:underline"
+                className="text-xs sm:text-sm font-bold text-teal-600 hover:underline cursor-pointer"
               >
                 {showSampleWriting ? 'Thu gọn' : 'Xem chi tiết'}
               </button>
             </div>
 
-            <div className="space-y-4 text-xs sm:text-sm">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200 dark:border-slate-700">
+            <div className={`space-y-4 ${fsBody}`}>
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2.5 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-black text-slate-800 dark:text-white">Mẫu 1: Miêu tả Người Bạn Thân (52 từ)</h4>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold">52 từ • Chuẩn GDPT 2018</span>
+                  <h4 className="font-black text-slate-800 dark:text-white text-base sm:text-lg">Mẫu 1: Miêu tả Người Bạn Thân (52 từ)</h4>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">52 từ • Chuẩn GDPT 2018</span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-200 leading-relaxed italic">
+                <p className="text-slate-800 dark:text-slate-100 leading-relaxed italic">
                   "My best friend is Nam. He is twelve years old and studies with me in class 6A. He is tall and has short black hair with a friendly round face. Nam is very kind and helpful because he always shares his pens and helps classmates with homework. I really like him because he is a wonderful friend."
                 </p>
-                <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-200 dark:border-slate-700">
+                <div className="text-xs sm:text-sm text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-700 leading-relaxed">
                   <em>Dịch: Bạn thân nhất của mình là Nam. Bạn ấy 12 tuổi và học cùng mình ở lớp 6A. Bạn ấy cao, có mái tóc đen ngắn và khuôn mặt tròn thân thiện. Nam rất tốt bụng và hay giúp đỡ vì bạn luôn chia sẻ bút và giúp bạn cùng lớp làm bài tập. Mình rất quý bạn ấy vì bạn là một người bạn tuyệt vời.</em>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2 border border-slate-200 dark:border-slate-700">
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2.5 border border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-black text-slate-800 dark:text-white">Mẫu 2: Miêu tả Ngôi Nhà Của Em (55 từ)</h4>
-                  <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-[11px] font-bold">55 từ • Dễ thuộc</span>
+                  <h4 className="font-black text-slate-800 dark:text-white text-base sm:text-lg">Mẫu 2: Miêu tả Ngôi Nhà Của Em (55 từ)</h4>
+                  <span className="px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold">55 từ • Dễ thuộc</span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-200 leading-relaxed italic">
+                <p className="text-slate-800 dark:text-slate-100 leading-relaxed italic">
                   "I live with my family in a lovely country house in Dong Yen. My house has six rooms: a living room, a kitchen, three bedrooms and a bathroom. Behind the house, there is a green garden with many flowers. My favourite room is my bedroom because it is bright and comfortable. I love my peaceful home very much."
                 </p>
-                <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-200 dark:border-slate-700">
+                <div className="text-xs sm:text-sm text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-700 leading-relaxed">
                   <em>Dịch: Mình sống cùng gia đình trong một ngôi nhà quê xinh xắn ở Đồng Yên. Nhà mình có 6 phòng: một phòng khách, một bếp, 3 phòng ngủ và một phòng tắm. Phía sau nhà có khu vườn xanh mát nhiều hoa. Phòng yêu thích của mình là phòng ngủ vì rất sáng và tiện nghi. Mình rất yêu mái ấm bình yên của mình.</em>
                 </div>
               </div>
@@ -1630,55 +1712,55 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
               </div>
 
               {/* DETAILED QUESTIONS REVIEW */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {filteredReviewItems.map(item => {
                   const isAnswered = userAnswers[item.id] !== undefined;
                   const isCorrect = userAnswers[item.id] === item.correct;
                   return (
                     <div 
                       key={item.id}
-                      className={`p-4 rounded-2xl border transition ${
+                      className={`p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition ${
                         isCorrect
-                          ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800'
-                          : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-800'
+                          ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-400'
+                          : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-400'
                       }`}
                     >
-                      <div className="flex items-start gap-2.5">
-                        <span className={`w-6 h-6 rounded-full text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
+                      <div className="flex items-start gap-3.5">
+                        <span className={`${fsBadge} rounded-xl text-white font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs ${
                           isCorrect ? 'bg-emerald-600' : 'bg-rose-600'
                         }`}>
                           {item.num}
                         </span>
-                        <div className="flex-1 space-y-2">
-                          <p className="font-bold text-slate-800 dark:text-slate-100 text-sm whitespace-pre-line">
+                        <div className="flex-1 space-y-3.5">
+                          <p className={`${fsQuestion} text-slate-900 dark:text-slate-100 whitespace-pre-line`}>
                             {item.q}
                           </p>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                             {item.options.map((opt, oIdx) => {
                               const isChosen = userAnswers[item.id] === oIdx;
                               const isRight = oIdx === item.correct;
                               return (
                                 <div
                                   key={oIdx}
-                                  className={`p-2.5 rounded-xl text-xs font-bold ${
+                                  className={`${fsOption} rounded-xl sm:rounded-2xl ${
                                     isRight
-                                      ? 'bg-emerald-600 text-white font-black'
+                                      ? 'bg-emerald-600 text-white font-black shadow-sm'
                                       : isChosen
-                                        ? 'bg-rose-600 text-white font-black'
-                                        : 'bg-white/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700'
+                                        ? 'bg-rose-600 text-white font-black shadow-sm'
+                                        : 'bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                                   }`}
                                 >
                                   <span>{opt}</span>
-                                  {isRight && <span className="ml-1 text-[10px]"> (Đáp án đúng)</span>}
-                                  {isChosen && !isRight && <span className="ml-1 text-[10px]"> (Em đã chọn)</span>}
+                                  {isRight && <span className="ml-1 text-xs"> (Đáp án đúng)</span>}
+                                  {isChosen && !isRight && <span className="ml-1 text-xs"> (Em đã chọn)</span>}
                                 </div>
                               );
                             })}
                           </div>
 
-                          <div className={`p-3 rounded-xl text-xs font-medium ${
-                            isCorrect ? 'bg-emerald-100/80 text-emerald-950' : 'bg-rose-100/80 text-rose-950'
+                          <div className={`p-4 rounded-xl sm:rounded-2xl ${fsExp} font-medium ${
+                            isCorrect ? 'bg-emerald-100/90 text-emerald-950 border border-emerald-300' : 'bg-rose-100/90 text-rose-950 border border-rose-300'
                           }`}>
                             <p className="font-semibold">{item.exp}</p>
                           </div>
