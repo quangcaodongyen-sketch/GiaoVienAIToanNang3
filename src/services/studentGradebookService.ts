@@ -900,6 +900,7 @@ class StudentGradebookService {
     const purgedDemoIds = new Set<string>();
     const purgedDemoNames: string[] = [];
     const officialGroups = new Map<string, StudentProfile[]>(); // studentCode -> candidate profiles
+    const thptGroups = new Map<string, StudentProfile[]>(); // normName__class -> THPT candidate profiles
 
     candidateList.forEach(cand => {
       const cName = (cand.name || '').trim();
@@ -907,6 +908,7 @@ class StudentGradebookService {
       const cCode = (cand.studentCode || '').trim().toLowerCase();
       const cCls = normalizeClassName(cand.className || '');
       const normN = normalizeVietnameseName(cName);
+      const isTHPT = this.isTHPTClass(cCls) || (cand.grade !== undefined && cand.grade >= 10);
 
       const hasDemoKeyword = 
         DEMO_REGEX.test(cName) || 
@@ -916,7 +918,7 @@ class StudentGradebookService {
 
       let matchedOfficial: OfficialStudentRosterItem | undefined = undefined;
 
-      if (!hasDemoKeyword) {
+      if (!hasDemoKeyword && !isTHPT) {
         // Ưu tiên 1: Khớp mã học sinh chính thức
         if (cCode && officialByCode.has(cCode)) {
           matchedOfficial = officialByCode.get(cCode);
@@ -934,13 +936,22 @@ class StudentGradebookService {
         }
       }
 
-      if (hasDemoKeyword || !matchedOfficial) {
+      if (hasDemoKeyword) {
         purgedDemoIds.add(cand.id);
         purgedDemoNames.push(cName || cand.id);
-      } else {
+      } else if (matchedOfficial) {
         const grp = officialGroups.get(matchedOfficial.studentCode) || [];
         grp.push(cand);
         officialGroups.set(matchedOfficial.studentCode, grp);
+      } else if (isTHPT && cName.length >= 2) {
+        // Học sinh THPT tự ghi tên và ghi lớp: Giữ lại và nhóm để hợp nhất duy nhất 1 tài khoản
+        const thptKey = `${normN}__${cCls || '10A1'}`;
+        const grp = thptGroups.get(thptKey) || [];
+        grp.push(cand);
+        thptGroups.set(thptKey, grp);
+      } else {
+        purgedDemoIds.add(cand.id);
+        purgedDemoNames.push(cName || cand.id);
       }
     });
 
@@ -1032,6 +1043,83 @@ class StudentGradebookService {
       };
 
       cleanStudents.push(canonicalProfile);
+    });
+
+    // 4b. Xây dựng danh sách học sinh Cấp THPT (Khối 10, 11, 12 tự ghi tên & lớp, hợp nhất 1 tài khoản duy nhất)
+    thptGroups.forEach((candidates, key) => {
+      if (candidates.length === 0) return;
+      const first = candidates[0];
+      const cls = normalizeClassName(first.className) || '10A1';
+      const gMatch = cls.match(/^(\d{1,2})/);
+      const grade = gMatch ? parseInt(gMatch[1], 10) : (first.grade && first.grade >= 10 ? first.grade : 10);
+
+      if (candidates.length > 1) {
+        mergedDuplicateCount += (candidates.length - 1);
+        details.push(`Hợp nhất ${candidates.length} tài khoản thành 1 cho học sinh THPT ${first.name} (Lớp ${cls})`);
+      }
+
+      // Xác định Canonical ID cho học sinh THPT
+      candidates.sort((a, b) => {
+        const aWeight = (a.username ? 2 : 0) + (a.password ? 2 : 0) + (a.totalMeritPoints ? 1 : 0);
+        const bWeight = (b.username ? 2 : 0) + (b.password ? 2 : 0) + (b.totalMeritPoints ? 1 : 0);
+        if (bWeight !== aWeight) return bWeight - aWeight;
+        return (a.createdAt || '').localeCompare(b.createdAt || '');
+      });
+      const canonicalId = candidates[0].id || `stu-thpt-${cls.toLowerCase()}-${Date.now().toString(36)}`;
+
+      candidates.forEach(c => {
+        idMigrationMap.set(c.id, canonicalId);
+      });
+
+      const att = Math.max(...candidates.map(c => c.attendancePoints || 0), 0);
+      const voc = Math.max(...candidates.map(c => c.vocabPoints || 0), 0);
+      const exm = Math.max(...candidates.map(c => c.examBonusPoints || 0), 0);
+      const prc = Math.max(...candidates.map(c => c.practicePoints || 0), 0);
+      const timePts = Math.max(...candidates.map(c => c.timePoints || 0), 0);
+      const studyMins = candidates.reduce((sum, c) => sum + (c.studyTimeMinutes || 0), 0);
+      const bonus = grantBonus ? bonusAmount : 15;
+      const totalMerit = att + voc + exm + prc + timePts + bonus;
+
+      const validDates = candidates.map(c => c.lastLoginDate).filter(Boolean) as string[];
+      validDates.sort();
+      const lastLogin = validDates.length > 0 ? validDates[validDates.length - 1] : undefined;
+
+      const createdDates = candidates.map(c => c.createdAt).filter(Boolean) as string[];
+      createdDates.sort();
+      const createdAt = createdDates.length > 0 ? createdDates[0] : new Date().toISOString();
+
+      const bestUser = candidates.find(c => c.username && !DEMO_REGEX.test(c.username))?.username || `thpt_${cls.toLowerCase()}_${canonicalId.slice(-4)}`;
+      const bestPass = candidates.find(c => c.password)?.password || '12345';
+      const bestPhone = candidates.find(c => c.parentPhone)?.parentPhone || '';
+      const bestGender = candidates.find(c => c.gender)?.gender || 'Nam';
+      const bestCode = candidates.find(c => c.studentCode)?.studentCode || `HS${cls.replace(/[^A-Za-z0-9]/g, '')}-${canonicalId.slice(-4)}`;
+
+      const canonicalTHPTProfile: StudentProfile = {
+        id: canonicalId,
+        studentCode: bestCode,
+        username: bestUser,
+        password: bestPass,
+        name: first.name,
+        classId: `cls-${cls.toLowerCase()}`,
+        className: cls,
+        grade: grade,
+        gender: bestGender,
+        dob: first.dob || '',
+        parentPhone: bestPhone,
+        note: `Học sinh cấp THPT (Lớp ${cls})`,
+        createdAt,
+        attendancePoints: att,
+        vocabPoints: voc,
+        examBonusPoints: exm,
+        practicePoints: prc,
+        studyTimeMinutes: studyMins,
+        timePoints: timePts,
+        encouragementBonus: bonus,
+        totalMeritPoints: totalMerit,
+        lastLoginDate: lastLogin
+      };
+
+      cleanStudents.push(canonicalTHPTProfile);
     });
 
     this.students = cleanStudents;

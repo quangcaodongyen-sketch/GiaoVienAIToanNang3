@@ -1681,6 +1681,44 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 </div>
               </div>
 
+              {/* CẤP THPT (KHỐI 10, 11, 12 - TỰ DO GHI TÊN & GHI LỚP, GHI LỚP NÀO HỌC LỚP ĐÓ) */}
+              <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center justify-between text-[11px] font-bold text-indigo-700 dark:text-indigo-300">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
+                    <span>🎓 Cấp THPT (Khối 10, 11, 12 - Tự ghi tên & lớp, ghi lớp nào học lớp đó):</span>
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 font-bold">
+                    Tự do ghi lớp
+                  </span>
+                </div>
+                <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
+                  {['10A1', '10A2', '11A1', '11A2', '12A1', '12A2'].map(cls => {
+                    const isSelected = quickClassName.trim().toUpperCase() === cls;
+                    return (
+                      <button
+                        key={cls}
+                        type="button"
+                        onClick={() => {
+                          setQuickClassName(cls);
+                          setQuickError('');
+                        }}
+                        className={`py-1.5 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black shadow-md ring-2 ring-indigo-300 scale-[1.03]'
+                            : 'bg-indigo-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-indigo-200/70 dark:border-slate-600 hover:bg-indigo-100 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        <span className="text-xs sm:text-sm font-black">{cls}</span>
+                        <span className={`text-[10px] ${isSelected ? 'text-indigo-100 font-bold' : 'text-slate-500 dark:text-slate-400'}`}>
+                          THPT
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Hoặc gõ lớp khác */}
               <div className="pt-1 flex items-center gap-2">
                 <span className="text-[11px] text-slate-400 dark:text-slate-400 whitespace-nowrap">Hoặc gõ lớp:</span>
@@ -1823,9 +1861,14 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 if (studentGradebookService.isTHPTClass(quickClassName)) {
                   return (
-                    <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[11px] text-blue-800 dark:text-blue-300 flex items-center gap-1.5">
-                      <span>🏫</span>
-                      <span>Khối Cấp 3 THPT: Cho phép học sinh đăng ký tự do với Họ và Tên thật chuẩn mực.</span>
+                    <div className="p-3.5 rounded-xl bg-indigo-50/90 dark:bg-indigo-950/40 border border-indigo-300 dark:border-indigo-800 text-xs text-indigo-900 dark:text-indigo-200 space-y-1">
+                      <div className="flex items-center gap-2 font-bold">
+                        <span>🎓</span>
+                        <span>Học sinh Cấp THPT (Lớp {quickClassName.trim().toUpperCase()}):</span>
+                      </div>
+                      <p className="text-[11px] text-indigo-800 dark:text-indigo-300 leading-relaxed">
+                        Em tự do ghi tên và ghi lớp. Hệ thống tự động xếp em vào <strong>Lớp {quickClassName.trim().toUpperCase()}</strong> để học và thi thử đúng chương trình lớp đó!
+                      </p>
                     </div>
                   );
                 }
@@ -2489,6 +2532,59 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Cấp THPT (Khối 10, 11, 12 - Tự ghi tên & lớp, ghi lớp nào học lớp đó) */}
+                  <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center justify-between text-[10px] font-bold text-indigo-700 dark:text-indigo-300 uppercase">
+                      <span>🎓 Cấp THPT (Khối 10, 11, 12 - Tự do ghi tên & lớp):</span>
+                      <span className="text-[9px] font-bold text-indigo-500">Ghi lớp nào học lớp đó</span>
+                    </div>
+                    <div className="grid grid-cols-6 gap-1.5">
+                      {['10A1', '10A2', '11A1', '11A2', '12A1', '12A2'].map(cls => {
+                        const g = parseInt(cls.slice(0, 2), 10);
+                        return (
+                          <button
+                            key={cls}
+                            type="button"
+                            onClick={() => {
+                              setRegClassName(cls);
+                              setRegGrade(g);
+                              setLoginStudentInput('');
+                              setLoginError('');
+                            }}
+                            className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
+                              regClassName === cls
+                                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm ring-2 ring-indigo-300 dark:ring-indigo-800 scale-102'
+                                : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-indigo-100'
+                            }`}
+                          >
+                            {cls}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Hoặc tự nhập tên lớp THPT */}
+                  <div className="pt-1.5 flex items-center gap-2 text-xs">
+                    <span className="text-slate-500 font-bold whitespace-nowrap">Hoặc tự gõ lớp:</span>
+                    <input
+                      type="text"
+                      value={regClassName}
+                      onChange={(e) => {
+                        const val = e.target.value.toUpperCase();
+                        setRegClassName(val);
+                        const m = val.match(/^(\d{1,2})/);
+                        if (m && m[1]) {
+                          const g = parseInt(m[1], 10);
+                          if (g >= 6 && g <= 12) setRegGrade(g);
+                        }
+                        setLoginError('');
+                      }}
+                      placeholder="VD: 10A1, 11B2, 12A3..."
+                      className="flex-1 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono font-bold"
+                    />
                   </div>
                 </div>
 
