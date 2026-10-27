@@ -1229,7 +1229,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <Sparkles className="w-4 h-4 text-emerald-300" />
-            <span>📊 Thống Kê Vào Học</span>
+            <span>📊 Điểm Danh & Sổ Lớp</span>
           </button>
 
           <button

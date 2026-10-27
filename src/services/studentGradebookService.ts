@@ -1,8 +1,52 @@
+import officialRosterData from '../data/officialStudentRoster.json';
 // =========================================================================
 // HỆ THỐNG QUẢN LÝ HỌC SINH THEO LỚP & SỔ ĐIỂM TRỰC TUYẾN TOÀN DIỆN
 // TÁC GIẢ BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH - ĐIỆN THOẠI / ZALO: 0915.213717
 // ĐƠN VỊ: TRƯỜNG THCS ĐỒNG YÊN
 // =========================================================================
+
+
+export interface OfficialStudentRosterItem {
+  stt: number;
+  studentCode: string;
+  name: string;
+  className: string;
+  grade: number;
+  dob: string;
+  regularScore: number | null;
+  midtermScore: number | null;
+  finalScore: number | null;
+  termAvg: number | null;
+}
+
+export interface ClassAttendanceStudentStatus {
+  stt: number;
+  studentCode: string;
+  name: string;
+  className: string;
+  grade: number;
+  dob: string;
+  regularScore: number | null;
+  hasEntered: boolean;
+  totalMeritPoints: number;
+  attendancePoints: number;
+  vocabPoints: number;
+  examBonusPoints: number;
+  practicePoints: number;
+  submissionsCount: number;
+  highestExamScore: number | null;
+  lastActive: string | null;
+}
+
+export interface ClassAttendanceReport {
+  className: string;
+  totalRoster: number;
+  enteredCount: number;
+  notEnteredCount: number;
+  enteredPercentage: number;
+  totalMeritPoints: number;
+  students: ClassAttendanceStudentStatus[];
+}
 
 export type AcademicRank = 'XUAT_SAC' | 'GIOI' | 'KHA' | 'DAT' | 'CAN_CO_GANG';
 
@@ -320,7 +364,15 @@ class StudentGradebookService {
   private loadOfficialRosters() {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.OFFICIAL_ROSTERS);
-      this.officialRosters = raw ? JSON.parse(raw) : {};
+      const local = raw ? JSON.parse(raw) : {};
+
+      // Baseline danh sách chính thức từ Sổ Điểm Bộ Môn Thầy Đinh Văn Thành
+      const baseline: Record<string, string[]> = {};
+      Object.entries(officialRosterData as Record<string, OfficialStudentRosterItem[]>).forEach(([cls, list]) => {
+        baseline[cls] = list.map(item => item.name);
+      });
+
+      this.officialRosters = { ...baseline, ...local };
     } catch {
       this.officialRosters = {};
     }
@@ -1920,6 +1972,118 @@ class StudentGradebookService {
     });
 
     return items;
+  }
+
+
+  // ==================== BÁO CÁO ĐIỂM DANH & ROSTER HỌC SINH TỪNG LỚP ====================
+  public getOfficialRosterFull(className?: string): OfficialStudentRosterItem[] {
+    const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+    if (!className || className === 'ALL') {
+      const all: OfficialStudentRosterItem[] = [];
+      Object.values(allData).forEach(arr => {
+        all.push(...arr);
+      });
+      return all;
+    }
+    const clean = normalizeClassName(className);
+    return allData[clean] || [];
+  }
+
+  public getClassAttendanceReport(className: string = 'ALL'): ClassAttendanceReport {
+    const allRoster = this.getOfficialRosterFull(className);
+
+    // Map danh sách học sinh đã vào học từ this.students
+    const studentProfileMap = new Map<string, StudentProfile>();
+    this.students.forEach(s => {
+      const key = `${normalizeVietnameseName(s.name)}__${normalizeClassName(s.className)}`;
+      studentProfileMap.set(key, s);
+      if (s.studentCode) {
+        studentProfileMap.set(s.studentCode.trim().toLowerCase(), s);
+      }
+    });
+
+    // Map bài nộp từ this.submissions
+    const subMap = new Map<string, StudentSubmission[]>();
+    this.submissions.forEach(sub => {
+      const key = `${normalizeVietnameseName(sub.studentName)}__${normalizeClassName(sub.className)}`;
+      const list = subMap.get(key) || [];
+      list.push(sub);
+      subMap.set(key, list);
+    });
+
+    let enteredCount = 0;
+    let totalMerit = 0;
+
+    const list: ClassAttendanceStudentStatus[] = allRoster.map(item => {
+      const key = `${normalizeVietnameseName(item.name)}__${normalizeClassName(item.className)}`;
+      const profile = studentProfileMap.get(key) || (item.studentCode ? studentProfileMap.get(item.studentCode.trim().toLowerCase()) : undefined);
+      const studentSubs = subMap.get(key) || [];
+
+      // Học sinh được tính là đã vào học nếu có tài khoản học sinh, có điểm chuyên cần > 0, hoặc có bài nộp
+      const hasEntered = Boolean(
+        profile && (
+          (profile.totalMeritPoints && profile.totalMeritPoints > 0) ||
+          profile.lastLoginDate ||
+          (profile.attendancePoints && profile.attendancePoints > 0) ||
+          studentSubs.length > 0
+        )
+      );
+
+      if (hasEntered) enteredCount++;
+
+      const merit = profile?.totalMeritPoints || 0;
+      totalMerit += merit;
+
+      let highestScore: number | null = null;
+      if (studentSubs.length > 0) {
+        highestScore = Math.max(...studentSubs.map(s => s.score));
+      }
+
+      return {
+        stt: item.stt,
+        studentCode: item.studentCode || profile?.studentCode || '',
+        name: item.name,
+        className: item.className,
+        grade: item.grade,
+        dob: item.dob,
+        regularScore: item.regularScore,
+        hasEntered,
+        totalMeritPoints: merit,
+        attendancePoints: profile?.attendancePoints || 0,
+        vocabPoints: profile?.vocabPoints || 0,
+        examBonusPoints: profile?.examBonusPoints || 0,
+        practicePoints: profile?.practicePoints || 0,
+        submissionsCount: studentSubs.length,
+        highestExamScore: highestScore,
+        lastActive: profile?.lastLoginDate || (studentSubs[0]?.submittedAt ? new Date(studentSubs[0].submittedAt).toLocaleDateString('vi-VN') : null)
+      };
+    });
+
+    const totalRoster = list.length;
+    const notEnteredCount = totalRoster - enteredCount;
+    const enteredPercentage = totalRoster > 0 ? Math.round((enteredCount / totalRoster) * 100) : 0;
+
+    return {
+      className,
+      totalRoster,
+      enteredCount,
+      notEnteredCount,
+      enteredPercentage,
+      totalMeritPoints: totalMerit,
+      students: list
+    };
+  }
+
+  public getOfficialClassesList(): Array<{ name: string; grade: number; totalStudents: number }> {
+    const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+    return Object.entries(allData).map(([cls, list]) => {
+      const gNum = parseInt(cls[0] || '8', 10);
+      return {
+        name: cls,
+        grade: gNum,
+        totalStudents: list.length
+      };
+    });
   }
 
 }
