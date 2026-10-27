@@ -25,7 +25,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
       <div className="text-center space-y-2.5 max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/70 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 font-bold text-xs uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-          <span>dekiemtraso.com • Nền Tảng Giáo Dục Số</span>
+          <span>dekiemtraso.com • Nền Tảng Giáo Dục Số Phi Thương Mại</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -33,7 +33,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
         </h1>
 
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-          Chọn phân hệ phù hợp để bắt đầu:
+          Học tập & Ôn thi hoàn toàn MIỄN PHÍ 100% cho học sinh • Chọn phân hệ để bắt đầu:
         </p>
       </div>
 
@@ -92,18 +92,22 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
               <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md shadow-emerald-600/20 group-hover:scale-105 transition">
                 🎓
               </div>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 group-hover:translate-x-1 transition">
-                <span>Vào học ngay</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700">
+                <span>🎁 MIỄN PHÍ 100%</span>
               </span>
             </div>
 
             <div>
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
-                Dành Cho Học Sinh
-              </h2>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
+                  Dành Cho Học Sinh
+                </h2>
+                <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-emerald-500 text-white shadow-xs">
+                  MIỄN PHÍ
+                </span>
+              </div>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                Ôn tập kiến thức, luyện từ vựng trọng tâm, đề cương giữa kỳ và thi thử trực tuyến theo lớp.
+                Hệ thống ôn tập kiến thức, đề cương giữa kỳ và thi thử trực tuyến phi lợi nhuận của Thầy giáo Đinh Văn Thành. Hoàn toàn miễn phí 100% cho học sinh.
               </p>
             </div>
           </div>
@@ -118,7 +122,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
               className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <GraduationCap className="w-4 h-4" />
-              <span>Vào Phân Hệ Học Sinh</span>
+              <span>ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

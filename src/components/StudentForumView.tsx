@@ -151,9 +151,9 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Tải danh sách bài viết
+  // Tải danh sách bài viết (Học sinh: chỉ thấy bài sạch; Admin: xem được cả bài bị tự động ẩn để xử lý)
   const loadPosts = () => {
-    setPosts(studentForumService.getPosts());
+    setPosts(studentForumService.getPosts(isAdmin));
   };
 
   useEffect(() => {
@@ -193,6 +193,20 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
   };
 
   // Đăng bài viết mới
+  // Admin Thầy Thành gỡ cờ bài viết vi phạm
+  const handleUnflagPost = (postId: string) => {
+    if (!isAdmin) return;
+    studentForumService.unflagPost(postId, isAdmin);
+    loadPosts();
+  };
+
+  // Admin Thầy Thành gỡ cờ bình luận
+  const handleUnflagComment = (postId: string, commentId: string) => {
+    if (!isAdmin) return;
+    studentForumService.unflagComment(postId, commentId, isAdmin);
+    loadPosts();
+  };
+
   const handleCreatePost = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
@@ -235,7 +249,7 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
     const authorStudentCode = isAdmin ? 'GV-ADMIN' : (currentStudent?.studentCode || 'HS');
     const authorGender = currentStudent?.gender || 'Nam';
 
-    studentForumService.createPost({
+    const newPost = studentForumService.createPost({
       authorId,
       authorName,
       authorClass,
@@ -258,8 +272,13 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
 
     setNewContent('');
     setSelectedImage(null);
-    setSuccessMsg('🎉 Đăng bài viết thành công! Cảm ơn em đã chia sẻ cùng các bạn.');
-    setTimeout(() => setSuccessMsg(''), 4000);
+    if (newPost.isAutoFlagged) {
+      setErrorMsg('⚠️ Bài viết của em chứa từ ngữ hoặc hình ảnh không phù hợp và đã được tự động ẩn để Thầy giáo kiểm duyệt.');
+      setTimeout(() => setErrorMsg(''), 6000);
+    } else {
+      setSuccessMsg('🎉 Đăng bài viết thành công! Cảm ơn em đã chia sẻ cùng các bạn.');
+      setTimeout(() => setSuccessMsg(''), 4000);
+    }
     loadPosts();
   };
 
@@ -325,7 +344,7 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
     const authorClass = isAdmin ? 'Giáo Viên' : (currentStudent?.className || '8A1');
     const authorGender = currentStudent?.gender || 'Nam';
 
-    studentForumService.addComment(postId, {
+    const cmtRes = studentForumService.addComment(postId, {
       authorId,
       authorName,
       authorClass,
@@ -336,6 +355,10 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
     // Xóa input của bài viết này
     setCommentInputs(prev => ({ ...prev, [postId]: '' }));
     loadPosts();
+
+    if (cmtRes?.isAutoFlagged) {
+      alert('⚠️ Bình luận của em chứa từ ngữ không phù hợp với môi trường giáo dục và đã được tự động ẩn khỏi diễn đàn để Thầy giáo kiểm duyệt.');
+    }
 
     // Thưởng điểm chuyên cần khi tham gia thảo luận bài vở
     if (currentStudent) {
@@ -568,6 +591,50 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
                     : 'border-slate-200 dark:border-slate-800'
                 }`}
               >
+                {/* BANNER CẢNH BÁO KIỂM DUYỆT (CHỈ ADMIN THẦY THÀNH MỚI NHÌN THẤY) */}
+                {isAdmin && (post.isAutoFlagged || post.isHiddenFromStudents || post.isReported) && (
+                  <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/70 border-2 border-rose-500/70 text-rose-900 dark:text-rose-100 text-xs space-y-2 animate-in fade-in">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="font-black flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+                        ⚠️ BÀI VIẾT NÀY ĐÃ BỊ TỰ ĐỘNG ẨN KHỎI HỌC SINH (CHỨA NỘI DUNG VI PHẠM)
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-200 dark:bg-rose-900 text-rose-900 dark:text-rose-100 font-mono font-bold">
+                        Đặc quyền Admin Thầy Thành
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-rose-700 dark:text-rose-300">
+                      <strong>Lý do:</strong> {post.flagReason || post.reportReason || 'Phát hiện từ ngữ tục tĩu / từ lóng / xuyên tạc / hình ảnh nhạy cảm'}
+                    </p>
+                    <div className="flex items-center gap-2 pt-1 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePost(post.id)}
+                        className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Xóa Vĩnh Viễn Bài Này</span>
+                      </button>
+                      {post.imageUrl && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteImage(post.id)}
+                          className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer"
+                        >
+                          <span>🖼️ Xóa Riêng Ảnh Vi Phạm</span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleUnflagPost(post.id)}
+                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Gỡ Cờ & Cho Phép Hiển Thị Lại</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Header bài viết */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -824,6 +891,19 @@ export const StudentForumView: React.FC<StudentForumViewProps> = ({
                                   )}
                                 </div>
                               </div>
+
+                              {isAdmin && (cmt.isAutoFlagged || cmt.isHiddenFromStudents) && (
+                                <div className="p-2 rounded-xl bg-rose-100/70 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-300 text-[10px] flex items-center justify-between gap-2">
+                                  <span>⚠️ Bình luận này đã tự động ẩn khỏi học sinh ({cmt.flagReason || 'Từ ngữ vi phạm'})</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleUnflagComment(post.id, cmt.id)}
+                                    className="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700 cursor-pointer text-[10px]"
+                                  >
+                                    Gỡ cờ
+                                  </button>
+                                </div>
+                              )}
 
                               <p className="text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
                                 {cmt.content}

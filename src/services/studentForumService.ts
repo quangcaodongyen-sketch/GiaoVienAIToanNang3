@@ -89,6 +89,76 @@ export interface ReactionRecord {
   time: string;
 }
 
+
+// ==================== BỘ LỌC TỰ ĐỘNG: TỪ NGỮ TỤC TĨU, TỪ LÓNG, XUYÊN TẠC & ẢNH PHẢN CẢM ====================
+const PROFANITY_PATTERNS: RegExp[] = [
+  // 1. Từ ngữ tục tĩu, chửi thề, khiêu dâm
+  /\b(l[oôòỏõóọồổỗốộ]n|l[oô]z|l[oô]n`|l0n)\b/i,
+  /\b(c[aăặắẳẵ]c|k[aăặắẳẵ]c|c4c|k4c)\b/i,
+  /\b(bu[oôòỏõóọồổỗốộ]i|b[uù]oi|b0i)\b/i,
+  /\b(d[aáàảãạ]i|d4i)\b/i,
+  /\b(ch[iị]ch|xo[aạ]c|n[uứ]ng|b[uú] li[eế]m|b[uú] cu|b[uú] c[aặ]c|b[uú] l[oồ]n)\b/i,
+  /\b(th[uủ] d[aâ]m|d[aâ]m d[aã]ng|d[aâ]m t[aà]c|g[aá]i g[oọ]i|cave|l[aà]m t[iì]nh)\b/i,
+  /\b(d[uụ]|d[uụ] m[aá]|d[uụ] me|d[uụ] b[aà]|d[uụ] cha)\b/i,
+  /\b(đ[uụ]|đ[uụ] m[aá]|đ[uụ] m[eẹ]|đ[uù] m[aá]|đ[uụ] cha)\b/i,
+  /\b(đ[iị]t|đ[iị]t m[eẹ]|đ[iị]t c[oọ]n m[eẹ]|đ[eé]o|đ[eé]ch|đ[eé]p|đ[eé]o m[eẹ]|dell|deoh)\b/i,
+  /\b(đ[iĩ]|con đ[iĩ]|đ[iĩ] th[oỏ]a|đ[iĩ] m[eẹ]|đ[iĩ] ch[oó])\b/i,
+
+  // 2. Từ lóng, teencode, viết tắt né kiểm duyệt
+  /\b(vcl|vcll|vkl|vl|vlon|vloz|vlz|vcc|vđ|v~đ|vclgt)\b/i,
+  /\b(clgt|clg|cclgt)\b/i,
+  /\b(đm|dm|dcm|đcm|đmm|dmm|đkm|dkm|đmk|dmk|cc|cmn|cmnl)\b/i,
+  /\b(v[aã]i l[oôồ]n|v[aã]i c[aặ]c|v[aã]i đ[aá]i|v[aã]i c[aả] l|v[aã]i c[aả] ch[uưở]ng)\b/i,
+  /\b(fck|fuck|fucking|bitch|shit|asshole|dick|pussy|porn|xxx|hentai|sex|nude|naked)\b/i,
+
+  // 3. Xúc phạm, thù ghét, bạo lực, xuyên tạc
+  /\b([oó]c ch[oó]|th[aă]ng ch[oó]|con ch[oó]|ch[oó] đ[eẻ]|ch[oó] ch[eế]t|s[uú]c v[aậ]t)\b/i,
+  /\b(đ[oồ] ngu|ngu nh[uư] ch[oó]|ngu nh[uư] b[oò]|m[aẹ] ki[eế]p|đ[aậ]u m[aá])\b/i,
+  /\b(b[oố] l[aá]o|m[aấ]t d[aạ]y|b[aư]ng b[oô]|xuy[eê]n t[aạ]c|ph[aả]n đ[oộ]ng|ba que)\b/i,
+  /\b(ch[eé]m ch[eế]t|gi[eế]t ch[eế]t|t[uự] t[uử]|r[aạ]ch tay|thu[oố]c phi[eệ]n|ma t[uú]y|c[aầ]n sa|b[oó]ng c[uườ]i)\b/i
+];
+
+const SENSITIVE_IMAGE_PATTERNS = [
+  'xxx', 'porn', 'sex', 'nude', '18+', 'khoathank', 'lohang', 'hở hang',
+  'bikini', 'phancam', 'gai_xinh', 'anh_nong', 'leak', 'nhaycam'
+];
+
+export function moderateForumContent(text: string, imageUrl?: string): {
+  isViolation: boolean;
+  reason?: string;
+  keywords: string[];
+} {
+  const detected: string[] = [];
+
+  if (text) {
+    const lower = text.toLowerCase();
+    PROFANITY_PATTERNS.forEach(pat => {
+      const match = lower.match(pat);
+      if (match) {
+        detected.push(match[0]);
+      }
+    });
+  }
+
+  if (imageUrl) {
+    const lowerImg = imageUrl.toLowerCase();
+    SENSITIVE_IMAGE_PATTERNS.forEach(kw => {
+      if (lowerImg.includes(kw)) {
+        detected.push(`Ảnh nhạy cảm (${kw})`);
+      }
+    });
+  }
+
+  const unique = Array.from(new Set(detected));
+  const isViolation = unique.length > 0;
+
+  return {
+    isViolation,
+    keywords: unique,
+    reason: isViolation ? `Phát hiện từ ngữ / hình ảnh vi phạm: ${unique.join(', ')}` : undefined
+  };
+}
+
 export interface ForumComment {
   id: string;
   postId: string;
@@ -101,6 +171,11 @@ export interface ForumComment {
   likes?: number;
   likedBy?: string[];
   reactions?: Record<string, ReactionType>;
+  // Kiểm duyệt nội dung tự động:
+  isAutoFlagged?: boolean;
+  flagReason?: string;
+  flaggedKeywords?: string[];
+  isHiddenFromStudents?: boolean;
 }
 
 export interface ForumPost {
@@ -121,6 +196,11 @@ export interface ForumPost {
   isReported?: boolean;
   reportReason?: string;
   isPinned?: boolean;
+  // Kiểm duyệt nội dung tự động:
+  isAutoFlagged?: boolean;
+  flagReason?: string;
+  flaggedKeywords?: string[];
+  isHiddenFromStudents?: boolean;
 }
 
 const STORAGE_KEY_FORUM = 'gvai_student_forum_posts_v1';
@@ -235,8 +315,20 @@ class StudentForumService {
     }
   }
 
-  public getPosts(): ForumPost[] {
-    return [...this.posts].sort((a, b) => {
+  public getPosts(isAdmin: boolean = false): ForumPost[] {
+    let result = [...this.posts];
+
+    if (!isAdmin) {
+      // Học sinh: Tự động loại bỏ hoàn toàn các bài viết vi phạm, thô tục, xuyên tạc hoặc bị báo cáo
+      result = result.filter(p => !p.isHiddenFromStudents && !p.isAutoFlagged && !p.isReported);
+      // Lọc bỏ bình luận vi phạm khỏi các bài hiển thị
+      result = result.map(p => ({
+        ...p,
+        comments: (p.comments || []).filter(c => !c.isHiddenFromStudents && !c.isAutoFlagged)
+      }));
+    }
+
+    return result.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -253,6 +345,9 @@ class StudentForumService {
     content: string;
     imageUrl?: string;
   }): ForumPost {
+    // Tự động kiểm duyệt ngôn từ & ảnh đính kèm
+    const moderation = moderateForumContent(data.content, data.imageUrl);
+
     const newPost: ForumPost = {
       id: 'post-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
       authorId: data.authorId,
@@ -267,7 +362,12 @@ class StudentForumService {
       likedBy: [],
       reactions: {},
       reactionUsers: {},
-      comments: []
+      comments: [],
+      // Nếu phát hiện vi phạm: tự động ẩn ngay đối với học sinh, chỉ Admin mới xem được
+      isAutoFlagged: moderation.isViolation,
+      flagReason: moderation.reason,
+      flaggedKeywords: moderation.keywords,
+      isHiddenFromStudents: moderation.isViolation
     };
 
     this.posts.unshift(newPost);
@@ -287,6 +387,9 @@ class StudentForumService {
     if (!post) return null;
 
     if (!post.comments) post.comments = [];
+    // Tự động kiểm duyệt ngôn từ bình luận
+    const moderation = moderateForumContent(commentData.content);
+
     const newComment: ForumComment = {
       id: 'cmt-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
       postId,
@@ -298,7 +401,12 @@ class StudentForumService {
       createdAt: new Date().toISOString(),
       likes: 0,
       likedBy: [],
-      reactions: {}
+      reactions: {},
+      // Nếu vi phạm: tự động ẩn ngay đối với học sinh, chỉ Admin mới xem được
+      isAutoFlagged: moderation.isViolation,
+      flagReason: moderation.reason,
+      flaggedKeywords: moderation.keywords,
+      isHiddenFromStudents: moderation.isViolation
     };
 
     post.comments.push(newComment);
@@ -428,27 +536,54 @@ class StudentForumService {
     return true;
   }
 
-  // Báo cáo bài viết hoặc ảnh vi phạm
+  // Báo cáo bài viết hoặc ảnh vi phạm (Tự động ẩn ngay với học sinh)
   public reportPost(postId: string, reason: string): boolean {
     const post = this.posts.find(p => p.id === postId);
     if (!post) return false;
 
     post.isReported = true;
     post.reportReason = reason;
+    post.isHiddenFromStudents = true; // Tự động ẩn ngay để bảo vệ học sinh khác
     this.savePosts();
     return true;
   }
 
-  // Admin gỡ cờ báo cáo vi phạm
-  public unflagPost(postId: string, isAdmin: boolean): boolean {
+  // Dành riêng cho Admin Thầy Thành: Gỡ cờ vi phạm & cho phép hiển thị lại công khai
+  public unflagPost(postId: string, isAdmin: boolean = true): boolean {
     if (!isAdmin) return false;
     const post = this.posts.find(p => p.id === postId);
     if (!post) return false;
 
+    post.isAutoFlagged = false;
     post.isReported = false;
+    post.isHiddenFromStudents = false;
+    post.flagReason = undefined;
+    post.flaggedKeywords = undefined;
     post.reportReason = undefined;
     this.savePosts();
     return true;
+  }
+
+  // Dành riêng cho Admin: Gỡ cờ bình luận
+  public unflagComment(postId: string, commentId: string, isAdmin: boolean = true): boolean {
+    if (!isAdmin) return false;
+    const post = this.posts.find(p => p.id === postId);
+    if (!post || !post.comments) return false;
+
+    const cmt = post.comments.find(c => c.id === commentId);
+    if (!cmt) return false;
+
+    cmt.isAutoFlagged = false;
+    cmt.isHiddenFromStudents = false;
+    cmt.flagReason = undefined;
+    cmt.flaggedKeywords = undefined;
+    this.savePosts();
+    return true;
+  }
+
+  // Đếm tổng số bài viết đang bị gắn cờ / ẩn (để Admin dễ quản lý)
+  public getFlaggedPostsCount(): number {
+    return this.posts.filter(p => p.isAutoFlagged || p.isHiddenFromStudents || p.isReported).length;
   }
 }
 

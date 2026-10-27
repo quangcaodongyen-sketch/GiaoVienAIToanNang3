@@ -1636,12 +1636,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </div>
           )}
 
-          <div className="text-center space-y-1.5">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300 text-xs font-black">
+              🎁 HOÀN TOÀN MIỄN PHÍ 100% • KHÔNG THU HỌC PHÍ
+            </div>
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-              Đăng Nhập Học Sinh
+              ĐĂNG NHẬP HỌC MIỄN PHÍ
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              Chọn Lớp và Họ Tên để bắt đầu học tập (không cần mật khẩu):
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+              Chương trình ôn tập trực tuyến do Thầy giáo Đinh Văn Thành xây dựng phi lợi nhuận phục vụ học sinh THCS Đồng Yên. Chọn Lớp và Họ Tên để bắt đầu:
             </p>
           </div>
 
@@ -1907,7 +1910,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2 mt-4"
             >
               <Sparkles className="w-5 h-5 text-amber-300" />
-              <span>🚀 Bắt Đầu Vào Học & Làm Bài Ngay</span>
+              <span>🚀 ĐĂNG NHẬP HỌC MIỄN PHÍ (+5Đ)</span>
             </button>
           </form>
 
@@ -2488,18 +2491,31 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             )}
 
             {/* Header Modal */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black shadow-md text-xl">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white flex items-center justify-center font-black shadow-md text-xl">
                 🎓
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                  Tài Khoản Học Sinh Trực Tuyến
-                </h3>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    ĐĂNG NHẬP HỌC MIỄN PHÍ
+                  </h3>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                    MIỄN PHÍ 100%
+                  </span>
+                </div>
                 <p className="text-xs text-slate-500">
-                  Trường THCS Đồng Yên • Hệ thống học tập & ôn luyện tự động
+                  Trường THCS Đồng Yên • Nền tảng học tập phi lợi nhuận của Thầy Đinh Thành
                 </p>
               </div>
+            </div>
+
+            {/* BANNER CAM KẾT MIỄN PHÍ 100% */}
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-blue-500/15 border border-emerald-500/30 text-emerald-950 dark:text-emerald-200 text-xs flex items-start gap-2.5 mb-3.5">
+              <span className="text-base shrink-0">🎁</span>
+              <p className="leading-relaxed text-[11px] sm:text-xs">
+                <strong>CAM KẾT SƯ PHẠM:</strong> Toàn bộ ứng dụng ôn tập & kiểm tra trực tuyến do Thầy giáo Đinh Văn Thành xây dựng phi lợi nhuận, hoàn toàn <strong>MIỄN PHÍ 100%</strong> cho học sinh. Nhà trường, phụ huynh và học sinh hoàn toàn yên tâm ôn luyện, tuyệt đối không thu học phí hay bất kỳ lệ phí nào.
+              </p>
             </div>
 
             {/* TAB CHUYỂN ĐỔI 2 TRONG 1: ĐĂNG NHẬP | QUÊN MK (KHÔNG CẦN ĐĂNG KÝ) */}
@@ -2513,7 +2529,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <span>🔑 Đăng Nhập Vào Học</span>
+                <span>🔑 ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
               </button>
 
               <button
@@ -2694,9 +2710,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                     )}
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center gap-1.5"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center gap-1.5"
                     >
-                      <span>🚀 Đăng Nhập Vào Học</span>
+                      <span>🚀 ĐĂNG NHẬP HỌC MIỄN PHÍ</span>
                     </button>
                   </div>
                 </div>

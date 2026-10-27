@@ -1456,7 +1456,7 @@ export default function App() {
                 title="Dành Cho Học Sinh: Học Từ Vựng Siêu Trí Nhớ, Thi Thử Online & Xem Điểm Danh Lớp"
               >
                 <span className="text-sm sm:text-base">🎓</span>
-                <span>DÀNH CHO HS</span>
+                <span>DÀNH CHO HS (HỌC MIỄN PHÍ)</span>
                 {mainViewTab === 'students' ? (
                   <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse hidden sm:inline-block"></span>
                 ) : (
