@@ -413,16 +413,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
   const handleOpenLuckyBox = () => {
-
-    if (!currentStudent) {
-
-      alert('Vui lòng chọn hoặc đăng nhập tài khoản học sinh của em trước khi mở hộp quà nhé!');
-
+    if (!isAdminUnlocked && !systemMaintenanceService.isSessionAuthenticated()) {
+      alert('🔒 Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này! Học sinh không có quyền tặng quà cho mình và người khác.');
       return;
-
     }
 
-    const res = studentGradebookService.openTeacherLuckyBox(currentStudent.id);
+    if (!currentStudent) {
+      alert('Vui lòng chọn hoặc đăng nhập tài khoản học sinh trước khi mở hộp quà nhé!');
+      return;
+    }
+
+    const res = studentGradebookService.openTeacherLuckyBox(currentStudent.id, true);
 
     setLuckyBoxResult(res);
 
@@ -4656,6 +4657,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           defaultGrade={currentStudent?.grade}
 
           defaultClassName={currentStudent?.className}
+
+          isAdmin={isAdminUnlocked || systemMaintenanceService.isSessionAuthenticated()}
 
           onStartExercise={() => setActiveTab('sgk')}
 

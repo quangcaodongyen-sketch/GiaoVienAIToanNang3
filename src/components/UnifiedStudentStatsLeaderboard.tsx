@@ -105,6 +105,7 @@ import {
 } from '../services/studentGradebookService';
 
 import { launchFireworks } from '../utils/fireworks';
+import { systemMaintenanceService } from '../services/systemMaintenanceService';
 
 
 
@@ -115,6 +116,8 @@ interface UnifiedStudentStatsLeaderboardProps {
   defaultGrade?: number;
 
   defaultClassName?: string;
+
+  isAdmin?: boolean;
 
   onStartExercise?: () => void;
 
@@ -136,6 +139,8 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   defaultClassName,
 
+  isAdmin: propIsAdmin,
+
   onStartExercise,
 
   onStartQuiz,
@@ -145,6 +150,29 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
   onStartVocab
 
 }) => {
+
+  // QUYỀN ADMIN: Chỉ Admin (Thầy Đinh Thành) mới có quyền thưởng điểm, mở hộp quà. Học sinh KHÔNG được tự tặng quà cho mình và người khác.
+  const [isAdminSession, setIsAdminSession] = useState<boolean>(() => {
+    return Boolean(propIsAdmin) || systemMaintenanceService.isSessionAuthenticated();
+  });
+
+  useEffect(() => {
+    if (propIsAdmin !== undefined) {
+      setIsAdminSession(propIsAdmin);
+    }
+  }, [propIsAdmin]);
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setIsAdminSession(Boolean(propIsAdmin) || systemMaintenanceService.isSessionAuthenticated());
+    };
+    window.addEventListener('gvai_admin_auth_changed', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+    return () => {
+      window.removeEventListener('gvai_admin_auth_changed', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+    };
+  }, [propIsAdmin]);
 
   // 1. CHẾ ĐỘ XEM TRUNG TÂM (Hợp nhất triệt để 2 loại thống kê cũ):
 
@@ -651,104 +679,93 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
 
 
-  // XỬ LÝ MỞ HỘP QUÀ MAY MẮN CỦA THẦY ĐINH THÀNH
-
+  // XỬ LÝ MỞ HỘP QUÀ MAY MẮN CỦA THẦY ĐINH THÀNH (CHỈ ADMIN CÓ QUYỀN)
   const handleOpenLuckyBox = (studentId?: string) => {
+    const currentIsAdmin = isAdminSession || Boolean(propIsAdmin) || systemMaintenanceService.isSessionAuthenticated();
+    if (!currentIsAdmin) {
+      alert('🔒 Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này! Học sinh không có quyền tặng quà cho mình và người khác.');
+      return;
+    }
 
     const targetId = studentId || activeStudent?.id || targetLeaderboard[0]?.studentId;
-
     if (!targetId) {
-
-      showToast('⚠️ Vui lòng chọn hoặc đăng nhập một học sinh để mở hộp quà may mắn!');
-
+      showToast('⚠️ Vui lòng chọn một học sinh để trao tặng hộp quà may mắn!');
       return;
-
     }
 
     setLuckyBoxTargetStudentId(targetId);
-
-    const res = studentGradebookService.openTeacherLuckyBox(targetId);
-
+    const res = studentGradebookService.openTeacherLuckyBox(targetId, true);
     setLuckyBoxResult(res);
-
     setShowLuckyBoxModal(true);
-
     if (!res.alreadyOpenedToday) {
-
       launchFireworks(5000);
-
-      showToast(`🎁 Chúc mừng em đã mở hộp quà may mắn và nhận +${res.pointsWon} điểm thi đua!`);
-
+      showToast(`🎁 Đã trao tặng hộp quà may mắn (+${res.pointsWon}đ) cho học sinh!`);
     }
-
     loadData();
-
   };
 
 
 
-  // XỬ LÝ THƯỞNG ĐIỂM TÍCH CỰC
-
+  // XỬ LÝ THƯỞNG ĐIỂM TÍCH CỰC - CHỈ DÀNH CHO ADMIN
   const handleOpenBonusModal = (studentId?: string) => {
+    const currentIsAdmin = isAdminSession || Boolean(propIsAdmin) || systemMaintenanceService.isSessionAuthenticated();
+    if (!currentIsAdmin) {
+      const pwd = window.prompt(
+        '🔒 QUY ĐỊNH HỆ THỐNG:\n' +
+        'Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này!\n' +
+        'Học sinh không có quyền tặng quà cho mình và người khác.\n\n' +
+        'Thầy/Cô vui lòng nhập mật khẩu Quản trị Admin để tiếp tục:'
+      );
+      if (!pwd) return;
+      if (systemMaintenanceService.verifyAdminCredentials('Admin', pwd) || systemMaintenanceService.verifyAdminPassword(pwd)) {
+        systemMaintenanceService.saveAdminSession();
+        setIsAdminSession(true);
+        window.dispatchEvent(new CustomEvent('gvai_admin_auth_changed', { detail: { isAuthenticated: true } }));
+      } else {
+        alert('❌ Mật khẩu Admin không chính xác! Học sinh không có quyền tự tặng quà.');
+        return;
+      }
+    }
 
     if (studentId) {
-
       setBonusStudentId(studentId);
-
     } else if (activeStudent) {
-
       setBonusStudentId(activeStudent.id);
-
     } else if (leaderboard.length > 0) {
-
       setBonusStudentId(leaderboard[0].studentId);
-
     }
-
     setShowBonusModal(true);
-
   };
 
-
-
   const handleSubmitBonus = () => {
+    const currentIsAdmin = isAdminSession || Boolean(propIsAdmin) || systemMaintenanceService.isSessionAuthenticated();
+    if (!currentIsAdmin) {
+      alert('❌ Chỉ có Admin mới có quyền thưởng điểm! Học sinh không có quyền tặng quà cho mình và người khác.');
+      setShowBonusModal(false);
+      return;
+    }
 
     if (!bonusStudentId) {
-
       alert('Vui lòng chọn học sinh được khen thưởng!');
-
       return;
-
     }
 
     const res = studentGradebookService.awardTeacherBonus(
-
       bonusStudentId,
-
       bonusPoints,
-
       bonusReason.trim() || 'Học tập tích cực & nỗ lực rèn luyện',
-
-      'Thầy Đinh Văn Thành'
-
+      'Thầy Đinh Văn Thành',
+      true
     );
 
     if (res.success) {
-
       triggerConfetti();
-
       showToast(res.message);
-
       setShowBonusModal(false);
-
       loadData();
-
     } else {
-
       alert(res.message);
-
     }
-
   };
 
 
@@ -1019,27 +1036,20 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
 
 
-          {/* Các nút tác vụ nhanh */}
-
-          <div className="flex items-center gap-2 flex-wrap shrink-0">
-
-            <button
-
-              type="button"
-
-              onClick={() => handleOpenBonusModal()}
-
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
-
-              title="Giáo viên thưởng thêm điểm thi đua cho học sinh tích cực"
-
-            >
-
-              <Gift className="w-4 h-4 text-slate-950" />
-
-              <span>Thưởng Điểm Tích Cực</span>
-
-            </button>
+          {/* Các nút tác vụ nhanh - CHỈ HIỂN THỊ KHI LÀ ADMIN */}
+          {isAdminSession && (
+            <div className="flex items-center gap-2 flex-wrap shrink-0">
+              <button
+                type="button"
+                onClick={() => handleOpenBonusModal()}
+                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                title="Giáo viên thưởng thêm điểm thi đua cho học sinh tích cực"
+              >
+                <Gift className="w-4 h-4 text-slate-950" />
+                <span>Thưởng Điểm Tích Cực</span>
+              </button>
+            </div>
+          )}
 
 
 
@@ -2123,8 +2133,9 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                     <th className="py-3 px-3 text-center">Điểm Bài Thi</th>
 
                     <th className="py-3 px-3">Danh Hiệu &amp; Huy Hiệu</th>
-
-                    <th className="py-3 px-3 text-center">Thao Tác</th>
+                    {isAdminSession && (
+                      <th className="py-3 px-3 text-center text-amber-500 font-bold">Thao Tác</th>
+                    )}
 
                   </tr>
 
@@ -2398,33 +2409,22 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
 
 
-                        {/* 8. Thao tác */}
-
-                        <td className="py-3 px-3 text-center">
-
-                          <button
-
-                            type="button"
-
-                            onClick={(e) => {
-
-                              e.stopPropagation();
-
-                              handleOpenBonusModal(item.studentId);
-
-                            }}
-
-                            className="p-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-950 dark:hover:bg-amber-900 text-amber-800 dark:text-amber-200 transition cursor-pointer"
-
-                            title="Thưởng thêm điểm cho bạn này"
-
-                          >
-
-                            <Gift className="w-3.5 h-3.5" />
-
-                          </button>
-
-                        </td>
+                        {/* 8. Thao tác - CHỈ DÀNH CHO ADMIN */}
+                        {isAdminSession && (
+                          <td className="py-3 px-3 text-center">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenBonusModal(item.studentId);
+                              }}
+                              className="p-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-950 dark:hover:bg-amber-900 text-amber-800 dark:text-amber-200 transition cursor-pointer"
+                              title="Thầy giáo thưởng thêm điểm cho bạn này"
+                            >
+                              <Gift className="w-3.5 h-3.5" />
+                            </button>
+                          </td>
+                        )}
 
                       </tr>
 
@@ -3102,25 +3102,18 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
             <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
 
-              <button
-
-                type="button"
-
-                onClick={() => {
-
-                  handleOpenBonusModal(selectedStudentDetail.studentId);
-
-                }}
-
-                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 cursor-pointer"
-
-              >
-
-                <Gift className="w-4 h-4 text-slate-950" />
-
-                <span>Thưởng Điểm Cho Em Này</span>
-
-              </button>
+              {isAdminSession && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleOpenBonusModal(selectedStudentDetail.studentId);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Gift className="w-4 h-4 text-slate-950" />
+                  <span>Thưởng Điểm Cho Em Này</span>
+                </button>
+              )}
 
 
 
@@ -3154,7 +3147,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           ========================================================================= */}
 
-      {showBonusModal && (
+      {showBonusModal && isAdminSession && (
 
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
 
@@ -3496,7 +3489,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           ========================================================================= */}
 
-      {showLuckyBoxModal && luckyBoxResult && (
+      {showLuckyBoxModal && luckyBoxResult && isAdminSession && (
 
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
 

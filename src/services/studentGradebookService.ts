@@ -6870,9 +6870,27 @@ class StudentGradebookService {
 
     reason: string, 
 
-    awardedBy: string = 'Thầy Đinh Văn Thành'
+    awardedBy: string = 'Thầy Đinh Văn Thành',
+
+    isAdminAuthorized: boolean = false
 
   ): { success: boolean; student?: StudentProfile; message: string } {
+
+    // QUY ĐỊNH BẮT BUỘC THEO CHỈ ĐẠO CỦA THẦY ĐINH THÀNH:
+    // Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này.
+    // Học sinh tuyệt đối KHÔNG CÓ QUYỀN tặng quà cho mình và người khác!
+    const isAdmin = isAdminAuthorized || (typeof window !== 'undefined' && (
+      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
+      localStorage.getItem('gvai_admin_session') === 'authenticated'
+    ));
+
+    if (!isAdmin) {
+      return {
+        success: false,
+        message: '❌ Chỉ có Quản trị viên (Thầy Đinh Thành) mới có quyền thưởng điểm! Học sinh không có quyền tự tặng quà cho mình hoặc người khác.'
+      };
+    }
 
     const student = this.students.find(s => s.id === studentId);
 
@@ -7099,13 +7117,20 @@ class StudentGradebookService {
    */
 
   public openTeacherLuckyBox(studentId: string, isAdminAuthorized: boolean = false): TeacherLuckyBoxResult {
-    // QUY ĐỊNH BẮT BUỘC: Học sinh TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ Ý MỞ HỘP QUÀ và tặng điểm cho mình!
-    // Duy nhất Thầy Đinh Thành / Giáo viên quản trị mới có quyền trao tặng hộp quà.
-    if (!isAdminAuthorized) {
+    // QUY ĐỊNH BẮT BUỘC THEO CHỈ ĐẠO CỦA THẦY ĐINH THÀNH:
+    // Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này.
+    // Học sinh TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ Ý MỞ HỘP QUÀ và tặng điểm cho mình và người khác!
+    const isTeacherAdmin = isAdminAuthorized || (typeof window !== 'undefined' && (
+      sessionStorage.getItem('gvai_admin_auth') === 'true' ||
+      sessionStorage.getItem('gvai_admin_logged_in') === 'true' ||
+      localStorage.getItem('gvai_admin_session') === 'authenticated'
+    ));
+
+    if (!isTeacherAdmin) {
       return {
         success: false,
         pointsWon: 0,
-        wishMessage: 'Học sinh không được tự ý mở hộp quà và tặng điểm cho mình! Tính năng này chỉ do Thầy giáo Đinh Thành trao tặng.',
+        wishMessage: 'Chỉ có Admin mới có quyền thưởng điểm bằng cách mở hộp quà này! Học sinh không có quyền tặng quà cho mình và người khác.',
         teacherName: 'Thầy giáo Đinh Văn Thành',
         teacherPhone: '0915.213717',
         alreadyOpenedToday: false,
