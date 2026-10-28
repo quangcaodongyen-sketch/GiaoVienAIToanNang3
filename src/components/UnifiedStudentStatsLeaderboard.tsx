@@ -130,10 +130,15 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
     } catch {}
   };
 
-  // Tải dữ liệu toàn diện theo thời gian thực
+  // Tải dữ liệu toàn diện theo thời gian thực (tự động rà soát & khôi phục điểm thực tế)
   const loadData = useCallback(() => {
     setIsRefreshing(true);
     try {
+      // 0. Tự động rà soát & khôi phục điểm học tập thực tế để tránh mọi thiệt thòi cho học sinh
+      try {
+        studentGradebookService.auditAndRestoreAllStudentPoints();
+      } catch {}
+
       // 1. Tải danh sách lớp
       const cls = studentGradebookService.getClasses();
       setClassesList(cls);
@@ -182,6 +187,31 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
       setTimeout(() => setIsRefreshing(false), 250);
     }
   }, [scopeFilter, selectedGrade, selectedClass, sortBy]);
+
+  // Thao tác chủ động: Rà soát & khôi phục toàn diện điểm thực tế cho học sinh
+  const handleAuditAndRestorePoints = () => {
+    setIsRefreshing(true);
+    try {
+      const res = studentGradebookService.auditAndRestoreAllStudentPoints();
+      loadData();
+      if (res.restoredCount > 0) {
+        alert(
+          `🎉 ĐÃ KHÔI PHỤC ĐIỂM THÀNH CÔNG CHO HỌC SINH!\n\n` +
+          `• Đã rà soát: ${res.auditedCount} học sinh\n` +
+          `• Số học sinh được khôi phục/bù đắp điểm: ${res.restoredCount} em\n` +
+          `• Tổng số điểm đã hoàn trả đúng thực tế: +${res.totalPointsRestored} điểm!\n\n` +
+          `Toàn bộ kết quả bài thi, bài tập và lịch sử học từ hôm qua đến nay đã được bảo toàn đầy đủ, tránh mọi thiệt thòi cho các em học sinh!`
+        );
+      } else {
+        alert(
+          `✅ HỆ THỐNG ĐÃ RÀ SOÁT TOÀN DIỆN!\n\n` +
+          `Toàn bộ ${res.auditedCount} học sinh đều đang có điểm số chuẩn xác, đầy đủ và bảo toàn tối đa theo đúng kết quả học tập thực tế!`
+        );
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // Khởi động và lắng nghe Real-time events
   useEffect(() => {
@@ -856,12 +886,34 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           {/* DANH SÁCH BẢNG XẾP HẠNG CHI TIẾT */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
               <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-blue-600" />
                 <span>Bảng Thi Đua Chi Tiết ({filteredLeaderboard.length} học sinh)</span>
               </h4>
-              <span className="text-xs text-slate-500">Bấm vào từng học sinh để xem bảng kê chi tiết</span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleAuditAndRestorePoints}
+                  disabled={isRefreshing}
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-xs flex items-center gap-1.5 cursor-pointer transition active:scale-95 disabled:opacity-50"
+                  title="Tự động rà soát đối chiếu toàn bộ bài làm, bài thi giữa kỳ và lịch sử học tập thực tế từ hôm qua đến nay để khôi phục đầy đủ điểm số cho học sinh"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-200" />
+                  <span>🛡️ Khôi Phục Điểm Thực Tế</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={loadData}
+                  disabled={isRefreshing}
+                  className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center gap-1 cursor-pointer transition"
+                  title="Làm mới bảng thống kê thời gian thực"
+                >
+                  <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <span>Làm mới</span>
+                </button>
+                <span className="text-xs text-slate-500 hidden md:inline">Bấm vào từng học sinh để xem bảng kê chi tiết</span>
+              </div>
             </div>
 
             <div className="overflow-x-auto">
