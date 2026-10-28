@@ -1554,7 +1554,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-400/20 border border-amber-300/30 text-amber-200 text-xs font-semibold">
               <span className="text-base shrink-0">🔒</span>
               <span>
-                <strong>Cam kết bảo mật:</strong> 100% đề thi tại đây là <strong>ĐỀ LUYỆN TẬP MINH HỌA</strong> theo ma trận CV 7991 của Bộ GD&amp;ĐT. Hệ thống <strong>TUYỆT ĐỐI KHÔNG ĐĂNG TẢI</strong> đề kiểm tra chính thức của nhà trường.
+                <strong>Quy chế bảo mật đề thi:</strong> Toàn bộ đề thi tại đây là <strong>ĐỀ LUYỆN TẬP MINH HỌA</strong> theo ma trận CV 7991 của Bộ GD&amp;ĐT. Hệ thống <strong>TUYỆT ĐỐI KHÔNG ĐĂNG TẢI</strong> đề kiểm tra chính thức của nhà trường. <strong>NGHIÊM CẤM GỢI Ý HOẶC NGỤ Ý CÂU HỎI CÓ TRONG ĐỀ THI CHÍNH THỨC 100%</strong>. Nghiêm cấm lộ đề dưới mọi hình thức.
               </span>
             </div>
 

@@ -317,7 +317,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                     📖 Đề Cương Bám Sát SGK & Ma Trận
                   </span>
                   <span className="text-[11px] font-black text-cyan-300">
-                    THCS Đồng Yên
+                    Tài Liệu Ôn Tập SGK
                   </span>
                 </div>
 
@@ -363,7 +363,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               <div className="flex items-center gap-2">
                 <span className="text-amber-400 text-base">💡</span>
                 <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide">
-                  Mẹo Nhận Dạng Dạng Đề GK1 - Bí Quyết Điểm 9, 10 Của Thầy Thành
+                  Phương Pháp Tư Duy & Kỹ Năng Làm Bài Thi Minh Họa Của Thầy Thành
                 </span>
               </div>
               <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg text-[11px] font-bold">
@@ -408,6 +408,9 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
             {/* NỘI DUNG MẸO TƯƠNG ỨNG */}
             <div className="text-xs text-blue-100 leading-relaxed bg-[#0B1E36]/80 p-3 rounded-lg border border-blue-500/20">
+              <div className="mb-2 p-2 rounded bg-amber-500/10 border border-amber-400/20 text-[11px] text-amber-200">
+                🔒 <strong>Quy chế bảo mật &amp; sư phạm:</strong> Các bí quyết trên nhằm rèn phương pháp tư duy và kỹ năng làm bài tập Tiếng Anh nói chung. Tuyệt đối nghiêm cấm việc gợi ý hoặc ngụ ý câu hỏi có trong đề thi chính thức. Hệ thống nghiêm cấm lộ đề dưới mọi hình thức!
+              </div>
               {activeTipTab === 'pronunciation' && (
                 <div>
                   <strong className="text-amber-300">🔊 Bí quyết câu Ngữ âm &amp; Trọng âm:</strong>

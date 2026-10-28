@@ -681,14 +681,17 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black uppercase tracking-wider backdrop-blur-md">
-                TRƯỜNG THCS ĐỒNG YÊN • NĂM HỌC 2026 - 2027
+                BỘ TÀI LIỆU LUYỆN TẬP BỔ TRỢ • NĂM HỌC 2026 - 2027
               </span>
               <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider">
-                BÁM SÁT 100% ĐỀ KIỂM TRA GIỮA KỲ 1
+                TÀI LIỆU ÔN TẬP THAM KHẢO (MA TRẬN CV 7991)
               </span>
               <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-black uppercase tracking-wider">
                 LẦN LÀM BÀI: LẦN {attemptCount}
               </span>
+            </div>
+            <div className="text-[11px] text-amber-200/90 font-medium italic pt-1">
+              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề thi chính thức của nhà trường.
             </div>
 
             {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}
