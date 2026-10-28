@@ -57,6 +57,7 @@ import {
 import { BRAND } from '../config/brand';
 
 import { OnlineExamPortal } from './OnlineExamPortal';
+import { StudentStudyReminder } from './StudentStudyReminder';
 
 import { English8RevisionPortal } from './English8RevisionPortal';
 
@@ -3004,6 +3005,42 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           </span>
         </div>
       </div>
+
+      {/* =========================================================================
+          LỜI NHẮC ÔN THI GK1 & HỌC TỪ VỰNG TĂNG ĐIỂM SỐ - THẦY ĐINH THÀNH
+          ========================================================================= */}
+      <StudentStudyReminder
+        currentStudent={currentStudent}
+        onGoToExam={() => {
+          setActiveTab('exam');
+          window.scrollTo({ top: 350, behavior: 'smooth' });
+        }}
+        onGoToQuiz={() => {
+          setActiveTab('quiz');
+          window.scrollTo({ top: 350, behavior: 'smooth' });
+        }}
+        onGoToVocabUnit={(unitNumber, targetGrade) => {
+          if (targetGrade && targetGrade !== selectedGrade) {
+            setSelectedGrade(targetGrade);
+          }
+          setSelectedUnit(unitNumber);
+          setActiveTab('vocab');
+          window.scrollTo({ top: 350, behavior: 'smooth' });
+        }}
+        onGoToDecuong={() => {
+          const g = currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.replace(/\D/g, ''), 10) || 8) : 8);
+          if (g === 6) {
+            setActiveTab('decuong_e6');
+          } else {
+            setActiveTab('decuong_e8');
+          }
+          window.scrollTo({ top: 350, behavior: 'smooth' });
+        }}
+        onGoToLeaderboard={() => {
+          setActiveTab('leaderboard');
+          window.scrollTo({ top: 350, behavior: 'smooth' });
+        }}
+      />
 
       {/* THANH ĐIỀU HƯỚNG CÁC PHÂN HỆ HỌC TẬP - RÕ RÀNG, DỄ TÌM, DỄ HỌC */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs sm:text-sm font-bold border-b border-slate-200 dark:border-slate-800 mb-3">
