@@ -222,13 +222,18 @@ export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmap
     },
     {
       date: '2026-11-02',
-      badge: '🚀 CHINH PHỤC BẢNG VÀNG',
-      title: 'Chinh Phục 100 Từ Mới & Bứt Phá Top 1',
-      description: 'Tặng +15 điểm đăng nhập + Thưởng mốc chuyên cần khi tích lũy trên 50 từ vựng.',
-      points: 15,
-      vocabMultiplier: 1.5,
-      vocabPointsPerUnit: 15,
-      rules: ['⭐ Đăng nhập Thứ Hai: +15đ', '🧠 Thuộc từ vựng: +15đ / bài', '🏅 Thưởng vượt mốc: +30đ']
+      badge: '📝 THI CHÍNH THỨC GK1',
+      title: 'Kiểm Tra Giữa Kỳ 1 Môn Tiếng Anh (Chiều Thứ Hai, 02/11/2026)',
+      description: 'Lịch kiểm tra chính thức trên lớp vào chiều Thứ Hai. Các em chuẩn bị bút chì 2B gọt sẵn, tẩy chì sạch để tô phiếu trắc nghiệm và tự tin làm bài đạt điểm 9, 10!',
+      points: 20,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: [
+        '✏️ Chuẩn bị ít nhất 2 bút chì 2B hoặc 3B tô trắc nghiệm & tẩy chì mềm',
+        '🧠 Ôn chắc từ vựng & ngữ pháp Unit 1, Unit 2, Unit 3',
+        '🛡️ Tổ Trưởng (TT) & Tổ Phó (TP) đôn đốc các bạn trong tổ có mặt đúng giờ',
+        '⭐ Điểm thi thật trên lớp sẽ được vinh danh trang trọng trên Bảng Vàng'
+      ]
     },
     {
       date: '2026-11-03',

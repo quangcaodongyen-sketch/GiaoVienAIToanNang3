@@ -229,6 +229,36 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
         </div>
       </div>
 
+      {/* BANNER THÔNG BÁO LỊCH KIỂM TRA GK1 TIẾNG ANH (CHIỀU THỨ 2 TUẦN SAU) */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-rose-950/60 via-amber-950/40 to-indigo-950/60 border-2 border-amber-400/60 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 text-white">
+        <div className="flex items-center gap-3">
+          <span className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 text-slate-950 flex items-center justify-center font-black text-xl shrink-0 shadow-md animate-bounce">
+            📢
+          </span>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase">
+                LỊCH THI CHÍNH THỨC TRÊN LỚP
+              </span>
+              <span className="text-[11px] font-bold text-amber-300">
+                Lớp {selectedClass} • Khối {currentGrade}
+              </span>
+            </div>
+            <h4 className="text-sm sm:text-base font-black text-white leading-tight">
+              KIỂM TRA GIỮA HỌC KỲ 1 (GK1): CHIỀU THỨ HAI TUẦN SAU (02/11/2026)
+            </h4>
+            <p className="text-xs text-amber-100/90 mt-1 leading-relaxed">
+              ⚡ <strong>Chuẩn bị bắt buộc:</strong> Bút chì 2B hoặc 3B gọt sẵn, tẩy chì mềm sạch để tô trắc nghiệm, bút mực, thước kẻ. Ôn chắc từ vựng &amp; ngữ pháp <strong>Unit 1, Unit 2, Unit 3</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div className="shrink-0 flex items-center gap-2 bg-black/40 px-3.5 py-2 rounded-2xl border border-amber-400/30 text-xs">
+          <span className="text-amber-300 font-bold">🎯 Nhiệm vụ TT &amp; TP:</span>
+          <span className="text-white text-[11px]">Đôn đốc 100% tổ có mặt đúng giờ</span>
+        </div>
+      </div>
+
       {/* 2. BẢNG PHÂN CÔNG RÕ NHIỆM VỤ SƯ PHẠM CỦA HỌC SINH */}
       <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
         <div className="flex items-center justify-between gap-2 flex-wrap">

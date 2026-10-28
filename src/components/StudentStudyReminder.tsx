@@ -155,7 +155,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
           <div className="flex items-center gap-2 text-blue-100 font-medium">
             <span className="text-amber-300">💡</span>
             <span>
-              <strong>Thầy Thành nhắc:</strong> Em hãy thi thử 1 đề minh họa GK1 và ôn từ vựng Unit 1-3 để tăng <strong>+35đ thi đua</strong> hôm nay nhé!
+              <strong>Thầy Thành nhắc:</strong> Kiểm tra GK1 Tiếng Anh vào <strong>CHIỀU THỨ 2 TUẦN SAU (02/11)</strong>! Các em nhớ chuẩn bị bút chì 2B tô trắc nghiệm & ôn chắc Unit 1-3 để đạt điểm 9, 10 nhé!
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -189,6 +189,67 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               <strong className="font-black text-amber-950 dark:text-amber-100 uppercase">Quy Chế Bảo Mật Đề Thi:</strong>{' '}
               Toàn bộ bài tập và đề thi trên website là <strong>ĐỀ THI THỬ MINH HỌA &amp; LUYỆN TẬP MÔ PHỎNG</strong> theo ma trận Công văn 7991/BGDĐT.
               Website <strong>TUYỆT ĐỐI KHÔNG ĐƯA ĐỀ KIỂM TRA CHÍNH THỨC</strong> của nhà trường lên mạng internet để bảo đảm tuyệt đối tính bảo mật và công bằng học tập cho học sinh.
+            </div>
+          </div>
+
+          {/* LƯU Ý SƯ PHẠM: LỊCH KIỂM TRA GK1 TIẾNG ANH VÀO CHIỀU THỨ 2 TUẦN SAU */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-950/60 via-amber-950/40 to-indigo-950/60 border-2 border-amber-400/60 shadow-lg relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-amber-400/30">
+              <div className="flex items-center gap-2.5">
+                <span className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0 animate-bounce">
+                  📢
+                </span>
+                <div>
+                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider mb-0.5">
+                    LỘ TRÌNH KIỂM TRA CHÍNH THỨC TRÊN LỚP
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-amber-300 uppercase tracking-tight">
+                    LỊCH KIỂM TRA GK1 TIẾNG ANH: CHIỀU THỨ HAI TUẦN SAU (02/11/2026)
+                  </h3>
+                </div>
+              </div>
+              <div className="shrink-0 bg-black/40 px-3 py-1.5 rounded-xl border border-amber-400/30 text-amber-200 text-xs font-bold text-center">
+                ⏰ Đã thông báo toàn khối • Sẵn sàng bứt phá
+              </div>
+            </div>
+
+            {/* 4 HÀNH TRANG BẮT BUỘC HỌC SINH CẦN CHUẨN BỊ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-3.5 text-xs">
+              <div className="p-3 rounded-xl bg-black/30 border border-amber-400/20 space-y-1">
+                <div className="font-black text-amber-300 flex items-center gap-1.5">
+                  <span>✏️ 1. Dụng Cụ Tô Trắc Nghiệm</span>
+                </div>
+                <p className="text-blue-100/90 leading-relaxed text-[11px]">
+                  Chuẩn bị <strong>ít nhất 2 bút chì 2B hoặc 3B gọt sẵn</strong>, <strong>tẩy chì mềm sạch</strong> (gôm), thước kẻ, bút mực. Tuyệt đối không dùng bút mực tô trắc nghiệm.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/30 border border-cyan-400/20 space-y-1">
+                <div className="font-black text-cyan-300 flex items-center gap-1.5">
+                  <span>🧠 2. Kiến Thức Trọng Tâm</span>
+                </div>
+                <p className="text-blue-100/90 leading-relaxed text-[11px]">
+                  Ôn chắc toàn bộ từ vựng <strong>Unit 1, Unit 2, Unit 3</strong>; ngữ pháp Hiện tại đơn, Quá khứ đơn, V-ing sau động từ chỉ sở thích, phát âm đuôi -s/es và -ed.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/30 border border-emerald-400/20 space-y-1">
+                <div className="font-black text-emerald-300 flex items-center gap-1.5">
+                  <span>💻 3. Luyện Thi Thử Trên Web</span>
+                </div>
+                <p className="text-blue-100/90 leading-relaxed text-[11px]">
+                  Vào mục <strong>"Thi Thử Online"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận dạng câu hỏi và kỹ năng phân bổ thời gian làm bài hợp lý.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-black/30 border border-purple-400/20 space-y-1">
+                <div className="font-black text-purple-300 flex items-center gap-1.5">
+                  <span>🛡️ 4. Trách Nhiệm TT &amp; TP</span>
+                </div>
+                <p className="text-blue-100/90 leading-relaxed text-[11px]">
+                  <strong>Tổ Trưởng (TT) &amp; Tổ Phó (TP)</strong> đôn đốc các bạn trong tổ ôn tập đầy đủ, nhắc nhở các bạn mang đủ bút chì 2B và đi thi đúng giờ chiều Thứ Hai!
+                </p>
+              </div>
             </div>
           </div>
 
