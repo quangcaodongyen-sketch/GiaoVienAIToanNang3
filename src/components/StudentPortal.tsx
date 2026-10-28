@@ -41,7 +41,7 @@ import { UnifiedStudentStatsLeaderboard } from './UnifiedStudentStatsLeaderboard
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
-import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString, TeacherLuckyBoxResult } from '../services/studentGradebookService';
 import { launchFireworks } from '../utils/fireworks';
 import { removeDiacritics } from '../services/appMatcher';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp, Crown } from 'lucide-react';
@@ -192,6 +192,25 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
   // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / từ ngày mai (+5 điểm)
   const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(), []);
+
+  // Hộp Quà May Mắn Thầy Đinh Thành
+  const [showLuckyBoxModal, setShowLuckyBoxModal] = useState<boolean>(false);
+  const [luckyBoxResult, setLuckyBoxResult] = useState<TeacherLuckyBoxResult | null>(null);
+
+  const handleOpenLuckyBox = () => {
+    if (!currentStudent) {
+      alert('Vui lòng chọn hoặc đăng nhập tài khoản học sinh của em trước khi mở hộp quà nhé!');
+      return;
+    }
+    const res = studentGradebookService.openTeacherLuckyBox(currentStudent.id);
+    setLuckyBoxResult(res);
+    setShowLuckyBoxModal(true);
+    if (!res.alreadyOpenedToday) {
+      launchFireworks(5000);
+    }
+    const fresh = studentGradebookService.getActiveStudent();
+    if (fresh) setCurrentStudent({ ...fresh });
+  };
 
   // Lắng nghe sự kiện nổ pháo hoa từ service nếu có
   useEffect(() => {
@@ -1451,6 +1470,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
               <button
                 type="button"
+                onClick={handleOpenLuckyBox}
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white text-xs font-black transition cursor-pointer shadow-md flex items-center gap-1.5 animate-pulse active:scale-95 border border-amber-300/40"
+                title="Mở Hộp Quà May Mắn Thầy Đinh Thành: Nhận +10đ đến +20đ thi đua cùng lời chúc sư phạm ấm áp đích danh!"
+              >
+                <span className="text-sm">🎁</span>
+                <span>Hộp Quà Thầy Thành</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={handleSwitchOtherStudent}
                 className="px-2.5 py-1.5 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-blue-100 hover:text-white text-xs font-bold transition cursor-pointer border border-blue-700/50 flex items-center gap-1"
                 title="Đổi bạn học khác"
@@ -1496,7 +1525,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto flex-wrap">
+          <button
+            type="button"
+            onClick={handleOpenLuckyBox}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+            title="Mở Hộp Quà May Mắn Thầy Đinh Thành"
+          >
+            <span>🎁</span>
+            <span>Mở Hộp Quà Hôm Nay</span>
+          </button>
           <span className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-xs">
             +{loginRewardInfo.points}đ Đăng Nhập
           </span>
@@ -3763,6 +3801,83 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition cursor-pointer"
               >
                 Đã Hiểu - Em Tiếp Tục Học Bài!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL: HỘP QUÀ MAY MẮN & LỜI CHÚC TRUYỀN CẢM HỨNG CỦA THẦY ĐINH THÀNH
+          ========================================================================= */}
+      {showLuckyBoxModal && luckyBoxResult && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl max-w-md w-full p-6 border-2 border-amber-400/50 shadow-2xl space-y-4 text-center relative overflow-hidden">
+            <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-rose-500/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative inline-block my-2">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 via-yellow-300 to-amber-600 p-1 shadow-2xl flex items-center justify-center text-4xl ring-4 ring-amber-400/30 animate-bounce">
+                🎁
+              </div>
+              <span className="absolute -top-2 -right-2 text-2xl animate-spin">✨</span>
+            </div>
+
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[11px] font-black uppercase tracking-wider border border-amber-400/40">
+                <span>⭐ Hộp Quà May Mắn Thầy Đinh Thành</span>
+              </span>
+              <h3 className="text-xl font-black text-white mt-2">
+                {luckyBoxResult.alreadyOpenedToday 
+                  ? 'Quà May Mắn Của Em Hôm Nay' 
+                  : 'Chúc Mừng Em Đã Mở Hộp Quà!'}
+              </h3>
+              <p className="text-xs text-amber-200/90 font-medium mt-1">
+                Dành tặng riêng cho học sinh: <strong className="text-white underline">{luckyBoxResult.studentName}</strong> (Lớp {luckyBoxResult.className})
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-orange-500/20 border-2 border-amber-400/50 text-center shadow-inner">
+              <span className="text-[11px] text-amber-300 font-bold uppercase tracking-wider block">
+                Điểm Thưởng Thi Đua Nhận Được:
+              </span>
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400 my-1 drop-shadow-md">
+                +{luckyBoxResult.pointsWon} ĐIỂM
+              </div>
+              <span className="text-[11px] text-emerald-300 font-bold block">
+                ⭐ Tổng điểm mới: {luckyBoxResult.newTotalPoints} điểm (Bảo toàn vĩnh viễn)
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-left space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-base">💌</span>
+                <span className="text-xs font-black text-amber-300 uppercase tracking-wide">
+                  Lời Nhắn Nhủ Sư Phạm Từ Thầy Đinh Thành:
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-200 italic leading-relaxed font-medium bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                "{luckyBoxResult.wishMessage}"
+              </p>
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                <span>👨‍🏫 {luckyBoxResult.teacherName}</span>
+                <span className="text-cyan-300 font-bold">Zalo: {luckyBoxResult.teacherPhone}</span>
+              </div>
+            </div>
+
+            {luckyBoxResult.alreadyOpenedToday && (
+              <p className="text-[11px] text-amber-300/80 italic">
+                * Hôm nay em đã mở quà rồi! Hãy quay lại vào ngày mai để tiếp tục mở hộp quà mới nhé!
+              </p>
+            )}
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLuckyBoxModal(false)}
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm shadow-lg transition cursor-pointer active:scale-98"
+              >
+                Em Cảm Ơn Thầy Thành &amp; Cố Gắng Học Tốt! 🚀
               </button>
             </div>
           </div>

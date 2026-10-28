@@ -48,7 +48,8 @@ import {
   StudentLevelInfo,
   calculateStudentLevel,
   MeritBonusItem,
-  getDailyLoginRewardInfo
+  getDailyLoginRewardInfo,
+  TeacherLuckyBoxResult
 } from '../services/studentGradebookService';
 import { launchFireworks } from '../utils/fireworks';
 
@@ -110,6 +111,14 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
   const [bonusReason, setBonusReason] = useState<string>('Học tập tích cực & chăm chỉ ôn bài');
   const [showLevelGuideModal, setShowLevelGuideModal] = useState<boolean>(false);
   const [attendanceStatusFilter, setAttendanceStatusFilter] = useState<'all' | 'entered' | 'not_entered'>('all');
+
+  // Chế độ thống nhất 1 kiểu: Mặc định lọc học sinh THỰC TẾ ĐÃ THAM GIA HỌC
+  const [onlyActiveStudents, setOnlyActiveStudents] = useState<boolean>(true);
+
+  // Modal Hộp Quà May Mắn Thầy Đinh Thành
+  const [showLuckyBoxModal, setShowLuckyBoxModal] = useState<boolean>(false);
+  const [luckyBoxResult, setLuckyBoxResult] = useState<TeacherLuckyBoxResult | null>(null);
+  const [luckyBoxTargetStudentId, setLuckyBoxTargetStudentId] = useState<string>('');
 
   // Toast helper
   const showToast = (msg: string) => {
@@ -238,21 +247,31 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
     }
   }, [defaultClassName, defaultGrade]);
 
-  // Học sinh đứng Top 1, Top 2, Top 3
-  const top1Student = leaderboard[0];
-  const top2Student = leaderboard[1];
-  const top3Student = leaderboard[2];
+  // Danh sách các học sinh THỰC TẾ ĐÃ THAM GIA HỌC (1 kiểu thống nhất trên toàn hệ thống)
+  const actualStudyingStudents = useMemo(() => {
+    return leaderboard.filter(s => s.isActuallyStudying || s.hasEntered || (s.totalMeritPoints && s.totalMeritPoints > 15) || (s.testsCount && s.testsCount > 0));
+  }, [leaderboard]);
+
+  // Danh sách hiển thị theo chế độ lọc (Mặc định: 1 kiểu thống nhất cho học sinh đã học thực tế)
+  const targetLeaderboard = useMemo(() => {
+    return onlyActiveStudents ? actualStudyingStudents : leaderboard;
+  }, [onlyActiveStudents, actualStudyingStudents, leaderboard]);
+
+  // Học sinh đứng Top 1, Top 2, Top 3 (Ưu tiên học sinh đã học thực tế)
+  const top1Student = targetLeaderboard[0];
+  const top2Student = targetLeaderboard[1];
+  const top3Student = targetLeaderboard[2];
 
   // Thống kê tổng quan chung theo phạm vi hiện tại
   const statsOverview = useMemo(() => {
     const total = attendanceReport ? attendanceReport.totalRoster : leaderboard.length;
-    const entered = attendanceReport ? attendanceReport.enteredCount : leaderboard.filter(s => (s.totalMeritPoints > 15 || s.testsCount > 0)).length;
+    const entered = attendanceReport ? attendanceReport.enteredCount : actualStudyingStudents.length;
     const percent = total > 0 ? Math.round((entered / total) * 100) : 0;
-    const avgScore = leaderboard.length > 0 
-      ? Math.round((leaderboard.reduce((acc, s) => acc + s.averageScore, 0) / leaderboard.length) * 10) / 10 
+    const avgScore = targetLeaderboard.length > 0 
+      ? Math.round((targetLeaderboard.reduce((acc, s) => acc + s.averageScore, 0) / targetLeaderboard.length) * 10) / 10 
       : 0;
-    const highestScore = leaderboard.length > 0 ? Math.max(...leaderboard.map(s => s.highestScore)) : 0;
-    const totalMeritSum = leaderboard.reduce((acc, s) => acc + s.totalMeritPoints, 0);
+    const highestScore = targetLeaderboard.length > 0 ? Math.max(...targetLeaderboard.map(s => s.highestScore)) : 0;
+    const totalMeritSum = targetLeaderboard.reduce((acc, s) => acc + s.totalMeritPoints, 0);
 
     return {
       total,
@@ -263,23 +282,27 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
       highestScore,
       totalMeritSum
     };
-  }, [attendanceReport, leaderboard]);
+  }, [attendanceReport, leaderboard, actualStudyingStudents, targetLeaderboard]);
 
-  // Lọc danh sách bảng xếp hạng theo tìm kiếm
+  // Lọc danh sách bảng xếp hạng theo tìm kiếm và chế độ lọc thống nhất
   const filteredLeaderboard = useMemo(() => {
-    if (!searchQuery.trim()) return leaderboard;
-    const q = searchQuery.toLowerCase().trim();
-    return leaderboard.filter(s => 
-      s.studentName.toLowerCase().includes(q) ||
-      s.studentCode.toLowerCase().includes(q) ||
-      s.className.toLowerCase().includes(q)
-    );
-  }, [leaderboard, searchQuery]);
+    let list = targetLeaderboard;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(s => 
+        s.studentName.toLowerCase().includes(q) ||
+        s.studentCode.toLowerCase().includes(q) ||
+        s.className.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [targetLeaderboard, searchQuery]);
 
-  // Lọc danh sách sổ điểm danh
+  // Lọc danh sách sổ điểm danh (đồng bộ chuẩn 100% với chế độ lọc học sinh thực tế đã học)
   const filteredAttendanceStudents = useMemo(() => {
     if (!attendanceReport) return [];
     return attendanceReport.students.filter(s => {
+      if (onlyActiveStudents && !s.hasEntered) return false;
       if (attendanceStatusFilter === 'entered' && !s.hasEntered) return false;
       if (attendanceStatusFilter === 'not_entered' && s.hasEntered) return false;
       if (searchQuery.trim()) {
@@ -292,7 +315,25 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
       }
       return true;
     });
-  }, [attendanceReport, attendanceStatusFilter, searchQuery]);
+  }, [attendanceReport, onlyActiveStudents, attendanceStatusFilter, searchQuery]);
+
+  // XỬ LÝ MỞ HỘP QUÀ MAY MẮN CỦA THẦY ĐINH THÀNH
+  const handleOpenLuckyBox = (studentId?: string) => {
+    const targetId = studentId || activeStudent?.id || targetLeaderboard[0]?.studentId;
+    if (!targetId) {
+      showToast('⚠️ Vui lòng chọn hoặc đăng nhập một học sinh để mở hộp quà may mắn!');
+      return;
+    }
+    setLuckyBoxTargetStudentId(targetId);
+    const res = studentGradebookService.openTeacherLuckyBox(targetId);
+    setLuckyBoxResult(res);
+    setShowLuckyBoxModal(true);
+    if (!res.alreadyOpenedToday) {
+      launchFireworks(5000);
+      showToast(`🎁 Chúc mừng em đã mở hộp quà may mắn và nhận +${res.pointsWon} điểm thi đua!`);
+    }
+    loadData();
+  };
 
   // XỬ LÝ THƯỞNG ĐIỂM TÍCH CỰC
   const handleOpenBonusModal = (studentId?: string) => {
@@ -775,6 +816,35 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 </option>
               ))}
             </select>
+
+            {/* 4. CHẾ ĐỘ THỐNG KÊ 1 KIỂU THỐNG NHẤT: HỌC SINH THỰC TẾ ĐÃ VÀO HỌC */}
+            <div className="flex items-center gap-1 bg-slate-200/90 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-300 dark:border-slate-700">
+              <button
+                type="button"
+                onClick={() => setOnlyActiveStudents(true)}
+                className={`px-3 py-1 rounded-md text-[11px] font-black transition flex items-center gap-1 cursor-pointer ${
+                  onlyActiveStudents
+                    ? 'bg-emerald-600 text-white shadow-xs ring-1 ring-emerald-400'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                }`}
+                title="Chỉ hiển thị các em học sinh THỰC TẾ ĐÃ THAM GIA HỌC (có điểm danh, làm bài, từ vựng, thời gian học)"
+              >
+                <CheckCircle2 className="w-3 h-3 text-emerald-200" />
+                <span>🎯 Học Sinh Đã Học ({actualStudyingStudents.length})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setOnlyActiveStudents(false)}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                  !onlyActiveStudents
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                }`}
+                title="Xem toàn bộ danh bạ cả trường bao gồm cả những em chưa vào học"
+              >
+                <span>📋 Toàn Bộ ({attendanceReport ? attendanceReport.totalRoster : leaderboard.length})</span>
+              </button>
+            </div>
           </div>
 
           {/* Tiêu chí sắp xếp bảng xếp hạng (chỉ hiển thị ở tab Bảng Vàng) */}
@@ -916,6 +986,15 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 <span>Bảng Thi Đua Chi Tiết ({filteredLeaderboard.length} học sinh)</span>
               </h4>
               <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => handleOpenLuckyBox()}
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white font-black text-xs shadow-xs flex items-center gap-1.5 cursor-pointer transition active:scale-95 animate-pulse"
+                  title="Mở Hộp Quà May Mắn Thầy Đinh Thành: Nhận +10đ đến +20đ thi đua cùng lời chúc sư phạm ấm áp đích danh!"
+                >
+                  <span className="text-sm">🎁</span>
+                  <span>Hộp Quà Thầy Thành</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -1641,6 +1720,83 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs cursor-pointer"
               >
                 Đã Hiểu &amp; Tiếp Tục Phấn Đấu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL 4: HỘP QUÀ MAY MẮN & LỜI CHÚC TRUYỀN CẢM HỨNG CỦA THẦY ĐINH THÀNH
+          ========================================================================= */}
+      {showLuckyBoxModal && luckyBoxResult && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl max-w-md w-full p-6 border-2 border-amber-400/50 shadow-2xl space-y-4 text-center relative overflow-hidden">
+            <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-rose-500/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative inline-block my-2">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 via-yellow-300 to-amber-600 p-1 shadow-2xl flex items-center justify-center text-4xl ring-4 ring-amber-400/30 animate-bounce">
+                🎁
+              </div>
+              <span className="absolute -top-2 -right-2 text-2xl animate-spin">✨</span>
+            </div>
+
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[11px] font-black uppercase tracking-wider border border-amber-400/40">
+                <span>⭐ Hộp Quà May Mắn Thầy Đinh Thành</span>
+              </span>
+              <h3 className="text-xl font-black text-white mt-2">
+                {luckyBoxResult.alreadyOpenedToday 
+                  ? 'Quà May Mắn Của Em Hôm Nay' 
+                  : 'Chúc Mừng Em Đã Mở Hộp Quà!'}
+              </h3>
+              <p className="text-xs text-amber-200/90 font-medium mt-1">
+                Dành tặng riêng cho học sinh: <strong className="text-white underline">{luckyBoxResult.studentName}</strong> (Lớp {luckyBoxResult.className})
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-orange-500/20 border-2 border-amber-400/50 text-center shadow-inner">
+              <span className="text-[11px] text-amber-300 font-bold uppercase tracking-wider block">
+                Điểm Thưởng Thi Đua Nhận Được:
+              </span>
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400 my-1 drop-shadow-md">
+                +{luckyBoxResult.pointsWon} ĐIỂM
+              </div>
+              <span className="text-[11px] text-emerald-300 font-bold block">
+                ⭐ Tổng điểm mới: {luckyBoxResult.newTotalPoints} điểm (Bảo toàn vĩnh viễn)
+              </span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-left space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-base">💌</span>
+                <span className="text-xs font-black text-amber-300 uppercase tracking-wide">
+                  Lời Nhắn Nhủ Sư Phạm Từ Thầy Đinh Thành:
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-200 italic leading-relaxed font-medium bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+                "{luckyBoxResult.wishMessage}"
+              </p>
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                <span>👨‍🏫 {luckyBoxResult.teacherName}</span>
+                <span className="text-cyan-300 font-bold">Zalo: {luckyBoxResult.teacherPhone}</span>
+              </div>
+            </div>
+
+            {luckyBoxResult.alreadyOpenedToday && (
+              <p className="text-[11px] text-amber-300/80 italic">
+                * Hôm nay em đã mở quà rồi! Hãy quay lại vào ngày mai để tiếp tục mở hộp quà mới nhé!
+              </p>
+            )}
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLuckyBoxModal(false)}
+                className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm shadow-lg transition cursor-pointer active:scale-98"
+              >
+                Em Cảm Ơn Thầy Thành &amp; Cố Gắng Học Tốt! 🚀
               </button>
             </div>
           </div>

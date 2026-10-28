@@ -126,6 +126,75 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
   };
 }
 
+export interface TeacherLuckyBoxResult {
+  success: boolean;
+  pointsWon: number;
+  wishMessage: string;
+  teacherName: string;
+  teacherPhone: string;
+  alreadyOpenedToday: boolean;
+  openedDate: string;
+  newTotalPoints: number;
+  studentName: string;
+  className: string;
+}
+
+// ==================== BỘ LỌC XÁC ĐỊNH HỌC SINH THỰC TẾ ĐÃ THAM GIA HỌC ====================
+// Thống nhất 1 tiêu chuẩn duy nhất: Học sinh được xác nhận là THỰC TẾ ĐÃ HỌC khi có đăng nhập,
+// có thời gian học, bài nộp, luyện từ vựng hoặc điểm thi đua thực tế tích lũy!
+export function isStudentActuallyStudying(student: {
+  lastLoginDate?: string | null;
+  attendancePoints?: number;
+  studyTimeMinutes?: number;
+  timePoints?: number;
+  vocabPoints?: number;
+  practicePoints?: number;
+  examBonusPoints?: number;
+  totalMeritPoints?: number;
+  testsCount?: number;
+  submissionsCount?: number;
+  hasEntered?: boolean;
+}): boolean {
+  if (!student) return false;
+  if (student.hasEntered) return true;
+  if (Boolean(student.lastLoginDate)) return true;
+  if ((student.attendancePoints || 0) > 0) return true;
+  if ((student.studyTimeMinutes || 0) > 0) return true;
+  if ((student.timePoints || 0) > 0) return true;
+  if ((student.vocabPoints || 0) > 0) return true;
+  if ((student.practicePoints || 0) > 0) return true;
+  if ((student.examBonusPoints || 0) > 0) return true;
+  if ((student.testsCount || 0) > 0) return true;
+  if ((student.submissionsCount || 0) > 0) return true;
+  // Nếu điểm tổng > 15 (điểm khuyến khích ban đầu), chắc chắn đã tích lũy điểm thực tế
+  if ((student.totalMeritPoints || 0) > 15) return true;
+  return false;
+}
+
+// ==================== VAULT BẢO TOÀN ĐIỂM SỐ TỐI CAO (CÓ LỢI CHO HỌC SINH) ====================
+// Bảo đảm điểm số học sinh đã học KHÔNG BAO GIỜ bị giảm, không bị xóa bớt dù tải lại trang hay reset
+const MAX_POINTS_VAULT_PREFIX = 'GVAI_MAX_POINTS_VAULT_';
+
+export function getStudentVaultMaxPoints(studentId: string): number {
+  if (!studentId) return 0;
+  try {
+    const val = localStorage.getItem(MAX_POINTS_VAULT_PREFIX + studentId);
+    return val ? Number(val) || 0 : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function saveStudentVaultMaxPoints(studentId: string, points: number): void {
+  if (!studentId || !points) return;
+  try {
+    const curr = getStudentVaultMaxPoints(studentId);
+    if (points > curr) {
+      localStorage.setItem(MAX_POINTS_VAULT_PREFIX + studentId, String(points));
+    }
+  } catch {}
+}
+
 export interface StudentLevelInfo {
   level: number;
   title: string;
@@ -348,6 +417,8 @@ export interface ClassLeaderboardItem {
   levelInfo?: StudentLevelInfo;
   vocabUnitsCount?: number;      // Số bài từ vựng đã học
   studyProgressPercent?: number; // % Tiến độ học tập tổng thể
+  hasEntered?: boolean;          // Đã vào học thực tế
+  isActuallyStudying?: boolean;  // Có hoạt động học tập thực tế
   totalMeritPoints: number;
 }
 export interface PurgeAndSyncRosterResult {
@@ -1829,8 +1900,9 @@ class StudentGradebookService {
       const calculatedSum = recAtt + recVoc + recExm + recPrc + recTime + recBonus + recTeacher;
 
       // ================= QUY TẮC BẢO VỆ ĐIỂM TỐI CAO: BÙ ĐẮP MỌI THIỆT THÒI =================
-      // Mục tiêu điểm: Phải ít nhất bằng điểm ghi nhận cao nhất từ trước đến nay, HOẶC điểm tính lại thực tế!
-      const targetTotal = Math.max(origTotal, calculatedSum);
+      // Mục tiêu điểm: Phải ít nhất bằng điểm ghi nhận cao nhất từ trước đến nay, HOẶC điểm tính lại thực tế, HOẶC điểm lưu trong Vault!
+      const vaultMax = getStudentVaultMaxPoints(student.id);
+      const targetTotal = Math.max(origTotal, vaultMax, calculatedSum);
 
       // Nếu có chênh lệch giữa targetTotal và calculatedSum (do điểm tích lũy trước đó):
       // Giữ nguyên và bù vào practicePoints để các thành phần cộng lại tròn khít!
@@ -1843,7 +1915,7 @@ class StudentGradebookService {
         restoredCount++;
         const added = targetTotal - origTotal;
         totalPointsRestored += added;
-        details.push(`Khôi phục cho ${student.name} (${student.className}): ${origTotal}đ ➔ ${targetTotal}đ (+${added}đ từ bài thi/hoạt động thực tế)`);
+        details.push(`Khôi phục cho ${student.name} (${student.className}): ${origTotal}đ ➔ ${targetTotal}đ (+${added}đ bảo toàn tối cao)`);
       }
 
       // Cập nhật lại toàn bộ hồ sơ học sinh
@@ -1855,6 +1927,7 @@ class StudentGradebookService {
       student.encouragementBonus = recBonus;
       student.teacherBonus = recTeacher;
       student.totalMeritPoints = targetTotal;
+      saveStudentVaultMaxPoints(student.id, targetTotal);
     });
 
     // 5. Lưu trữ vĩnh viễn và đồng bộ Cloud
@@ -3197,6 +3270,16 @@ class StudentGradebookService {
     const student = this.students.find(s => s.id === studentId);
     if (!student) return null;
 
+    const origTotal = student.totalMeritPoints || 0;
+    const vaultMax = getStudentVaultMaxPoints(student.id);
+    const addedPoints = 
+      (options.attendance || 0) + 
+      (options.vocab || 0) + 
+      (options.examBonus || 0) + 
+      (options.practice || 0) + 
+      (options.timePoints || 0) + 
+      (options.teacherBonus || 0);
+
     if (options.attendance) student.attendancePoints = (student.attendancePoints || 0) + options.attendance;
     if (options.vocab) student.vocabPoints = (student.vocabPoints || 0) + options.vocab;
     if (options.examBonus) student.examBonusPoints = (student.examBonusPoints || 0) + options.examBonus;
@@ -3205,7 +3288,7 @@ class StudentGradebookService {
     if (options.minutes) student.studyTimeMinutes = (student.studyTimeMinutes || 0) + options.minutes;
     if (options.teacherBonus) student.teacherBonus = (student.teacherBonus || 0) + options.teacherBonus;
 
-    student.totalMeritPoints = 
+    const calculatedSum = 
       (student.attendancePoints || 0) + 
       (student.vocabPoints || 0) + 
       (student.examBonusPoints || 0) + 
@@ -3213,6 +3296,16 @@ class StudentGradebookService {
       (student.timePoints || 0) +
       (student.encouragementBonus ?? 15) +
       (student.teacherBonus || 0);
+
+    // BẢO TOÀN ĐIỂM SỐ TỐI CAO: Điểm mới luôn theo hướng có lợi nhất cho học sinh!
+    const targetTotal = Math.max(origTotal + addedPoints, vaultMax + addedPoints, calculatedSum);
+
+    // Bù phần chênh lệch vào teacherBonus để các thành phần luôn khớp chính xác
+    if (targetTotal > calculatedSum) {
+      student.teacherBonus = (student.teacherBonus || 0) + (targetTotal - calculatedSum);
+    }
+    student.totalMeritPoints = targetTotal;
+    saveStudentVaultMaxPoints(student.id, targetTotal);
 
     this.saveStudents();
 
@@ -3242,6 +3335,9 @@ class StudentGradebookService {
     const student = this.students.find(s => s.id === studentId);
     if (!student) return { success: false, message: 'Không tìm thấy học sinh!' };
 
+    const origTotal = student.totalMeritPoints || 0;
+    const vaultMax = getStudentVaultMaxPoints(student.id);
+
     if (!student.bonusHistory) {
       student.bonusHistory = [];
     }
@@ -3257,7 +3353,7 @@ class StudentGradebookService {
     student.bonusHistory.unshift(bonusItem);
     student.teacherBonus = (student.teacherBonus || 0) + bonusPoints;
 
-    student.totalMeritPoints = 
+    const calculatedSum = 
       (student.attendancePoints || 0) + 
       (student.vocabPoints || 0) + 
       (student.examBonusPoints || 0) + 
@@ -3265,6 +3361,13 @@ class StudentGradebookService {
       (student.timePoints || 0) +
       (student.encouragementBonus ?? 15) +
       (student.teacherBonus || 0);
+
+    const targetTotal = Math.max(origTotal + bonusPoints, vaultMax + bonusPoints, calculatedSum);
+    if (targetTotal > calculatedSum) {
+      student.teacherBonus = (student.teacherBonus || 0) + (targetTotal - calculatedSum);
+    }
+    student.totalMeritPoints = targetTotal;
+    saveStudentVaultMaxPoints(student.id, targetTotal);
 
     this.saveStudents();
 
@@ -3282,6 +3385,113 @@ class StudentGradebookService {
       student, 
       message: `Đã thưởng +${bonusPoints} điểm thi đua cho học sinh ${student.name}!` 
     };
+  }
+
+  /**
+   * KIỂM TRA ĐÃ MỞ HỘP QUÀ MAY MẮN CỦA THẦY ĐINH THÀNH HÔM NAY CHƯA
+   */
+  public hasOpenedLuckyBoxToday(studentId: string): boolean {
+    if (!studentId) return false;
+    const todayStr = getLocalDateString();
+    try {
+      return localStorage.getItem(`GVAI_LUCKY_BOX_${studentId}_${todayStr}`) !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * MỞ HỘP QUÀ MAY MẮN CỦA THẦY ĐINH THÀNH (Mỗi ngày 1 lần):
+   * Tặng điểm ngẫu nhiên (+10đ, +15đ, +20đ) kèm Lời chúc truyền cảm hứng đích danh tới từng học sinh!
+   */
+  public openTeacherLuckyBox(studentId: string): TeacherLuckyBoxResult {
+    const todayStr = getLocalDateString();
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) {
+      return {
+        success: false,
+        pointsWon: 0,
+        wishMessage: 'Vui lòng chọn hoặc đăng nhập tài khoản học sinh!',
+        teacherName: 'Thầy giáo Đinh Văn Thành',
+        teacherPhone: '0915.213717',
+        alreadyOpenedToday: false,
+        openedDate: todayStr,
+        newTotalPoints: 0,
+        studentName: '',
+        className: ''
+      };
+    }
+
+    const storageKey = `GVAI_LUCKY_BOX_${student.id}_${todayStr}`;
+    try {
+      const existing = localStorage.getItem(storageKey);
+      if (existing) {
+        const parsed = JSON.parse(existing);
+        return {
+          ...parsed,
+          alreadyOpenedToday: true,
+          newTotalPoints: student.totalMeritPoints || 0
+        };
+      }
+    } catch {}
+
+    // Ngẫu nhiên chọn điểm thưởng may mắn có lợi nhất cho học sinh: +10đ (50%), +15đ (35%), +20đ (15%)
+    const rand = Math.random();
+    let pointsWon = 10;
+    if (rand < 0.15) pointsWon = 20;
+    else if (rand < 0.50) pointsWon = 15;
+
+    // Kho lời chúc sư phạm chân thành, ấm áp từ Thầy Đinh Thành
+    const sName = student.name || 'em';
+    const sCls = student.className || '';
+    const wishes = [
+      `Thầy Đinh Thành chúc em ${sName} (Lớp ${sCls}) luôn chăm ngoan, giữ vững tinh thần tự giác học tập mỗi ngày và bứt phá điểm 10 rực rỡ môn Tiếng Anh trong kỳ thi Giữa Kỳ này nhé!`,
+      `Thầy Đinh Thành rất tự hào về sự kiên trì của ${sName}! Mỗi bài từ vựng và câu trắc nghiệm hôm nay là một bước tiến lớn cho tương lai. Chúc em luôn tự tin và tỏa sáng trên Bảng Vàng toàn trường!`,
+      `Gửi tới em ${sName} lời chúc bình an, trí tuệ minh mẫn và tràn đầy năng lượng! Thầy Thành tin chắc rằng với sự chăm chỉ này, ${sName} sẽ đạt kết quả xuất sắc nhất lớp ${sCls}!`,
+      `Mỗi ngày tiến bộ một chút, thành công rực rỡ sẽ đến! Thầy Đinh Thành chúc ${sName} nắm chắc từng từ vựng, giải chuẩn từng câu ngữ pháp và luôn dẫn đầu phong trào thi đua của lớp!`,
+      `Thầy Đinh Thành tặng em ${sName} hộp quà may mắn cùng niềm tin yêu sâu sắc! Chúc em làm bài thi thật bình tĩnh, đọc kỹ đề bài và đạt điểm số cao nhất khiến thầy cô và bố mẹ tự hào!`,
+      `Học tập là chìa khóa mở ra tương lai tươi sáng. Thầy Thành chúc ${sName} luôn giữ ngọn lửa đam mê, học tập vui vẻ, tích lũy thêm nhiều điểm số thi đua và chinh phục mọi đỉnh cao tri thức!`,
+      `Thầy Đinh Thành gửi lời khen ngợi đặc biệt tới em ${sName} (Lớp ${sCls}) vì đã vào học đúng giờ hôm nay! Chúc em luôn là tấm gương sáng cho các bạn cùng lớp noi theo!`,
+      `Chúc em ${sName} một ngày học tập thật hiệu quả và ngập tràn niềm vui! Hãy tiếp tục luyện đề và ôn từ vựng đều đặn cùng Thầy Thành để nhận trọn vẹn điểm thưởng pháo hoa nhé!`,
+      `Kiên trì là mẹ của thành công! Thầy Đinh Thành chúc em ${sName} ôn tập thật chắc tay, tự tin bước vào phòng thi và rinh về điểm số cao nhất lớp ${sCls}!`,
+      `Thầy Đinh Thành chúc ${sName} có thêm nhiều niềm hứng khởi trong từng bài học. Chỉ cần em nỗ lực hết mình mỗi ngày, Thầy luôn đồng hành và hỗ trợ em đạt kết quả tốt nhất!`
+    ];
+
+    const wishIndex = (todayStr.split('-').reduce((acc, part) => acc + Number(part), 0) + student.name.length) % wishes.length;
+    const wishMessage = wishes[wishIndex];
+
+    // Cộng điểm cho học sinh
+    this.addStudentMeritPoints(student.id, {
+      teacherBonus: pointsWon,
+      reason: `🎁 Mở Hộp Quà May Mắn Thầy Đinh Thành: +${pointsWon}đ và nhận lời chúc sư phạm ấm áp!`
+    });
+
+    try {
+      this.recordCheckin(
+        student,
+        '🎁 HỘP QUÀ THẦY THÀNH',
+        `🎁 Mở Hộp Quà May Mắn ngày ${todayStr}: Nhận +${pointsWon}đ thi đua! Lời chúc của Thầy: "${wishMessage}"`
+      );
+    } catch {}
+
+    const result: TeacherLuckyBoxResult = {
+      success: true,
+      pointsWon,
+      wishMessage,
+      teacherName: 'Thầy giáo Đinh Văn Thành',
+      teacherPhone: '0915.213717',
+      alreadyOpenedToday: false,
+      openedDate: todayStr,
+      newTotalPoints: student.totalMeritPoints || 0,
+      studentName: student.name,
+      className: student.className
+    };
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(result));
+    } catch {}
+
+    return result;
   }
 
   /**
@@ -3460,9 +3670,30 @@ class StudentGradebookService {
       const tme = student.timePoints || 0;
       const enc = student.encouragementBonus ?? 15;
       const tch = student.teacherBonus || 0;
-      const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
-        ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme + enc + tch);
+      const vaultMax = getStudentVaultMaxPoints(student.id);
+      const calculatedSum = att + voc + exm + prc + tme + enc + tch;
+      const totalMerit = Math.max(
+        (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null) ? student.totalMeritPoints : 0,
+        vaultMax,
+        calculatedSum
+      );
+      if (totalMerit > (student.totalMeritPoints || 0)) {
+        student.totalMeritPoints = totalMerit;
+        saveStudentVaultMaxPoints(student.id, totalMerit);
+      }
+
+      // Xác định trạng thái thực tế đã tham gia học (1 kiểu thống nhất trên toàn hệ thống)
+      const isActuallyStudying = Boolean(
+        student.lastLoginDate ||
+        att > 0 ||
+        (student.studyTimeMinutes || 0) > 0 ||
+        tme > 0 ||
+        voc > 0 ||
+        prc > 0 ||
+        exm > 0 ||
+        testsCount > 0 ||
+        totalMerit > 15
+      );
 
       const badges: string[] = [];
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
@@ -3517,6 +3748,8 @@ class StudentGradebookService {
         levelInfo: calculateStudentLevel(totalMerit, undefined),
         vocabUnitsCount,
         studyProgressPercent,
+        hasEntered: isActuallyStudying,
+        isActuallyStudying,
         totalMeritPoints: totalMerit
       };
     });
@@ -3615,22 +3848,29 @@ class StudentGradebookService {
       const profile = studentProfileMap.get(key) || (item.studentCode ? studentProfileMap.get(item.studentCode.trim().toLowerCase()) : undefined);
       const studentSubs = subMap.get(key) || [];
 
-      // Học sinh được tính là đã vào học nếu có hoạt động thực tế (đã đăng nhập, chuyên cần, thời gian học, bài nộp)
+      // Học sinh được tính là đã vào học nếu có hoạt động thực tế (đã đăng nhập, chuyên cần, thời gian học, bài nộp, từ vựng)
       const hasEntered = Boolean(
         profile && (
           Boolean(profile.lastLoginDate) ||
           ((profile.attendancePoints || 0) > 0) ||
           ((profile.studyTimeMinutes || 0) > 0) ||
+          ((profile.timePoints || 0) > 0) ||
           ((profile.vocabPoints || 0) > 0) ||
           ((profile.practicePoints || 0) > 0) ||
           ((profile.examBonusPoints || 0) > 0) ||
+          ((profile.totalMeritPoints || 0) > 15) ||
           studentSubs.length > 0
         )
       );
 
       if (hasEntered) enteredCount++;
 
-      const merit = profile?.totalMeritPoints || 0;
+      const vaultMax = profile ? getStudentVaultMaxPoints(profile.id) : 0;
+      const merit = profile ? Math.max(profile.totalMeritPoints || 0, vaultMax) : 0;
+      if (profile && merit > (profile.totalMeritPoints || 0)) {
+        profile.totalMeritPoints = merit;
+        saveStudentVaultMaxPoints(profile.id, merit);
+      }
       totalMerit += merit;
 
       let highestScore: number | null = null;
