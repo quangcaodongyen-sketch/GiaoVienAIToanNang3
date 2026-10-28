@@ -161,7 +161,7 @@ export const isAppMatching = (
     return combined.includes('listening') || combined.includes('tts') || combined.includes('bai nghe') || combined.includes('file nghe') || combined.includes('smart-listening') || combined.includes('mb-');
   }
 
-  // 22. BIẾN THỂ ĐỀ THI
+  // 22. BIẾN THỂ ĐỀ KIỂM TRA
   if (target.includes('bienthe') || target.includes('bien the') || target.includes('var')) {
     return combined.includes('bien the') || combined.includes('bienthe');
   }

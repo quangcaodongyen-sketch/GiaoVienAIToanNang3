@@ -385,7 +385,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                 </div>
               )}
 
-              {/* VÙNG XEM TRƯỚC SƯ PHẠM ĐỀ THI TIẾNG VIỆT TIỂU HỌC */}
+              {/* VÙNG XEM TRƯỚC SƯ PHẠM ĐỀ KIỂM TRA TIẾNG VIỆT TIỂU HỌC */}
               {generatedExam && (
                 <div id="tvth-preview-container" className="bg-white text-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl font-serif text-[13pt] leading-relaxed border border-slate-300 overflow-x-auto space-y-6 animate-fadeIn">
                   
@@ -394,7 +394,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                     * Công cụ hỗ trợ, tham khảo dành cho giáo viên.
                   </div>
 
-                  {/* HEADER ĐỀ THI 2 DÒNG CHUẨN THÔNG TƯ 27 */}
+                  {/* HEADER ĐỀ KIỂM TRA 2 DÒNG CHUẨN THÔNG TƯ 27 */}
                   <div className="flex justify-between items-start text-center text-[12pt] border-b-2 border-slate-800 pb-3">
                     <div className="text-center font-bold">
                       <p className="uppercase">{schoolAgency}</p>

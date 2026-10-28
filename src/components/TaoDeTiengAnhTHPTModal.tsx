@@ -302,7 +302,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
               </div>
             </div>
 
-            {/* BẢNG CHỌN KHỐI LỚP, KỲ THI, SỐ MÃ ĐỀ & THÔNG TIN TRƯỜNG */}
+            {/* BẢNG CHỌN KHỐI LỚP, ĐỢT KIỂM TRA, SỐ MÃ ĐỀ & THÔNG TIN TRƯỜNG */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Cột trái: Cấu hình đề */}
               <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
@@ -374,11 +374,11 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   </select>
                 </div>
 
-                {/* BẢO CHỨNG BÀI NGHE PHÒNG THI */}
+                {/* BẢO CHỨNG BÀI NGHE PHÒNG KIỂM TRA */}
                 <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-[11px] text-emerald-300 flex items-center gap-2">
                   <Headphones className="w-4 h-4 shrink-0 text-emerald-400" />
                   <span>
-                    🔒 <strong>Bài nghe (Q1 - Q8)</strong> cố định 100% chung đáp án giữa các mã đề để học sinh nghe chung 1 file audio trong phòng thi.
+                    🔒 <strong>Bài nghe (Q1 - Q8)</strong> cố định 100% chung đáp án giữa các mã đề để học sinh nghe chung 1 file audio trong phòng kiểm tra.
                   </span>
                 </div>
               </div>
@@ -447,7 +447,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
               </div>
             </div>
 
-            {/* LIVE PREVIEW ĐỀ THI SƯ PHẠM CHUẨN */}
+            {/* LIVE PREVIEW ĐỀ KIỂM TRA SƯ PHẠM CHUẨN */}
             {examGenerated && (
               <div className="p-5 rounded-2xl bg-slate-950 border border-violet-500/40 space-y-4 animate-fadeIn shadow-2xl">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
@@ -481,19 +481,19 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                   </div>
                 </div>
 
-                {/* VĂN BẢN ĐỀ THI CHUẨN SƯ PHẠM (TIMES NEW ROMAN 13PT, ĐÁP ÁN ĐÚNG IN ĐỎ BOLD=FALSE) */}
+                {/* VĂN BẢN ĐỀ KIỂM TRA CHUẨN SƯ PHẠM (TIMES NEW ROMAN 13PT, ĐÁP ÁN ĐÚNG IN ĐỎ BOLD=FALSE) */}
                 <div
                   id="thpt-exam-paper"
                   className="bg-white text-black p-6 rounded-xl font-serif text-[13pt] leading-relaxed space-y-4 shadow-lg max-h-[460px] overflow-y-auto select-text border border-slate-300"
                   style={{ fontFamily: '"Times New Roman", Times, serif' }}
                 >
-                  {/* TIÊU ĐỀ ĐỀ THI 2 CỘT */}
+                  {/* TIÊU ĐỀ ĐỀ KIỂM TRA 2 CỘT */}
                   <div className="grid grid-cols-2 text-center text-xs font-bold uppercase pb-3 border-b-2 border-black">
                     <div>
                       <p>{schoolAgency}</p>
                       <p className="font-extrabold text-blue-900">{schoolName}</p>
                       <p className="font-normal italic normal-case text-slate-700 mt-0.5">
-                        Mã đề thi: <strong className="text-black">{variantCodes[0]}</strong> (Kèm bộ {numVariants} mã đề: {variantCodes.join(', ')})
+                        Mã đề kiểm tra: <strong className="text-black">{variantCodes[0]}</strong> (Kèm bộ {numVariants} mã đề: {variantCodes.join(', ')})
                       </p>
                     </div>
                     <div>
@@ -511,7 +511,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                       A. MA TRẬN 16 CỘT &amp; BẢN ĐẶC TẢ KỸ THUẬT (CHUẨN BGD&amp;ĐT TỪ 2025)
                     </p>
                     <p className="italic text-center mt-0.5">
-                      Đề thi gồm 4 phần: Listening (2.0đ) • Language (2.5đ) • Reading (2.5đ) • Writing (1.0đ - 2.0đ) • Speaking test ({selectedTerm.startsWith('CK') ? '2.0đ' : '0.0đ'}).
+                      Đề kiểm tra gồm 4 phần: Listening (2.0đ) • Language (2.5đ) • Reading (2.5đ) • Writing (1.0đ - 2.0đ) • Speaking test ({selectedTerm.startsWith('CK') ? '2.0đ' : '0.0đ'}).
                     </p>
                   </div>
 

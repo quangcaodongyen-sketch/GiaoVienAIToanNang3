@@ -89,7 +89,7 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
   // Copy tin nhắn nhắc bạn
   const handleCopyRemind = () => {
     if (!remindTarget) return;
-    const txt = `📢 [NHẮC BÀI CÙNG TỔ ${remindTarget.team.teamNumber}] Chào bạn ${remindTarget.member.name} thân mến! ${remindTarget.team.name} lớp ${selectedClass} đang rất cần điểm thi đua của bạn để cùng vươn lên Top 1 Quán Quân! Bạn tranh thủ vào web làm 1-2 bài từ vựng và bài thi thử nhé. Cố lên bạn ơi! 🚀`;
+    const txt = `📢 [NHẮC BÀI CÙNG TỔ ${remindTarget.team.teamNumber}] Chào bạn ${remindTarget.member.name} thân mến! ${remindTarget.team.name} lớp ${selectedClass} đang rất cần điểm thi đua của bạn để cùng vươn lên Top 1 Quán Quân! Bạn tranh thủ vào web làm 1-2 bài từ vựng và bài kiểm tra thử nhé. Cố lên bạn ơi! 🚀`;
     navigator.clipboard.writeText(txt).then(() => {
       setCopiedRemindText(true);
       setTimeout(() => setCopiedRemindText(false), 3000);
@@ -322,7 +322,7 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
               </div>
             </div>
             <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1 list-disc list-inside leading-relaxed pt-1">
-              <li><strong>Tự giác học tập:</strong> Mỗi ngày hoàn thành từ vựng, giải đề cương, làm bài thi thử online.</li>
+              <li><strong>Tự giác học tập:</strong> Mỗi ngày hoàn thành từ vựng, giải đề cương, làm bài kiểm tra thử online.</li>
               <li><strong>Đóng góp điểm số:</strong> 100% điểm cá nhân kiếm được sẽ cộng thẳng vào Tổng Điểm của Tổ.</li>
               <li><strong>Tinh thần đồng đội:</strong> Tương trợ, hỏi bạn và chia sẻ kinh nghiệm học tập tiếng Anh.</li>
             </ul>
@@ -706,7 +706,7 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
 
               {/* NỘI DUNG TIN NHẮN MẪU THÂN THIỆN */}
               <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs leading-relaxed text-slate-800 dark:text-slate-200 italic font-medium">
-                "📢 [NHẮC BÀI CÙNG TỔ {remindTarget.team.teamNumber}] Chào bạn {remindTarget.member.name} thân mến! {remindTarget.team.name} lớp {selectedClass} đang rất cần điểm thi đua của bạn để cùng vươn lên Top 1 Quán Quân! Bạn tranh thủ vào web làm 1-2 bài từ vựng và bài thi thử nhé. Cố lên bạn ơi! 🚀"
+                "📢 [NHẮC BÀI CÙNG TỔ {remindTarget.team.teamNumber}] Chào bạn {remindTarget.member.name} thân mến! {remindTarget.team.name} lớp {selectedClass} đang rất cần điểm thi đua của bạn để cùng vươn lên Top 1 Quán Quân! Bạn tranh thủ vào web làm 1-2 bài từ vựng và bài kiểm tra thử nhé. Cố lên bạn ơi! 🚀"
               </div>
 
               <div className="flex items-center gap-2">

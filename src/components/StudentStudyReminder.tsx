@@ -97,7 +97,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm sm:text-base font-black text-white tracking-tight flex items-center gap-1.5">
-                <span>LỜI NHẮC ÔN THI &amp; TĂNG ĐIỂM SỐ</span>
+                <span>LỜI NHẮC ÔN TẬP &amp; TĂNG ĐIỂM SỐ</span>
               </h3>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 shadow-xs">
                 Thầy Đinh Thành
@@ -107,7 +107,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-blue-200/90 font-medium mt-0.5">
-              Rèn kỹ năng nhận dạng đề thi Giữa Kỳ 1 (GK1) • Học từ vựng trọng tâm • Tăng điểm thi đua siêu tốc
+              Rèn kỹ năng nhận dạng đề kiểm tra Giữa Kỳ 1 (GK1) • Học từ vựng trọng tâm • Tăng điểm thi đua siêu tốc
             </p>
           </div>
         </div>
@@ -180,14 +180,14 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
       {/* 3. KHI MỞ RỘNG: 3 CARD NHẮC NHỞ HÀNH ĐỘNG CỐT LÕI */}
       {isExpanded && (
         <div className="p-4 sm:p-5 space-y-4">
-          {/* CAM KẾT BẢO MẬT ĐỀ THI HỌC ĐƯỜNG */}
+          {/* CAM KẾT BẢO MẬT ĐỀ KIỂM TRA HỌC ĐƯỜNG */}
           <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start sm:items-center gap-3 text-amber-900 dark:text-amber-200">
             <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 font-bold shadow-xs text-base">
               🔒
             </div>
             <div className="text-xs sm:text-sm leading-relaxed">
-              <strong className="font-black text-amber-950 dark:text-amber-100 uppercase">Quy Chế Bảo Mật Đề Thi:</strong>{' '}
-              Toàn bộ bài tập và đề thi trên website là <strong>ĐỀ THI THỬ MINH HỌA &amp; LUYỆN TẬP MÔ PHỎNG</strong> theo ma trận Công văn 7991/BGDĐT.
+              <strong className="font-black text-amber-950 dark:text-amber-100 uppercase">Quy Chế Bảo Mật Đề Kiểm Tra:</strong>{' '}
+              Toàn bộ bài tập và đề kiểm tra trên website là <strong>ĐỀ KIỂM TRA THỬ MINH HỌA &amp; LUYỆN TẬP MÔ PHỎNG</strong> theo ma trận Công văn 7991/BGDĐT.
               Website <strong>TUYỆT ĐỐI KHÔNG ĐƯA ĐỀ KIỂM TRA CHÍNH THỨC</strong> của nhà trường lên mạng internet để bảo đảm tuyệt đối tính bảo mật và công bằng học tập cho học sinh.
             </div>
           </div>
@@ -235,10 +235,10 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
               <div className="p-3 rounded-xl bg-black/30 border border-emerald-400/20 space-y-1">
                 <div className="font-black text-emerald-300 flex items-center gap-1.5">
-                  <span>💻 3. Luyện Thi Thử Trên Web</span>
+                  <span>💻 3. Luyện Kiểm Tra Thử Trên Web</span>
                 </div>
                 <p className="text-blue-100/90 leading-relaxed text-[11px]">
-                  Vào mục <strong>"Thi Thử Online"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận dạng câu hỏi và kỹ năng phân bổ thời gian làm bài hợp lý.
+                  Vào mục <strong>"Kiểm Tra Thử Online"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận dạng câu hỏi và kỹ năng phân bổ thời gian làm bài hợp lý.
                 </p>
               </div>
 
@@ -254,7 +254,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {/* LỜI NHẮC 1: LÀM BÀI THI ONLINE ĐỀ GIỮA KỲ 1 (GK1) */}
+            {/* LỜI NHẮC 1: LÀM BÀI KIỂM TRA ONLINE ĐỀ GIỮA KỲ 1 (GK1) */}
             <div className="rounded-2xl bg-[#0B1E36]/90 border border-amber-400/40 p-4 flex flex-col justify-between shadow-md hover:border-amber-300 transition-all group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
@@ -267,7 +267,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                 </div>
 
                 <h4 className="text-sm sm:text-base font-black text-white group-hover:text-amber-300 transition-colors">
-                  Thi Thử Online Đề Minh Họa GK1 (Lớp {grade})
+                  Kiểm Tra Thử Online Đề Minh Họa GK1 (Lớp {grade})
                 </h4>
 
                 <p className="text-xs text-blue-100/90 leading-relaxed mt-1.5 font-normal">
@@ -291,10 +291,10 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                   type="button"
                   onClick={onGoToExam}
                   className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
-                  title="Mở phân hệ Đề Thi Online Giữa Kỳ 1"
+                  title="Mở phân hệ Đề Kiểm Tra Online Giữa Kỳ 1"
                 >
                   <Award className="w-4 h-4 text-slate-950" />
-                  <span>Vào Thi Thử Minh Họa GK1</span>
+                  <span>Vào Kiểm Tra Thử Minh Họa GK1</span>
                 </button>
                 <button
                   type="button"
@@ -324,7 +324,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                 </h4>
 
                 <p className="text-xs text-blue-100/90 leading-relaxed mt-1.5 font-normal">
-                  <strong>Mục đích:</strong> Từ vựng Unit 1 - 3 chiếm 50% điểm số bài thi GK1. Mỗi bài từ vựng hoàn thành giúp em nhận ngay <strong>+15đ thi đua</strong> (+35% ngày vàng) để bứt phá bảng xếp hạng toàn trường!
+                  <strong>Mục đích:</strong> Từ vựng Unit 1 - 3 chiếm 50% điểm số bài kiểm tra GK1. Mỗi bài từ vựng hoàn thành giúp em nhận ngay <strong>+15đ thi đua</strong> (+35% ngày vàng) để bứt phá bảng xếp hạng toàn trường!
                 </p>
 
                 <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px]">
@@ -418,13 +418,13 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
           </div>
 
-          {/* 4. MẸO SƯ PHẠM NHẬN DẠNG ĐỀ THI GK1 CỦA THẦY ĐINH THÀNH */}
+          {/* 4. MẸO SƯ PHẠM NHẬN DẠNG ĐỀ KIỂM TRA GK1 CỦA THẦY ĐINH THÀNH */}
           <div className="p-3.5 sm:p-4 rounded-xl bg-blue-950/60 border border-blue-400/30">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-amber-400 text-base">💡</span>
                 <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide">
-                  Phương Pháp Tư Duy & Kỹ Năng Làm Bài Thi Minh Họa Của Thầy Thành
+                  Phương Pháp Tư Duy & Kỹ Năng Làm Bài Kiểm Tra Minh Họa Của Thầy Thành
                 </span>
               </div>
               <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg text-[11px] font-bold">
@@ -470,7 +470,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             {/* NỘI DUNG MẸO TƯƠNG ỨNG */}
             <div className="text-xs text-blue-100 leading-relaxed bg-[#0B1E36]/80 p-3 rounded-lg border border-blue-500/20">
               <div className="mb-2 p-2 rounded bg-amber-500/10 border border-amber-400/20 text-[11px] text-amber-200">
-                🔒 <strong>Quy chế bảo mật &amp; sư phạm:</strong> Các bí quyết trên nhằm rèn phương pháp tư duy và kỹ năng làm bài tập Tiếng Anh nói chung. Tuyệt đối nghiêm cấm việc gợi ý hoặc ngụ ý câu hỏi có trong đề thi chính thức. Hệ thống nghiêm cấm lộ đề dưới mọi hình thức!
+                🔒 <strong>Quy chế bảo mật &amp; sư phạm:</strong> Các bí quyết trên nhằm rèn phương pháp tư duy và kỹ năng làm bài tập Tiếng Anh nói chung. Tuyệt đối nghiêm cấm việc gợi ý hoặc ngụ ý câu hỏi có trong đề kiểm tra chính thức. Hệ thống nghiêm cấm lộ đề dưới mọi hình thức!
               </div>
               {activeTipTab === 'pronunciation' && (
                 <div>

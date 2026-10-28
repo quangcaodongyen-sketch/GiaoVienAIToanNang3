@@ -7,7 +7,7 @@
 //    - Đề 1 (Biến thể nhẹ): Đổi từ vựng, tình huống, nhân vật; giữ nguyên ma trận ngữ pháp
 //    - Đề 2 (Biến thể trung bình): Đổi câu hỏi và ngữ cảnh, bài đọc viết mới theo chủ đề
 //    - Đề 3 (Biến thể sâu): Câu hỏi độc lập hoàn toàn, bám sát ma trận kiến thức
-// 3. Đầy đủ Đề thi + Đáp án (Audio Script, Sample Writing, Speaking cues & answers)
+// 3. Đầy đủ Đề kiểm tra + Đáp án (Audio Script, Sample Writing, Speaking cues & answers)
 // 4. Xuất file Microsoft Word (.doc) tham khảo dành cho giáo viên Sư phạm (A4, Times New Roman 13pt, ngắt trang section break)
 // ============================================================================
 
@@ -198,7 +198,7 @@ export function generateLocalPedagogicalVariants(originalText: string, gradeStr:
   // Biến thể 1: Biến thể nhẹ (Light variation)
   const variant1: ExamVariant = {
     title: `ĐỀ SỐ ${code1} (BIẾN THỂ NHẸ)`,
-    examContent: `PHẦN 1: ĐỀ THI
+    examContent: `PHẦN 1: ĐỀ KIỂM TRA
 
 UBND HUYỆN / THỊ XÃ ....................
 TRƯỜNG THCS ........................................
@@ -283,7 +283,7 @@ Participating in voluntary community projects is one of the most rewarding activ
   // Biến thể 2: Biến thể vừa (Medium variation)
   const variant2: ExamVariant = {
     title: `ĐỀ SỐ ${code2} (BIẾN THỂ TRUNG BÌNH)`,
-    examContent: `PHẦN 1: ĐỀ THI
+    examContent: `PHẦN 1: ĐỀ KIỂM TRA
 
 UBND HUYỆN / THỊ XÃ ....................
 TRƯỜNG THCS ........................................
@@ -369,7 +369,7 @@ Traditional craft villages are invaluable cultural treasures of Vietnam. By pres
   // Biến thể 3: Biến thể sâu / mới hơn (Deeper variation)
   const variant3: ExamVariant = {
     title: `ĐỀ SỐ ${code3} (BIẾN THỂ MỚI HOÀN TOÀN)`,
-    examContent: `PHẦN 1: ĐỀ THI
+    examContent: `PHẦN 1: ĐỀ KIỂM TRA
 
 UBND HUYỆN / THỊ XÃ ....................
 TRƯỜNG THCS ........................................
@@ -468,18 +468,18 @@ export async function generateVariantsWithGeminiClient(
   const systemInstruction = `Bạn là chuyên gia ra đề kiểm tra Tiếng Anh THCS (Trung học cơ sở, từ Lớp 6 đến Lớp 9). 
 Hãy tạo đúng 3 đề kiểm tra biến thể khác nhau từ đề gốc do giáo viên cung cấp.
 Giữ nguyên cấu trúc đề gốc bao gồm: số phần, số câu, dạng câu hỏi, mức độ khó, và ma trận kiến thức.
-Không tạo câu hỏi vượt quá trình độ học sinh THCS. Mỗi đề phải có phần đề thi và đáp án đầy đủ.
+Không tạo câu hỏi vượt quá trình độ học sinh THCS. Mỗi đề phải có phần đề kiểm tra và đáp án đầy đủ.
 
 Quy tắc đặt tiêu đề (Mã đề):
-- Tuyệt đối KHÔNG ghi các chữ như "Biến thể nhẹ", "Biến thể trung bình", "Biến thể mới hơn", "Đề 1", "Đề 2", "Đề 3" vào trong tiêu đề hoặc nội dung đề thi.
+- Tuyệt đối KHÔNG ghi các chữ như "Biến thể nhẹ", "Biến thể trung bình", "Biến thể mới hơn", "Đề 1", "Đề 2", "Đề 3" vào trong tiêu đề hoặc nội dung đề kiểm tra.
 - Thay vào đó, hãy dựa vào Lớp học của đề gốc để sinh mã đề tương ứng trong kết quả JSON (ví dụ: Lớp 6 thì ghi ĐỀ SỐ 601, ĐỀ SỐ 602, ĐỀ SỐ 603; Lớp 7 thì ghi ĐỀ SỐ 701, ĐỀ SỐ 702, ĐỀ SỐ 703; Lớp 8 thì ghi ĐỀ SỐ 801, ĐỀ SỐ 802, ĐỀ SỐ 803; Lớp 9 thì ghi ĐỀ SỐ 901, ĐỀ SỐ 902, ĐỀ SỐ 903).
-- Tiêu đề (title) của 3 đề thi trong kết quả JSON lần lượt là "ĐỀ SỐ [Grade]01", "ĐỀ SỐ [Grade]02", "ĐỀ SỐ [Grade]03".
+- Tiêu đề (title) của 3 đề kiểm tra trong kết quả JSON lần lượt là "ĐỀ SỐ [Grade]01", "ĐỀ SỐ [Grade]02", "ĐỀ SỐ [Grade]03".
 
 Quy tắc nội dung đáp án (Answers):
 - Phần đáp án (answers) phải đầy đủ và chi tiết cho tất cả các câu hỏi trắc nghiệm và tự luận.
-- Nếu đề thi có phần nghe (Listening): BẮT BUỘC phải đính kèm nội dung băng nghe chi tiết (Audio Script) vào ngay trước phần đáp án.
-- Nếu đề thi có phần viết (Writing): BẮT BUỘC cung cấp đoạn văn mẫu hoàn chỉnh chi tiết (không ghi dàn ý chung chung).
-- Nếu đề thi có phần nói (Speaking): BẮT BUỘC cung cấp chi tiết cả câu hỏi gợi ý và câu trả lời mẫu đầy đủ cho học sinh.
+- Nếu đề kiểm tra có phần nghe (Listening): BẮT BUỘC phải đính kèm nội dung băng nghe chi tiết (Audio Script) vào ngay trước phần đáp án.
+- Nếu đề kiểm tra có phần viết (Writing): BẮT BUỘC cung cấp đoạn văn mẫu hoàn chỉnh chi tiết (không ghi dàn ý chung chung).
+- Nếu đề kiểm tra có phần nói (Speaking): BẮT BUỘC cung cấp chi tiết cả câu hỏi gợi ý và câu trả lời mẫu đầy đủ cho học sinh.
 
 Quy tắc trình bày hỗ trợ sư phạm:
 - KHÔNG tự ý thêm tên xã, tên trường cụ thể mà để trống sư phạm: TRƯỜNG THCS: ....................
@@ -503,8 +503,8 @@ Mức độ biến thể của 3 đề:
           }
         },
         {
-          text: `Dưới đây là tệp tin đề thi gốc do giáo viên tải lên.
-Hãy đọc kỹ tệp tin này, nhận diện toàn bộ nội dung đề thi (bao gồm các phần trắc nghiệm, tự luận, bài đọc, câu hỏi và đáp án nếu có).
+          text: `Dưới đây là tệp tin đề kiểm tra gốc do giáo viên tải lên.
+Hãy đọc kỹ tệp tin này, nhận diện toàn bộ nội dung đề kiểm tra (bao gồm các phần trắc nghiệm, tự luận, bài đọc, câu hỏi và đáp án nếu có).
 Sau đó, tiến hành phân tích ma trận kiến thức của đề gốc này: Xác định môn, lớp, số phần, số câu, dạng câu hỏi, mức độ khó, chủ đề từ vựng và ngữ pháp.
 Tiếp theo, hãy sinh ra đúng 3 đề kiểm tra biến thể tương ứng theo đúng các quy tắc sinh đề và định dạng đặc biệt bắt buộc:
 - Đề biến thể số 1 (Đề [Grade]01)
@@ -512,8 +512,8 @@ Tiếp theo, hãy sinh ra đúng 3 đề kiểm tra biến thể tương ứng t
 - Đề biến thể số 3 (Đề [Grade]03)
 
 Mỗi đề biến thể bắt buộc phải có đầy đủ 2 phần chính:
-PHẦN 1: ĐỀ THI
-[Toàn bộ đề thi]
+PHẦN 1: ĐỀ KIỂM TRA
+[Toàn bộ đề kiểm tra]
 
 PHẦN 2: ĐÁP ÁN
 [Toàn bộ đáp án chi tiết, Audio Script, đoạn văn mẫu Writing và bài nói Speaking]`
@@ -524,20 +524,20 @@ PHẦN 2: ĐÁP ÁN
     contents.push({
       parts: [
         {
-          text: `Dưới đây là đề thi gốc do giáo viên cung cấp:
+          text: `Dưới đây là đề kiểm tra gốc do giáo viên cung cấp:
 ---
 ${originalExamText}
 ---
 
-Hãy phân tích đề thi gốc này: Xác định môn, lớp, số phần, số câu, dạng câu hỏi, mức độ khó, chủ đề từ vựng và ngữ pháp.
+Hãy phân tích đề kiểm tra gốc này: Xác định môn, lớp, số phần, số câu, dạng câu hỏi, mức độ khó, chủ đề từ vựng và ngữ pháp.
 Sau đó, sinh ra đúng 3 đề biến thể tương ứng:
 - Đề biến thể số 1 (Đề [Grade]01)
 - Đề biến thể số 2 (Đề [Grade]02)
 - Đề biến thể số 3 (Đề [Grade]03)
 
 Mỗi đề biến thể bắt buộc phải có đầy đủ 2 phần chính:
-PHẦN 1: ĐỀ THI
-[Toàn bộ đề thi]
+PHẦN 1: ĐỀ KIỂM TRA
+[Toàn bộ đề kiểm tra]
 
 PHẦN 2: ĐÁP ÁN
 [Toàn bộ đáp án chi tiết, Audio Script, đoạn văn mẫu Writing và bài nói Speaking]`
@@ -708,7 +708,7 @@ export function exportBientheToWordHtml(
         </tr>
       </table>
 
-      <!-- NỘI DUNG ĐỀ THI -->
+      <!-- NỘI DUNG ĐỀ KIỂM TRA -->
       <div style="font-size: 12.5pt; text-align: justify; line-height: 1.25;">
         ${v.examContent
           .split("\n")

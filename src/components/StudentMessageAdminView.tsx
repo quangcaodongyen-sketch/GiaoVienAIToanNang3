@@ -420,9 +420,9 @@ export const StudentMessageAdminView: React.FC<StudentMessageAdminViewProps> = (
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
                 >
                   <option value="Hỏi bài tập">❓ Hỏi bài tập & Ngữ pháp Tiếng Anh</option>
-                  <option value="Báo lỗi đề thi / bài tập">⚠️ Báo lỗi câu hỏi đề thi / bài tập</option>
+                  <option value="Báo lỗi đề kiểm tra / bài tập">⚠️ Báo lỗi câu hỏi đề kiểm tra / bài tập</option>
                   <option value="Thắc mắc tài khoản / điểm số">🔑 Thắc mắc tài khoản / Điểm số thi đua</option>
-                  <option value="Xin thêm tài liệu ôn thi">📚 Xin thêm tài liệu & Đề cương ôn thi</option>
+                  <option value="Xin thêm tài liệu ôn tập">📚 Xin thêm tài liệu & Đề cương ôn tập</option>
                   <option value="Góp ý xây dựng trang web">💡 Góp ý xây dựng và hoàn thiện website</option>
                   <option value="Khác">💬 Nội dung khác</option>
                 </select>

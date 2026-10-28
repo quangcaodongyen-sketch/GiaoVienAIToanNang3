@@ -458,7 +458,7 @@ Kính nhờ Thầy hỗ trợ cài đặt & đồng hành sư phạm và hỗ tr
                   <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-2xl shadow-sm">
                     📝
                   </div>
-                  <h4 className="font-black text-white text-base uppercase">CHƯA KHỞI TẠO ĐỀ THI {curSub.name.toUpperCase()}</h4>
+                  <h4 className="font-black text-white text-base uppercase">CHƯA KHỞI TẠO ĐỀ KIỂM TRA {curSub.name.toUpperCase()}</h4>
                   <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
                     Thầy/Cô vui lòng chọn <b>Khối lớp</b>, <b>Kỳ kiểm tra</b> ở trên và bấm nút:
                     <br/>
@@ -472,7 +472,7 @@ Kính nhờ Thầy hỗ trợ cài đặt & đồng hành sư phạm và hỗ tr
                 </div>
               )}
 
-              {/* KHUNG HIỂN THỊ KẾT QUẢ ĐỀ THI KHI ĐÃ BẤM TẠO ĐỀ */}
+              {/* KHUNG HIỂN THỊ KẾT QUẢ ĐỀ KIỂM TRA KHI ĐÃ BẤM TẠO ĐỀ */}
               {generatedPreview && (
                 <div className="p-4 rounded-2xl bg-white text-slate-900 border border-slate-200 shadow-md space-y-2">
                   <div className="flex items-center justify-between border-b pb-2 border-slate-200">
@@ -481,7 +481,7 @@ Kính nhờ Thầy hỗ trợ cài đặt & đồng hành sư phạm và hỗ tr
                       type="button"
                       onClick={() => {
                         navigator.clipboard.writeText(generatedPreview);
-                        alert('Đã sao chép nội dung đề thi!');
+                        alert('Đã sao chép nội dung đề kiểm tra!');
                       }}
                       className="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer"
                     >

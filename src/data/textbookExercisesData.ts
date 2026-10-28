@@ -8815,7 +8815,7 @@ export const TEXTBOOK_UNITS_DATA: SGKUnit[] = [
               "university"
             ],
             "correctAnswer": 0,
-            "explanation": "Khởi động bài học (Getting Started): Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+            "explanation": "Khởi động bài học (Getting Started): Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
             "section": "1. Getting Started"
           },
           {
@@ -9064,7 +9064,7 @@ export const TEXTBOOK_UNITS_DATA: SGKUnit[] = [
               "university"
             ],
             "correctAnswer": 0,
-            "explanation": "Kỹ năng Đọc - Nói (Skills 1): Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+            "explanation": "Kỹ năng Đọc - Nói (Skills 1): Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
             "section": "5. Skills 1"
           },
           {

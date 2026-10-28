@@ -305,12 +305,12 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                 </div>
               </div>
 
-              {/* BẢNG ĐIỀU KHIỂN THIẾT LẬP ĐỀ THI TIỂU HỌC */}
+              {/* BẢNG ĐIỀU KHIỂN THIẾT LẬP ĐỀ KIỂM TRA TIỂU HỌC */}
               <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
                     <Sliders className="w-4 h-4 text-amber-400" />
-                    CẤU HÌNH THÔNG SỐ ĐỀ THI TIỂU HỌC (GLOBAL SUCCESS)
+                    CẤU HÌNH THÔNG SỐ ĐỀ KIỂM TRA TIỂU HỌC (GLOBAL SUCCESS)
                   </h3>
                   <span className="text-xs text-slate-400">
                     Mã máy: <span className="font-mono text-amber-300 font-bold">{detectedMid}</span>
@@ -431,7 +431,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                 </div>
               </div>
 
-              {/* KHUNG XEM TRƯỚC ĐỀ THI ĐẠT CHUẨN SƯ PHẠM (TIMES NEW ROMAN 13PT) */}
+              {/* KHUNG XEM TRƯỚC ĐỀ KIỂM TRA ĐẠT CHUẨN SƯ PHẠM (TIMES NEW ROMAN 13PT) */}
               {examGenerated && (
                 <div className="rounded-2xl border border-slate-700 bg-white text-slate-900 shadow-2xl overflow-hidden font-serif">
                   

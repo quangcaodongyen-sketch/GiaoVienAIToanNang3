@@ -578,7 +578,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
           )}
 
           {/* ========================================================================= */}
-          {/* TAB 3: XEM MẪU ĐỀ THI 15 PHÚT (GLOBAL SUCCESS) */}
+          {/* TAB 3: XEM MẪU ĐỀ KIỂM TRA 15 PHÚT (GLOBAL SUCCESS) */}
           {/* ========================================================================= */}
           {activeTab === ('preview' as any) && (
             <div className="space-y-5">
@@ -847,7 +847,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     <div className="max-w-md mx-auto border-2 border-slate-800 p-4 rounded-lg bg-slate-50">
                       <div className="grid grid-cols-2 gap-4 text-left text-xs">
                         <div>
-                          <div><b>Mã đề thi:</b> [{activeCodeDisplay}]</div>
+                          <div><b>Mã đề kiểm tra:</b> [{activeCodeDisplay}]</div>
                           <div><b>Họ và tên:</b> ..............................</div>
                         </div>
                         <div>

@@ -744,10 +744,10 @@ startxref
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                       <span className="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
-                        <Check className="w-3.5 h-3.5" /> 2. Gộp Giáo Án & Đề Thi Siêu Tốc
+                        <Check className="w-3.5 h-3.5" /> 2. Gộp Giáo Án & Đề Kiểm Tra Siêu Tốc
                       </span>
                       <p className="text-[11px] text-slate-300 leading-relaxed">
-                        Kéo thả sắp xếp thứ tự các tệp bài giảng, tài liệu ôn tập và đề thi thành 1 file duy nhất với tốc độ tức thì, không làm giảm chất lượng chữ và hình.
+                        Kéo thả sắp xếp thứ tự các tệp bài giảng, tài liệu ôn tập và đề kiểm tra thành 1 file duy nhất với tốc độ tức thì, không làm giảm chất lượng chữ và hình.
                       </p>
                     </div>
 
@@ -765,7 +765,7 @@ startxref
                         <Check className="w-3.5 h-3.5" /> 4. Xử Lý Offline Trực Tiếp Trên Máy
                       </span>
                       <p className="text-[11px] text-slate-300 leading-relaxed">
-                        Dữ liệu được xử lý trực tiếp bằng công nghệ WebAssembly ngay trên máy tính của bạn, tuyệt đối không gửi lên server, bảo vệ 100% bí mật đề thi.
+                        Dữ liệu được xử lý trực tiếp bằng công nghệ WebAssembly ngay trên máy tính của bạn, tuyệt đối không gửi lên server, bảo vệ 100% bí mật đề kiểm tra.
                       </p>
                     </div>
                   </div>
@@ -819,7 +819,7 @@ startxref
                     <ShieldCheck className="w-4 h-4 text-pink-400" /> Ưu Điểm Độc Quyền
                   </h4>
                   <ul className="text-xs text-slate-300 space-y-1.5 list-disc pl-4">
-                    <li>Xử lý trực tiếp trên máy tính, không sợ lộ đề thi, giáo án.</li>
+                    <li>Xử lý trực tiếp trên máy tính, không sợ lộ đề kiểm tra, giáo án.</li>
                     <li>Không giới hạn dung lượng và số lượng tệp cần gộp.</li>
                     <li>Giữ nguyên độ sắc nét chuẩn in ấn 300dpi.</li>
                   </ul>

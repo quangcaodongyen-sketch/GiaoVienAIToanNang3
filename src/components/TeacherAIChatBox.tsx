@@ -229,7 +229,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
       return {
         text: '🔬 **PHẦN MỀM TẠO ĐỀ KHOA HỌC TỰ NHIÊN THCS (CV 7991)**\n\n' +
           '• Phân bổ mạch kiến thức chuẩn Bộ GD&ĐT: Chất và sự biến đổi của chất (Hóa), Vật sống (Sinh), Năng lượng và sự biến đổi (Lý), Trái Đất và bầu trời.\n' +
-          '• Tự động tạo ma trận, bản đặc tả và đề thi chuẩn đẹp kèm công thức và ký hiệu hóa học chuẩn.',
+          '• Tự động tạo ma trận, bản đặc tả và đề kiểm tra chuẩn đẹp kèm công thức và ký hiệu hóa học chuẩn.',
         actions: [
           { label: '🚀 MỞ CÔNG CỤ TẠO ĐỀ KHTN NGAY', actionType: 'open-modal' as const, appId: 'tao-de-khtn-thcs', subjectKey: 'KHTN', primary: true },
           { label: '📦 Tải Bản Nén (.ZIP Pass: 123)', actionType: 'open-url' as const, url: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing' },
@@ -251,7 +251,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
       return {
         text: '📖 **PHẦN MỀM TẠO ĐỀ NGỮ VĂN THCS & THPT (CV 7991 & 2025+)**\n\n' +
           '• Chuẩn cấu trúc: Phần Đọc hiểu (ngữ liệu ngoài SGK) + Phần Viết (nghị luận xã hội / nghị luận văn học).\n' +
-          '• Xuất ma trận, bản đặc tả, đề thi và thang điểm hướng dẫn chấm chi tiết, biểu điểm barem chuẩn Bộ.',
+          '• Xuất ma trận, bản đặc tả, đề kiểm tra và thang điểm hướng dẫn chấm chi tiết, biểu điểm barem chuẩn Bộ.',
         actions: [
           { label: '🚀 MỞ CÔNG CỤ TẠO ĐỀ VĂN THCS', actionType: 'open-modal' as const, appId: 'tao-de-van-thcs', subjectKey: 'VAN', primary: true },
           { label: '🌟 Mở Tạo Đề Ngữ Văn THPT', actionType: 'open-modal' as const, appId: 'tao-de-thpt-subject', subjectKey: 'NGUVAN' },
@@ -912,7 +912,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
                   <span>Cam kết đồng hành cùng Thầy/Cô:</span>
                 </div>
                 <p>• Hỗ trợ cài đặt từ xa qua UltraViewer / AnyDesk miễn phí 100%.</p>
-                <p>• Bảo hành và tự động cập nhật ngân hàng đề thi trong suốt năm học.</p>
+                <p>• Bảo hành và tự động cập nhật ngân hàng đề kiểm tra trong suốt năm học.</p>
                 <p>• Giải đáp thắc mắc chuyên môn ra đề và thể thức văn bản Nghị định 30/2020.</p>
               </div>
             </div>

@@ -195,7 +195,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
     }
 
     if (!originalExamText.trim() && !uploadedFile) {
-      setErrorMessage("Vui lòng tải lên file đề thi gốc hoặc chọn một đề kiểm tra mẫu bên dưới!");
+      setErrorMessage("Vui lòng tải lên file đề kiểm tra gốc hoặc chọn một đề kiểm tra mẫu bên dưới!");
       return;
     }
 
@@ -421,7 +421,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                     BẢN XEM TRƯỚC & DÙNG THỬ CÔNG NGHỆ SINH ĐỀ BIẾN THỂ AI
                   </div>
                   <p className="text-slate-300 mt-1 leading-relaxed">
-                    Chức năng trên web dùng thử giới hạn 5 lượt. Để phân tích toàn diện ma trận đề thi không giới hạn, sinh 3 đề biến thể tương đương và xuất tệp Word .docx chuẩn in ấn cho máy tính của Thầy/Cô, vui lòng tải phần mềm Desktop và hỗ trợ cài đặt bản Pro đầy đủ.
+                    Chức năng trên web dùng thử giới hạn 5 lượt. Để phân tích toàn diện ma trận đề kiểm tra không giới hạn, sinh 3 đề biến thể tương đương và xuất tệp Word .docx chuẩn in ấn cho máy tính của Thầy/Cô, vui lòng tải phần mềm Desktop và hỗ trợ cài đặt bản Pro đầy đủ.
                   </p>
                 </div>
               </div>
@@ -448,7 +448,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                       ĐANG TIẾP TỤC CẬP NHẬT & TIẾP NHẬN GÓP Ý
                     </span>
                   </div>
-                  Phần mềm Sinh 3 đề biến thể hiện <strong>đang được tiếp tục cập nhật và hoàn thiện</strong> thuật toán hoán vị và đảo đề thi. Do mỗi bộ môn và nhà trường có thể có dạng đề đặc thù riêng, Thầy/Cô có mẫu đề chuẩn hoặc ý tưởng mong muốn xin vui lòng <strong>góp ý qua Zalo ({BRAND.phone})</strong> để Thầy Thành tối ưu thuật toán tạo ra sản phẩm như ý muốn của Thầy/Cô!
+                  Phần mềm Sinh 3 đề biến thể hiện <strong>đang được tiếp tục cập nhật và hoàn thiện</strong> thuật toán hoán vị và đảo đề kiểm tra. Do mỗi bộ môn và nhà trường có thể có dạng đề đặc thù riêng, Thầy/Cô có mẫu đề chuẩn hoặc ý tưởng mong muốn xin vui lòng <strong>góp ý qua Zalo ({BRAND.phone})</strong> để Thầy Thành tối ưu thuật toán tạo ra sản phẩm như ý muốn của Thầy/Cô!
                 </div>
               </div>
               <a
@@ -469,7 +469,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
                   <h3 className="font-extrabold text-sm text-amber-300">
-                    BƯỚC 1: TẢI ĐỀ THI GỐC LÊN HOẶC CHỌN ĐỀ MẪU GLOBAL SUCCESS THCS
+                    BƯỚC 1: TẢI ĐỀ KIỂM TRA GỐC LÊN HOẶC CHỌN ĐỀ MẪU GLOBAL SUCCESS THCS
                   </h3>
                 </div>
 
@@ -600,7 +600,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                       setOriginalExamText(e.target.value);
                       if (uploadedFile) setUploadedFile(null);
                     }}
-                    placeholder="Hoặc dán toàn bộ nội dung đề thi gốc (Câu hỏi, bài đọc, đáp án nếu có) vào đây..."
+                    placeholder="Hoặc dán toàn bộ nội dung đề kiểm tra gốc (Câu hỏi, bài đọc, đáp án nếu có) vào đây..."
                     className="w-full flex-1 p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-200 placeholder-slate-500 font-mono focus:outline-none focus:border-amber-400 resize-none"
                   />
                   
@@ -774,7 +774,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                 {/* 3. EXAM PAPER PREVIEW CONTAINER */}
                 <div className="p-4 sm:p-6 rounded-2xl bg-white text-slate-900 shadow-xl max-h-[560px] overflow-y-auto selection:bg-amber-100 font-serif border border-slate-300">
                   
-                  {/* PAPER TOP SWITCH (ĐỀ THI / ĐÁP ÁN) */}
+                  {/* PAPER TOP SWITCH (ĐỀ KIỂM TRA / ĐÁP ÁN) */}
                   <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 font-sans">
                     <div className="flex items-center gap-2">
                       <span className="font-extrabold text-sm text-slate-900">
@@ -792,7 +792,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                             : "text-slate-600 hover:text-slate-900"
                         }`}
                       >
-                        Xem Đề Thi
+                        Xem Đề Kiểm Tra
                       </button>
                       <button
                         type="button"
@@ -812,7 +812,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   {!isProActive && (
                     <div className="mb-4 p-3 rounded-xl bg-red-50 border-2 border-dashed border-red-500 text-center font-sans">
                       <div className="text-xs font-black text-red-600 uppercase tracking-wide">
-                        ⚠️ ĐỀ THI ĐANG XEM Ở CHẾ ĐỘ DÙNG THỬ (CÒN {trialRemaining}/5 LƯỢT)
+                        ⚠️ ĐỀ KIỂM TRA ĐANG XEM Ở CHẾ ĐỘ DÙNG THỬ (CÒN {trialRemaining}/5 LƯỢT)
                       </div>
                       <div className="text-[11px] text-red-800 mt-0.5">
                         Tác giả & Hỗ trợ kỹ thuật: <strong>Tác giả Đinh Thành - ĐT: 0915.213717</strong> (Hotline/Zalo: <strong>0915.213717</strong>)
@@ -908,7 +908,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   </div>
                   <h5 className="font-bold text-slate-200 text-xs">Bộ Đề Mẫu Chuẩn Khối 6-9</h5>
                   <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Trọn bộ 20 đề thi mẫu bám sát SGK Global Success mới nhất kèm ma trận và bảng đặc tả.
+                    Trọn bộ 20 đề kiểm tra mẫu bám sát SGK Global Success mới nhất kèm ma trận và bảng đặc tả.
                   </p>
                 </div>
                 <a
@@ -949,7 +949,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   </div>
                   <h5 className="font-bold text-slate-200 text-xs">Cẩm Nang Sư Phạm AI</h5>
                   <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Tài liệu hướng dẫn ứng dụng AI để sinh đề thi phân hóa và chống học vẹt hiệu quả.
+                    Tài liệu hướng dẫn ứng dụng AI để sinh đề kiểm tra phân hóa và chống học vẹt hiệu quả.
                   </p>
                 </div>
                 <a
@@ -971,7 +971,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
                 <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <strong className="text-amber-400 block font-bold">1. Chuẩn bị đề thi gốc</strong>
+                  <strong className="text-amber-400 block font-bold">1. Chuẩn bị đề kiểm tra gốc</strong>
                   <p className="text-slate-400 leading-relaxed">
                     Thầy/Cô kéo thả tệp Word, PDF hoặc dán nội dung văn bản đề kiểm tra cần nhân bản vào khung làm việc.
                   </p>
@@ -1133,7 +1133,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">✓</span>
-                    <span><strong>Thuật toán hoán vị AI:</strong> Tự động phân tích đề gốc và tạo 3 đề biến thể tương đương chống quay cóp trong phòng thi.</span>
+                    <span><strong>Thuật toán hoán vị AI:</strong> Tự động phân tích đề gốc và tạo 3 đề biến thể tương đương chống quay cóp trong phòng kiểm tra.</span>
                   </div>
                 </div>
                 <div className="space-y-2">

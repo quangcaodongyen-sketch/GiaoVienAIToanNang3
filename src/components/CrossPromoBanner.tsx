@@ -28,7 +28,7 @@ const PROMO_ITEMS: PromoItem[] = [
     id: 'taode',
     badge: 'CV 7991',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    text: 'Sinh ma trận, bản đặc tả & đề thi 12 môn THCS với đáp án đúng chữ đỏ tiện chấm bài',
+    text: 'Sinh ma trận, bản đặc tả & đề kiểm tra 12 môn THCS với đáp án đúng chữ đỏ tiện chấm bài',
     highlightText: 'Ma Trận & Đặc Tả',
     actionText: 'Trải Nghiệm Ngay',
     hash: '#tao-de-tieng-anh'
@@ -48,7 +48,7 @@ const PROMO_ITEMS: PromoItem[] = [
     id: 'bienthe',
     badge: 'CHỐNG QUAY CÓP',
     badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-    text: 'Sinh 3 đề biến thể tương đương từ đề thi gốc kèm hướng dẫn chấm và audio script',
+    text: 'Sinh 3 đề biến thể tương đương từ đề kiểm tra gốc kèm hướng dẫn chấm và audio script',
     highlightText: 'Sinh Đề Biến Thể VIP',
     actionText: 'Dùng Thử 5 Lượt',
     hash: '#sinh-de-bien-the'

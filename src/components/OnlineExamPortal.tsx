@@ -88,7 +88,7 @@ interface PartAudioPlayerProps {
 
 
 /* =================================================================
-   SPEAKING STUDIO CK - PHÒNG THI NÓI & GHI ÂM CHẤM ĐIỂM AI CHUẨN BGD
+   SPEAKING STUDIO CK - PHÒNG KIỂM TRA NÓI & GHI ÂM CHẤM ĐIỂM AI CHUẨN BGD
    Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717)
    ================================================================= */
 interface SpeakingStudioCKProps {
@@ -376,7 +376,7 @@ const SpeakingStudioCK: React.FC<SpeakingStudioCKProps> = ({ grade, examCode, is
         durationSec: dur,
         strengths: "Em có phong thái tự tin, âm lượng to rõ ràng, trình bày mạch lạc và đúng trọng tâm câu hỏi của Giám khảo.",
         improvements: "Em hãy chú ý nhấn đúng trọng âm của từ (stress) và phát âm rõ âm đuôi (ending sounds: /s/, /z/, /ed/) để bài nói thêm phần tự nhiên và truyền cảm nhé.",
-        encouragement: "Thầy rất khen ngợi tinh thần học tập và sự nỗ lực của em! Em hãy tiếp tục ghi âm luyện nói đều đặn mỗi ngày để đạt điểm 10 trọn vẹn trong bài thi Cuối kỳ nhé!"
+        encouragement: "Thầy rất khen ngợi tinh thần học tập và sự nỗ lực của em! Em hãy tiếp tục ghi âm luyện nói đều đặn mỗi ngày để đạt điểm 10 trọn vẹn trong bài kiểm tra Cuối kỳ nhé!"
       };
 
       setEvaluation(evalData);
@@ -404,7 +404,7 @@ const SpeakingStudioCK: React.FC<SpeakingStudioCKProps> = ({ grade, examCode, is
             <span>KỸ NĂNG NÓI & KHẢO THÍ CHUẨN BỘ GD&ĐT (CUỐI KỲ)</span>
           </div>
           <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <span>🗣️ BÀI THI NÓI (SPEAKING TEST) – THANG ĐIỂM: 2.0 ĐIỂM</span>
+            <span>🗣️ BÀI KIỂM TRA NÓI (SPEAKING TEST) – THANG ĐIỂM: 2.0 ĐIỂM</span>
           </h3>
           <p className="text-xs sm:text-sm text-purple-900/80 mt-1 font-medium">
             Chủ đề: <strong className="text-purple-950 font-bold">{topicConfig.topicTitle}</strong> (Tiếng Anh {grade} Global Success)
@@ -523,7 +523,7 @@ const SpeakingStudioCK: React.FC<SpeakingStudioCKProps> = ({ grade, examCode, is
           {/* Header Score & Badge */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-purple-100 pb-4 mb-4">
             <div>
-              <span className="text-xs font-black text-purple-700 uppercase tracking-wider">KẾT QUẢ KHẢO THÍ BÀI THI NÓI (SPEAKING TEST)</span>
+              <span className="text-xs font-black text-purple-700 uppercase tracking-wider">KẾT QUẢ KHẢO THÍ BÀI KIỂM TRA NÓI (SPEAKING TEST)</span>
               <h4 className="text-lg font-black text-slate-900 tracking-tight mt-0.5">
                 BẢNG ĐIỂM CHI TIẾT THEO 4 TIÊU CHÍ CHUẨN BỘ GD&ĐT
               </h4>
@@ -1084,7 +1084,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       return;
     }
 
-    // Nếu đề thi có sẵn file audio mp3 (chuẩn phòng thu), ưu tiên phát audioRef
+    // Nếu đề kiểm tra có sẵn file audio mp3 (chuẩn phòng thu), ưu tiên phát audioRef
     if (currentExam?.audioUrl && audioRef.current) {
       audioRef.current.src = currentExam.audioUrl;
       audioRef.current.playbackRate = playbackSpeed;
@@ -1423,7 +1423,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
         levelTitle: 'Mức Tốt (Giỏi)',
         badgeText: 'Tốt (Giỏi) 🌟',
         ruleNote: 'Chuẩn Thông tư 22/2021/TT-BGDĐT: Đạt mức Tốt (8.0 - 8.9đ)',
-        feedback: 'Khen ngợi: Em nắm rất vững kiến thức trọng tâm, tiếp tục phát huy ở các bài thi tới nhé!',
+        feedback: 'Khen ngợi: Em nắm rất vững kiến thức trọng tâm, tiếp tục phát huy ở các bài kiểm tra tới nhé!',
         bannerBg: 'bg-gradient-to-br from-emerald-600 via-teal-700 to-green-800 border-emerald-400',
         iconType: 'trophy'
       };
@@ -1516,7 +1516,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
   const handleResetExam = () => {
     buildExam(selectedGrade, examType, selectedExamIndex);
-    setShuffleNotice('🔄 Đề thi đã tự động đảo ngẫu nhiên câu hỏi & đáp án mới để em luyện tập!');
+    setShuffleNotice('🔄 Đề kiểm tra đã tự động đảo ngẫu nhiên câu hỏi & đáp án mới để em luyện tập!');
     setTimeout(() => {
       setShuffleNotice('');
     }, 4500);
@@ -1544,7 +1544,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 CHUẨN BGD&ĐT (CV 7991)
               </span>
               <h2 className="text-base sm:text-xl font-black tracking-tight text-white">
-                ĐỀ THI THỬ MINH HỌA & LUYỆN TẬP ONLINE
+                ĐỀ KIỂM TRA THỬ MINH HỌA & LUYỆN TẬP ONLINE
               </h2>
             </div>
             <div className="text-xs sm:text-sm text-sky-200">
@@ -1554,7 +1554,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-400/20 border border-amber-300/30 text-amber-200 text-xs font-semibold">
               <span className="text-base shrink-0">🔒</span>
               <span>
-                <strong>Quy chế bảo mật đề thi:</strong> Toàn bộ đề thi tại đây là <strong>ĐỀ LUYỆN TẬP MINH HỌA</strong> theo ma trận CV 7991 của Bộ GD&amp;ĐT. Hệ thống <strong>TUYỆT ĐỐI KHÔNG ĐĂNG TẢI</strong> đề kiểm tra chính thức của nhà trường. <strong>NGHIÊM CẤM GỢI Ý HOẶC NGỤ Ý CÂU HỎI CÓ TRONG ĐỀ THI CHÍNH THỨC 100%</strong>. Nghiêm cấm lộ đề dưới mọi hình thức.
+                <strong>Quy chế bảo mật đề kiểm tra:</strong> Toàn bộ đề kiểm tra tại đây là <strong>ĐỀ LUYỆN TẬP MINH HỌA</strong> theo ma trận CV 7991 của Bộ GD&amp;ĐT. Hệ thống <strong>TUYỆT ĐỐI KHÔNG ĐĂNG TẢI</strong> đề kiểm tra chính thức của nhà trường. <strong>NGHIÊM CẤM GỢI Ý HOẶC NGỤ Ý CÂU HỎI CÓ TRONG ĐỀ KIỂM TRA CHÍNH THỨC 100%</strong>. Nghiêm cấm lộ đề dưới mọi hình thức.
               </span>
             </div>
 
@@ -1568,13 +1568,13 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   </span>
                   <div>
                     <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
-                      <span>Đề Thi Thử Minh Họa Tiếng Anh Lớp {studentGrade}</span>
+                      <span>Đề Kiểm Tra Thử Minh Họa Tiếng Anh Lớp {studentGrade}</span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500 text-white font-bold">
                         Chuẩn Khối {studentGrade}
                       </span>
                     </h4>
                     <p className="text-[11px] text-sky-200">
-                      Đã tự động khóa theo lớp của em ({currentAvailableCodes.length} mã đề thi thử minh họa bám sát ma trận CV 7991/BGDĐT)
+                      Đã tự động khóa theo lớp của em ({currentAvailableCodes.length} mã đề kiểm tra thử minh họa bám sát ma trận CV 7991/BGDĐT)
                     </p>
                   </div>
                 </div>
@@ -1667,14 +1667,14 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           </div>
 
-          {/* DÒNG 3: BẢNG MÃ ĐỀ THI - MOBILE FIRST */}
+          {/* DÒNG 3: BẢNG MÃ ĐỀ KIỂM TRA - MOBILE FIRST */}
           <div className="pt-2 border-t border-white/10 space-y-2">
             <div className="flex items-center justify-between flex-wrap gap-1">
               <span className="text-xs sm:text-sm font-black text-emerald-300 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" />
                 {hasOfficialForCurrent 
-                  ? `3. Chọn mã đề thi ôn luyện (Khối ${selectedGrade} - ${currentAvailableCodes.length} mã đề chuẩn):`
-                  : 'Mã đề thi:'}
+                  ? `3. Chọn mã đề kiểm tra ôn luyện (Khối ${selectedGrade} - ${currentAvailableCodes.length} mã đề chuẩn):`
+                  : 'Mã đề kiểm tra:'}
               </span>
               <span className="text-xs sm:text-sm text-amber-300 font-bold">
                 {hasOfficialForCurrent ? `Đang làm: Mã ${currentAvailableCodes[selectedExamIndex % currentAvailableCodes.length]}` : ''}
@@ -1684,7 +1684,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             {isLoadingExams ? (
               <div className="text-xs sm:text-sm text-sky-200 bg-sky-500/20 p-3 rounded-xl border border-sky-400/30 flex items-center gap-2">
                 <RotateCw className="w-4 h-4 animate-spin text-sky-300" />
-                <span>Đang nạp dữ liệu đề thi trực tuyến... Xin chờ giây lát.</span>
+                <span>Đang nạp dữ liệu đề kiểm tra trực tuyến... Xin chờ giây lát.</span>
               </div>
             ) : hasOfficialForCurrent ? (
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
@@ -1730,7 +1730,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
       {isLoadingExams && !currentExam && (
         <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3">
           <RotateCw className="w-8 h-8 animate-spin text-sky-600 mx-auto" />
-          <p className="font-bold text-slate-700 text-base">Đang mở đề thi chuẩn Bộ GD&ĐT... Xin chờ giây lát!</p>
+          <p className="font-bold text-slate-700 text-base">Đang mở đề kiểm tra chuẩn Bộ GD&ĐT... Xin chờ giây lát!</p>
         </div>
       )}
 
@@ -1794,7 +1794,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           </div>
           <div className="max-w-xl mx-auto space-y-2">
             <h3 className="text-lg sm:text-xl font-black text-slate-800">
-              Hiện Chưa Có Mã Đề Thi Cho Mục Này (0 Mã Đề)
+              Hiện Chưa Có Mã Đề Kiểm Tra Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
               Hệ thống hiện tại lưu trữ <b>đầy đủ các mã đề chuẩn Giữa Học Kỳ 1 Lớp 6: Mã 601, Mã 602, Mã 603, Mã 604, Mã 605</b> và <b>Lớp 8: Đủ 3 mã đề chuẩn (Mã 801, Mã 802, Mã 803)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
@@ -1868,7 +1868,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
           </div>
         </div>
       ) : (
-        /* GIAO DIỆN LÀM BÀI THI CHÍNH THỨC - MOBILE FIRST */
+        /* GIAO DIỆN LÀM BÀI KIỂM TRA CHÍNH THỨC - MOBILE FIRST */
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
           {/* HEADER BÀI KIỂM TRA */}
           <div className="p-4 sm:p-6 bg-slate-50 border-b border-slate-200">
@@ -1876,17 +1876,17 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider">
-                    BỘ ĐỀ THI THỬ MINH HỌA & LUYỆN TẬP — NĂM HỌC 2026 - 2027
+                    BỘ ĐỀ KIỂM TRA THỬ MINH HỌA & LUYỆN TẬP — NĂM HỌC 2026 - 2027
                   </span>
                   <span className="px-2 py-0.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
                     ĐỀ LUYỆN TẬP MINH HỌA (CV 7991)
                   </span>
                   <span className="px-2 py-0.5 rounded text-[10px] sm:text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                    🔒 KHÔNG PHẢI ĐỀ THI CHÍNH THỨC CỦA NHÀ TRƯỜNG
+                    🔒 KHÔNG PHẢI ĐỀ KIỂM TRA CHÍNH THỨC CỦA NHÀ TRƯỜNG
                   </span>
                 </div>
                 <h3 className="text-lg sm:text-2xl font-black text-slate-800 mt-1 uppercase leading-tight">
-                  {currentExam.typeTitle.replace(/ĐỀ KIỂM TRA/g, 'ĐỀ THI THỬ MINH HỌA')} (MÔ PHỎNG)
+                  {currentExam.typeTitle.replace(/ĐỀ KIỂM TRA/g, 'ĐỀ KIỂM TRA THỬ MINH HỌA')} (MÔ PHỎNG)
                 </h3>
                 <div className="text-[11px] text-rose-600 font-semibold italic mt-0.5">
                   * Lưu ý bảo mật: Đây là đề luyện tập mô phỏng dạng bài, tuyệt đối không phải đề kiểm tra chính thức của nhà trường.
@@ -1902,7 +1902,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
               <div className="flex items-center gap-2">
                 <div className="px-3.5 py-1.5 sm:py-2 rounded-xl bg-sky-50 border border-sky-200 text-sky-900 text-center shadow-2xs">
-                  <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sky-700">MÃ ĐỀ THI</div>
+                  <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sky-700">MÃ ĐỀ KIỂM TRA</div>
                   <div className="text-base sm:text-lg font-black text-sky-900">{currentExam.examCode}</div>
                 </div>
 
@@ -2127,10 +2127,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
             </div>
           )}
 
-          {/* DANH SÁCH CÂU HỎI THEO TỪNG PHẦN - CHUẨN ĐỀ THI MẪU CÔNG VĂN 7991 */}
+          {/* DANH SÁCH CÂU HỎI THEO TỪNG PHẦN - CHUẨN ĐỀ KIỂM TRA MẪU CÔNG VĂN 7991 */}
           <div className="p-3.5 sm:p-6 space-y-6 sm:space-y-8">
             {(() => {
-              // Tách văn bản bài đọc thành 2 đoạn riêng biệt chuẩn đề thi mẫu:
+              // Tách văn bản bài đọc thành 2 đoạn riêng biệt chuẩn đề kiểm tra mẫu:
               // 1. Đoạn văn điền từ (Cloze Text) cho Part 4
               // 2. Đoạn văn đọc hiểu (Reading Passage) cho Part 5
               let clozePassage = '';
@@ -2187,7 +2187,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
 
               return distinctPartGroups.map((group, groupIdx) => (
                 <div key={groupIdx} className="space-y-3 sm:space-y-4">
-                  {/* Tiêu đề Part riêng biệt chuẩn Đề thi mẫu */}
+                  {/* Tiêu đề Part riêng biệt chuẩn Đề kiểm tra mẫu */}
                   <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-between gap-2">
                     <div>
                       <h4 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
@@ -2483,7 +2483,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               ));
             })()}
 
-            {/* PHÒNG THI NÓI (SPEAKING TEST) KÈM TÍNH NĂNG GHI ÂM VÀ CHẤM ĐIỂM AI CHO BÀI THI CUỐI KỲ (CK) */}
+            {/* PHÒNG KIỂM TRA NÓI (SPEAKING TEST) KÈM TÍNH NĂNG GHI ÂM VÀ CHẤM ĐIỂM AI CHO BÀI KIỂM TRA CUỐI KỲ (CK) */}
             {Boolean(
               examType === 'cuoi-ky-1' || 
               examType === 'cuoi-ky-2' || 

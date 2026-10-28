@@ -219,7 +219,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
       q: "Many teenagers feel ______ before an important exam.",
       options: ["A. pressure", "B. peer", "C. stressed"],
       correct: 2,
-      exp: "💡 Cụm từ: 'feel stressed' = cảm thấy căng thẳng, lo âu trước kỳ thi."
+      exp: "💡 Cụm từ: 'feel stressed' = cảm thấy căng thẳng, lo âu trước đợt kiểm tra."
     },
     {
       id: "rev_p_16",
@@ -613,7 +613,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
               </span>
             </div>
             <div className="text-[11px] text-amber-200/90 font-medium italic pt-1">
-              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề thi chính thức của nhà trường.
+              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề kiểm tra chính thức của nhà trường.
             </div>
 
             {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}
@@ -1545,7 +1545,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                         </div>
                         <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-relaxed italic">
                           {parseFloat(totalScore10) >= 8.0 && (
-                            `"Thầy Thành rất tự hào về kết quả xuất sắc ${totalScore10}/10đ của em ${currentStudent?.name || ''}! Tinh thần tự giác và chăm chỉ này chắc chắn sẽ giúp em đạt điểm 10 rực rỡ trong kỳ thi chính thức!"`
+                            `"Thầy Thành rất tự hào về kết quả xuất sắc ${totalScore10}/10đ của em ${currentStudent?.name || ''}! Tinh thần tự giác và chăm chỉ này chắc chắn sẽ giúp em đạt điểm 10 rực rỡ trong đợt kiểm tra chính thức!"`
                           )}
                           {parseFloat(totalScore10) >= 5.0 && parseFloat(totalScore10) < 8.0 && (
                             `"Khá lắm em ơi (${totalScore10}/10đ)! Em đã nắm rất chắc nền tảng cơ bản rồi. Em hãy đọc kỹ phần giải thích ngắn gọn ở các câu sai bên dưới rồi bấm 'Làm lại lần ${attemptCount + 1}' để chạm mốc 9-10 điểm nhé!"`
@@ -1575,7 +1575,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                   </div>
                 </div>
 
-                {/* NÚT LÀM LẠI & THI THỬ MINH HỌA */}
+                {/* NÚT LÀM LẠI & KIỂM TRA THỬ MINH HỌA */}
                 <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
                   <button
                     type="button"
@@ -1592,7 +1592,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                       onClick={onGoToExams}
                       className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
                     >
-                      <span>🚀 Thi Thử Online Đề Minh Họa (Mã 801, 802, 803) &rarr;</span>
+                      <span>🚀 Kiểm Tra Thử Online Đề Minh Họa (Mã 801, 802, 803) &rarr;</span>
                     </button>
                   )}
                 </div>

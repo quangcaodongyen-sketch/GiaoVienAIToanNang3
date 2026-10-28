@@ -358,7 +358,7 @@ Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em. Em xin trân tr
                 )}
               </div>
 
-              {/* Form Tùy Chọn Đề Thi */}
+              {/* Form Tùy Chọn Đề Kiểm Tra */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">Khối Lớp (Global):</label>
@@ -525,7 +525,7 @@ Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em. Em xin trân tr
                 </div>
               )}
 
-              {/* Preview Khung Đề Thi Sư Phạm (Times New Roman 13pt) */}
+              {/* Preview Khung Đề Kiểm Tra Sư Phạm (Times New Roman 13pt) */}
               {examGenerated && (
                 <div className="p-6 rounded-2xl bg-white text-black shadow-xl border border-slate-300 font-['Times_New_Roman',serif] text-[13pt] leading-relaxed animate-fade-in space-y-4">
                   
@@ -561,7 +561,7 @@ Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em. Em xin trân tr
                     {!isProActive && <strong> (BẢN DÙNG THỬ CHỈ HIỂN THỊ 1/2 ĐÁP ÁN ĐỂ BẢO VỆ TÁC QUYỀN)</strong>}
                   </div>
 
-                  {/* NỘI DUNG ĐỀ THI KÈM ĐÁP ÁN CHỮ ĐỎ (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
+                  {/* NỘI DUNG ĐỀ KIỂM TRA KÈM ĐÁP ÁN CHỮ ĐỎ (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
                   <div className="space-y-4">
                     <p className="font-bold uppercase text-[12pt]">PART A. LISTENING (2.0 points)</p>
                     <p className="italic text-[11pt]">Listen to the conversation and choose the correct answer A, B, C or D.</p>
@@ -726,7 +726,7 @@ Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em. Em xin trân tr
                     <span className="text-slate-500">Đã áp dụng thông tin: {schoolName} ({schoolYear})</span>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => alert('Đã sao chép toàn bộ đề thi kèm đáp án chữ màu đỏ vào bộ nhớ tạm!')}
+                        onClick={() => alert('Đã sao chép toàn bộ đề kiểm tra kèm đáp án chữ màu đỏ vào bộ nhớ tạm!')}
                         className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <Copy className="w-3.5 h-3.5" /> Sao chép văn bản

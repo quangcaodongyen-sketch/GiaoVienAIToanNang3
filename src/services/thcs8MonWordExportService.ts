@@ -42,7 +42,7 @@ export interface THCS8MonExamData {
   };
 }
 
-// Hàm chuẩn bị dữ liệu đề thi hoàn chỉnh cho từng môn học
+// Hàm chuẩn bị dữ liệu đề kiểm tra hoàn chỉnh cho từng môn học
 export function getTHCS8MonExamSuite(
   subjectId: string,
   grade: string = '7',
@@ -821,7 +821,7 @@ export function getTHCS8MonExamSuite(
               { num: 2, content: 'Hành vi nào sau đây thể hiện sự tự hào về truyền thống quê hương?', options: ['A. Giới thiệu làng nghề truyền thống cho bạn bè', 'B. Xấu hổ vì quê mình làm nông nghiệp', 'C. Chê bai lễ hội dân gian', 'D. Phá hoại di tích lịch sử'], correctKey: 'A' },
               { num: 3, content: 'Bảo tồn di sản văn hóa là trách nhiệm của:', options: ['A. Chỉ riêng các nhà khảo cổ', 'B. Toàn thể công dân và cộng đồng xã hội', 'C. Chỉ riêng chính quyền địa phương', 'D. Khách du lịch nước ngoài'], correctKey: 'B' },
               { num: 4, content: 'Đức tính cần cù, chăm chỉ trong lao động giúp con người:', options: ['A. Trở nên giàu có tức thì mà không cần học', 'B. Hoàn thiện nhân cách, tạo ra của cải và được mọi người tôn trọng', 'C. Trốn tránh khó khăn', 'D. Bị người khác chê cười'], correctKey: 'B' },
-              { num: 5, content: 'Hành động nào dưới đây là biểu hiện của tính trung thực trong học tập?', options: ['A. Nhìn bài của bạn trong giờ kiểm tra', 'B. Nhận lỗi khi chưa làm bài tập và cố gắng sửa chữa', 'C. Giấu điểm kém không cho bố mẹ biết', 'D. Nhờ người khác làm hộ bài thi'], correctKey: 'B' },
+              { num: 5, content: 'Hành động nào dưới đây là biểu hiện của tính trung thực trong học tập?', options: ['A. Nhìn bài của bạn trong giờ kiểm tra', 'B. Nhận lỗi khi chưa làm bài tập và cố gắng sửa chữa', 'C. Giấu điểm kém không cho bố mẹ biết', 'D. Nhờ người khác làm hộ bài kiểm tra'], correctKey: 'B' },
               { num: 6, content: 'Yêu thương con người là truyền thống quý báu được thể hiện qua câu tục ngữ nào?', options: ['A. Thương người như thể thương thân', 'B. Ăn quả nhớ kẻ trồng cây', 'C. Có công mài sắt có ngày nên kim', 'D. Đi một ngày đàng học một sàng khôn'], correctKey: 'A' },
               { num: 7, content: 'Hành vi bạo lực học đường bao gồm:', options: ['A. Cùng nhau học nhóm và thảo luận', 'B. Đánh đập, cô lập, đe dọa hoặc tung tin thất thiệt xúc phạm bạn bè', 'C. Giúp đỡ bạn khi gặp bài toán khó', 'D. Tham gia giải bóng đá của trường'], correctKey: 'B' },
               { num: 8, content: 'Khi chứng kiến một vụ bạo lực học đường, em nên làm gì?', options: ['A. Đứng cổ vũ và quay video đăng lên mạng xã hội', 'B. Kịp thời báo cho thầy cô giáo, ban giám hiệu hoặc người lớn có trách nhiệm', 'C. Bỏ đi vì không liên quan đến mình', 'D. Rủ thêm bạn vào đánh hùa'], correctKey: 'B' },
@@ -1815,7 +1815,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
 
       ${renderMarksTable()}
 
-      <!-- Nội dung đề thi -->
+      <!-- Nội dung đề kiểm tra -->
       ${renderExamParts()}
 
       <!-- Dòng kết thúc đề -->
@@ -1969,7 +1969,7 @@ export function generateTHCS8MonWordHtml(data: THCS8MonExamData, isPro: boolean 
         <tr>
           <td style="border: none; text-align: center; padding: 8pt; font-family: 'Times New Roman', serif;">
             <div style="font-size: 13pt; font-weight: bold; color: #BE123C; text-transform: uppercase;">
-              ⭐ THÔNG BÁO: ĐÂY LÀ ĐỀ THI TRẢI NGHIỆM DÙNG THỬ (HIỂN THỊ 1/2 ĐÁP ÁN) ⭐
+              ⭐ THÔNG BÁO: ĐÂY LÀ ĐỀ KIỂM TRA TRẢI NGHIỆM DÙNG THỬ (HIỂN THỊ 1/2 ĐÁP ÁN) ⭐
             </div>
             <div style="font-size: 11pt; color: #333333; margin-top: 4pt; line-height: 1.4;">
               Để mở khóa <b>100% toàn bộ đáp án</b>, lời giải chi tiết từng bước, ma trận 16 cột và tạo đề không giới hạn số lượng,<br/>

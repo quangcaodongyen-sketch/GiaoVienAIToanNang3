@@ -200,7 +200,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
   // Exit current test back to test selection
   const handleExitTest = () => {
     if (activeTest && !isSubmitted && Object.keys(selectedAnswers).length > 0) {
-      if (window.confirm('Bạn đang làm dở bài thi. Bạn có chắc chắn muốn thoát về danh sách bài không?')) {
+      if (window.confirm('Bạn đang làm dở bài kiểm tra. Bạn có chắc chắn muốn thoát về danh sách bài không?')) {
         setActiveTest(null);
         setIsTimerRunning(false);
       }
@@ -347,11 +347,11 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
   return (
     <div className="space-y-6">
       {/* ========================================================
-          TRƯỜNG HỢP 1: ĐANG LÀM BÀI HOẶC XEM KẾT QUẢ PHÒNG THI
+          TRƯỜNG HỢP 1: ĐANG LÀM BÀI HOẶC XEM KẾT QUẢ PHÒNG KIỂM TRA
          ======================================================== */}
       {activeTest ? (
         <div className="space-y-6 animate-fadeIn">
-          {/* THANH ĐIỀU HƯỚNG PHÒNG THI */}
+          {/* THANH ĐIỀU HƯỚNG PHÒNG KIỂM TRA */}
           <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-3xl border-2 border-slate-200 dark:border-slate-800 shadow-md flex flex-wrap items-center justify-between gap-4 sticky top-16 z-30 backdrop-blur-md bg-white/95 dark:bg-slate-900/95">
             <div className="flex items-center gap-3">
               <button
@@ -894,7 +894,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
         </div>
       ) : (
         /* ========================================================
-            TRƯỜNG HỢP 2: DASHBOARD CHỌN LỚP, CHỌN UNIT & 5 BÀI THI
+            TRƯỜNG HỢP 2: DASHBOARD CHỌN LỚP, CHỌN UNIT & 5 BÀI KIỂM TRA
            ======================================================== */
         <div className="space-y-6 animate-fadeIn">
           {/* BANNER GIỚI THIỆU PHÂN HỆ KIỂM TRA ONLINE */}
@@ -1049,7 +1049,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
                     className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group hover:border-blue-500/50"
                   >
                     <div>
-                      {/* Badge bài thi & Điểm số đã đạt */}
+                      {/* Badge bài kiểm tra & Điểm số đã đạt */}
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <span className="px-3 py-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs shadow-xs">
                           BÀI {test.testNumber} / 5
@@ -1071,7 +1071,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
                         )}
                       </div>
 
-                      {/* Tiêu đề bài thi */}
+                      {/* Tiêu đề bài kiểm tra */}
                       <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition">
                         {test.title}
                       </h4>
@@ -1102,7 +1102,7 @@ export const OnlineQuizPortal: React.FC<OnlineQuizPortalProps> = ({ studentGrade
                         className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer active:scale-98 border-b-4 border-blue-800 active:border-b-2 active:translate-y-0.5"
                       >
                         <Award className="w-4 h-4 text-amber-300" />
-                        <span>{pastAttempt ? 'Làm lại để nâng điểm' : 'Bắt đầu làm bài thi ngay'}</span>
+                        <span>{pastAttempt ? 'Làm lại để nâng điểm' : 'Bắt đầu làm bài kiểm tra ngay'}</span>
                       </button>
                     </div>
                   </div>

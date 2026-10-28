@@ -130,7 +130,7 @@ interface VocabItem {
 
 
 
-// Danh mục tài liệu đề thi tải về cho học sinh
+// Danh mục tài liệu đề kiểm tra tải về cho học sinh
 
 interface StudentDownloadFile {
 
@@ -180,7 +180,7 @@ const DOWNLOADABLE_MATERIALS: StudentDownloadFile[] = [
 
     id: 'mat-2',
 
-    title: 'Tài liệu hướng dẫn giải bài tập và ôn thi 8 môn THCS',
+    title: 'Tài liệu hướng dẫn giải bài tập và ôn tập 8 môn THCS',
 
     subject: 'Tổng hợp',
 
@@ -268,7 +268,7 @@ const MOTIVATIONAL_QUOTES = [
 
   "Học tiếng Anh như một chuyến du lịch kỳ thú, mỗi từ mới là một chân trời rộng mở. Chúc em học vui say sưa! 🌈",
 
-  "Thầy Thành gửi lời khen ngợi đặc biệt đến sự chăm chỉ của em! Chúc em đạt điểm số cao nhất trong kỳ thi tới! ⭐",
+  "Thầy Thành gửi lời khen ngợi đặc biệt đến sự chăm chỉ của em! Chúc em đạt điểm số cao nhất trong đợt kiểm tra tới! ⭐",
 
   "Chăm ngoan - Tự giác - Kiên trì: Ba người bạn tốt này sẽ giúp em chạm tới mọi ước mơ! 🦉",
 
@@ -2339,7 +2339,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
           files[i],
 
-          'Tài liệu ôn tập & Đề thi chia sẻ cho Giáo viên và Học sinh',
+          'Tài liệu ôn tập & Đề kiểm tra chia sẻ cho Giáo viên và Học sinh',
 
           'Admin Quản Trị'
 
@@ -3079,7 +3079,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       </div>
 
       {/* =========================================================================
-          LỜI NHẮC ÔN THI GK1 & HỌC TỪ VỰNG TĂNG ĐIỂM SỐ - THẦY ĐINH THÀNH
+          LỜI NHẮC ÔN TẬP GK1 & HỌC TỪ VỰNG TĂNG ĐIỂM SỐ - THẦY ĐINH THÀNH
           ========================================================================= */}
       <StudentStudyReminder
         currentStudent={currentStudent}
@@ -3169,7 +3169,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <span>3. Đề Cương &amp; Bài Tập</span>
         </button>
 
-        {/* 4. Đề Thi Online */}
+        {/* 4. Đề Kiểm Tra Online */}
         <button
           type="button"
           onClick={() => {
@@ -3182,10 +3182,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Lộ trình 4: Luyện đề kiểm tra 5 phút & đề thi giữa kỳ online tự động bấm giờ"
+          title="Lộ trình 4: Luyện đề kiểm tra 5 phút & đề kiểm tra giữa kỳ online tự động bấm giờ"
         >
           <Award className={`w-4 h-4 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-amber-500'}`} />
-          <span>4. Đề Thi Online</span>
+          <span>4. Đề Kiểm Tra Online</span>
         </button>
 
         {/* 5. 4 Tổ Thi Đua (Team Battle) */}
@@ -3364,7 +3364,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </span>
           </button>
 
-          {/* LỘ TRÌNH 2: ĐỀ THI GIỮA KỲ (THỰC CHIẾN) */}
+          {/* LỘ TRÌNH 2: ĐỀ KIỂM TRA GIỮA KỲ (THỰC CHIẾN) */}
           <button
             type="button"
             onClick={() => setActiveTab('exam')}
@@ -3373,10 +3373,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.5)] border border-blue-400/50 -translate-y-0.5'
                 : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 font-extrabold border border-slate-200/60 dark:border-slate-700/60 shadow-xs'
             }`}
-            title="Lộ trình 2: Thi thử đề kiểm tra giữa kỳ 1 chuẩn ma trận cấu trúc Bộ GD&ĐT"
+            title="Lộ trình 2: Kiểm tra thử đề kiểm tra giữa kỳ 1 chuẩn ma trận cấu trúc Bộ GD&ĐT"
           >
             <Award className={`w-3.5 h-3.5 ${activeTab === 'exam' ? 'text-amber-300' : 'text-blue-500'}`} />
-            <span>📝 Đề Thi Giữa Kỳ</span>
+            <span>📝 Đề Kiểm Tra Giữa Kỳ</span>
             <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1 ${
               activeTab === 'exam' ? 'bg-white/20 text-white' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300'
             }`}>
@@ -4282,7 +4282,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                       <p className="text-[11px] text-indigo-800 dark:text-indigo-300 leading-relaxed">
 
-                        Em tự do ghi tên và ghi lớp. Hệ thống tự động xếp em vào <strong>Lớp {quickClassName.trim().toUpperCase()}</strong> để học và thi thử đúng chương trình lớp đó!
+                        Em tự do ghi tên và ghi lớp. Hệ thống tự động xếp em vào <strong>Lớp {quickClassName.trim().toUpperCase()}</strong> để học và kiểm tra thử đúng chương trình lớp đó!
 
                       </p>
 
@@ -4494,7 +4494,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-100 text-[10px] font-black uppercase tracking-wider border border-emerald-300/30">
 
-                    Khuyên Dùng Trước Khi Làm Đề Thi
+                    Khuyên Dùng Trước Khi Làm Đề Kiểm Tra
 
                   </div>
 
@@ -4604,7 +4604,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 <BookMarked className="w-5 h-5 text-blue-600" />
 
-                <span>Kho Đề Thi & Tài Liệu Dành Cho Giáo Viên & Học Sinh</span>
+                <span>Kho Đề Kiểm Tra & Tài Liệu Dành Cho Giáo Viên & Học Sinh</span>
 
               </h3>
 
@@ -4666,7 +4666,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
               <span className="p-1 rounded-lg bg-blue-600 text-white text-xs">🎯</span>
 
-              <span>Đang tự động hiển thị tài liệu &amp; đề thi phù hợp riêng cho <strong>Lớp {currentStudent.grade} ({currentStudent.className})</strong> để em dễ tìm bài nhất.</span>
+              <span>Đang tự động hiển thị tài liệu &amp; đề kiểm tra phù hợp riêng cho <strong>Lớp {currentStudent.grade} ({currentStudent.className})</strong> để em dễ tìm bài nhất.</span>
 
             </div>
 
@@ -6408,7 +6408,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 <p className="leading-relaxed">
 
-                  <strong>Em hãy chụp màn hình</strong> hoặc ghi nhớ lại <strong>Tên đăng nhập</strong> và <strong>Mật khẩu</strong> trên để đăng nhập học từ vựng và làm bài thi mỗi ngày nhé!
+                  <strong>Em hãy chụp màn hình</strong> hoặc ghi nhớ lại <strong>Tên đăng nhập</strong> và <strong>Mật khẩu</strong> trên để đăng nhập học từ vựng và làm bài kiểm tra mỗi ngày nhé!
 
                 </p>
 
@@ -6890,7 +6890,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                         `• Tổng số tài khoản chuẩn hiện tại: ${res.currentCount} học sinh.\n` +
 
-                        `• Toàn bộ lịch sử điểm số bài thi cao nhất đã được bảo toàn nguyên vẹn 100%!`);
+                        `• Toàn bộ lịch sử điểm số bài kiểm tra cao nhất đã được bảo toàn nguyên vẹn 100%!`);
 
                     } else {
 
@@ -7464,7 +7464,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   <div className="text-amber-700/90 dark:text-amber-400/90 text-xs mt-0.5 leading-relaxed">
 
-                    Đồng hồ tính giờ chỉ chạy khi em <strong>thực sự có tương tác</strong> (lật thẻ từ vựng 3D, nghe phát âm, làm bài tập trắc nghiệm, giải đề cương, làm bài thi online, thảo luận...).
+                    Đồng hồ tính giờ chỉ chạy khi em <strong>thực sự có tương tác</strong> (lật thẻ từ vựng 3D, nghe phát âm, làm bài tập trắc nghiệm, giải đề cương, làm bài kiểm tra online, thảo luận...).
 
                   </div>
 

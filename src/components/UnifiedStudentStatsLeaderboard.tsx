@@ -439,7 +439,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
           `• Tổng số điểm đã hoàn trả đúng thực tế: +${res.totalPointsRestored} điểm!\n\n` +
 
-          `Toàn bộ kết quả bài thi, bài tập và lịch sử học từ hôm qua đến nay đã được bảo toàn đầy đủ, tránh mọi thiệt thòi cho các em học sinh!`
+          `Toàn bộ kết quả bài kiểm tra, bài tập và lịch sử học từ hôm qua đến nay đã được bảo toàn đầy đủ, tránh mọi thiệt thòi cho các em học sinh!`
 
         );
 
@@ -792,7 +792,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
 
 
-    csvContent += 'Hạng,Mã HS,Họ và Tên,Lớp,Cấp Độ,Danh Hiệu,Chuyên Cần,Từ Vựng,Đề Cương,Điểm Thi GK/CK,Thời Gian,Điểm Thưởng,Tổng Điểm Thi Đua,Điểm TB Bài Thi,Điểm Cao Nhất,Số Bài Đã Làm\n';
+    csvContent += 'Hạng,Mã HS,Họ và Tên,Lớp,Cấp Độ,Danh Hiệu,Chuyên Cần,Từ Vựng,Đề Cương,Điểm Kiểm Tra GK/CK,Thời Gian,Điểm Thưởng,Tổng Điểm Thi Đua,Điểm TB Bài Kiểm Tra,Điểm Cao Nhất,Số Bài Đã Làm\n';
 
 
 
@@ -1028,7 +1028,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
             <p className="text-xs sm:text-sm text-blue-200/90 max-w-3xl leading-relaxed">
 
-              Hệ thống theo dõi tiến độ, vinh danh cấp bậc học sinh, tự động tính điểm chuyên cần, từ vựng 3D, đề cương và bài thi. Cập nhật liên tục từng giây cho học sinh và giáo viên Trường THCS Đồng Yên.
+              Hệ thống theo dõi tiến độ, vinh danh cấp bậc học sinh, tự động tính điểm chuyên cần, từ vựng 3D, đề cương và bài kiểm tra. Cập nhật liên tục từng giây cho học sinh và giáo viên Trường THCS Đồng Yên.
 
             </p>
 
@@ -1382,7 +1382,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
 
-            <div className="font-bold text-amber-600">📝 Bài Thi GK/CK</div>
+            <div className="font-bold text-amber-600">📝 Bài Kiểm Tra GK/CK</div>
 
             <div className="text-slate-500">Điểm thi x 10 (VD: 9.5đ ➔ +95đ)</div>
 
@@ -1806,7 +1806,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
               >
 
-                📝 Điểm Bài Thi
+                📝 Điểm Bài Kiểm Tra
 
               </button>
 
@@ -2072,7 +2072,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                   className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-xs flex items-center gap-1.5 cursor-pointer transition active:scale-95 disabled:opacity-50"
 
-                  title="Tự động rà soát đối chiếu toàn bộ bài làm, bài thi giữa kỳ và lịch sử học tập thực tế từ hôm qua đến nay để khôi phục đầy đủ điểm số cho học sinh"
+                  title="Tự động rà soát đối chiếu toàn bộ bài làm, bài kiểm tra giữa kỳ và lịch sử học tập thực tế từ hôm qua đến nay để khôi phục đầy đủ điểm số cho học sinh"
 
                 >
 
@@ -2130,7 +2130,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                     <th className="py-3 px-3 text-center">Điểm Thi Đua</th>
 
-                    <th className="py-3 px-3 text-center">Điểm Bài Thi</th>
+                    <th className="py-3 px-3 text-center">Điểm Bài Kiểm Tra</th>
 
                     <th className="py-3 px-3">Danh Hiệu &amp; Huy Hiệu</th>
                     {isAdminSession && (
@@ -2351,7 +2351,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
 
 
-                        {/* 6. Điểm Bài Thi */}
+                        {/* 6. Điểm Bài Kiểm Tra */}
 
                         <td className="py-3 px-3 text-center">
 
@@ -2734,7 +2734,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
               <p className="text-xs text-slate-500 mt-0.5">
 
-                Ghi nhận trực tiếp từng giây các hoạt động: nộp bài thi, hoàn thành từ vựng, điểm danh và tích điểm của học sinh.
+                Ghi nhận trực tiếp từng giây các hoạt động: nộp bài kiểm tra, hoàn thành từ vựng, điểm danh và tích điểm của học sinh.
 
               </p>
 
@@ -3016,7 +3016,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
 
-                  <span className="text-slate-600 dark:text-slate-400">📝 Bài thi GK/CK:</span>
+                  <span className="text-slate-600 dark:text-slate-400">📝 Bài kiểm tra GK/CK:</span>
 
                   <span className="font-black text-amber-600">+{selectedStudentDetail.examBonusPoints || 0}đ</span>
 

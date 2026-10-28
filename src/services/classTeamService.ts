@@ -224,7 +224,7 @@ class ClassTeamService {
             role: 'vice_leader' as TeamRole,
             roleTitle: 'Tổ Phó (Vice Leader)',
             roleBadge: '⭐ TP',
-            dutyDescription: '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài thi thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!'
+            dutyDescription: '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài kiểm tra thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!'
           };
         } else {
           return {
@@ -412,7 +412,7 @@ class ClassTeamService {
             role: 'vice_leader' as TeamRole,
             roleTitle: 'Tổ Phó (Vice Leader)',
             roleBadge: '⭐ TP',
-            dutyDescription: '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài thi thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!'
+            dutyDescription: '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài kiểm tra thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!'
           };
         } else {
           return {
@@ -524,7 +524,7 @@ class ClassTeamService {
         } else if (newRole === 'vice_leader') {
           m.roleTitle = 'Tổ Phó (Vice Leader)';
           m.roleBadge = '⭐ TP';
-          m.dutyDescription = '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài thi thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!';
+          m.dutyDescription = '⭐ Nhiệm vụ: Hỗ trợ Tổ trưởng theo dõi chuyên cần, hướng dẫn các bạn học từ vựng và làm bài kiểm tra thử GK1, nhắc nhở giữ chuỗi ngày học pháo hoa liên tục!';
         } else {
           m.roleTitle = 'Thành Viên';
           m.roleBadge = '👤 TV';

@@ -33,7 +33,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
         </h1>
 
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-          Học tập & Ôn thi hoàn toàn MIỄN PHÍ 100% cho học sinh • Chọn phân hệ để bắt đầu:
+          Học tập & Ôn tập hoàn toàn MIỄN PHÍ 100% cho học sinh • Chọn phân hệ để bắt đầu:
         </p>
       </div>
 
@@ -107,7 +107,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                Hệ thống ôn tập kiến thức, đề cương giữa kỳ và thi thử trực tuyến phi lợi nhuận của Thầy giáo Đinh Văn Thành. Hoàn toàn miễn phí 100% cho học sinh.
+                Hệ thống ôn tập kiến thức, đề cương giữa kỳ và kiểm tra thử trực tuyến phi lợi nhuận của Thầy giáo Đinh Văn Thành. Hoàn toàn miễn phí 100% cho học sinh.
               </p>
             </div>
           </div>
@@ -137,7 +137,7 @@ export const WelcomeRoleGateway: React.FC<WelcomeRoleGatewayProps> = ({
             <Crown className="w-4 h-4" />
           </div>
           <div className="text-xs text-slate-600 dark:text-slate-300">
-            <span className="font-bold text-slate-900 dark:text-white">Dành cho Quản trị viên:</span> Điểm danh & Quản lý đề thi
+            <span className="font-bold text-slate-900 dark:text-white">Dành cho Quản trị viên:</span> Điểm danh & Quản lý đề kiểm tra
           </div>
         </div>
 

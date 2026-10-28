@@ -193,12 +193,12 @@ export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmap
     {
       date: '2026-10-30',
       badge: '⚡ NGÀY HỘI VỀ ĐÍCH',
-      title: 'Ngày Hội Về Đích & Thưởng Nóng Đề Thi GK1',
-      description: 'Tặng +10 điểm đăng nhập + Điểm làm bài thi thử giữa kỳ quy đổi nhân 10 vào Bảng Vàng!',
+      title: 'Ngày Hội Về Đích & Thưởng Nóng Đề Kiểm Tra GK1',
+      description: 'Tặng +10 điểm đăng nhập + Điểm làm bài kiểm tra thử giữa kỳ quy đổi nhân 10 vào Bảng Vàng!',
       points: 10,
       vocabMultiplier: 1.5,
       vocabPointsPerUnit: 15,
-      rules: ['⭐ Đăng nhập ngày 30/10: +10đ', '📝 Điểm thi thử GK1 x10 vào Bảng Vàng', '🧠 Học từ vựng: +15đ / Unit']
+      rules: ['⭐ Đăng nhập ngày 30/10: +10đ', '📝 Điểm kiểm tra thử GK1 x10 vào Bảng Vàng', '🧠 Học từ vựng: +15đ / Unit']
     },
     {
       date: '2026-10-31',
@@ -334,7 +334,7 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
         '🎆 Pháo hoa chăm chỉ liên tiếp: +20 điểm thưởng',
         '⏰ Thời hạn: Đúng 23:59:59 đêm nay 29/10 sẽ tự động kết thúc'
       ],
-      nextDayPromoPreview: '⚡ NGÀY KIA (30/10): NGÀY HỘI VỀ ĐÍCH — Thưởng Nóng Đề Thi Giữa Kỳ (+100đ)!',
+      nextDayPromoPreview: '⚡ NGÀY KIA (30/10): NGÀY HỘI VỀ ĐÍCH — Thưởng Nóng Đề Kiểm Tra Giữa Kỳ (+100đ)!',
       todayStr
     };
   }
@@ -347,13 +347,13 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
       promoBadge: '⚡ NGÀY HỘI VỀ ĐÍCH',
       vocabMultiplier: 1.5,
       vocabPointsPerUnit: 15,
-      title: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi Giữa Kỳ!',
-      bannerText: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10 ĐIỂM ĐĂNG NHẬP + Thưởng nóng làm đề cương & đề thi giữa kỳ đạt điểm cao!',
+      title: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Kiểm Tra Giữa Kỳ!',
+      bannerText: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10 ĐIỂM ĐĂNG NHẬP + Thưởng nóng làm đề cương & đề kiểm tra giữa kỳ đạt điểm cao!',
       dateDisplay,
       expiresAtDisplay,
       bonusRules: [
         '⭐ Đăng nhập hôm nay 30/10: +10 điểm chuyên cần',
-        '📝 Điểm thi thử Giữa kỳ: Nhân 10 điểm thi đua (VD: 9.0đ -> +90 điểm)',
+        '📝 Điểm kiểm tra thử Giữa kỳ: Nhân 10 điểm thi đua (VD: 9.0đ -> +90 điểm)',
         '🧠 Học từ vựng: +15 điểm / Unit',
         '⏰ Thời hạn: Đúng 23:59:59 đêm 30/10 sẽ tự động đóng chương trình'
       ],
@@ -444,18 +444,18 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
         '🧠 Học từ vựng & bài tập: +15 điểm / bài',
         '⏰ Áp dụng duy nhất Thứ Sáu đến 23:59:59 đêm'
       ],
-      nextDay: '⚡ NGÀY MAI THỨ BẢY: ĐẤU TRƯỜNG THI THỬ — Thưởng Nóng Đề Thi (+100đ)!'
+      nextDay: '⚡ NGÀY MAI THỨ BẢY: ĐẤU TRƯỜNG KIỂM TRA THỬ — Thưởng Nóng Đề Kiểm Tra (+100đ)!'
     },
     6: { // Thứ Bảy
       badge: '🏆 ĐẤU TRƯỜNG CUỐI TUẦN',
       points: 10,
       mult: 1,
       vPts: 10,
-      title: '🏆 THỨ BẢY TRANH CÚP: Thưởng Lớn Khi Làm Đề Thi Khảo Sát!',
-      banner: '🏆 Đấu trường cuối tuần: Tặng +10đ Đăng Nhập + Thưởng điểm bài thi nhân 10 vào Bảng Vàng!',
+      title: '🏆 THỨ BẢY TRANH CÚP: Thưởng Lớn Khi Làm Đề Kiểm Tra Khảo Sát!',
+      banner: '🏆 Đấu trường cuối tuần: Tặng +10đ Đăng Nhập + Thưởng điểm bài kiểm tra nhân 10 vào Bảng Vàng!',
       rules: [
         '⭐ Đăng nhập Thứ Bảy: +10 điểm',
-        '📝 Điểm làm bài thi: Nhân 10 điểm thi đua',
+        '📝 Điểm làm bài kiểm tra: Nhân 10 điểm thi đua',
         '⏰ Kết thúc lúc 23:59:59 Thứ Bảy'
       ],
       nextDay: '🌟 NGÀY MAI CHỦ NHẬT: VINH DANH BẢNG VÀNG — Thưởng Pháo Hoa +30đ Chuyên Cần Tuần!'
@@ -948,7 +948,7 @@ export interface StudentProfile {
 
   vocabPoints?: number;      // Điểm học từ vựng (+10đ/bài unit)
 
-  examBonusPoints?: number;  // Điểm thưởng bài thi GK (điểm thi x 10)
+  examBonusPoints?: number;  // Điểm thưởng bài kiểm tra GK (điểm thi x 10)
 
   practicePoints?: number;   // Điểm làm đề cương & bài tập (+10đ/phần)
 
@@ -964,7 +964,7 @@ export interface StudentProfile {
 
   regularScore?: number | null; // Điểm ĐGtx từ sổ điểm chính thức
 
-  encouragementBonus?: number; // Điểm thưởng khuyến khích ôn thi GK1 (+15đ)
+  encouragementBonus?: number; // Điểm thưởng khuyến khích ôn tập GK1 (+15đ)
 
   teacherBonus?: number;       // Điểm thưởng giáo viên trao thêm do tích cực (+10, +20...)
 
@@ -1754,7 +1754,7 @@ export const DONG_YEN_CLASSES: ClassRoom[] = [
 
   { id: 'cls-11a1', name: '11A1', grade: 11, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 11A1 THPT', createdAt: '2026-09-05T07:30:00Z' },
 
-  { id: 'cls-12a1', name: '12A1', grade: 12, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 12A1 THPT - Ôn thi Tốt nghiệp 2026 - 2027', createdAt: '2026-09-05T07:30:00Z' }
+  { id: 'cls-12a1', name: '12A1', grade: 12, schoolYear: '2026 - 2027', homeroomTeacher: 'Trường THPT', description: 'Lớp 12A1 THPT - Ôn tập Tốt nghiệp 2026 - 2027', createdAt: '2026-09-05T07:30:00Z' }
 
 ];
 
@@ -2164,7 +2164,7 @@ class StudentGradebookService {
 
 
 
-      // 1. Tự động khôi phục toàn diện tất cả tài khoản học sinh và bài thi từ toàn bộ các key cũ
+      // 1. Tự động khôi phục toàn diện tất cả tài khoản học sinh và bài kiểm tra từ toàn bộ các key cũ
 
       this.recoverAllLegacyData();
 
@@ -2179,7 +2179,7 @@ class StudentGradebookService {
 
 
 
-      // 3. Tự động rà soát & khôi phục toàn diện điểm thực tế của học sinh từ tất cả bài thi, bài tập và lịch sử học hôm qua đến nay
+      // 3. Tự động rà soát & khôi phục toàn diện điểm thực tế của học sinh từ tất cả bài kiểm tra, bài tập và lịch sử học hôm qua đến nay
 
       this.auditAndRestoreAllStudentPoints();
 
@@ -2829,7 +2829,7 @@ class StudentGradebookService {
 
 
 
-      // Điểm khuyến khích ôn thi Giữa kỳ 1 (+15 điểm)
+      // Điểm khuyến khích ôn tập Giữa kỳ 1 (+15 điểm)
 
       const bonus = grantBonus ? bonusAmount : 15;
 
@@ -3099,7 +3099,7 @@ class StudentGradebookService {
 
     // 5. Làm sạch & hợp nhất bài nộp (Student Submissions)
 
-    // - Xóa bỏ bài thi của học sinh demo
+    // - Xóa bỏ bài kiểm tra của học sinh demo
 
     // - Chuyển studentId về canonical student
 
@@ -3115,7 +3115,7 @@ class StudentGradebookService {
 
       if (purgedDemoIds.has(sub.studentId) || DEMO_REGEX.test(sub.studentName || '')) {
 
-        return; // Bỏ qua bài thi demo
+        return; // Bỏ qua bài kiểm tra demo
 
       }
 
@@ -3129,7 +3129,7 @@ class StudentGradebookService {
 
       if (!canonicalStudent) {
 
-        // Kiểm tra xem tên bài thi có trùng với học sinh nào trong sổ điểm không
+        // Kiểm tra xem tên bài kiểm tra có trùng với học sinh nào trong sổ điểm không
 
         const normSubName = normalizeVietnameseName(sub.studentName || '');
 
@@ -3339,7 +3339,7 @@ class StudentGradebookService {
 
 
 
-    // 9. Lưu trữ danh sách học sinh và bài thi sạch tuyệt đối vào bộ nhớ vĩnh viễn
+    // 9. Lưu trữ danh sách học sinh và bài kiểm tra sạch tuyệt đối vào bộ nhớ vĩnh viễn
 
     this.saveStudents();
 
@@ -3655,7 +3655,7 @@ class StudentGradebookService {
 
           gender: 'Nam',
 
-          note: 'Tự động đồng bộ từ bài thi đã làm',
+          note: 'Tự động đồng bộ từ bài kiểm tra đã làm',
 
           createdAt: sub.submittedAt || new Date().toISOString(),
 
@@ -3671,7 +3671,7 @@ class StudentGradebookService {
 
         this.students.push(newProfile);
 
-        details.push(`Tự động đồng bộ học sinh mới từ bài thi: ${newProfile.name} (Lớp ${newProfile.className})`);
+        details.push(`Tự động đồng bộ học sinh mới từ bài kiểm tra: ${newProfile.name} (Lớp ${newProfile.className})`);
 
       }
 
@@ -3775,7 +3775,7 @@ class StudentGradebookService {
 
 
 
-      // Điểm bài thi GK/CK: Điểm thi x 10 (lấy bài cao nhất hoặc tích lũy các bài thi)
+      // Điểm bài kiểm tra GK/CK: Điểm thi x 10 (lấy bài cao nhất hoặc tích lũy các bài kiểm tra)
 
       let examBonusFromSubs = 0;
 
@@ -5325,7 +5325,7 @@ class StudentGradebookService {
 
           examBonus: meritBonus,
 
-          reason: `Bài thi ${newSub.testTitle}: Đạt ${newSub.score}đ (+${meritBonus} điểm thi đua)`
+          reason: `Bài kiểm tra ${newSub.testTitle}: Đạt ${newSub.score}đ (+${meritBonus} điểm thi đua)`
 
         });
 
@@ -5349,7 +5349,7 @@ class StudentGradebookService {
 
         { id: newSub.studentId, studentCode: newSub.studentCode, name: newSub.studentName, className: newSub.className, grade: newSub.grade },
 
-        newSub.testType === 'online_quiz' ? 'Hoàn thành bài kiểm tra trắc nghiệm' : (newSub.testType === 'gk_ck_exam' ? 'Nộp bài thi GK-CK' : 'Hoàn thành bài tập SGK'),
+        newSub.testType === 'online_quiz' ? 'Hoàn thành bài kiểm tra trắc nghiệm' : (newSub.testType === 'gk_ck_exam' ? 'Nộp bài kiểm tra GK-CK' : 'Hoàn thành bài tập SGK'),
 
         `${newSub.testTitle} - Đạt ${newSub.score}/10 điểm (+${meritBonus} điểm thi đua)`
 
@@ -6285,7 +6285,7 @@ class StudentGradebookService {
 
       
 
-      // Khôi phục điểm bài thi nếu có từ submissions
+      // Khôi phục điểm bài kiểm tra nếu có từ submissions
 
       const studentSubs = this.submissions.filter(sub => 
 
@@ -6611,7 +6611,7 @@ class StudentGradebookService {
 
     const rows = list.map((item, index) => {
 
-      const typeLabel = item.testType === 'online_quiz' ? 'Đề Thi Online Trắc Nghiệm' : 'Bài Tập SGK Theo Phần';
+      const typeLabel = item.testType === 'online_quiz' ? 'Đề Kiểm Tra Online Trắc Nghiệm' : 'Bài Tập SGK Theo Phần';
 
       let rankText = 'Đạt Yêu Cầu';
 
@@ -6689,7 +6689,7 @@ class StudentGradebookService {
 
   /**
 
-   * Đặt lại (reset) toàn bộ điểm thi đua, tiến độ học tập và bài thi đã test thử trên máy tính này
+   * Đặt lại (reset) toàn bộ điểm thi đua, tiến độ học tập và bài kiểm tra đã test thử trên máy tính này
 
    * Trả học sinh về trạng thái ban đầu sạch sẽ
 
@@ -7375,7 +7375,7 @@ class StudentGradebookService {
 
     const wishes = [
 
-      `Thầy Đinh Thành chúc em ${sName} (Lớp ${sCls}) luôn chăm ngoan, giữ vững tinh thần tự giác học tập mỗi ngày và bứt phá điểm 10 rực rỡ môn Tiếng Anh trong kỳ thi Giữa Kỳ này nhé!`,
+      `Thầy Đinh Thành chúc em ${sName} (Lớp ${sCls}) luôn chăm ngoan, giữ vững tinh thần tự giác học tập mỗi ngày và bứt phá điểm 10 rực rỡ môn Tiếng Anh trong đợt kiểm tra Giữa Kỳ này nhé!`,
 
       `Thầy Đinh Thành rất tự hào về sự kiên trì của ${sName}! Mỗi bài từ vựng và câu trắc nghiệm hôm nay là một bước tiến lớn cho tương lai. Chúc em luôn tự tin và tỏa sáng trên Bảng Vàng toàn trường!`,
 
@@ -7383,7 +7383,7 @@ class StudentGradebookService {
 
       `Mỗi ngày tiến bộ một chút, thành công rực rỡ sẽ đến! Thầy Đinh Thành chúc ${sName} nắm chắc từng từ vựng, giải chuẩn từng câu ngữ pháp và luôn dẫn đầu phong trào thi đua của lớp!`,
 
-      `Thầy Đinh Thành tặng em ${sName} hộp quà may mắn cùng niềm tin yêu sâu sắc! Chúc em làm bài thi thật bình tĩnh, đọc kỹ đề bài và đạt điểm số cao nhất khiến thầy cô và bố mẹ tự hào!`,
+      `Thầy Đinh Thành tặng em ${sName} hộp quà may mắn cùng niềm tin yêu sâu sắc! Chúc em làm bài kiểm tra thật bình tĩnh, đọc kỹ đề bài và đạt điểm số cao nhất khiến thầy cô và bố mẹ tự hào!`,
 
       `Học tập là chìa khóa mở ra tương lai tươi sáng. Thầy Thành chúc ${sName} luôn giữ ngọn lửa đam mê, học tập vui vẻ, tích lũy thêm nhiều điểm số thi đua và chinh phục mọi đỉnh cao tri thức!`,
 
@@ -7391,7 +7391,7 @@ class StudentGradebookService {
 
       `Chúc em ${sName} một ngày học tập thật hiệu quả và ngập tràn niềm vui! Hãy tiếp tục luyện đề và ôn từ vựng đều đặn cùng Thầy Thành để nhận trọn vẹn điểm thưởng pháo hoa nhé!`,
 
-      `Kiên trì là mẹ của thành công! Thầy Đinh Thành chúc em ${sName} ôn tập thật chắc tay, tự tin bước vào phòng thi và rinh về điểm số cao nhất lớp ${sCls}!`,
+      `Kiên trì là mẹ của thành công! Thầy Đinh Thành chúc em ${sName} ôn tập thật chắc tay, tự tin bước vào phòng kiểm tra và rinh về điểm số cao nhất lớp ${sCls}!`,
 
       `Thầy Đinh Thành chúc ${sName} có thêm nhiều niềm hứng khởi trong từng bài học. Chỉ cần em nỗ lực hết mình mỗi ngày, Thầy luôn đồng hành và hỗ trợ em đạt kết quả tốt nhất!`
 
@@ -7637,7 +7637,7 @@ class StudentGradebookService {
 
   /**
 
-   * 3. Điểm bài thi giữa kỳ: Tùy theo điểm đạt được để cộng điểm vào tổng điểm
+   * 3. Điểm bài kiểm tra giữa kỳ: Tùy theo điểm đạt được để cộng điểm vào tổng điểm
 
    */
 

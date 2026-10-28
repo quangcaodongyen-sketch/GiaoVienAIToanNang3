@@ -208,7 +208,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
               </div>
             </div>
 
-            {/* ==================== CỘT 2: NHIỆM VỤ ĐỀ CƯƠNG & THI THỬ ==================== */}
+            {/* ==================== CỘT 2: NHIỆM VỤ ĐỀ CƯƠNG & KIỂM TRA THỬ ==================== */}
             <div className="bg-[#0D233E] rounded-xl border border-blue-500/25 p-3.5 sm:p-4 flex flex-col justify-between space-y-3">
               <div>
                 {/* Header Nhiệm Vụ 2 */}
@@ -218,7 +218,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                       Nhiệm vụ 2
                     </span>
                     <h4 className="font-bold text-sm sm:text-base text-white">
-                      Đề Cương & Thi Thử GK1
+                      Đề Cương & Kiểm Tra Thử GK1
                     </h4>
                   </div>
                   <span className="text-sm font-bold text-cyan-300">
@@ -227,7 +227,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                 </div>
 
                 <p className="text-xs text-blue-200/80 mb-3">
-                  Hoàn thành đề cương và bài kiểm tra thi thử giữa học kỳ 1.
+                  Hoàn thành đề cương và bài kiểm tra kiểm tra thử giữa học kỳ 1.
                 </p>
 
                 {/* 2 Thẻ Bài Tập Tối Giản */}
@@ -259,7 +259,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                     </button>
                   </div>
 
-                  {/* Thẻ 2: Đề Thi Thử Online */}
+                  {/* Thẻ 2: Đề Kiểm Tra Thử Online */}
                   <div className="p-3 rounded-xl border border-blue-900/40 bg-[#091B30] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -281,7 +281,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                       className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shrink-0 cursor-pointer shadow-xs transition flex items-center justify-center gap-1"
                     >
                       <Award className="w-3.5 h-3.5" />
-                      <span>{missionState.mission2.midtermExam.attemptsCount > 0 ? 'Thi Thử Lại' : 'Vào Thi Thử GK1'}</span>
+                      <span>{missionState.mission2.midtermExam.attemptsCount > 0 ? 'Kiểm Tra Thử Lại' : 'Vào Kiểm Tra Thử GK1'}</span>
                     </button>
                   </div>
 

@@ -65,7 +65,7 @@ export interface MidtermMissionState {
     warningNote?: string;
   };
 
-  // NHIỆM VỤ 2: ĐỀ CƯƠNG & ĐỀ THI GIỮA KỲ 1
+  // NHIỆM VỤ 2: ĐỀ CƯƠNG & ĐỀ KIỂM TRA GIỮA KỲ 1
   mission2: {
     title: string;
     description: string;
@@ -169,8 +169,8 @@ export class MidtermMissionService {
         totalRequiredCount: VOCAB_MODES_CONFIG.length * 3
       },
       mission2: {
-        title: 'Nhiệm vụ 2: Ôn đề cương & thi thử Giữa Kỳ 1',
-        description: 'Học kỹ đề cương và làm bài thi thử giữa kỳ (tối thiểu 1 lần/bài). Điểm số >= 5.0đ, làm nghiêm túc không chọn bừa.',
+        title: 'Nhiệm vụ 2: Ôn đề cương & kiểm tra thử Giữa Kỳ 1',
+        description: 'Học kỹ đề cương và làm bài kiểm tra thử giữa kỳ (tối thiểu 1 lần/bài). Điểm số >= 5.0đ, làm nghiêm túc không chọn bừa.',
         decuong: {
           type: 'decuong',
           title: `Đề Cương Ôn Tập Giữa Kỳ 1 (Kèm Audio & Chấm Điểm)`,
@@ -183,13 +183,13 @@ export class MidtermMissionService {
         },
         midtermExam: {
           type: 'midterm_exam',
-          title: `Đề Thi Thử Giữa Kỳ 1 Chuẩn Cấu Trúc BGD&ĐT`,
+          title: `Đề Kiểm Tra Thử Giữa Kỳ 1 Chuẩn Cấu Trúc BGD&ĐT`,
           attemptsCount: 0,
           highestScore: 0,
           lastScore: 0,
           lastTimeSpentSeconds: 0,
           qualityPassed: false,
-          statusNote: 'Chưa làm bài thi thử GK1 (Yêu cầu tối thiểu 1 lần, điểm >= 5.0đ)'
+          statusNote: 'Chưa làm bài kiểm tra thử GK1 (Yêu cầu tối thiểu 1 lần, điểm >= 5.0đ)'
         },
         overallPercent: 0,
         isFullyCompleted: false
@@ -198,7 +198,7 @@ export class MidtermMissionService {
       academicLevel: 'CHUA_HOAN_THANH',
       levelBadgeText: 'Chưa hoàn thành',
       levelColor: 'text-slate-500 bg-slate-100',
-      teacherEvaluation: 'Bắt đầu ôn tập: Hoàn thành từ vựng Unit 1 - 3 và làm bài đề cương, đề thi thử.',
+      teacherEvaluation: 'Bắt đầu ôn tập: Hoàn thành từ vựng Unit 1 - 3 và làm bài đề cương, đề kiểm tra thử.',
       lastUpdatedAt: new Date().toISOString()
     };
 
@@ -267,7 +267,7 @@ export class MidtermMissionService {
   }
 
   /**
-   * Ghi nhận làm bài thi đề cương hoặc đề thi Giữa Kỳ 1
+   * Ghi nhận làm bài kiểm tra đề cương hoặc đề kiểm tra Giữa Kỳ 1
    * @param timeSpentSeconds: Thời gian làm bài thực tế (tính bằng giây)
    */
   public recordExamPracticeQuality(
@@ -297,7 +297,7 @@ export class MidtermMissionService {
 
     // QUY CHUẨN CHẤT LƯỢNG THẦY THÀNH:
     // 1. Điểm số tối thiểu phải >= 5.0 (Mức Đạt Thông tư 22 BGD&ĐT).
-    // 2. Không được nộp bài vội vàng (< 90 giây đối với bài thi đầy đủ).
+    // 2. Không được nộp bài vội vàng (< 90 giây đối với bài kiểm tra đầy đủ).
     const isNotRushed = timeSpentSeconds >= 90;
     const isPassingScore = score >= 5.0;
     const passedQuality = isPassingScore && isNotRushed;
@@ -315,7 +315,7 @@ export class MidtermMissionService {
           message = `⚠️ Nhắc nhở của Thầy Thành: Em nộp bài quá nhanh (${timeSpentSeconds} giây). Em hãy làm bài nghiêm túc, đọc kỹ từng câu để đạt kết quả tốt nhất!`;
         } else {
           targetItem.statusNote = `Chưa đạt: Điểm dưới 5.0 (${score}đ). Em hãy ôn lại lý thuyết và làm lại đề!`;
-          message = `⚠️ Thầy Thành nhắc nhở: Điểm bài làm là ${score}/10 (dưới 5.0đ). Để chuẩn bị tốt cho kỳ thi thật, em hãy xem lại lời giải chi tiết và làm lại lần nữa nhé!`;
+          message = `⚠️ Thầy Thành nhắc nhở: Điểm bài làm là ${score}/10 (dưới 5.0đ). Để chuẩn bị tốt cho đợt kiểm tra thật, em hãy xem lại lời giải chi tiết và làm lại lần nữa nhé!`;
         }
       } else {
         message = `Em vừa hoàn thành thêm 1 lần làm bài ${targetItem.title} (${score}/10đ). Cố gắng phát huy nhé!`;
@@ -418,7 +418,7 @@ export class MidtermMissionService {
     state.mission1.overallPercent = Math.min(100, Math.round(sumUnitPercents / 3));
     state.mission1.isFullyCompleted = state.mission1.overallPercent >= 100;
 
-    // 2. Tính % Nhiệm vụ 2 (Đề cương & Đề thi Giữa kỳ)
+    // 2. Tính % Nhiệm vụ 2 (Đề cương & Đề kiểm tra Giữa kỳ)
     let m2PassedCount = 0;
     if (state.mission2.decuong.qualityPassed) m2PassedCount++;
     if (state.mission2.midtermExam.qualityPassed) m2PassedCount++;
@@ -426,7 +426,7 @@ export class MidtermMissionService {
     state.mission2.overallPercent = m2PassedCount === 2 ? 100 : (m2PassedCount === 1 ? 50 : 0);
     state.mission2.isFullyCompleted = m2PassedCount === 2;
 
-    // 3. Tính Tổng % Toàn Diện (50% từ vựng + 50% đề cương/đề thi)
+    // 3. Tính Tổng % Toàn Diện (50% từ vựng + 50% đề cương/đề kiểm tra)
     state.totalProgressPercent = Math.round((state.mission1.overallPercent * 0.5) + (state.mission2.overallPercent * 0.5));
 
     // 4. Xếp loại học lực & Lời nhận xét sư phạm của Thầy Thành
@@ -446,7 +446,7 @@ export class MidtermMissionService {
       state.academicLevel = 'KHA';
       state.levelBadgeText = 'Khá';
       state.levelColor = 'text-indigo-700 bg-indigo-100 border-indigo-300 dark:bg-indigo-950/60 dark:text-indigo-300';
-      state.teacherEvaluation = `Đã hoàn thành ${state.totalProgressPercent}% nhiệm vụ. Cần hoàn thành đủ các dạng bài từ vựng và luyện lại đề thi.`;
+      state.teacherEvaluation = `Đã hoàn thành ${state.totalProgressPercent}% nhiệm vụ. Cần hoàn thành đủ các dạng bài từ vựng và luyện lại đề kiểm tra.`;
     } else if (state.totalProgressPercent >= 30 || avgScore >= 5.0) {
       state.academicLevel = 'DAT';
       state.levelBadgeText = 'Đạt yêu cầu';
@@ -456,7 +456,7 @@ export class MidtermMissionService {
       state.academicLevel = 'CAN_CO_GANG';
       state.levelBadgeText = 'Cần nỗ lực';
       state.levelColor = 'text-rose-700 bg-rose-100 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300';
-      state.teacherEvaluation = `Tiến độ hiện tại: ${state.totalProgressPercent}%. Cần hoàn thành nhiệm vụ từ vựng và nộp bài thi thử theo quy định.`;
+      state.teacherEvaluation = `Tiến độ hiện tại: ${state.totalProgressPercent}%. Cần hoàn thành nhiệm vụ từ vựng và nộp bài kiểm tra thử theo quy định.`;
     }
 
     state.lastUpdatedAt = new Date().toISOString();

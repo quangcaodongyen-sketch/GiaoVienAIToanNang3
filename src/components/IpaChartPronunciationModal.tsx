@@ -779,7 +779,7 @@ export const IpaChartPronunciationModal: React.FC<IpaChartPronunciationModalProp
                 <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 text-amber-950 dark:text-amber-200">
                   <div className="text-xs font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 flex items-center gap-1.5 mb-1">
                     <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Lỗi học sinh thường gặp & Bẫy đề thi:</span>
+                    <span>Lỗi học sinh thường gặp & Bẫy đề kiểm tra:</span>
                   </div>
                   <p className="text-xs leading-relaxed font-medium">
                     {activeSound.commonMistakeNote}

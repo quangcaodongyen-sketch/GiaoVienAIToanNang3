@@ -348,7 +348,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                   {/* Mã đề */}
                   <div>
                     <label className="block text-xs text-slate-300 font-semibold mb-1.5">
-                      Mã đề thi (Gợi ý 3 chữ số):
+                      Mã đề kiểm tra (Gợi ý 3 chữ số):
                     </label>
                     <input
                       type="text"
@@ -438,7 +438,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
                     </div>
                   </div>
 
-                  {/* NỘI DUNG CÁC PHẦN ĐỀ THI */}
+                  {/* NỘI DUNG CÁC PHẦN ĐỀ KIỂM TRA */}
                   {examData.parts.map((p, pIdx) => (
                     <div key={pIdx} className="mb-6">
                       <div className="font-bold text-base uppercase text-blue-900 mb-2">

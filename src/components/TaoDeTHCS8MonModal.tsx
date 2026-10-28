@@ -103,7 +103,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     highlights: [
       'Cân đối thời lượng kiến thức Vật lí - Hóa học - Sinh học theo tuần và số tiết dạy học',
       'Hệ thống hình vẽ sơ đồ thí nghiệm, đồ thị và bảng số liệu khoa học trực quan',
-      'Đề thi tích hợp ma trận và bản đặc tả đánh giá năng lực khoa học tự nhiên toàn diện'
+      'Đề kiểm tra tích hợp ma trận và bản đặc tả đánh giá năng lực khoa học tự nhiên toàn diện'
     ],
     zipUrl: EXAM_7MON_RESOURCES.subjects.KHTN.zipUrl,
     exeUrl: EXAM_7MON_RESOURCES.subjects.KHTN.exeUrl,
@@ -153,7 +153,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     desc: 'Cấu trúc chuẩn CV 7991: 12 MCQ (3A-3B-3C-3D) + 2 Đúng/Sai + 4 Trả lời ngắn + 2 Tự luận / Lập trình.',
     highlights: [
       'Cấu trúc 10.0đ chuẩn CV 7991 & thuật toán cân bằng đáp án thông minh 3A - 3B - 3C - 3D',
-      'Tự động xuất Biên bản phản biện, duyệt đề thi chuẩn 01 trang A4 theo Nghị định 30/2020',
+      'Tự động xuất Biên bản phản biện, duyệt đề kiểm tra chuẩn 01 trang A4 theo Nghị định 30/2020',
       'Ngân hàng 1.200+ câu hỏi bám sát SGK Kết nối tri thức Lớp 6, 7, 8, 9',
       'Đầy đủ Ma trận 16 cột 3 tầng, Bản đặc tả 7 cột và Đề cương ôn tập 4 dạng bài tập'
     ],
@@ -573,7 +573,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                 </button>
               </div>
               
-              {/* THANH ĐIỀU KHIỂN CẤU HÌNH ĐỀ THI */}
+              {/* THANH ĐIỀU KHIỂN CẤU HÌNH ĐỀ KIỂM TRA */}
               <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {/* CHỌN BỘ MÔN */}
@@ -619,7 +619,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                     </select>
                   </div>
 
-                  {/* CHỌN KỲ THI */}
+                  {/* CHỌN ĐỢT KIỂM TRA */}
                   <div>
                     <label className="text-[11px] font-bold text-slate-300 block mb-1">Kỳ kiểm tra:</label>
                     <select
@@ -641,7 +641,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
 
                   {/* CHỌN MÃ ĐỀ */}
                   <div>
-                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Mã đề thi:</label>
+                    <label className="text-[11px] font-bold text-slate-300 block mb-1">Mã đề kiểm tra:</label>
                     <select
                       value={selectedExamCode}
                       onChange={(e) => {
@@ -669,7 +669,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                     className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition cursor-pointer"
                   >
                     <Sparkles className={`w-4 h-4 text-amber-300 ${isGenerating ? 'animate-spin' : ''}`} />
-                    <span>{isGenerating ? 'ĐANG KHỞI TẠO ĐỀ THI...' : `🚀 BẤM TẠO ĐỀ MÔN ${curSub.name.toUpperCase()} (LỚP ${selectedGrade})`}</span>
+                    <span>{isGenerating ? 'ĐANG KHỞI TẠO ĐỀ KIỂM TRA...' : `🚀 BẤM TẠO ĐỀ MÔN ${curSub.name.toUpperCase()} (LỚP ${selectedGrade})`}</span>
                     {!isProActive && (
                       <span className="ml-1 px-2 py-0.5 rounded-full bg-black/40 text-[10px] text-amber-300 font-mono">
                         {trialRemaining}/3 LƯỢT ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
@@ -687,7 +687,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                         ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30 hover:from-emerald-500 hover:to-teal-500'
                         : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
                     }`}
-                    title={hasGenerated ? 'Tải file Word đề thi chuẩn in ấn (.doc)' : 'Vui lòng bấm nút [Bấm Tạo Đề] ở trên trước khi tải file Word'}
+                    title={hasGenerated ? 'Tải file Word đề kiểm tra chuẩn in ấn (.doc)' : 'Vui lòng bấm nút [Bấm Tạo Đề] ở trên trước khi tải file Word'}
                   >
                     <Download className="w-4 h-4" />
                     <span>XUẤT WORD (.DOC)</span>
@@ -713,7 +713,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                 </div>
               </div>
 
-              {/* 4 TAB XEM NỘI DUNG: ĐỀ THI - MA TRẬN - BẢN ĐẶC TẢ - ĐÁP ÁN */}
+              {/* 4 TAB XEM NỘI DUNG: ĐỀ KIỂM TRA - MA TRẬN - BẢN ĐẶC TẢ - ĐÁP ÁN */}
               <div className="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
                 <button
                   onClick={() => setActiveView('exam')}
@@ -724,7 +724,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  1. ĐỀ THI HỌC SINH
+                  1. ĐỀ KIỂM TRA HỌC SINH
                 </button>
 
                 <button
@@ -787,10 +787,10 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                   </div>
                 )}
 
-                {/* 1. XEM ĐỀ THI HỌC SINH (KHI ĐÃ BẤM TẠO ĐỀ) */}
+                {/* 1. XEM ĐỀ KIỂM TRA HỌC SINH (KHI ĐÃ BẤM TẠO ĐỀ) */}
                 {hasGenerated && activeView === 'exam' && examData && (
                   <div className="space-y-4">
-                    {/* TIÊU ĐỀ ĐỀ THI SƯ PHẠM */}
+                    {/* TIÊU ĐỀ ĐỀ KIỂM TRA SƯ PHẠM */}
                     <div className="grid grid-cols-2 gap-4 pb-3 border-b-2 border-slate-800 text-center">
                       <div>
                         <p className="font-bold text-xs uppercase">{examData.parentAgency || 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO ....................'}</p>
@@ -805,7 +805,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                       </div>
                     </div>
 
-                    {/* NỘI DUNG CÁC PHẦN ĐỀ THI */}
+                    {/* NỘI DUNG CÁC PHẦN ĐỀ KIỂM TRA */}
                     {examData.parts?.map((part, pIdx) => (
                       <div key={pIdx} className="space-y-3 pt-2">
                         <div className="font-bold text-[#FF0000] text-sm">
@@ -837,7 +837,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                   </div>
                 )}
 
-                {/* 2. XEM MA TRẬN ĐỀ THI (CV 7991) */}
+                {/* 2. XEM MA TRẬN ĐỀ KIỂM TRA (CV 7991) */}
                 {hasGenerated && activeView === 'matrix' && examData?.matrix && (
                   <div className="space-y-3">
                     <h4 className="font-bold text-sm text-[#FF0000] text-center uppercase">
@@ -983,7 +983,7 @@ Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin 
                           <div className="flex items-center gap-2">
                             <Crown className="w-5 h-5 text-amber-600 shrink-0" />
                             <h5 className="font-black text-xs text-amber-950 uppercase tracking-wide">
-                              ⭐ BẢN DÙNG THỬ CHỈ HIỂN THỊ ĐÁP ÁN 1/2 ĐỀ THI ⭐
+                              ⭐ BẢN DÙNG THỬ CHỈ HIỂN THỊ ĐÁP ÁN 1/2 ĐỀ KIỂM TRA ⭐
                             </h5>
                           </div>
                           <p className="text-xs text-slate-700 leading-relaxed">

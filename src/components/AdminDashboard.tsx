@@ -1329,7 +1329,7 @@ ${finalKey}
 1. Mở phần mềm "${appNameGuide}" (hoặc trên Web).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT PRO NGAY".
-Chúc Thầy/Cô có những tiết dạy và kỳ thi hiệu quả, tiết kiệm tối đa thời gian!`;
+Chúc Thầy/Cô có những tiết dạy và đợt kiểm tra hiệu quả, tiết kiệm tối đa thời gian!`;
       setExamZaloMsg(msg);
 
       const newRecord = {
@@ -1389,7 +1389,7 @@ ${res.key}
 1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang.
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
 3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KẾT NỐI HỖ TRỢ CÀI ĐẶT PHẦN MỀM".
-Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết kiệm tối đa thời gian!`;
+Chúc Thầy/Cô có những bộ đề kiểm tra phân hóa chất lượng, tiết kiệm tối đa thời gian!`;
       setBientheZaloMsg(msg);
 
       const newRecord = {
@@ -1761,7 +1761,7 @@ HƯỚNG DẪN KÍCH HOẠT:
 • Trên Word: Mở Microsoft Word -> Vào tab ToolMathpix2 -> Bấm nút "Nhập Key" -> Dán mã số (1) ở trên vào -> Bản quyền VIP kích hoạt thành công 100%!
 • Trên Web: Vào tab "Bản Quyền & Kích Hoạt" -> Dán mã vào ô kích hoạt.
 
-Chúc Quý Thầy/Cô biên soạn đề thi Toán tốc độ cao và giảng dạy hiệu quả!
+Chúc Quý Thầy/Cô biên soạn đề kiểm tra Toán tốc độ cao và giảng dạy hiệu quả!
 Mọi hỗ trợ xin liên hệ: Tác giả Đinh Thành - Hotline / Zalo: 0915.213717.`;
 
       setMathKeyResult(dvtWordKey);
@@ -2131,7 +2131,7 @@ Mọi hỗ trợ xin liên hệ: Tác giả Đinh Thành - Hotline / Zalo: 0915.
         return `🌟 [GIẢI PHÁP ĐỘT PHÁ] TẠO ĐỀ KIỂM TRA TIẾNG ANH GLOBAL SUCCESS CHUẨN CV 7991/BGDĐT CHỈ TRONG 30 GIÂY!
 
 Kính gửi quý Thầy/Cô dạy bộ môn Tiếng Anh THCS trên toàn quốc!
-Thầy/Cô đang mệt mỏi vì phải tự soạn ma trận, bản đặc tả kỹ thuật, chia tỉ lệ câu hỏi và tìm audio nghe cho đề thi định kỳ?
+Thầy/Cô đang mệt mỏi vì phải tự soạn ma trận, bản đặc tả kỹ thuật, chia tỉ lệ câu hỏi và tìm audio nghe cho đề kiểm tra định kỳ?
 
 👉 Phần mềm của ${author} đã giải quyết trọn vẹn:
 ✅ Tự động sinh Ma trận & Bản đặc tả tham khảo dành cho giáo viên CV 7991 của Bộ GD&ĐT.
@@ -2150,7 +2150,7 @@ Thầy/Cô đang mệt mỏi vì phải tự soạn ma trận, bản đặc tả
 Kính gửi quý Thầy/Cô dạy các môn: Toán, Ngữ Văn, Khoa Học Tự Nhiên, Lịch Sử & Địa Lí, Tin Học, GDCD, Công Nghệ!
 
 ⚡ KHÔNG CÒN NỖI LO MA TRẬN & BẢN ĐẶC TẢ PHỨC TẠP:
-🔹 Sinh trọn bộ Ma trận, Bản đặc tả kỹ thuật và Đề thi in ấn A4 kèm Đáp án chi tiết.
+🔹 Sinh trọn bộ Ma trận, Bản đặc tả kỹ thuật và Đề kiểm tra in ấn A4 kèm Đáp án chi tiết.
 🔹 Môn Toán: Công thức toán sắc nét, ký hiệu chuẩn mực.
 🔹 Môn Văn: Đọc hiểu ngữ liệu ngoài SGK (6.0đ) & Viết nghị luận/tự sự (4.0đ).
 🔹 Môn KHTN: Tỉ lệ chuẩn 3 phân môn Lý - Hóa - Sinh bám sát CTGDPT 2018.
@@ -2177,7 +2177,7 @@ Quý Thầy/Cô mất quá nhiều thời gian để căn lề, sửa font chữ
 #chuanhoavanban #nghidinh30 #soangiaoan5512 #addinword #giaovien`;
 
       case 'BIENTHE':
-        return `🛡️ SINH 3 ĐỀ BIẾN THỂ TƯƠNG ĐƯƠNG CHỐNG QUAY CÓP TRONG PHÒNG THI (AI PRO)!
+        return `🛡️ SINH 3 ĐỀ BIẾN THỂ TƯƠNG ĐƯƠNG CHỐNG QUAY CÓP TRONG PHÒNG KIỂM TRA (AI PRO)!
 
 Thầy/Cô chỉ có 1 đề gốc nhưng muốn tạo ra 3 mã đề tương đương về độ khó, hoán vị câu hỏi và phương án để học sinh ngồi cạnh không thể chép bài?
 
@@ -3318,7 +3318,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                         <option value="van">📖 Ngữ Văn THCS</option>
                         <option value="15p">⏱️ Tạo Đề 15 Phút Tiếng Anh</option>
                         <option value="tts">🎙️ Smart Listening Pro (Tạo Bài Nghe SGK)</option>
-                        <option value="bienthe">🔀 Biến Thể Đề Thi & Trộn Đề</option>
+                        <option value="bienthe">🔀 Biến Thể Đề Kiểm Tra & Trộn Đề</option>
                         <option value="mathstudio">📐 Đinh Thành MathStudio 2026+</option>
                         <option value="chvb">📑 Chuẩn Hóa Văn Bản AI</option>
                         <option value="cleaner">🧹 Dinh Thanh Cleaner Pro</option>
@@ -4483,7 +4483,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                         { id: 'tienganh', label: 'Tiếng Anh (THCS/THPT)' },
                         { id: 'toan', label: 'Toán Học (MathStudio)' },
                         { id: 'tienich', label: 'Tiện Ích Giáo Viên' },
-                        { id: 'chung', label: 'Giáo Án & Đề Thi' }
+                        { id: 'chung', label: 'Giáo Án & Đề Kiểm Tra' }
                       ].map(cat => (
                         <button
                           key={cat.id}

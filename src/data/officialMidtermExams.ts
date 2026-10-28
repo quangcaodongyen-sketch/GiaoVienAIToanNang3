@@ -1,4 +1,4 @@
-// DỮ LIỆU ĐỀ THI THỬ MINH HỌA & LUYỆN TẬP TOÀN DIỆN CẢ NĂM HỌC (320 MÃ ĐỀ THI ĐỘC LẬP - TUYỆT ĐỐI KHÔNG PHẢI ĐỀ KIỂM TRA CHÍNH THỨC CỦA NHÀ TRƯỜNG)
+// DỮ LIỆU ĐỀ KIỂM TRA THỬ MINH HỌA & LUYỆN TẬP TOÀN DIỆN CẢ NĂM HỌC (320 MÃ ĐỀ KIỂM TRA ĐỘC LẬP - TUYỆT ĐỐI KHÔNG PHẢI ĐỀ KIỂM TRA CHÍNH THỨC CỦA NHÀ TRƯỜNG)
 // Chuẩn Công văn 7991/BGDĐT & Chương trình GDPT 2018 Bộ SGK Global Success
 // Tác giả bản quyền phần mềm: Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717) - Trường THCS Đồng Yên
 // Gồm:

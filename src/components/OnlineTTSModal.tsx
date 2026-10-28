@@ -1216,7 +1216,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                     </div>
                   )}
 
-                  {/* CẤU HÌNH BÀI THI: SỐ LẦN NGHE, LỜI NHẮC, CHUÔNG KẾT THÚC, TỐC ĐỘ */}
+                  {/* CẤU HÌNH BÀI KIỂM TRA: SỐ LẦN NGHE, LỜI NHẮC, CHUÔNG KẾT THÚC, TỐC ĐỘ */}
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-1 border-t border-slate-700/60">
                     <div>
                       <label className="block text-[10px] font-bold text-slate-400 mb-0.5">
@@ -1375,7 +1375,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                       onChange={(e) => setEnableIntro(e.target.checked)}
                       className="rounded border-slate-700 text-blue-600 focus:ring-0"
                     />
-                    📢 Lời Dẫn Đề Thi Mở Đầu (Intro / Instructions):
+                    📢 Lời Dẫn Đề Kiểm Tra Mở Đầu (Intro / Instructions):
                   </label>
                   <span className="text-[10px] text-slate-400">Nghỉ 1.5s sau lời dẫn</span>
                 </div>
@@ -1384,7 +1384,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                     type="text"
                     value={introText}
                     onChange={(e) => setIntroText(e.target.value)}
-                    placeholder="Nhập lời mở đầu bài thi (Part 1. Listen to the conversation...)..."
+                    placeholder="Nhập lời mở đầu bài kiểm tra (Part 1. Listen to the conversation...)..."
                     className="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-blue-500"
                   />
                 )}
@@ -1726,7 +1726,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                 <span className="text-[11px] text-slate-400">Phân vai Nick & Mi, Tom & Mai</span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-                <span className="font-bold text-slate-200 block">🔔 Chuông Phòng Thi</span>
+                <span className="font-bold text-slate-200 block">🔔 Chuông Phòng Kiểm Tra</span>
                 <span className="text-[11px] text-slate-400">Chèn chuông Ding, Bell chuẩn BGD</span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">

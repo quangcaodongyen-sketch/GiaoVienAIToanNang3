@@ -691,7 +691,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
               </span>
             </div>
             <div className="text-[11px] text-amber-200/90 font-medium italic pt-1">
-              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề thi chính thức của nhà trường.
+              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề kiểm tra chính thức của nhà trường.
             </div>
 
             {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}
@@ -1661,7 +1661,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                       onClick={() => onGoToExam ? onGoToExam() : null}
                       className="w-full py-2.5 px-4 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 text-teal-700 dark:text-teal-300 font-bold text-xs border border-teal-300 dark:border-teal-800 shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <span>Vào Thi Thử Mã Đề 605</span>
+                      <span>Vào Kiểm Tra Thử Mã Đề 605</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -1673,7 +1673,7 @@ export const English6RevisionPortal: React.FC<English6RevisionPortalProps> = ({
                   <div>
                     <span className="font-bold text-slate-900 dark:text-white">Lời phê của Thầy Đinh Thành: </span>
                     {parseFloat(totalScore10) >= 8.5 ? (
-                      <span>Xuất sắc! Em đã nắm rất vững toàn bộ kiến thức 3 Unit đầu. Cứ giữ vững phong độ này trong kỳ thi Giữa kỳ 1 nhé!</span>
+                      <span>Xuất sắc! Em đã nắm rất vững toàn bộ kiến thức 3 Unit đầu. Cứ giữ vững phong độ này trong đợt kiểm tra Giữa kỳ 1 nhé!</span>
                     ) : parseFloat(totalScore10) >= 6.5 ? (
                       <span>Khá tốt! Em đã gỡ điểm thành công phần từ vựng và câu cơ bản. Hãy xem lại các câu sai bên dưới và bấm "Làm lại" để bứt phá điểm 9-10 nhé!</span>
                     ) : (

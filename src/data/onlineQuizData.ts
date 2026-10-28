@@ -23148,7 +23148,7 @@ export const GRADES_QUIZ_DATA: GradeQuizInfo[] = [
                   "university"
                 ],
                 "correctAnswer": 0,
-                "explanation": "Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+                "explanation": "Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
                 "level": "TH"
               },
               {
@@ -23278,7 +23278,7 @@ export const GRADES_QUIZ_DATA: GradeQuizInfo[] = [
                   "university"
                 ],
                 "correctAnswer": 0,
-                "explanation": "Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+                "explanation": "Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
                 "level": "TH"
               },
               {
@@ -23647,7 +23647,7 @@ export const GRADES_QUIZ_DATA: GradeQuizInfo[] = [
                   "university"
                 ],
                 "correctAnswer": 0,
-                "explanation": "Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+                "explanation": "Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
                 "level": "TH"
               },
               {
@@ -23777,7 +23777,7 @@ export const GRADES_QUIZ_DATA: GradeQuizInfo[] = [
                   "university"
                 ],
                 "correctAnswer": 0,
-                "explanation": "Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+                "explanation": "Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
                 "level": "TH"
               },
               {
@@ -24263,7 +24263,7 @@ export const GRADES_QUIZ_DATA: GradeQuizInfo[] = [
                   "university"
                 ],
                 "correctAnswer": 0,
-                "explanation": "Từ vựng (Kỳ thi): Kỳ thi tuyển sinh đầu vào -> entrance examination.",
+                "explanation": "Từ vựng (Đợt kiểm tra): Đợt kiểm tra tuyển sinh đầu vào -> entrance examination.",
                 "level": "TH"
               },
               {

@@ -249,7 +249,7 @@ export function buildPDFZaloMessage(
 2. Mở cửa sổ "PDF Suite Pro" -> Chọn Tab "Bản Quyền & Kích Hoạt".
 3. Dán Mã kích hoạt ở trên vào ô và bấm "KÍCH HOẠT PRO NGAY".
 
-Chúc Thầy/Cô quản lý và xử lý file PDF giáo án, đề thi nhanh chóng và hiệu quả!`;
+Chúc Thầy/Cô quản lý và xử lý file PDF giáo án, đề kiểm tra nhanh chóng và hiệu quả!`;
 }
 
 export async function verifyPDFLicenseKey(...args: any[]): Promise<any> {

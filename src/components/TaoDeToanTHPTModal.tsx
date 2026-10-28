@@ -408,7 +408,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                   >
                     {isGenerating ? (
                       <>
-                        <RefreshCw className="w-4 h-4 animate-spin" /> Đang tổng hợp Ma trận &amp; Đề thi...
+                        <RefreshCw className="w-4 h-4 animate-spin" /> Đang tổng hợp Ma trận &amp; Đề kiểm tra...
                       </>
                     ) : !isProActive && trialRemaining <= 0 ? (
                       <>
@@ -432,7 +432,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                   <h4 className="text-sm font-bold text-white">Chưa tạo đề kiểm tra Toán THPT</h4>
                   <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
                     Hệ thống không cung cấp sẵn đề mẫu để copy dùng luôn mà không nuôi app. Quý Thầy/Cô vui lòng bấm nút 
-                    <strong className="text-cyan-400"> "🚀 BẤM XUẤT ĐỀ TOÁN LỚP {selectedGrade}"</strong> ở trên để sinh đề thi bám sát Quyết định 764/BGDĐT (Dùng thử 3 lần, xem 1/2 đáp án).
+                    <strong className="text-cyan-400"> "🚀 BẤM XUẤT ĐỀ TOÁN LỚP {selectedGrade}"</strong> ở trên để sinh đề kiểm tra bám sát Quyết định 764/BGDĐT (Dùng thử 3 lần, xem 1/2 đáp án).
                   </p>
                 </div>
               )}
@@ -455,12 +455,12 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                     </div>
                   )}
 
-                  {/* TIÊU NGỮ VÀ KHUNG ĐỀ THI */}
+                  {/* TIÊU NGỮ VÀ KHUNG ĐỀ KIỂM TRA */}
                   <div className="flex justify-between items-start text-center mb-4 text-[12pt] border-b pb-3 border-slate-300">
                     <div className="text-center font-bold">
                       <p className="uppercase">{schoolAgency}</p>
                       <p className="uppercase font-extrabold text-blue-900">{schoolName}</p>
-                      <p className="text-[11pt] font-normal italic mt-0.5">(Đề thi gồm có 04 trang)</p>
+                      <p className="text-[11pt] font-normal italic mt-0.5">(Đề kiểm tra gồm có 04 trang)</p>
                     </div>
                     <div className="text-center font-bold">
                       <p className="uppercase">KIỂM TRA {selectedTerm === 'GK1' ? 'GIỮA HỌC KỲ I' : selectedTerm === 'CK1' ? 'CUỐI HỌC KỲ I' : selectedTerm === 'GK2' ? 'GIỮA HỌC KỲ II' : 'CUỐI HỌC KỲ II'}</p>
@@ -469,12 +469,12 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                     </div>
                   </div>
 
-                  {/* DÒNG HỌ TÊN, LỚP VÀ MÃ ĐỀ THI TRÊN BẢNG BIỂU THEO QUY CHUẨN */}
+                  {/* DÒNG HỌ TÊN, LỚP VÀ MÃ ĐỀ KIỂM TRA TRÊN BẢNG BIỂU THEO QUY CHUẨN */}
                   <div className="flex justify-between items-center text-[12pt] font-semibold mb-3 px-1">
                     <div>Họ và tên thí sinh: .................................................................................</div>
                     <div>Lớp: ....................</div>
                     <div className="border-2 border-slate-800 px-3 py-0.5 font-bold font-mono text-[13pt] bg-slate-100">
-                      Mã đề thi: {variantCodes[0]}
+                      Mã đề kiểm tra: {variantCodes[0]}
                     </div>
                   </div>
 
@@ -495,7 +495,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                     </div>
                   </div>
 
-                  {/* NỘI DUNG ĐỀ THI MÔN TOÁN THPT ĐỊNH DẠNG MỚI (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
+                  {/* NỘI DUNG ĐỀ KIỂM TRA MÔN TOÁN THPT ĐỊNH DẠNG MỚI (CHỈ 1/2 ĐÁP ÁN KHI !isProActive) */}
                   <div className="space-y-4 text-justify mt-5">
                     <div className="font-bold text-[13pt] text-blue-950 uppercase border-b pb-1 border-slate-400 flex items-center justify-between">
                       <span>PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (Từ câu 1 đến câu 12)</span>

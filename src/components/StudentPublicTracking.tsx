@@ -143,7 +143,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
     const subheader = `Kính nhờ Quý Phụ huynh và Thầy/Cô đôn đốc ${missing.length} em học sinh sau vào học ôn tập:`;
     const studentLines = missing.map((s, idx) => `${idx + 1}. ${s.name} (${s.className}) - Mã HS: ${s.studentCode || 'Chưa cấp'}`);
     const footer = `
-👉 Link Cổng Học Tập & Ôn Thi Tiếng Anh: https://dekiemtraso.com
+👉 Link Cổng Học Tập & Ôn Tập Tiếng Anh: https://dekiemtraso.com
 (Học sinh chỉ cần chọn đúng Tên và Lớp là vào học được ngay, không cần mật khẩu)`;
 
     const fullText = [header, timeStr, subheader, '', ...studentLines, footer].join('\n');
@@ -634,7 +634,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                   {summary.totalSubmissionsCount}
                 </div>
                 <div className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                  Bài Thi &amp; Bài Tập Đã Nộp
+                  Bài Kiểm Tra &amp; Bài Tập Đã Nộp
                 </div>
               </div>
             </div>

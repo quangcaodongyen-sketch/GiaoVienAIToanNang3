@@ -625,7 +625,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                             : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
                         }`}
                       >
-                        Bảng Đề Thi
+                        Bảng Đề Kiểm Tra
                       </button>
                     </div>
                   </div>
@@ -737,7 +737,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
                     Bộ Cài Đặt Word Add-in MathStudio 2026+ Pro
                   </h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Tích hợp trọn bộ 7 nhóm công cụ: Mathpix LaTeX, Căn chỉnh công thức, Soạn thảo đề thi Toán, Kẻ bảng đáp án, Tác giả & Kiểm tra Cập nhật tự động.
+                    Tích hợp trọn bộ 7 nhóm công cụ: Mathpix LaTeX, Căn chỉnh công thức, Soạn thảo đề kiểm tra Toán, Kẻ bảng đáp án, Tác giả & Kiểm tra Cập nhật tự động.
                   </p>
                 </div>
 

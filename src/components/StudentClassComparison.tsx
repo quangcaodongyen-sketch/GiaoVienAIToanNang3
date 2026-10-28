@@ -49,7 +49,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
   const [studentSubs, setStudentSubs] = useState<StudentSubmission[]>([]);
   // Chế độ xem: Cùng Lớp hoặc Toàn Trường
   const [rankingScope, setRankingScope] = useState<'class' | 'school' | 'grade'>('class');
-  // Tiêu chí xếp hạng: Điểm chuyên cần & thi đua hoặc Điểm bài thi
+  // Tiêu chí xếp hạng: Điểm chuyên cần & thi đua hoặc Điểm bài kiểm tra
   const [rankingSortBy, setRankingSortBy] = useState<'merit' | 'score'>('merit');
   const [schoolGradeFilter, setSchoolGradeFilter] = useState<number>(0);
 
@@ -200,7 +200,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                 </span>
               </h3>
               <p className="text-xs sm:text-sm text-amber-100/90 mt-1">
-                Tích điểm tự động: Đăng nhập mỗi ngày (+5đ) • Học xong bài từ vựng (+10đ) • Ôn đề cương & bài tập (+10đ) • Làm bài thi giữa kỳ (Điểm x 10) • Thời gian học tương tác (+3đ/10 phút thực tế)
+                Tích điểm tự động: Đăng nhập mỗi ngày (+5đ) • Học xong bài từ vựng (+10đ) • Ôn đề cương & bài tập (+10đ) • Làm bài kiểm tra giữa kỳ (Điểm x 10) • Thời gian học tương tác (+3đ/10 phút thực tế)
               </p>
             </div>
 
@@ -218,7 +218,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                 <span className="text-base sm:text-lg font-black text-white">+{activeStudent.practicePoints || 0}đ</span>
               </div>
               <div className="p-2 rounded-xl bg-white/10">
-                <span className="block text-[11px] text-amber-200 font-bold">🏆 Điểm Bài Thi</span>
+                <span className="block text-[11px] text-amber-200 font-bold">🏆 Điểm Bài Kiểm Tra</span>
                 <span className="text-base sm:text-lg font-black text-white">+{activeStudent.examBonusPoints || 0}đ</span>
               </div>
               <div className="p-2 rounded-xl bg-white/10 col-span-2 sm:col-span-1">
@@ -268,7 +268,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
             <span className="text-xs text-slate-500 font-bold">/ 10.0</span>
           </div>
           <p className="mt-2 text-xs text-slate-600 font-medium">
-            Đã làm <span className="font-bold text-blue-700">{myTestsCount} bài thi</span> (Cao nhất: {myHighest}đ)
+            Đã làm <span className="font-bold text-blue-700">{myTestsCount} bài kiểm tra</span> (Cao nhất: {myHighest}đ)
           </p>
         </div>
 
@@ -462,7 +462,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
               </button>
             </div>
 
-            {/* Chuyển tiêu chí sắp xếp: Điểm Chuyên Cần vs Điểm Bài Thi */}
+            {/* Chuyển tiêu chí sắp xếp: Điểm Chuyên Cần vs Điểm Bài Kiểm Tra */}
             <div className="flex p-1 bg-white/15 rounded-xl border border-white/20">
               <button
                 type="button"
@@ -482,7 +482,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                 }`}
                 title="Xếp theo Điểm Trung Bình Bài Kiểm Tra"
               >
-                📊 Điểm Bài Thi
+                📊 Điểm Bài Kiểm Tra
               </button>
             </div>
 
@@ -526,7 +526,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                 <th className="py-3.5 px-3 text-center">Lớp</th>
                 <th className="py-3.5 px-4 text-center bg-amber-100/70 text-amber-950">⭐ Điểm Chuyên Cần & Thi Đua</th>
                 <th className="py-3.5 px-3 text-center">Chi Tiết Tích Điểm</th>
-                <th className="py-3.5 px-3 text-center">Số Bài Thi</th>
+                <th className="py-3.5 px-3 text-center">Số Bài Kiểm Tra</th>
                 <th className="py-3.5 px-3 text-center">Điểm TB</th>
                 <th className="py-3.5 px-3 text-center">Xếp Loại</th>
                 <th className="py-3.5 px-4">Huy Hiệu</th>
@@ -602,7 +602,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                         <span title="Điểm danh chuyên cần" className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">⏰+{item.attendancePoints || 0}</span>
                         <span title="Học từ vựng" className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700">🧠+{item.vocabPoints || 0}</span>
                         <span title="Đề cương & bài tập" className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">📝+{item.practicePoints || 0}</span>
-                        <span title="Điểm bài thi GK" className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">🏆+{item.examBonusPoints || 0}</span>
+                        <span title="Điểm bài kiểm tra GK" className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">🏆+{item.examBonusPoints || 0}</span>
                       </div>
                     </td>
                     <td className="py-3.5 px-3 text-center font-black text-emerald-700">{item.testsCount} bài</td>

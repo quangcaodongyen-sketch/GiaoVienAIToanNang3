@@ -80,7 +80,7 @@ export interface ExamSuiteData {
     writingCues: string;
   };
 
-  // Dedicated Speaking Test (Đề thi nói chính thức)
+  // Dedicated Speaking Test (Đề kiểm tra nói chính thức)
   speakingTest: SpeakingTestData;
 
   // Answers & Rubric
@@ -384,7 +384,7 @@ export interface GenerateExamOptions {
 }
 
 /**
- * Sinh trọn bộ đề thi chuẩn Công văn 7991/BGDĐT
+ * Sinh trọn bộ đề kiểm tra chuẩn Công văn 7991/BGDĐT
  * Khớp 100% quy chuẩn master_exam_builder.py, dynamic_exam_engine.py và Thư viện Speaking Test
  */
 export function generateExamSuite(options: GenerateExamOptions): ExamSuiteData {
@@ -874,7 +874,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
     </table>
   `;
 
-  // Render đề thi cho một mã đề
+  // Render đề kiểm tra cho một mã đề
   const renderExamContent = (exam: typeof examCode1) => {
     let html = `
       <table style="width: 100%; border: none; border-collapse: collapse; margin-bottom: 4pt; page-break-inside: avoid;">
@@ -1062,13 +1062,13 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
       </table>
 
       <!-- =================================================================== -->
-      <!-- PHẦN 2: ĐỀ THI MÃ ĐỀ 1                                              -->
+      <!-- PHẦN 2: ĐỀ KIỂM TRA MÃ ĐỀ 1                                              -->
       <!-- =================================================================== -->
       <br clear="all" style="page-break-before: always; mso-break-type: section-break;" />
       ${renderExamContent(examCode1)}
 
       <!-- =================================================================== -->
-      <!-- PHẦN 3: ĐỀ THI MÃ ĐỀ 2 (HOÁN VỊ)                                    -->
+      <!-- PHẦN 3: ĐỀ KIỂM TRA MÃ ĐỀ 2 (HOÁN VỊ)                                    -->
       <!-- =================================================================== -->
       <br clear="all" style="page-break-before: always; mso-break-type: section-break;" />
       ${renderExamContent(examCode2)}
@@ -1085,7 +1085,7 @@ export function exportToWordHtml(suite: ExamSuiteData): string {
             <b style="text-decoration: underline;">${schoolName}</b>
           </td>
           <td style="width: 55%; text-align: center; vertical-align: top; font-size: 11pt; border: none; padding: 0;">
-            <b style="font-size: 12.5pt;">ĐỀ THI ĐÁNH GIÁ NĂNG LỰC NÓI (SPEAKING TEST)</b><br/>
+            <b style="font-size: 12.5pt;">ĐỀ KIỂM TRA ĐÁNH GIÁ NĂNG LỰC NÓI (SPEAKING TEST)</b><br/>
             <b>MÔN: TIẾNG ANH ${grade} - HỌC KỲ: ${termTitle}</b><br/>
             <i>${speakingTest.subtitle}</i>
           </td>

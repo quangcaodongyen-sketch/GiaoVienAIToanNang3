@@ -1092,7 +1092,7 @@ export default function App() {
                     )}
                   </div>
                   <p className="text-[11px] sm:text-xs text-blue-200/90 font-medium hidden sm:block">
-                    Luyện Từ Vựng Siêu Trí Nhớ • Đề Cương &amp; Đề Thi Online • Bảng Vàng Thi Đua
+                    Luyện Từ Vựng Siêu Trí Nhớ • Đề Cương &amp; Đề Kiểm Tra Online • Bảng Vàng Thi Đua
                   </p>
                 </div>
               </div>
@@ -1535,7 +1535,7 @@ export default function App() {
                     ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
                 }`}
-                title="Dành Cho Học Sinh: Học Từ Vựng, Thi Thử Online & Xem Điểm"
+                title="Dành Cho Học Sinh: Học Từ Vựng, Kiểm Tra Thử Online & Xem Điểm"
               >
                 <span className="text-sm sm:text-base">🎓</span>
                 <span>DÀNH CHO HS</span>
@@ -1615,7 +1615,7 @@ export default function App() {
                         window.history.pushState(null, '', '/hocsinh');
                       }}
                       className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-emerald-950/40 ring-2 ring-emerald-300/40 cursor-pointer"
-                      title="Chuyển sang Góc Học Sinh: Luyện Từ Vựng Siêu Trí Nhớ & Thi Thử Online"
+                      title="Chuyển sang Góc Học Sinh: Luyện Từ Vựng Siêu Trí Nhớ & Kiểm Tra Thử Online"
                     >
                       <GraduationCap className="w-4 h-4 text-amber-300" />
                       <span>🎓 Sang Cổng Học Sinh &rarr;</span>
@@ -1672,7 +1672,7 @@ export default function App() {
           />
         )}
 
-        {/* 3. PHÂN HỆ DÀNH CHO HỌC SINH (TỪ VỰNG + THI ONLINE + TẢI ĐỀ) */}
+        {/* 3. PHÂN HỆ DÀNH CHO HỌC SINH (TỪ VỰNG + KIỂM TRA ONLINE + TẢI ĐỀ) */}
         {mainViewTab === 'students' && (
           <StudentPortal 
             onSwitchToTeachers={() => {
