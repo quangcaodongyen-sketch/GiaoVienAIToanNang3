@@ -395,6 +395,56 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const [showPromoRoadmapModal, setShowPromoRoadmapModal] = useState<boolean>(false);
   const promoRoadmapList: PromoRoadmapDay[] = useMemo(() => getPromoRoadmapSchedule(currentPromoDate), [currentPromoDate]);
 
+  
+  // =========================================================================
+  // TỰ ĐỘNG CẬP NHẬT ĐIỂM SỐ CHUẨN XÁC MỖI 2 PHÚT (THẦY ĐINH VĂN THÀNH)
+  // - Định kỳ mỗi 2 phút (120.000 ms) tự động đồng bộ từ Cloud & Serverless
+  // - Bảo toàn điểm cao nhất (Math.max), tuyệt đối không làm mất điểm
+  // - Tự động cập nhật Bảng Vàng & 4 Tổ Thi Đua thời gian thực không cần tải lại trang
+  // =========================================================================
+  const [lastAutoSyncTime, setLastAutoSyncTime] = useState<string>(() => {
+    const d = new Date();
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  });
+
+  useEffect(() => {
+    const syncGradebookEvery2Min = async () => {
+      try {
+        console.log('🔄 [2-Min AutoSync] Đang tự động cập nhật điểm số học sinh chuẩn xác...');
+        // 1. Đồng bộ từ Cloud
+        await studentGradebookService.syncFromCloud(true);
+
+        // 2. Cập nhật học sinh hiện tại nếu đang đăng nhập
+        if (currentStudent) {
+          const freshList = studentGradebookService.getStudents();
+          const fresh = freshList.find(s => 
+            s.id === currentStudent.id || 
+            s.name.trim().toLowerCase() === currentStudent.name.trim().toLowerCase()
+          );
+          if (fresh) {
+            const maxPoints = Math.max(fresh.totalMeritPoints || 0, currentStudent.totalMeritPoints || 0);
+            setCurrentStudent(prev => prev ? { ...prev, ...fresh, totalMeritPoints: maxPoints } : null);
+          }
+        }
+
+        // 3. Cập nhật mốc giờ đồng bộ
+        const now = new Date();
+        setLastAutoSyncTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
+
+        // 4. Kích hoạt sự kiện toàn trang
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('gvai_gradebook_updated'));
+        }
+      } catch (err) {
+        console.warn('Lỗi tự động cập nhật điểm 2 phút:', err);
+      }
+    };
+
+    // Đặt chu kỳ chuẩn xác: mỗi 2 phút = 120,000 ms
+    const timer2Min = setInterval(syncGradebookEvery2Min, 120000);
+    return () => clearInterval(timer2Min);
+  }, [currentStudent]);
+
   // Đếm ngược thời gian thực tới 23:59:59 của ngày hôm nay
   const [timeRemainingToday, setTimeRemainingToday] = useState<string>('');
   useEffect(() => {
@@ -882,50 +932,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
+  // BẢO VỆ ĐIỂM SỐ: VÔ HIỆU HÓA HOÀN TOÀN CÁC HÀM RESET ĐIỂM ĐỂ KHÔNG BAO GIỜ BỊ MẤT ĐIỂM
   const handleResetCurrentStudentPoints = () => {
-
-    if (!currentStudent) return;
-
-    if (window.confirm(`Thầy/Cô có muốn đặt lại (reset) điểm của bạn "${currentStudent.name}" về ban đầu (0 điểm) không?`)) {
-
-      studentGradebookService.resetAllTestProgress(currentStudent.id);
-
-      const updated = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
-
-      if (updated) {
-
-        setCurrentStudent({ ...updated });
-
-      }
-
-      alert(`Đã đặt lại điểm của bạn "${currentStudent.name}" về 0đ thành công!`);
-
-    }
-
+    alert('🔒 Chức năng reset điểm đã bị khóa vĩnh viễn theo chỉ đạo của Thầy Đinh Thành để bảo toàn 100% điểm số học sinh!');
   };
 
-
-
   const handleResetAllTestPoints = () => {
-
-    if (window.confirm('Thầy/Cô có chắc chắn muốn đặt lại (reset) toàn bộ điểm số, bài nộp và tiến độ của TẤT CẢ các học sinh vừa test trên máy này về mặc định không?')) {
-
-      const res = studentGradebookService.resetAllTestProgress();
-
-      if (currentStudent) {
-
-        const updated = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
-
-        if (updated) setCurrentStudent({ ...updated });
-
-      }
-
-      alert(`Đã đặt lại điểm thành công cho ${res.count} học sinh trên máy này!`);
-
-      window.location.reload();
-
-    }
-
+    alert('🔒 Chức năng reset điểm đã bị khóa vĩnh viễn theo chỉ đạo của Thầy Đinh Thành để bảo toàn 100% điểm số học sinh!');
   };
 
 
@@ -2835,6 +2848,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
 
                 <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold hidden sm:inline-flex items-center gap-1" title="Điểm tự động đồng bộ mỗi 2 phút, bảo toàn điểm số an toàn tuyệt đối">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  <span>Tự cập nhật 2 phút • {lastAutoSyncTime}</span>
+                </span>
                 {myTeamInfo && (
                   <button
                     type="button"
@@ -3002,23 +3019,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
               </button>
 
-              <button
 
-                type="button"
-
-                onClick={handleResetCurrentStudentPoints}
-
-                className="px-2.5 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-200 hover:text-white text-xs font-bold transition cursor-pointer border border-rose-700/50 flex items-center gap-1"
-
-                title="Đặt lại (reset) điểm của bạn này về 0đ"
-
-              >
-
-                <RotateCw className="w-3.5 h-3.5 text-rose-300" />
-
-                <span>Reset Điểm</span>
-
-              </button>
 
             </div>
 
@@ -4334,26 +4335,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-          {/* Nút Reset toàn bộ điểm test trên máy */}
-
+          {/* BẢO VỆ ĐIỂM SỐ HỌC SINH: ĐÃ XÓA BỎ HOÀN TOÀN NÚT RESET ĐIỂM ĐỂ CHỐNG MẤT ĐIỂM */}
           <div className="pt-2 pb-1 text-center">
-
-            <button
-
-              type="button"
-
-              onClick={handleResetAllTestPoints}
-
-              className="text-xs text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 font-semibold inline-flex items-center gap-1.5 transition underline cursor-pointer"
-
-              title="Khôi phục toàn bộ điểm số của tất cả các học sinh vừa test về ban đầu"
-
-            >
-
-              <span>🔄 Đặt lại (Reset) toàn bộ điểm test trên máy này về mặc định</span>
-
-            </button>
-
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>🔒 Điểm tự động cập nhật chuẩn xác mỗi 2 phút • Bảo toàn 100% điểm số</span>
+            </span>
           </div>
 
 

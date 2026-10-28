@@ -6690,7 +6690,12 @@ class StudentGradebookService {
 
    */
 
-  public resetAllTestProgress(studentId?: string): { success: boolean; count: number } {
+  public resetAllTestProgress(studentId?: string, forceAdminBypass: boolean = false): { success: boolean; count: number } {
+    // KHÓA BẢO VỆ CHẶT CHẼ: TUYỆT ĐỐI KHÔNG CHO RESET ĐIỂM BỪA BÃI ĐỂ BẢO VỆ ĐIỂM SỐ HỌC SINH
+    if (!forceAdminBypass) {
+      console.warn('🔒 [BẢO VỆ ĐIỂM SỐ] Yêu cầu reset điểm bị từ chối để tránh mất điểm học sinh theo chỉ đạo của Thầy Đinh Thành!');
+      return { success: false, count: 0 };
+    }
 
     let affectedCount = 0;
 
