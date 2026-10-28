@@ -1428,6 +1428,234 @@ export function getTHCS8MonExamSuite(
         }
       };
 
+    case 'GDDP':
+      return {
+        subjectId: 'GDDP',
+        subjectName: 'Giáo dục địa phương',
+        grade,
+        termCode,
+        termTitle,
+        examCode,
+        timeMinutes: 45,
+        schoolYear,
+        parentAgency: 'UBND HUYỆN BẮC QUANG - PHÒNG GD&ĐT',
+        schoolName: 'TRƯỜNG TIỂU HỌC & THCS ĐỒNG TÂM',
+        parts: [
+          {
+            title: 'PHẦN I. CÂU HỎI TRẮC NGHIỆM KHÁCH QUAN',
+            points: '5,0 điểm',
+            instruction: 'Khoanh tròn vào chữ cái A, B, C hoặc D đứng trước câu trả lời đúng (Mỗi câu đúng 0,25 điểm):',
+            questions: [
+              {
+                num: 1,
+                content: 'Tỉnh Hà Giang nằm ở khu vực địa lí nào của nước ta?',
+                options: ['A. Đông Bắc Bộ', 'B. Đông Bắc Bộ (Đúng)', 'C. Tây Bắc Bộ', 'D. Bắc Trung Bộ'],
+                correctKey: 'B'
+              },
+              {
+                num: 2,
+                content: 'Cao nguyên đá Đồng Văn (Hà Giang) được UNESCO công nhận là gì?',
+                options: ['A. Di sản thiên nhiên thế giới', 'B. Công viên địa chất toàn cầu UNESCO', 'C. Khu dự trữ sinh quyển thế giới', 'D. Kỳ quan thiên nhiên mới'],
+                correctKey: 'B'
+              },
+              {
+                num: 3,
+                content: 'Khu di tích lịch sử Quốc gia đặc biệt Tân Trào thuộc địa phận tỉnh nào?',
+                options: ['A. Tuyên Quang', 'B. Hà Giang', 'C. Cao Bằng', 'D. Bắc Kạn'],
+                correctKey: 'A'
+              },
+              {
+                num: 4,
+                content: 'Lễ hội Thành Tuyên nổi tiếng với hoạt động văn hóa đặc trưng nào?',
+                options: ['A. Đua thuyền rồng trên sông Gâm', 'B. Rước đèn Trung thu khổng lồ độc đáo', 'C. Hội chọi trâu truyền thống', 'D. Lễ hội hoa tam giác mạch'],
+                correctKey: 'B'
+              },
+              {
+                num: 5,
+                content: 'Cây chè Shan Tuyết cổ thụ là đặc sản nông nghiệp nổi tiếng của địa phương nào?',
+                options: ['A. Hoàng Su Phì (Hà Giang) và Na Hang (Tuyên Quang)', 'B. Mèo Vạc (Hà Giang)', 'C. Yên Sơn (Tuyên Quang)', 'D. Hàm Yên (Tuyên Quang)'],
+                correctKey: 'A'
+              },
+              {
+                num: 6,
+                content: 'Dân tộc thiểu số nào có dân số đông và trang phục hoa văn rực rỡ đặc trưng tại vùng cao Hà Giang?',
+                options: ['A. Dân tộc Mông', 'B. Dân tộc Thái', 'C. Dân tộc Mường', 'D. Dân tộc Khơ Me'],
+                correctKey: 'A'
+              },
+              {
+                num: 7,
+                content: 'Đèo Mã Pí Lèng nổi tiếng uốn lượn bên dòng sông nào ở Hà Giang?',
+                options: ['A. Sông Nho Quế', 'B. Sông Lô', 'C. Sông Gâm', 'D. Sông Chảy'],
+                correctKey: 'A'
+              },
+              {
+                num: 8,
+                content: 'Làn điệu hát Then, đàn Tính là nét văn hóa truyền thống đặc sắc của dân tộc nào?',
+                options: ['A. Dân tộc Tày, Nùng', 'B. Dân tộc Dao', 'C. Dân tộc Mông', 'D. Dân tộc Pà Thẻn'],
+                correctKey: 'A'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN II. TỰ LUẬN & LIÊN HỆ THỰC TIỄN ĐỊA PHƯƠNG',
+            points: '5,0 điểm',
+            instruction: 'Học sinh trình bày câu trả lời chi tiết và nêu rõ bài học hành động:',
+            questions: [
+              {
+                num: 9,
+                content: 'Trình bày giá trị lịch sử - văn hóa của Khu di tích Quốc gia đặc biệt Tân Trào (Tuyên Quang) đối với cuộc Cách mạng Tháng Tám năm 1945.',
+                points: '2,5 điểm'
+              },
+              {
+                num: 10,
+                content: 'Là một học sinh THCS, em cần làm những việc gì cụ thể để góp phần giữ gìn và quảng bá các danh lam thắng cảnh, di sản văn hóa quê hương em (như Cao nguyên đá Đồng Văn hoặc Lễ hội Thành Tuyên)?',
+                points: '2,5 điểm'
+              }
+            ]
+          }
+        ],
+        matrix: {
+          headers: ['TT', 'Chủ đề / Bài học', 'Nhận biết (TN)', 'Thông hiểu (TN)', 'Vận dụng (TL)', 'Vận dụng cao (TL)', 'Tổng điểm'],
+          rows: [
+            ['1', 'Vị trí địa lí, tự nhiên & Danh lam thắng cảnh quê hương', '4 câu (1,0đ)', '2 câu (0,5đ)', 'Câu 10 ý a (1,0đ)', 'Câu 10 ý b (1,5đ)', '4,0 điểm (40%)'],
+            ['2', 'Lịch sử truyền thống cách mạng & Di tích lịch sử', '2 câu (0,5đ)', '2 câu (0,5đ)', 'Câu 9 ý a (1,5đ)', 'Câu 9 ý b (1,0đ)', '3,5 điểm (35%)'],
+            ['3', 'Văn hóa, phong tục & Lễ hội truyền thống dân tộc', '1 câu (0,25đ)', '1 câu (0,25đ)', '-', 'Ý liên hệ (2,0đ)', '2,5 điểm (25%)'],
+            ['TỔNG', 'Toàn bộ nội dung kiểm tra theo PPCT & CV 7991', '7 câu (1,75đ)', '5 câu (1,25đ)', '1 câu (2,5đ)', '1 câu (4,5đ)', '10,0 điểm (100%)']
+          ]
+        },
+        specification: {
+          headers: ['TT', 'Chủ đề', 'Chuẩn kiến thức, kỹ năng cần kiểm tra', 'Mức độ nhận thức', 'Câu hỏi & Điểm số'],
+          rows: [
+            ['1', 'Địa lí & Tự nhiên Hà Giang - Tuyên Quang', 'Xác định vị trí địa lí, nhận biết các thắng cảnh thiên nhiên tiêu biểu', 'Nhận biết, thông hiểu', 'Câu 1, 2, 7 (0,75đ)'],
+            ['2', 'Lịch sử cách mạng quê hương', 'Nắm được các mốc lịch sử tại Tân Trào, căn cứ địa cách mạng', 'Thông hiểu, vận dụng', 'Câu 3 (0,25đ) & Câu 9 (2,5đ)'],
+            ['3', 'Bản sắc văn hóa các dân tộc', 'Nhận diện nét đẹp văn hóa, phong tục truyền thống các dân tộc Tày, Mông, Dao', 'Nhận biết, vận dụng cao', 'Câu 4, 5, 6, 8 (1,0đ) & Câu 10 (2,5đ)']
+          ]
+        },
+        answerGuide: {
+          mcqAnswers: [
+            { q: 1, ans: 'B' }, { q: 2, ans: 'B' }, { q: 3, ans: 'A' }, { q: 4, ans: 'B' },
+            { q: 5, ans: 'A' }, { q: 6, ans: 'A' }, { q: 7, ans: 'A' }, { q: 8, ans: 'A' }
+          ],
+          essayGuide: [
+            {
+              question: 'Câu 9: Giá trị lịch sử khu di tích Tân Trào (2,5 điểm)',
+              step: '- Nơi Trung ương Đảng và Bác Hồ chọn làm Thủ đô Khu giải phóng (Thủ đô Kháng chiến) (1,0đ).
+- Diễn ra Hội nghị cán bộ toàn quốc của Đảng và Quốc dân Đại hội Tân Trào (0,75đ).
+- Phát lệnh Tổng khởi nghĩa giành chính quyền trong cả nước tháng 8/1945 (0,75đ).',
+              point: '2,5 điểm'
+            },
+            {
+              question: 'Câu 10: Hành động của học sinh gìn giữ di sản (2,5 điểm)',
+              step: '- Tích cực tìm hiểu, học tập nâng cao hiểu biết về văn hóa quê hương (0,75đ).
+- Giữ gìn vệ sinh môi trường tại các điểm di tích, không vứt rác, không vẽ bậy (0,75đ).
+- Tự hào giới thiệu cảnh đẹp và nét văn hóa với bạn bè qua mạng xã hội lành mạnh (1,0đ).',
+              point: '2,5 điểm'
+            }
+          ]
+        }
+      };
+
+    case 'HDTN':
+      return {
+        subjectId: 'HDTN',
+        subjectName: 'Hoạt động trải nghiệm, hướng nghiệp',
+        grade,
+        termCode,
+        termTitle,
+        examCode,
+        timeMinutes: 45,
+        schoolYear,
+        parentAgency: 'PHÒNG GIÁO DỤC VÀ ĐÀO TẠO ....................',
+        schoolName: 'TRƯỜNG THCS ....................',
+        parts: [
+          {
+            title: 'PHẦN I. TRẮC NGHIỆM ĐÁNH GIÁ NĂNG LỰC & HÀNH VI',
+            points: '5,0 điểm',
+            instruction: 'Khoanh tròn vào chữ cái A, B, C hoặc D đứng trước câu trả lời đúng:',
+            questions: [
+              {
+                num: 1,
+                content: 'Mục tiêu cốt lõi của môn Hoạt động trải nghiệm, hướng nghiệp cấp THCS là:',
+                options: ['A. Hình thành và phát triển các phẩm chất, năng lực và kỹ năng thích ứng cuộc sống', 'B. Thi lấy điểm xếp loại học sinh giỏi', 'C. Học thuộc lòng các điều luật', 'D. Tham gia lao động công ích bắt buộc'],
+                correctKey: 'A'
+              },
+              {
+                num: 2,
+                content: 'Khi gặp căng thẳng trong học tập hoặc áp lực thi cử, biện pháp tích cực nhất em nên làm là:',
+                options: ['A. Thức khuya chơi game để quên đi', 'B. Lập thời gian biểu khoa học, chia sẻ với thầy cô, cha mẹ và nghỉ ngơi hợp lí', 'C. Bỏ bữa và không nói chuyện với ai', 'D. Trách móc bản thân'],
+                correctKey: 'B'
+              },
+              {
+                num: 3,
+                content: 'Hành vi nào thể hiện sự tôn trọng và gìn giữ nét đẹp văn hóa gia đình, nhà trường?',
+                options: ['A. Chào hỏi lễ phép, kính trên nhường dưới, tích cực lắng nghe góp ý', 'B. Làm theo ý thích cá nhân không quan tâm đến mọi người xung quanh', 'C. Nói trống không với người lớn tuổi', 'D. Tẩy chay bạn bè khi có quan điểm khác mình'],
+                correctKey: 'A'
+              },
+              {
+                num: 4,
+                content: 'Bước đầu tiên trong quy trình lập kế hoạch hoạt động nhóm hiệu quả là:',
+                options: ['A. Xác định rõ mục tiêu của hoạt động và kết quả cần đạt', 'B. Phân công công việc ngay lập tức', 'C. Tổng kết đánh giá', 'D. Báo cáo giáo viên'],
+                correctKey: 'A'
+              }
+            ]
+          },
+          {
+            title: 'PHẦN II. XỬ LÝ TÌNH HUỐNG & DỰ ÁN HÀNH ĐỘNG THỰC TẾ',
+            points: '5,0 điểm',
+            instruction: 'Học sinh đọc kĩ tình huống và trình bày giải pháp xử lý văn minh, chuẩn mực:',
+            questions: [
+              {
+                num: 5,
+                content: 'Tình huống: Trong buổi thảo luận nhóm chuẩn bị tiết mục chào mừng ngày Nhà giáo Việt Nam 20/11, bạn An và bạn Bình xảy ra bất đồng ý kiến gay gắt về kịch bản, dẫn đến buổi tập bị gián đoạn. Nếu là nhóm trưởng, em sẽ xử lý tình huống này như thế nào để giữ vững tinh thần đoàn kết và hoàn thành tốt kế hoạch?',
+                points: '2,5 điểm'
+              },
+              {
+                num: 6,
+                content: 'Hãy xây dựng một bản kế hoạch nhỏ (gồm: Mục tiêu, Các bước thực hiện, Dự kiến thời gian) để rèn luyện thói quen tự học và tự quản lý cảm xúc bản thân trong học kì này.',
+                points: '2,5 điểm'
+              }
+            ]
+          }
+        ],
+        matrix: {
+          headers: ['TT', 'Mạch nội dung trải nghiệm', 'Nhận biết (TN)', 'Thông hiểu (TN)', 'Vận dụng (TL)', 'Vận dụng cao (TL)', 'Tổng điểm'],
+          rows: [
+            ['1', 'Hoạt động hướng vào bản thân (Khám phá & phát triển)', '2 câu (1,0đ)', '1 câu (0,5đ)', 'Ý lập kế hoạch (1,5đ)', 'Vận dụng cảm xúc (1,0đ)', '4,0 điểm (40%)'],
+            ['2', 'Hoạt động hướng đến xã hội (Gia đình, nhà trường & bạn bè)', '1 câu (0,5đ)', '1 câu (0,5đ)', 'Xử lý bất đồng (1,5đ)', 'Giải pháp đoàn kết (1,0đ)', '4,5 điểm (45%)'],
+            ['3', 'Hoạt động hướng nghiệp & Thích ứng cuộc sống', '1 câu (0,5đ)', '1 câu (1,0đ)', '-', '-', '1,5 điểm (15%)'],
+            ['TỔNG', 'Toàn bộ nội dung theo chuẩn CV 7991 & CT GDPT 2018', '4 câu (2,0đ)', '3 câu (2,0đ)', '1 câu (3,0đ)', '1 câu (3,0đ)', '10,0 điểm (100%)']
+          ]
+        },
+        specification: {
+          headers: ['TT', 'Mạch nội dung', 'Yêu cầu cần đạt', 'Hình thức kiểm tra', 'Điểm số'],
+          rows: [
+            ['1', 'Phát triển bản thân', 'Nhận biết cảm xúc, lập kế hoạch cá nhân khoa học', 'Trắc nghiệm & Tự luận', 'Câu 1, 2 (1,0đ) & Câu 6 (2,5đ)'],
+            ['2', 'Quan hệ xã hội & Giao tiếp', 'Kỹ năng hợp tác nhóm, giải quyết mâu thuẫn văn minh', 'Trắc nghiệm & Xử lý tình huống', 'Câu 3, 4 (1,0đ) & Câu 5 (2,5đ)']
+          ]
+        },
+        answerGuide: {
+          mcqAnswers: [
+            { q: 1, ans: 'A' }, { q: 2, ans: 'B' }, { q: 3, ans: 'A' }, { q: 4, ans: 'A' }
+          ],
+          essayGuide: [
+            {
+              question: 'Câu 5: Xử lý mâu thuẫn nhóm (2,5 điểm)',
+              step: '- Lắng nghe bình tĩnh ý kiến của cả 2 bạn An và Bình (0,75đ).
+- Phân tích điểm hợp lí và chưa hợp lí của từng ý tưởng trên tinh thần tôn trọng (0,75đ).
+- Gợi ý kết hợp các điểm mạnh của cả hai hoặc biểu quyết dân chủ trong nhóm (1,0đ).',
+              point: '2,5 điểm'
+            },
+            {
+              question: 'Câu 6: Kế hoạch rèn luyện tự học (2,5 điểm)',
+              step: '- Nêu rõ mục tiêu cụ thể, khả thi (0,75đ).
+- Liệt kê các khung giờ tự học cố định, tránh xa điện thoại/mạng xã hội (1,0đ).
+- Phương pháp tự kiểm tra và tự thưởng khi hoàn thành mục tiêu (0,75đ).',
+              point: '2,5 điểm'
+            }
+          ]
+        }
+      };
+
     default:
       return getTHCS8MonExamSuite('TOAN', grade, termCode, examCode);
   }

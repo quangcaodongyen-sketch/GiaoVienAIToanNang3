@@ -613,6 +613,16 @@ export default function App() {
         setShowTaoDeTHPTSubjectModal(true);
         webSecurityGuard.setActiveApp('tao-de-cn-thpt', 'Tạo Đề Công Nghệ THPT (2025+)');
       }
+      else if (hash === '#tao-de-gddp' || hash === '#tao-de-gddp-thcs') {
+        setThcs8MonSelectedSubject('GDDP');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-gddp-thcs', 'Tạo Đề Giáo Dục Địa Phương THCS (CV 7991)');
+      }
+      else if (hash === '#tao-de-hdtn' || hash === '#tao-de-hdtn-thcs') {
+        setThcs8MonSelectedSubject('HDTN');
+        setShowTaoDeTHCS8MonModal(true);
+        webSecurityGuard.setActiveApp('tao-de-hdtn-thcs', 'Tạo Đề Hoạt Động Trải Nghiệm THCS (CV 7991)');
+      }
       else if (hash === '#tao-de-toan' || hash === '#tao-de-toan-thcs') {
         setThcs8MonSelectedSubject('TOAN');
         setShowTaoDeTHCS8MonModal(true);
@@ -732,6 +742,16 @@ export default function App() {
 
   // Hàm điều hướng mở modal từ Chat Box Trợ Lý AI
   const handleOpenAppFromChat = (appId: string, subjectKey?: string) => {
+    if (appId === 'tao-de-gddp-thcs') {
+      setThcs8MonSelectedSubject('GDDP');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (appId === 'tao-de-hdtn-thcs') {
+      setThcs8MonSelectedSubject('HDTN');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
     if (appId === 'tao-de-toan-thcs') {
       setThcs8MonSelectedSubject('TOAN');
       setShowTaoDeTHCS8MonModal(true);
@@ -906,6 +926,18 @@ export default function App() {
     if (app.id === 'tao-de-15p-tienganh' || app.url === '#tao-de-15p-tienganh') {
       e.preventDefault();
       setShowTaoDe15PhutModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-gddp-thcs' || app.url === '#tao-de-gddp-thcs' || app.url === '#tao-de-gddp') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('GDDP');
+      setShowTaoDeTHCS8MonModal(true);
+      return;
+    }
+    if (app.id === 'tao-de-hdtn-thcs' || app.url === '#tao-de-hdtn-thcs' || app.url === '#tao-de-hdtn') {
+      e.preventDefault();
+      setThcs8MonSelectedSubject('HDTN');
+      setShowTaoDeTHCS8MonModal(true);
       return;
     }
     if (app.id === 'tao-de-toan-thcs' || app.url === '#tao-de-toan') {

@@ -197,6 +197,40 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
     accentColor: 'from-sky-700 to-cyan-800',
     badgeBg: 'bg-sky-500/20 text-sky-300 border-sky-500/40'
   },
+  GDDP: {
+    key: 'GDDP',
+    name: 'Giáo dục địa phương',
+    fullName: 'Môn Giáo dục địa phương THCS',
+    icon: '🏞️',
+    size: '76 MB',
+    desc: 'Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả 7 cột và đề kiểm tra GDĐP Lớp 6, 7, 8, 9 chuẩn Công văn 7991 (Hà Giang & Tuyên Quang).',
+    highlights: [
+      'Nạp toàn bộ kiến thức các bài học Giáo dục địa phương tỉnh Hà Giang và Tuyên Quang',
+      'Đầy đủ các mẫu đề linh hoạt: 20 MCQ + Tự luận hoặc 12 MCQ + Đúng/Sai + Trả lời ngắn + Tự luận',
+      'Giao diện Nền xanh chữ trắng chuẩn sư phạm cao cấp, tích hợp Add-in Word Ribbon và xuất song song Bản Giáo viên & Bản Học sinh'
+    ],
+    zipUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    exeUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    accentColor: 'from-blue-700 to-indigo-800',
+    badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+  },
+  HDTN: {
+    key: 'HDTN',
+    name: 'Hoạt động trải nghiệm',
+    fullName: 'Hoạt động trải nghiệm, hướng nghiệp THCS',
+    icon: '🎒',
+    size: '76 MB',
+    desc: 'Tự động tạo ma trận 16 cột 3 tầng, bản đặc tả 7 cột và đề kiểm tra HĐTN Lớp 6, 7, 8, 9 chuẩn Công văn 7991 (Sách Kết nối tri thức).',
+    highlights: [
+      'Bám sát chuẩn 3 mạch nội dung: Phát triển cá nhân, Hoạt động xã hội & môi trường, Hướng nghiệp',
+      'Đầy đủ Ma trận 16 cột 3 tầng, Bản đặc tả 7 cột và Barem điểm chi tiết theo chuẩn Bộ GD&ĐT',
+      'Giao diện Nền xanh chữ trắng chuẩn sư phạm cao cấp, tích hợp Add-in Word Ribbon 1-Click'
+    ],
+    zipUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    exeUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    accentColor: 'from-teal-700 to-cyan-800',
+    badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
+  },
   LICHSU: {
     key: 'LICHSU',
     name: 'Lịch sử',
@@ -216,7 +250,7 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
   }
 };
 
-const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'DIALI', 'TIN', 'CN'];
+const SUBJECT_KEYS = ['GDCD', 'TOAN', 'VAN', 'KHTN', 'SUDIA', 'LICHSU', 'DIALI', 'TIN', 'CN', 'GDDP', 'HDTN'];
 
 export const SUBJECT_HASH_MAP: Record<string, string> = {
   TOAN: '#tao-de-toan',

@@ -219,6 +219,22 @@ export const EXAM_THPT_RESOURCES = {
       icon: "💻",
       color: "from-sky-600 to-cyan-600"
     },
+    GDDP: {
+      name: "Giáo dục địa phương",
+      zipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      size: "76 MB",
+      icon: "🏞️",
+      color: "from-blue-700 to-indigo-800"
+    },
+    HDTN: {
+      name: "Hoạt động trải nghiệm",
+      zipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      size: "76 MB",
+      icon: "🎒",
+      color: "from-teal-700 to-cyan-800"
+    },
     LICHSU: {
       name: "Lịch sử",
       fullName: "Môn Lịch sử THPT",
@@ -334,6 +350,22 @@ export const EXAM_7MON_RESOURCES = {
       icon: "⚙️",
       color: "from-teal-600 to-emerald-600"
     },
+    GDDP: {
+      name: "Giáo dục địa phương",
+      zipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      size: "76 MB",
+      icon: "🏞️",
+      color: "from-blue-700 to-indigo-800"
+    },
+    HDTN: {
+      name: "Hoạt động trải nghiệm",
+      zipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+      size: "76 MB",
+      icon: "🎒",
+      color: "from-teal-700 to-cyan-800"
+    },
     LICHSU: {
       name: "Lịch sử",
       zipUrl: "https://drive.google.com/file/d/1R22KTK7x1JIbGi_X9KNwBgErL3qitthk/view?usp=sharing",
@@ -358,6 +390,22 @@ export const EXAM_LICHSU_THCS_RESOURCES = {
 
 
 // Cấu hình link tài nguyên Tạo Đề Địa Lí THCS Chuyên Sâu (CV 7991)
+export const EXAM_GDDP_THCS_RESOURCES = {
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  dotmUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  videoDirectUrl: "",
+  videoWatchUrl: ""
+};
+
+export const EXAM_HDTN_THCS_RESOURCES = {
+  fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  dotmUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  videoDirectUrl: "",
+  videoWatchUrl: ""
+};
+
 export const EXAM_DIALI_THCS_RESOURCES = {
   fullZipUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
   exeUrl: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",

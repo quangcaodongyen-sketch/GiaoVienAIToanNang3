@@ -435,6 +435,59 @@ export const OFFICIAL_APP_FILES: StorageFileItem[] = [
     isOfficial: true
   },
 
+  // ==================== GDĐP & HĐTN THCS ====================
+  {
+    id: 'app-gddp-thcs-exe',
+    folderId: FOLDER_ALL_APPS_ID,
+    name: 'Cai_Dat_TaoDe_GDDP_THCS.exe',
+    size: 76442624,
+    fileType: 'exe',
+    mimeType: 'application/x-msdownload',
+    uploadedAt: '2026-10-27T23:50:00Z',
+    downloadUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    description: 'Bộ cài đặt All-in-One Tạo đề Giáo dục địa phương THCS (Hà Giang & Tuyên Quang)',
+    uploader: 'Thầy Đinh Thành (Tác quyền)',
+    isOfficial: true
+  },
+  {
+    id: 'app-gddp-thcs-zip',
+    folderId: FOLDER_ALL_APPS_ID,
+    name: 'TaoDe_GDDP_THCS_Pass_123.zip',
+    size: 522190848,
+    fileType: 'zip',
+    mimeType: 'application/zip',
+    uploadedAt: '2026-10-27T23:50:00Z',
+    downloadUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    description: 'File nén Tạo đề Giáo dục địa phương THCS (Pass giải nén: 123)',
+    uploader: 'Thầy Đinh Thành (Tác quyền)',
+    isOfficial: true
+  },
+  {
+    id: 'app-hdtn-thcs-exe',
+    folderId: FOLDER_ALL_APPS_ID,
+    name: 'Cai_Dat_TaoDe_HDTN_THCS.exe',
+    size: 76546048,
+    fileType: 'exe',
+    mimeType: 'application/x-msdownload',
+    uploadedAt: '2026-10-27T23:50:00Z',
+    downloadUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    description: 'Bộ cài đặt All-in-One Tạo đề Hoạt động trải nghiệm THCS (Kết nối tri thức)',
+    uploader: 'Thầy Đinh Thành (Tác quyền)',
+    isOfficial: true
+  },
+  {
+    id: 'app-hdtn-thcs-zip',
+    folderId: FOLDER_ALL_APPS_ID,
+    name: 'TaoDe_HDTN_THCS_Pass_123.zip',
+    size: 523239424,
+    fileType: 'zip',
+    mimeType: 'application/zip',
+    uploadedAt: '2026-10-27T23:50:00Z',
+    downloadUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    description: 'File nén Tạo đề Hoạt động trải nghiệm THCS (Pass giải nén: 123)',
+    uploader: 'Thầy Đinh Thành (Tác quyền)',
+    isOfficial: true
+  },
   // ==================== CẤP THPT (QĐ 764) ====================
   {
     id: 'app-toan-thpt-exe',

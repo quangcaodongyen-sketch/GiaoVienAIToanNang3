@@ -234,6 +234,32 @@ export const apps: AppCard[] = [
     order: 10
   },
   {
+    id: "tao-de-gddp-thcs",
+    title: "TẠO ĐỀ GIÁO DỤC ĐỊA PHƯƠNG THCS (CV 7991)",
+    description: "Chuẩn Công văn 7991: 5 Mẫu đề kiểm tra đa dạng (20 TN + 3 TL, 16 TN + 2 TL, 12 TN + 3 TL, 100% TN). Nạp 100% ngữ liệu tỉnh Hà Giang & Tuyên Quang Lớp 6, 7, 8, 9 kèm Ma trận, Bản đặc tả & Biên bản phản biện.",
+    image: "/taode_gddp_thcs.png",
+    url: "#tao-de-gddp-thcs",
+    category: "ĐỀ THI CẤP THCS (CV 7991)",
+    levelBadge: "THCS",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 10.1
+  },
+  {
+    id: "tao-de-hdtn-thcs",
+    title: "TẠO ĐỀ HOẠT ĐỘNG TRẢI NGHIỆM THCS (CV 7991)",
+    description: "Chuẩn Công văn 7991: Toàn bộ 3 mạch nội dung Hoạt động trải nghiệm, hướng nghiệp Lớp 6, 7, 8, 9 SGK Kết nối tri thức. Tự động tính điểm thời gian thực, cân bằng 10.0đ, Ma trận 3 tầng & Bộ xuất All-in-One.",
+    image: "/taode_hdtn_thcs.png",
+    url: "#tao-de-hdtn-thcs",
+    category: "ĐỀ THI CẤP THCS (CV 7991)",
+    levelBadge: "THCS",
+    badge: "BẢN QUYỀN PRO",
+    active: true,
+    featured: true,
+    order: 10.2
+  },
+  {
     id: "sinhdebienthe",
     title: "SINH ĐỀ BIẾN THỂ (AI PRO)",
     description: "Phân tích đề gốc để sinh ngay 3 đề biến thể tương đương chống sao chép trong phòng thi.",

@@ -75,7 +75,15 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
     exe: 'https://drive.google.com/file/d/1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86/view?usp=sharing',
     zip: 'https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing'
   },
-  'tao-de-cn-thcs': {
+  'tao-de-gddp-thcs': {
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
+  },
+  'tao-de-hdtn-thcs': {
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
+  },
+    'tao-de-cn-thcs': {
     exe: 'https://drive.google.com/file/d/1ijY-nFdcajr5vSCXG-MS27sYhIhe6urw/view?usp=sharing',
     zip: 'https://drive.google.com/file/d/1vr2V6f6yPaUWh_v9pCxoXT-i7_QsxIjL/view?usp=sharing'
   },
