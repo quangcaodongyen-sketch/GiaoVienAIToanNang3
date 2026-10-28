@@ -1689,66 +1689,54 @@ export default function App() {
       </main>
 
             {/* FOOTER & THONG TIN TAC GIA THEO QUY CHUAN SKILL CHIA SE & MIEN TRU TRACH NHIEM (#footer-info) */}
-      <footer id="footer-info" className={`${t.footerBg} text-white border-t-2 ${t.footerBorder} py-8 transition-colors duration-300`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
-          
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 pb-5 border-b border-slate-800/80">
-            {/* Thông tin dự án đơn giản 1-2 dòng */}
-            <div className="space-y-1.5 max-w-xl">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
-                  <GraduationCap className="w-5 h-5 text-cyan-400" />
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-extrabold text-white">
-                    Dự án Hỗ trợ Giáo viên - Đề Kiểm Tra Số
-                  </h2>
-                  <p className="text-xs text-cyan-400 font-semibold">
-                    Chia sẻ các app hỗ trợ ra đề kiểm tra &amp; tiện ích giáo dục tham khảo • dekiemtraso.com
-                  </p>
-                </div>
+      <footer id="footer-info" className={`${t.footerBg} text-white border-t ${t.footerBorder} py-4 sm:py-5 transition-colors duration-300`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            {/* Nhận diện thương hiệu & Thông tin bản quyền tinh gọn */}
+            <div className="flex items-center gap-3 text-center md:text-left">
+              <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 hidden sm:flex">
+                <GraduationCap className="w-4 h-4 text-cyan-400" />
               </div>
-              <p className="text-[11px] sm:text-xs text-slate-400 pl-11">
-                * Dữ liệu do AI gợi ý chỉ mang tính chất tham khảo, giáo viên vui lòng rà soát trước khi sử dụng.
-              </p>
+              <div className="space-y-0.5 text-xs">
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 font-bold text-white">
+                  <a href="https://dekiemtraso.com" className="text-cyan-400 hover:underline">
+                    dekiemtraso.com
+                  </a>
+                  <span className="text-slate-600 hidden sm:inline">•</span>
+                  <span className="text-slate-200">Tác giả: Thầy Đinh Thành</span>
+                  <span className="text-slate-600 hidden sm:inline">•</span>
+                  <span className="text-slate-400 font-normal">© 2026 Giáo Viên AI</span>
+                </div>
+                <p className="text-[11px] text-slate-400">
+                  Phần mềm hỗ trợ tạo đề kiểm tra &amp; tiện ích giáo dục tham khảo chuẩn BGD&amp;ĐT
+                </p>
+              </div>
             </div>
 
-            {/* Thông tin tác giả & Liên hệ */}
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="text-left md:text-right pr-2">
-                <div className="text-xs sm:text-sm font-bold text-white">Tác giả Đinh Thành</div>
-                <div className="text-xs text-emerald-400 font-semibold">ĐT/Zalo: 0915.213717</div>
-              </div>
-
+            {/* Các nút liên kết & Cổng Quản trị tinh gọn */}
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold shrink-0">
               <a
                 href={BRAND.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm"
+                className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center gap-1.5 shadow-2xs"
+                title={`Hotline / Zalo: ${BRAND.phone}`}
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>Zalo: 0915.213717</span>
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Zalo: {BRAND.phone}</span>
               </a>
 
               <a
                 href={BRAND.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-2 rounded-xl bg-blue-600/70 hover:bg-blue-600 text-white font-bold text-xs border border-blue-500/40 transition-colors flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl bg-blue-600/70 hover:bg-blue-600 text-white border border-blue-500/40 transition-all flex items-center gap-1.5"
+                title="Trang Facebook tác giả"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>Facebook</span>
               </a>
-            </div>
-          </div>
-
-          {/* Dòng bản quyền & Cổng Admin */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-            <div>
-              © 2026 Tác giả Đinh Thành (0915.213717). Dự án Hỗ trợ Giáo viên • <a href="https://dekiemtraso.com" className="text-cyan-400 hover:underline font-bold">dekiemtraso.com</a>
-            </div>
-
-            <div className="flex items-center gap-3">
 
               <button
                 type="button"
@@ -1757,14 +1745,15 @@ export default function App() {
                   window.location.hash = '#admin';
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 font-bold border border-amber-400/30 transition-all flex items-center gap-1.5 cursor-pointer"
+                title="Cổng Quản Trị Hệ Thống"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-400" />
-                <span>Cổng Quản Trị Admin</span>
+                <span>Admin</span>
               </button>
             </div>
-          </div>
 
+          </div>
         </div>
       </footer>
 
