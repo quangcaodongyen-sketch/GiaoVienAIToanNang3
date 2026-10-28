@@ -190,67 +190,119 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
-      {/* THANH LỌC & TÌM KIẾM TINH GỌN */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-xs font-bold text-slate-500 mr-1 flex items-center gap-1">
+      {/* THANH LỌC TAB 3D TRONG SUỐT & TÌM KIẾM NHANH */}
+      <div className="backdrop-blur-md bg-white/75 dark:bg-slate-900/75 p-3.5 sm:p-4 rounded-3xl border border-white/60 dark:border-slate-800/80 shadow-[0_8px_30px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300 mr-1 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
             <Filter className="w-3.5 h-3.5 text-blue-600" />
             <span>Phân loại:</span>
           </span>
           {[
-            { id: 'ALL', label: `Tất cả (${apps.length})` },
-            { id: 'THCS', label: 'Cấp THCS (CV 7991)' },
-            { id: 'THPT', label: 'Cấp THPT (2025+)' },
-            { id: 'TIỂU HỌC', label: 'Cấp Tiểu Học (TT 27)' },
-            { id: 'CV 5512', label: 'Giáo Án & NLS (5512)' },
-            { id: 'TIỆN ÍCH', label: 'Tiện Ích Giáo Viên' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setCategoryFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                categoryFilter === tab.id
-                  ? 'bg-blue-600 text-white shadow-xs font-black'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+            { id: 'ALL', icon: '✨', label: 'Tất Cả', sub: `${apps.length} App` },
+            { id: 'THCS', icon: '📐', label: 'THCS', sub: 'CV 7991' },
+            { id: 'THPT', icon: '🏛️', label: 'THPT', sub: 'QĐ 764' },
+            { id: 'TIỂU HỌC', icon: '🎒', label: 'Tiểu Học', sub: 'TT 27' },
+            { id: 'CV 5512', icon: '📋', label: 'Giáo Án', sub: '5512 & NLS' },
+            { id: 'TIỆN ÍCH', icon: '⚡', label: 'Tiện Ích', sub: 'Trợ Lý AI' }
+          ].map(tab => {
+            const isAct = categoryFilter === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setCategoryFilter(tab.id)}
+                className={`relative px-3.5 py-2 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                  isAct
+                    ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5'
+                    : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
+                }`}
+              >
+                <span className="text-sm">{tab.icon}</span>
+                <span>{tab.label}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  isAct ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                }`}>
+                  {tab.sub}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Ô TÌM KIẾM NHANH */}
+        {/* Ô TÌM KIẾM NHANH 3D TRONG SUỐT */}
         <div className="relative min-w-[260px] flex-1 sm:flex-initial">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-blue-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Tìm môn học hoặc tên công cụ..."
+            placeholder="Tìm môn học, lớp hoặc tên công cụ..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white placeholder:text-slate-400 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)] backdrop-blur-xs"
           />
         </div>
       </div>
 
-      {/* BẢNG DANH MỤC ỨNG DỤNG ĐƠN GIẢN - GỌN GÀNG - KHÔNG TỐN DIỆN TÍCH */}
-      {/* KHUYẾN NGHỊ TẢI FILE AN TOÀN - TRÁNH BÁO LỖI VIRUS */}
-      <div className="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="w-4 h-4" />
+      {/* THÔNG BÁO CHUNG 3D TRONG SUỐT: LIÊN TỤC UPDATE & GHI NHẬN Ý KIẾN THẦY CÔ */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0C2340]/95 via-[#123660]/90 to-[#0A1A2E]/95 text-white p-4 sm:p-5 border border-cyan-400/40 shadow-[0_12px_32px_rgba(12,35,64,0.35),inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-md">
+        {/* Hiệu ứng hào quang ánh sáng 3D đa chiều */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-cyan-400/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          {/* Cột trái: Thông điệp Liên tục update & Ghi nhận hoàn thiện */}
+          <div className="space-y-2 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Huy hiệu 3D: LIÊN TỤC UPDATE */}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-slate-950 shadow-[0_3px_10px_rgba(245,158,11,0.45),inset_0_1px_0_rgba(255,255,255,0.7)] animate-pulse">
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                <span>LIÊN TỤC UPDATE 2026</span>
+              </span>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cyan-400/20 text-cyan-200 border border-cyan-400/40 shadow-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Chuẩn BGD&ĐT • 100% An Toàn</span>
+              </span>
+            </div>
+
+            <div>
+              <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight flex items-center gap-2">
+                <span>📢</span>
+                <span>Hệ sinh thái phần mềm được <strong className="text-amber-300 underline decoration-amber-400/60 font-black">LIÊN TỤC UPDATE</strong> đồng hành cùng Thầy/Cô</span>
+              </h3>
+              <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed mt-1">
+                Tác giả <strong className="text-cyan-300 font-bold">Thầy giáo Đinh Thành</strong> luôn trân trọng lắng nghe &amp; ghi nhận mọi yêu cầu nâng cấp, bổ sung môn học, tối ưu hóa tính năng cũng như sửa app theo góp ý thực tế của quý Thầy/Cô trên toàn quốc để các ứng dụng ngày càng hoàn thiện, phục vụ đắc lực nhất cho công tác giảng dạy &amp; ra đề kiểm tra.
+              </p>
+            </div>
+
+            {/* Hướng dẫn tải an toàn .zip Pass 123 */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-300 pt-1.5 border-t border-white/10">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Khuyên dùng: Tải bản nén <strong className="text-amber-300 font-bold font-mono bg-white/10 px-1.5 py-0.2 rounded border border-white/15">.zip (Pass: 123)</strong> để tải siêu tốc, không bị chặn nhầm.</span>
+              </span>
+              <span className="hidden sm:inline text-white/30">•</span>
+              <span>Hoặc chọn bản <strong className="text-cyan-200 font-bold">.exe</strong> cài trực tiếp qua Google Drive / Cloud CDN.</span>
+            </div>
           </div>
-          <div>
-            <p className="font-bold text-emerald-900 dark:text-emerald-200">
-              Khuyên dùng: Tải bản nén <span className="underline decoration-emerald-500 font-extrabold">.zip (Pass: 123)</span> để không bao giờ bị trình duyệt chặn nhầm virus!
-            </p>
-            <p className="text-emerald-700 dark:text-emerald-400 text-[11px] mt-0.5">
-              Tải siêu tốc qua máy chủ Cloud. Mật khẩu giải nén chung: <span className="font-mono font-bold bg-emerald-200 dark:bg-emerald-900/60 px-1.5 py-0.2 rounded text-emerald-950 dark:text-emerald-100">123</span> • Hoặc chọn bản <span className="font-semibold">.exe</span> cài trực tiếp.
-            </p>
+
+          {/* Cột phải: Nút 3D tương tác gửi yêu cầu & Hotline Zalo */}
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0">
+            <a
+              href={BRAND.zaloUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs shadow-[0_6px_18px_rgba(16,185,129,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-emerald-400/50 flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer text-center"
+              title="Gửi tin nhắn Zalo yêu cầu nâng cấp tính năng hoặc sửa app trực tiếp tới Thầy Đinh Thành"
+            >
+              <MessageCircle className="w-4 h-4 text-white shrink-0" />
+              <span>Góp Ý &amp; Yêu Cầu Nâng Cấp App</span>
+            </a>
+
+            <div className="text-[10px] text-slate-300 text-center font-medium">
+              Hotline / Zalo Thầy Thành: <strong className="text-amber-300 font-bold">{BRAND.phone}</strong> (24/7)
+            </div>
           </div>
         </div>
-        <span className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 font-semibold text-[11px]">
-          ✓ 100% Sạch & An toàn
-        </span>
       </div>
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
