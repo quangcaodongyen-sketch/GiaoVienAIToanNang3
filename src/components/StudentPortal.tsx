@@ -422,7 +422,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             s.name.trim().toLowerCase() === currentStudent.name.trim().toLowerCase()
           );
           if (fresh) {
-            const maxPoints = Math.max(fresh.totalMeritPoints || 0, currentStudent.totalMeritPoints || 0);
+            const vaultPts = studentGradebookService.getVaultMaxPoints ? studentGradebookService.getVaultMaxPoints(fresh.id, fresh.name, fresh.className) : 0;
+            const maxPoints = Math.max(fresh.totalMeritPoints || 0, currentStudent.totalMeritPoints || 0, vaultPts, 15);
             setCurrentStudent(prev => prev ? { ...prev, ...fresh, totalMeritPoints: maxPoints } : null);
           }
         }
@@ -2847,7 +2848,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
 
-                <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
+                <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 15}đ</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold hidden sm:inline-flex items-center gap-1" title="Điểm tự động đồng bộ mỗi 2 phút, bảo toàn điểm số an toàn tuyệt đối">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                   <span>Tự cập nhật 2 phút • {lastAutoSyncTime}</span>

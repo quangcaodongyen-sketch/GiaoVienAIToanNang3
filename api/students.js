@@ -71,9 +71,11 @@ export default async function handler(req, res) {
         // Map quan ly tat ca hoc sinh theo key chuan hoa
         const studentMap = new Map();
         const normalizeKey = (s) => {
-          const namePart = (s?.name || s?.username || s?.studentCode || '').trim().toLowerCase();
-          const classPart = (s?.className || '').trim().toLowerCase();
-          return namePart + '__' + classPart;
+          const rawName = (s?.name || s?.username || '').trim().toLowerCase();
+          const normName = rawName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
+          const classPart = (s?.className || '').trim().toUpperCase().replace(/LỚP\s*/gi, '').replace(/\s+/g, '');
+          if (normName && classPart) return normName + '__' + classPart;
+          return (s?.studentCode || s?.id || normName || rawName) + '__' + classPart;
         };
 
         // Nap hoc sinh hien co tren Cloud
@@ -147,7 +149,8 @@ export default async function handler(req, res) {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (Vercel Serverless)'
+            'User-Agent': 'Mozilla/5.0 (Vercel Serverless)',
+            'api-key': '6886e8ea-13b7-11f1-a1b7-0242ac120005'
           },
           body: finalPayload
         });
