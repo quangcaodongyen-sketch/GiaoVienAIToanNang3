@@ -123,6 +123,49 @@ class VocabularyService {
     });
   }
 
+  // Lấy danh sách từ vựng sinh luyện tập chuẩn (mặc định đúng 20 câu/từ để học sinh nhớ sâu)
+  // Ưu tiên toàn bộ từ của Unit hiện tại, sau đó bổ sung từ trọng tâm cùng khối lớp cho đủ 20 từ
+  public getPracticeVocabulary(grade: number, unitNumber: number = 0, targetCount: number = 20): VocabItem[] {
+    const unitWords = this.getVocabulary(grade, unitNumber);
+    const allGradeWords = this.getVocabulary(grade, 0);
+
+    if (allGradeWords.length === 0) return unitWords;
+
+    // Nếu unit hiện tại đã có >= targetCount từ, ta xáo trộn ngẫu nhiên và lấy đủ targetCount
+    if (unitWords.length >= targetCount) {
+      return [...unitWords].sort(() => 0.5 - Math.random()).slice(0, targetCount);
+    }
+
+    // Nếu unit có ít hơn targetCount từ (ví dụ 10-15 từ):
+    // 1. Giữ toàn bộ từ của Unit đó (đảm bảo nắm trọn vẹn Unit đang học)
+    const result: VocabItem[] = [...unitWords];
+
+    // 2. Lấy thêm các từ trọng tâm khác từ các bài cùng khối lớp để đủ 20 từ
+    const otherWords = allGradeWords
+      .filter(w => unitNumber === 0 || w.unitNumber !== unitNumber)
+      .sort(() => 0.5 - Math.random());
+
+    let otherIdx = 0;
+    while (result.length < targetCount && otherIdx < otherWords.length) {
+      result.push(otherWords[otherIdx]);
+      otherIdx++;
+    }
+
+    // Nếu toàn bộ khối vẫn chưa đủ 20 từ (dự phòng), nhân bản từ để đủ 20 câu
+    let cycleIdx = 0;
+    while (result.length < targetCount && result.length > 0) {
+      const src = result[cycleIdx % result.length];
+      result.push({
+        ...src,
+        id: `${src.id}-dup-${result.length}`
+      });
+      cycleIdx++;
+    }
+
+    // Xáo trộn thứ tự để câu hỏi đa dạng, kích thích phản xạ học sinh
+    return result.sort(() => 0.5 - Math.random());
+  }
+
   // Tổng số từ vựng toàn hệ thống
   public getTotalCount(): number {
     return this.vocabItems.length;

@@ -228,6 +228,26 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     return vocabularyService.getVocabulary(selectedGrade, selectedUnit, vocabSearch);
   }, [selectedGrade, selectedUnit, vocabSearch]);
 
+  // Bộ từ vựng sinh luyện tập chuẩn 20 từ (bảo đảm luôn đủ 20 câu để học sinh rèn luyện nhớ sâu)
+  const [practiceSeed, setPracticeSeed] = useState<number>(0);
+  const practiceVocabList: VocabItem[] = useMemo(() => {
+    return vocabularyService.getPracticeVocabulary(selectedGrade, selectedUnit, 20);
+  }, [selectedGrade, selectedUnit, practiceSeed]);
+
+  // Ref cho bộ đếm thời gian tự động chuyển câu (Auto-advance mượt mà 1.2s - 1.4s)
+  const autoNextQuizTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoNextListenTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoNextSpellTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Tự động dọn dẹp timer khi chuyển bài, chuyển chế độ hoặc unmount
+  useEffect(() => {
+    return () => {
+      if (autoNextQuizTimerRef.current) clearTimeout(autoNextQuizTimerRef.current);
+      if (autoNextListenTimerRef.current) clearTimeout(autoNextListenTimerRef.current);
+      if (autoNextSpellTimerRef.current) clearTimeout(autoNextSpellTimerRef.current);
+    };
+  }, [currentMode, selectedUnit, selectedGrade]);
+
   // Cấu hình âm thanh & giọng đọc
   const [voiceAccent, setVoiceAccent] = useState<VoiceAccent>(() => audioPronunciationService.getAccent());
   const [speechRate, setSpeechRate] = useState<number>(() => audioPronunciationService.getRate());
@@ -269,47 +289,60 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
   const currentWord = filteredVocab[cardIndex] || filteredVocab[0];
 
-  // ==================== STATE DẠNG 2: TRẮC NGHIỆM NGHĨA TỪ ====================
+  // ==================== STATE DẠNG 2: TRẮC NGHIỆM NGHĨA TỪ (20 CÂU TỰ CHUYỂN) ====================
   const [quizIndex, setQuizIndex] = useState<number>(0);
   const [quizSelectedOption, setQuizSelectedOption] = useState<string | null>(null);
   const [quizScore, setQuizScore] = useState<number>(0);
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
-  // Sinh 4 lựa chọn cho câu trắc nghiệm hiện tại
-  const currentQuizWord = filteredVocab[quizIndex];
+  // Sinh 4 lựa chọn cho câu trắc nghiệm hiện tại từ bộ 20 từ
+  const currentQuizWord = practiceVocabList[quizIndex] || practiceVocabList[0];
   const quizOptions = useMemo(() => {
-    if (!currentQuizWord || filteredVocab.length === 0) return [];
+    if (!currentQuizWord || practiceVocabList.length === 0) return [];
     const correct = currentQuizWord.meaning;
-    const others = filteredVocab
-      .filter(w => w.meaning !== correct)
+    // Lấy distractor từ toàn bộ kho từ vựng cùng khối lớp để phương án phong phú, không trùng lặp
+    const allGradeVocab = vocabularyService.getVocabulary(selectedGrade, 0);
+    const others = allGradeVocab
+      .filter(w => w.meaning !== correct && w.word !== currentQuizWord.word)
       .map(w => w.meaning);
+    const uniqueOthers = Array.from(new Set(others));
     // Xáo trộn distractor
-    const shuffledOthers = [...others].sort(() => 0.5 - Math.random()).slice(0, 3);
+    const shuffledOthers = [...uniqueOthers].sort(() => 0.5 - Math.random()).slice(0, 3);
     const all = [correct, ...shuffledOthers];
     return all.sort(() => 0.5 - Math.random());
-  }, [currentQuizWord, filteredVocab]);
+  }, [currentQuizWord, practiceVocabList, selectedGrade]);
 
   const handleQuizAnswer = (selectedMeaning: string, e?: React.MouseEvent) => {
     if (quizSelectedOption !== null) return; // Đã chọn rồi
     setQuizSelectedOption(selectedMeaning);
-    const isCorrect = selectedMeaning === currentQuizWord.meaning;
+    const isCorrect = selectedMeaning === currentQuizWord?.meaning;
     if (isCorrect) {
       setQuizScore(s => s + 1);
       triggerScorePopup(e, '+10 Điểm! ⭐');
     } else {
       playWrongSound();
     }
+
+    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO SAU 1.3 GIÂY
+    if (autoNextQuizTimerRef.current) clearTimeout(autoNextQuizTimerRef.current);
+    autoNextQuizTimerRef.current = setTimeout(() => {
+      handleNextQuiz();
+    }, 1300);
   };
 
   const handleNextQuiz = () => {
-    if (quizIndex < filteredVocab.length - 1) {
+    if (autoNextQuizTimerRef.current) {
+      clearTimeout(autoNextQuizTimerRef.current);
+      autoNextQuizTimerRef.current = null;
+    }
+    if (quizIndex < practiceVocabList.length - 1) {
       setQuizIndex(i => i + 1);
       setQuizSelectedOption(null);
     } else {
       setQuizFinished(true);
       if (currentStudent) {
         const finalScore = quizScore;
-        const totalQ = filteredVocab.length;
+        const totalQ = practiceVocabList.length;
         const acc = Math.round((finalScore / totalQ) * 100);
 
         // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
@@ -336,29 +369,36 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleRestartQuiz = () => {
+    if (autoNextQuizTimerRef.current) {
+      clearTimeout(autoNextQuizTimerRef.current);
+      autoNextQuizTimerRef.current = null;
+    }
+    setPracticeSeed(s => s + 1);
     setQuizIndex(0);
     setQuizSelectedOption(null);
     setQuizScore(0);
     setQuizFinished(false);
   };
 
-  // ==================== STATE DẠNG 3: LUYỆN NGHE CHỌN TỪ ====================
+  // ==================== STATE DẠNG 3: LUYỆN NGHE CHỌN TỪ (20 CÂU TỰ CHUYỂN) ====================
   const [listenIndex, setListenIndex] = useState<number>(0);
   const [listenSelectedOption, setListenSelectedOption] = useState<string | null>(null);
   const [listenScore, setListenScore] = useState<number>(0);
   const [listenFinished, setListenFinished] = useState<boolean>(false);
 
-  const currentListenWord = filteredVocab[listenIndex];
+  const currentListenWord = practiceVocabList[listenIndex] || practiceVocabList[0];
   const listenOptions = useMemo(() => {
-    if (!currentListenWord || filteredVocab.length === 0) return [];
+    if (!currentListenWord || practiceVocabList.length === 0) return [];
     const correct = currentListenWord.word;
-    const others = filteredVocab
+    const allGradeVocab = vocabularyService.getVocabulary(selectedGrade, 0);
+    const others = allGradeVocab
       .filter(w => w.word !== correct)
       .map(w => w.word);
-    const shuffledOthers = [...others].sort(() => 0.5 - Math.random()).slice(0, 3);
+    const uniqueOthers = Array.from(new Set(others));
+    const shuffledOthers = [...uniqueOthers].sort(() => 0.5 - Math.random()).slice(0, 3);
     const all = [correct, ...shuffledOthers];
     return all.sort(() => 0.5 - Math.random());
-  }, [currentListenWord, filteredVocab]);
+  }, [currentListenWord, practiceVocabList, selectedGrade]);
 
   // Tự động phát âm khi chuyển sang câu nghe mới
   useEffect(() => {
@@ -373,23 +413,34 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   const handleListenAnswer = (selectedWord: string, e?: React.MouseEvent) => {
     if (listenSelectedOption !== null) return;
     setListenSelectedOption(selectedWord);
-    if (selectedWord === currentListenWord.word) {
+    const isCorrect = selectedWord === currentListenWord?.word;
+    if (isCorrect) {
       setListenScore(s => s + 1);
       triggerScorePopup(e, '+10 Điểm! ⭐');
     } else {
       playWrongSound();
     }
+
+    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO SAU 1.4 GIÂY
+    if (autoNextListenTimerRef.current) clearTimeout(autoNextListenTimerRef.current);
+    autoNextListenTimerRef.current = setTimeout(() => {
+      handleNextListen();
+    }, 1400);
   };
 
   const handleNextListen = () => {
-    if (listenIndex < filteredVocab.length - 1) {
+    if (autoNextListenTimerRef.current) {
+      clearTimeout(autoNextListenTimerRef.current);
+      autoNextListenTimerRef.current = null;
+    }
+    if (listenIndex < practiceVocabList.length - 1) {
       setListenIndex(i => i + 1);
       setListenSelectedOption(null);
     } else {
       setListenFinished(true);
       if (currentStudent) {
         const finalScore = listenScore;
-        const totalQ = filteredVocab.length;
+        const totalQ = practiceVocabList.length;
         const acc = Math.round((finalScore / totalQ) * 100);
 
         // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
@@ -405,7 +456,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         );
         setMissionUpdateTrigger(t => t + 1);
 
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện nghe từ vựng Unit ${selectedUnit}`, 10);
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện nghe từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
         if (onRewardMerit) onRewardMerit(`Luyện nghe từ vựng Unit ${selectedUnit}`, 10);
 
         if ([1, 2, 3].includes(selectedUnit)) {
@@ -416,6 +467,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleRestartListen = () => {
+    if (autoNextListenTimerRef.current) {
+      clearTimeout(autoNextListenTimerRef.current);
+      autoNextListenTimerRef.current = null;
+    }
+    setPracticeSeed(s => s + 1);
     setListenIndex(0);
     setListenSelectedOption(null);
     setListenScore(0);
@@ -438,9 +494,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   const [matchFinished, setMatchFinished] = useState<boolean>(false);
 
   const initMatchGame = () => {
-    if (filteredVocab.length === 0) return;
-    // Chọn 5 từ ngẫu nhiên để nối
-    const sampleWords = [...filteredVocab].sort(() => 0.5 - Math.random()).slice(0, 6);
+    const sourceVocab = practiceVocabList.length > 0 ? practiceVocabList : filteredVocab;
+    if (sourceVocab.length === 0) return;
+    // Chọn 6 từ ngẫu nhiên để nối
+    const sampleWords = [...sourceVocab].sort(() => 0.5 - Math.random()).slice(0, 6);
     const cards: MatchCard[] = [];
     sampleWords.forEach(w => {
       cards.push({
@@ -549,7 +606,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     }
   };
 
-  // ==================== STATE DẠNG 5: LUYỆN GÕ CHÍNH TẢ (SPELLING) ====================
+  // ==================== STATE DẠNG 5: LUYỆN GÕ CHÍNH TẢ (SPELLING - 20 TỪ) ====================
   const [spellIndex, setSpellIndex] = useState<number>(0);
   const [spellInput, setSpellInput] = useState<string>('');
   const [spellFeedback, setSpellFeedback] = useState<'correct' | 'wrong' | null>(null);
@@ -559,7 +616,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   const [spellFinished, setSpellFinished] = useState<boolean>(false);
   const spellInputRef = useRef<HTMLInputElement>(null);
 
-  const currentSpellWord = filteredVocab[spellIndex];
+  const currentSpellWord = practiceVocabList[spellIndex] || practiceVocabList[0];
 
   const handleSpellCheck = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -572,6 +629,12 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       speakWord(currentSpellWord.word);
       setSpellScore(s => s + 1);
       triggerScorePopup(null, '+10 Điểm! ⭐');
+
+      // TỰ ĐỘNG CHUYỂN SANG TỪ TIẾP THEO SAU 1.3 GIÂY
+      if (autoNextSpellTimerRef.current) clearTimeout(autoNextSpellTimerRef.current);
+      autoNextSpellTimerRef.current = setTimeout(() => {
+        handleSpellNext();
+      }, 1300);
     } else {
       setSpellFeedback('wrong');
       playWrongSound();
@@ -579,7 +642,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleSpellNext = () => {
-    if (spellIndex < filteredVocab.length - 1) {
+    if (autoNextSpellTimerRef.current) {
+      clearTimeout(autoNextSpellTimerRef.current);
+      autoNextSpellTimerRef.current = null;
+    }
+    if (spellIndex < practiceVocabList.length - 1) {
       setSpellIndex(i => i + 1);
       setSpellInput('');
       setSpellFeedback(null);
@@ -590,7 +657,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       setSpellFinished(true);
       if (currentStudent) {
         const finalScore = spellScore;
-        const totalQ = filteredVocab.length;
+        const totalQ = practiceVocabList.length;
         const acc = Math.round((finalScore / totalQ) * 100);
 
         const sRes = midtermMissionService.recordVocabPracticeQuality(
@@ -605,7 +672,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         );
         setMissionUpdateTrigger(t => t + 1);
 
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện gõ từ vựng Unit ${selectedUnit}`, 10);
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện gõ từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
         if (onRewardMerit) onRewardMerit(`Luyện gõ từ vựng Unit ${selectedUnit}`, 10);
 
         if ([1, 2, 3].includes(selectedUnit)) {
@@ -624,6 +691,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleSpellRestart = () => {
+    if (autoNextSpellTimerRef.current) {
+      clearTimeout(autoNextSpellTimerRef.current);
+      autoNextSpellTimerRef.current = null;
+    }
+    setPracticeSeed(s => s + 1);
     setSpellIndex(0);
     setSpellInput('');
     setSpellFeedback(null);
@@ -1170,45 +1242,69 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       )}
 
-      {/* DẠNG 2: TRẮC NGHIỆM 4 LỰA CHỌN */}
-      {/* DẠNG 6: TRẮC NGHIỆM (QUIZ) - 4 PHƯƠNG ÁN 3D NỔI TRONG SUỐT */}
+      {/* ==================== DẠNG 3: TRẮC NGHIỆM (QUIZ) - 20 CÂU TỰ CHUYỂN, GỌN GÀNG KHÔNG TRƯỢT CUỘN ==================== */}
+      <style>{`
+        @keyframes autoAdvanceTimerQuiz {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+        @keyframes autoAdvanceTimerListen {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
+
       {currentMode === 'quiz' && (
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
           {!quizFinished ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-blue-700 dark:text-blue-300 font-black border border-blue-400/40 shadow-xs">
-                  🎯 Câu hỏi {quizIndex + 1} / {filteredVocab.length}
+            <div className="space-y-3 sm:space-y-3.5">
+              {/* THANH TIẾN TRÌNH MINI TÍCH HỢP ĐIỂM SỐ GỌN 1 HÀNG */}
+              <div className="flex items-center justify-between text-xs font-black gap-2">
+                <span className="px-2.5 py-1 rounded-xl bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 shrink-0">
+                  🎯 Câu {quizIndex + 1} / {practiceVocabList.length}
                 </span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-black flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  Đúng: {quizScore} / {quizIndex + (quizSelectedOption ? 1 : 0)} câu
+
+                {/* Thanh progress bar mỏng 6px bo tròn */}
+                <div className="flex-1 mx-2 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200 dark:border-slate-700">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, Math.max(5, ((quizIndex + 1) / practiceVocabList.length) * 100))}%` }}
+                  />
+                </div>
+
+                <span className="px-2.5 py-1 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 shrink-0 flex items-center gap-1">
+                  <span>⭐ Đúng:</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-black">{quizScore}/{quizIndex + (quizSelectedOption ? 1 : 0)}</span>
                 </span>
               </div>
 
+              {/* KHUNG CÂU HỎI TỪ VỰNG - RÕ NÉT & GỌN GÀNG KHÔNG TỐN CHIỀU CAO */}
               {currentQuizWord && (
-                <div className="text-center py-4 px-4 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-sky-500/15 backdrop-blur-md border border-indigo-200/80 dark:border-indigo-800/80 shadow-[0_4px_15px_rgba(99,102,241,0.1),inset_0_1px_0_rgba(255,255,255,0.7)] space-y-2">
-                  <div className="inline-flex items-center gap-2.5">
-                    <span className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight drop-shadow-xs">
+                <div className="text-center py-2.5 px-3.5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-sky-500/15 border border-indigo-200/70 dark:border-indigo-800/60 shadow-xs relative">
+                  <div className="inline-flex items-center justify-center gap-2 flex-wrap">
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                       {currentQuizWord.word}
                     </span>
                     <button
                       type="button"
                       onClick={() => speakWord(currentQuizWord.word)}
-                      className="p-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white shadow-[0_3px_0_#1d4ed8,0_4px_10px_rgba(59,130,246,0.3)] hover:-translate-y-0.5 active:translate-y-0.5 transition cursor-pointer"
+                      className="p-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition hover:scale-105 active:scale-95 cursor-pointer"
+                      title="Nghe phát âm chuẩn"
                     >
                       <Volume2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="text-sm font-mono font-bold text-sky-600 dark:text-sky-300">/{currentQuizWord.phonetic}/</div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold pt-1">
-                    Chọn nghĩa tiếng Việt chính xác nhất của từ trên:
+                  <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mt-0.5">
+                    /{currentQuizWord.phonetic}/ • <span className="italic font-sans text-slate-500">{currentQuizWord.type || 'v'}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                    Chọn nghĩa tiếng Việt chính xác nhất:
                   </p>
                 </div>
               )}
 
-              {/* 4 PHƯƠNG ÁN TRẮC NGHIỆM 3D NỔI TRONG SUỐT */}
-              <div className="grid grid-cols-1 gap-3.5">
+              {/* LƯỚI 4 ĐÁP ÁN TRẮC NGHIỆM: 2 CỘT x 2 HÀNG KHÔNG TRƯỢT CUỘN */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 {quizOptions.map((opt, i) => {
                   const isSelected = quizSelectedOption === opt;
                   const isCorrect = opt === currentQuizWord?.meaning;
@@ -1220,34 +1316,30 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       optClasses = `
                         bg-gradient-to-r from-emerald-500 to-teal-600 text-white
                         border-2 border-emerald-300
-                        shadow-[0_5px_0_#059669,0_0_25px_rgba(16,185,129,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        shadow-[0_4px_12px_rgba(16,185,129,0.45)]
                         font-black scale-[1.01]
                       `;
                     } else if (isSelected) {
                       optClasses = `
                         bg-gradient-to-r from-rose-500 to-red-600 text-white
                         border-2 border-rose-300
-                        shadow-[0_5px_0_#9f1239,0_0_25px_rgba(244,63,94,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        shadow-[0_4px_12px_rgba(244,63,94,0.45)]
                         font-black animate-shake
                       `;
                     } else {
                       optClasses = `
-                        opacity-35 bg-slate-100/60 dark:bg-slate-800/40 border-2 border-slate-200 dark:border-slate-700
-                        text-slate-400 dark:text-slate-500 shadow-none scale-95
+                        opacity-35 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700
+                        text-slate-400 dark:text-slate-500 shadow-none scale-98
                       `;
                     }
                   } else {
-                    // Trạng thái chờ: KHỐI PHÍM 3D NỔI TRONG SUỐT (AMBER/INDIGO 3D GLASS)
                     optClasses = `
-                      bg-gradient-to-r from-amber-400/15 via-orange-500/10 to-amber-500/20
-                      dark:from-amber-500/20 dark:via-orange-600/15 dark:to-amber-700/30
-                      backdrop-blur-md border-2 border-amber-300/80 dark:border-amber-400/50
-                      text-amber-950 dark:text-amber-100
-                      shadow-[0_5px_0_#d97706,0_8px_18px_-3px_rgba(217,119,6,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
-                      dark:shadow-[0_5px_0_#b45309,0_8px_18px_-3px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
-                      hover:-translate-y-0.5 hover:shadow-[0_7px_0_#d97706,0_12px_22px_-2px_rgba(217,119,6,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
-                      hover:border-amber-400
-                      active:translate-y-0.5 active:shadow-[0_2px_0_#d97706]
+                      bg-white dark:bg-slate-800
+                      border-2 border-slate-200 dark:border-slate-700
+                      hover:border-blue-500 dark:hover:border-blue-400
+                      text-slate-800 dark:text-slate-100
+                      shadow-xs hover:shadow-md
+                      hover:-translate-y-0.5 active:translate-y-0.5
                     `;
                   }
 
@@ -1257,35 +1349,67 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       type="button"
                       disabled={quizSelectedOption !== null}
                       onClick={(e) => handleQuizAnswer(opt, e)}
-                      className={`p-4 rounded-2xl flex items-center justify-between text-left text-sm sm:text-base font-bold transition-all duration-200 cursor-pointer select-none ${optClasses}`}
+                      className={`p-2.5 sm:p-3 rounded-xl flex items-center justify-between text-left text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer select-none min-h-[46px] sm:min-h-[50px] ${optClasses}`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-xl bg-gradient-to-b from-amber-500 to-orange-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-[0_2px_0_#c2410c,inset_0_1px_0_rgba(255,255,255,0.5)]">
+                      <div className="flex items-center gap-2 min-w-0 pr-1">
+                        <span className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-300 font-black text-xs flex items-center justify-center shrink-0 border border-blue-500/20">
                           {String.fromCharCode(65 + i)}
                         </span>
-                        <span className="leading-snug">{opt}</span>
+                        <span className="leading-snug line-clamp-2">{opt}</span>
                       </div>
                       {quizSelectedOption !== null && isCorrect && (
-                        <CheckCircle2 className="w-5 h-5 text-white shrink-0 drop-shadow-md" />
+                        <CheckCircle2 className="w-4 h-4 text-white shrink-0 drop-shadow-sm ml-1" />
                       )}
                       {quizSelectedOption !== null && isSelected && !isCorrect && (
-                        <XCircle className="w-5 h-5 text-white shrink-0 drop-shadow-md" />
+                        <XCircle className="w-4 h-4 text-white shrink-0 drop-shadow-sm ml-1" />
                       )}
                     </button>
                   );
                 })}
               </div>
 
+              {/* THANH CÔNG BỐ KẾT QUẢ TỨC THÌ & TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO */}
               {quizSelectedOption !== null && (
-                <div className="pt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={handleNextQuiz}
-                    className="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm shadow-md transition flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>{quizIndex < filteredVocab.length - 1 ? 'Câu Tiếp Theo' : 'Xem Kết Quả'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                <div className="relative overflow-hidden rounded-xl shadow-md animate-in fade-in">
+                  <div className={`p-2.5 px-3.5 flex items-center justify-between gap-2 text-xs font-bold text-white ${
+                    quizSelectedOption === currentQuizWord?.meaning
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600'
+                      : 'bg-gradient-to-r from-rose-500 via-red-600 to-rose-600'
+                  }`}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      {quizSelectedOption === currentQuizWord?.meaning ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
+                          <span className="font-black text-xs sm:text-sm">🎉 CHÍNH XÁC! (+10đ ⭐)</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-4 h-4 text-white shrink-0" />
+                          <span className="truncate text-xs sm:text-sm">
+                            Chưa đúng! Đáp án: <strong className="underline underline-offset-2">{currentQuizWord?.meaning}</strong>
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleNextQuiz}
+                      className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-[11px] font-black shrink-0 flex items-center gap-1 transition cursor-pointer"
+                      title="Bấm để chuyển ngay không cần chờ"
+                    >
+                      <span>{quizIndex < practiceVocabList.length - 1 ? 'Tiếp' : 'Xem Kết Quả'}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+
+                  {/* Thanh đếm ngược tự động chuyển 1.3s */}
+                  <div className="h-1.5 w-full bg-black/25">
+                    <div
+                      className="h-full bg-white/90"
+                      style={{ animation: 'autoAdvanceTimerQuiz 1.3s linear forwards' }}
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -1295,10 +1419,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 🏆
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                Hoàn Thành Trắc Nghiệm Unit {selectedUnit}!
+                Hoàn Thành 20 Câu Trắc Nghiệm Unit {selectedUnit}!
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Em đã trả lời đúng <strong className="text-emerald-600">{quizScore} / {filteredVocab.length} câu</strong> ({Math.round((quizScore / filteredVocab.length) * 100)}%).
+                Em đã trả lời đúng <strong className="text-emerald-600">{quizScore} / {practiceVocabList.length} câu</strong> ({Math.round((quizScore / practiceVocabList.length) * 100)}%).
               </p>
               <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 text-xs font-bold inline-block">
                 ⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua!
@@ -1307,16 +1431,17 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 <button
                   type="button"
                   onClick={handleRestartQuiz}
-                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
                 >
-                  Luyện Lại Ván Này
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Luyện 20 Câu Mới</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCurrentMode('match')}
+                  onClick={() => setCurrentMode('listen')}
                   className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
                 >
-                  <span>Chuyển Sang Nối Từ</span>
+                  <span>Chuyển Sang Luyện Nghe</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -1325,37 +1450,39 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       )}
 
-      {/* DẠNG 3: LUYỆN NGHE CHỌN TỪ */}
-      {/* DẠNG 7: LUYỆN NGHE (LISTEN) - KHỐI 3D NỔI TRONG SUỐT (3D TRANSLUCENT GLASS) */}
+      {/* ==================== DẠNG 4: LUYỆN NGHE (LISTEN) - 20 CÂU TỰ CHUYỂN, GỌN GÀNG KHÔNG TRƯỢT CUỘN ==================== */}
       {currentMode === 'listen' && (
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
           {!listenFinished ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-700 dark:text-purple-300 font-black border border-purple-400/40 shadow-xs">
-                  🎧 Câu nghe {listenIndex + 1} / {filteredVocab.length}
+            <div className="space-y-3 sm:space-y-3.5">
+              {/* THANH TIẾN TRÌNH MINI TÍCH HỢP ĐIỂM SỐ GỌN 1 HÀNG */}
+              <div className="flex items-center justify-between text-xs font-black gap-2">
+                <span className="px-2.5 py-1 rounded-xl bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 shrink-0">
+                  🎧 Câu nghe {listenIndex + 1} / {practiceVocabList.length}
                 </span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-black flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  Đúng: {listenScore} / {listenIndex + (listenSelectedOption ? 1 : 0)} câu
+
+                {/* Thanh progress bar mỏng 6px */}
+                <div className="flex-1 mx-2 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200 dark:border-slate-700">
+                  <div
+                    className="h-full bg-gradient-to-r from-purple-500 via-indigo-500 to-sky-500 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, Math.max(5, ((listenIndex + 1) / practiceVocabList.length) * 100))}%` }}
+                  />
+                </div>
+
+                <span className="px-2.5 py-1 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 shrink-0 flex items-center gap-1">
+                  <span>⭐ Đúng:</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-black">{listenScore}/{listenIndex + (listenSelectedOption ? 1 : 0)}</span>
                 </span>
               </div>
 
+              {/* KHUNG PHÁT ÂM TỪ VỰNG - SIÊU GỌN VỚI TAI NGHE & 2 NÚT PHÁT ÂM */}
               {currentListenWord && (
-                <div className="text-center py-2 space-y-3">
-                  {/* Khối biểu tượng tai nghe 3D trong suốt phát quang */}
-                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 opacity-35 blur-xl animate-pulse"></div>
-                    <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-500/25 via-indigo-600/25 to-purple-700/35 backdrop-blur-md border-2 border-purple-300/60 dark:border-purple-400/50 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(147,51,234,0.35),inset_0_2px_0_rgba(255,255,255,0.7)]">
-                      <Headphones className="w-10 h-10 text-white drop-shadow-md animate-bounce" />
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-center gap-3 pt-1">
+                <div className="text-center py-2.5 px-3 rounded-2xl bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-sky-500/15 border border-purple-200/70 dark:border-purple-800/60 shadow-xs space-y-2">
+                  <div className="flex items-center justify-center gap-2.5 flex-wrap">
                     <button
                       type="button"
                       onClick={() => speakWord(currentListenWord.word)}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-b from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-black text-xs shadow-[0_4px_0_#6b21a8,0_6px_15px_rgba(168,85,247,0.35),inset_0_1.5px_0_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#6b21a8] transition flex items-center gap-1.5 cursor-pointer"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95"
                     >
                       <Volume2 className="w-4 h-4" />
                       <span>Bấm Để Nghe Lại</span>
@@ -1363,19 +1490,19 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     <button
                       type="button"
                       onClick={() => speakWord(currentListenWord.word, 0.65)}
-                      className="px-3.5 py-2 rounded-xl bg-gradient-to-b from-amber-400/20 to-amber-500/30 hover:bg-amber-500/30 backdrop-blur-md border border-amber-400/50 text-amber-900 dark:text-amber-200 font-bold text-xs shadow-[0_3px_0_#d97706,0_4px_10px_rgba(245,158,11,0.2),inset_0_1px_0_rgba(255,255,255,0.6)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#d97706] transition flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-900 dark:text-amber-200 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
                     >
                       <span>🐢 Nghe Chậm</span>
                     </button>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    Em hãy lắng nghe và chọn từ tiếng Anh được phát âm:
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Lắng nghe kỹ và chọn từ tiếng Anh tương ứng:
                   </p>
                 </div>
               )}
 
-              {/* 4 Nút Lựa Chọn 3D NỔI TRONG SUỐT (3D SAPPHIRE GLASS BUTTONS) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {/* LƯỚI 4 NÚT CHỌN TỪ TIẾNG ANH: 2 CỘT CÂN ĐỐI KHÔNG TRƯỢT CUỘN */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
                 {listenOptions.map((optWord, i) => {
                   const isSelected = listenSelectedOption === optWord;
                   const isCorrect = optWord === currentListenWord?.word;
@@ -1385,36 +1512,32 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   if (listenSelectedOption !== null) {
                     if (isCorrect) {
                       optClasses = `
-                        bg-gradient-to-b from-emerald-500 to-emerald-600 text-white
+                        bg-gradient-to-r from-emerald-500 to-teal-600 text-white
                         border-2 border-emerald-300
-                        shadow-[0_6px_0_#047857,0_0_25px_rgba(16,185,129,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
-                        scale-[1.02] font-black
+                        shadow-[0_4px_12px_rgba(16,185,129,0.45)]
+                        scale-[1.01] font-black
                       `;
                     } else if (isSelected) {
                       optClasses = `
-                        bg-gradient-to-b from-rose-500 to-red-600 text-white
+                        bg-gradient-to-r from-rose-500 to-red-600 text-white
                         border-2 border-rose-300
-                        shadow-[0_6px_0_#9f1239,0_0_25px_rgba(244,63,94,0.7),inset_0_2px_0_rgba(255,255,255,0.7)]
+                        shadow-[0_4px_12px_rgba(244,63,94,0.45)]
                         animate-shake font-black
                       `;
                     } else {
                       optClasses = `
-                        opacity-35 bg-slate-100/60 dark:bg-slate-800/40 border-2 border-slate-200 dark:border-slate-700
-                        text-slate-400 dark:text-slate-500 shadow-none scale-95
+                        opacity-35 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700
+                        text-slate-400 dark:text-slate-500 shadow-none scale-98
                       `;
                     }
                   } else {
-                    // Trạng thái chờ: KHỐI PHÍM 3D NỔI TRONG SUỐT (SAPPHIRE GLASS 3D)
                     optClasses = `
-                      bg-gradient-to-b from-sky-400/15 via-blue-500/10 to-indigo-600/20
-                      dark:from-sky-500/20 dark:via-blue-600/15 dark:to-indigo-700/30
-                      backdrop-blur-md border-2 border-sky-300/80 dark:border-sky-400/50
-                      text-sky-950 dark:text-sky-100
-                      shadow-[0_6px_0_#0284c7,0_10px_20px_-3px_rgba(2,132,199,0.25),inset_0_1.5px_0_rgba(255,255,255,0.7)]
-                      dark:shadow-[0_6px_0_#0369a1,0_10px_20px_-3px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.25)]
-                      hover:-translate-y-1 hover:shadow-[0_8px_0_#0284c7,0_14px_24px_-2px_rgba(2,132,199,0.35),inset_0_1.5px_0_rgba(255,255,255,0.85)]
-                      hover:border-sky-400
-                      active:translate-y-1 active:shadow-[0_2px_0_#0284c7,0_4px_8px_rgba(2,132,199,0.2)]
+                      bg-white dark:bg-slate-800
+                      border-2 border-slate-200 dark:border-slate-700
+                      hover:border-purple-500 dark:hover:border-purple-400
+                      text-slate-800 dark:text-slate-100
+                      shadow-xs hover:shadow-md
+                      hover:-translate-y-0.5 active:translate-y-0.5
                     `;
                   }
 
@@ -1424,7 +1547,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                       type="button"
                       disabled={listenSelectedOption !== null}
                       onClick={(e) => handleListenAnswer(optWord, e)}
-                      className={`p-4 sm:p-5 rounded-2xl flex items-center justify-center text-center text-base sm:text-lg font-black tracking-wide transition-all duration-200 cursor-pointer select-none ${optClasses}`}
+                      className={`p-3 sm:p-4 rounded-xl flex items-center justify-center text-center text-sm sm:text-base font-black tracking-wide transition-all duration-150 cursor-pointer select-none min-h-[48px] sm:min-h-[52px] ${optClasses}`}
                     >
                       <span>{optWord}</span>
                     </button>
@@ -1432,23 +1555,50 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 })}
               </div>
 
+              {/* THANH CÔNG BỐ KẾT QUẢ TỨC THÌ & TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO */}
               {listenSelectedOption !== null && (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500/15 to-indigo-500/15 backdrop-blur-md border border-sky-300/50 text-center space-y-1 shadow-sm animate-in fade-in">
-                  <div className="text-xs font-mono font-bold text-sky-700 dark:text-sky-300">/{currentListenWord?.phonetic}/</div>
-                  <div className="text-sm font-black text-slate-900 dark:text-white">Nghĩa: {currentListenWord?.meaning}</div>
-                </div>
-              )}
+                <div className="relative overflow-hidden rounded-xl shadow-md animate-in fade-in">
+                  <div className={`p-2.5 px-3.5 flex items-center justify-between gap-2 text-xs font-bold text-white ${
+                    listenSelectedOption === currentListenWord?.word
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600'
+                      : 'bg-gradient-to-r from-rose-500 via-red-600 to-rose-600'
+                  }`}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      {listenSelectedOption === currentListenWord?.word ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
+                          <span className="font-black text-xs sm:text-sm truncate">
+                            🎉 ĐÚNG! "{currentListenWord?.word}": {currentListenWord?.meaning}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-4 h-4 text-white shrink-0" />
+                          <span className="truncate text-xs sm:text-sm">
+                            Chưa đúng! Từ đúng: <strong className="underline underline-offset-2">{currentListenWord?.word}</strong> ({currentListenWord?.meaning})
+                          </span>
+                        </>
+                      )}
+                    </div>
 
-              {listenSelectedOption !== null && (
-                <div className="pt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={handleNextListen}
-                    className="px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-sm shadow-[0_4px_0_#4338ca,0_8px_20px_rgba(99,102,241,0.4),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#4338ca] transition flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>{listenIndex < filteredVocab.length - 1 ? 'Câu Tiếp Theo' : 'Xem Kết Quả'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                    <button
+                      type="button"
+                      onClick={handleNextListen}
+                      className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-[11px] font-black shrink-0 flex items-center gap-1 transition cursor-pointer"
+                      title="Bấm để chuyển ngay không cần chờ"
+                    >
+                      <span>{listenIndex < practiceVocabList.length - 1 ? 'Tiếp' : 'Xem Kết Quả'}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+
+                  {/* Thanh đếm ngược tự động chuyển 1.4s */}
+                  <div className="h-1.5 w-full bg-black/25">
+                    <div
+                      className="h-full bg-white/90"
+                      style={{ animation: 'autoAdvanceTimerListen 1.4s linear forwards' }}
+                    />
+                  </div>
                 </div>
               )}
             </div>
@@ -1458,10 +1608,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 🎧
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                Hoàn Thành Luyện Nghe Unit {selectedUnit}!
+                Hoàn Thành 20 Câu Luyện Nghe Unit {selectedUnit}!
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Em đã nghe đúng <strong className="text-purple-600">{listenScore} / {filteredVocab.length} từ</strong>.
+                Em đã nghe đúng <strong className="text-purple-600">{listenScore} / {practiceVocabList.length} từ</strong> ({Math.round((listenScore / practiceVocabList.length) * 100)}%).
               </p>
               <div className="p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold inline-block">
                 ⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua!
@@ -1470,9 +1620,18 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 <button
                   type="button"
                   onClick={handleRestartListen}
-                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
                 >
-                  Luyện Lại Ván Này
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Luyện 20 Câu Mới</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentMode('spelling')}
+                  className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>Chuyển Sang Luyện Gõ</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -1661,45 +1820,66 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* DẠNG 8: LUYỆN GÕ CHÍNH TẢ (SPELLING) - 3D TRANSLUCENT GLASS */}
+      {/* ==================== DẠNG 5: LUYỆN GÕ CHÍNH TẢ (SPELLING) - 20 TỪ, TỰ CHUYỂN KHI ĐÚNG ==================== */}
+      <style>{`
+        @keyframes autoAdvanceTimerSpell {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
+
       {currentMode === 'spelling' && (
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xl max-w-2xl mx-auto space-y-6">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
           {!spellFinished ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-500 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <span className="px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700 font-black">
-                  Luyện gõ từ {spellIndex + 1} / {filteredVocab.length}
+            <div className="space-y-3 sm:space-y-3.5">
+              {/* THANH TIẾN TRÌNH MINI TÍCH HỢP ĐIỂM SỐ GỌN 1 HÀNG */}
+              <div className="flex items-center justify-between text-xs font-black gap-2">
+                <span className="px-2.5 py-1 rounded-xl bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 shrink-0">
+                  ✍️ Luyện gõ {spellIndex + 1} / {practiceVocabList.length}
                 </span>
-                <span className="text-emerald-600 font-black">
-                  Đúng: {spellScore} từ
+
+                {/* Thanh progress bar mỏng 6px */}
+                <div className="flex-1 mx-2 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200 dark:border-slate-700">
+                  <div
+                    className="h-full bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, Math.max(5, ((spellIndex + 1) / practiceVocabList.length) * 100))}%` }}
+                  />
+                </div>
+
+                <span className="px-2.5 py-1 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 shrink-0 flex items-center gap-1">
+                  <span>⭐ Đúng:</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-black">{spellScore}/{spellIndex + (spellFeedback === 'correct' ? 1 : 0)}</span>
                 </span>
               </div>
 
+              {/* KHUNG NGHĨA TỪ CẦN GÕ - GỌN GÀNG RÕ NÉT */}
               {currentSpellWord && (
-                <div className="text-center py-4 space-y-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+                <div className="text-center py-2.5 px-3.5 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-sky-500/15 border border-indigo-200/70 dark:border-indigo-800/60 shadow-xs space-y-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                     Nghĩa Tiếng Việt:
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
                     {currentSpellWord.meaning}
                   </h3>
-                  <div className="flex items-center justify-center gap-2 text-sm font-mono text-sky-600 dark:text-sky-400">
+                  <div className="flex items-center justify-center gap-2 text-xs font-mono text-sky-600 dark:text-sky-400">
                     <span>/{currentSpellWord.phonetic}/</span>
                     <button
                       type="button"
                       onClick={() => speakWord(currentSpellWord.word)}
-                      className="p-1.5 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition cursor-pointer"
+                      className="p-1 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition cursor-pointer"
+                      title="Nghe phát âm"
                     >
-                      <Volume2 className="w-4 h-4" />
+                      <Volume2 className="w-3.5 h-3.5" />
                     </button>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono">
+                      {currentSpellWord.type || 'v'}
+                    </span>
                   </div>
-                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono inline-block">
-                    Từ loại: {currentSpellWord.type || 'v'}
-                  </span>
                 </div>
               )}
 
-              {/* Ô gõ từ */}
-              <form onSubmit={handleSpellCheck} className="space-y-3">
+              {/* Ô GÕ TỪ */}
+              <form onSubmit={handleSpellCheck} className="space-y-2.5">
                 <div className="relative">
                   <input
                     ref={spellInputRef}
@@ -1711,7 +1891,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     }}
                     placeholder="Gõ từ tiếng Anh vào đây..."
                     autoFocus
-                    className={`w-full px-5 py-4 rounded-2xl border-2 text-center text-lg sm:text-xl font-black tracking-wide transition focus:outline-hidden ${
+                    className={`w-full px-4 py-3 rounded-2xl border-2 text-center text-base sm:text-lg font-black tracking-wide transition focus:outline-hidden ${
                       spellFeedback === 'correct'
                         ? 'border-emerald-500 bg-emerald-50/50 text-emerald-900 ring-2 ring-emerald-300'
                         : spellFeedback === 'wrong'
@@ -1721,42 +1901,60 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   />
                 </div>
 
+                {/* THÔNG BÁO ĐÚNG & ĐẾM NGƯỢC TỰ CHUYỂN */}
                 {spellFeedback === 'correct' && (
-                  <div className="p-3 rounded-xl bg-emerald-500 text-white font-black text-xs text-center flex items-center justify-center gap-2 shadow-sm">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Chính xác 100%! Rất giỏi!</span>
+                  <div className="relative overflow-hidden rounded-xl shadow-md animate-in fade-in">
+                    <div className="p-2.5 px-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <span>Chính xác 100%! (+10đ ⭐) - Tự chuyển sang từ tiếp theo...</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSpellNext}
+                        className="px-2 py-0.5 rounded-md bg-white/20 hover:bg-white/30 text-[11px] font-black shrink-0 flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Tiếp</span> <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                    <div className="h-1.5 w-full bg-black/25">
+                      <div
+                        className="h-full bg-white/90"
+                        style={{ animation: 'autoAdvanceTimerSpell 1.3s linear forwards' }}
+                      />
+                    </div>
                   </div>
                 )}
 
                 {spellFeedback === 'wrong' && (
-                  <div className="p-3 rounded-xl bg-rose-500 text-white font-black text-xs text-center flex items-center justify-center gap-2 shadow-sm">
-                    <XCircle className="w-4 h-4" />
+                  <div className="p-2.5 rounded-xl bg-rose-500 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-xs animate-in fade-in">
+                    <XCircle className="w-4 h-4 shrink-0" />
                     <span>Chưa đúng, em hãy thử lại hoặc bấm xem gợi ý nhé!</span>
                   </div>
                 )}
 
                 {spellShowAnswer && currentSpellWord && (
-                  <div className="p-3 rounded-xl bg-amber-100 text-amber-900 font-black text-xs text-center">
-                    Đáp án đúng: <span className="text-sm underline">{currentSpellWord.word}</span>
+                  <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 font-black text-xs text-center border border-amber-300 dark:border-amber-800">
+                    Đáp án đúng: <span className="text-sm underline tracking-wide font-mono">{currentSpellWord.word}</span>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between gap-2 pt-2 flex-wrap">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={handleSpellHint}
-                      className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 cursor-pointer border border-slate-200 dark:border-slate-700"
                     >
-                      <Lightbulb className="w-4 h-4 text-amber-500" />
-                      <span>Gợi Ý Chữ Cái</span>
+                      <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Gợi Ý</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setSpellShowAnswer(true)}
-                      className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 cursor-pointer border border-slate-200 dark:border-slate-700"
                     >
-                      <Eye className="w-4 h-4 text-slate-500" />
+                      <Eye className="w-3.5 h-3.5 text-slate-500" />
                       <span>Xem Đáp Án</span>
                     </button>
                   </div>
@@ -1765,15 +1963,15 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     <button
                       type="button"
                       onClick={handleSpellNext}
-                      className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer ml-auto"
+                      className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer ml-auto"
                     >
                       <span>Từ Tiếp Theo</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   ) : (
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-md transition cursor-pointer ml-auto"
+                      className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs shadow-md transition cursor-pointer ml-auto"
                     >
                       Kiểm Tra (Enter)
                     </button>
@@ -1787,21 +1985,22 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 ✍️
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                Hoàn Thành Luyện Gõ Unit {selectedUnit}!
+                Hoàn Thành 20 Từ Luyện Gõ Unit {selectedUnit}!
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Em đã gõ đúng chính tả <strong className="text-indigo-600">{spellScore} / {filteredVocab.length} từ</strong>.
+                Em đã gõ đúng chính tả <strong className="text-indigo-600">{spellScore} / {practiceVocabList.length} từ</strong> ({Math.round((spellScore / practiceVocabList.length) * 100)}%).
               </p>
               <div className="p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold inline-block">
                 ⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua!
               </div>
-              <div className="pt-2">
+              <div className="pt-2 flex justify-center gap-3">
                 <button
                   type="button"
                   onClick={handleSpellRestart}
-                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer flex items-center gap-1.5"
                 >
-                  Luyện Lại Ván Này
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Luyện 20 Từ Mới</span>
                 </button>
               </div>
             </div>
