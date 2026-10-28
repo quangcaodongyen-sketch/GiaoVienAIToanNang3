@@ -384,7 +384,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
   // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / từ ngày mai (+5 điểm)
 
-  const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(), []);
+  const [currentPromoDate, setCurrentPromoDate] = useState<string>(getLocalDateString());
+  const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(currentPromoDate), [currentPromoDate]);
+
+  // Tự động kiểm tra theo thời gian thực: Hết ngày (qua 00:00:00) tự động xoá bỏ chương trình cũ và nạp chương trình ngày mới!
+  useEffect(() => {
+    const checkMidnightTimer = setInterval(() => {
+      const realDate = getLocalDateString();
+      if (realDate !== currentPromoDate) {
+        setCurrentPromoDate(realDate);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('gvai_daily_promo_rollover', { detail: { newDate: realDate } }));
+          window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { newDate: realDate } }));
+        }
+      }
+    }, 10000);
+    return () => clearInterval(checkMidnightTimer);
+  }, [currentPromoDate]);
 
 
 
@@ -2998,38 +3014,41 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
           <div>
 
-            <div className="font-black text-amber-900 dark:text-amber-200 flex items-center gap-2 flex-wrap">
-
-              <span>{loginRewardInfo.title}</span>
-
-              {loginRewardInfo.vocabMultiplier > 1 && (
-
-                <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black animate-pulse">
-
-                  🔥 NHÂN ĐÔI ĐIỂM TỪ VỰNG
-
-                </span>
-
-              )}
-
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black tracking-wider uppercase shadow-xs">
+                {loginRewardInfo.promoBadge || '🎁 CHƯƠNG TRÌNH KHUYẾN MẠI'}
+              </span>
+              <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                📅 {loginRewardInfo.dateDisplay}
+              </span>
+              <span className="text-[11px] font-bold text-rose-600 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-300 dark:border-rose-800">
+                ⏰ {loginRewardInfo.expiresAtDisplay}
+              </span>
             </div>
 
-            <p className="text-slate-600 dark:text-slate-300 mt-0.5 font-medium">
+            <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white mt-1">
+              {loginRewardInfo.title}
+            </h4>
 
+            <p className="text-slate-600 dark:text-slate-300 mt-0.5 text-xs font-medium">
               {loginRewardInfo.bannerText}
-
             </p>
 
+            {loginRewardInfo.bonusRules && loginRewardInfo.bonusRules.length > 0 && (
+              <div className="flex items-center gap-2 flex-wrap mt-2 text-[11px]">
+                {loginRewardInfo.bonusRules.map((rule, idx) => (
+                  <span key={idx} className="inline-flex items-center gap-1 font-semibold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-xl border border-amber-300/50 shadow-2xs">
+                    {rule}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {loginRewardInfo.nextDayPromoPreview && (
-
-              <p className="text-rose-600 dark:text-rose-400 font-black mt-1 flex items-center gap-1">
-
+              <p className="text-rose-600 dark:text-rose-400 font-black mt-2 text-xs flex items-center gap-1 bg-rose-50/80 dark:bg-rose-950/40 p-2 rounded-xl border border-rose-200 dark:border-rose-900">
                 <span>🔔</span>
-
                 <span>{loginRewardInfo.nextDayPromoPreview}</span>
-
               </p>
-
             )}
 
           </div>

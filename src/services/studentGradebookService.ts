@@ -59,23 +59,18 @@ export interface MeritBonusItem {
 
 
 export interface DailyLoginRewardInfo {
-
   points: number;
-
   isPromoToday: boolean;
-
+  promoBadge: string;
   title: string;
-
   bannerText: string;
-
   todayStr: string;
-
+  dateDisplay: string;         // Hiển thị ngày cụ thể (VD: "Thứ Tư, 28/10/2026")
+  expiresAtDisplay: string;    // Thời hạn áp dụng rõ ràng (VD: "23:59:59 đêm nay - Hết ngày tự hủy")
   vocabMultiplier: number;     // Hệ số nhân điểm từ vựng (VD: x2 = +20đ/bài)
-
   vocabPointsPerUnit: number;  // Điểm nhận được cho mỗi bài từ vựng hoàn thành
-
-  nextDayPromoPreview?: string; // Bật mí chính sách khuyến mại ngày mai để kích thích học sinh quay lại
-
+  bonusRules: string[];        // Công bố chi tiết từng quyền lợi điểm số
+  nextDayPromoPreview?: string; // Bật mí chương trình ngày mai
 }
 
 
@@ -139,120 +134,216 @@ export function getYesterdayDateString(referenceDateStr?: string): string {
 
 
 export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewardInfo {
+  const now = new Date();
+  const todayStr = customDateStr || getLocalDateString(now);
 
-  const todayStr = customDateStr || getLocalDateString();
+  const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  const parts = todayStr.split('-').map(Number);
+  const targetDate = (parts.length === 3) ? new Date(parts[0], parts[1] - 1, parts[2]) : now;
+  const dayName = daysOfWeek[targetDate.getDay()] || 'Hôm nay';
+  const dateDisplay = `${dayName}, ngày ${targetDate.getDate().toString().padStart(2, '0')}/${(targetDate.getMonth() + 1).toString().padStart(2, '0')}/${targetDate.getFullYear()}`;
+  const expiresAtDisplay = `Hiệu lực đến 23:59:59 đêm nay (Hết ngày tự động hủy bỏ để đón chương trình ngày mới)`;
 
-
-
-  // 1. Ngày hôm nay (2026-10-28): Khuyến mại đăng nhập +10đ & Giới thiệu chính sách bùng nổ ngày mai
-
+  // 1. Ngày 28/10/2026: KHỞI ĐỘNG TUẦN THI ĐUA (Hôm nay)
   if (todayStr === '2026-10-28') {
-
     return {
-
       points: 10,
-
       isPromoToday: true,
-
+      promoBadge: '🎁 KHỞI ĐỘNG THI ĐUA',
       vocabMultiplier: 1,
-
       vocabPointsPerUnit: 10,
-
-      title: '🎁 KHUYẾN MẠI HÔM NAY (28/10): Tặng +10 Điểm Đăng Nhập Đầu Tiên!',
-
-      bannerText: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng ngay +10 ĐIỂM cho lần đăng nhập đầu tiên vào học! (Học 1-2 bài từ vựng tăng vọt % tiến độ)',
-
-      nextDayPromoPreview: '🔥 BẬT MÍ NGÀY MAI (29/10): ĐỔI CHÍNH SÁCH SIÊU KHỦNG — Tặng +15đ đăng nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/bài)! Các em hãy quay lại học ngày mai để bứt phá Top Bảng Vàng nhé!',
-
+      title: '🎁 KHỞI ĐỘNG THI ĐUA (28/10): Tặng +10đ Đăng Nhập Lần Đầu!',
+      bannerText: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng ngay +10 ĐIỂM cho lần đăng nhập đầu tiên vào học! Học 1-2 bài từ vựng tăng vọt % tiến độ và bứt phá Bảng Vàng!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Đăng nhập lần đầu hôm nay: +10 điểm chuyên cần',
+        '🧠 Mỗi bài từ vựng học thuộc: +10 điểm và tăng 35% tiến độ',
+        '🎆 Pháo hoa chuyên cần liên tiếp: +20 điểm (khi học hôm qua và hôm nay)',
+        '⏰ Thời hạn áp dụng: Duy nhất hôm nay 28/10 đến 23:59:59 đêm'
+      ],
+      nextDayPromoPreview: '🔥 BẬT MÍ NGÀY MAI (29/10): ĐẠI TIỆC TĂNG TỐC — Tặng +15đ đăng nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/bài)! Các em hãy quay lại học để bứt phá Top 1 nhé!',
       todayStr
-
     };
-
   }
 
-
-
-  // 2. Ngày mai (2026-10-29): Đổi chính sách khuyến mại bùng nổ (+15đ đăng nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG +20đ/bài)
-
+  // 2. Ngày 29/10/2026: ĐẠI TIỆC TĂNG TỐC (Ngày mai)
   if (todayStr === '2026-10-29') {
-
     return {
-
       points: 15,
-
       isPromoToday: true,
-
+      promoBadge: '🔥 ĐẠI TIỆC TĂNG TỐC',
       vocabMultiplier: 2,
-
       vocabPointsPerUnit: 20,
-
       title: '🔥 ĐẠI TIỆC TĂNG TỐC (29/10): Tặng +15đ Đăng Nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)!',
-
       bannerText: '🔥 SIÊU KHUYẾN MẠI NGÀY 29/10: Tặng ngay +15 ĐIỂM ĐĂNG NHẬP + NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)! Học 1 - 2 bài là tăng vọt % tiến độ và bứt phá Top 1!',
-
-      nextDayPromoPreview: '⚡ NGÀY KIA (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi Giữa Kỳ (+100đ)!',
-
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Đăng nhập hôm nay 29/10: Tặng nóng +15 điểm thi đua',
+        '🧠 NHÂN ĐÔI ĐIỂM TỪ VỰNG: Nhận trọn vẹn +20 điểm / mỗi Unit hoàn thành (x2 bình thường)',
+        '🎆 Pháo hoa chăm chỉ liên tiếp: +20 điểm thưởng',
+        '⏰ Thời hạn: Đúng 23:59:59 đêm nay 29/10 sẽ tự động kết thúc'
+      ],
+      nextDayPromoPreview: '⚡ NGÀY KIA (30/10): NGÀY HỘI VỀ ĐÍCH — Thưởng Nóng Đề Thi Giữa Kỳ (+100đ)!',
       todayStr
-
     };
-
   }
 
-
-
-  // 3. Ngày kia (2026-10-30): Ngày hội thi thử Giữa kỳ
-
+  // 3. Ngày 30/10/2026: NGÀY HỘI VỀ ĐÍCH
   if (todayStr === '2026-10-30') {
-
     return {
-
       points: 10,
-
       isPromoToday: true,
-
+      promoBadge: '⚡ NGÀY HỘI VỀ ĐÍCH',
       vocabMultiplier: 1.5,
-
       vocabPointsPerUnit: 15,
-
-      title: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi!',
-
-      bannerText: '⚡ NGÀY HỘI VỀ ĐÍCH: Tặng +10 ĐIỂM ĐĂNG NHẬP + Thưởng nóng làm đề cương & đề thi giữa kỳ!',
-
-      nextDayPromoPreview: '🌟 THI ĐUA CUỐI TUẦN: Bảng Vàng vinh danh Top 3 Quán Quân toàn trường!',
-
+      title: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi Giữa Kỳ!',
+      bannerText: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10 ĐIỂM ĐĂNG NHẬP + Thưởng nóng làm đề cương & đề thi giữa kỳ đạt điểm cao!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Đăng nhập hôm nay 30/10: +10 điểm chuyên cần',
+        '📝 Điểm thi thử Giữa kỳ: Nhân 10 điểm thi đua (VD: 9.0đ -> +90 điểm)',
+        '🧠 Học từ vựng: +15 điểm / Unit',
+        '⏰ Thời hạn: Đúng 23:59:59 đêm 30/10 sẽ tự động đóng chương trình'
+      ],
+      nextDayPromoPreview: '🌟 CUỐI TUẦN (31/10): LỄ HỘI VINH DANH — Tặng Cúp Quán Quân và +20đ Chuyên Cần!',
       todayStr
-
     };
-
   }
 
+  // 4. LỊCH KHUYẾN MẠI TỰ ĐỘNG LUÂN PHIÊN THEO THỨ TRONG TUẦN (VĨNH VIỄN KHÔNG BAO GIỜ LỖI THỜI)
+  // Mỗi ngày trong tuần tự động có chương trình riêng biệt, đúng 24:00 là tự động xoay vòng ngày mới!
+  const dayOfWeek = targetDate.getDay(); // 0: CN, 1: T2, 2: T3, 3: T4, 4: T5, 5: T6, 6: T7
 
-
-  // Tiêu chuẩn các ngày khác
-
-  return {
-
-    points: 5,
-
-    isPromoToday: false,
-
-    vocabMultiplier: 1,
-
-    vocabPointsPerUnit: 10,
-
-    title: '⭐ Điểm Chuyên Cần Đăng Nhập: +5 Điểm',
-
-    bannerText: '⭐ Chăm chỉ học tập: Đăng nhập mỗi ngày nhận ngay +5 ĐIỂM chuyên cần vào Bảng xếp hạng!',
-
-    nextDayPromoPreview: '🔥 Chăm chỉ học tập mỗi ngày để nhận thưởng pháo hoa liên tiếp (+20đ)!',
-
-    todayStr
-
+  const weeklySchedule: Record<number, {
+    badge: string;
+    points: number;
+    mult: number;
+    vPts: number;
+    title: string;
+    banner: string;
+    rules: string[];
+    nextDay: string;
+  }> = {
+    1: { // Thứ Hai
+      badge: '🚀 KHỞI ĐẦU TUẦN MỚI',
+      points: 10,
+      mult: 1,
+      vPts: 10,
+      title: '🚀 THỨ HAI NĂNG LƯỢNG: Tặng +10đ Đăng Nhập Khởi Đầu Tuần Mới!',
+      banner: '🚀 Chào tuần mới! Tặng ngay +10 ĐIỂM chuyên cần cho lần đăng nhập đầu tiên hôm nay!',
+      rules: [
+        '⭐ Đăng nhập Thứ Hai: +10 điểm khởi đầu tuần mới',
+        '🧠 Học từ vựng bám sát SGK: +10 điểm / Unit',
+        '⏰ Áp dụng duy nhất trong ngày Thứ Hai đến 23:59:59'
+      ],
+      nextDay: '🔥 NGÀY MAI THỨ BA: Thưởng nhân đôi điểm bài tập và ôn đề cương (+20đ)!'
+    },
+    2: { // Thứ Ba
+      badge: '📚 ĐỘT PHÁ NGỮ PHÁP',
+      points: 5,
+      mult: 1,
+      vPts: 10,
+      title: '📚 THỨ BA CHĂM CHỈ: Thưởng Điểm Luyện Đề & Đề Cương Ôn Tập!',
+      banner: '📚 Thứ Ba bứt phá: Tặng +5đ đăng nhập + Điểm thưởng gấp đôi khi giải bài tập đề cương!',
+      rules: [
+        '⭐ Đăng nhập Thứ Ba: +5 điểm chuyên cần',
+        '📝 Hoàn thành bài tập đề cương: +10 đến +20 điểm',
+        '⏰ Áp dụng đến 23:59:59 đêm nay'
+      ],
+      nextDay: '🔥 NGÀY MAI THỨ TƯ: NGÀY HỘI TỪ VỰNG — NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/bài)!'
+    },
+    3: { // Thứ Tư
+      badge: '🧠 ĐẠI TIỆC TỪ VỰNG X2',
+      points: 10,
+      mult: 2,
+      vPts: 20,
+      title: '🧠 THỨ TƯ VÀNG: NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit) & Tặng +10đ Đăng Nhập!',
+      banner: '🧠 Thứ Tư Vàng: NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)! Học thuộc từ vựng để bứt phá Top Bảng Vàng!',
+      rules: [
+        '⭐ Đăng nhập Thứ Tư: +10 điểm chuyên cần',
+        '🧠 NHÂN ĐÔI ĐIỂM TỪ VỰNG: Nhận +20đ / Unit hoàn thành',
+        '⏰ Hết hạn lúc 23:59:59 đêm nay, tự động cập nhật ngày Thứ Năm'
+      ],
+      nextDay: '⚡ NGÀY MAI THỨ NĂM: Luyện Nghe Audio 3D & Thưởng pháo hoa chuyên cần!'
+    },
+    4: { // Thứ Năm
+      badge: '🎧 LUYỆN NGHE THẦN TỐC',
+      points: 5,
+      mult: 1.5,
+      vPts: 15,
+      title: '🎧 THỨ NĂM LUYỆN NGHE: Thưởng +15đ Từ Vựng & Thưởng Luyện Phát Âm Chuẩn!',
+      banner: '🎧 Luyện nghe phát âm chuẩn cùng AI: Nhận ngay +15đ từ vựng và quà tặng chuyên cần!',
+      rules: [
+        '⭐ Đăng nhập Thứ Năm: +5 điểm',
+        '🎧 Luyện nghe Audio & Từ vựng: +15 điểm / bài',
+        '⏰ Hiệu lực đến 23:59:59 đêm nay'
+      ],
+      nextDay: '🔥 NGÀY MAI THỨ SÁU: TĂNG TỐC CUỐI TUẦN — Tặng +15đ Đăng Nhập!'
+    },
+    5: { // Thứ Sáu
+      badge: '🔥 TĂNG TỐC VỀ ĐÍCH',
+      points: 15,
+      mult: 1.5,
+      vPts: 15,
+      title: '🔥 THỨ SÁU TĂNG TỐC: Tặng Nóng +15đ Đăng Nhập & Khuyến Mại Học Tập!',
+      banner: '🔥 Thứ Sáu Bứt Phá: Tặng ngay +15 ĐIỂM ĐĂNG NHẬP! Hoàn thành bài tập để chốt Top tuần!',
+      rules: [
+        '⭐ Đăng nhập Thứ Sáu: Tặng ngay +15 điểm thi đua',
+        '🧠 Học từ vựng & bài tập: +15 điểm / bài',
+        '⏰ Áp dụng duy nhất Thứ Sáu đến 23:59:59 đêm'
+      ],
+      nextDay: '⚡ NGÀY MAI THỨ BẢY: ĐẤU TRƯỜNG THI THỬ — Thưởng Nóng Đề Thi (+100đ)!'
+    },
+    6: { // Thứ Bảy
+      badge: '🏆 ĐẤU TRƯỜNG CUỐI TUẦN',
+      points: 10,
+      mult: 1,
+      vPts: 10,
+      title: '🏆 THỨ BẢY TRANH CÚP: Thưởng Lớn Khi Làm Đề Thi Khảo Sát!',
+      banner: '🏆 Đấu trường cuối tuần: Tặng +10đ Đăng Nhập + Thưởng điểm bài thi nhân 10 vào Bảng Vàng!',
+      rules: [
+        '⭐ Đăng nhập Thứ Bảy: +10 điểm',
+        '📝 Điểm làm bài thi: Nhân 10 điểm thi đua',
+        '⏰ Kết thúc lúc 23:59:59 Thứ Bảy'
+      ],
+      nextDay: '🌟 NGÀY MAI CHỦ NHẬT: VINH DANH BẢNG VÀNG — Thưởng Pháo Hoa +30đ Chuyên Cần Tuần!'
+    },
+    0: { // Chủ Nhật
+      badge: '🌟 VINH DANH CHỦ NHẬT',
+      points: 15,
+      mult: 1.5,
+      vPts: 15,
+      title: '🌟 CHỦ NHẬT VINH DANH: Tặng +15đ Đăng Nhập & Bắn Pháo Hoa Ăn Mừng!',
+      banner: '🌟 Chủ Nhật Rực Rỡ: Tặng +15đ Đăng Nhập! Tuyên dương Top 3 học sinh xuất sắc nhất tuần!',
+      rules: [
+        '⭐ Đăng nhập Chủ Nhật: +15 điểm thi đua',
+        '🎆 Pháo hoa ăn mừng thành tích: +20 điểm',
+        '⏰ Đúng 23:59:59 kết thúc tuần, mở đầu tuần mới Thứ Hai'
+      ],
+      nextDay: '🚀 NGÀY MAI THỨ HAI: Chào đón Tuần Học Tập Mới đầy hứng khởi!'
+    }
   };
 
+  const todayConfig = weeklySchedule[dayOfWeek] || weeklySchedule[1];
+
+  return {
+    points: todayConfig.points,
+    isPromoToday: true,
+    promoBadge: todayConfig.badge,
+    vocabMultiplier: todayConfig.mult,
+    vocabPointsPerUnit: todayConfig.vPts,
+    title: todayConfig.title,
+    bannerText: todayConfig.banner,
+    dateDisplay,
+    expiresAtDisplay,
+    bonusRules: todayConfig.rules,
+    nextDayPromoPreview: todayConfig.nextDay,
+    todayStr
+  };
 }
-
-
 
 export interface TeacherLuckyBoxResult {
 

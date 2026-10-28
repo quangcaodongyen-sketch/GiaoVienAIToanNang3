@@ -202,7 +202,19 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / ngày mai (+5 điểm)
 
-  const loginReward = useMemo(() => getDailyLoginRewardInfo(), []);
+  const [currentPromoDate, setCurrentPromoDate] = useState<string>(getLocalDateString());
+  const loginReward = useMemo(() => getDailyLoginRewardInfo(currentPromoDate), [currentPromoDate]);
+
+  // Tự động kiểm tra thời gian thực: Hết ngày (00:00:00) tự động xoá bỏ chương trình cũ và cập nhật chương trình ngày mới!
+  useEffect(() => {
+    const checkTimer = setInterval(() => {
+      const realDate = getLocalDateString();
+      if (realDate !== currentPromoDate) {
+        setCurrentPromoDate(realDate);
+      }
+    }, 10000);
+    return () => clearInterval(checkTimer);
+  }, [currentPromoDate]);
 
 
 
@@ -1237,18 +1249,53 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
       <div className="bg-blue-50/80 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 rounded-2xl p-3 sm:p-4 text-xs text-slate-700 dark:text-slate-300">
 
+        {/* KHUNG CÔNG BỐ CHÍNH THỨC CHƯƠNG TRÌNH KHUYẾN MẠI THEO NGÀY */}
+        <div className="mb-3 p-3 rounded-2xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-indigo-500/15 border-2 border-amber-400/50 dark:border-amber-500/30 shadow-xs">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+                {loginReward.promoBadge || '🎁 CHƯƠNG TRÌNH KHUYẾN MẠI'}
+              </span>
+              <span className="text-xs font-black text-amber-950 dark:text-amber-200">
+                📅 {loginReward.dateDisplay}
+              </span>
+              <span className="text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-800">
+                ⏰ {loginReward.expiresAtDisplay}
+              </span>
+            </div>
+            <span className="text-[11px] font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
+              ✓ Hết 24:00 Tự Động Hủy &amp; Cập Nhật Mới
+            </span>
+          </div>
+          <h5 className="text-sm font-black text-slate-900 dark:text-white mt-1.5">
+            {loginReward.title}
+          </h5>
+          <p className="text-slate-600 dark:text-slate-300 text-xs font-medium mt-0.5">
+            {loginReward.bannerText}
+          </p>
+          {loginReward.bonusRules && loginReward.bonusRules.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap mt-2">
+              {loginReward.bonusRules.map((r, i) => (
+                <span key={i} className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 bg-white/80 dark:bg-slate-900/80 px-2.5 py-0.5 rounded-lg border border-amber-300/40 shadow-2xs">
+                  {r}
+                </span>
+              ))}
+            </div>
+          )}
+          {loginReward.nextDayPromoPreview && (
+            <p className="text-rose-600 dark:text-rose-400 font-black mt-2 text-xs flex items-center gap-1 bg-white/60 dark:bg-slate-900/60 p-2 rounded-xl border border-rose-200 dark:border-rose-900">
+              <span>🔔</span>
+              <span>{loginReward.nextDayPromoPreview}</span>
+            </p>
+          )}
+        </div>
+
         <div className="flex items-center justify-between gap-2 flex-wrap font-bold mb-2 text-blue-900 dark:text-blue-300">
-
           <span className="flex items-center gap-1.5">
-
             <HelpCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-
             <span>Quy Chuẩn Tính Điểm Thi Đua Tự Động &amp; Công Khai Minh Bạch:</span>
-
           </span>
-
           <span className="text-[11px] text-slate-500">Cộng trực tiếp vào Điểm Tổng</span>
-
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 text-[11px]">
