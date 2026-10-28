@@ -134,18 +134,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
   // Tải dữ liệu toàn diện theo thời gian thực (tự động rà soát & khôi phục điểm thực tế)
   const loadData = useCallback(async () => {
     setIsRefreshing(true);
-    try {
-      // 0. Tự động đồng bộ toàn bộ học sinh và kết quả bài làm mới nhất từ Cloud về máy Thầy
-      try {
-        await studentGradebookService.syncFromCloud();
-      } catch (err) {
-        console.warn('Lỗi syncFromCloud trong bảng xếp hạng:', err);
-      }
-
-      // Tự động rà soát & khôi phục điểm học tập thực tế để tránh mọi thiệt thòi cho học sinh
-      try {
-        studentGradebookService.auditAndRestoreAllStudentPoints();
-      } catch {}
+    try {
 
       // 1. Tải danh sách lớp
       const cls = studentGradebookService.getClasses();
@@ -227,6 +216,9 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
   useEffect(() => {
     loadData();
 
+    // Đồng bộ ngầm Cloud 1 lần duy nhất khi mở Bảng xếp hạng
+    studentGradebookService.syncFromCloud().catch(() => {});
+
     // Lắng nghe sự kiện cập nhật điểm danh, nộp bài, thưởng điểm
     const handleGradebookUpdate = () => {
       loadData();
@@ -238,7 +230,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
     // Tự động làm mới mỗi 15 giây để đảm bảo thời gian thực
     const timer = setInterval(() => {
       loadData();
-    }, 15000);
+    }, 30000);
 
     return () => {
       window.removeEventListener('gvai_gradebook_updated', handleGradebookUpdate);

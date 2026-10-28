@@ -772,6 +772,10 @@ class StudentGradebookService {
   private students: StudentProfile[] = [];
   private submissions: StudentSubmission[] = [];
   private checkinLogs: StudentCheckinLog[] = [];
+  private isSyncingFromCloud = false;
+  private lastCloudSyncTimestamp = 0;
+  private isSyncingToCloud = false;
+  private lastCloudUploadTimestamp = 0;
 
   constructor() {
     this.initData();
@@ -1592,7 +1596,7 @@ class StudentGradebookService {
    * Tự động rà soát từ Submissions, Checkin Logs, Tiến độ Nhiệm vụ & Lịch sử học thực tế hôm qua đến nay
    * Khôi phục toàn bộ điểm số bị mất hoặc bị ghi đè, bù đắp mọi thiệt thòi cho học sinh, bảo toàn điểm cao nhất!
    */
-  public auditAndRestoreAllStudentPoints(): {
+  public auditAndRestoreAllStudentPoints(triggerCloudSync: boolean = true): {
     auditedCount: number;
     restoredCount: number;
     totalPointsRestored: number;
@@ -1931,8 +1935,8 @@ class StudentGradebookService {
     });
 
     // 5. Lưu trữ vĩnh viễn và đồng bộ Cloud
-    this.saveStudents();
-    this.saveSubmissions();
+    this.saveStudents(false);
+    this.saveSubmissions(false);
     try {
       localStorage.setItem(STORAGE_KEYS.CHECKIN_LOGS, JSON.stringify(this.checkinLogs));
       localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
@@ -1947,7 +1951,9 @@ class StudentGradebookService {
       }
     }
 
-    this.syncToCloud().catch(() => {});
+    if (triggerCloudSync) {
+      this.syncToCloud().catch(() => {});
+    }
 
     return {
       auditedCount: this.students.length,
@@ -2124,11 +2130,19 @@ class StudentGradebookService {
   }
 
   // Tự động kéo danh sách học sinh và kết quả bài làm từ Cloud về (giúp dữ liệu mọi thiết bị hiển thị đồng nhất)
-  public async syncFromCloud(): Promise<StudentProfile[]> {
+  public async syncFromCloud(force: boolean = false): Promise<StudentProfile[]> {
+    if (this.isSyncingFromCloud) {
+      return [...this.students];
+    }
+    const now = Date.now();
+    if (!force && now - this.lastCloudSyncTimestamp < 15000) {
+      return [...this.students];
+    }
+    this.isSyncingFromCloud = true;
     try {
       let cloudStudents: StudentProfile[] | null = null;
       let cloudSubmissions: StudentSubmission[] | null = null;
-      const bust = '_t=' + Date.now();
+      const bust = '_t=' + now;
 
       // 1. Gọi API Vercel cùng domain (kèm timestamp chống cache hoàn toàn)
       try {
@@ -2183,7 +2197,7 @@ class StudentGradebookService {
         });
         if (hasNewSub) {
           this.submissions = Array.from(subMap.values());
-          this.saveSubmissions();
+          this.saveSubmissions(false);
         }
       }
 
@@ -2235,21 +2249,33 @@ class StudentGradebookService {
           }
         });
         this.students = Array.from(map.values());
-        this.saveStudents();
+        this.saveStudents(false);
         // Tự động rà soát và khôi phục điểm thực tế cho toàn bộ học sinh
-        this.auditAndRestoreAllStudentPoints();
+        this.auditAndRestoreAllStudentPoints(false);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
+        }
         if (hasNewLocal) {
           this.syncToCloud().catch(() => {});
         }
       }
     } catch (e) {
       console.warn('Lỗi syncFromCloud:', e);
+    } finally {
+      this.isSyncingFromCloud = false;
+      this.lastCloudSyncTimestamp = Date.now();
     }
     return [...this.students];
   }
 
   // Đẩy danh sách học sinh và kết quả bài làm lên Cloud để mọi thiết bị đồng bộ thời gian thực
-  public async syncToCloud(): Promise<void> {
+  public async syncToCloud(force: boolean = false): Promise<void> {
+    if (this.isSyncingToCloud) return;
+    const now = Date.now();
+    if (!force && now - this.lastCloudUploadTimestamp < 10000) {
+      return;
+    }
+    this.isSyncingToCloud = true;
     try {
       const payload = JSON.stringify({
         school: 'THCS Dong Yen',
@@ -2289,6 +2315,9 @@ class StudentGradebookService {
       }
     } catch (e) {
       console.warn('Lỗi syncToCloud:', e);
+    } finally {
+      this.isSyncingToCloud = false;
+      this.lastCloudUploadTimestamp = Date.now();
     }
   }
 
@@ -2450,7 +2479,7 @@ class StudentGradebookService {
     return { importedCount: count, errors };
   }
 
-  private saveStudents() {
+  private saveStudents(dispatchUpdate: boolean = true) {
     try {
       localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(this.students));
       // Lưu trữ bền vững vĩnh viễn vào Vault và các bản sao lưu
@@ -2477,7 +2506,7 @@ class StudentGradebookService {
         };
         localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(engProfile));
       }
-      if (typeof window !== 'undefined') {
+      if (dispatchUpdate && typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
       }
     } catch (e) {
@@ -2586,14 +2615,14 @@ class StudentGradebookService {
     return true;
   }
 
-  private saveSubmissions() {
+  private saveSubmissions(dispatchUpdate: boolean = true) {
     try {
       localStorage.setItem(STORAGE_KEYS.SUBMISSIONS, JSON.stringify(this.submissions));
       if (this.submissions && this.submissions.length > 0) {
         localStorage.setItem(STORAGE_KEYS.VAULT_SUBMISSIONS, JSON.stringify(this.submissions));
         localStorage.setItem('gvai_submissions_backup', JSON.stringify(this.submissions));
       }
-      if (typeof window !== 'undefined') {
+      if (dispatchUpdate && typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
       }
     } catch (e) {
