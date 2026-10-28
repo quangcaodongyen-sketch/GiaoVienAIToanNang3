@@ -1,6 +1,7 @@
 import { cloudSyncService } from './services/cloudSyncService';
 import React, { useState, useEffect } from 'react';
 import { 
+  ArrowLeft,
   Menu, 
   X, 
   Sparkles, 
@@ -1060,7 +1061,73 @@ export default function App() {
         </div>
       )}
 
-      {/* MASTER ADMIN TOP BAR DÀNH CHO ADMIN THẦY THÀNH (QUẢN TRỊ TOÀN WEB & THỬ NGHIỆM VAI TRÒ HỌC SINH) */}
+            {/* =========================================================================
+          GIAO DIỆN HEADER DÀNH RIÊNG CHO HỌC SINH
+          (Khi ở Tab Học Sinh: Ẩn toàn bộ thanh công cụ của GV và Admin, giống như sang 1 trang web mới chỉ dành cho học sinh)
+          ========================================================================= */}
+      {mainViewTab === 'students' ? (
+        <header className="sticky top-0 z-50 bg-[#0B1E36] border-b border-blue-500/30 shadow-lg transition-all duration-300">
+          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16 sm:h-20">
+              {/* Logo Học Sinh Đĩnh Đạc & Thân Thiện */}
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg ring-2 ring-emerald-300/40">
+                  <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-base sm:text-xl font-black text-white tracking-tight">
+                      GÓC HỌC TẬP HỌC SINH
+                    </h1>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/25 text-emerald-300 border border-emerald-400/40 shadow-xs">
+                      THCS Đồng Yên
+                    </span>
+                    {isAdminSession && (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500 text-slate-950">
+                        Admin Test
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-blue-200/90 font-medium hidden sm:block">
+                    Luyện Từ Vựng Siêu Trí Nhớ • Đề Cương &amp; Đề Thi Online • Bảng Vàng Thi Đua
+                  </p>
+                </div>
+              </div>
+
+              {/* Nút tác vụ nhanh: Chuyển giao diện Sáng/Tối & NÚT TRỞ VỀ TOÀN TRANG WEB (GV & ADMIN) */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                {/* Nút đổi giao diện Sáng / Tối */}
+                <button
+                  type="button"
+                  onClick={() => changeTheme(themeMode === 'pedagogy' ? 'dark' : 'pedagogy')}
+                  className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/50 transition cursor-pointer text-xs font-bold flex items-center gap-1.5"
+                  title="Chuyển đổi giao diện Sáng / Tối"
+                >
+                  <span>{themeMode === 'pedagogy' ? '🌙' : '☀️'}</span>
+                  <span className="hidden md:inline">{themeMode === 'pedagogy' ? 'Chế độ Tối' : 'Chế độ Sáng'}</span>
+                </button>
+
+                {/* NÚT QUAY LẠI TOÀN TRANG WEB (CÓ GIÁO VIÊN & ADMIN) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMainViewTab('welcome');
+                    window.history.pushState(null, '', '/');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-3.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs sm:text-sm border border-blue-400/30 transition-all flex items-center gap-2 shadow-md cursor-pointer group"
+                  title="Quay lại toàn bộ trang web (Bao gồm Kho Giáo Viên & Quản Trị Admin)"
+                >
+                  <ArrowLeft className="w-4 h-4 text-cyan-200 group-hover:-translate-x-1 transition-transform" />
+                  <span className="hidden sm:inline">Quay Lại Toàn Trang (GV &amp; Admin)</span>
+                  <span className="sm:hidden">Trang Chủ Toàn Web</span>
+                </button>
+              </div>
+            </div>
+          </nav>
+        </header>
+      ) : (
+{/* MASTER ADMIN TOP BAR DÀNH CHO ADMIN THẦY THÀNH (QUẢN TRỊ TOÀN WEB & THỬ NGHIỆM VAI TRÒ HỌC SINH) */}
       {isAdminSession && (
         <MasterAdminBar
           currentTab={mainViewTab}
@@ -1536,6 +1603,7 @@ export default function App() {
           </div>
         </div>
       </header>
+      )}
 
       <main className="flex-1">
         {/* 0. CỔNG CHÀO MỪNG & LỰA CHỌN PHÂN HỆ DEKIEMTRASO.COM */}
