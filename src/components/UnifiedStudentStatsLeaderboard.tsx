@@ -591,10 +591,10 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
               <span className="absolute top-0 right-0 text-[8px] px-1 bg-rose-600 text-white font-black rounded-bl tracking-wider">HÔM NAY</span>
             )}
             <div className={`font-black ${loginReward.isPromoToday ? 'text-amber-700 dark:text-amber-300' : 'text-blue-600'}`}>
-              {loginReward.isPromoToday ? '🎁 Chuyên Cần (+10đ)' : '📅 Chuyên Cần'}
+              {loginReward.isPromoToday ? `🎁 Chuyên Cần (+${loginReward.points}đ)` : '📅 Chuyên Cần'}
             </div>
             <div className={loginReward.isPromoToday ? 'text-amber-800 dark:text-amber-200 font-bold' : 'text-slate-500'}>
-              {loginReward.isPromoToday ? '+10đ hôm nay (Mai: +5đ)' : '+5 điểm / ngày đăng nhập'}
+              {loginReward.isPromoToday ? `+${loginReward.points}đ lần đầu đăng nhập` : '+5 điểm / ngày đăng nhập'}
             </div>
           </div>
           <div className="p-2 rounded-xl bg-gradient-to-br from-rose-50 via-amber-50 to-orange-50 dark:from-rose-950/40 dark:via-amber-950/40 dark:to-orange-950/40 border border-rose-300 dark:border-rose-700 shadow-2xs">
@@ -607,7 +607,11 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <div className="font-bold text-indigo-600">🧠 Từ Vựng 3D</div>
-            <div className="text-slate-500">+10 điểm / Unit học xong</div>
+            <div className="text-slate-500 font-semibold">
+              {loginReward.vocabMultiplier > 1 
+                ? `+${loginReward.vocabPointsPerUnit}đ / Unit (x${loginReward.vocabMultiplier} ĐIỂM)` 
+                : '+10 điểm / Unit (Tăng 35%)'}
+            </div>
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <div className="font-bold text-teal-600">📚 Đề Cương & Bài Tập</div>
@@ -625,6 +629,26 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <div className="font-bold text-purple-600">⭐ Thưởng Tích Cực</div>
             <div className="text-slate-500">+15đ khởi động &amp; Thầy khen</div>
+          </div>
+        </div>
+
+        {/* BANNER THÔNG BÁO CHÍNH SÁCH KHUYẾN MẠI THI ĐUA HÔM NAY VÀ NGÀY MAI */}
+        <div className="mt-3 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 border border-amber-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-xl shrink-0">🔥</span>
+            <div>
+              <span className="font-black text-amber-800 dark:text-amber-200">{loginReward.title}</span>
+              {loginReward.nextDayPromoPreview && (
+                <span className="block text-[11px] text-rose-600 dark:text-rose-400 font-bold mt-0.5">
+                  {loginReward.nextDayPromoPreview}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-black text-[11px]">
+              Học 1-2 bài từ vựng ➔ Tăng ngay 35% - 70%
+            </span>
           </div>
         </div>
       </div>
@@ -935,6 +959,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                     <th className="py-3 px-3 text-center w-14">Hạng</th>
                     <th className="py-3 px-3">Học Sinh</th>
                     <th className="py-3 px-3 text-center">Lớp</th>
+                    <th className="py-3 px-3 text-center">Tiến Độ Học</th>
                     <th className="py-3 px-3 text-center">Cấp Độ (Level)</th>
                     <th className="py-3 px-3 text-center">Điểm Thi Đua</th>
                     <th className="py-3 px-3 text-center">Điểm Bài Thi</th>
@@ -998,6 +1023,27 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                         {/* 3. Lớp */}
                         <td className="py-3 px-3 text-center font-bold text-slate-700 dark:text-slate-300">
                           {item.className}
+                        </td>
+
+                        {/* 4. Tiến Độ Học Tập & Bài Từ Vựng (1 bài = 35%, 2 bài = 70%) */}
+                        <td className="py-3 px-3 text-center">
+                          <div className="inline-flex flex-col items-center">
+                            <span className="font-black text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                              <span>📈</span>
+                              <span>{item.studyProgressPercent || 0}%</span>
+                            </span>
+                            <div className="w-20 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-1 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-emerald-500 to-teal-400 h-1.5 rounded-full transition-all duration-500"
+                                style={{ width: `${item.studyProgressPercent || 0}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5 font-semibold">
+                              {item.vocabUnitsCount && item.vocabUnitsCount > 0 
+                                ? `${item.vocabUnitsCount} bài từ vựng` 
+                                : 'Chưa học bài nào'}
+                            </span>
+                          </div>
                         </td>
 
                         {/* 4. Cấp Độ Level & Tiến Trình XP */}
@@ -1321,6 +1367,29 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 </div>
               </div>
             )}
+
+            {/* TIẾN ĐỘ HỌC TẬP TỪ VỰNG & NHIỆM VỤ (1 BÀI = 35%, 2 BÀI = 70%) */}
+            <div className="bg-emerald-50 dark:bg-emerald-950/40 p-3.5 rounded-2xl border border-emerald-200 dark:border-emerald-800/50 space-y-2">
+              <div className="flex items-center justify-between text-xs font-black text-emerald-900 dark:text-emerald-200">
+                <span className="flex items-center gap-1.5">
+                  <span>📈</span>
+                  <span>Tiến Độ Học Tập Tổng Hợp</span>
+                </span>
+                <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">
+                  {selectedStudentDetail.studyProgressPercent || 0}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${selectedStudentDetail.studyProgressPercent || 0}%` }}
+                ></div>
+              </div>
+              <div className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between font-medium">
+                <span>Số bài từ vựng hoàn thành: <strong>{selectedStudentDetail.vocabUnitsCount || 0} bài</strong></span>
+                <span>(1 bài = 35% • 2 bài = 70% • 3 bài = 100%)</span>
+              </div>
+            </div>
 
             {/* BẢNG KÊ MINH BẠCH TỪNG THÀNH PHẦN TẠO THÀNH ĐIỂM TỔNG */}
             <div className="space-y-2">

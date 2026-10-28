@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { vocabularyService, VocabItem, UnitInfo } from '../services/vocabularyService';
 import { audioPronunciationService, VoiceAccent } from '../services/audioPronunciationService';
-import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, getDailyLoginRewardInfo } from '../services/studentGradebookService';
 import { midtermMissionService, MidtermMissionState } from '../services/midtermMissionService';
 
 interface UnifiedVocabPortalProps {
@@ -130,8 +130,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   onRewardMerit,
   onOpenIpaModal
 }) => {
-  // State hiệu ứng +10 điểm bay lên
+  // State hiệu ứng điểm bay lên & Chính sách khuyến mại
   const [floatingScores, setFloatingScores] = useState<FloatingScore[]>([]);
+  const loginReward = useMemo(() => getDailyLoginRewardInfo(), []);
 
   const triggerScorePopup = (
     e?: React.MouseEvent | { clientX?: number; clientY?: number } | null,
@@ -722,9 +723,16 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       );
       setMissionUpdateTrigger(t => t + 1);
 
-      const newTotal = studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-      if (onRewardMerit) onRewardMerit(`Học từ vựng Unit ${selectedUnit}`, 10);
-      alert(`🎉 Chúc mừng em ${currentStudent.name} đã hoàn thành bài tập từ vựng Unit ${selectedUnit} (Tiếng Anh ${selectedGrade})!\n⭐ Em được cộng +10 điểm chuyên cần vào tổng điểm thi đua (Tổng điểm hiện tại: ${newTotal}đ)!\n\n${res.message}`);
+      const vRes = studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
+      if (onRewardMerit) onRewardMerit(`Học từ vựng Unit ${selectedUnit}`, vRes.awardedPoints);
+
+      alert(
+        `🎉 CHÚC MỪNG EM ${currentStudent.name}!\n` +
+        `✅ Em đã hoàn thành xuất sắc bài học từ vựng Unit ${selectedUnit} (Tiếng Anh ${selectedGrade})!\n` +
+        `⭐ Thưởng: +${vRes.awardedPoints} điểm thi đua ${vRes.isDoubleReward ? '(ĐÃ NHÂN ĐÔI KHUYẾN MẠI 🔥)' : ''} (Tổng hiện tại: ${vRes.totalMeritPoints}đ)!\n` +
+        `📈 TIẾN ĐỘ HỌC TẬP TĂNG VỌT: Đạt ${vRes.progressPercent}% (${vRes.vocabUnitsCount} bài đã hoàn thành)!\n\n` +
+        `${res.message}`
+      );
     } else {
       alert('Em hãy nhập Tên và Lớp ở trên để được ghi nhận điểm chuyên cần nhé!');
     }
@@ -732,6 +740,40 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
   return (
     <div className="space-y-4 animate-in fade-in">
+      {/* BANNER CHÍNH SÁCH KHUYẾN MẠI THI ĐUA & BẬT MÍ NGÀY MAI */}
+      <div className="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-indigo-500/15 border-2 border-amber-400/40 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+        <div className="flex items-start gap-2.5">
+          <span className="text-2xl shrink-0">🎁</span>
+          <div>
+            <div className="font-black text-sm text-amber-900 dark:text-amber-200 flex items-center gap-1.5 flex-wrap">
+              <span>{loginReward.title}</span>
+              {loginReward.vocabMultiplier > 1 && (
+                <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black animate-pulse">
+                  🔥 NHÂN ĐÔI ĐIỂM
+                </span>
+              )}
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 mt-0.5 font-medium">
+              {loginReward.bannerText}
+            </p>
+            {loginReward.nextDayPromoPreview && (
+              <p className="text-rose-600 dark:text-rose-400 font-black mt-1 flex items-center gap-1">
+                <span>🔔</span>
+                <span>{loginReward.nextDayPromoPreview}</span>
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="shrink-0 flex items-center gap-2 self-start md:self-auto">
+          <span className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-xs">
+            +{loginReward.vocabPointsPerUnit || 10}đ / Bài Học
+          </span>
+          <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-black text-xs shadow-xs">
+            1 Bài ➔ Tăng 35%
+          </span>
+        </div>
+      </div>
+
       {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP ==================== */}
       <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -756,16 +798,16 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
         </div>
 
-        {/* NÚT HOÀN THÀNH BÀI (+10Đ) & NÚT MỞ MINI-GAME */}
+        {/* NÚT HOÀN THÀNH BÀI (+10Đ/20Đ) & NÚT MỞ MINI-GAME */}
         <div className="flex items-center gap-2 flex-wrap self-start md:self-auto">
           <button
             type="button"
             onClick={handleRewardUnitCompletion}
             className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-500/20 transition flex items-center gap-1.5 cursor-pointer"
-            title="Bấm để nhận 10 điểm chuyên cần sau khi hoàn thành bài"
+            title="Bấm để nhận điểm chuyên cần sau khi hoàn thành bài"
           >
             <Sparkles className="w-4 h-4 text-amber-200" />
-            <span>🎉 Đã Thuộc Bài Này (+10đ)</span>
+            <span>🎉 Đã Thuộc Bài Này (+{loginReward.vocabPointsPerUnit || 10}đ)</span>
           </button>
 
           <button

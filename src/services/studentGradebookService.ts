@@ -1,4 +1,5 @@
 import officialRosterData from '../data/officialStudentRoster.json';
+import { midtermMissionService } from './midtermMissionService';
 // =========================================================================
 // HỆ THỐNG QUẢN LÝ HỌC SINH THEO LỚP & SỔ ĐIỂM TRỰC TUYẾN TOÀN DIỆN
 // TÁC GIẢ BẢN QUYỀN: THẦY GIÁO ĐINH VĂN THÀNH - ĐIỆN THOẠI / ZALO: 0915.213717
@@ -33,6 +34,9 @@ export interface DailyLoginRewardInfo {
   title: string;
   bannerText: string;
   todayStr: string;
+  vocabMultiplier: number;     // Hệ số nhân điểm từ vựng (VD: x2 = +20đ/bài)
+  vocabPointsPerUnit: number;  // Điểm nhận được cho mỗi bài từ vựng hoàn thành
+  nextDayPromoPreview?: string; // Bật mí chính sách khuyến mại ngày mai để kích thích học sinh quay lại
 }
 
 export function getLocalDateString(d: Date = new Date()): string {
@@ -43,9 +47,10 @@ export function getLocalDateString(d: Date = new Date()): string {
 }
 
 /**
- * QUY TẮC KHUYẾN MẠI ĐĂNG NHẬP SƯ PHẠM:
- * - Khuyến mại duy nhất hôm nay (2026-10-28): Lần đăng nhập đầu tiên được cộng 10 điểm để tặng học sinh.
- * - Từ ngày mai (2026-10-29 trở đi): Học sinh mới đăng nhập sẽ cộng 5 điểm thôi.
+ * QUY TẮC KHUYẾN MẠI THI ĐUA THEO NGÀY (THẦY ĐINH VĂN THÀNH):
+ * - Hôm nay (2026-10-28): Tặng +10đ đăng nhập lần đầu tiên + Thông báo nóng chính sách ngày mai.
+ * - Ngày mai (2026-10-29): Đổi chính sách bùng nổ: TẶNG +15Đ ĐĂNG NHẬP + NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20Đ/BÀI)!
+ * - Các ngày tiếp theo: Liên tục đổi mới ưu đãi thi đua để thu hút học sinh tham gia học tập hào hứng.
  */
 export function getYesterdayDateString(referenceDateStr?: string): string {
   try {
@@ -65,24 +70,58 @@ export function getYesterdayDateString(referenceDateStr?: string): string {
 
 export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewardInfo {
   const todayStr = customDateStr || getLocalDateString();
-  const PROMO_DATE = '2026-10-28';
-  const isPromoToday = todayStr === PROMO_DATE;
 
-  if (isPromoToday) {
+  // 1. Ngày hôm nay (2026-10-28): Khuyến mại đăng nhập +10đ & Giới thiệu chính sách bùng nổ ngày mai
+  if (todayStr === '2026-10-28') {
     return {
       points: 10,
       isPromoToday: true,
-      title: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng +10 Điểm Đăng Nhập Đầu Tiên!',
-      bannerText: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng ngay +10 ĐIỂM cho lần đăng nhập đầu tiên vào học! (Từ ngày mai mới đăng nhập sẽ chỉ cộng +5 điểm)',
+      vocabMultiplier: 1,
+      vocabPointsPerUnit: 10,
+      title: '🎁 KHUYẾN MẠI HÔM NAY (28/10): Tặng +10 Điểm Đăng Nhập Đầu Tiên!',
+      bannerText: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng ngay +10 ĐIỂM cho lần đăng nhập đầu tiên vào học! (Học 1-2 bài từ vựng tăng vọt % tiến độ)',
+      nextDayPromoPreview: '🔥 BẬT MÍ NGÀY MAI (29/10): ĐỔI CHÍNH SÁCH SIÊU KHỦNG — Tặng +15đ đăng nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/bài)! Các em hãy quay lại học ngày mai để bứt phá Top Bảng Vàng nhé!',
       todayStr
     };
   }
 
+  // 2. Ngày mai (2026-10-29): Đổi chính sách khuyến mại bùng nổ (+15đ đăng nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG +20đ/bài)
+  if (todayStr === '2026-10-29') {
+    return {
+      points: 15,
+      isPromoToday: true,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      title: '🔥 ĐẠI TIỆC TĂNG TỐC (29/10): Tặng +15đ Đăng Nhập & NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)!',
+      bannerText: '🔥 SIÊU KHUYẾN MẠI NGÀY 29/10: Tặng ngay +15 ĐIỂM ĐĂNG NHẬP + NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)! Học 1 - 2 bài là tăng vọt % tiến độ và bứt phá Top 1!',
+      nextDayPromoPreview: '⚡ NGÀY KIA (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi Giữa Kỳ (+100đ)!',
+      todayStr
+    };
+  }
+
+  // 3. Ngày kia (2026-10-30): Ngày hội thi thử Giữa kỳ
+  if (todayStr === '2026-10-30') {
+    return {
+      points: 10,
+      isPromoToday: true,
+      vocabMultiplier: 1.5,
+      vocabPointsPerUnit: 15,
+      title: '⚡ NGÀY HỘI VỀ ĐÍCH (30/10): Tặng +10đ Đăng Nhập & Thưởng Nóng Đề Thi!',
+      bannerText: '⚡ NGÀY HỘI VỀ ĐÍCH: Tặng +10 ĐIỂM ĐĂNG NHẬP + Thưởng nóng làm đề cương & đề thi giữa kỳ!',
+      nextDayPromoPreview: '🌟 THI ĐUA CUỐI TUẦN: Bảng Vàng vinh danh Top 3 Quán Quân toàn trường!',
+      todayStr
+    };
+  }
+
+  // Tiêu chuẩn các ngày khác
   return {
     points: 5,
     isPromoToday: false,
+    vocabMultiplier: 1,
+    vocabPointsPerUnit: 10,
     title: '⭐ Điểm Chuyên Cần Đăng Nhập: +5 Điểm',
     bannerText: '⭐ Chăm chỉ học tập: Đăng nhập mỗi ngày nhận ngay +5 ĐIỂM chuyên cần vào Bảng xếp hạng!',
+    nextDayPromoPreview: '🔥 Chăm chỉ học tập mỗi ngày để nhận thưởng pháo hoa liên tiếp (+20đ)!',
     todayStr
   };
 }
@@ -257,6 +296,8 @@ export interface StudentProfile {
   teacherBonus?: number;       // Điểm thưởng giáo viên trao thêm do tích cực (+10, +20...)
   bonusHistory?: MeritBonusItem[]; // Nhật ký điểm thưởng công khai
   streakBonusAwardedDate?: string; // Ngày đã nhận thưởng pháo hoa học liên tiếp (+20đ) (YYYY-MM-DD)
+  vocabUnitsCompletedCount?: number; // Số bài từ vựng đã hoàn thành
+  studyProgressPercent?: number;     // % Tiến độ học tập tổng thể (1 bài = 35%, 2 bài = 70%, 3 bài = 100%)
 }
 
 export interface StudentSubmission {
@@ -305,6 +346,8 @@ export interface ClassLeaderboardItem {
   teacherBonus?: number;
   bonusHistory?: MeritBonusItem[];
   levelInfo?: StudentLevelInfo;
+  vocabUnitsCount?: number;      // Số bài từ vựng đã học
+  studyProgressPercent?: number; // % Tiến độ học tập tổng thể
   totalMeritPoints: number;
 }
 export interface PurgeAndSyncRosterResult {
@@ -3273,14 +3316,53 @@ class StudentGradebookService {
   }
 
   /**
-   * 2. Hoàn thành 1 bài từ vựng: +10 điểm chuyên cần
+   * 2. Hoàn thành 1 bài từ vựng: Tự động cộng điểm theo chính sách khuyến mại từng ngày
+   * - Hôm nay (28/10): +10 điểm / Unit.
+   * - Ngày mai (29/10): ĐỔI CHÍNH SÁCH BÙNG NỔ — NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20 điểm / Unit)!
+   * - Tăng % tiến độ học bài rõ rệt cho các em (1 bài = 35%, 2 bài = 70%, 3 bài = 100%).
    */
-  public recordVocabUnitCompleted(studentId: string, unitNumber: number, grade: number): number {
-    const student = this.addStudentMeritPoints(studentId, {
-      vocab: 10,
-      reason: `Học xong từ vựng Unit ${unitNumber} - Lớp ${grade} (+10 điểm)`
+  public recordVocabUnitCompleted(
+    studentId: string, 
+    unitNumber: number, 
+    grade: number
+  ): { 
+    totalMeritPoints: number; 
+    awardedPoints: number; 
+    vocabUnitsCount: number; 
+    progressPercent: number; 
+    isDoubleReward: boolean;
+  } {
+    const today = getLocalDateString();
+    const rewardInfo = getDailyLoginRewardInfo(today);
+    const bonus = rewardInfo.vocabPointsPerUnit || 10;
+    const isDouble = (rewardInfo.vocabMultiplier || 1) >= 2;
+
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) {
+      return { totalMeritPoints: 0, awardedPoints: 0, vocabUnitsCount: 0, progressPercent: 0, isDoubleReward: false };
+    }
+
+    student.vocabUnitsCompletedCount = Math.max((student.vocabUnitsCompletedCount || 0) + 1, 1);
+    const count = student.vocabUnitsCompletedCount;
+    const progress = count >= 3 ? 100 : (count === 2 ? 70 : 35);
+    student.studyProgressPercent = Math.max(student.studyProgressPercent || 0, progress);
+
+    this.addStudentMeritPoints(studentId, {
+      vocab: bonus,
+      reason: `Học xong từ vựng Unit ${unitNumber} - Lớp ${grade} (+${bonus}đ${isDouble ? ' - ĐÃ NHÂN ĐÔI KHUYẾN MẠI' : ''})`
     });
-    return student?.totalMeritPoints || 0;
+
+    try {
+      midtermMissionService.markUnitMastered(studentId, student.name, student.className, grade, unitNumber);
+    } catch {}
+
+    return {
+      totalMeritPoints: student.totalMeritPoints || 0,
+      awardedPoints: bonus,
+      vocabUnitsCount: count,
+      progressPercent: student.studyProgressPercent || progress,
+      isDoubleReward: isDouble
+    };
   }
 
   /**
@@ -3391,6 +3473,24 @@ class StudentGradebookService {
       if (tch > 0) badges.push('Được Thầy Khen Thưởng 🎁');
       if (student.studyTimeMinutes && student.studyTimeMinutes >= 30) badges.push('Chiến Binh Bứt Phá 🔥');
 
+      // Tự động tính toán số bài từ vựng và % tiến độ học tập minh bạch:
+      // 1 bài từ vựng = 35%, 2 bài = 70%, 3 bài = 100%
+      let vocabUnitsCount = student.vocabUnitsCompletedCount || 0;
+      if (vocabUnitsCount === 0 && voc > 0) {
+        vocabUnitsCount = Math.max(1, Math.min(3, Math.round(voc / 10)));
+      }
+      let studyProgressPercent = student.studyProgressPercent || 0;
+      if (vocabUnitsCount > 0) {
+        const baseVocabProg = vocabUnitsCount >= 3 ? 100 : (vocabUnitsCount === 2 ? 70 : 35);
+        studyProgressPercent = Math.max(studyProgressPercent, baseVocabProg);
+      }
+      if (testsCount > 0 || exm > 0) {
+        studyProgressPercent = Math.min(100, studyProgressPercent + 15);
+      }
+      if (prc > 0) {
+        studyProgressPercent = Math.min(100, studyProgressPercent + 15);
+      }
+
       return {
         studentId: student.id,
         studentCode: student.studentCode,
@@ -3415,6 +3515,8 @@ class StudentGradebookService {
         teacherBonus: tch,
         bonusHistory: student.bonusHistory || [],
         levelInfo: calculateStudentLevel(totalMerit, undefined),
+        vocabUnitsCount,
+        studyProgressPercent,
         totalMeritPoints: totalMerit
       };
     });

@@ -31,6 +31,7 @@ export interface UnitMissionProgress {
   qualityPassedCount: number;
   unitPercent: number; // 0 - 100% dựa trên các dạng bài ĐẠT CHẤT LƯỢNG
   isMastered: boolean; // Khi đạt >= 75% các dạng bài
+  isUnitCompleted?: boolean; // Khi học sinh đã hoàn thành bài từ vựng
   statusNote: string;
 }
 
@@ -328,7 +329,47 @@ export class MidtermMissionService {
   }
 
   /**
+   * Đánh dấu học sinh đã hoàn thành trọn vẹn 1 bài từ vựng (Unit 1, 2 hoặc 3)
+   * Giúp học sinh học được 1 - 2 bài là % tăng vọt rõ nét ngay lập tức!
+   */
+  public markUnitMastered(
+    studentId: string,
+    studentName: string,
+    className: string,
+    grade: number,
+    unitNumber: number
+  ): MidtermMissionState {
+    const state = this.getMissionState(studentId, studentName, className, grade);
+    if ([1, 2, 3].includes(unitNumber)) {
+      const unit = state.mission1.units[unitNumber];
+      if (unit) {
+        unit.isUnitCompleted = true;
+        unit.isMastered = true;
+        unit.unitPercent = 100;
+        unit.statusNote = `🌟 Đã hoàn thành 100% trọn vẹn bài từ vựng Unit ${unitNumber}!`;
+
+        // Tự động kích hoạt đạt chất lượng cho các dạng cốt lõi
+        const coreModes = ['flashcard', 'quiz', 'match'];
+        coreModes.forEach(mId => {
+          if (unit.modes[mId]) {
+            unit.modes[mId].completed = true;
+            unit.modes[mId].qualityPassed = true;
+            unit.modes[mId].accuracyPercent = Math.max(unit.modes[mId].accuracyPercent || 0, 95);
+            unit.modes[mId].note = 'Đã hoàn thành xuất sắc';
+            unit.modes[mId].completedAt = new Date().toISOString();
+          }
+        });
+
+        this.recalculateState(state);
+        this.saveState(state);
+      }
+    }
+    return state;
+  }
+
+  /**
    * Tính toán lại toàn bộ % tiến độ và nhận xét sư phạm của Thầy Thành
+   * Quy chuẩn sư phạm: Học sinh học được 1 - 2 bài từ vựng là % phải tăng vọt rõ ràng cho các em thấy!
    */
   private recalculateState(state: MidtermMissionState) {
     // 1. Tính % Nhiệm vụ 1 (Từ vựng Unit 1 - 3)
@@ -347,17 +388,25 @@ export class MidtermMissionService {
       }
 
       u.qualityPassedCount = passedCount;
-      u.unitPercent = Math.min(100, Math.round((passedCount / u.totalRequiredModes) * 100));
-      u.isMastered = u.unitPercent >= 80;
 
-      if (u.unitPercent >= 100) {
-        u.statusNote = '🌟 Hoàn thành xuất sắc 100% tất cả các dạng bài!';
-      } else if (u.unitPercent >= 60) {
-        u.statusNote = `Đã đạt ${u.unitPercent}% (${passedCount}/${u.totalRequiredModes} dạng bài đạt chuẩn). Còn một số dạng cần hoàn thành.`;
-      } else if (u.unitPercent > 0) {
-        u.statusNote = `Mới đạt ${u.unitPercent}% (${passedCount}/${u.totalRequiredModes} dạng bài). Hãy tiếp tục học chăm chỉ nhé!`;
+      // QUY CHUẨN TÍNH % RÕ RÀNG, ĐỘNG VIÊN TINH THẦN HỌC SINH:
+      // Học sinh học được 1 - 2 bài từ vựng là % phải tăng rõ ràng:
+      // - Học xong bài Unit (hoặc làm >= 3 dạng): Đạt ngay 100% của Unit!
+      // - Làm 2 dạng bài: Đạt ngay 75%!
+      // - Làm 1 dạng bài: Đạt ngay 50%!
+      if (u.isUnitCompleted || u.isMastered || passedCount >= 3) {
+        u.unitPercent = 100;
+        u.isMastered = true;
+        u.statusNote = `🌟 Đã hoàn thành xuất sắc 100% bài học từ vựng Unit ${uNum}!`;
+      } else if (passedCount === 2) {
+        u.unitPercent = 75;
+        u.statusNote = `Đạt 75% (${passedCount} dạng bài đạt chuẩn). Hãy hoàn thành tiếp nhé!`;
+      } else if (passedCount === 1) {
+        u.unitPercent = 50; // Làm 1 dạng bài chất lượng đạt ngay 50% bài học!
+        u.statusNote = `Đạt 50% (${passedCount} dạng bài). Hãy làm thêm 1 bài nữa để hoàn thành 100%!`;
       } else {
-        u.statusNote = 'Chưa có dạng bài nào đạt chuẩn (Cần học và đạt >= 60% độ chính xác).';
+        u.unitPercent = 0;
+        u.statusNote = 'Chưa hoàn thành dạng bài nào';
       }
 
       totalQualityPassedVocab += passedCount;
@@ -365,7 +414,8 @@ export class MidtermMissionService {
     }
 
     state.mission1.qualityPassedCount = totalQualityPassedVocab;
-    state.mission1.overallPercent = Math.round(sumUnitPercents / 3);
+    // 1 bài = 33%, 2 bài = 67%, 3 bài = 100%
+    state.mission1.overallPercent = Math.min(100, Math.round(sumUnitPercents / 3));
     state.mission1.isFullyCompleted = state.mission1.overallPercent >= 100;
 
     // 2. Tính % Nhiệm vụ 2 (Đề cương & Đề thi Giữa kỳ)

@@ -1472,6 +1472,40 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       </div>
 
+      {/* BANNER CHÍNH SÁCH KHUYẾN MẠI THI ĐUA HÔM NAY & BẬT MÍ NGÀY MAI */}
+      <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-indigo-500/15 border border-amber-400/40 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-start gap-2.5">
+          <span className="text-xl shrink-0">🎁</span>
+          <div>
+            <div className="font-black text-amber-900 dark:text-amber-200 flex items-center gap-2 flex-wrap">
+              <span>{loginRewardInfo.title}</span>
+              {loginRewardInfo.vocabMultiplier > 1 && (
+                <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black animate-pulse">
+                  🔥 NHÂN ĐÔI ĐIỂM TỪ VỰNG
+                </span>
+              )}
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 mt-0.5 font-medium">
+              {loginRewardInfo.bannerText}
+            </p>
+            {loginRewardInfo.nextDayPromoPreview && (
+              <p className="text-rose-600 dark:text-rose-400 font-black mt-1 flex items-center gap-1">
+                <span>🔔</span>
+                <span>{loginRewardInfo.nextDayPromoPreview}</span>
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+          <span className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-xs">
+            +{loginRewardInfo.points}đ Đăng Nhập
+          </span>
+          <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-black shadow-xs">
+            1 Bài Từ Vựng ➔ Tăng 35%
+          </span>
+        </div>
+      </div>
+
       {/* THANH ĐIỀU HƯỚNG 6 PHÂN HỆ KHOA HỌC */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none text-xs sm:text-sm font-bold border-b border-slate-200 dark:border-slate-800 mb-3">
         {/* 1. Nhiệm Vụ GK1 */}
