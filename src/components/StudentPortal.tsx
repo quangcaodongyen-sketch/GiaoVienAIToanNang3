@@ -41,7 +41,7 @@ import { UnifiedStudentStatsLeaderboard } from './UnifiedStudentStatsLeaderboard
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
-import { studentGradebookService, StudentProfile, validateEducationalStudentName } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString } from '../services/studentGradebookService';
 import { removeDiacritics } from '../services/appMatcher';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp, Crown } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
@@ -186,7 +186,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     setTimeout(() => setShowCheerToast(false), 5000);
   };
 
-  const triggerWelcomeModal = (student: StudentProfile, isReturn: boolean = true) => {
+  // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / từ ngày mai (+5 điểm)
+  const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(), []);
+
+  const triggerWelcomeModal = (student: StudentProfile, isReturn: boolean = true, pointsGiven?: number) => {
+    const awarded = pointsGiven !== undefined ? pointsGiven : loginRewardInfo.points;
     const mascots = ['🦉', '🐱', '🚀', '🌟', '🐼', '🦁', '🐝'];
     const titles = [
       'Chiến Binh Chăm Ngoan 🛡️',
@@ -196,10 +200,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       'Cú Vàng Thông Thái 🦉',
       'Nhà Vô Địch Tương Lai 🏆'
     ];
-    const cheers = [
+    const cheers = loginRewardInfo.isPromoToday ? [
+      `🎁 Thầy Thành chúc mừng em ${student.name} đã đăng nhập hôm nay và nhận trọn vẹn +${awarded} ĐIỂM KHUYẾN MẠI ĐẶC BIỆT DUY NHẤT HÔM NAY! Chúc em học thật say mê và đạt nhiều hoa điểm 10 rực rỡ!`,
+      `🔥 Khuyến mại vàng duy nhất hôm nay: Thầy Thành tặng ngay +${awarded} điểm chuyên cần cho em ${student.name} (Lớp ${student.className})! Hãy bắt đầu buổi học thật hăng say nhé!`,
+      `🌟 Tự giác học bài là phẩm chất đáng quý nhất! Thầy gửi tặng em +${awarded} điểm thi đua hôm nay và chúc em tự tin chinh phục mọi bài tập tiếng Anh!`,
+      `🏆 Hoan hô tinh thần học tập của em ${student.name}! +${awarded} điểm thưởng khuyến mại hôm nay đã được cộng vào Bảng xếp hạng của lớp ${student.className}!`
+    ] : [
       `Thầy Thành rất vui khi thấy em ${student.name} chăm chỉ quay lại học bài hôm nay! Mỗi ngày tiến bộ một chút, thành công sẽ đến với em!`,
       `Chào mừng em ${student.name} đã trở lại bàn học! Thầy Thành tin chắc hôm nay em sẽ ghi trọn điểm 10 rực rỡ!`,
-      `Tự giác học tập là phẩm chất tuyệt vời nhất! Thầy Thành gửi tặng em +5 điểm chuyên cần và chúc em có một buổi học thật say mê!`,
+      `Tự giác học tập là phẩm chất tuyệt vời nhất! Thầy Thành gửi tặng em +${awarded} điểm chuyên cần và chúc em có một buổi học thật say mê!`,
       `Hoan hô tinh thần học tập của em ${student.name} (Lớp ${student.className})! Thầy luôn đồng hành và dõi theo từng bước tiến của em!`
     ];
     const randomMascot = mascots[Math.floor(Math.random() * mascots.length)];
@@ -207,11 +216,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     const randomCheer = cheers[Math.floor(Math.random() * cheers.length)];
 
     setWelcomeModalData({
-      isOpen: false,
+      isOpen: true,
       studentName: student.name,
       studentClass: student.className,
-      pointsAwarded: 5,
-      totalPoints: student.totalMeritPoints || 5,
+      pointsAwarded: awarded,
+      totalPoints: student.totalMeritPoints || awarded,
       mascotEmoji: randomMascot,
       badgeTitle: randomTitle,
       cheerMessage: randomCheer
@@ -585,13 +594,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       }
     }
 
-    studentGradebookService.setActiveStudent(found);
-    setCurrentStudent(found);
+    // Điểm danh chuyên cần tự động cho lần đăng nhập đầu tiên hôm nay
+    const loginRewardRes = studentGradebookService.recordDailyLogin(found.id);
+    const updated = studentGradebookService.getStudents().find(s => s.id === found.id) || found;
+
+    studentGradebookService.setActiveStudent(updated);
+    setCurrentStudent(updated);
     setShowAuthModal(false);
     setLoginStudentInput('');
     setLoginPassInput('');
-    saveStudentToDevice(found);
-    triggerWelcomeModal(found, true);
+    saveStudentToDevice(updated);
+    triggerWelcomeModal(updated, true, loginRewardRes.awarded || (loginRewardRes.isFirstToday ? loginRewardInfo.points : 0));
   };
 
   const handleStudentLogout = () => {
@@ -736,7 +749,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       const finalName = stdNameResult.standardizedName || name;
       const finalCode = stdNameResult.officialItem ? stdNameResult.officialItem.studentCode : ('HS' + cleanCls.replace(/\s+/g, '') + '-' + Math.floor(10 + Math.random() * 90));
 
-      // Tạo mới hồ sơ học sinh
+      // Tạo mới hồ sơ học sinh kèm điểm khuyến mại hôm nay / ngày mai
       const savedProfile = studentGradebookService.addStudent({
         studentCode: finalCode,
         username: rawUser,
@@ -747,8 +760,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         grade: regGrade,
         gender: regGender,
         parentPhone: cleanPhone,
-        note: stdNameResult.isOfficialMatched ? 'Học sinh chính thức theo Sổ điểm bộ môn' : 'Học sinh tự đăng ký trực tuyến'
+        note: stdNameResult.isOfficialMatched ? 'Học sinh chính thức theo Sổ điểm bộ môn' : 'Học sinh tự đăng ký trực tuyến',
+        attendancePoints: loginRewardInfo.points,
+        encouragementBonus: 15,
+        totalMeritPoints: 15 + loginRewardInfo.points,
+        lastLoginDate: loginRewardInfo.todayStr
       });
+      studentGradebookService.recordCheckin(savedProfile, 'Đăng ký tài khoản', `Đăng ký & đăng nhập ngày ${loginRewardInfo.todayStr} (+${loginRewardInfo.points}đ: ${loginRewardInfo.title})`);
 
       // Đồng bộ ngay lên Cloud để điện thoại có thể đăng nhập ngay tức thì
       studentGradebookService.syncToCloud().catch(() => {});
@@ -1503,6 +1521,42 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {!currentStudent && ['missions', 'vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8', 'decuong_e6'].includes(activeTab) && (
         <div className="bg-gradient-to-br from-white via-blue-50/60 to-indigo-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl border-2 border-blue-500/40 p-6 sm:p-8 shadow-xl max-w-3xl mx-auto my-6 animate-in fade-in space-y-5">
           
+          {/* BANNER KHUYẾN MẠI DUY NHẤT HÔM NAY CỘNG 10 ĐIỂM (TỪ NGÀY MAI CỘNG 5 ĐIỂM) */}
+          <div className={`p-4 sm:p-5 rounded-2xl shadow-xl border-2 text-white relative overflow-hidden transition-all ${
+            loginRewardInfo.isPromoToday 
+              ? 'bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 border-amber-300 ring-4 ring-amber-400/30'
+              : 'bg-gradient-to-r from-blue-600 to-indigo-700 border-blue-400'
+          }`}>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner shrink-0 animate-bounce">
+                  {loginRewardInfo.isPromoToday ? '🎁' : '⭐'}
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/25 text-white text-[11px] font-black uppercase tracking-wider mb-1">
+                    {loginRewardInfo.isPromoToday ? '🔥 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10)' : '📅 ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'}
+                  </div>
+                  <h4 className="text-base sm:text-lg font-black text-white leading-tight">
+                    {loginRewardInfo.isPromoToday
+                      ? 'Đăng Nhập Học Được Cộng +10 Điểm Tặng Học Sinh!'
+                      : 'Đăng Nhập Học Tập Mỗi Ngày Nhận Ngay +5 Điểm Chuyên Cần!'}
+                  </h4>
+                  <p className="text-xs text-white/95 font-medium mt-1">
+                    {loginRewardInfo.isPromoToday
+                      ? '⚡ Áp dụng cho lần đăng nhập đầu tiên hôm nay để tặng các em học sinh. Từ ngày mai mới đăng nhập sẽ cộng 5 điểm thôi!'
+                      : '⚡ Điểm chuyên cần tự động cộng vào Bảng xếp hạng thi đua toàn trường.'}
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 flex items-center gap-2">
+                <span className="px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-lg inline-flex items-center gap-1.5 animate-pulse">
+                  <span>+{loginRewardInfo.points} ĐIỂM</span>
+                  <span>🎉</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* GỢI Ý 1-CHẠM VÀO HỌC LẠI NẾU ĐÃ CÓ BẢN LƯU TRÊN THIẾT BỊ NÀY */}
           {rememberedStudent && (
             <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 p-4 sm:p-5 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 border-emerald-300">
@@ -1526,7 +1580,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4 text-slate-900" />
-                  <span>🚀 1-Chạm Vào Học Ngay (+5đ)</span>
+                  <span>🚀 1-Chạm Vào Học Ngay (+{loginRewardInfo.points}đ{loginRewardInfo.isPromoToday ? ' Khuyến Mại' : ''})</span>
                 </button>
                 <button
                   type="button"
@@ -1878,7 +1932,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2 mt-4"
             >
               <Sparkles className="w-5 h-5 text-amber-300" />
-              <span>🚀 VÀO HỌC NGAY (+5Đ)</span>
+              <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}Đ{loginRewardInfo.isPromoToday ? ' TẶNG HÔM NAY!' : ''})</span>
             </button>
           </form>
 
@@ -3273,6 +3327,78 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       
+
+      {/* =========================================================================
+          MODAL CHÀO MỪNG & VINH DANH THƯỞNG ĐIỂM ĐĂNG NHẬP (KHUYẾN MẠI +10Đ HÔM NAY)
+          ========================================================================= */}
+      {welcomeModalData?.isOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border-2 border-amber-400 dark:border-amber-500 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl relative text-center animate-in zoom-in-95 duration-200">
+            {/* Nút đóng góc phải */}
+            <button
+              type="button"
+              onClick={() => setWelcomeModalData(null)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Mascot & Huy hiệu */}
+            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 flex items-center justify-center text-4xl shadow-lg shadow-amber-500/30 mb-3 animate-bounce">
+              {welcomeModalData.mascotEmoji || '🦉'}
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 text-xs font-black uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span>{welcomeModalData.badgeTitle || 'Chiến Binh Chăm Ngoan 🛡️'}</span>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              CHÀO MỪNG EM {welcomeModalData.studentName.toUpperCase()}!
+            </h3>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-bold mt-0.5">
+              Học sinh Lớp {welcomeModalData.studentClass}
+            </p>
+
+            {/* HỘP QUÀ TẶNG ĐIỂM RỰC RỠ */}
+            <div className="my-4 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xl shadow-amber-500/25 border border-amber-300/50">
+              <div className="text-[11px] font-black uppercase tracking-wider text-amber-100">
+                {loginRewardInfo.isPromoToday 
+                  ? '🎁 QUÀ TẶNG KHUYẾN MẠI DUY NHẤT HÔM NAY' 
+                  : '⭐ ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'}
+              </div>
+              <div className="text-3xl sm:text-4xl font-black tracking-tight my-1 drop-shadow-sm">
+                +{welcomeModalData.pointsAwarded} ĐIỂM
+              </div>
+              <div className="text-xs font-semibold text-white/95 flex items-center justify-center gap-1">
+                <span>Tổng điểm thi đua hiện tại:</span>
+                <span className="font-black text-yellow-200">⭐ {welcomeModalData.totalPoints}đ</span>
+              </div>
+            </div>
+
+            {/* LỜI NHẮN NHỦ SƯ PHẠM CỦA THẦY THÀNH */}
+            <div className="p-3.5 rounded-2xl bg-blue-50/80 dark:bg-slate-800/80 border border-blue-200/80 dark:border-slate-700 text-left space-y-1 mb-5">
+              <div className="flex items-center gap-1.5 text-xs font-black text-blue-700 dark:text-blue-400">
+                <span>👨‍🏫</span>
+                <span>Thầy giáo Đinh Văn Thành nhắn nhủ:</span>
+              </div>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed italic">
+                "{welcomeModalData.cheerMessage}"
+              </p>
+            </div>
+
+            {/* NÚT BẮT ĐẦU VÀO HỌC */}
+            <button
+              type="button"
+              onClick={() => setWelcomeModalData(null)}
+              className="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/30 transition cursor-pointer flex items-center justify-center gap-2 group"
+            >
+              <span>🚀 Em Cảm Ơn Thầy &amp; Vào Học Ngay!</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
       <IpaChartPronunciationModal

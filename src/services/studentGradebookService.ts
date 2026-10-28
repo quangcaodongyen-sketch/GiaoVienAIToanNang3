@@ -27,6 +27,50 @@ export interface MeritBonusItem {
   createdAt: string;
 }
 
+export interface DailyLoginRewardInfo {
+  points: number;
+  isPromoToday: boolean;
+  title: string;
+  bannerText: string;
+  todayStr: string;
+}
+
+export function getLocalDateString(d: Date = new Date()): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * QUY TẮC KHUYẾN MẠI ĐĂNG NHẬP SƯ PHẠM:
+ * - Khuyến mại duy nhất hôm nay (2026-10-28): Lần đăng nhập đầu tiên được cộng 10 điểm để tặng học sinh.
+ * - Từ ngày mai (2026-10-29 trở đi): Học sinh mới đăng nhập sẽ cộng 5 điểm thôi.
+ */
+export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewardInfo {
+  const todayStr = customDateStr || getLocalDateString();
+  const PROMO_DATE = '2026-10-28';
+  const isPromoToday = todayStr === PROMO_DATE;
+
+  if (isPromoToday) {
+    return {
+      points: 10,
+      isPromoToday: true,
+      title: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng +10 Điểm Đăng Nhập Đầu Tiên!',
+      bannerText: '🎁 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10): Tặng ngay +10 ĐIỂM cho lần đăng nhập đầu tiên vào học! (Từ ngày mai mới đăng nhập sẽ chỉ cộng +5 điểm)',
+      todayStr
+    };
+  }
+
+  return {
+    points: 5,
+    isPromoToday: false,
+    title: '⭐ Điểm Chuyên Cần Đăng Nhập: +5 Điểm',
+    bannerText: '⭐ Chăm chỉ học tập: Đăng nhập mỗi ngày nhận ngay +5 ĐIỂM chuyên cần vào Bảng xếp hạng!',
+    todayStr
+  };
+}
+
 export interface StudentLevelInfo {
   level: number;
   title: string;
@@ -2240,17 +2284,20 @@ class StudentGradebookService {
       return sNameNorm === normInputName && (sClsNorm === cleanCls || s.classId === targetClass!.id);
     });
 
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = getLocalDateString();
+    const loginReward = getDailyLoginRewardInfo(todayStr);
+
     if (existing) {
       existing.grade = grade;
       existing.className = cleanCls;
       existing.classId = targetClass.id;
-      // Cộng 5 điểm chuyên cần mỗi ngày đăng nhập
+      // Khởi tạo điểm thưởng khuyến khích nếu chưa có
       if (existing.encouragementBonus === undefined) {
         existing.encouragementBonus = 15;
       }
+      // Khuyến mại duy nhất hôm nay cộng 10 điểm, từ ngày mai cộng 5 điểm cho lần đăng nhập đầu tiên
       if (existing.lastLoginDate !== todayStr) {
-        existing.attendancePoints = (existing.attendancePoints || 0) + 5;
+        existing.attendancePoints = (existing.attendancePoints || 0) + loginReward.points;
         existing.lastLoginDate = todayStr;
         existing.totalMeritPoints = (
           (existing.attendancePoints || 0) + 
@@ -2260,7 +2307,7 @@ class StudentGradebookService {
           (existing.timePoints || 0) + 
           (existing.encouragementBonus || 15)
         );
-        this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+5 điểm chuyên cần)`);
+        this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+${loginReward.points}đ: ${loginReward.title})`);
       } else {
         existing.totalMeritPoints = (
           (existing.attendancePoints || 0) + 
@@ -2311,14 +2358,14 @@ class StudentGradebookService {
       gender: 'Nam',
       note: 'Vào học nhanh trực tiếp không cần đăng ký',
       createdAt: new Date().toISOString(),
-      attendancePoints: 5,
+      attendancePoints: loginReward.points,
       vocabPoints: 0,
       examBonusPoints: 0,
       practicePoints: 0,
       studyTimeMinutes: 0,
       timePoints: 0,
       encouragementBonus: 15,
-      totalMeritPoints: 20,
+      totalMeritPoints: 15 + loginReward.points,
       lastLoginDate: todayStr
     };
     try {
@@ -2334,7 +2381,7 @@ class StudentGradebookService {
     this.students.push(newStudent);
     this.saveStudents();
     this.setActiveStudent(newStudent);
-    this.recordCheckin(newStudent, 'Vào học trực tuyến', `Bắt đầu buổi học mới tại Lớp ${cleanCls}`);
+    this.recordCheckin(newStudent, 'Vào học trực tuyến', `Bắt đầu buổi học mới tại Lớp ${cleanCls} (+${loginReward.points}đ: ${loginReward.title})`);
     this.syncToCloud().catch(() => {});
     return newStudent;
   }
@@ -2594,20 +2641,34 @@ class StudentGradebookService {
   }
 
   /**
-   * 1. Điểm danh đăng nhập: +5 điểm chuyên cần
+   * 1. Điểm danh đăng nhập: Khuyến mại DUY NHẤT HÔM NAY +10 điểm, từ ngày mai +5 điểm
    */
-  public recordDailyLogin(studentId: string): number {
-    const today = new Date().toISOString().slice(0, 10);
+  public recordDailyLogin(studentId: string): { awarded: number; total: number; isFirstToday: boolean; rewardInfo: DailyLoginRewardInfo } {
+    const today = getLocalDateString();
+    const loginReward = getDailyLoginRewardInfo(today);
     const student = this.students.find(s => s.id === studentId);
-    if (!student) return 0;
+    if (!student) {
+      return { awarded: 0, total: 0, isFirstToday: false, rewardInfo: loginReward };
+    }
     if (student.lastLoginDate !== today) {
       student.lastLoginDate = today;
       this.addStudentMeritPoints(studentId, {
-        attendance: 5,
-        reason: `Đăng nhập chuyên cần ngày ${today} (+5 điểm)`
+        attendance: loginReward.points,
+        reason: `Đăng nhập chuyên cần ngày ${today} (+${loginReward.points}đ: ${loginReward.title})`
       });
+      return {
+        awarded: loginReward.points,
+        total: student.totalMeritPoints || 0,
+        isFirstToday: true,
+        rewardInfo: loginReward
+      };
     }
-    return student.totalMeritPoints || 0;
+    return {
+      awarded: 0,
+      total: student.totalMeritPoints || 0,
+      isFirstToday: false,
+      rewardInfo: loginReward
+    };
   }
 
   /**

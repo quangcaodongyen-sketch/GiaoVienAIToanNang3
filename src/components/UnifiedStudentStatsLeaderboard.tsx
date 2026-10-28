@@ -47,7 +47,8 @@ import {
   StudentCheckinLog,
   StudentLevelInfo,
   calculateStudentLevel,
-  MeritBonusItem
+  MeritBonusItem,
+  getDailyLoginRewardInfo
 } from '../services/studentGradebookService';
 
 interface UnifiedStudentStatsLeaderboardProps {
@@ -95,6 +96,9 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(null);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [lastUpdatedTime, setLastUpdatedTime] = useState<string>('');
+
+  // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / ngày mai (+5 điểm)
+  const loginReward = useMemo(() => getDailyLoginRewardInfo(), []);
 
   // 6. MODAL & THÔNG BÁO
   const [selectedStudentDetail, setSelectedStudentDetail] = useState<ClassLeaderboardItem | null>(null);
@@ -557,9 +561,20 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
           <span className="text-[11px] text-slate-500">Cộng trực tiếp vào Điểm Tổng</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-[11px]">
-          <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-            <div className="font-bold text-blue-600">📅 Chuyên Cần</div>
-            <div className="text-slate-500">+5 điểm / ngày đăng nhập</div>
+          <div className={`p-2 rounded-xl border relative overflow-hidden transition-all ${
+            loginReward.isPromoToday 
+              ? 'bg-amber-50/90 dark:bg-amber-950/50 border-amber-400 dark:border-amber-600 shadow-xs' 
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700'
+          }`}>
+            {loginReward.isPromoToday && (
+              <span className="absolute top-0 right-0 text-[8px] px-1 bg-rose-600 text-white font-black rounded-bl tracking-wider">HÔM NAY</span>
+            )}
+            <div className={`font-black ${loginReward.isPromoToday ? 'text-amber-700 dark:text-amber-300' : 'text-blue-600'}`}>
+              {loginReward.isPromoToday ? '🎁 Chuyên Cần (+10đ)' : '📅 Chuyên Cần'}
+            </div>
+            <div className={loginReward.isPromoToday ? 'text-amber-800 dark:text-amber-200 font-bold' : 'text-slate-500'}>
+              {loginReward.isPromoToday ? '+10đ hôm nay (Mai: +5đ)' : '+5 điểm / ngày đăng nhập'}
+            </div>
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <div className="font-bold text-indigo-600">🧠 Từ Vựng 3D</div>
