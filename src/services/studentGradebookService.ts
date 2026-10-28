@@ -19,6 +19,110 @@ export interface OfficialStudentRosterItem {
   termAvg: number | null;
 }
 
+export interface MeritBonusItem {
+  id: string;
+  points: number;
+  reason: string;
+  awardedBy: string;
+  createdAt: string;
+}
+
+export interface StudentLevelInfo {
+  level: number;
+  title: string;
+  badge: string;
+  icon: string;
+  minPoints: number;
+  maxPoints: number;
+  currentPoints: number;
+  progressPercent: number;
+  pointsToNextLevel: number;
+  crownType?: 'gold' | 'silver' | 'bronze' | null;
+}
+
+export function calculateStudentLevel(totalMeritPoints: number, rank?: number): StudentLevelInfo {
+  const pts = Math.max(0, totalMeritPoints || 0);
+  let level = 1;
+  let title = 'Tân Binh Khởi Động';
+  let badge = 'Tân Binh Khởi Động 🌱';
+  let icon = '🌱';
+  let minPoints = 0;
+  let maxPoints = 50;
+
+  if (pts >= 750) {
+    level = 7;
+    title = 'Huyền Thoại Toàn Năng';
+    badge = 'Huyền Thoại Toàn Năng ⚡🔥';
+    icon = '⚡';
+    minPoints = 750;
+    maxPoints = 1000;
+  } else if (pts >= 500) {
+    level = 6;
+    title = 'Bậc Thầy Từ Vựng';
+    badge = 'Bậc Thầy Từ Vựng 👑';
+    icon = '👑';
+    minPoints = 500;
+    maxPoints = 750;
+  } else if (pts >= 350) {
+    level = 5;
+    title = 'Đại Sư Xuất Chúng';
+    badge = 'Đại Sư Xuất Chúng 🔮';
+    icon = '🔮';
+    minPoints = 350;
+    maxPoints = 500;
+  } else if (pts >= 200) {
+    level = 4;
+    title = 'Cao Thủ Tinh Anh';
+    badge = 'Cao Thủ Tinh Anh 💎';
+    icon = '💎';
+    minPoints = 200;
+    maxPoints = 350;
+  } else if (pts >= 100) {
+    level = 3;
+    title = 'Chiến Binh Kiên Trì';
+    badge = 'Chiến Binh Kiên Trì ⚔️';
+    icon = '⚔️';
+    minPoints = 100;
+    maxPoints = 200;
+  } else if (pts >= 50) {
+    level = 2;
+    title = 'Mầm Non Chăm Chỉ';
+    badge = 'Mầm Non Chăm Chỉ 🌿';
+    icon = '🌿';
+    minPoints = 50;
+    maxPoints = 100;
+  } else {
+    level = 1;
+    title = 'Tân Binh Khởi Động';
+    badge = 'Tân Binh Khởi Động 🌱';
+    icon = '🌱';
+    minPoints = 0;
+    maxPoints = 50;
+  }
+
+  const span = maxPoints - minPoints;
+  const progressPercent = span > 0 ? Math.min(100, Math.max(0, Math.round(((pts - minPoints) / span) * 100))) : 100;
+  const pointsToNextLevel = Math.max(0, maxPoints - pts);
+
+  let crownType: 'gold' | 'silver' | 'bronze' | null = null;
+  if (rank === 1) crownType = 'gold';
+  else if (rank === 2) crownType = 'silver';
+  else if (rank === 3) crownType = 'bronze';
+
+  return {
+    level,
+    title,
+    badge,
+    icon,
+    minPoints,
+    maxPoints,
+    currentPoints: pts,
+    progressPercent,
+    pointsToNextLevel,
+    crownType
+  };
+}
+
 export interface ClassAttendanceStudentStatus {
   stt: number;
   studentCode: string;
@@ -34,6 +138,9 @@ export interface ClassAttendanceStudentStatus {
   examBonusPoints: number;
   practicePoints: number;
   encouragementBonus?: number;
+  teacherBonus?: number;
+  bonusHistory?: MeritBonusItem[];
+  levelInfo?: StudentLevelInfo;
   submissionsCount: number;
   highestExamScore: number | null;
   lastActive: string | null;
@@ -87,6 +194,8 @@ export interface StudentProfile {
   stt?: number;              // Số thứ tự theo sổ điểm chính thức
   regularScore?: number | null; // Điểm ĐGtx từ sổ điểm chính thức
   encouragementBonus?: number; // Điểm thưởng khuyến khích ôn thi GK1 (+15đ)
+  teacherBonus?: number;       // Điểm thưởng giáo viên trao thêm do tích cực (+10, +20...)
+  bonusHistory?: MeritBonusItem[]; // Nhật ký điểm thưởng công khai
 }
 
 export interface StudentSubmission {
@@ -132,6 +241,9 @@ export interface ClassLeaderboardItem {
   studyTimeMinutes?: number;
   timePoints?: number;
   encouragementBonus?: number;
+  teacherBonus?: number;
+  bonusHistory?: MeritBonusItem[];
+  levelInfo?: StudentLevelInfo;
   totalMeritPoints: number;
 }
 export interface PurgeAndSyncRosterResult {
@@ -1646,6 +1758,9 @@ class StudentGradebookService {
         };
         localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(engProfile));
       }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
+      }
     } catch (e) {
       console.error('Failed to save students:', e);
     }
@@ -1759,6 +1874,9 @@ class StudentGradebookService {
         localStorage.setItem(STORAGE_KEYS.VAULT_SUBMISSIONS, JSON.stringify(this.submissions));
         localStorage.setItem('gvai_submissions_backup', JSON.stringify(this.submissions));
       }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
+      }
     } catch (e) {
       console.error('Failed to save submissions:', e);
     }
@@ -1798,13 +1916,16 @@ class StudentGradebookService {
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
       const enc = student.encouragementBonus ?? 15;
+      const tch = student.teacherBonus || 0;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme + enc);
+        : (att + voc + exm + prc + tme + enc + tch);
 
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
       if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
       if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
+      if (tch > 0) badges.push('Được Thầy Khen Thưởng 🎁');
+      if (student.studyTimeMinutes && student.studyTimeMinutes >= 30) badges.push('Chiến Binh Bứt Phá 🔥');
 
       return {
         studentId: student.id,
@@ -1826,6 +1947,10 @@ class StudentGradebookService {
         practicePoints: prc,
         studyTimeMinutes: student.studyTimeMinutes || 0,
         timePoints: tme,
+        encouragementBonus: enc,
+        teacherBonus: tch,
+        bonusHistory: student.bonusHistory || [],
+        levelInfo: calculateStudentLevel(totalMerit, undefined),
         totalMeritPoints: totalMerit
       };
     });
@@ -1839,6 +1964,10 @@ class StudentGradebookService {
 
     items.forEach((item, index) => {
       item.rank = index + 1;
+      item.levelInfo = calculateStudentLevel(item.totalMeritPoints, item.rank);
+      if (item.rank === 1) item.badges.unshift('Quán Quân Vàng 👑');
+      else if (item.rank === 2) item.badges.unshift('Á Quân Bạc 🥈');
+      else if (item.rank === 3) item.badges.unshift('Quý Quân Đồng 🥉');
     });
 
     return items;
@@ -1876,13 +2005,16 @@ class StudentGradebookService {
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
       const enc = student.encouragementBonus ?? 15;
+      const tch = student.teacherBonus || 0;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme + enc);
+        : (att + voc + exm + prc + tme + enc + tch);
 
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
       if (att >= 15) badges.push('Chuyên Cần Gương Mẫu ⏰');
       if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
+      if (tch > 0) badges.push('Được Thầy Khen Thưởng 🎁');
+      if (student.studyTimeMinutes && student.studyTimeMinutes >= 30) badges.push('Chiến Binh Bứt Phá 🔥');
 
       return {
         studentId: student.id,
@@ -1904,6 +2036,10 @@ class StudentGradebookService {
         practicePoints: prc,
         studyTimeMinutes: student.studyTimeMinutes || 0,
         timePoints: tme,
+        encouragementBonus: enc,
+        teacherBonus: tch,
+        bonusHistory: student.bonusHistory || [],
+        levelInfo: calculateStudentLevel(totalMerit, undefined),
         totalMeritPoints: totalMerit
       };
     });
@@ -1919,6 +2055,10 @@ class StudentGradebookService {
     // Gán thứ hạng
     items.forEach((item, index) => {
       item.rank = index + 1;
+      item.levelInfo = calculateStudentLevel(item.totalMeritPoints, item.rank);
+      if (item.rank === 1) item.badges.unshift('Quán Quân Vàng 👑');
+      else if (item.rank === 2) item.badges.unshift('Á Quân Bạc 🥈');
+      else if (item.rank === 3) item.badges.unshift('Quý Quân Đồng 🥉');
     });
 
     return items;
@@ -2360,6 +2500,7 @@ class StudentGradebookService {
     practice?: number;
     timePoints?: number;
     minutes?: number;
+    teacherBonus?: number;
     reason?: string;
   }): StudentProfile | null {
     const student = this.students.find(s => s.id === studentId);
@@ -2371,6 +2512,7 @@ class StudentGradebookService {
     if (options.practice) student.practicePoints = (student.practicePoints || 0) + options.practice;
     if (options.timePoints) student.timePoints = (student.timePoints || 0) + options.timePoints;
     if (options.minutes) student.studyTimeMinutes = (student.studyTimeMinutes || 0) + options.minutes;
+    if (options.teacherBonus) student.teacherBonus = (student.teacherBonus || 0) + options.teacherBonus;
 
     student.totalMeritPoints = 
       (student.attendancePoints || 0) + 
@@ -2378,7 +2520,8 @@ class StudentGradebookService {
       (student.examBonusPoints || 0) + 
       (student.practicePoints || 0) + 
       (student.timePoints || 0) +
-      (student.encouragementBonus ?? 15);
+      (student.encouragementBonus ?? 15) +
+      (student.teacherBonus || 0);
 
     this.saveStudents();
 
@@ -2394,6 +2537,60 @@ class StudentGradebookService {
     }
 
     return student;
+  }
+
+  /**
+   * Giáo viên thưởng thêm điểm cho học sinh tích cực (công khai minh bạch trong mục thống kê)
+   */
+  public awardTeacherBonus(
+    studentId: string, 
+    bonusPoints: number, 
+    reason: string, 
+    awardedBy: string = 'Thầy Đinh Văn Thành'
+  ): { success: boolean; student?: StudentProfile; message: string } {
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return { success: false, message: 'Không tìm thấy học sinh!' };
+
+    if (!student.bonusHistory) {
+      student.bonusHistory = [];
+    }
+
+    const bonusItem: MeritBonusItem = {
+      id: 'bonus-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+      points: bonusPoints,
+      reason: reason || 'Khen thưởng học tập tích cực',
+      awardedBy: awardedBy || 'Thầy Đinh Văn Thành',
+      createdAt: new Date().toISOString()
+    };
+
+    student.bonusHistory.unshift(bonusItem);
+    student.teacherBonus = (student.teacherBonus || 0) + bonusPoints;
+
+    student.totalMeritPoints = 
+      (student.attendancePoints || 0) + 
+      (student.vocabPoints || 0) + 
+      (student.examBonusPoints || 0) + 
+      (student.practicePoints || 0) + 
+      (student.timePoints || 0) +
+      (student.encouragementBonus ?? 15) +
+      (student.teacherBonus || 0);
+
+    this.saveStudents();
+
+    const active = this.getActiveStudent();
+    if (active && active.id === student.id) {
+      this.setActiveStudent(student);
+    }
+
+    try {
+      this.recordCheckin(student, 'Thưởng điểm tích cực', `+${bonusPoints}đ do ${awardedBy}: ${reason}`);
+    } catch {}
+
+    return { 
+      success: true, 
+      student, 
+      message: `Đã thưởng +${bonusPoints} điểm thi đua cho học sinh ${student.name}!` 
+    };
   }
 
   /**
@@ -2496,9 +2693,10 @@ class StudentGradebookService {
       const prc = student.practicePoints || 0;
       const tme = student.timePoints || 0;
       const enc = student.encouragementBonus ?? 15;
+      const tch = student.teacherBonus || 0;
       const totalMerit = (student.totalMeritPoints !== undefined && student.totalMeritPoints !== null)
         ? student.totalMeritPoints
-        : (att + voc + exm + prc + tme + enc);
+        : (att + voc + exm + prc + tme + enc + tch);
 
       const badges: string[] = [];
       if (totalMerit >= 100) badges.push('Ngôi Sao Thi Đua ⭐');
@@ -2506,6 +2704,8 @@ class StudentGradebookService {
       if (voc >= 20) badges.push('Siêu Trí Nhớ 3D 🧠');
       if (highestScore === 10) badges.push('Điểm 10 Tuyệt Đối 🌟');
       if (testsCount >= 3) badges.push('Chăm Chỉ Luyện Đề 📚');
+      if (tch > 0) badges.push('Được Thầy Khen Thưởng 🎁');
+      if (student.studyTimeMinutes && student.studyTimeMinutes >= 30) badges.push('Chiến Binh Bứt Phá 🔥');
 
       return {
         studentId: student.id,
@@ -2527,6 +2727,10 @@ class StudentGradebookService {
         practicePoints: prc,
         studyTimeMinutes: student.studyTimeMinutes || 0,
         timePoints: tme,
+        encouragementBonus: enc,
+        teacherBonus: tch,
+        bonusHistory: student.bonusHistory || [],
+        levelInfo: calculateStudentLevel(totalMerit, undefined),
         totalMeritPoints: totalMerit
       };
     });
@@ -2547,6 +2751,10 @@ class StudentGradebookService {
 
     items.forEach((item, index) => {
       item.rank = index + 1;
+      item.levelInfo = calculateStudentLevel(item.totalMeritPoints, item.rank);
+      if (item.rank === 1) item.badges.unshift('Quán Quân Vàng 👑');
+      else if (item.rank === 2) item.badges.unshift('Á Quân Bạc 🥈');
+      else if (item.rank === 3) item.badges.unshift('Quý Quân Đồng 🥉');
     });
 
     return items;
@@ -2644,6 +2852,9 @@ class StudentGradebookService {
         examBonusPoints: profile?.examBonusPoints || 0,
         practicePoints: profile?.practicePoints || 0,
         encouragementBonus: profile?.encouragementBonus ?? 15,
+        teacherBonus: profile?.teacherBonus || 0,
+        bonusHistory: profile?.bonusHistory || [],
+        levelInfo: calculateStudentLevel(merit, undefined),
         submissionsCount: studentSubs.length,
         highestExamScore: highestScore,
         lastActive: profile?.lastLoginDate || (studentSubs[0]?.submittedAt ? new Date(studentSubs[0].submittedAt).toLocaleDateString('vi-VN') : null)

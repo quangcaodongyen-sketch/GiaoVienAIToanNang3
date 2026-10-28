@@ -37,6 +37,7 @@ import { OnlineQuizPortal } from './OnlineQuizPortal';
 import { TextbookExercisePortal } from './TextbookExercisePortal';
 import { StudentClassComparison } from './StudentClassComparison';
 import { StudentPublicTracking } from './StudentPublicTracking';
+import { UnifiedStudentStatsLeaderboard } from './UnifiedStudentStatsLeaderboard';
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
@@ -1336,18 +1337,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <span>5. Diễn Đàn & Hỏi Thầy</span>
         </button>
 
-        {/* 6. Sổ Điểm & Thi Đua */}
+        {/* 6. Thống Kê & Bảng Vàng */}
         <button
           type="button"
           onClick={() => setActiveTab('leaderboard')}
           className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
             ['leaderboard', 'tracking'].includes(activeTab)
-              ? 'bg-blue-600 text-white shadow-sm font-black'
+              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm font-black'
               : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
           <Trophy className="w-4 h-4 text-amber-400" />
-          <span>6. Sổ Điểm & Thi Đua</span>
+          <span>6. Thống Kê & Bảng Vàng</span>
         </button>
       </div>
 
@@ -1474,32 +1475,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       )}
 
-      {['leaderboard', 'tracking'].includes(activeTab) && (
-        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 w-fit text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => setActiveTab('leaderboard')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === 'leaderboard'
-                ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-xs font-black'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
-          >
-            🏆 Xếp Hạng Thi Đua
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('tracking')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === 'tracking'
-                ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-300 shadow-xs font-black'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
-          >
-            📊 Sổ Điểm Lớp
-          </button>
-        </div>
-      )}
 
       {/* ==================== PHÂN HỆ 0: NHIỆM VỤ ÔN TẬP GIỮA KỲ 1 ==================== */}
       {currentStudent && activeTab === 'missions' && (
@@ -1928,10 +1903,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
             <button
               type="button"
-              onClick={() => setActiveTab('tracking')}
+              onClick={() => setActiveTab('leaderboard')}
               className="font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1"
             >
-              <span>Xem Bảng Theo Dõi Vào Học Công Khai</span>
+              <span>Xem Bảng Vàng &amp; Thống Kê Thi Đua Toàn Trường</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -2024,22 +1999,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <OnlineQuizPortal studentGrade={currentStudent?.grade} />
       )}
 
-      {/* ==================== PHÂN HỆ THỐNG KÊ VÀO HỌC & THI ĐUA CÔNG KHAI ==================== */}
-      {activeTab === 'tracking' && (
-        <StudentPublicTracking 
-          defaultClass={currentStudent?.className}
-          onStartExam={() => setActiveTab('exam')}
-          onStartVocab={() => setActiveTab('vocab')}
-        />
-      )}
-
-      {/* ==================== PHÂN HỆ 5: BẢNG THI ĐUA & SO SÁNH BẠN CÙNG LỚP ==================== */}
-      {activeTab === 'leaderboard' && (
-        <StudentClassComparison 
+      {/* ==================== PHÂN HỆ THỐNG KÊ & BẢNG VÀNG THI ĐUA THỐNG NHẤT THỜI GIAN THỰC ==================== */}
+      {['leaderboard', 'tracking'].includes(activeTab) && (
+        <UnifiedStudentStatsLeaderboard 
           defaultClassId={currentStudent?.classId}
           defaultGrade={currentStudent?.grade}
+          defaultClassName={currentStudent?.className}
           onStartExercise={() => setActiveTab('sgk')}
           onStartQuiz={() => setActiveTab('quiz')}
+          onStartExam={() => setActiveTab('exam')}
+          onStartVocab={() => setActiveTab('vocab')}
         />
       )}
       {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
