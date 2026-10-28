@@ -58,6 +58,21 @@ export interface MeritBonusItem {
 
 
 
+export interface PromoRoadmapDay {
+  date: string;                // YYYY-MM-DD
+  dayLabel: string;            // VD: "Hôm nay", "Ngày mai", "Thứ Sáu", v.v.
+  dateDisplay: string;         // VD: "Thứ Năm, 29/10/2026"
+  shortDate: string;           // VD: "29/10"
+  badge: string;               // VD: "🔥 ĐẠI TIỆC TĂNG TỐC"
+  title: string;               // Tiêu đề sự kiện
+  description: string;         // Mô tả chi tiết
+  points: number;              // Điểm đăng nhập (VD: 15)
+  vocabMultiplier: number;     // Hệ số từ vựng (VD: 2)
+  vocabPointsPerUnit: number;  // Điểm / Unit từ vựng (VD: 20)
+  status: 'expired' | 'active' | 'upcoming';
+  rules: string[];
+}
+
 export interface DailyLoginRewardInfo {
   points: number;
   isPromoToday: boolean;
@@ -132,6 +147,135 @@ export function getYesterdayDateString(referenceDateStr?: string): string {
 }
 
 
+
+
+/**
+ * LỘ TRÌNH KHUYẾN MẠI & SỰ KIỆN THI ĐUA THEO NGÀY (THẦY ĐINH VĂN THÀNH):
+ * - Tự động xóa bỏ hoàn toàn các thông báo của ngày cũ (ngày < todayStr).
+ * - Hiển thị sự kiện MỚI NHẤT HÔM NAY (active).
+ * - Cung cấp lộ trình trước cho các ngày sắp tới (upcoming) để học sinh nắm rõ kế hoạch.
+ */
+export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmapDay[] {
+  const todayStr = referenceDateStr || getLocalDateString();
+  const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+  // Danh mục lộ trình định sẵn của Thầy Thành
+  const predefinedRoadmap: Array<{
+    date: string;
+    badge: string;
+    title: string;
+    description: string;
+    points: number;
+    vocabMultiplier: number;
+    vocabPointsPerUnit: number;
+    rules: string[];
+  }> = [
+    {
+      date: '2026-10-28',
+      badge: '🎁 KHỞI ĐỘNG THI ĐUA',
+      title: 'Khởi Động Tuần Thi Đua Học Tốt',
+      description: 'Tặng +10 điểm đăng nhập lần đầu tiên vào học và làm quen với giao diện.',
+      points: 10,
+      vocabMultiplier: 1,
+      vocabPointsPerUnit: 10,
+      rules: ['⭐ Đăng nhập lần đầu: +10đ', '🧠 Mỗi bài từ vựng: +10đ', '⏰ Đã kết thúc lúc 23:59:59 ngày 28/10']
+    },
+    {
+      date: '2026-10-29',
+      badge: '🔥 ĐẠI TIỆC TĂNG TỐC',
+      title: 'Đại Tiệc Tăng Tốc & Nhân Đôi Điểm Từ Vựng',
+      description: 'Tặng ngay +15 ĐIỂM ĐĂNG NHẬP + NHÂN ĐÔI ĐIỂM TỪ VỰNG (+20đ/Unit)!',
+      points: 15,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['⭐ Đăng nhập hôm nay: +15đ', '🧠 Nhân đôi điểm từ vựng: +20đ / Unit hoàn thành', '⏰ Áp dụng đến 23:59:59 đêm nay']
+    },
+    {
+      date: '2026-10-30',
+      badge: '⚡ NGÀY HỘI VỀ ĐÍCH',
+      title: 'Ngày Hội Về Đích & Thưởng Nóng Đề Thi GK1',
+      description: 'Tặng +10 điểm đăng nhập + Điểm làm bài thi thử giữa kỳ quy đổi nhân 10 vào Bảng Vàng!',
+      points: 10,
+      vocabMultiplier: 1.5,
+      vocabPointsPerUnit: 15,
+      rules: ['⭐ Đăng nhập ngày 30/10: +10đ', '📝 Điểm thi thử GK1 x10 vào Bảng Vàng', '🧠 Học từ vựng: +15đ / Unit']
+    },
+    {
+      date: '2026-10-31',
+      badge: '🎃 HALLOWEEN HỌC TẬP',
+      title: 'Lễ Hội Halloween Học Tập & Mở Quà May Mắn',
+      description: 'Tặng +15 điểm chuyên cần + Cơ hội mở Hộp Quà May Mắn nhận ngay +30 điểm!',
+      points: 15,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['⭐ Đăng nhập Halloween: +15đ', '🎁 Mở rương quà tặng Thầy Thành: +10đ đến +30đ', '🧠 Từ vựng x2: +20đ / Unit']
+    },
+    {
+      date: '2026-11-01',
+      badge: '🌟 KHỞI ĐỘNG THÁNG MỚI',
+      title: 'Chào Tháng 11 Bứt Phá & Nhân Đôi Chuyên Cần',
+      description: 'Mở màn tháng mới với +20 điểm đăng nhập kỷ lục và vinh danh Top 1 tháng trước!',
+      points: 20,
+      vocabMultiplier: 1.5,
+      vocabPointsPerUnit: 15,
+      rules: ['⭐ Đăng nhập ngày đầu tháng: +20đ', '🎆 Bắn pháo hoa ăn mừng: +25đ', '🏆 Trao cúp thi đua tháng 11']
+    },
+    {
+      date: '2026-11-02',
+      badge: '🚀 CHINH PHỤC BẢNG VÀNG',
+      title: 'Chinh Phục 100 Từ Mới & Bứt Phá Top 1',
+      description: 'Tặng +15 điểm đăng nhập + Thưởng mốc chuyên cần khi tích lũy trên 50 từ vựng.',
+      points: 15,
+      vocabMultiplier: 1.5,
+      vocabPointsPerUnit: 15,
+      rules: ['⭐ Đăng nhập Thứ Hai: +15đ', '🧠 Thuộc từ vựng: +15đ / bài', '🏅 Thưởng vượt mốc: +30đ']
+    },
+    {
+      date: '2026-11-03',
+      badge: '🏆 ĐẤU TRƯỜNG THI ĐUA',
+      title: 'Đấu Trường Thi Đua Khối Lớp Xuất Sắc',
+      description: 'Tặng +15 điểm đăng nhập + Thưởng pháo hoa tập thể cho Top 3 lớp có điểm cao nhất!',
+      points: 15,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['⭐ Đăng nhập Thứ Ba: +15đ', '🧠 Nhân đôi điểm bài học: +20đ / Unit', '🎆 Thưởng pháo hoa tập thể']
+    }
+  ];
+
+  return predefinedRoadmap.map(item => {
+    const parts = item.date.split('-').map(Number);
+    const itemDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    const dayName = daysOfWeek[itemDate.getDay()] || '';
+    const shortDate = `${parts[2].toString().padStart(2, '0')}/${parts[1].toString().padStart(2, '0')}`;
+    const dateDisplay = `${dayName}, ${shortDate}/${parts[0]}`;
+
+    let status: 'expired' | 'active' | 'upcoming' = 'upcoming';
+    let dayLabel = `Ngày ${shortDate}`;
+
+    if (item.date < todayStr) {
+      status = 'expired';
+      dayLabel = `Đã qua (${shortDate})`;
+    } else if (item.date === todayStr) {
+      status = 'active';
+      dayLabel = `Hôm nay (${shortDate})`;
+    } else {
+      const todayParts = todayStr.split('-').map(Number);
+      const tDate = new Date(todayParts[0], todayParts[1] - 1, todayParts[2]);
+      const diffDays = Math.round((itemDate.getTime() - tDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays === 1) dayLabel = `Ngày mai (${shortDate})`;
+      else if (diffDays === 2) dayLabel = `Ngày kia (${shortDate})`;
+      else dayLabel = `${dayName} (${shortDate})`;
+    }
+
+    return {
+      ...item,
+      dayLabel,
+      dateDisplay,
+      shortDate,
+      status
+    };
+  });
+}
 
 export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewardInfo {
   const now = new Date();

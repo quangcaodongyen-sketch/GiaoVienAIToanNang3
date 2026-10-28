@@ -22,7 +22,8 @@ import {
 
   Download, 
 
-  Clock, 
+  Clock,
+  Calendar, 
 
   Award, 
 
@@ -85,7 +86,7 @@ import { StudentForumView } from './StudentForumView';
 
 import { StudentMessageAdminView } from './StudentMessageAdminView';
 
-import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString, TeacherLuckyBoxResult } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString, TeacherLuckyBoxResult, getPromoRoadmapSchedule, PromoRoadmapDay } from '../services/studentGradebookService';
 
 import { launchFireworks } from '../utils/fireworks';
 
@@ -383,10 +384,42 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-  // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / từ ngày mai (+5 điểm)
-
+  // Thông tin khuyến mại đăng nhập hôm nay / lộ trình theo ngày
   const [currentPromoDate, setCurrentPromoDate] = useState<string>(getLocalDateString());
   const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(currentPromoDate), [currentPromoDate]);
+
+  // Lộ trình khuyến mại có kế hoạch trước của Thầy Thành
+  const [showPromoRoadmapModal, setShowPromoRoadmapModal] = useState<boolean>(false);
+  const promoRoadmapList: PromoRoadmapDay[] = useMemo(() => getPromoRoadmapSchedule(currentPromoDate), [currentPromoDate]);
+
+  // Đếm ngược thời gian thực tới 23:59:59 của ngày hôm nay
+  const [timeRemainingToday, setTimeRemainingToday] = useState<string>('');
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const diffMs = endOfDay.getTime() - now.getTime();
+      if (diffMs <= 0) {
+        setTimeRemainingToday('00:00:00');
+        const realDate = getLocalDateString();
+        if (realDate !== currentPromoDate) {
+          setCurrentPromoDate(realDate);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('gvai_daily_promo_rollover', { detail: { newDate: realDate } }));
+            window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { newDate: realDate } }));
+          }
+        }
+      } else {
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+        setTimeRemainingToday(`${hours.toString().padStart(2, '0')} giờ ${minutes.toString().padStart(2, '0')} phút ${seconds.toString().padStart(2, '0')} giây`);
+      }
+    };
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, [currentPromoDate]);
 
   // Tự động kiểm tra theo thời gian thực: Hết ngày (qua 00:00:00) tự động xoá bỏ chương trình cũ và nạp chương trình ngày mới!
   useEffect(() => {
@@ -399,7 +432,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { newDate: realDate } }));
         }
       }
-    }, 10000);
+    }, 5000);
     return () => clearInterval(checkMidnightTimer);
   }, [currentPromoDate]);
 
@@ -3450,74 +3483,61 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
           
 
-          {/* BANNER KHUYẾN MẠI DUY NHẤT HÔM NAY CỘNG 10 ĐIỂM (TỪ NGÀY MAI CỘNG 5 ĐIỂM) */}
-
-          <div className={`p-4 sm:p-5 rounded-2xl shadow-xl border-2 text-white relative overflow-hidden transition-all ${
-
-            loginRewardInfo.isPromoToday 
-
-              ? 'bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 border-amber-300 ring-4 ring-amber-400/30'
-
-              : 'bg-gradient-to-r from-blue-600 to-indigo-700 border-blue-400'
-
-          }`}>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
-
-              <div className="flex items-center gap-3">
-
+          {/* BANNER THÔNG BÁO ƯU ĐÃI ĐỘNG THEO NGÀY GIỜ & LỘ TRÌNH (TỰ ĐỘNG XÓA BỎ NGÀY CŨ) */}
+          <div className="p-4 sm:p-5 rounded-2xl shadow-xl border-2 text-white relative overflow-hidden transition-all bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 border-amber-300 ring-4 ring-amber-400/30">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 relative z-10">
+              <div className="flex items-start sm:items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner shrink-0 animate-bounce">
-
-                  {loginRewardInfo.isPromoToday ? '🎁' : '⭐'}
-
+                  🎁
                 </div>
-
                 <div>
-
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/25 text-white text-[11px] font-black uppercase tracking-wider mb-1">
-
-                    {loginRewardInfo.isPromoToday ? '🔥 KHUYẾN MẠI DUY NHẤT HÔM NAY (28/10)' : '📅 ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'}
-
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/25 text-white text-[11px] font-black uppercase tracking-wider">
+                      {loginRewardInfo.promoBadge || '🔥 KHUYẾN MẠI THEO NGÀY'}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/25 text-amber-200 text-[10px] font-bold">
+                      📅 {loginRewardInfo.dateDisplay}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-100 text-[10px] font-bold border border-emerald-400/30">
+                      ⚡ Mới nhất hôm nay • Đã xóa ngày cũ
+                    </span>
                   </div>
 
                   <h4 className="text-base sm:text-lg font-black text-white leading-tight">
-
-                    {loginRewardInfo.isPromoToday
-
-                      ? 'Đăng Nhập Học Được Cộng +10 Điểm Tặng Học Sinh!'
-
-                      : 'Đăng Nhập Học Tập Mỗi Ngày Nhận Ngay +5 Điểm Chuyên Cần!'}
-
+                    Đăng Nhập Học Được Cộng +{loginRewardInfo.points} Điểm Tặng Học Sinh!
                   </h4>
 
-                  <p className="text-xs text-white/95 font-medium mt-1">
-
-                    {loginRewardInfo.isPromoToday
-
-                      ? '⚡ Áp dụng cho lần đăng nhập đầu tiên hôm nay để tặng các em học sinh. Từ ngày mai mới đăng nhập sẽ cộng 5 điểm thôi!'
-
-                      : '⚡ Điểm chuyên cần tự động cộng vào Bảng xếp hạng thi đua toàn trường.'}
-
+                  <p className="text-xs text-white/95 font-medium mt-1 leading-relaxed">
+                    {loginRewardInfo.bannerText || `⚡ Áp dụng cho lần đăng nhập đầu tiên hôm nay (${loginRewardInfo.dateDisplay}) để tặng các em học sinh.`}
                   </p>
 
+                  {/* ĐỒNG HỒ ĐẾM NGƯỢC THỜI GIAN THỰC & NÚT XEM LỘ TRÌNH */}
+                  <div className="flex items-center gap-2 flex-wrap mt-2.5">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/30 backdrop-blur-xs text-[11px] font-bold text-amber-200 border border-amber-300/30">
+                      <Clock className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                      <span>Hiệu lực hôm nay: Còn <strong>{timeRemainingToday || 'đang tính...'}</strong></span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPromoRoadmapModal(true)}
+                      className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-[11px] transition flex items-center gap-1 cursor-pointer border border-white/20 active:scale-95 shadow-xs"
+                      title="Xem trước lộ trình ưu đãi các ngày sắp tới"
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-amber-300" />
+                      <span>📅 Xem Lộ Trình Ưu Đãi Các Ngày Tới &rarr;</span>
+                    </button>
+                  </div>
                 </div>
-
               </div>
 
-              <div className="shrink-0 flex items-center gap-2">
-
-                <span className="px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-lg inline-flex items-center gap-1.5 animate-pulse">
-
+              <div className="shrink-0 flex items-center gap-2 self-end md:self-center">
+                <span className="px-4 py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-lg inline-flex items-center gap-1.5 animate-pulse">
                   <span>+{loginRewardInfo.points} ĐIỂM</span>
-
                   <span>🎉</span>
-
                 </span>
-
               </div>
-
             </div>
-
           </div>
 
 
@@ -7650,6 +7670,138 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       )}
 
+
+
+      
+      {/* MODAL LỘ TRÌNH ƯU ĐÃI & SỰ KIỆN THI ĐUA THEO NGÀY (THẦY ĐINH VĂN THÀNH) */}
+      {showPromoRoadmapModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full shadow-2xl border border-amber-400/40 overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Header Modal */}
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">📅</span>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black leading-tight">
+                    LỘ TRÌNH ƯU ĐÃI &amp; THÔNG BÁO THEO NGÀY
+                  </h3>
+                  <p className="text-[11px] text-amber-100 font-medium mt-0.5">
+                    Thầy giáo Đinh Văn Thành • Tự động cập nhật theo ngày giờ thực • Xóa bỏ thông báo cũ
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPromoRoadmapModal(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-sm transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Quy chế bảo mật & tự động xóa ngày cũ */}
+            <div className="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+              <span className="text-base shrink-0">🔒</span>
+              <div className="leading-relaxed">
+                <strong>Quy chế thông báo theo ngày giờ thực:</strong> Hệ thống tự động xóa bỏ thông báo của các ngày cũ khi bước qua 00:00:00 để tránh hiển thị sai lệch. Các em luôn nhìn thấy sự kiện mới nhất hôm nay và kế hoạch các ngày sắp tới!
+              </div>
+            </div>
+
+            {/* Danh sách lộ trình từng ngày */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-3">
+              {promoRoadmapList.map((item, idx) => {
+                const isActive = item.status === 'active';
+                const isExpired = item.status === 'expired';
+
+                return (
+                  <div
+                    key={idx}
+                    className={`p-3.5 sm:p-4 rounded-2xl border transition-all ${
+                      isActive
+                        ? 'bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 border-amber-400 ring-2 ring-amber-400/30 shadow-md'
+                        : isExpired
+                        ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60'
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-400'
+                    }`}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                          isActive
+                            ? 'bg-rose-600 text-white shadow-xs'
+                            : isExpired
+                            ? 'bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                            : 'bg-indigo-600 text-white'
+                        }`}>
+                          {item.badge}
+                        </span>
+
+                        <span className="text-xs font-black text-slate-800 dark:text-slate-200">
+                          {item.dateDisplay}
+                        </span>
+
+                        <span className={`px-2 py-0.2 rounded text-[10px] font-bold ${
+                          isActive
+                            ? 'bg-amber-400 text-slate-950 font-black animate-pulse'
+                            : isExpired
+                            ? 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 line-through'
+                            : 'bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-300'
+                        }`}>
+                          {isActive ? '🔥 ĐANG DIỄN RA HÔM NAY' : isExpired ? 'ĐÃ HẾT HẠN (TỰ ĐỘNG XÓA)' : '⏳ SẮP DIỄN RA'}
+                        </span>
+                      </div>
+
+                      <div className="shrink-0">
+                        <span className={`px-2.5 py-1 rounded-lg text-xs font-black ${
+                          isActive
+                            ? 'bg-amber-400 text-slate-950 shadow-xs'
+                            : isExpired
+                            ? 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                            : 'bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+                        }`}>
+                          +{item.points}đ Đăng Nhập {item.vocabMultiplier > 1 ? `• x${item.vocabMultiplier} Từ Vựng` : ''}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white mt-1">
+                      {item.title}
+                    </h4>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                      {item.description}
+                    </p>
+
+                    {item.rules && item.rules.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap gap-2 text-[11px]">
+                        {item.rules.map((r, ri) => (
+                          <span key={ri} className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300">
+                            {r}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer Modal */}
+            <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Lộ trình thiết kế độc quyền bởi <strong>Thầy Đinh Văn Thành</strong>
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowPromoRoadmapModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs transition cursor-pointer hover:opacity-90"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
       {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
