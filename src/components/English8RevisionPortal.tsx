@@ -1572,7 +1572,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                   </div>
                 </div>
 
-                {/* NÚT LÀM LẠI & THI CHÍNH THỨC */}
+                {/* NÚT LÀM LẠI & THI THỬ MINH HỌA */}
                 <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
                   <button
                     type="button"
@@ -1589,7 +1589,7 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                       onClick={onGoToExams}
                       className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
                     >
-                      <span>🚀 Làm Bài Thi Chính Thức (Mã 801, 802, 803) &rarr;</span>
+                      <span>🚀 Thi Thử Online Đề Minh Họa (Mã 801, 802, 803) &rarr;</span>
                     </button>
                   )}
                 </div>

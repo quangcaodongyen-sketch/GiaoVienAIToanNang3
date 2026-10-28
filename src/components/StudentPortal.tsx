@@ -3094,7 +3094,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           title="Luyện đề thi trắc nghiệm online bấm giờ và chấm điểm tự động"
         >
           <Award className="w-4 h-4 text-amber-300" />
-          <span>3. Đề Thi Online</span>
+          <span>3. Thi Thử Online</span>
         </button>
 
         {/* 4. Thống Kê & Bảng Vàng (Tổng Hợp Điểm) */}
@@ -3278,7 +3278,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
           >
 
-            📝 Đề Thi Giữa Kỳ
+            📝 Thi Thử Giữa Kỳ (Minh Họa)
 
           </button>
 
