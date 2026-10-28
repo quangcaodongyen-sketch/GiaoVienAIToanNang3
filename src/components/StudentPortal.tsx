@@ -41,7 +41,8 @@ import { UnifiedStudentStatsLeaderboard } from './UnifiedStudentStatsLeaderboard
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 import { StudentForumView } from './StudentForumView';
 import { StudentMessageAdminView } from './StudentMessageAdminView';
-import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString } from '../services/studentGradebookService';
+import { launchFireworks } from '../utils/fireworks';
 import { removeDiacritics } from '../services/appMatcher';
 import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCircle, LogOut, User, UserPlus, Eye, EyeOff, MessageSquare, Mail, FileUp, Crown } from 'lucide-react';
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
@@ -115,6 +116,9 @@ interface WelcomeModalData {
   mascotEmoji: string;
   badgeTitle: string;
   cheerMessage: string;
+  hasFireworks?: boolean;
+  isStreakHero?: boolean;
+  streakPoints?: number;
 }
 
 const MOTIVATIONAL_QUOTES = [
@@ -189,7 +193,44 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   // Thông tin khuyến mại đăng nhập hôm nay (+10 điểm) / từ ngày mai (+5 điểm)
   const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(), []);
 
+  // Lắng nghe sự kiện nổ pháo hoa từ service nếu có
+  useEffect(() => {
+    const handleFireworksReward = () => {
+      launchFireworks(5000);
+    };
+    window.addEventListener('gvai_fireworks_streak_reward', handleFireworksReward);
+    return () => window.removeEventListener('gvai_fireworks_streak_reward', handleFireworksReward);
+  }, []);
+
   const triggerWelcomeModal = (student: StudentProfile, isReturn: boolean = true, pointsGiven?: number) => {
+    const todayStr = getLocalDateString();
+    const studiedYesterday = studentGradebookService.didStudentStudyYesterday(student.id, student.name, student.className, todayStr);
+    const hasStreakBonus = student.streakBonusAwardedDate === todayStr;
+
+    // ================= BẮN PHÁO HOA ĂN MỪNG NẾU HÔM QUA ĐÃ HỌC VÀ HÔM NAY TIẾP TỤC HỌC =================
+    if (studiedYesterday || hasStreakBonus) {
+      launchFireworks(5500);
+
+      const streakPoints = 20;
+      const basePoints = pointsGiven !== undefined ? pointsGiven : loginRewardInfo.points;
+      const totalAwardedToday = basePoints + streakPoints;
+
+      setWelcomeModalData({
+        isOpen: true,
+        studentName: student.name,
+        studentClass: student.className,
+        pointsAwarded: totalAwardedToday,
+        totalPoints: student.totalMeritPoints || totalAwardedToday,
+        mascotEmoji: '🎆',
+        badgeTitle: '🎆 SIÊU SAO CHĂM CHỈ LIÊN TIẾP (+20Đ PHÁO HOA) 🎆',
+        hasFireworks: true,
+        isStreakHero: true,
+        streakPoints: streakPoints,
+        cheerMessage: `🎆 BẮN PHÁO HOA RỰC RỠ ĂN MỪNG! Thầy giáo Đinh Văn Thành vô cùng tự hào và khen ngợi em ${student.name} (Lớp ${student.className})! Hôm qua em đã rất chăm chỉ học bài, hôm nay em lại tiếp tục kiên trì quay lại bàn học! Thầy Thành tặng em trọn vẹn màn PHÁO HOA ĂN MỪNG và +${streakPoints} ĐIỂM THƯỞNG CHĂM CHỈ vào Bảng xếp hạng thi đua! Chúc em luôn giữ vững ngọn lửa đam mê và gặt hái thật nhiều điểm 10 rực rỡ!`
+      });
+      return;
+    }
+
     const awarded = pointsGiven !== undefined ? pointsGiven : loginRewardInfo.points;
     const mascots = ['🦉', '🐱', '🚀', '🌟', '🐼', '🦁', '🐝'];
     const titles = [
@@ -223,7 +264,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       totalPoints: student.totalMeritPoints || awarded,
       mascotEmoji: randomMascot,
       badgeTitle: randomTitle,
-      cheerMessage: randomCheer
+      cheerMessage: randomCheer,
+      hasFireworks: false,
+      isStreakHero: false
     });
   };
   // ==================== VÀO HỌC NHANH & NHỚ THIẾT BỊ 1-CHẠM (KHÔNG CẦN ĐĂNG KÝ) ====================
@@ -3361,20 +3404,50 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </p>
 
             {/* HỘP QUÀ TẶNG ĐIỂM RỰC RỠ */}
-            <div className="my-4 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xl shadow-amber-500/25 border border-amber-300/50">
-              <div className="text-[11px] font-black uppercase tracking-wider text-amber-100">
-                {loginRewardInfo.isPromoToday 
-                  ? '🎁 QUÀ TẶNG KHUYẾN MẠI DUY NHẤT HÔM NAY' 
-                  : '⭐ ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'}
+            <div className={`my-4 py-3.5 px-4 rounded-2xl text-white shadow-xl border ${
+              welcomeModalData.hasFireworks
+                ? 'bg-gradient-to-r from-rose-600 via-amber-500 to-indigo-600 border-amber-300 shadow-rose-500/30'
+                : 'bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 border-amber-300/50 shadow-amber-500/25'
+            }`}>
+              <div className="text-[11px] font-black uppercase tracking-wider text-amber-100 flex items-center justify-center gap-1.5 flex-wrap">
+                {welcomeModalData.hasFireworks ? (
+                  <>
+                    <span>🎆🎇</span>
+                    <span>ĐẶC QUYỀN PHÁO HOA: CHĂM CHỈ HỌC TẬP LIÊN TIẾP</span>
+                    <span>🎇🎆</span>
+                  </>
+                ) : loginRewardInfo.isPromoToday ? (
+                  '🎁 QUÀ TẶNG KHUYẾN MẠI DUY NHẤT HÔM NAY'
+                ) : (
+                  '⭐ ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'
+                )}
               </div>
-              <div className="text-3xl sm:text-4xl font-black tracking-tight my-1 drop-shadow-sm">
-                +{welcomeModalData.pointsAwarded} ĐIỂM
+              <div className="text-3xl sm:text-4xl font-black tracking-tight my-1 drop-shadow-sm flex items-center justify-center gap-2">
+                <span>+{welcomeModalData.pointsAwarded} ĐIỂM</span>
+                {welcomeModalData.hasFireworks && <span className="animate-spin text-2xl">✨</span>}
               </div>
+              {welcomeModalData.hasFireworks && (
+                <div className="text-[11px] font-bold text-amber-100 mb-1">
+                  (Bao gồm +{welcomeModalData.streakPoints || 20}đ thưởng pháo hoa học liên tiếp {loginRewardInfo.isPromoToday ? '+ 10đ quà hôm nay' : '+ 5đ chuyên cần'})
+                </div>
+              )}
               <div className="text-xs font-semibold text-white/95 flex items-center justify-center gap-1">
                 <span>Tổng điểm thi đua hiện tại:</span>
                 <span className="font-black text-yellow-200">⭐ {welcomeModalData.totalPoints}đ</span>
               </div>
             </div>
+
+            {/* NÚT BẮN LẠI PHÁO HOA ĂN MỪNG NẾU LÀ HỌC SINH CHĂM CHỈ */}
+            {welcomeModalData.hasFireworks && (
+              <button
+                type="button"
+                onClick={() => launchFireworks(4500)}
+                className="mb-3 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-1.5 mx-auto transition cursor-pointer shadow-xs active:scale-95"
+              >
+                <span>🎆</span>
+                <span>Bắn Lại Pháo Hoa Rực Rỡ!</span>
+              </button>
+            )}
 
             {/* LỜI NHẮN NHỦ SƯ PHẠM CỦA THẦY THÀNH */}
             <div className="p-3.5 rounded-2xl bg-blue-50/80 dark:bg-slate-800/80 border border-blue-200/80 dark:border-slate-700 text-left space-y-1 mb-5">

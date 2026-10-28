@@ -50,6 +50,7 @@ import {
   MeritBonusItem,
   getDailyLoginRewardInfo
 } from '../services/studentGradebookService';
+import { launchFireworks } from '../utils/fireworks';
 
 interface UnifiedStudentStatsLeaderboardProps {
   defaultClassId?: string;
@@ -116,18 +117,9 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
     setTimeout(() => setToastMessage(''), 3500);
   };
 
-  // Kích hoạt pháo hoa chúc mừng nếu có
+  // Kích hoạt pháo hoa chúc mừng rực rỡ toàn màn hình
   const triggerConfetti = () => {
-    try {
-      const conf = (window as unknown as { confetti?: (opts: unknown) => void }).confetti;
-      if (typeof conf === 'function') {
-        conf({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      }
-    } catch {}
+    launchFireworks(4500);
   };
 
   // Tải dữ liệu toàn diện theo thời gian thực (tự động rà soát & khôi phục điểm thực tế)
@@ -590,7 +582,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
           </span>
           <span className="text-[11px] text-slate-500">Cộng trực tiếp vào Điểm Tổng</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-[11px]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 text-[11px]">
           <div className={`p-2 rounded-xl border relative overflow-hidden transition-all ${
             loginReward.isPromoToday 
               ? 'bg-amber-50/90 dark:bg-amber-950/50 border-amber-400 dark:border-amber-600 shadow-xs' 
@@ -604,6 +596,14 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
             </div>
             <div className={loginReward.isPromoToday ? 'text-amber-800 dark:text-amber-200 font-bold' : 'text-slate-500'}>
               {loginReward.isPromoToday ? '+10đ hôm nay (Mai: +5đ)' : '+5 điểm / ngày đăng nhập'}
+            </div>
+          </div>
+          <div className="p-2 rounded-xl bg-gradient-to-br from-rose-50 via-amber-50 to-orange-50 dark:from-rose-950/40 dark:via-amber-950/40 dark:to-orange-950/40 border border-rose-300 dark:border-rose-700 shadow-2xs">
+            <div className="font-black text-rose-600 dark:text-rose-400 flex items-center gap-1">
+              <span>🎆 Pháo Hoa (+20đ)</span>
+            </div>
+            <div className="text-slate-600 dark:text-slate-300 font-bold">
+              Học hôm qua &amp; quay lại hôm nay
             </div>
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
@@ -892,6 +892,18 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 <span>Bảng Thi Đua Chi Tiết ({filteredLeaderboard.length} học sinh)</span>
               </h4>
               <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    launchFireworks(5000);
+                    showToast('🎆 Bắn pháo hoa rực rỡ ăn mừng tinh thần học tập chăm chỉ của các em học sinh!');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-black text-xs shadow-xs flex items-center gap-1.5 cursor-pointer transition active:scale-95"
+                  title="Bắn pháo hoa rực rỡ ăn mừng thành tích học tập chăm chỉ của học sinh"
+                >
+                  <span>🎆</span>
+                  <span>Pháo Hoa Ăn Mừng</span>
+                </button>
                 <button
                   type="button"
                   onClick={handleAuditAndRestorePoints}

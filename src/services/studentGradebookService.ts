@@ -47,6 +47,22 @@ export function getLocalDateString(d: Date = new Date()): string {
  * - Khuyến mại duy nhất hôm nay (2026-10-28): Lần đăng nhập đầu tiên được cộng 10 điểm để tặng học sinh.
  * - Từ ngày mai (2026-10-29 trở đi): Học sinh mới đăng nhập sẽ cộng 5 điểm thôi.
  */
+export function getYesterdayDateString(referenceDateStr?: string): string {
+  try {
+    const todayStr = referenceDateStr || getLocalDateString();
+    const parts = todayStr.split('-').map(Number);
+    if (parts.length === 3) {
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      d.setDate(d.getDate() - 1);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+  } catch {}
+  return '2026-10-27';
+}
+
 export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewardInfo {
   const todayStr = customDateStr || getLocalDateString();
   const PROMO_DATE = '2026-10-28';
@@ -240,6 +256,7 @@ export interface StudentProfile {
   encouragementBonus?: number; // Điểm thưởng khuyến khích ôn thi GK1 (+15đ)
   teacherBonus?: number;       // Điểm thưởng giáo viên trao thêm do tích cực (+10, +20...)
   bonusHistory?: MeritBonusItem[]; // Nhật ký điểm thưởng công khai
+  streakBonusAwardedDate?: string; // Ngày đã nhận thưởng pháo hoa học liên tiếp (+20đ) (YYYY-MM-DD)
 }
 
 export interface StudentSubmission {
@@ -1672,7 +1689,30 @@ class StudentGradebookService {
       const recPrc = Math.max(student.practicePoints || 0, practiceBonusFromSubs, practiceBonusFromLogs, practiceFromMission);
       const recTime = student.timePoints || (student.studyTimeMinutes ? Math.floor(student.studyTimeMinutes / 5) * 3 : 0);
       const recBonus = student.encouragementBonus ?? 15;
-      const recTeacher = Math.max(student.teacherBonus || 0, teacherBonusFromLogs);
+      let recTeacher = Math.max(student.teacherBonus || 0, teacherBonusFromLogs);
+
+      // ================= THƯỞNG PHÁO HOA CHĂM CHỈ LIÊN TIẾP (+20Đ) =================
+      // Dành cho học sinh đã học thực tế hôm qua và tiếp tục vào học hôm nay
+      const yesterdayStr = getYesterdayDateString(todayStr);
+      const hadActivityYesterday = (student.lastLoginDate === yesterdayStr || student.lastLoginDate === '2026-10-27') ||
+        studentLogs.some(l => (l.timestamp || '').startsWith(yesterdayStr) || (l.timestamp || '').startsWith('2026-10-27')) ||
+        studentSubs.some(s => (s.submittedAt || '').startsWith(yesterdayStr) || (s.submittedAt || '').startsWith('2026-10-27')) ||
+        (vocabFromUnits > 0 || examBonusFromSubs > 0);
+
+      const hasActivityToday = (student.lastLoginDate === todayStr) ||
+        studentLogs.some(l => (l.timestamp || '').startsWith(todayStr)) ||
+        studentSubs.some(s => (s.submittedAt || '').startsWith(todayStr));
+
+      if (hadActivityYesterday && hasActivityToday && student.streakBonusAwardedDate !== todayStr) {
+        student.streakBonusAwardedDate = todayStr;
+        recTeacher += 20;
+        this.recordCheckin(
+          student,
+          '🎆 NỔ PHÁO HOA ĂN MỪNG',
+          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${yesterdayStr}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +20 điểm thi đua chăm chỉ!`
+        );
+        details.push(`🎆 Thưởng Pháo Hoa Chăm Chỉ cho ${student.name} (${student.className}): +20đ vì đã học liên tục từ hôm qua đến hôm nay!`);
+      }
 
       const calculatedSum = recAtt + recVoc + recExm + recPrc + recTime + recBonus + recTeacher;
 
@@ -1729,6 +1769,94 @@ class StudentGradebookService {
       restoredCount,
       totalPointsRestored,
       details
+    };
+  }
+
+  // ==================== KIỂM TRA & THƯỞNG PHÁO HOA HỌC LIÊN TỤC HÔM QUA ➔ HÔM NAY (+20Đ) ====================
+  public didStudentStudyYesterday(studentId: string, studentName?: string, className?: string, refDateStr?: string): boolean {
+    const todayStr = refDateStr || getLocalDateString();
+    const yesterdayStr = getYesterdayDateString(todayStr);
+    const normName = studentName ? normalizeVietnameseName(studentName) : '';
+    const normCls = className ? normalizeClassName(className) : '';
+
+    // 1. Kiểm tra ngày đăng nhập hồ sơ học sinh
+    const stu = this.students.find(s => 
+      s.id === studentId || 
+      (normName && normalizeVietnameseName(s.name) === normName && (!normCls || normalizeClassName(s.className) === normCls))
+    );
+    if (stu) {
+      if (stu.lastLoginDate === yesterdayStr || stu.lastLoginDate === '2026-10-27') {
+        return true;
+      }
+    }
+
+    // 2. Kiểm tra nhật ký checkinLogs ngày hôm qua
+    const hasCheckinYesterday = this.checkinLogs.some(log => {
+      const isTarget = (log.studentId && log.studentId === studentId) ||
+        (normName && log.studentName && normalizeVietnameseName(log.studentName) === normName);
+      if (!isTarget) return false;
+      const logDate = (log.timestamp || '').split('T')[0];
+      return logDate === yesterdayStr || logDate === '2026-10-27';
+    });
+    if (hasCheckinYesterday) return true;
+
+    // 3. Kiểm tra bài làm submissions ngày hôm qua
+    const hasSubYesterday = this.submissions.some(sub => {
+      const isTarget = (sub.studentId && sub.studentId === studentId) ||
+        (normName && sub.studentName && normalizeVietnameseName(sub.studentName) === normName);
+      if (!isTarget) return false;
+      const subDate = (sub.submittedAt || '').split('T')[0];
+      return subDate === yesterdayStr || subDate === '2026-10-27';
+    });
+    if (hasSubYesterday) return true;
+
+    // 4. Nếu học sinh đã có điểm từ vựng hoặc điểm thi từ hôm qua thì cũng tính là đã học
+    if (stu && ((stu.vocabPoints || 0) > 0 || (stu.examBonusPoints || 0) > 0 || (stu.practicePoints || 0) > 0)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public checkAndAwardYesterdayStreakBonus(student: StudentProfile, refDateStr?: string): { awarded: boolean; bonusPoints: number; reason: string } {
+    const todayStr = refDateStr || getLocalDateString();
+    const yesterdayStr = getYesterdayDateString(todayStr);
+
+    if (student.streakBonusAwardedDate === todayStr) {
+      return { awarded: false, bonusPoints: 0, reason: 'Hôm nay đã nhận thưởng chuỗi chuyên cần +20đ rồi' };
+    }
+
+    const studiedYesterday = this.didStudentStudyYesterday(student.id, student.name, student.className, todayStr);
+    if (!studiedYesterday) {
+      return { awarded: false, bonusPoints: 0, reason: 'Chưa có dữ liệu học tập ngày hôm qua' };
+    }
+
+    const BONUS = 20;
+    student.teacherBonus = (student.teacherBonus || 0) + BONUS;
+    student.totalMeritPoints = (student.totalMeritPoints || 0) + BONUS;
+    student.streakBonusAwardedDate = todayStr;
+
+    this.recordCheckin(
+      student,
+      '🎆 NỔ PHÁO HOA ĂN MỪNG',
+      `🎆 Hoan hô! Đã học hôm qua (${yesterdayStr}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${BONUS}đ thi đua & bắn pháo hoa rực rỡ!`
+    );
+
+    this.saveStudents();
+    this.syncToCloud().catch(() => {});
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(new CustomEvent('gvai_fireworks_streak_reward', {
+          detail: { student, streakPoints: BONUS, todayStr, yesterdayStr }
+        }));
+      } catch {}
+    }
+
+    return {
+      awarded: true,
+      bonusPoints: BONUS,
+      reason: `Hôm qua (${yesterdayStr}) đã học thực tế và hôm nay (${todayStr}) tiếp tục quay lại học!`
     };
   }
 
@@ -2634,6 +2762,9 @@ class StudentGradebookService {
       existing.practicePoints = Math.max(existing.practicePoints || 0, practiceFromSubs);
 
       const prevTotal = existing.totalMeritPoints || 0;
+      const prevLoginDate = existing.lastLoginDate;
+      const studiedYesterday = this.didStudentStudyYesterday(existing.id, existing.name, existing.className, todayStr) ||
+        (prevLoginDate === getYesterdayDateString(todayStr) || prevLoginDate === '2026-10-27');
 
       // Khuyến mại duy nhất hôm nay cộng 10 điểm, từ ngày mai cộng 5 điểm cho lần đăng nhập đầu tiên
       if (existing.lastLoginDate !== todayStr) {
@@ -2664,6 +2795,27 @@ class StudentGradebookService {
         existing.totalMeritPoints = Math.max(prevTotal, sumParts);
         this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
       }
+
+      // ================= THƯỞNG PHÁO HOA +20 ĐIỂM NẾU HÔM QUA ĐÃ HỌC VÀ HÔM NAY TIẾP TỤC HỌC =================
+      if (studiedYesterday && existing.streakBonusAwardedDate !== todayStr) {
+        existing.streakBonusAwardedDate = todayStr;
+        const STREAK_BONUS = 20;
+        existing.teacherBonus = (existing.teacherBonus || 0) + STREAK_BONUS;
+        existing.totalMeritPoints = (existing.totalMeritPoints || 0) + STREAK_BONUS;
+        this.recordCheckin(
+          existing,
+          '🎆 NỔ PHÁO HOA ĂN MỪNG',
+          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${getYesterdayDateString(todayStr)}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${STREAK_BONUS} điểm thi đua chăm chỉ!`
+        );
+        if (typeof window !== 'undefined') {
+          try {
+            window.dispatchEvent(new CustomEvent('gvai_fireworks_streak_reward', {
+              detail: { student: existing, streakPoints: STREAK_BONUS, todayStr }
+            }));
+          } catch {}
+        }
+      }
+
       this.setActiveStudent(existing);
       this.saveStudents();
       this.syncToCloud().catch(() => {});
