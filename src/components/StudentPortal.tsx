@@ -3120,40 +3120,30 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('missions')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             activeTab === 'missions'
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Nhiệm vụ ôn tập giữa kỳ và lộ trình học tập hàng ngày"
+          title="Lộ trình 1: Nhiệm vụ ôn tập giữa kỳ và mục tiêu học tập hàng ngày"
         >
           <Target className={`w-4 h-4 ${activeTab === 'missions' ? 'text-amber-300' : 'text-rose-500'}`} />
           <span>1. Nhiệm Vụ GK1</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'missions' ? 'bg-white/20 text-white' : 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
-          }`}>
-            Mục tiêu
-          </span>
         </button>
 
         {/* 2. Từ Vựng */}
         <button
           type="button"
           onClick={() => setActiveTab('vocab')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             activeTab === 'vocab'
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Học từ vựng SGK Tiếng Anh theo Unit kèm phát âm AI & Flashcard"
+          title="Lộ trình 2: Học từ vựng SGK Tiếng Anh theo Unit kèm phát âm AI & Flashcard"
         >
           <BookOpen className={`w-4 h-4 ${activeTab === 'vocab' ? 'text-amber-300' : 'text-emerald-500'}`} />
           <span>2. Từ Vựng</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'vocab' ? 'bg-white/20 text-white' : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
-          }`}>
-            Flashcard
-          </span>
         </button>
 
         {/* 3. Đề Cương & Bài Tập */}
@@ -3168,12 +3158,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               setActiveTab('sgk');
             }
           }}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             ['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Đề cương ôn tập và bài tập SGK có đáp án chi tiết"
+          title="Lộ trình 3: Đề cương ôn tập và bài tập SGK có đáp án chi tiết"
         >
           <FileText className={`w-4 h-4 ${['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) ? 'text-amber-300' : 'text-cyan-500'}`} />
           <span>3. Đề Cương &amp; Bài Tập</span>
@@ -3182,13 +3172,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         {/* 4. Đề Thi Online */}
         <button
           type="button"
-          onClick={() => setActiveTab('exam')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          onClick={() => {
+            if (!['exam', 'quiz'].includes(activeTab)) {
+              setActiveTab('quiz'); // Mở Kiểm Tra 5 Phút trước theo lộ trình khởi động
+            }
+          }}
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             ['exam', 'quiz'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Luyện đề thi trắc nghiệm online bấm giờ và chấm điểm tự động"
+          title="Lộ trình 4: Luyện đề kiểm tra 5 phút & đề thi giữa kỳ online tự động bấm giờ"
         >
           <Award className={`w-4 h-4 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-amber-500'}`} />
           <span>4. Đề Thi Online</span>
@@ -3198,32 +3192,27 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('teams')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             activeTab === 'teams'
               ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-600 text-white font-black shadow-[0_6px_18px_rgba(79,70,229,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-indigo-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-indigo-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Xem 4 tổ thi đua của lớp, danh sách Tổ Trưởng, Tổ Phó và bảng đua top"
+          title="Lộ trình 5: Xem 4 tổ thi đua của lớp, danh sách Tổ Trưởng, Tổ Phó và bảng đua top"
         >
           <Users className={`w-4 h-4 ${activeTab === 'teams' ? 'text-cyan-300' : 'text-sky-500'}`} />
           <span>5. 4 Tổ Thi Đua</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            activeTab === 'teams' ? 'bg-white/20 text-white' : 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300'
-          }`}>
-            Team Battle
-          </span>
         </button>
 
         {/* 6. Diễn Đàn & Hỏi Thầy */}
         <button
           type="button"
           onClick={() => setActiveTab('forum')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             ['forum', 'messages'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_18px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 hover:text-blue-600 font-extrabold border border-slate-200/90 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Hỏi bài Thầy Đinh Thành hoặc thảo luận cùng các bạn"
+          title="Lộ trình 6: Hỏi bài Thầy Đinh Thành hoặc thảo luận cùng các bạn"
         >
           <MessageSquare className={`w-4 h-4 ${['forum', 'messages'].includes(activeTab) ? 'text-amber-300' : 'text-purple-500'}`} />
           <span>6. Diễn Đàn &amp; Hỏi Thầy</span>
@@ -3233,20 +3222,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('leaderboard')}
-          className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
+          className={`relative px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 shrink-0 active:scale-95 ${
             ['leaderboard', 'tracking'].includes(activeTab)
               ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_18px_rgba(245,158,11,0.45),inset_0_1px_0_rgba(255,255,255,0.5)] border border-amber-300 -translate-y-0.5 scale-[1.02]'
               : 'bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-amber-800 dark:text-amber-200 hover:text-amber-600 font-extrabold border border-amber-200/80 dark:border-amber-800/60 shadow-[0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)]'
           }`}
-          title="Xem Bảng Vàng Vinh Danh & Tổng Hợp Điểm Thi Đua của từng khối lớp"
+          title="Lộ trình 7: Bảng Vàng Vinh Danh & Tổng Hợp Điểm Thi Đua của từng khối lớp"
         >
           <Trophy className={`w-4 h-4 ${['leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950' : 'text-amber-500'}`} />
           <span>7. Thống Kê &amp; Bảng Vàng</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-            ['leaderboard', 'tracking'].includes(activeTab) ? 'bg-black/20 text-slate-950' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300'
-          }`}>
-            Xem Điểm
-          </span>
         </button>
       </div>
 
@@ -3359,55 +3343,47 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
       {['exam', 'quiz'].includes(activeTab) && (
-
-        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 w-fit text-xs font-bold">
-
+        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/60 dark:border-slate-800/80 shadow-[0_6px_20px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.8)] w-fit text-xs font-bold flex-wrap">
+          {/* LỘ TRÌNH 1: KIỂM TRA 5 PHÚT (KHỞI ĐỘNG NHANH) */}
           <button
-
             type="button"
-
-            onClick={() => setActiveTab('exam')}
-
-            className={`px-3 py-1.5 rounded-lg transition ${
-
-              activeTab === 'exam'
-
-                ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-xs font-black'
-
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-
-            }`}
-
-          >
-
-            📝 Thi Thử Giữa Kỳ (Minh Họa)
-
-          </button>
-
-          <button
-
-            type="button"
-
             onClick={() => setActiveTab('quiz')}
-
-            className={`px-3 py-1.5 rounded-lg transition ${
-
+            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               activeTab === 'quiz'
-
-                ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-xs font-black'
-
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-
+                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_12px_rgba(245,158,11,0.4),inset_0_1px_0_rgba(255,255,255,0.6)] border border-amber-300 -translate-y-0.5'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-amber-600 font-extrabold border border-slate-200/60 dark:border-slate-700/60 shadow-xs'
             }`}
-
+            title="Lộ trình 1: Bài kiểm tra 5 phút trắc nghiệm nhanh rèn phản xạ từng Unit"
           >
-
-            ⏱️ Trắc Nghiệm 15 Phút
-
+            <Clock className={`w-3.5 h-3.5 ${activeTab === 'quiz' ? 'text-slate-950' : 'text-amber-500'}`} />
+            <span>⏱️ Kiểm Tra 5 Phút</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1 ${
+              activeTab === 'quiz' ? 'bg-black/20 text-slate-950' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'
+            }`}>
+              Khởi động
+            </span>
           </button>
 
+          {/* LỘ TRÌNH 2: ĐỀ THI GIỮA KỲ (THỰC CHIẾN) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('exam')}
+            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              activeTab === 'exam'
+                ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.5)] border border-blue-400/50 -translate-y-0.5'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 font-extrabold border border-slate-200/60 dark:border-slate-700/60 shadow-xs'
+            }`}
+            title="Lộ trình 2: Thi thử đề kiểm tra giữa kỳ 1 chuẩn ma trận cấu trúc Bộ GD&ĐT"
+          >
+            <Award className={`w-3.5 h-3.5 ${activeTab === 'exam' ? 'text-amber-300' : 'text-blue-500'}`} />
+            <span>📝 Đề Thi Giữa Kỳ</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1 ${
+              activeTab === 'exam' ? 'bg-white/20 text-white' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300'
+            }`}>
+              Thực chiến
+            </span>
+          </button>
         </div>
-
       )}
 
 
@@ -3443,55 +3419,30 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
       {['forum', 'messages'].includes(activeTab) && (
-
-        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 w-fit text-xs font-bold">
-
+        <div className="flex items-center gap-2 p-1.5 mb-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/60 dark:border-slate-800/80 shadow-[0_6px_20px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.8)] w-fit text-xs font-bold flex-wrap">
           <button
-
             type="button"
-
             onClick={() => setActiveTab('forum')}
-
-            className={`px-3 py-1.5 rounded-lg transition ${
-
+            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               activeTab === 'forum'
-
-                ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 shadow-xs font-black'
-
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-[0_4px_12px_rgba(37,99,235,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/50 -translate-y-0.5'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 font-extrabold border border-slate-200/60 dark:border-slate-700/60 shadow-xs'
             }`}
-
           >
-
             💬 Diễn Đàn Trao Đổi
-
           </button>
-
           <button
-
             type="button"
-
             onClick={() => setActiveTab('messages')}
-
-            className={`px-3 py-1.5 rounded-lg transition ${
-
+            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               activeTab === 'messages'
-
-                ? 'bg-white dark:bg-slate-700 text-cyan-600 dark:text-cyan-300 shadow-xs font-black'
-
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-
+                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black shadow-[0_4px_12px_rgba(8,145,178,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] border border-cyan-400/50 -translate-y-0.5'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-cyan-600 font-extrabold border border-slate-200/60 dark:border-slate-700/60 shadow-xs'
             }`}
-
           >
-
             ✉️ Nhắn Tin Thầy Thành
-
           </button>
-
         </div>
-
       )}
 
 

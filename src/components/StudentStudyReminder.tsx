@@ -300,9 +300,9 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                   type="button"
                   onClick={onGoToQuiz}
                   className="px-2.5 py-2 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-cyan-200 hover:text-white font-bold text-xs transition cursor-pointer border border-blue-700/50"
-                  title="Thử sức bài trắc nghiệm nhanh 15 phút"
+                  title="Thử sức bài kiểm tra trắc nghiệm nhanh 5 phút rèn phản xạ"
                 >
-                  15 Phút
+                  KT 5 Phút
                 </button>
               </div>
             </div>
