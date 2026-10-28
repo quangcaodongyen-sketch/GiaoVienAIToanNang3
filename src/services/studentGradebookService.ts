@@ -248,7 +248,7 @@ export interface StudentProfile {
   examBonusPoints?: number;  // Điểm thưởng bài thi GK (điểm thi x 10)
   practicePoints?: number;   // Điểm làm đề cương & bài tập (+10đ/phần)
   studyTimeMinutes?: number; // Thời gian tương tác học tập thực tế (phút)
-  timePoints?: number;       // Điểm cộng theo thời gian (+3đ mỗi 5 phút)
+  timePoints?: number;       // Điểm cộng theo thời gian (+3đ mỗi 10 phút học thực tế có tương tác)
   totalMeritPoints?: number; // Tổng điểm thi đua chuyên cần
   lastLoginDate?: string;    // Ngày đăng nhập gần nhất (YYYY-MM-DD)
   stt?: number;              // Số thứ tự theo sổ điểm chính thức
@@ -1754,7 +1754,9 @@ class StudentGradebookService {
       const recVoc = Math.max(student.vocabPoints || 0, vocabFromUnits);
       const recExm = Math.max(student.examBonusPoints || 0, examBonusFromSubs, examFromMission);
       const recPrc = Math.max(student.practicePoints || 0, practiceBonusFromSubs, practiceBonusFromLogs, practiceFromMission);
-      const recTime = student.timePoints || (student.studyTimeMinutes ? Math.floor(student.studyTimeMinutes / 5) * 3 : 0);
+      const recTime = (student.timePoints !== undefined && student.timePoints > 0)
+        ? student.timePoints 
+        : (student.studyTimeMinutes ? Math.floor(student.studyTimeMinutes / 10) * 3 : 0);
       const recBonus = student.encouragementBonus ?? 15;
       let recTeacher = Math.max(student.teacherBonus || 0, teacherBonusFromLogs);
 
@@ -3305,23 +3307,45 @@ class StudentGradebookService {
   }
 
   /**
-   * 5. Thời gian học và tương tác thời gian thực: Cứ mỗi 5 phút +3 điểm
+   * 5. Thời gian học và tương tác thời gian thực: Cứ mỗi 10 phút cộng dồn học thực tế có tương tác -> cộng +3 điểm thi đua
+   * Chống treo máy: Chỉ tích lũy khi học sinh thao tác thực tế (làm bài, lật từ vựng...) và tab trình duyệt đang hoạt động.
    */
-  public recordActiveStudyTime(studentId: string, minutes: number = 5): number {
+  public recordActiveStudyTime(
+    studentId: string, 
+    minutes: number = 1
+  ): { 
+    student: StudentProfile | null; 
+    pointsAwarded: number; 
+    newMinutes: number; 
+    totalPoints: number; 
+    awarded: boolean;
+  } {
     const student = this.students.find(s => s.id === studentId);
-    if (!student) return 0;
+    if (!student) {
+      return { student: null, pointsAwarded: 0, newMinutes: 0, totalPoints: 0, awarded: false };
+    }
+
     const oldMinutes = student.studyTimeMinutes || 0;
     const newMinutes = oldMinutes + minutes;
-    const oldBuckets = Math.floor(oldMinutes / 5);
-    const newBuckets = Math.floor(newMinutes / 5);
-    const pointsAwarded = (newBuckets - oldBuckets) * 3;
+    const oldBuckets = Math.floor(oldMinutes / 10);
+    const newBuckets = Math.floor(newMinutes / 10);
+    const pointsAwarded = Math.max(0, (newBuckets - oldBuckets) * 3);
 
-    this.addStudentMeritPoints(studentId, {
+    const updatedStudent = this.addStudentMeritPoints(studentId, {
       minutes: minutes,
       timePoints: pointsAwarded > 0 ? pointsAwarded : 0,
-      reason: pointsAwarded > 0 ? `Học tập tích cực (${newMinutes} phút) (+${pointsAwarded} điểm)` : undefined
+      reason: pointsAwarded > 0 
+        ? `⏱️ Chuyên cần tương tác học tập thực tế (Đủ ${newBuckets * 10} phút cộng dồn): +${pointsAwarded}đ thi đua (Cứ 10 phút nhận 3 điểm)` 
+        : undefined
     });
-    return student.totalMeritPoints || 0;
+
+    return {
+      student: updatedStudent || student,
+      pointsAwarded,
+      newMinutes,
+      totalPoints: (updatedStudent || student).totalMeritPoints || 0,
+      awarded: pointsAwarded > 0
+    };
   }
 
   /**

@@ -618,8 +618,9 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
             <div className="text-slate-500">Điểm thi x 10 (VD: 9.5đ ➔ +95đ)</div>
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
-            <div className="font-bold text-rose-600">⏳ Thời Gian Học</div>
-            <div className="text-slate-500">+3 điểm / mỗi 5 phút học thực</div>
+            <div className="font-bold text-rose-600">⏳ Học Thực Tế Có Tương Tác</div>
+            <div className="text-slate-500 font-semibold">+3 điểm / mỗi 10 phút cộng dồn</div>
+            <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">Chống treo máy: tự ngưng khi rời tab</div>
           </div>
           <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <div className="font-bold text-purple-600">⭐ Thưởng Tích Cực</div>

@@ -425,16 +425,118 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     }
   };
 
-  // TÍCH ĐIỂM THỜI GIAN THỰC: Cứ mỗi 5 phút tương tác học tập thực tế -> cộng +3 điểm chuyên cần
+  // TRẠNG THÁI THEO DÕI HỌC TẬP THỰC TẾ & CHỐNG TREO MÁY
+  const [isActiveLearning, setIsActiveLearning] = useState<boolean>(true);
+  const [showStudyRulesModal, setShowStudyRulesModal] = useState<boolean>(false);
+  const [studyRewardToast, setStudyRewardToast] = useState<{ show: boolean; minutes: number; points: number } | null>(null);
+  const lastInteractionRef = React.useRef<number>(Date.now());
+  const accumulatedSecondsRef = React.useRef<number>(0);
+  const isTabVisibleRef = React.useRef<boolean>(true);
+
+  // =========================================================================
+  // TÍCH ĐIỂM CHUYÊN CẦN HỌC TẬP THỰC TẾ: CỨ 10 PHÚT CỘNG DỒN -> +3 ĐIỂM
+  // CHỐNG GIAN LẬN TREO MÁY: CHỈ TÍCH LŨY KHI CÓ TƯƠNG TÁC THỰC TẾ & TAB ĐANG MỞ
+  // =========================================================================
   useEffect(() => {
     if (!currentStudent) return;
-    const interval = setInterval(() => {
-      studentGradebookService.recordActiveStudyTime(currentStudent.id, 5);
-      const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
-      if (fresh) setCurrentStudent({ ...fresh });
-    }, 5 * 60 * 1000);
 
-    return () => clearInterval(interval);
+    lastInteractionRef.current = Date.now();
+    accumulatedSecondsRef.current = 0;
+    isTabVisibleRef.current = !document.hidden;
+    setIsActiveLearning(!document.hidden);
+
+    // Lắng nghe mọi tương tác của học sinh (chuột, phím, chạm cảm ứng, cuộn trang...)
+    const handleUserInteraction = () => {
+      lastInteractionRef.current = Date.now();
+      if (!isActiveLearning && isTabVisibleRef.current) {
+        setIsActiveLearning(true);
+      }
+    };
+
+    const interactionEvents: (keyof WindowEventMap)[] = [
+      'mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'touchmove', 'click', 'wheel'
+    ];
+    interactionEvents.forEach(evt => {
+      window.addEventListener(evt, handleUserInteraction, { passive: true });
+    });
+
+    // Lắng nghe chuyển tab / ẩn trình duyệt
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isTabVisibleRef.current = false;
+        setIsActiveLearning(false);
+      } else {
+        isTabVisibleRef.current = true;
+        lastInteractionRef.current = Date.now();
+        setIsActiveLearning(true);
+      }
+    };
+
+    const handleWindowFocus = () => {
+      lastInteractionRef.current = Date.now();
+      isTabVisibleRef.current = true;
+      setIsActiveLearning(true);
+    };
+
+    const handleWindowBlur = () => {
+      if (Date.now() - lastInteractionRef.current > 15000) {
+        setIsActiveLearning(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleWindowFocus);
+    window.addEventListener('blur', handleWindowBlur);
+
+    // Đồng hồ Heartbeat 1 giây: Kiểm tra tính tích cực & Tích lũy thời gian
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const idleTime = now - lastInteractionRef.current;
+      const isIdle = idleTime > 60000; // Quá 60 giây không có bất kỳ thao tác nào
+      const isHidden = document.hidden;
+
+      if (isIdle || isHidden) {
+        setIsActiveLearning(false);
+        return; // Dừng tích lũy giây! Chống treo máy hoàn toàn!
+      }
+
+      // Đang có tương tác thực tế & tab đang mở
+      setIsActiveLearning(true);
+      accumulatedSecondsRef.current += 1;
+
+      // Khi tích lũy đủ 60 giây (1 phút) tương tác thực tế
+      if (accumulatedSecondsRef.current >= 60) {
+        accumulatedSecondsRef.current = 0;
+
+        const result = studentGradebookService.recordActiveStudyTime(currentStudent.id, 1);
+        if (result.student) {
+          setCurrentStudent({ ...result.student });
+
+          // Khi đạt mốc 10 phút mới (+3 điểm thi đua)!
+          if (result.awarded && result.pointsAwarded > 0) {
+            launchFireworks(4000);
+            setStudyRewardToast({
+              show: true,
+              minutes: result.newMinutes,
+              points: result.pointsAwarded
+            });
+            setTimeout(() => {
+              setStudyRewardToast(null);
+            }, 6000);
+          }
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      interactionEvents.forEach(evt => {
+        window.removeEventListener(evt, handleUserInteraction);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleWindowFocus);
+      window.removeEventListener('blur', handleWindowBlur);
+    };
   }, [currentStudent?.id]);
 
   const [trialCount, setTrialCount] = useState<number>(() => {
@@ -1286,7 +1388,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </p>
           </div>
 
-          {/* Thẻ học sinh hiển thị đĩnh đạc, tone xanh chữ trắng */}
+          {/* Thẻ học sinh hiển thị đĩnh đạc, tone xanh chữ trắng kèm Widget Chuyên Cần Thực Tế */}
           {currentStudent ? (
             <div className="flex items-center gap-2.5 flex-wrap">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0F2A4A] border border-blue-400/40 text-white shadow-xs">
@@ -1295,6 +1397,58 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
                 <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
               </div>
+
+              {/* WIDGET THEO DÕI CHUYÊN CẦN HỌC THỰC TẾ & CHỐNG TREO MÁY */}
+              <div 
+                onClick={() => setShowStudyRulesModal(true)}
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all cursor-pointer shadow-xs ${
+                  isActiveLearning 
+                    ? 'bg-emerald-950/80 border-emerald-500/60 hover:bg-emerald-900/90 text-emerald-100 ring-1 ring-emerald-500/30' 
+                    : 'bg-amber-950/70 border-amber-500/50 hover:bg-amber-900/80 text-amber-100 ring-1 ring-amber-500/30'
+                }`}
+                title="Bấm để xem Quy Chế Chuyên Cần: Cứ mỗi 10 phút học thực tế có tương tác = +3 điểm thi đua (Chống treo máy)"
+              >
+                <div className="relative flex items-center justify-center shrink-0">
+                  <span className={`w-2.5 h-2.5 rounded-full ${isActiveLearning ? 'bg-emerald-400 animate-ping absolute' : ''}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full ${isActiveLearning ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <div className="flex items-center gap-2 text-[11px] font-black leading-tight">
+                    <span className="flex items-center gap-1">
+                      {isActiveLearning ? (
+                        <>
+                          <span className="text-emerald-300">Đang Học Thực Tế</span>
+                          <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/30 text-emerald-200">Đang tính giờ</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-amber-300">Tạm Dừng Tính Giờ</span>
+                          <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/30 text-amber-200">Chờ tương tác</span>
+                        </>
+                      )}
+                    </span>
+                    <span className="text-cyan-300 font-black">
+                      ⏱️ {currentStudent.studyTimeMinutes || 0} phút
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {/* Mini progress bar 10 phút */}
+                    <div className="w-20 h-1.5 bg-black/50 rounded-full overflow-hidden border border-white/10">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-500 ${isActiveLearning ? 'bg-gradient-to-r from-emerald-400 to-teal-300' : 'bg-amber-400'}`}
+                        style={{ width: `${Math.min(100, (((currentStudent.studyTimeMinutes || 0) % 10) / 10) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-white/90 font-bold">
+                      {(currentStudent.studyTimeMinutes || 0) % 10}/10p (+3đ)
+                    </span>
+                    <span className="text-[9px] text-emerald-300 font-extrabold bg-emerald-950/90 px-1 rounded border border-emerald-500/30">
+                      +{currentStudent.timePoints || 0}đ
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               <button
                 type="button"
                 onClick={handleSwitchOtherStudent}
@@ -3469,6 +3623,114 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <span>🚀 Em Cảm Ơn Thầy &amp; Vào Học Ngay!</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* TOAST ĂN MỪNG THƯỞNG ĐIỂM CHUYÊN CẦN HỌC THỰC TẾ (CỨ 10 PHÚT = +3Đ) */}
+      {studyRewardToast && studyRewardToast.show && (
+        <div className="fixed bottom-6 right-6 z-50 animate-bounce max-w-sm p-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-2xl border-2 border-emerald-300 flex items-start gap-3">
+          <span className="text-3xl">⏱️🎉</span>
+          <div className="flex-1">
+            <h4 className="font-black text-sm uppercase tracking-wide text-amber-200">
+              Cộng Điểm Chuyên Cần Thực Tế!
+            </h4>
+            <p className="text-xs mt-0.5 text-white/95 leading-relaxed">
+              Chúc mừng em đã tích cực học tập thực tế đủ <strong>{studyRewardToast.minutes} phút</strong>!
+            </p>
+            <div className="mt-1 text-xs font-black text-amber-300 flex items-center gap-1">
+              <span>⭐ Thưởng nóng: +{studyRewardToast.points} điểm thi đua!</span>
+            </div>
+            <p className="text-[10px] text-emerald-100 mt-0.5 italic">
+              (Cứ 10 phút tương tác học thực tế em sẽ tiếp tục nhận +3đ)
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setStudyRewardToast(null)}
+            className="text-white/80 hover:text-white p-1 cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* MODAL GIẢI THÍCH QUY CHẾ CHUYÊN CẦN HỌC THỰC TẾ & CHỐNG TREO MÁY */}
+      {showStudyRulesModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl relative text-slate-800 dark:text-slate-100 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">⏱️</span>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    Quy Chế Tính Giờ Chuyên Cần Học Thực Tế
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
+                    Hệ thống tự động đo lường tương tác &amp; Chống gian lận treo máy
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowStudyRulesModal(false)}
+                className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs sm:text-sm">
+              <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-start gap-3">
+                <span className="text-xl shrink-0">🎁</span>
+                <div>
+                  <div className="font-black text-emerald-800 dark:text-emerald-300">
+                    Cứ 10 phút tương tác học thực tế = +3 điểm thi đua
+                  </div>
+                  <div className="text-emerald-700/90 dark:text-emerald-400/90 text-xs mt-0.5 leading-relaxed">
+                    Hệ thống tích lũy số phút học thực tế của em. Cứ khi đủ 10 phút cộng dồn (10p, 20p, 30p, 40p...), em sẽ lập tức được cộng <strong>+3 điểm thi đua</strong> vào tổng điểm cá nhân!
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-start gap-3">
+                <span className="text-xl shrink-0">🛡️</span>
+                <div>
+                  <div className="font-black text-amber-800 dark:text-amber-300">
+                    Cơ chế chống treo máy tuyệt đối (Anti-Idle &amp; Anti-Afk)
+                  </div>
+                  <div className="text-amber-700/90 dark:text-amber-400/90 text-xs mt-0.5 leading-relaxed">
+                    Đồng hồ tính giờ chỉ chạy khi em <strong>thực sự có tương tác</strong> (lật thẻ từ vựng 3D, nghe phát âm, làm bài tập trắc nghiệm, giải đề cương, làm bài thi online, thảo luận...).
+                  </div>
+                  <ul className="list-disc list-inside text-[11px] text-amber-800 dark:text-amber-300/90 mt-1.5 space-y-0.5 font-medium">
+                    <li>Nếu không có thao tác chuột/phím/chạm cảm ứng quá <strong>60 giây</strong>, đồng hồ sẽ <strong>tự động tạm dừng</strong>.</li>
+                    <li>Nếu em <strong>chuyển sang tab khác</strong> hoặc thu nhỏ trình duyệt, đồng hồ cũng <strong>lập tức ngừng đếm</strong>.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 flex items-start gap-3">
+                <span className="text-xl shrink-0">📊</span>
+                <div>
+                  <div className="font-black text-blue-800 dark:text-blue-300">
+                    Công khai, minh bạch &amp; Thi đua công bằng
+                  </div>
+                  <div className="text-blue-700/90 dark:text-blue-400/90 text-xs mt-0.5 leading-relaxed">
+                    Điểm thi đua được lưu lại trong Sổ điểm điện tử, Bảng Vàng và Bảng Thi Đua Toàn Trường để Thầy Cô và bạn bè cùng dõi theo và biểu dương thành tích chăm chỉ của em!
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowStudyRulesModal(false)}
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition cursor-pointer"
+              >
+                Đã Hiểu - Em Tiếp Tục Học Bài!
+              </button>
+            </div>
           </div>
         </div>
       )}

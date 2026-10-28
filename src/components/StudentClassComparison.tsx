@@ -200,7 +200,7 @@ export const StudentClassComparison: React.FC<StudentClassComparisonProps> = ({
                 </span>
               </h3>
               <p className="text-xs sm:text-sm text-amber-100/90 mt-1">
-                Tích điểm tự động: Đăng nhập mỗi ngày (+5đ) • Học xong bài từ vựng (+10đ) • Ôn đề cương & bài tập (+10đ) • Làm bài thi giữa kỳ (Điểm x 10) • Thời gian học tương tác (+3đ/5 phút)
+                Tích điểm tự động: Đăng nhập mỗi ngày (+5đ) • Học xong bài từ vựng (+10đ) • Ôn đề cương & bài tập (+10đ) • Làm bài thi giữa kỳ (Điểm x 10) • Thời gian học tương tác (+3đ/10 phút thực tế)
               </p>
             </div>
 
