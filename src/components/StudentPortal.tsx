@@ -79,6 +79,8 @@ import { StudentClassComparison } from './StudentClassComparison';
 import { StudentPublicTracking } from './StudentPublicTracking';
 
 import { UnifiedStudentStatsLeaderboard } from './UnifiedStudentStatsLeaderboard';
+import { ClassTeamBattleView } from './ClassTeamBattleView';
+import { classTeamService } from '../services/classTeamService';
 
 import { HsgEnglishPreparationPortal } from './HsgEnglishPreparationPortal';
 
@@ -386,6 +388,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
   // Thông tin khuyến mại đăng nhập hôm nay / lộ trình theo ngày
   const [currentPromoDate, setCurrentPromoDate] = useState<string>(getLocalDateString());
+  const myTeamInfo = useMemo(() => currentStudent ? classTeamService.getStudentTeamInfo(currentStudent.name, currentStudent.className) : null, [currentStudent]);
   const loginRewardInfo: DailyLoginRewardInfo = useMemo(() => getDailyLoginRewardInfo(currentPromoDate), [currentPromoDate]);
 
   // Lộ trình khuyến mại có kế hoạch trước của Thầy Thành
@@ -2561,7 +2564,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e6'>(() => {
+  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e6' | 'teams'>(() => {
 
     try {
 
@@ -2832,6 +2835,19 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
 
                 <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 5}đ</span>
+                {myTeamInfo && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('teams')}
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/30 hover:bg-indigo-500/50 text-indigo-200 border border-indigo-400/40 font-bold text-[11px] transition cursor-pointer"
+                    title="Bấm để xem chi tiết 4 Tổ Thi Đua của lớp em"
+                  >
+                    <span>🛡️ {myTeamInfo.team.name.split('(')[0]}</span>
+                    <span className="px-1 py-0.2 rounded bg-amber-400 text-slate-950 font-black text-[9px]">
+                      {myTeamInfo.member.roleBadge}
+                    </span>
+                  </button>
+                )}
 
               </div>
 
@@ -3142,13 +3158,31 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           title="Xem Bảng Vàng Vinh Danh & Tổng Hợp Điểm Thi Đua của từng khối lớp"
         >
           <Trophy className="w-4 h-4 text-amber-500" />
-          <span>4. Bảng Vàng &amp; Tổng Hợp Điểm</span>
+          <span>4. Bảng Vàng</span>
           <span className="px-1.5 py-0.2 rounded-md bg-amber-400/30 text-amber-900 dark:text-amber-200 text-[10px] font-black">
             Xem Điểm
           </span>
         </button>
 
-        {/* 5. Nhiệm Vụ Ngày */}
+        {/* 5. 4 Tổ Thi Đua (Team Battle) */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('teams')}
+          className={`px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            activeTab === 'teams'
+              ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-600 text-white shadow-md font-black ring-2 ring-indigo-300/50'
+              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+          title="Xem 4 tổ thi đua của lớp, danh sách Tổ Trưởng, Tổ Phó và bảng đua top"
+        >
+          <Users className="w-4 h-4 text-sky-400" />
+          <span>5. 🛡️ 4 Tổ Thi Đua</span>
+          <span className="px-1.5 py-0.2 rounded-md bg-indigo-500/20 text-indigo-700 dark:text-indigo-200 text-[10px] font-black">
+            Team Battle
+          </span>
+        </button>
+
+        {/* 6. Nhiệm Vụ Ngày */}
         <button
           type="button"
           onClick={() => setActiveTab('missions')}
@@ -3160,10 +3194,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           title="Nhiệm vụ ôn tập giữa kỳ và tích điểm hàng ngày"
         >
           <Target className="w-4 h-4 text-rose-400" />
-          <span>5. Nhiệm Vụ Ngày</span>
+          <span>6. Nhiệm Vụ Ngày</span>
         </button>
 
-        {/* 6. Diễn Đàn & Hỏi Thầy */}
+        {/* 7. Diễn Đàn & Hỏi Thầy */}
         <button
           type="button"
           onClick={() => setActiveTab('forum')}
@@ -3175,7 +3209,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           title="Hỏi bài Thầy Đinh Thành hoặc thảo luận cùng các bạn"
         >
           <MessageSquare className="w-4 h-4 text-purple-400" />
-          <span>6. Diễn Đàn &amp; Hỏi Thầy</span>
+          <span>7. Diễn Đàn &amp; Hỏi Thầy</span>
         </button>
       </div>
 
@@ -4570,6 +4604,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
         />
 
+      )}
+
+      {/* ==================== PHÂN HỆ 4 TỔ THI ĐUA (TEAM BATTLE) ==================== */}
+      {activeTab === 'teams' && (
+        <ClassTeamBattleView
+          currentStudent={currentStudent}
+          isAdmin={isAdminUnlocked || systemMaintenanceService.isSessionAuthenticated()}
+          onGoToVocab={() => setActiveTab('vocab')}
+          onGoToExam={() => setActiveTab('exam')}
+        />
       )}
 
       {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}

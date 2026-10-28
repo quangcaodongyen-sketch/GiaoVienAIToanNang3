@@ -302,7 +302,9 @@ export default function App() {
       rawHash === '#kiemtra' ||
       rawHash === '#kiem-tra' ||
       rawHash === '#exam' ||
-      rawHash === '#eng12_vocab'
+      rawHash === '#eng12_vocab' ||
+      rawHash === '#teams' ||
+      rawHash === '#to-thi-dua'
     );
   };
 
