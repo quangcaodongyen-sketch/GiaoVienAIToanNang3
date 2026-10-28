@@ -111,13 +111,13 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
   };
 
   const handleExportWord = async () => {
-    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về cài đặt trải nghiệm trên máy tính.`);
     setActiveTab('download');
   };
 
   const handleActivate = async () => {
     if (!licenseKeyInput.trim()) {
-      setActivationMsg({ text: 'Vui lòng nhập mã kích hoạt bản quyền!', isError: true });
+      setActivationMsg({ text: 'Vui lòng nhập mã hỗ trợ cài đặt phần mềm!', isError: true });
       return;
     }
 
@@ -244,13 +244,13 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
           </button>
         </div>
 
-        {/* THÔNG BÁO HẾT LƯỢT DÙNG THỬ NẾU CÓ */}
+        {/* THÔNG BÁO HOÀN THÀNH LƯỢT TRẢI NGHIỆM NẾU CÓ */}
         {showExpiredNotice && !isPro && (
           <div className="bg-rose-500/15 border-b border-rose-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-rose-300">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
               <span>
-                Thầy/Cô đã dùng hết <strong>5 lượt trải nghiệm miễn phí</strong> trên thiết bị này. Kính mời Quý Thầy/Cô đăng ký kích hoạt bản quyền Pro để tiếp tục sử dụng không giới hạn!
+                Thầy/Cô đã dùng hết <strong>5 lượt trải nghiệm miễn phí</strong> trên thiết bị này. Kính mời Quý Thầy/Cô đăng ký hỗ trợ cài đặt bản Pro đầy đủ để tiếp tục sử dụng không giới hạn!
               </span>
             </div>
             <button
@@ -718,7 +718,7 @@ export const TaoDeLichSuTHCSModal: React.FC<TaoDeLichSuTHCSModalProps> = ({
               <div className="bg-slate-800/40 border border-slate-700 rounded-xl p-5">
                 <div className="text-sm font-bold text-white mb-3 flex items-center gap-2">
                   <Key className="w-4 h-4 text-amber-400" />
-                  Kích Hoạt Bản Quyền Pro Môn Lịch Sử THCS
+                  Hỗ Trợ Cài Đặt Phần Mềm Pro Môn Lịch Sử THCS
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">

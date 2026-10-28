@@ -268,7 +268,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                       CHÍNH SÁCH DÙNG THỬ MIỄN PHÍ TRÊN MÁY TÍNH
                       {isProActive ? (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500 text-white">
-                          ĐÃ KÍCH HOẠT BẢN QUYỀN PRO
+                          ĐÃ HỖ TRỢ CÀI ĐẶT PHẦN MỀM PRO
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/30 text-amber-300 border border-amber-500/40">
@@ -812,7 +812,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                   <div>
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
                       <ShieldCheck className="w-5 h-5 text-amber-400" />
-                      KÍCH HOẠT BẢN QUYỀN PRO TIẾNG ANH TIỂU HỌC
+                      HỖ TRỢ CÀI ĐẶT PHẦN MỀM PRO TIẾNG ANH TIỂU HỌC
                     </h3>
                     <p className="text-xs text-slate-400">
                       Bản quyền độc lập cấp theo mã máy tính chuẩn Rule 5: <code className="text-amber-300">DVT-ENGPRI-XXXX-XXXX</code>.
@@ -848,7 +848,7 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                     </button>
                   </div>
                   <p className="text-[11px] text-slate-400 italic">
-                    Gửi mã máy này cho Tác giả Đinh Thành qua Zalo để nhận Mã kích hoạt bản quyền Pro.
+                    Gửi mã máy này cho Tác giả Đinh Thành qua Zalo để nhận Mã hỗ trợ cài đặt bản Pro đầy đủ.
                   </p>
                 </div>
 
@@ -889,15 +889,15 @@ export const TaoDeTiengAnhTieuHocModal: React.FC<TaoDeTiengAnhTieuHocModalProps>
                 )}
               </div>
 
-              {/* FORM GỬI THÔNG TIN ĐĂNG KÝ SƯ PHẠM VÀ BÁO GIÁ ƯU ĐÃI (Rule 4) */}
+              {/* FORM GỬI THÔNG TIN ĐĂNG KÝ SƯ PHẠM VÀ HỖ TRỢ CÀI ĐẶT TẬN TÌNH (Rule 4) */}
               <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
                 <div className="border-b border-slate-800 pb-3">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
                     <User className="w-4 h-4 text-sky-400" />
-                    ĐĂNG KÝ TƯ VẤN & BÁO GIÁ ƯU ĐÃI SƯ PHẠM (RULE 4)
+                    ĐĂNG KÝ TƯ VẤN & HỖ TRỢ CÀI ĐẶT TẬN TÌNH SƯ PHẠM (RULE 4)
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
-                    Thầy/Cô vui lòng gửi thông tin để Tác giả Đinh Thành gửi báo giá ưu đãi sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
+                    Thầy/Cô vui lòng gửi thông tin để Tác giả Đinh Thành gửi hỗ trợ cài đặt & đồng hành sư phạm tốt nhất và hỗ trợ cài đặt tận tình.
                   </p>
                 </div>
 

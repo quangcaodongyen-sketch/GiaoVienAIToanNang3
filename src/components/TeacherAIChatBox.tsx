@@ -107,7 +107,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
     {
       id: 'welcome-msg',
       sender: 'bot',
-      text: '👋 Dạ kính chào Thầy/Cô! Em là Trợ lý AI của Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên).\n\nEm sẵn sàng hỗ trợ Thầy/Cô:\n• Lấy link tải & mở phần mềm Tạo Đề theo môn (Toán, Tiếng Anh, KHTN, Văn, Sử, Địa, Tin...)\n• Tải bộ 10 đề Giữa kỳ 1 Lớp 9 chuẩn tập huấn 2026-2027\n• Hướng dẫn lấy Mã máy tính & Kích hoạt bản quyền Ed25519\n• Giải đáp mọi thắc mắc kỹ thuật & kết nối trực tiếp với Thầy Thành qua Zalo 0915.213717.\n\nThầy/Cô cần hỗ trợ nội dung gì ạ?',
+      text: '👋 Dạ kính chào Thầy/Cô! Em là Trợ lý AI của Thầy giáo Đinh Văn Thành (Trường THCS Đồng Yên).\n\nEm sẵn sàng hỗ trợ Thầy/Cô:\n• Lấy link tải & mở phần mềm Tạo Đề theo môn (Toán, Tiếng Anh, KHTN, Văn, Sử, Địa, Tin...)\n• Tải bộ 10 đề Giữa kỳ 1 Lớp 9 chuẩn tập huấn 2026-2027\n• Hướng dẫn lấy Mã máy tính & Hỗ trợ cài đặt phần mềm Ed25519\n• Giải đáp mọi thắc mắc kỹ thuật & kết nối trực tiếp với Thầy Thành qua Zalo 0915.213717.\n\nThầy/Cô cần hỗ trợ nội dung gì ạ?',
       timestamp: 'Vừa xong',
       actions: [
         { label: '📐 Tạo Đề Toán THCS (Mới nhất)', actionType: 'open-modal', appId: 'tao-de-toan-thcs', subjectKey: 'TOAN', primary: true },
@@ -497,7 +497,7 @@ export const TeacherAIChatBox: React.FC<TeacherAIChatBoxProps> = ({ onOpenApp })
               </button>
             </div>
             <p className="text-slate-200 text-[11px] leading-relaxed">
-              👋 <strong>Kính chào Thầy/Cô!</strong> Cần lấy link tải phần mềm Tạo Đề môn gì hay kích hoạt bản quyền, em gửi ngay nhé!
+              👋 <strong>Kính chào Thầy/Cô!</strong> Cần lấy link tải phần mềm Tạo Đề môn gì hay hỗ trợ cài đặt phần mềm, em gửi ngay nhé!
             </p>
             <div className="mt-2 flex items-center gap-1.5">
               <button

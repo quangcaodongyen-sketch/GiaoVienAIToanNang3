@@ -159,7 +159,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
       return;
     }
     if (!phoneNumber.trim()) {
-      setErrorMessage('Vui lòng nhập Số điện thoại hoặc Zalo để Admin kích hoạt.');
+      setErrorMessage('Vui lòng nhập Số điện thoại hoặc Zalo để Thầy Thành hỗ trợ cài đặt.');
       return;
     }
 
@@ -216,7 +216,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
     `• Ứng dụng đăng ký: ${selectedAppName}\n` +
     `• Gói đăng ký: ${getPackageLabel(selectedPackage)}\n` +
     `----------------------------------------\n` +
-    `Kính nhờ Thầy duyệt và kích hoạt bản quyền trực tuyến cho ứng dụng này giúp em. Em xin cảm ơn Thầy!`
+    `Kính nhờ Thầy duyệt và hỗ trợ cài đặt và đồng hành trực tiếp cho ứng dụng này giúp em. Em xin cảm ơn Thầy!`
   );
 
   return (
@@ -242,7 +242,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
             Mở Khóa Phiên Bản Nâng Cao
           </h3>
           <p className="text-xs text-slate-300 mt-1">
-            Thầy/Cô chọn ứng dụng cụ thể có nhu cầu sử dụng và gửi thông tin cho Admin Tác giả Đinh Thành để kích hoạt Pro trực tuyến.
+            Thầy/Cô chọn ứng dụng cụ thể có nhu cầu sử dụng và gửi thông tin cho Admin Tác giả Đinh Thành để được hỗ trợ cài đặt và trải nghiệm đầy đủ tính năng.
           </p>
         </div>
 
@@ -255,7 +255,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 <div className="space-y-1">
                   <p className="font-bold text-emerald-300 text-base">Đã gửi đơn đăng ký thành công!</p>
                   <p className="text-xs text-emerald-200/90 leading-relaxed">
-                    Thông tin của Thầy/Cô đã được cập nhật lên hệ thống Cloud. Admin Tác giả Đinh Thành sẽ duyệt và kích hoạt trực tuyến đúng ứng dụng Thầy/Cô đã chọn.
+                    Thông tin của Thầy/Cô đã được cập nhật lên hệ thống Cloud. Admin Tác giả Đinh Thành sẽ kết nối và hỗ trợ cài đặt trực tiếp đúng ứng dụng Thầy/Cô đã chọn.
                   </p>
                   <div className="mt-2.5 p-3 rounded-lg bg-slate-950/80 border border-emerald-500/30 text-xs space-y-1.5">
                     <div><strong>Họ và tên:</strong> <span className="text-white">{submittedData.fullName}</span></div>
@@ -300,7 +300,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 </div>
               )}
 
-              {/* 1. Chọn Ứng Dụng Cần Kích Hoạt */}
+              {/* 1. Chọn Ứng Dụng Cần Hỗ TrỢ Cài Đặt */}
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1 flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-blue-400" />
@@ -321,7 +321,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                 </div>
                 <div className="mt-1 text-[11px] text-slate-400 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
-                  <span>Kích hoạt độc lập cho từng ứng dụng chuyên môn của Thầy/Cô.</span>
+                  <span>Hỗ trợ cài đặt độc lập cho từng ứng dụng chuyên môn của Thầy/Cô.</span>
                 </div>
               </div>
 
@@ -329,7 +329,7 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
                   <CalendarCheck className="w-3.5 h-3.5 text-amber-400" />
-                  Chọn Gói thời hạn kích hoạt: <span className="text-red-400">*</span>
+                  Chọn Thời gian đồng hành & hỗ trợ: <span className="text-red-400">*</span>
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -458,12 +458,12 @@ export const TrialRegisterModal: React.FC<TrialRegisterModalProps> = ({
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{isSubmitting ? 'ĐANG GỬI...' : 'GỬI ĐĂNG KÝ KÍCH HOẠT CHO ADMIN'}</span>
+                  <span>{isSubmitting ? 'ĐANG GỬI...' : 'GỬI YÊU CẦU HỖ TRỢ CÀI ĐẶT'}</span>
                 </button>
               </div>
 
               <p className="text-[11px] text-slate-400 text-center pt-1">
-                Admin Tác giả Đinh Thành (0915.213717) duyệt và kích hoạt trực tuyến theo đúng ứng dụng đã chọn.
+                Admin Tác giả Đinh Thành (0915.213717) kết nối và hỗ trợ cài đặt trực tiếp theo đúng ứng dụng đã chọn.
               <p className="text-[10px] text-slate-500 italic text-center pt-2 border-t border-slate-800/80 leading-relaxed">
                 * Cam kết miễn nhiệm: Toàn bộ ứng dụng và tài liệu mang tính chất tham khảo, hỗ trợ giáo viên trong công tác soạn giảng. Mọi nội dung do AI gợi ý cần được giáo viên rà soát, thẩm định trước khi áp dụng. Tác giả không chịu trách nhiệm đối với việc sử dụng nguyên văn vào thực tế giảng dạy.
               </p>

@@ -188,7 +188,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
     if (!isProActive) {
       const remaining = await getSecureBientheTrialRemaining(hardwareCode);
       if (remaining <= 0) {
-        setErrorMessage("Bạn đã dùng hết 5 lượt tạo thử nghiệm trên thiết bị này. Vui lòng kích hoạt Bản Quyền Pro để tiếp tục!");
+        setErrorMessage("Bạn đã dùng hết 5 lượt tạo thử nghiệm trên thiết bị này. Vui lòng hỗ trợ cài đặt bản Pro đầy đủ để tiếp tục!");
         setActiveTab("license");
         return;
       }
@@ -251,7 +251,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
 
     const key = licenseInputKey.trim().toUpperCase();
     if (!key) {
-      setActivationError("Vui lòng nhập mã kích hoạt Pro!");
+      setActivationError("Vui lòng nhập mã hỗ trợ cài đặt Pro!");
       return;
     }
 
@@ -421,7 +421,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                     BẢN XEM TRƯỚC & DÙNG THỬ CÔNG NGHỆ SINH ĐỀ BIẾN THỂ AI
                   </div>
                   <p className="text-slate-300 mt-1 leading-relaxed">
-                    Chức năng trên web dùng thử giới hạn 5 lượt. Để phân tích toàn diện ma trận đề thi không giới hạn, sinh 3 đề biến thể tương đương và xuất tệp Word .docx chuẩn in ấn cho máy tính của Thầy/Cô, vui lòng tải phần mềm Desktop và kích hoạt bản quyền Pro.
+                    Chức năng trên web dùng thử giới hạn 5 lượt. Để phân tích toàn diện ma trận đề thi không giới hạn, sinh 3 đề biến thể tương đương và xuất tệp Word .docx chuẩn in ấn cho máy tính của Thầy/Cô, vui lòng tải phần mềm Desktop và hỗ trợ cài đặt bản Pro đầy đủ.
                   </p>
                 </div>
               </div>
@@ -646,7 +646,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                 {!isProActive && trialRemaining <= 0 ? (
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt sinh 3 đề biến thể VIP V1 (Mã máy: ${hardwareCode}). Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt Pro giúp nhé!`
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt sinh 3 đề biến thể VIP V1 (Mã máy: ${hardwareCode}). Xin Thầy hỗ trợ cài đặt tận tình và hướng dẫn tôi hỗ trợ cài đặt Pro giúp nhé!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1033,7 +1033,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Tác giả Đinh Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key kích hoạt Pro.
+                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Tác giả Đinh Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key hỗ trợ cài đặt Pro.
               </p>
             </div>
 
@@ -1062,7 +1062,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                     className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
                   >
                     <Unlock className="w-4 h-4" />
-                    KÍCH HOẠT BẢN QUYỀN PRO NGAY
+                    KẾT NỐI HỖ TRỢ CÀI ĐẶT PHẦN MỀM
                   </button>
 
                   <a
@@ -1114,7 +1114,7 @@ export const SinhDeBienTheModal: React.FC<SinhDeBienTheModalProps> = ({
                     <span className="text-[10px] text-amber-400 font-semibold">Ưu Đãi Sư Phạm</span>
                   </div>
                   <h4 className="text-base sm:text-lg font-black text-white mt-1">
-                    Báo Giá Ưu Đãi & Tư Vấn Chi Tiết Theo Nhu Cầu
+                    Kết Nối Hỗ Trợ Cài Đặt & Đồng Hành Sư Phạm
                   </h4>
                 </div>
                 <div className="text-left sm:text-right shrink-0">

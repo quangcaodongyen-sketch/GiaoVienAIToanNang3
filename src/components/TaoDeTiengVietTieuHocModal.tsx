@@ -81,7 +81,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
     if (!isOpen) return;
     syncBrowserHash('#taode-tiengviet-tieuhoc');
 
-    // Lấy số lượt dùng thử còn lại
+    // Lấy số lượt trải nghiệm còn lại
     const rem = getExamTVTHTrialRemaining();
     setTrialCount(rem);
 
@@ -114,7 +114,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
 
   const handleGenerateExam = () => {
     if (!isProActive && trialCount <= 0) {
-      alert('Thầy/Cô đã hết 5 lượt dùng thử trải nghiệm miễn phí! Vui lòng liên hệ Admin Thầy Thành Zalo 0915.213717 để nâng cấp bản quyền Pro.');
+      alert('Thầy/Cô đã hết 5 lượt trải nghiệm trải nghiệm miễn phí! Vui lòng liên hệ Admin Thầy Thành Zalo 0915.213717 để nâng cấp bản quyền Pro.');
       setActiveTab('register');
       return;
     }
@@ -132,7 +132,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
   };
 
   const handleExportDocx = () => {
-    alert("Tính năng tạo đề kiểm tra Tiếng Việt và xuất file Word chuẩn hoạt động trên phần mềm máy tính PC.\n\nThầy/Cô vui lòng tải bộ cài đặt máy tính (.exe / .zip) để dùng thử và liên hệ Zalo 0915.213717 để kích hoạt bản quyền Pro!");
+    alert("Tính năng tạo đề kiểm tra Tiếng Việt và xuất file Word chuẩn hoạt động trên phần mềm máy tính PC.\n\nThầy/Cô vui lòng tải bộ cài đặt máy tính (.exe / .zip) để dùng thử và liên hệ Zalo 0915.213717 để hỗ trợ cài đặt bản Pro đầy đủ!");
     setActiveTab('download');
   };
 
@@ -267,7 +267,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                   {/* Thanh Tiến trình 5 chấm dùng thử */}
                   {!isProActive && (
                     <div className="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
-                      <span className="text-xs text-slate-400">Lượt dùng thử:</span>
+                      <span className="text-xs text-slate-400">Lượt trải nghiệm:</span>
                       <div className="flex items-center gap-1 text-xs">
                         {[1, 2, 3, 4, 5].map((idx) => (
                           <span key={idx} className={idx <= trialCount ? 'text-rose-400 font-bold' : 'text-slate-600'}>
@@ -713,13 +713,13 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                 </div>
               </div>
 
-              {/* BẢNG TƯ VẤN BÁO GIÁ ƯU ĐÃI SƯ PHẠM VÀ LIÊN HỆ ZALO THẦY THÀNH */}
+              {/* BẢNG TƯ VẤN HỖ TRỢ CÀI ĐẶT TẬN TÌNH SƯ PHẠM VÀ LIÊN HỆ ZALO THẦY THÀNH */}
               <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-rose-950/30 to-slate-900 border border-amber-500/30 space-y-3 text-center">
                 <h4 className="font-bold text-base text-amber-300">
-                  NHẬN BÁO GIÁ ƯU ĐÃI SƯ PHẠM &amp; KÍCH HOẠT QUA ZALO
+                  KẾT NỐI ZALO HỖ TRỢ CÀI ĐẶT &amp; ĐỒNG HÀNH CHUYÊN MÔN
                 </h4>
                 <p className="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed">
-                  Liên hệ Admin Thầy Thành để nhận tư vấn, báo giá ưu đãi sư phạm phù hợp các gói 1 Năm, 2 Năm hoặc VIP Trọn Đời qua Zalo:
+                  Liên hệ Admin Thầy Thành để nhận tư vấn, hỗ trợ cài đặt & đồng hành sư phạm phù hợp các gói 1 Năm, 2 Năm hoặc VIP Trọn Đời qua Zalo:
                 </p>
 
                 <a
@@ -729,7 +729,7 @@ export const TaoDeTiengVietTieuHocModal: React.FC<TaoDeTiengVietTieuHocModalProp
                     `• Họ tên GV: ${regName || 'Giáo viên Tiểu học'}\n` +
                     `• Mã máy (ID): ${detectedMid}\n` +
                     `----------------------------------------\n` +
-                    `Kính nhờ Thầy tư vấn báo giá ưu đãi sư phạm và kích hoạt bản quyền giúp em!`
+                    `Kính nhờ Thầy tư vấn hỗ trợ cài đặt & đồng hành sư phạm và hỗ trợ cài đặt phần mềm giúp em!`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

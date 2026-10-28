@@ -232,11 +232,11 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
   const handleStartRecording = async () => {
     setRecordError("");
 
-    // Kiểm tra lượt dùng thử
+    // Kiểm tra lượt trải nghiệm
     if (!isProActive) {
       const rem = await getSecureRecordTrialRemaining(hardwareCode);
       if (rem <= 0) {
-        setRecordError("Thầy Cô đã sử dụng hết 5 lượt quay thử nghiệm trên thiết bị này. Vui lòng kích hoạt Bản Quyền Pro để ghi hình không giới hạn!");
+        setRecordError("Thầy Cô đã sử dụng hết 5 lượt quay thử nghiệm trên thiết bị này. Vui lòng hỗ trợ cài đặt bản Pro đầy đủ để ghi hình không giới hạn!");
         setActiveTab("license");
         return;
       }
@@ -347,7 +347,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
         setIsPaused(false);
         stopAllTracks();
 
-        // Trừ 1 lượt dùng thử
+        // Trừ 1 lượt trải nghiệm
         if (!isProActive) {
           const nextRem = await consumeSecureRecordTrial(hardwareCode);
           setTrialRemaining(nextRem);
@@ -476,7 +476,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
 
     const key = licenseInputKey.trim().toUpperCase();
     if (!key) {
-      setActivationError("Vui lòng nhập mã kích hoạt Pro!");
+      setActivationError("Vui lòng nhập mã hỗ trợ cài đặt Pro!");
       return;
     }
 
@@ -770,7 +770,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Tác giả Đinh Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key kích hoạt Pro.
+                👉 Hãy sao chép Mã máy tính trên và gửi qua Zalo cho Tác giả Đinh Thành (<strong className="text-white">{BRAND.phone}</strong>) để nhận Key hỗ trợ cài đặt Pro.
               </p>
             </div>
 
@@ -799,7 +799,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
                     className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 cursor-pointer"
                   >
                     <Unlock className="w-4 h-4" />
-                    KÍCH HOẠT BẢN QUYỀN PRO NGAY
+                    KẾT NỐI HỖ TRỢ CÀI ĐẶT PHẦN MỀM
                   </button>
 
                   <a
@@ -841,7 +841,7 @@ export const ScreenRecordModal: React.FC<ScreenRecordModalProps> = ({
               </h4>
 
               <p className="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed">
-                Để phục vụ phù hợp nhất với nhu cầu sử dụng của từng Thầy/Cô (Gói 1 năm cá nhân, 2 năm tiết kiệm hoặc Gói Trọn Đời VIP), kính mời Thầy/Cô liên hệ trực tiếp qua Zalo của <strong>Thầy giáo {BRAND.author}</strong> để được tư vấn gói phù hợp và nhận báo giá ưu đãi sư phạm tốt nhất.
+                Để phục vụ phù hợp nhất với nhu cầu sử dụng của từng Thầy/Cô (Gói 1 năm cá nhân, 2 năm tiết kiệm hoặc Gói Trọn Đời VIP), kính mời Thầy/Cô liên hệ trực tiếp qua Zalo của <strong>Thầy giáo {BRAND.author}</strong> để được tư vấn gói phù hợp và nhận hỗ trợ cài đặt & đồng hành sư phạm tốt nhất.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">

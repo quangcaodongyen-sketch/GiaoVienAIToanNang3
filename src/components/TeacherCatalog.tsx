@@ -314,9 +314,9 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                 <th className="py-3 px-3 min-w-[200px]">Tên Phần Mềm & Ứng Dụng</th>
                 <th className="py-3 px-3 min-w-[120px]">Cấp Học / Môn</th>
                 <th className="py-3 px-3 min-w-[250px]">Chức Năng Chính</th>
-                <th className="py-3 px-3 text-center min-w-[130px]">Dùng Thử Trực Tuyến</th>
-                <th className="py-3 px-3 text-center min-w-[180px]">Tải Bộ Cài Miễn Phí</th>
-                <th className="py-3 px-3 text-center min-w-[140px]">Bản Quyền Pro</th>
+                <th className="py-3 px-3 text-center min-w-[130px]">Trải Nghiệm Trực Tuyến</th>
+                <th className="py-3 px-3 text-center min-w-[170px]">Tải Bộ Cài Đặt</th>
+                <th className="py-3 px-3 text-center min-w-[150px]">Hỗ Trợ Cài Đặt</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -378,10 +378,10 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                         <button
                           onClick={() => onOpenAppModal(app)}
                           className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-xs font-bold transition shadow-2xs cursor-pointer active:scale-95"
-                          title="Trải nghiệm thử 5 lượt miễn phí"
+                          title="Bấm để trải nghiệm trực tuyến ngay"
                         >
                           <Sparkles className="w-3 h-3 text-cyan-600 animate-pulse" />
-                          <span>Dùng thử Online</span>
+                          <span>Trải nghiệm Online</span>
                         </button>
                       </td>
 
@@ -394,7 +394,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-95 cursor-pointer"
-                              title="Tải bộ cài đặt 2-in-1 bản quyền (Pass giải nén: 123) - 100% không bị chặn nhầm virus"
+                              title="Tải bộ cài đặt 2-in-1 (Pass giải nén: 123) - 100% không bị chặn nhầm virus"
                             >
                               <Download className="w-3.5 h-3.5 text-blue-100 shrink-0" />
                               <span>Tải Bộ Cài (.zip)</span>
@@ -415,23 +415,23 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                               onClick={() => onOpenAppModal(app)}
                               className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 text-xs hover:bg-blue-100 font-bold border border-blue-200 cursor-pointer"
                             >
-                              <span>Dùng Online</span>
+                              <span>Trải nghiệm Online</span>
                             </button>
                           )}
                         </div>
                       </td>
 
-                      {/* NÂNG CẤP BẢN QUYỀN PRO */}
+                      {/* HỖ TRỢ CÀI ĐẶT QUA ZALO */}
                       <td className="py-3 px-3 text-center">
                         <a
                           href={BRAND.zaloUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 text-xs font-bold transition shadow-2xs"
-                          title="Liên hệ Thầy Thành qua Zalo để nhận báo giá ưu đãi sư phạm"
+                          title="Nhắn tin Zalo Thầy Đinh Thành để được hướng dẫn hỗ trợ cài đặt tận tình"
                         >
                           <MessageCircle className="w-3 h-3 text-emerald-600" />
-                          <span>Zalo Kích Hoạt</span>
+                          <span>Zalo hỗ trợ cài đặt</span>
                         </a>
                       </td>
                     </tr>

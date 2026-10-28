@@ -162,7 +162,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
       const code = getOrCreateMathStudioHardwareCode();
       setDetectedMid(code);
 
-      // Đọc số lượt dùng thử còn lại trên máy (mặc định 5 lượt)
+      // Đọc số lượt trải nghiệm còn lại trên máy (mặc định 5 lượt)
       const savedTrials = localStorage.getItem('gvai_mathstudio_trial_remaining');
       if (savedTrials !== null) {
         const parsed = parseInt(savedTrials, 10);
@@ -193,7 +193,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
           const res = verifyKeyFormat(savedKey, code);
           if (res.isValid || savedKey.includes('APPROVED')) {
             setIsProActive(true);
-            setVerifyResult(res.isValid ? res : { isValid: true, message: 'Đã kích hoạt bản quyền Pro từ Cloud' });
+            setVerifyResult(res.isValid ? res : { isValid: true, message: 'Đã hỗ trợ cài đặt bản Pro đầy đủ từ Cloud' });
           }
         }
       }
@@ -206,7 +206,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
       if (trialRemaining <= 0) {
         alert(
           'Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí MathStudio trên máy tính này!\n\n' +
-          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để kích hoạt bản quyền Pro hoặc liên hệ Tác giả Đinh Thành (0915.213717).'
+          'Quý Thầy/Cô vui lòng chuyển sang Tab "Bản Quyền & Kích Hoạt" để hỗ trợ cài đặt bản Pro đầy đủ hoặc liên hệ Tác giả Đinh Thành (0915.213717).'
         );
         setActiveTab('register');
         return;
@@ -252,7 +252,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
 
   // Tải file Word mẫu chứa công thức toán (.doc format OpenXML)
   const handleDownloadWordDoc = () => {
-    alert(`⚠️ TÍNH NĂNG CHÈN CÔNG THỨC TOÁN WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH & ADD-IN WORD\n\nĐể đảm bảo công thức hiển thị dạng Office Math chuẩn xác và tự động chèn vào Word, tính năng này được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    alert(`⚠️ TÍNH NĂNG CHÈN CÔNG THỨC TOÁN WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH & ADD-IN WORD\n\nĐể đảm bảo công thức hiển thị dạng Office Math chuẩn xác và tự động chèn vào Word, tính năng này được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về cài đặt trải nghiệm trên máy tính.`);
     setActiveTab('download');
   };
 
@@ -951,7 +951,7 @@ export const MathStudioModal: React.FC<MathStudioModalProps> = ({ isOpen, onClos
 • Trường: ${regSchool}
 • Mã máy: ${detectedMid}
 • Gói: ${regPlan === 'LIFETIME' ? 'VIP Trọn Đời' : regPlan === '2YEAR' ? 'Gói 2 Năm' : 'Gói 1 Năm'}
-Kính nhờ Thầy kích hoạt bản quyền giúp em!`
+Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"

@@ -86,7 +86,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
       setIsProActive(true);
     }
 
-    // Đọc số lượt dùng thử từ localStorage
+    // Đọc số lượt trải nghiệm từ localStorage
     const savedTrial = localStorage.getItem('gvai_taode_thpt_trial_remaining');
     if (savedTrial !== null) {
       setTrialRemaining(parseInt(savedTrial, 10));
@@ -113,7 +113,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
     if (res.isValid) {
       setIsProActive(true);
       localStorage.setItem('gvai_taode_thpt_is_pro_active', 'true');
-      setVerifyResult({ isValid: true, message: '🎉 Kích hoạt Bản quyền Pro THPT thành công! Thầy/Cô có thể tạo đề không giới hạn.' });
+      setVerifyResult({ isValid: true, message: '🎉 Hỗ trợ cài đặt phần mềm Pro THPT thành công! Thầy/Cô có thể tạo đề không giới hạn.' });
     } else {
       setVerifyResult(res);
     }
@@ -744,7 +744,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
               </div>
             )}
 
-            {/* BÁO HẾT LƯỢT DÙNG THỬ */}
+            {/* BÁO HOÀN THÀNH LƯỢT TRẢI NGHIỆM */}
             {!isProActive && trialRemaining <= 0 && (
               <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                 <div>
@@ -752,7 +752,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
                     Thầy/Cô đã dùng hết 5 lượt trải nghiệm miễn phí trên máy này!
                   </h5>
                   <p className="text-xs text-slate-400">
-                    Vui lòng bấm sang Tab "Bản Quyền &amp; Kích Hoạt" để kích hoạt bản quyền Pro sử dụng không giới hạn.
+                    Vui lòng bấm sang Tab "Bản Quyền &amp; Kích Hoạt" để hỗ trợ cài đặt bản Pro đầy đủ sử dụng không giới hạn.
                   </p>
                 </div>
                 <button
@@ -885,7 +885,7 @@ export const TaoDeTiengAnhTHPTModal: React.FC<TaoDeTiengAnhTHPTModalProps> = ({ 
               <div className="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-4">
                 <h4 className="text-sm font-bold text-white uppercase tracking-wide text-amber-400 flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5" />
-                  <span>Kích Hoạt Bản Quyền Pro THPT</span>
+                  <span>Hỗ Trợ Cài Đặt Phần Mềm Pro THPT</span>
                 </h4>
 
                 <div>

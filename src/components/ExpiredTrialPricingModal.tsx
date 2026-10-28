@@ -137,13 +137,13 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
         <div className="p-5 bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border-b border-slate-800">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-bold mb-1.5">
             <Crown className="w-3.5 h-3.5 text-amber-400" />
-            MỞ KHÓA BẢN ĐẦY ĐỦ (ĐỒNG HÀNH CÙNG TÁC GIẢ)
+            HỖ TRỢ CÀI ĐẶT (ĐỒNG HÀNH CÙNG TÁC GIẢ)
           </div>
           <h3 className="text-lg font-bold text-white">
             {appName}
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Điền thông tin gửi Admin Tác giả Đinh Thành để kích hoạt trực tuyến theo năm.
+            Điền thông tin gửi Tác giả Thầy Đinh Thành để được hỗ trợ hướng dẫn cài đặt và đồng hành theo năm học.
           </p>
         </div>
 
@@ -156,7 +156,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
                 <div>
                   <p className="font-bold text-emerald-300 text-base">Đã gửi thông tin cho Admin thành công!</p>
                   <p className="text-xs text-emerald-200/90 mt-1">
-                    Admin Tác giả Đinh Thành đã nhận được thông tin để duyệt và kích hoạt trực tuyến theo năm cho Thầy/Cô.
+                    Tác giả Thầy Đinh Thành đã nhận được thông tin và sẽ kết nối hỗ trợ cài đặt trực tiếp cho Thầy/Cô.
                   </p>
                 </div>
               </div>
@@ -262,7 +262,7 @@ export const ExpiredTrialPricingModal: React.FC<ExpiredTrialPricingModalProps> =
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-[0.98] cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{isSubmitting ? 'ĐANG GỬI...' : 'GỬI CHO ADMIN ĐỂ KÍCH HOẠT THEO NĂM'}</span>
+                  <span>{isSubmitting ? 'ĐANG GỬI...' : 'GỬI YÊU CẦU ĐỂ ĐƯỢC HỖ TRỢ CÀI ĐẶT & ĐỒNG HÀNH'}</span>
                 </button>
               </div>
 

@@ -77,7 +77,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
       setIsProActive(true);
     }
 
-    // Đọc số lượt dùng thử từ localStorage (Chuẩn 3 lần/môn)
+    // Đọc số lượt trải nghiệm từ localStorage (Chuẩn 3 lần/môn)
     const savedTrial = localStorage.getItem('gvai_taode_toan_thpt_trial_remaining');
     if (savedTrial !== null) {
       setTrialRemaining(parseInt(savedTrial, 10));
@@ -104,7 +104,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
     if (res.isValid) {
       setIsProActive(true);
       localStorage.setItem('gvai_taode_toan_thpt_is_pro_active', 'true');
-      setVerifyResult({ isValid: true, message: '🎉 Kích hoạt Bản quyền Pro Toán THPT thành công! Thầy/Cô có thể tạo đề không giới hạn.' });
+      setVerifyResult({ isValid: true, message: '🎉 Hỗ trợ cài đặt phần mềm Pro Toán THPT thành công! Thầy/Cô có thể tạo đề không giới hạn.' });
     } else {
       setVerifyResult(res);
     }
@@ -112,7 +112,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
 
   const handleGenerateExamOnline = () => {
     if (!isProActive && trialRemaining <= 0) {
-      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt dùng thử môn Toán THPT!\n\nVui lòng kích hoạt Bản quyền Pro để sử dụng không giới hạn và xem đầy đủ 100% đáp án.');
+      alert('⚠️ Thầy/Cô đã dùng hết 3 lượt trải nghiệm môn Toán THPT!\n\nVui lòng hỗ trợ cài đặt bản Pro đầy đủ để sử dụng không giới hạn và xem đầy đủ 100% đáp án.');
       setActiveTab('register');
       return;
     }
@@ -412,7 +412,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       </>
                     ) : !isProActive && trialRemaining <= 0 ? (
                       <>
-                        <Lock className="w-4 h-4 text-amber-400" /> Hết 3 lượt dùng thử – Nâng cấp Pro
+                        <Lock className="w-4 h-4 text-amber-400" /> Hết 3 lượt trải nghiệm – Nâng cấp Pro
                       </>
                     ) : (
                       <>
@@ -729,7 +729,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                       Mã Phần Cứng Máy Tính Của Thầy/Cô (Hardware Code)
                     </h5>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Gửi mã này qua Zalo <span className="font-bold text-blue-300">0915.213717</span> để Thầy Thành kích hoạt bản quyền Pro.
+                      Gửi mã này qua Zalo <span className="font-bold text-blue-300">0915.213717</span> để Thầy Thành hỗ trợ cài đặt bản Pro đầy đủ.
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -786,7 +786,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
               <div className="space-y-3">
                 <h5 className="font-bold text-white text-sm flex items-center gap-2">
                   <Crown className="w-4 h-4 text-amber-400" />
-                  Các Gói Bản Quyền Sư Phạm (Liên hệ Zalo để nhận báo giá ưu đãi)
+                  Các Gói Bản Quyền Sư Phạm (Liên hệ Zalo để nhận hỗ trợ cài đặt tận tình)
                 </h5>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -798,7 +798,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                         Sử dụng trọn vẹn 1 năm học (12 tháng). Đầy đủ tính năng tạo đề Toán 10, 11, 12 theo cấu trúc mới.
                       </p>
                       <div className="pt-2 text-xs font-bold text-blue-400">
-                        Báo giá ưu đãi sư phạm qua Zalo
+                        Hỗ trợ cài đặt & đồng hành sư phạm qua Zalo
                       </div>
                     </div>
                     <a
@@ -819,7 +819,7 @@ export const TaoDeToanTHPTModal: React.FC<TaoDeToanTHPTModalProps> = ({ isOpen, 
                         Sử dụng 2 năm học (24 tháng). Tự động cập nhật ngân hàng câu hỏi và tính năng mới miễn phí.
                       </p>
                       <div className="pt-2 text-xs font-bold text-indigo-400">
-                        Báo giá ưu đãi sư phạm qua Zalo
+                        Hỗ trợ cài đặt & đồng hành sư phạm qua Zalo
                       </div>
                     </div>
                     <a

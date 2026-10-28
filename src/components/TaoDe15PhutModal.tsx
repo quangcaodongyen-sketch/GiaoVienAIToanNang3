@@ -390,7 +390,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                     {detectedMid || 'DVT-15M-8899-AABB'}
                   </div>
                   <p className="text-xs text-slate-400 mt-1">
-                    Gửi mã này cho Tác giả Đinh Thành để nhận Khóa kích hoạt bản quyền.
+                    Gửi mã này cho Tác giả Đinh Thành để nhận Khóa hỗ trợ cài đặt phần mềm.
                   </p>
                 </div>
 
@@ -511,7 +511,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
               {/* Ô kích hoạt Key */}
               <div className="p-5 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-4">
                 <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                  <Crown className="w-4 h-4 text-amber-400" /> Kích hoạt Bản Quyền Pro:
+                  <Crown className="w-4 h-4 text-amber-400" /> Hỗ trợ cài đặt phần mềm Pro:
                 </h4>
                 <form onSubmit={handleActivateKey} className="flex flex-col sm:flex-row gap-3">
                   <input
@@ -572,7 +572,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
               </div>
 
               <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center text-xs text-amber-300">
-                ⭐ <b>Chính sách sư phạm:</b> Liên hệ Admin Thầy Thành để kích hoạt bản quyền Pro & nhận báo giá ưu đãi sư phạm qua Zalo: <b>0915.213717</b>.
+                ⭐ <b>Chính sách sư phạm:</b> Liên hệ Admin Thầy Thành để hỗ trợ cài đặt bản Pro đầy đủ & nhận hỗ trợ cài đặt & đồng hành sư phạm qua Zalo: <b>0915.213717</b>.
               </div>
             </div>
           )}
@@ -592,7 +592,7 @@ export const TaoDe15PhutModal: React.FC<TaoDe15PhutModalProps> = ({
                       BẢN XEM TRƯỚC MẪU CẤU TRÚC ĐỀ 15 PHÚT (GLOBAL SUCCESS)
                     </div>
                     <p className="text-slate-300 mt-1 leading-relaxed">
-                      Chức năng trên web chỉ phục vụ xem trước cấu trúc mẫu. Để tạo và xuất file Word .docx tự động cho toàn bộ 48 Units (Lớp 6, 7, 8, 9), tự động hoán vị câu hỏi và sinh cặp mã đối xứng, Thầy/Cô vui lòng tải phần mềm về máy tính và kích hoạt bản quyền Pro.
+                      Chức năng trên web chỉ phục vụ xem trước cấu trúc mẫu. Để tạo và xuất file Word .docx tự động cho toàn bộ 48 Units (Lớp 6, 7, 8, 9), tự động hoán vị câu hỏi và sinh cặp mã đối xứng, Thầy/Cô vui lòng tải phần mềm về máy tính và hỗ trợ cài đặt bản Pro đầy đủ.
                     </p>
                   </div>
                 </div>

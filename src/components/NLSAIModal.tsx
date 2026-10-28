@@ -175,7 +175,7 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
   const [verifyResult, setVerifyResult] = useState<{ isValid: boolean; message: string } | null>(null);
   const [isProActive, setIsProActive] = useState<boolean>(false);
 
-  // Hệ thống 5 lượt dùng thử miễn phí / máy tính
+  // Hệ thống 5 lượt trải nghiệm miễn phí / máy tính
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
 
   // Form đăng ký
@@ -193,7 +193,7 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
       const code = getOrCreateNLSHardwareCode();
       setDetectedMid(code);
 
-      // Đọc số lượt dùng thử còn lại trên máy (tối đa 5 lượt/máy tính)
+      // Đọc số lượt trải nghiệm còn lại trên máy (tối đa 5 lượt/máy tính)
       const savedTrials = localStorage.getItem('gvai_nls_trial_remaining');
       if (savedTrials !== null) {
         const parsed = parseInt(savedTrials, 10);
@@ -276,11 +276,11 @@ export const NLSAIModal: React.FC<NLSAIModalProps> = ({ isOpen, onClose, onOpenA
     // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActive) {
       if (trialRemaining <= 0) {
-        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tích hợp NLS miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
+        alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm tích hợp NLS miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận hỗ trợ cài đặt & đồng hành sư phạm và hỗ trợ cài đặt phần mềm tiếp tục sử dụng không giới hạn.');
         setActiveTab('register');
         return;
       }
-      // Trừ 1 lượt dùng thử (tối thiểu 0)
+      // Trừ 1 lượt trải nghiệm (tối thiểu 0)
       const nextRemaining = Math.max(0, trialRemaining - 1);
       setTrialRemaining(nextRemaining);
       localStorage.setItem('gvai_nls_trial_remaining', String(nextRemaining));
@@ -557,7 +557,7 @@ ${exportDisabilityProc}
             <td>
               <p style="color: #DC2626; font-weight: bold; font-size: 12pt; margin: 0 0 6pt 0;">🔒 [ĐÃ HẾT HẠN MỨC DÙNG THỬ 2 TRANG ĐẦU CỦA GIÁO ÁN]</p>
               <p style="color: #475569; font-size: 10.5pt; margin: 0 0 6pt 0;">Các hoạt động tiếp theo (3. Luyện tập, 4. Vận dụng) và phụ lục học liệu số được khóa trong bản dùng thử.</p>
-              <p style="color: #1E3A8A; font-weight: bold; font-size: 11pt; margin: 0;">Quý Thầy/Cô vui lòng liên hệ Zalo Tác giả Đinh Thành (<b>0915.213717</b>) để kích hoạt bản quyền Pro mở khóa 100% giáo án dài không giới hạn số trang!</p>
+              <p style="color: #1E3A8A; font-weight: bold; font-size: 11pt; margin: 0;">Quý Thầy/Cô vui lòng liên hệ Zalo Tác giả Đinh Thành (<b>0915.213717</b>) để hỗ trợ cài đặt bản Pro đầy đủ mở khóa 100% giáo án dài không giới hạn số trang!</p>
             </td>
           </tr>
         </table>
@@ -991,7 +991,7 @@ ${exportDisabilityProc}
 • SĐT/Zalo: ${regPhone}
 • Trường: ${regSchool}
 • Mã máy: ${detectedMid}
-Kính nhờ Thầy kích hoạt bản quyền 1 năm giúp em!`
+Kính nhờ Thầy hỗ trợ cài đặt phần mềm 1 năm giúp em!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"

@@ -342,7 +342,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
   const [detectedMid, setDetectedMid] = useState<string>('');
   const [copiedMid, setCopiedMid] = useState(false);
 
-  // Hệ thống 5 lượt dùng thử miễn phí
+  // Hệ thống 5 lượt trải nghiệm miễn phí
   const [trialRemaining, setTrialRemaining] = useState<number>(5);
 
   // Online Studio States
@@ -418,7 +418,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     return list;
   }, [parsedTurns]);
 
-  // Khởi tạo mã máy, lượt dùng thử và kiểm tra bản quyền Pro tự động
+  // Khởi tạo mã máy, lượt trải nghiệm và kiểm tra bản quyền Pro tự động
   useEffect(() => {
     const mid = getOrCreateMachineId();
     setDetectedMid(mid);
@@ -558,7 +558,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
     // KIỂM TRA LƯỢT DÙNG THỬ 5 LẦN/MÁY TÍNH
     if (!isProActivated) {
       if (trialRemaining <= 0) {
-        alert('Thầy/Cô đã hoàn thành 5/5 lượt dùng thử tạo bài nghe tiếng Anh miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền tiếp tục sử dụng không giới hạn.');
+        alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm tạo bài nghe tiếng Anh miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận hỗ trợ cài đặt & đồng hành sư phạm và hỗ trợ cài đặt phần mềm tiếp tục sử dụng không giới hạn.');
         setActiveTab('register');
         return;
       }
@@ -734,7 +734,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
 
   const handleActivateKey = async () => {
     if (!inputKey.trim()) {
-      alert('Vui lòng nhập hoặc dán mã kích hoạt bản quyền do Thầy Thành cấp!');
+      alert('Vui lòng nhập hoặc dán mã hỗ trợ cài đặt phần mềm do Thầy Thành cấp!');
       return;
     }
     const res = await verifySmartListeningLicenseKey(inputKey.trim(), detectedMid);
@@ -1001,7 +1001,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
                       : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                   }`}>
-                    {trialRemaining > 0 ? `👉 Còn lại: ${trialRemaining} lượt` : 'Đã hết lượt dùng thử'}
+                    {trialRemaining > 0 ? `👉 Còn lại: ${trialRemaining} lượt` : 'Đã hết lượt trải nghiệm'}
                   </span>
                 </div>
 
@@ -1459,7 +1459,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                     !isProActivated && trialRemaining <= 0 ? (
                       <a
                         href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                          `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt tạo bài nghe Smart Listening Pro (Mã máy: ${detectedMid}). Nhờ Thầy tư vấn và báo giá ưu đãi sư phạm giúp tôi!`
+                          `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt tạo bài nghe Smart Listening Pro (Mã máy: ${detectedMid}). Nhờ Thầy tư vấn và hỗ trợ cài đặt & đồng hành sư phạm giúp tôi!`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1856,7 +1856,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   <span className="text-xs text-amber-400 font-mono font-bold">5 LẦN MIỄN PHÍ / MÁY TÍNH</span>
                 </div>
 
-                {/* Hộp đếm lượt dùng thử 5 chấm */}
+                {/* Hộp đếm lượt trải nghiệm 5 chấm */}
                 <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold text-amber-200 block">
@@ -1960,7 +1960,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-300">
                     <div className="flex items-start gap-1.5">
                       <span className="text-emerald-400 font-bold">✓</span>
-                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên tối ưu, báo giá ưu đãi trực tiếp qua Zalo.</span>
+                      <span><strong>Trợ giá giáo dục:</strong> Chi phí hỗ trợ giáo viên tối ưu, hỗ trợ cài đặt tận tình trực tiếp qua Zalo.</span>
                     </div>
                     <div className="flex items-start gap-1.5">
                       <span className="text-emerald-400 font-bold">✓</span>
@@ -1979,7 +1979,7 @@ export const OnlineTTSModal: React.FC<OnlineTTSModalProps> = ({ isOpen, onClose 
                   {/* Nút bấm liên hệ Zalo báo giá */}
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi muốn nhận tư vấn và báo giá ưu đãi sư phạm phần mềm Smart Listening Pro. Mã máy của tôi: ${detectedMid}.`
+                      `Chào Thầy Thành, tôi muốn nhận tư vấn và hỗ trợ cài đặt & đồng hành sư phạm phần mềm Smart Listening Pro. Mã máy của tôi: ${detectedMid}.`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"

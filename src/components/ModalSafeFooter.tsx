@@ -34,7 +34,7 @@ export const ModalSafeFooter: React.FC<ModalSafeFooterProps> = ({ onClose, onOpe
         </div>
       </div>
       <div className="text-[11px] text-slate-400 leading-relaxed">
-        Thầy/Cô tải phần mềm về cài đặt dùng thử trên máy tính. Để được hỗ trợ kỹ thuật và mở khóa tính năng Pro đầy đủ, Thầy/Cô vui lòng nhắn tin trực tiếp qua Zalo: <span className="text-emerald-400 font-semibold">0915.213717</span> (Tác giả Đinh Thành).
+        Thầy/Cô tải phần mềm về cài đặt trải nghiệm trên máy tính. Để được hướng dẫn cài đặt và đồng hành chuyên môn, Thầy/Cô vui lòng nhắn tin trực tiếp qua Zalo: <span className="text-emerald-400 font-semibold">0915.213717</span> (Tác giả Thầy Đinh Thành).
       </div>
       <div className="text-[10px] text-slate-500 italic border-t border-slate-900 pt-1 leading-relaxed">
         * Cam kết miễn nhiệm: Toàn bộ ứng dụng và tài liệu mang tính chất tham khảo, hỗ trợ giáo viên trong công tác soạn giảng. Mọi nội dung do AI gợi ý cần được giáo viên rà soát, thẩm định trước khi áp dụng. Tác giả không chịu trách nhiệm đối với việc sử dụng nguyên văn vào thực tế giảng dạy.

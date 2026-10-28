@@ -83,7 +83,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
       setIsProActive(true);
     }
 
-    // Đọc số lượt dùng thử từ localStorage (Chuẩn 3 lần/môn)
+    // Đọc số lượt trải nghiệm từ localStorage (Chuẩn 3 lần/môn)
     const savedTrial = localStorage.getItem('gvai_taode_eng_trial_remaining');
     if (savedTrial !== null) {
       setTrialRemaining(parseInt(savedTrial, 10));
@@ -137,7 +137,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
   };
 
   const handleOnlineGenerate = () => {
-    alert('⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Hướng Dẫn" để tải bộ cài đặt về dùng thử trên máy tính.');
+    alert('⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Hướng Dẫn" để tải bộ cài đặt về cài đặt trải nghiệm trên máy tính.');
     setActiveTab('download');
   };
 
@@ -179,7 +179,7 @@ export const TaoDeTiengAnhModal: React.FC<TaoDeTiengAnhModalProps> = ({ isOpen, 
 • Đơn vị: ${regData.schoolUnit}
 • Mã máy tính: ${regData.machineId}
 ----------------------------------------
-Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng cảm ơn!`;
+Kính nhờ Thầy hỗ trợ cài đặt phần mềm giúp em. Em xin trân trọng cảm ơn!`;
 
     navigator.clipboard.writeText(zaloMsg);
     setRegSent(true);
@@ -323,11 +323,11 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <span className="text-sm font-bold text-white">Chính Sách Dùng Thử Trực Tuyến:</span>
                     {isProActive ? (
                       <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        👑 Không giới hạn (Đã kích hoạt Pro)
+                        👑 Không giới hạn (Đã hỗ trợ cài đặt Pro)
                       </span>
                     ) : (
                       <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        {trialRemaining > 0 ? `Còn ${trialRemaining}/3 lượt trên máy này` : '⚠️ Đã hết 3 lượt dùng thử'}
+                        {trialRemaining > 0 ? `Còn ${trialRemaining}/3 lượt trên máy này` : '⚠️ Đã hết 3 lượt trải nghiệm'}
                       </span>
                     )}
                   </div>
@@ -479,7 +479,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   ) : !isProActive && trialRemaining <= 0 ? (
                     <>
                       <Lock className="w-4 h-4 text-amber-400" />
-                      <span>Hết 3 lượt dùng thử – Vui lòng nâng cấp bản quyền Pro</span>
+                      <span>Hết 3 lượt trải nghiệm – Vui lòng nâng cấp bản quyền Pro</span>
                     </>
                   ) : (
                     <>
@@ -507,7 +507,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                   className="w-full sm:w-auto py-3 px-5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-amber-600/20 transition cursor-pointer"
                 >
                   <Crown className="w-4 h-4" />
-                  <span>🔑 Kích hoạt Bản quyền Pro</span>
+                  <span>🔑 Hỗ trợ cài đặt phần mềm Pro</span>
                 </button>
               </div>
 
@@ -942,7 +942,7 @@ Kính nhờ Thầy kích hoạt bản quyền giúp em. Em xin trân trọng c�
                     <span className="text-xs text-amber-400 font-mono font-bold">5 LẦN MIỄN PHÍ</span>
                   </div>
 
-                  {/* Hộp đếm lượt dùng thử */}
+                  {/* Hộp đếm lượt trải nghiệm */}
                   <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 flex items-center justify-between">
                     <div>
                       <span className="text-xs font-bold text-amber-200 block">

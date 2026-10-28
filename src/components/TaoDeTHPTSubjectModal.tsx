@@ -111,7 +111,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
     const savedPro = localStorage.getItem(proKey) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
+    // Kiểm tra số lượt trải nghiệm 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
     const trialKey = `gvai_trial_remaining_${appTag.toLowerCase()}`;
     const savedRemaining = localStorage.getItem(trialKey);
     if (savedPro) {
@@ -156,7 +156,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
       setIsProActive(true);
       localStorage.setItem(`gvai_pro_${appTag.toLowerCase()}`, 'true');
       setTrialRemaining(999);
-      setVerifyMsg(`🎉 Kích hoạt Bản quyền Pro ${curSub.fullName} thành công!`);
+      setVerifyMsg(`🎉 Hỗ trợ cài đặt phần mềm Pro ${curSub.fullName} thành công!`);
     } else {
       setVerifyMsg('Mã kích hoạt không đúng hoặc không thuộc ' + curSub.fullName + '. Vui lòng kiểm tra lại!');
       webSecurityGuard.recordFailedKeyAttempt(`taode-${appTag.toLowerCase()}`, inputKey, detectedMid);
@@ -195,7 +195,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
 • Số điện thoại: ${regPhone.trim()}
 • Đơn vị: ${regSchool.trim() || 'Trường THPT'}
 • Mã máy tính: ${detectedMid}
-Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền giúp em!`;
+Kính nhờ Thầy hỗ trợ cài đặt & đồng hành sư phạm và hỗ trợ cài đặt phần mềm giúp em!`;
     const zaloUrl = `https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(msg)}`;
     window.open(zaloUrl, '_blank');
   };
@@ -466,7 +466,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                   </p>
                   <div className="pt-2">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono">
-                      🎁 Dùng thử miễn phí: Còn {trialRemaining}/3 lượt ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                      🎁 Trải nghiệm miễn phí: Còn {trialRemaining}/3 lượt ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
                     </span>
                   </div>
                 </div>
@@ -551,7 +551,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                 <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                   <h4 className="text-xs font-bold text-white uppercase">
-                    KÍCH HOẠT BẢN QUYỀN PRO MÔN {curSub.name.toUpperCase()} (ĐÃ CÓ KEY)
+                    HỖ TRỢ CÀI ĐẶT PHẦN MỀM PRO MÔN {curSub.name.toUpperCase()} (ĐÃ CÓ KEY)
                   </h4>
                 </div>
 
@@ -613,7 +613,7 @@ Kính nhờ Thầy báo giá ưu đãi sư phạm và kích hoạt bản quyền
                 <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
                   <Crown className="w-4 h-4 text-amber-400" />
                   <h4 className="text-xs font-bold text-white uppercase">
-                    ĐĂNG KÝ BẢN QUYỀN PRO & NHẬN BÁO GIÁ ƯU ĐÃI SƯ PHẠM
+                    KẾT NỐI HỖ TRỢ CÀI ĐẶT & ĐỒNG HÀNH CHUYÊN MÔN
                   </h4>
                 </div>
 

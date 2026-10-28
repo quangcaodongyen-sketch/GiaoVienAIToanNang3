@@ -305,7 +305,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
   const [regPackage, setRegPackage] = useState<'1YEAR' | '2YEAR' | '3YEAR'>('1YEAR');
   const [regSent, setRegSent] = useState<boolean>(false);
 
-  // Khởi tạo môn học và lượt dùng thử khi mở modal (Chống vòng lặp re-render tuyệt đối)
+  // Khởi tạo môn học và lượt trải nghiệm khi mở modal (Chống vòng lặp re-render tuyệt đối)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -326,7 +326,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
     const savedPro = localStorage.getItem(`gvai_taode_${finalSub.toLowerCase()}_is_pro`) === 'true';
     setIsProActive(savedPro);
 
-    // Kiểm tra số lượt dùng thử 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
+    // Kiểm tra số lượt trải nghiệm 3 lần (chuẩn lưu số lượt còn lại 3 -> 0)
     const trialKey = `gvai_taode_${finalSub.toLowerCase()}_trial_remaining`;
     const savedRemaining = localStorage.getItem(trialKey);
     let remaining = 3;
@@ -359,7 +359,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 
   // Xử lý tạo đề mới & Xuất file Word: Chuyển hướng sang tải bản máy tính
   const handleExportWordDoc = () => {
-    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font và đầy đủ tính năng, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    alert(`⚠️ TÍNH NĂNG TẠO ĐỀ & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác không lỗi font và đầy đủ tính năng, tính năng tạo đề và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Về & Cài Đặt" để tải bộ cài đặt về cài đặt trải nghiệm trên máy tính.`);
     setActiveTab('download');
   };
 
@@ -386,7 +386,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
       setIsProActive(true);
       localStorage.setItem(`gvai_taode_${currentSubjectKey.toLowerCase()}_is_pro`, 'true');
       setTrialRemaining(999);
-      setVerifyMsg(`🎉 Kích hoạt Bản quyền Pro ${curSub.fullName} thành công!`);
+      setVerifyMsg(`🎉 Hỗ trợ cài đặt phần mềm Pro ${curSub.fullName} thành công!`);
     } else {
       setVerifyMsg('Mã kích hoạt không đúng định dạng. Vui lòng kiểm tra lại!');
       webSecurityGuard.recordFailedKeyAttempt(`tao-de-${currentSubjectKey.toLowerCase()}-thcs`, inputKey, detectedMid);
@@ -445,7 +445,7 @@ export const TaoDeTHCS8MonModal: React.FC<TaoDeTHCS8MonModalProps> = ({
 • Gói đăng ký: ${pkgLabel}
 • Mã máy tính: ${detectedMid}
 ----------------------------------------
-Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân trọng cảm ơn!`;
+Kính nhờ Thầy duyệt hỗ trợ cài đặt phần mềm giúp em. Em xin trân trọng cảm ơn!`;
 
     navigator.clipboard.writeText(zaloMsg);
     setRegSent(true);
@@ -562,7 +562,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                   <span className="font-bold text-white text-xs">🎯 TẠO ĐỀ {curSub.name.toUpperCase()} (CV 7991)</span>
                   <span className="text-slate-400 hidden sm:inline">•</span>
                   <span className="text-amber-300 text-[11px] font-semibold">
-                    {isProActive ? 'Bản quyền Pro không giới hạn' : `Dùng thử miễn phí: Còn ${trialRemaining}/3 lượt (${[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})`}
+                    {isProActive ? 'Bản quyền Pro không giới hạn' : `Trải nghiệm miễn phí: Còn ${trialRemaining}/3 lượt (${[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})`}
                   </span>
                 </div>
                 <button
@@ -781,7 +781,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                     </p>
                     <div className="pt-2">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold font-mono">
-                        🎁 Dùng thử miễn phí: Còn {trialRemaining}/3 lượt môn {curSub.name} ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
+                        🎁 Trải nghiệm miễn phí: Còn {trialRemaining}/3 lượt môn {curSub.name} ({[1, 2, 3].map(dot => dot <= trialRemaining ? '●' : '○').join(' ')})
                       </span>
                     </div>
                   </div>
@@ -1005,7 +1005,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                               className="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-1.5 shadow cursor-pointer"
                             >
                               <Key className="w-3.5 h-3.5" />
-                              <span>Kích Hoạt Bản Quyền Pro</span>
+                              <span>Hỗ Trợ Cài Đặt Phần Mềm Pro</span>
                             </button>
                           </div>
                         </div>
@@ -1327,7 +1327,7 @@ Kính nhờ Thầy duyệt kích hoạt bản quyền giúp em. Em xin trân tr�
                 <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                   <h4 className="text-xs font-bold text-white uppercase">
-                    KÍCH HOẠT BẢN QUYỀN MÔN {curSub.name.toUpperCase()} KHI ĐÃ CÓ KEY
+                    HỖ TRỢ CÀI ĐẶT PHẦN MỀM MÔN {curSub.name.toUpperCase()} KHI ĐÃ CÓ KEY
                   </h4>
                 </div>
 

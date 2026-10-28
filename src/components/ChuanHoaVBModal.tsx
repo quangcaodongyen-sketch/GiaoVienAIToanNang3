@@ -235,7 +235,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
   // Bộ phân tích & Chuẩn hóa văn bản hành chính theo Nghị định 30/2020/NĐ-CP
     // Tải file Word (.doc) thể thức chuẩn Nghị định 30/2020/NĐ-CP
   const handleDownloadDocx = () => {
-    alert(`⚠️ TÍNH NĂNG CHUẨN HÓA & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng chuẩn hóa và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về dùng thử trên máy tính.`);
+    alert(`⚠️ TÍNH NĂNG CHUẨN HÓA & XUẤT FILE WORD ĐƯỢC TỐI ƯU TRÊN PHẦN MỀM PC MÁY TÍNH\n\nĐể đảm bảo định dạng văn bản chuẩn xác và an toàn, tính năng chuẩn hóa và xuất file Word được thực hiện trên phần mềm máy tính (PC).\n\nKính mời Quý Thầy/Cô chuyển sang tab "Tải Bản Máy Tính" để tải bộ cài đặt về cài đặt trải nghiệm trên máy tính.`);
     setActiveTab('download');
   };
 
@@ -246,7 +246,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
     }
 
     if (!isVIP && remainingTrials <= 0) {
-      alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận báo giá ưu đãi sư phạm và kích hoạt bản quyền sử dụng không giới hạn.');
+      alert('Thầy/Cô đã hoàn thành 5/5 lượt trải nghiệm miễn phí trên máy tính này!\n\nQuý Thầy/Cô vui lòng bấm Liên hệ Zalo Thầy Thành (0915.213717) để nhận hỗ trợ cài đặt & đồng hành sư phạm và hỗ trợ cài đặt phần mềm sử dụng không giới hạn.');
       setActiveTab('license');
       return;
     }
@@ -370,7 +370,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
 
       setHasProcessed(true);
 
-      // Trừ 1 lượt dùng thử
+      // Trừ 1 lượt trải nghiệm
       if (!isVIP) {
         const nextTrials = await consumeSecureCHVBTrial();
         setRemainingTrials(nextTrials);
@@ -401,7 +401,7 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
       if (res.isValid) {
         setIsVIP(true);
         setRemainingTrials(999);
-        setActivationMsg({ text: res.message || 'Kích hoạt Bản quyền VIP thành công!', type: 'success' });
+        setActivationMsg({ text: res.message || 'Hỗ trợ cài đặt phần mềm VIP thành công!', type: 'success' });
       } else {
         setActivationMsg({ text: res.message || 'Mã bản quyền không đúng!', type: 'error' });
       }
@@ -623,14 +623,14 @@ export const ChuanHoaVBModal: React.FC<ChuanHoaVBModalProps> = ({
                   {!isVIP && remainingTrials <= 0 ? (
                     <a
                       href={`https://zalo.me/${BRAND.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                        `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt Chuẩn hóa văn bản hành chính AI. Nhờ Thầy báo giá ưu đãi và hướng dẫn kích hoạt bản quyền giúp tôi (Mã máy: ${hwid}).`
+                        `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt Chuẩn hóa văn bản hành chính AI. Nhờ Thầy hỗ trợ cài đặt tận tình và hướng dẫn hỗ trợ cài đặt phần mềm giúp tôi (Mã máy: ${hwid}).`
                       )}`}
                       target="_blank"
                       rel="noreferrer"
                       className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer animate-pulse"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>HẾT LƯỢT DÙNG THỬ – NHẮN ZALO BÁO GIÁ ƯU ĐÃI</span>
+                      <span>HOÀN THÀNH LƯỢT TRẢI NGHIỆM – NHẮN ZALO HỖ TRỢ CÀI ĐẶT TẬN TÌNH</span>
                     </a>
                   ) : (
                     <button

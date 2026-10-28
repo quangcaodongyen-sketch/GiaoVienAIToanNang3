@@ -59,7 +59,7 @@ export const InternalAdminGuard: React.FC<InternalAdminGuardProps> = ({
         <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 text-left text-xs space-y-2.5">
           <p className="font-bold text-amber-300 flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-            Liên hệ Admin Thầy Thành để kích hoạt bản quyền & báo giá ưu đãi:
+            Liên hệ Admin Thầy Thành để hỗ trợ cài đặt phần mềm & hỗ trợ cài đặt tận tình:
           </p>
           <div className="text-slate-300 space-y-1">
             <p>• Tác giả & Quản trị: <strong>Tác giả Đinh Thành, ĐT: 0915.213717</strong> </p>

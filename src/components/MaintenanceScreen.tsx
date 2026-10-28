@@ -136,7 +136,7 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onAdminLog
 
             <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <div className="text-slate-400 text-center sm:text-left">
-                Cần kích hoạt bản quyền hoặc hỗ trợ khẩn cấp:
+                Cần hỗ trợ cài đặt phần mềm hoặc hỗ trợ khẩn cấp:
               </div>
               <a
                 href={BRAND.zaloUrl}

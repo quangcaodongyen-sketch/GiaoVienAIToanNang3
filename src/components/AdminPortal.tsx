@@ -471,7 +471,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBackToHome, onSwitch
                 className="px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-300 focus:outline-none"
               >
                 <option value="ALL">Tất cả trạng thái</option>
-                <option value="ACTIVE">Đã kích hoạt Pro</option>
+                <option value="ACTIVE">Đã hỗ trợ cài đặt Pro</option>
                 <option value="PENDING">Chờ duyệt</option>
                 <option value="EXPIRED">Đã hết hạn</option>
               </select>

@@ -55,7 +55,7 @@ export const apps: AppCard[] = [
     url: "#nls-ai",
     category: "GIÁO ÁN & NLS (5512)",
     levelBadge: "CV 5512",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 1
@@ -70,7 +70,7 @@ export const apps: AppCard[] = [
     url: "#taode-tienganh-tieuhoc",
     category: "ĐỀ THI TIỂU HỌC (TT 27)",
     levelBadge: "TIỂU HỌC",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 2
@@ -83,7 +83,7 @@ export const apps: AppCard[] = [
     url: "#taode-tiengviet-tieuhoc",
     category: "ĐỀ THI TIỂU HỌC (TT 27)",
     levelBadge: "TIỂU HỌC",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 2
@@ -98,7 +98,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-tieng-anh",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 3
@@ -124,7 +124,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-toan",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 4
@@ -137,7 +137,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-van",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 5
@@ -150,7 +150,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-khtn",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 6
@@ -163,7 +163,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-sudia",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 7
@@ -176,7 +176,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-lichsu-thcs",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 7.5
@@ -189,7 +189,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-dia-li-thcs",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 7.6
@@ -202,7 +202,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-gdcd",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 8
@@ -215,7 +215,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-tin",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 9
@@ -228,7 +228,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-cn",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 10
@@ -241,7 +241,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-gddp-thcs",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 10.1
@@ -254,7 +254,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-hdtn-thcs",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 10.2
@@ -267,7 +267,7 @@ export const apps: AppCard[] = [
     url: "#sinh-de-bien-the",
     category: "ĐỀ THI CẤP THCS (CV 7991)",
     levelBadge: "THCS",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 11
@@ -282,7 +282,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-tieng-anh-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 12
@@ -295,7 +295,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-toan-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 13
@@ -308,7 +308,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-van-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 14
@@ -321,7 +321,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-vatli-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 15
@@ -334,7 +334,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-hoahoc-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 16
@@ -347,7 +347,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-sinhhoc-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 17
@@ -360,7 +360,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-tin-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 18
@@ -373,7 +373,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-lichsu-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 19
@@ -386,7 +386,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-diali-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 20
@@ -399,7 +399,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-gdktpl-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 21
@@ -412,7 +412,7 @@ export const apps: AppCard[] = [
     url: "#tao-de-cn-thpt",
     category: "ĐỀ THI CẤP THPT (2025+)",
     levelBadge: "THPT",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: false,
     order: 22
@@ -427,7 +427,7 @@ export const apps: AppCard[] = [
     url: "#smart-listening",
     category: "BÀI GIẢNG & TIỆN ÍCH",
     levelBadge: "TIỆN ÍCH",
-    badge: "BẢN QUYỀN PRO",
+    badge: "PHIÊN BẢN PRO",
     active: true,
     featured: true,
     order: 23

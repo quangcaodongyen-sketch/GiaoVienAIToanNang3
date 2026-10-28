@@ -753,7 +753,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
           const genRes = await generateExamLicenseKey(cleanMid, pkgType as any);
           licenseKey = genRes.key;
           expDateStr = genRes.expiryDateStr;
-          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã kích hoạt Bản quyền Pro Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
+          zaloMsg = `Kính gửi Thầy/Cô,\nTác giả Đinh Thành, ĐT: 0915.213717 (0915.213717) xin gửi Mã hỗ trợ cài đặt bản Pro đầy đủ Tạo Đề Tiếng Anh Global Success:\n\n• Mã máy: ${cleanMid}\n• Gói: ${genRes.packageName}\n• Hạn dùng: ${genRes.expiryDateStr}\n• MÃ KÍCH HOẠT PRO:\n${genRes.key}\n\nChúc Thầy/Cô sử dụng phần mềm hiệu quả!`;
         }
         // I. Tạo Đề THCS 8 Môn (CV 7991)
         else if (effectiveAppId.includes('thcs8m') || cleanMidUpper.includes('THCS8M')) {
@@ -1388,7 +1388,7 @@ ${res.key}
 👉 HƯỚNG DẪN KÍCH HOẠT:
 1. Mở công cụ "Sinh 3 Đề Biến Thể VIP" trên trang web GiaoVienAI-ToanNang.
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
-3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
+3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KẾT NỐI HỖ TRỢ CÀI ĐẶT PHẦN MỀM".
 Chúc Thầy/Cô có những bộ đề thi phân hóa chất lượng, tiết kiệm tối đa thời gian!`;
       setBientheZaloMsg(msg);
 
@@ -1448,7 +1448,7 @@ ${res.key}
 👉 HƯỚNG DẪN KÍCH HOẠT:
 1. Mở phần mềm "Screen Record Pro V2" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt".
-3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KÍCH HOẠT BẢN QUYỀN PRO NGAY".
+3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Bản Quyền Pro" rồi bấm "KẾT NỐI HỖ TRỢ CÀI ĐẶT PHẦN MỀM".
 Chúc Thầy/Cô quay được nhiều bài giảng chất lượng cao, âm thanh trong trẻo!`;
       setRecordZaloMsg(msg);
 
@@ -1511,7 +1511,7 @@ ${key}
 👉 HƯỚNG DẪN KÍCH HOẠT:
 1. Mở phần mềm "Đinh Thành Cleaner Pro v4.5" (hoặc trên Web GiaoVienAI-ToanNang).
 2. Chọn Tab "3. Bản Quyền & Kích Hoạt VIP".
-3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Kích Hoạt Bản Quyền VIP" rồi bấm "🚀 KÍCH HOẠT BẢN QUYỀN VIP NGAY".
+3. Dán đúng mã kích hoạt trên vào ô "Nhập Mã Hỗ Trợ Cài Đặt Phần Mềm VIP" rồi bấm "🚀 HỖ TRỢ CÀI ĐẶT PHẦN MỀM VIP NGAY".
 Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt và giảng dạy thăng hoa!`;
       setCleanerZaloMsg(msg);
 
@@ -1745,7 +1745,7 @@ Chúc Thầy/Cô dọn dẹp sạch sẽ ổ C, máy tính chạy êm mượt v�
       const dvtWordKey = `DVT-${licType}-${hStr.substr(0, 4)}-${hStr.substr(4, 4)}-${hStr.substr(8, 4)}-${hStr.substr(12, 4)}`;
 
       const customZaloMsg = `KÍNH GỬI QUÝ THẦY/CÔ!
-Tác giả Đinh Thành xin gửi Thầy/Cô thông tin kích hoạt bản quyền Đinh Thành MathStudio 2026+ Pro:
+Tác giả Đinh Thành xin gửi Thầy/Cô thông tin hỗ trợ cài đặt phần mềm Đinh Thành MathStudio 2026+ Pro:
 ----------------------------------------
 👉 Ứng dụng: Đinh Thành MathStudio 2026+ Pro (Word & Mathpix)
 👉 Mã máy tính: ${cleanId}
@@ -1812,7 +1812,7 @@ Mọi hỗ trợ xin liên hệ: Tác giả Đinh Thành - Hotline / Zalo: 0915.
       setDe15pKeyResult(key);
 
       const pkgName = de15pPackage === '1year' ? '1 Năm' : de15pPackage === '2year' ? '2 Năm' : 'Trọn Đời (Vĩnh Viễn)';
-      const msg = `Kính gửi Quý Thầy/Cô,\nTác giả Đinh Thành gửi mã kích hoạt Bản Quyền Pro phần mềm "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS)":\n- Mã máy: ${cleanId}\n- Gói bản quyền: ${pkgName}\n- Khóa kích hoạt: ${key}\n\nThầy/Cô mở phần mềm hoặc truy cập web, vào tab Bản quyền & Kích hoạt, dán mã key trên để sử dụng trọn vẹn toàn bộ 48 Units ạ. Chúc Thầy/Cô dạy tốt!\nHotline/Zalo: 0915.213717.`;
+      const msg = `Kính gửi Quý Thầy/Cô,\nTác giả Đinh Thành gửi mã hỗ trợ cài đặt bản Pro đầy đủ phần mềm "TẠO ĐỀ 15 PHÚT TIẾNG ANH (GLOBAL SUCCESS - 48 UNITS)":\n- Mã máy: ${cleanId}\n- Gói bản quyền: ${pkgName}\n- Khóa kích hoạt: ${key}\n\nThầy/Cô mở phần mềm hoặc truy cập web, vào tab Bản quyền & Kích hoạt, dán mã key trên để sử dụng trọn vẹn toàn bộ 48 Units ạ. Chúc Thầy/Cô dạy tốt!\nHotline/Zalo: 0915.213717.`;
       setDe15pZaloMsg(msg);
 
       const newRecord = {
@@ -2238,7 +2238,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ KÍCH HOẠT BẢN QUYỀN' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ KÍCH HOẠT PRO'}
+                  {userRole === 'SUB_ADMIN' ? 'HỖ TRỢ HỖ TRỢ CÀI ĐẶT PHẦN MỀM' : 'TRUNG TÂM QUẢN TRỊ & THỐNG KÊ KÍCH HOẠT PRO'}
                 </h2>
                 <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${userRole === 'SUB_ADMIN' ? 'bg-purple-500/20 border border-purple-500/40 text-purple-300' : 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400'}`}>
                   {userRole === 'SUB_ADMIN' ? '🌸 TÀI KHOẢN PHÓ QUẢN TRỊ' : '👑 ADMIN'}
@@ -4433,7 +4433,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                     </div>
                   </div>
 
-                  {/* Card 3: Số máy đã kích hoạt Pro */}
+                  {/* Card 3: Số máy đã hỗ trợ cài đặt Pro */}
                   <div className="bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg shadow-emerald-950/20 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
                     <div className="flex items-center justify-between">
@@ -5770,7 +5770,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div className="pt-3 border-t border-slate-800 space-y-3">
                   <div>
                     <label className="block text-slate-300 font-bold mb-1">
-                      Mã Key kích hoạt Pro (ENG-prefix-expts-sig):
+                      Mã Key hỗ trợ cài đặt Pro (ENG-prefix-expts-sig):
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -5930,7 +5930,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div className="pt-3 border-t border-slate-800 space-y-3">
                   <div>
                     <label className="block text-slate-300 font-bold mb-1">
-                      Mã Key kích hoạt Pro (VAR-prefix-expts-sig):
+                      Mã Key hỗ trợ cài đặt Pro (VAR-prefix-expts-sig):
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -6090,7 +6090,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div className="pt-3 border-t border-slate-800 space-y-3">
                   <div>
                     <label className="block text-slate-300 font-bold mb-1">
-                      Mã Key kích hoạt Pro (REC-prefix-expts-sig):
+                      Mã Key hỗ trợ cài đặt Pro (REC-prefix-expts-sig):
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -6895,7 +6895,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
               </div>
 
               <p className="text-slate-400 text-[11px]">
-                Hệ thống sinh mã kích hoạt Pro chuẩn Ed25519 chống bẻ khóa dành riêng cho Add-in Word MathStudio. Khách hàng mở Word, vào tab <strong>Bản quyền & Hệ thống</strong> bấm <strong>Thông tin Bản quyền</strong> để lấy Hardware Code (dạng <code>DVT-MATH-XXXX-XXXX</code>).
+                Hệ thống sinh mã hỗ trợ cài đặt Pro chuẩn Ed25519 chống bẻ khóa dành riêng cho Add-in Word MathStudio. Khách hàng mở Word, vào tab <strong>Bản quyền & Hệ thống</strong> bấm <strong>Thông tin Bản quyền</strong> để lấy Hardware Code (dạng <code>DVT-MATH-XXXX-XXXX</code>).
               </p>
 
               <form onSubmit={handleGenerateMathKey} className="space-y-3">
@@ -6951,7 +6951,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                 <div className="pt-3 border-t border-slate-800 space-y-3">
                   <div>
                     <label className="block text-slate-300 font-bold mb-1">
-                      Mã Key kích hoạt Pro (KEY-MATH-YYYYMMDD-sig):
+                      Mã Key hỗ trợ cài đặt Pro (KEY-MATH-YYYYMMDD-sig):
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -7063,7 +7063,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
               </div>
 
               <p className="text-slate-400 text-[11px]">
-                Hệ thống sinh mã kích hoạt Pro cho phần mềm và web Tạo Đề 15 Phút Tiếng Anh (Lớp 6, 7, 8, 9 - 48 Units). Mã máy tính của khách hàng có tiền tố <code>DVT-15M-XXXX-XXXX</code>.
+                Hệ thống sinh mã hỗ trợ cài đặt Pro cho phần mềm và web Tạo Đề 15 Phút Tiếng Anh (Lớp 6, 7, 8, 9 - 48 Units). Mã máy tính của khách hàng có tiền tố <code>DVT-15M-XXXX-XXXX</code>.
               </p>
 
               <form onSubmit={handleGenerateDe15pKey} className="space-y-3">
@@ -7119,7 +7119,7 @@ Nhằm hỗ trợ Thầy/Cô giảm tải tối đa áp lực hồ sơ sổ sác
                   <div className="p-3 rounded-xl bg-slate-950 border border-cyan-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="text-[11px] text-cyan-400 font-bold uppercase tracking-wider">
-                        Mã Kích Hoạt Bản Quyền Pro (Gửi cho khách):
+                        Mã Hỗ Trợ Cài Đặt Phần Mềm Pro (Gửi cho khách):
                       </div>
                       <div className="font-mono text-base font-black text-amber-400 select-all tracking-wide break-all">
                         {de15pKeyResult}

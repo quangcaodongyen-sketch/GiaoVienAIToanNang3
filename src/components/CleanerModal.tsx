@@ -260,7 +260,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
       setScanLogs((prev) => [...prev, step.log]);
     }
 
-    // Tiêu thụ 1 lượt dùng thử nếu chưa kích hoạt VIP
+    // Tiêu thụ 1 lượt trải nghiệm nếu chưa kích hoạt VIP
     if (!isVIP) {
       const nextTrials = await consumeSecureCleanerTrial();
       setRemainingTrials(nextTrials);
@@ -278,7 +278,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
     setIsCleaning(false);
   };
 
-  // Xử lý kích hoạt bản quyền VIP
+  // Xử lý hỗ trợ cài đặt phần mềm VIP
   const handleActivateLicense = async () => {
     if (!licenseKeyInput.trim()) {
       setActivationMsg({ text: 'Vui lòng nhập mã bản quyền PRO!', type: 'error' });
@@ -392,7 +392,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
             }`}
           >
             <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
-            <span>2. Kích Hoạt Bản Quyền Pro & Hỗ Trợ</span>
+            <span>2. Hỗ Trợ Cài Đặt Phần Mềm Pro & Hỗ Trợ</span>
           </button>
         </div>
 
@@ -432,7 +432,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
 
                 {!isVIP && (
                   <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
-                    <span className="text-xs text-slate-300 font-medium">Lượt dùng thử:</span>
+                    <span className="text-xs text-slate-300 font-medium">Lượt trải nghiệm:</span>
                     <div className="flex items-center gap-1 text-emerald-400 text-sm font-black">
                       {[1, 2, 3, 4, 5].map((dot) => (
                         <span key={dot} className={dot <= remainingTrials ? 'text-emerald-400' : 'text-slate-600'}>
@@ -645,7 +645,7 @@ export const CleanerModal: React.FC<CleanerModalProps> = ({
                 {!isVIP && remainingTrials <= 0 ? (
                   <a
                     href={`https://zalo.me/${BRAND.phoneRaw}?text=${encodeURIComponent(
-                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt dọn rác DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy báo giá ưu đãi và hướng dẫn tôi kích hoạt VIP giúp nhé!`
+                      `Chào Thầy Thành, tôi đã dùng thử hết 5 lượt dọn rác DinhThanh Cleaner Pro (Mã máy: ${hwid}). Xin Thầy hỗ trợ cài đặt tận tình và hướng dẫn tôi kích hoạt VIP giúp nhé!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
