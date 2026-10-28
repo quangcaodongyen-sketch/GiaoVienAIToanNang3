@@ -148,8 +148,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
       } else if (scopeFilter === 'grade') {
         lb = studentGradebookService.getSchoolLeaderboard(selectedGrade, sortBy);
       } else {
-        const targetClassId = 'cls-' + selectedClass.toLowerCase();
-        lb = studentGradebookService.getClassLeaderboard(targetClassId);
+        lb = studentGradebookService.getClassLeaderboard(selectedClass);
         if (sortBy === 'score') {
           lb.sort((a, b) => b.averageScore - a.averageScore || b.totalMeritPoints - a.totalMeritPoints);
         } else {

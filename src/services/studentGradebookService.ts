@@ -1563,6 +1563,73 @@ class StudentGradebookService {
     const todayStr = getLocalDateString();
     const loginReward = getDailyLoginRewardInfo(todayStr);
 
+    // 3.5. TỰ ĐỘNG ĐỒNG BỘ CÁC HỌC SINH ĐÃ VÀO HỌC (TỪ BÀI LÀM & NHẬT KÝ CHECK-IN) VÀO DANH SÁCH HỌC SINH
+    const existingStudentKeys = new Set(
+      this.students.map(s => `${normalizeVietnameseName(s.name)}__${normalizeClassName(s.className)}`)
+    );
+
+    // a) Quét từ bài làm submissions
+    allSubmissions.forEach(sub => {
+      if (!sub || !sub.studentName) return;
+      const autoCls = normalizeClassName(sub.className) || '8A1';
+      const key = `${normalizeVietnameseName(sub.studentName)}__${autoCls}`;
+      if (!existingStudentKeys.has(key)) {
+        existingStudentKeys.add(key);
+        let grade = sub.grade || 8;
+        const matchG = autoCls.match(/^(\d{1,2})/);
+        if (matchG && matchG[1]) grade = parseInt(matchG[1], 10);
+
+        const newProfile: StudentProfile = {
+          id: sub.studentId || ('stu-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000)),
+          studentCode: sub.studentCode || ('HS' + autoCls + '-' + Math.floor(Math.random() * 90 + 10)),
+          name: sub.studentName,
+          className: autoCls,
+          classId: 'cls-' + autoCls.toLowerCase().replace(/[^a-z0-9]/g, ''),
+          grade,
+          gender: 'Nam',
+          note: 'Tự động đồng bộ từ bài thi đã làm',
+          createdAt: sub.submittedAt || new Date().toISOString(),
+          attendancePoints: 10,
+          encouragementBonus: 15,
+          totalMeritPoints: 25,
+          lastLoginDate: todayStr
+        };
+        this.students.push(newProfile);
+        details.push(`Tự động đồng bộ học sinh mới từ bài thi: ${newProfile.name} (Lớp ${newProfile.className})`);
+      }
+    });
+
+    // b) Quét từ nhật ký check-in
+    allCheckinLogs.forEach(log => {
+      if (!log || !log.studentName) return;
+      const autoCls = normalizeClassName(log.className) || '8A1';
+      const key = `${normalizeVietnameseName(log.studentName)}__${autoCls}`;
+      if (!existingStudentKeys.has(key)) {
+        existingStudentKeys.add(key);
+        let grade = log.grade || 8;
+        const matchG = autoCls.match(/^(\d{1,2})/);
+        if (matchG && matchG[1]) grade = parseInt(matchG[1], 10);
+
+        const newProfile: StudentProfile = {
+          id: log.studentId || ('stu-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000)),
+          studentCode: log.studentCode || ('HS' + autoCls + '-' + Math.floor(Math.random() * 90 + 10)),
+          name: log.studentName,
+          className: autoCls,
+          classId: 'cls-' + autoCls.toLowerCase().replace(/[^a-z0-9]/g, ''),
+          grade,
+          gender: 'Nam',
+          note: 'Tự động đồng bộ từ nhật ký vào học',
+          createdAt: log.timestamp || new Date().toISOString(),
+          attendancePoints: 10,
+          encouragementBonus: 15,
+          totalMeritPoints: 25,
+          lastLoginDate: todayStr
+        };
+        this.students.push(newProfile);
+        details.push(`Tự động đồng bộ học sinh mới từ nhật ký vào học: ${newProfile.name} (Lớp ${newProfile.className})`);
+      }
+    });
+
     // 4. Rà soát từng học sinh
     this.students.forEach(student => {
       if (!student || !student.name) return;
@@ -1911,9 +1978,29 @@ class StudentGradebookService {
   }
 
   // ==================== QUẢN LÝ HỌC SINH ====================
-  public getStudents(classId?: string): StudentProfile[] {
-    if (classId) {
-      return this.students.filter(s => s.classId === classId);
+  public getStudents(classIdOrName?: string): StudentProfile[] {
+    if (classIdOrName && classIdOrName !== 'all' && classIdOrName !== 'ALL') {
+      const normInput = normalizeClassName(classIdOrName);
+
+      // 1. Nếu là lọc theo Khối (VD: "Khối 8", "Khối 6", "8", "6")
+      if (classIdOrName.toLowerCase().includes('khối') || /^\d+$/.test(normInput)) {
+        const gNum = parseInt(classIdOrName.replace(/\D/g, ''), 10);
+        if (gNum) {
+          return this.students.filter(s => s.grade === gNum || (s.className && s.className.startsWith(String(gNum))));
+        }
+      }
+
+      // 2. Nếu là lọc theo Lớp (VD: "8A1", "cls-8a1")
+      const matchedClass = this.classes.find(c => c.id === classIdOrName || normalizeClassName(c.name) === normInput);
+      const targetId = matchedClass?.id || classIdOrName;
+      const targetName = matchedClass?.name ? normalizeClassName(matchedClass.name) : normInput;
+
+      return this.students.filter(s => 
+        s.classId === targetId || 
+        s.classId === classIdOrName ||
+        normalizeClassName(s.className) === targetName ||
+        normalizeClassName(s.className) === normInput
+      );
     }
     return [...this.students];
   }
@@ -2460,12 +2547,27 @@ class StudentGradebookService {
     return items;
   }
 
-  public getClassLeaderboard(classId: string): ClassLeaderboardItem[] {
-    const classStudents = this.getStudents(classId);
-    const classSubs = this.submissions.filter(s => s.classId === classId);
+  public getClassLeaderboard(classIdOrName: string): ClassLeaderboardItem[] {
+    const classStudents = this.getStudents(classIdOrName);
+    const normCls = normalizeClassName(classIdOrName);
+    const matchedClass = this.classes.find(c => c.id === classIdOrName || normalizeClassName(c.name) === normCls);
+    const targetId = matchedClass?.id || classIdOrName;
+    const targetName = matchedClass?.name ? normalizeClassName(matchedClass.name) : normCls;
+
+    const classSubs = this.submissions.filter(s => 
+      s.classId === targetId || 
+      s.classId === classIdOrName || 
+      normalizeClassName(s.className) === targetName ||
+      normalizeClassName(s.className) === normCls
+    );
 
     const items: ClassLeaderboardItem[] = classStudents.map(student => {
-      const stuSubs = classSubs.filter(s => s.studentId === student.id);
+      const sNameNorm = normalizeVietnameseName(student.name);
+      const stuSubs = classSubs.filter(s => 
+        s.studentId === student.id || 
+        (student.studentCode && s.studentCode && s.studentCode.toLowerCase() === student.studentCode.toLowerCase()) ||
+        (normalizeVietnameseName(s.studentName) === sNameNorm && (normalizeClassName(s.className) === targetName || !s.className))
+      );
       const testsCount = stuSubs.length;
       const highestScore = testsCount > 0 ? Math.max(...stuSubs.map(s => s.score)) : 0;
       const averageScore = testsCount > 0 
@@ -3338,7 +3440,22 @@ class StudentGradebookService {
       });
       return all;
     }
+
+    // Nếu lọc theo Khối (VD: "Khối 6", "Khối 8", "Khối 7", "8", "6")
     const clean = normalizeClassName(className);
+    if (className.toLowerCase().includes('khối') || /^\d+$/.test(clean)) {
+      const gNum = parseInt(className.replace(/\D/g, ''), 10);
+      if (gNum) {
+        const byGrade: OfficialStudentRosterItem[] = [];
+        Object.values(allData).forEach(arr => {
+          arr.forEach(it => {
+            if (it.grade === gNum) byGrade.push(it);
+          });
+        });
+        return byGrade;
+      }
+    }
+
     return allData[clean] || [];
   }
 
@@ -3417,6 +3534,71 @@ class StudentGradebookService {
         highestExamScore: highestScore,
         lastActive: profile?.lastLoginDate || (studentSubs[0]?.submittedAt ? new Date(studentSubs[0].submittedAt).toLocaleDateString('vi-VN') : null)
       };
+    });
+
+    // ================= TỰ ĐỘNG BỔ SUNG CÁC HỌC SINH ĐÃ VÀO HỌC TRONG this.students MÀ CHƯA CÓ TRONG ROSTER GỐC =================
+    const existingRosterKeys = new Set(
+      list.map(item => `${normalizeVietnameseName(item.name)}__${normalizeClassName(item.className)}`)
+    );
+
+    const isAllScope = !className || className === 'ALL';
+    const isGradeScope = className.toLowerCase().includes('khối') || /^\d+$/.test(normalizeClassName(className));
+    const gradeNum = isGradeScope ? parseInt(className.replace(/\D/g, ''), 10) : 0;
+    const cleanTargetCls = normalizeClassName(className);
+
+    this.students.forEach(student => {
+      if (!student || !student.name) return;
+      const sClsNorm = normalizeClassName(student.className);
+
+      // Kiểm tra xem học sinh có thuộc phạm vi đang lọc không
+      let inScope = false;
+      if (isAllScope) {
+        inScope = true;
+      } else if (isGradeScope) {
+        inScope = student.grade === gradeNum || sClsNorm.startsWith(String(gradeNum));
+      } else {
+        inScope = sClsNorm === cleanTargetCls;
+      }
+
+      if (!inScope) return;
+
+      const key = `${normalizeVietnameseName(student.name)}__${sClsNorm}`;
+      if (!existingRosterKeys.has(key)) {
+        existingRosterKeys.add(key);
+
+        const studentSubs = subMap.get(key) || [];
+        let highestScore: number | null = null;
+        if (studentSubs.length > 0) {
+          highestScore = Math.max(...studentSubs.map(s => s.score));
+        }
+
+        const merit = student.totalMeritPoints || 0;
+        totalMerit += merit;
+        enteredCount++;
+
+        list.push({
+          stt: list.length + 1,
+          studentCode: student.studentCode || '',
+          name: student.name,
+          className: student.className,
+          grade: student.grade,
+          dob: student.dob || '---',
+          regularScore: student.regularScore || null,
+          hasEntered: true,
+          totalMeritPoints: merit,
+          attendancePoints: student.attendancePoints || 0,
+          vocabPoints: student.vocabPoints || 0,
+          examBonusPoints: student.examBonusPoints || 0,
+          practicePoints: student.practicePoints || 0,
+          encouragementBonus: student.encouragementBonus ?? 15,
+          teacherBonus: student.teacherBonus || 0,
+          bonusHistory: student.bonusHistory || [],
+          levelInfo: calculateStudentLevel(merit, undefined),
+          submissionsCount: studentSubs.length,
+          highestExamScore: highestScore,
+          lastActive: student.lastLoginDate || (studentSubs[0]?.submittedAt ? new Date(studentSubs[0].submittedAt).toLocaleDateString('vi-VN') : 'Hôm nay')
+        });
+      }
     });
 
     const totalRoster = list.length;
@@ -3519,15 +3701,55 @@ class StudentGradebookService {
   }
 
   public getOfficialClassesList(): Array<{ name: string; grade: number; totalStudents: number }> {
+    const classMap = new Map<string, { name: string; grade: number; totalStudents: number }>();
+
+    // 1. Lớp từ officialRosterData gốc
     const allData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
-    return Object.entries(allData).map(([cls, list]) => {
-      const gNum = parseInt(cls[0] || '8', 10);
-      return {
+    Object.entries(allData).forEach(([cls, list]) => {
+      const clean = normalizeClassName(cls);
+      const matchG = clean.match(/^(\d{1,2})/);
+      const gNum = matchG ? parseInt(matchG[1], 10) : 8;
+      classMap.set(clean, {
         name: cls,
         grade: gNum,
         totalStudents: list.length
-      };
+      });
     });
+
+    // 2. Lớp từ this.classes quản lý
+    this.classes.forEach(c => {
+      const clean = normalizeClassName(c.name);
+      if (!classMap.has(clean)) {
+        const count = this.students.filter(s => normalizeClassName(s.className) === clean).length;
+        classMap.set(clean, {
+          name: c.name,
+          grade: c.grade || 8,
+          totalStudents: count
+        });
+      }
+    });
+
+    // 3. Lớp từ các học sinh thực tế trong this.students
+    this.students.forEach(s => {
+      if (!s.className) return;
+      const clean = normalizeClassName(s.className);
+      if (!classMap.has(clean)) {
+        const count = this.students.filter(st => normalizeClassName(st.className) === clean).length;
+        const matchG = clean.match(/^(\d{1,2})/);
+        const gNum = matchG ? parseInt(matchG[1], 10) : (s.grade || 8);
+        classMap.set(clean, {
+          name: s.className,
+          grade: gNum,
+          totalStudents: count
+        });
+      } else {
+        const item = classMap.get(clean)!;
+        const actualCount = this.students.filter(st => normalizeClassName(st.className) === clean).length;
+        item.totalStudents = Math.max(item.totalStudents, actualCount);
+      }
+    });
+
+    return Array.from(classMap.values()).sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
   }
 
 }
