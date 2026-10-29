@@ -696,17 +696,53 @@ export const VERIFIED_HIGH_SCORE_BASELINE: Record<string, { total: number; vocab
 // Bảo đảm điểm số học sinh đã học KHÔNG BAO GIỜ bị giảm, không bị xóa bớt dù tải lại trang hay reset
 const MAX_POINTS_VAULT_PREFIX = 'GVAI_MAX_POINTS_VAULT_';
 
+export function isVerifiedHighScore(studentName?: string, className?: string): boolean {
+  if (!studentName || !className) return false;
+  const k = normalizeVietnameseName(studentName) + '__' + normalizeClassName(className).toLowerCase();
+  return Boolean(VERIFIED_HIGH_SCORE_BASELINE[k]);
+}
+
+export function sanitizeInflatedVaultScores(): void {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(MAX_POINTS_VAULT_PREFIX)) {
+        const val = Number(localStorage.getItem(key)) || 0;
+        if (val > 3000) {
+          const subKey = key.replace(MAX_POINTS_VAULT_PREFIX, '');
+          if (!VERIFIED_HIGH_SCORE_BASELINE[subKey]) {
+            keysToRemove.push(key);
+          }
+        }
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch {}
+}
+
 export function getStudentVaultMaxPoints(studentId?: string, studentName?: string, className?: string): number {
   let maxPts = 0;
   try {
     if (studentId) {
       const val = localStorage.getItem(MAX_POINTS_VAULT_PREFIX + studentId);
-      if (val) maxPts = Math.max(maxPts, Number(val) || 0);
+      if (val) {
+        const num = Number(val) || 0;
+        if (num <= 3000 || isVerifiedHighScore(studentName, className)) {
+          maxPts = Math.max(maxPts, num);
+        }
+      }
     }
     if (studentName && className) {
       const k = normalizeVietnameseName(studentName) + '__' + normalizeClassName(className).toLowerCase();
       const valName = localStorage.getItem(MAX_POINTS_VAULT_PREFIX + k);
-      if (valName) maxPts = Math.max(maxPts, Number(valName) || 0);
+      if (valName) {
+        const num = Number(valName) || 0;
+        if (num <= 3000 || isVerifiedHighScore(studentName, className)) {
+          maxPts = Math.max(maxPts, num);
+        }
+      }
 
       const base = VERIFIED_HIGH_SCORE_BASELINE[k];
       if (base) maxPts = Math.max(maxPts, base.total);
@@ -717,6 +753,8 @@ export function getStudentVaultMaxPoints(studentId?: string, studentName?: strin
 
 export function saveStudentVaultMaxPoints(studentId?: string, points?: number, studentName?: string, className?: string): void {
   if (!points || points <= 0) return;
+  // BẢO VỆ CHỐNG ĐIỂM ẢO: Tuyệt đối không lưu vào vault số điểm ảo > 3000 nếu không được Thầy xác nhận
+  if (points > 3000 && !isVerifiedHighScore(studentName, className)) return;
   try {
     if (studentId) {
       const curr = getStudentVaultMaxPoints(studentId, studentName, className);
@@ -3576,6 +3614,8 @@ class StudentGradebookService {
   }
 
   public auditAndRestoreAllStudentPoints(triggerCloudSync: boolean = true): {
+    sanitizeInflatedVaultScores();
+
 
     auditedCount: number;
 
@@ -4187,57 +4227,70 @@ class StudentGradebookService {
 
 
 
-      const calculatedSum = recAtt + recVoc + recExm + recPrc + recTime + recBonus + recTeacher;
-
-      // ================= QUY TẮC BẢO VỆ ĐIỂM TỐI CAO: BÙ ĐẮP MỌI THIỆT THÒI =================
-      const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
       const baseKey = `${normName}__${cleanCls.toLowerCase()}`;
       const baseInfo = VERIFIED_HIGH_SCORE_BASELINE[baseKey];
-      const baseTotal = baseInfo ? baseInfo.total : 0;
-      const baseVoc = baseInfo?.vocab || 0;
-      const baseAtt = baseInfo?.attendance || 0;
+      const isLoginToday = Boolean(student.lastLoginDate && student.lastLoginDate.slice(0, 10) === todayStr);
 
-      const targetTotal = Math.max(origTotal, vaultMax, baseTotal, calculatedSum, 15);
-      const finalVoc = Math.max(recVoc, baseVoc);
-      const finalAtt = Math.max(recAtt, baseAtt);
-      const finalExm = Math.max(recExm, baseInfo?.exam || 0);
+      let targetTotal = origTotal;
+      let finalAtt = recAtt;
+      let finalVoc = recVoc;
+      let finalExm = recExm;
+      let finalPrc = recPrc;
+      let finalTeacher = recTeacher;
 
-      // Nếu có chênh lệch giữa targetTotal và calculatedSum (do điểm tích lũy trước đó):
+      if (baseInfo) {
+        // Trường hợp 1: Học sinh có BẢNG ĐIỂM XÁC THỰC TÍCH LŨY CHÍNH THỨC của Thầy Thành
+        // Bảo tồn trọn vẹn điểm chuẩn + thưởng 10đ đăng nhập hôm nay (nếu có đăng nhập)
+        const loginPtsToday = isLoginToday ? 10 : 0;
+        targetTotal = baseInfo.total + loginPtsToday;
+        finalAtt = (baseInfo.attendance ?? 10) + loginPtsToday;
+        finalVoc = baseInfo.vocab ?? 0;
+        finalExm = baseInfo.exam ?? 0;
+        finalPrc = baseInfo.practice ?? 0;
+        finalTeacher = recTeacher;
+      } else {
+        // Trường hợp 2: Học sinh không thuộc baseline
+        // Kiểm tra xem có bị lỗi cộng dồn dập (Vocab XP Runaway) khiến điểm ảo tăng vọt không
+        const isRunawayInflated = (origTotal > 200 || student.vocabPoints > 100 || student.practicePoints > 150) && (recExm < 150);
 
-      // Giữ nguyên và bù vào practicePoints để các thành phần cộng lại tròn khít!
-
-      let finalPractice = Math.max(recPrc, baseInfo?.practice || 0);
-
-      if (targetTotal > calculatedSum) {
-
-        finalPractice += (targetTotal - calculatedSum);
-
+        if (isRunawayInflated) {
+          // Trở về điểm thực tế chính xác: Điểm chuyên cần (10đ) + Điểm khuyến khích (15đ) + Điểm bài kiểm tra thật + Từ vựng thật + Thưởng thầy
+          finalAtt = isLoginToday ? 10 : (recAtt > 0 ? 10 : 5);
+          finalVoc = Math.min(recVoc, 80); // Tối đa các bài từ vựng thực tế
+          finalExm = recExm; // Điểm bài kiểm tra giữa kỳ thật
+          finalPrc = Math.min(recPrc, 60); // Điểm luyện tập thật
+          finalTeacher = Math.min(recTeacher, 40);
+          targetTotal = finalAtt + finalVoc + finalExm + finalPrc + recBonus + finalTeacher;
+          details.push(`Trở về điểm thực cho ${student.name} (${student.className}): ${origTotal}đ ➔ ${targetTotal}đ (đã thu hồi điểm cộng dồn dập)`);
+        } else {
+          const calculatedSum = recAtt + recVoc + recExm + recPrc + recTime + recBonus + recTeacher;
+          const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
+          targetTotal = Math.max(origTotal, vaultMax, calculatedSum, 15);
+          finalVoc = recVoc;
+          finalAtt = recAtt;
+          finalExm = recExm;
+          finalPrc = recPrc;
+          if (targetTotal > calculatedSum) {
+            finalPrc += (targetTotal - calculatedSum);
+          }
+        }
       }
-
-
 
       if (targetTotal > origTotal) {
-
         restoredCount++;
-
         const added = targetTotal - origTotal;
-
         totalPointsRestored += added;
-
         details.push(`Khôi phục cho ${student.name} (${student.className}): ${origTotal}đ ➔ ${targetTotal}đ (+${added}đ bảo toàn tối cao)`);
-
       }
-
-
 
       // Cập nhật lại toàn bộ hồ sơ học sinh
       student.attendancePoints = finalAtt;
       student.vocabPoints = finalVoc;
-      student.examBonusPoints = recExm;
-      student.practicePoints = finalPractice;
+      student.examBonusPoints = finalExm;
+      student.practicePoints = finalPrc;
       student.timePoints = recTime;
       student.encouragementBonus = recBonus;
-      student.teacherBonus = recTeacher;
+      student.teacherBonus = finalTeacher;
       student.totalMeritPoints = targetTotal;
       saveStudentVaultMaxPoints(student.id, targetTotal, student.name, student.className);
 
@@ -6474,105 +6527,64 @@ class StudentGradebookService {
 
 
       // Khuyến mại duy nhất hôm nay cộng 10 điểm, từ ngày mai cộng 5 điểm cho lần đăng nhập đầu tiên
+      // NGUYÊN TẮC BẮT BUỘC CỦA THẦY ĐINH THÀNH: Mỗi ngày đăng nhập CHỈ CỘNG THƯỞNG 1 LẦN DUY NHẤT!
+      const loginAwardKey = `GVAI_DAILY_LOGIN_AWARDED_${existing.id}_${todayStr}`;
+      const isAlreadyAwardedToday = 
+        (existing.lastLoginDate && existing.lastLoginDate.slice(0, 10) === todayStr) ||
+        (typeof window !== 'undefined' && window.localStorage?.getItem(loginAwardKey) === 'true');
 
-      if (existing.lastLoginDate !== todayStr) {
-
+      if (!isAlreadyAwardedToday) {
         existing.attendancePoints = (existing.attendancePoints || 0) + loginReward.points;
-
         existing.lastLoginDate = todayStr;
-
-        const sumParts = (
-
-          (existing.attendancePoints || 0) + 
-
-          (existing.vocabPoints || 0) + 
-
-          (existing.examBonusPoints || 0) + 
-
-          (existing.practicePoints || 0) + 
-
-          (existing.timePoints || 0) + 
-
-          (existing.encouragementBonus || 15) +
-
-          (existing.teacherBonus || 0)
-
-        );
-
-        // BẢO VỆ ĐIỂM TỐI CAO: Ít nhất bằng điểm cũ + điểm thưởng hôm nay
-
-        const vaultMax = getStudentVaultMaxPoints(existing.id, existing.name, existing.className);
-        existing.totalMeritPoints = Math.max(prevTotal + loginReward.points, vaultMax + loginReward.points, sumParts);
-        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
-
+        if (typeof window !== 'undefined') {
+          try { window.localStorage?.setItem(loginAwardKey, 'true'); } catch {}
+        }
         this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+${loginReward.points}đ: ${loginReward.title})`);
-
       } else {
-
-        const sumParts = (
-
-          (existing.attendancePoints || 0) + 
-
-          (existing.vocabPoints || 0) + 
-
-          (existing.examBonusPoints || 0) + 
-
-          (existing.practicePoints || 0) + 
-
-          (existing.timePoints || 0) + 
-
-          (existing.encouragementBonus || 15) +
-
-          (existing.teacherBonus || 0)
-
-        );
-
-        const vaultMax = getStudentVaultMaxPoints(existing.id, existing.name, existing.className);
-        existing.totalMeritPoints = Math.max(prevTotal, vaultMax, sumParts);
-        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
-
         this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
-
       }
 
-
+      const sumParts = (
+        (existing.attendancePoints || 0) + 
+        (existing.vocabPoints || 0) + 
+        (existing.examBonusPoints || 0) + 
+        (existing.practicePoints || 0) + 
+        (existing.timePoints || 0) + 
+        (existing.encouragementBonus || 15) +
+        (existing.teacherBonus || 0)
+      );
+      const vaultMax = getStudentVaultMaxPoints(existing.id, existing.name, existing.className);
+      existing.totalMeritPoints = Math.max(vaultMax, sumParts, 15);
+      saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
 
       // ================= THƯỞNG PHÁO HOA +20 ĐIỂM NẾU HÔM QUA ĐÃ HỌC VÀ HÔM NAY TIẾP TỤC HỌC =================
+      const streakAwardKey = `GVAI_STREAK_AWARDED_${existing.id}_${todayStr}`;
+      const canAwardStreak = 
+        studiedYesterday && 
+        (!existing.streakBonusAwardedDate || existing.streakBonusAwardedDate.slice(0, 10) !== todayStr) &&
+        (typeof window === 'undefined' || window.localStorage?.getItem(streakAwardKey) !== 'true');
 
-      if (studiedYesterday && existing.streakBonusAwardedDate !== todayStr) {
-
+      if (canAwardStreak) {
         existing.streakBonusAwardedDate = todayStr;
-
-        const STREAK_BONUS = 20;
-
-        existing.teacherBonus = (existing.teacherBonus || 0) + STREAK_BONUS;
-
-        existing.totalMeritPoints = (existing.totalMeritPoints || 0) + STREAK_BONUS;
-
-        this.recordCheckin(
-
-          existing,
-
-          '🎆 NỔ PHÁO HOA ĂN MỪNG',
-
-          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${getYesterdayDateString(todayStr)}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${STREAK_BONUS} điểm thi đua chăm chỉ!`
-
-        );
-
         if (typeof window !== 'undefined') {
-
-          try {
-
-            window.dispatchEvent(new CustomEvent('gvai_fireworks_streak_reward', {
-
-              detail: { student: existing, streakPoints: STREAK_BONUS, todayStr }
-
-            }));
-
-          } catch {}
-
+          try { window.localStorage?.setItem(streakAwardKey, 'true'); } catch {}
         }
-
+        const STREAK_BONUS = 20;
+        existing.teacherBonus = (existing.teacherBonus || 0) + STREAK_BONUS;
+        existing.totalMeritPoints = (existing.totalMeritPoints || 0) + STREAK_BONUS;
+        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
+        this.recordCheckin(
+          existing,
+          '🎆 NỔ PHÁO HOA ĂN MỪNG',
+          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${getYesterdayDateString(todayStr)}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${STREAK_BONUS} điểm thi đua chăm chỉ!`
+        );
+        if (typeof window !== 'undefined') {
+          try {
+            window.dispatchEvent(new CustomEvent('gvai_fireworks_streak_reward', {
+              detail: { student: existing, streakPoints: STREAK_BONUS, todayStr }
+            }));
+          } catch {}
+        }
       }
 
 
@@ -7406,57 +7418,43 @@ class StudentGradebookService {
    */
 
   public recordDailyLogin(studentId: string): { awarded: number; total: number; isFirstToday: boolean; rewardInfo: DailyLoginRewardInfo } {
-
     const today = getLocalDateString();
-
     const loginReward = getDailyLoginRewardInfo(today);
-
     const student = this.students.find(s => s.id === studentId);
-
     if (!student) {
-
       return { awarded: 0, total: 0, isFirstToday: false, rewardInfo: loginReward };
-
     }
 
-    if (student.lastLoginDate !== today) {
+    const loginAwardKey = `GVAI_DAILY_LOGIN_AWARDED_${student.id}_${today}`;
+    const alreadyAwardedToday = 
+      (student.lastLoginDate && student.lastLoginDate.slice(0, 10) === today) ||
+      (typeof window !== 'undefined' && window.localStorage?.getItem(loginAwardKey) === 'true');
 
-      student.lastLoginDate = today;
-
-      this.addStudentMeritPoints(studentId, {
-
-        attendance: loginReward.points,
-
-        reason: `Đăng nhập chuyên cần ngày ${today} (+${loginReward.points}đ: ${loginReward.title})`
-
-      });
-
+    if (alreadyAwardedToday) {
+      // Đã đăng nhập hôm nay rồi, tuyệt đối không cộng thưởng thêm lần thứ hai!
       return {
-
-        awarded: loginReward.points,
-
+        awarded: 0,
         total: student.totalMeritPoints || 0,
-
-        isFirstToday: true,
-
+        isFirstToday: false,
         rewardInfo: loginReward
-
       };
-
     }
 
+    // Lần đầu tiên đăng nhập hôm nay:
+    student.lastLoginDate = today;
+    if (typeof window !== 'undefined') {
+      try { window.localStorage?.setItem(loginAwardKey, 'true'); } catch {}
+    }
+    this.addStudentMeritPoints(studentId, {
+      attendance: loginReward.points,
+      reason: `Đăng nhập chuyên cần ngày ${today} (+${loginReward.points}đ: ${loginReward.title})`
+    });
     return {
-
-      awarded: 0,
-
+      awarded: loginReward.points,
       total: student.totalMeritPoints || 0,
-
-      isFirstToday: false,
-
+      isFirstToday: true,
       rewardInfo: loginReward
-
     };
-
   }
 
 

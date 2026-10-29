@@ -611,64 +611,57 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const [iframeKey, setIframeKey] = useState<number>(0);
-
-
+  const awardedExercisesRef = useRef<Set<string>>(new Set());
 
   // Lắng nghe kết quả làm bài & học từ vựng từ iframe (Chant, Speed Blitz, Word Scramble...)
-
+  // TUYỆT ĐỐI TUÂN THỦ NGUYÊN TẮC CỦA THẦY ĐINH THÀNH:
+  // Phải hoàn thành bài tập thực tế mới được cộng điểm (+10đ/bài),
+  // nghiêm cấm tự ý cộng điểm dồn dập từ các event tiến độ GVAI_VOCAB_PROGRESS hoặc dùng cumulative XP!
   useEffect(() => {
-
     const handleVocabMessage = (event: MessageEvent) => {
-
       try {
-
         const data = event.data;
-
         if (!data || !currentStudent) return;
 
-        if (data.type === 'GVAI_VOCAB_PROGRESS' || data.type === 'GVAI_EXERCISE_COMPLETED') {
-
-          const u = Number(data.unit) || selectedUnit;
-
-          const g = Number(data.grade) || selectedGrade;
-
-          const pts = data.xp || data.score || 10;
-
-          studentGradebookService.recordVocabUnitCompleted(currentStudent.id, u, g);
-
-          studentGradebookService.recordPracticeMerit(
-
-            currentStudent.id,
-
-            `${data.exerciseType || 'Bài tập từ vựng'} Unit ${u}`,
-
-            pts
-
-          );
-
-          refreshStudentScore();
-
-          if (onRewardMerit) {
-
-            onRewardMerit(`Hoàn thành ${data.exerciseType || 'bài tập từ vựng'} Unit ${u}`, pts);
-
-          }
-
+        // Bỏ qua các sự kiện lật thẻ / xem từ (tiến độ học tập đơn thuần, không cộng điểm)
+        if (data.type === 'GVAI_VOCAB_PROGRESS') {
+          return;
         }
 
+        // Chỉ khi HOÀN THÀNH bài tập (GVAI_EXERCISE_COMPLETED) mới ghi nhận thưởng điểm
+        if (data.type === 'GVAI_EXERCISE_COMPLETED') {
+          const u = Number(data.unit) || selectedUnit;
+          const g = Number(data.grade) || selectedGrade;
+          const exerciseType = data.exerciseType || 'Bài tập từ vựng';
+          const dedupKey = `${currentStudent.id}__g${g}__u${u}__${exerciseType}`;
+
+          // Chống cộng điểm dồn dập: Mỗi bài tập trong 1 phiên chỉ thưởng 1 lần duy nhất
+          if (awardedExercisesRef.current.has(dedupKey)) {
+            return;
+          }
+          awardedExercisesRef.current.add(dedupKey);
+
+          // Cố định 10 điểm thưởng cho 1 bài tập hoàn thành (tuyệt đối không lấy data.xp tích lũy của game)
+          const pts = 10;
+          studentGradebookService.recordVocabUnitCompleted(currentStudent.id, u, g);
+          studentGradebookService.recordPracticeMerit(
+            currentStudent.id,
+            `${exerciseType} Unit ${u}`,
+            pts
+          );
+          refreshStudentScore();
+          if (onRewardMerit) {
+            onRewardMerit(`Hoàn thành ${exerciseType} Unit ${u}`, pts);
+          }
+        }
       } catch (err) {
-
         console.warn('Lỗi xử lý message từ iframe:', err);
-
       }
-
     };
 
     window.addEventListener('message', handleVocabMessage);
-
     return () => window.removeEventListener('message', handleVocabMessage);
-
-  }, [currentStudent, selectedUnit, selectedGrade, onRewardMerit]);
+  }, [currentStudent, selectedUnit, selectedGrade, onRewardMerit, refreshStudentScore]);
 
 
 

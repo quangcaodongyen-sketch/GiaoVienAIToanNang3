@@ -4289,23 +4289,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           currentStudent={currentStudent}
 
           onRewardMerit={(reason, pts) => {
-
             if (currentStudent) {
-
-              studentGradebookService.addStudentMeritPoints(currentStudent.id, {
-
-                vocab: pts,
-
-                reason: reason
-
-              });
-
+              // Điểm đã được ghi nhận chuẩn xác 1 lần bên trong UnifiedVocabPortal,
+              // ở đây chỉ cập nhật state hiển thị để học sinh thấy điểm mới
               const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
-
               if (fresh) setCurrentStudent({ ...fresh });
-
             }
-
           }}
 
           onOpenIpaModal={() => setIsIpaModalOpen(true)}
