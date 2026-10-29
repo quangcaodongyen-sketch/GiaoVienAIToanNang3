@@ -1937,7 +1937,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
 
           {/* GIAO DIỆN MÁY TÍNH & MÀN LỚN: THANH CUỘN TAB 3D TRONG SUỐT */}
-          <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto pb-1 text-xs max-w-full lg:max-w-3xl">
+          <div className="hidden sm:flex items-center gap-2 overflow-x-auto pb-1 text-xs sm:text-sm md:text-base max-w-full lg:max-w-3xl">
             {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => {
               const uMission = missionState?.mission1.units[u.unitNumber];
               const isGK1Target = [1, 2, 3].includes(u.unitNumber);
@@ -1955,7 +1955,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     handleRestartListen();
                     handleSpellRestart();
                   }}
-                  className={`px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
+                  className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm md:text-base transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
                     isAct
                       ? 'bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_16px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-0.5 scale-105'
                       : 'bg-white/10 hover:bg-white/20 text-white font-extrabold border border-white/15 backdrop-blur-md hover:text-amber-300 shadow-sm'
@@ -2078,13 +2078,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
 
         {/* LƯỚI 8 NÚT TAB 3D TRONG SUỐT - TƯƠNG PHẢN CAO - PHÙ HỢP HOÀN HẢO VỚI ĐIỆN THOẠI */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 pt-1 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 pt-1 text-xs sm:text-sm md:text-base font-black">
           
           {/* 1. Flashcard */}
           <button
             type="button"
             onClick={() => setCurrentMode('flashcard')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'flashcard'
                 ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white shadow-[0_6px_20px_rgba(37,99,235,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-blue-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2098,7 +2098,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('match')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'match'
                 ? 'bg-gradient-to-b from-indigo-500 via-purple-600 to-indigo-700 text-white shadow-[0_6px_20px_rgba(99,102,241,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-indigo-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2112,7 +2112,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('quiz')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'quiz'
                 ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white shadow-[0_6px_20px_rgba(16,185,129,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-emerald-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2126,7 +2126,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('listen')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'listen'
                 ? 'bg-gradient-to-b from-purple-500 via-fuchsia-600 to-purple-700 text-white shadow-[0_6px_20px_rgba(168,85,247,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-purple-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2140,7 +2140,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('spelling')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'spelling'
                 ? 'bg-gradient-to-b from-sky-500 via-blue-600 to-sky-700 text-white shadow-[0_6px_20px_rgba(14,165,233,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-sky-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2154,7 +2154,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('chant')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'chant'
                 ? 'bg-gradient-to-b from-pink-500 via-rose-600 to-pink-700 text-white shadow-[0_6px_20px_rgba(244,63,94,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-pink-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2169,7 +2169,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('scramble')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'scramble'
                 ? 'bg-gradient-to-b from-violet-600 via-indigo-700 to-violet-800 text-white shadow-[0_6px_20px_rgba(124,58,237,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-violet-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
@@ -2183,7 +2183,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('blitz')}
-            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
+            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
               currentMode === 'blitz'
                 ? 'bg-gradient-to-b from-amber-400 via-orange-500 to-amber-600 text-slate-950 shadow-[0_6px_20px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-1 scale-[1.03]'
                 : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'

@@ -1525,7 +1525,7 @@ export default function App() {
                   window.history.pushState(null, '', '/');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'welcome'
                     ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
                     : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
@@ -1543,7 +1543,7 @@ export default function App() {
                   setMainViewTab('teachers');
                   window.history.pushState(null, '', '/giaovien');
                 }}
-                className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'teachers'
                     ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
                     : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
@@ -1561,7 +1561,7 @@ export default function App() {
                   setMainViewTab('students');
                   window.history.pushState(null, '', '/hocsinh');
                 }}
-                className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
                   (mainViewTab as string) === 'students'
                     ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white font-black shadow-[0_6px_20px_rgba(16,185,129,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-emerald-300/60 -translate-y-0.5 scale-[1.02]'
                     : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'

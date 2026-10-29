@@ -3062,7 +3062,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('missions')}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             activeTab === 'missions'
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3077,7 +3077,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('vocab')}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             activeTab === 'vocab'
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3100,7 +3100,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               setActiveTab('sgk');
             }
           }}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             ['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3119,7 +3119,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               setActiveTab('quiz'); // Mở Kiểm Tra 5 Phút trước theo lộ trình khởi động
             }
           }}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             ['exam', 'quiz'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3136,7 +3136,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           onClick={() => {
             setActiveTab('teams');
           }}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             ['teams', 'leaderboard', 'tracking'].includes(activeTab)
               ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.7),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.15),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3151,7 +3151,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab('forum')}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
+          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             ['forum', 'messages'].includes(activeTab)
               ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
@@ -3166,11 +3166,11 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {/* THANH CHUYỂN NHANH PHỤ (SUB-NAV) KHI Ở CÁC PHÂN HỆ CÓ NHIỀU MỤC - CHUẨN 3D TRONG SUỐT & TƯƠNG PHẢN */}
       {/* THANH ĐIỀU HƯỚNG PHÂN HỆ THI ĐUA & THỐNG KÊ (GỘP GỌN 4 CHẾ ĐỘ: TOÀN TRƯỜNG, THEO KHỐI, THEO LỚP, 4 TỔ THI ĐUA) */}
       {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
           <button
             type="button"
             onClick={() => setCompetitionSubTab('all')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               competitionSubTab === 'all'
                 ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3183,7 +3183,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => setCompetitionSubTab('grade')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               competitionSubTab === 'grade'
                 ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-[0_4px_14px_rgba(79,70,229,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-indigo-300 border-b-2 border-indigo-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3196,7 +3196,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => setCompetitionSubTab('class')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               competitionSubTab === 'class'
                 ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3209,7 +3209,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => setCompetitionSubTab('teams')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               competitionSubTab === 'teams'
                 ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_14px_rgba(245,158,11,0.5),inset_0_1.5px_1px_rgba(255,255,255,0.7),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3223,12 +3223,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       
       {['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
           {(!currentStudent || currentStudent.grade === 6) && (
             <button
               type="button"
               onClick={() => setActiveTab('decuong_e6')}
-              className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
                 activeTab === 'decuong_e6'
                   ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
                   : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3242,7 +3242,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('decuong_e8')}
-              className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
                 activeTab === 'decuong_e8'
                   ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
                   : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3255,7 +3255,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('sgk')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               activeTab === 'sgk'
                 ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3267,7 +3267,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('hsg')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
               activeTab === 'hsg'
                 ? 'bg-gradient-to-b from-purple-600 via-indigo-600 to-purple-700 text-white font-black shadow-[0_4px_14px_rgba(147,51,234,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-purple-300 border-b-2 border-purple-950 -translate-y-0.5 scale-[1.02]'
                 : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
@@ -3279,7 +3279,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {['exam', 'quiz'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
           {/* LỘ TRÌNH 1: KIỂM TRA 5 PHÚT (KHỞI ĐỘNG NHANH) */}
           <button
             type="button"
@@ -3338,7 +3338,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {['forum', 'messages'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
           <button
             type="button"
             onClick={() => setActiveTab('forum')}
@@ -4527,7 +4527,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   }}
 
-                  className="cursor-pointer px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5"
+                  className="cursor-pointer px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5"
 
                   title="Mở hộp thoại tải tài liệu mới lên cho học sinh toàn trường"
 
@@ -7145,7 +7145,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 onClick={() => launchFireworks(4500)}
 
-                className="mb-3 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-1.5 mx-auto transition cursor-pointer shadow-xs active:scale-95"
+                className="mb-3 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-1.5 mx-auto transition cursor-pointer shadow-xs active:scale-95"
 
               >
 
