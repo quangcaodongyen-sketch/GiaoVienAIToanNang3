@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Bell, 
-  Sparkles, 
   Award, 
   BookOpen, 
   FileText, 
-  CheckCircle2, 
   ChevronDown, 
   ChevronUp, 
-  ArrowRight, 
-  Zap, 
   Trophy, 
-  Target, 
-  Volume2, 
-  Lightbulb, 
-  HelpCircle,
   Clock,
-  Check
+  Sparkles
 } from 'lucide-react';
 import { StudentProfile } from '../services/studentGradebookService';
 import { vocabularyService } from '../services/vocabularyService';
 
 export interface StudentStudyReminderProps {
   currentStudent?: StudentProfile | null;
+  loginRewardInfo?: {
+    points: number;
+    title: string;
+    promoBadge?: string;
+    expiresAtDisplay?: string;
+  };
   onGoToExam: () => void;
   onGoToQuiz: () => void;
   onGoToVocabUnit: (unitNumber: number, grade?: number) => void;
@@ -34,6 +32,7 @@ const STORAGE_REMINDER_BELL_KEY = 'gvai_student_study_reminder_bell_enabled';
 
 export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
   currentStudent,
+  loginRewardInfo,
   onGoToExam,
   onGoToQuiz,
   onGoToVocabUnit,
@@ -58,13 +57,13 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
   // Lấy danh sách Unit thực tế của khối lớp
   const units = vocabularyService.getUnitsByGrade(grade);
-  const unit1 = units.find(u => u.unitNumber === 1) || { unitNumber: 1, title: 'Unit 1', wordCount: 25 };
-  const unit2 = units.find(u => u.unitNumber === 2) || { unitNumber: 2, title: 'Unit 2', wordCount: 25 };
-  const unit3 = units.find(u => u.unitNumber === 3) || { unitNumber: 3, title: 'Unit 3', wordCount: 25 };
+  const unit1 = units.find(u => u.unitNumber === 1) || { unitNumber: 1, title: 'Unit 1', wordCount: 22 };
+  const unit2 = units.find(u => u.unitNumber === 2) || { unitNumber: 2, title: 'Unit 2', wordCount: 23 };
+  const unit3 = units.find(u => u.unitNumber === 3) || { unitNumber: 3, title: 'Unit 3', wordCount: 23 };
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
+    setTimeout(() => setToastMsg(null), 3000);
   };
 
   const toggleBell = () => {
@@ -72,356 +71,308 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
     setIsBellEnabled(next);
     localStorage.setItem(STORAGE_REMINDER_BELL_KEY, String(next));
     if (next) {
-      showToast('🔔 Đã bật nhắc nhở học bài mỗi ngày! Thầy Đinh Thành sẽ đồng hành cùng em.');
+      showToast('🔔 Đã bật nhắc nhở học bài mỗi ngày cùng Thầy Đinh Thành!');
     } else {
       showToast('🔕 Đã tạm tắt nhắc nhở học bài.');
     }
   };
 
+  const promoPts = loginRewardInfo?.points || 15;
+
   return (
-    <div className="mb-5 rounded-2xl bg-gradient-to-br from-[#0B1E36] via-[#0F2A4A] to-[#123863] border-2 border-amber-400/50 shadow-xl text-white overflow-hidden transition-all duration-300">
-      {/* TOAST THÔNG BÁO NHẸ NHÀNG */}
+    <div className="mb-4 rounded-2xl bg-gradient-to-br from-[#0B1E36] via-[#0F2A4A] to-[#123863] border border-blue-500/40 shadow-xl text-white overflow-hidden transition-all duration-300">
+      {/* TOAST THÔNG BÁO NHANH */}
       {toastMsg && (
-        <div className="bg-amber-400 text-slate-950 px-4 py-2 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in">
+        <div className="bg-amber-400 text-slate-950 px-4 py-1.5 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in">
           <span>✨</span>
           <span>{toastMsg}</span>
         </div>
       )}
 
-      {/* 1. HEADER THANH NHẮC NHỞ */}
-      <div className="p-3.5 sm:p-4 bg-gradient-to-r from-blue-950/80 via-slate-900/80 to-blue-950/80 border-b border-blue-500/30 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center shadow-lg font-black text-lg shrink-0 animate-pulse">
-            <Bell className="w-5 h-5 text-slate-950" />
+      {/* 1. HEADER GỘP GỌN: TIÊU ĐỀ + TÓM TẮT LỊCH THI & ƯU ĐÃI + NÚT THU GỌN */}
+      <div className="p-3 sm:p-3.5 bg-gradient-to-r from-blue-950/90 via-slate-900/90 to-blue-950/90 border-b border-blue-500/30 flex flex-wrap items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center shadow-md font-black shrink-0">
+            <Bell className="w-4 h-4 text-slate-950" />
           </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-sm sm:text-base font-black text-white tracking-tight flex items-center gap-1.5">
-                <span>LỜI NHẮC ÔN TẬP &amp; TĂNG ĐIỂM SỐ</span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h3 className="text-xs sm:text-sm font-black text-white tracking-tight">
+                LỜI NHẮC ÔN TẬP GK1 &amp; TĂNG ĐIỂM SỐ
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 shadow-xs">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 shadow-2xs">
                 Thầy Đinh Thành
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/30 text-cyan-200 border border-blue-400/30">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/30 text-cyan-200 border border-blue-400/30 truncate">
                 Dành cho {studentName} ({className})
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-blue-200/90 font-medium mt-0.5">
-              Rèn kỹ năng nhận dạng đề kiểm tra Giữa Kỳ 1 (GK1) • Học từ vựng trọng tâm • Tăng điểm thi đua siêu tốc
+            <p className="text-[11px] text-blue-200/95 font-medium mt-0.5 flex items-center gap-1.5 flex-wrap">
+              <span className="text-amber-300 font-bold">📢 Thi GK1: Chiều Thứ 2 (02/11)</span>
+              <span>•</span>
+              <span className="text-emerald-300 font-bold">🎁 Tặng +{promoPts}đ Đăng nhập</span>
+              <span>•</span>
+              <span className="text-cyan-200">Mang 2 bút chì 2B &amp; tẩy mềm</span>
             </p>
           </div>
         </div>
 
-        {/* NÚT TÁC VỤ: BẬT CHUÔNG & THU GỌN */}
+        {/* NÚT BẬT CHUÔNG & THU GỌN */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={toggleBell}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border ${
-              isBellEnabled
-                ? 'bg-amber-400/20 text-amber-300 border-amber-400/40 hover:bg-amber-400/30'
-                : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:text-white'
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border ${
+              isBellEnabled 
+                ? 'bg-amber-400/20 text-amber-300 border-amber-400/40 hover:bg-amber-400/30' 
+                : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
             }`}
-            title={isBellEnabled ? 'Đang bật chuông nhắc học bài' : 'Bấm để bật chuông nhắc học bài'}
+            title={isBellEnabled ? 'Đang bật chuông nhắc nhở' : 'Bấm để bật chuông nhắc nhở'}
           >
-            <Bell className={`w-3.5 h-3.5 ${isBellEnabled ? 'text-amber-400 fill-amber-400' : ''}`} />
-            <span className="hidden sm:inline">{isBellEnabled ? 'Đang Nhắc Học Bài' : 'Bật Nhắc Học'}</span>
+            <Bell className={`w-3.5 h-3.5 ${isBellEnabled ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+            <span className="text-[11px] hidden sm:inline">{isBellEnabled ? 'Đang Nhắc' : 'Tắt Nhắc'}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-white font-bold text-xs transition cursor-pointer border border-blue-700/50 flex items-center gap-1"
-            title={isExpanded ? 'Thu gọn lời nhắc' : 'Mở rộng lời nhắc'}
+            className="px-2.5 py-1 rounded-lg bg-blue-800/40 hover:bg-blue-700/60 text-cyan-200 font-bold text-xs transition flex items-center gap-1 cursor-pointer border border-blue-500/30"
           >
             {isExpanded ? (
               <>
-                <ChevronUp className="w-4 h-4 text-cyan-300" />
-                <span className="hidden sm:inline">Thu Gọn</span>
+                <ChevronUp className="w-3.5 h-3.5 text-cyan-300" />
+                <span className="text-[11px]">Thu Gọn</span>
               </>
             ) : (
               <>
-                <ChevronDown className="w-4 h-4 text-cyan-300" />
-                <span className="hidden sm:inline">Xem Lời Nhắc</span>
+                <ChevronDown className="w-3.5 h-3.5 text-cyan-300" />
+                <span className="text-[11px]">Xem Chi Tiết</span>
               </>
             )}
           </button>
         </div>
       </div>
 
-      {/* 2. KHI THU GỌN: THANH TÓM TẮT NHANH */}
+      {/* 2. KHI THU GỌN: THANH TÓM TẮT 1 DÒNG ĐƠN GIẢN */}
       {!isExpanded && (
-        <div className="px-4 py-2.5 bg-blue-950/40 flex flex-wrap items-center justify-between gap-2.5 text-xs">
-          <div className="flex items-center gap-2 text-blue-100 font-medium">
-            <span className="text-amber-300">💡</span>
-            <span>
-              <strong>Thầy Thành nhắc:</strong> Kiểm tra GK1 Tiếng Anh vào <strong>CHIỀU THỨ 2 TUẦN SAU (02/11)</strong>! Các em nhớ chuẩn bị bút chì 2B tô trắc nghiệm & ôn chắc Unit 1-3 để đạt điểm 9, 10 nhé!
-            </span>
+        <div className="px-3.5 py-2 bg-blue-950/40 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-blue-100 font-medium text-[11px] sm:text-xs">
+            <span className="text-amber-300 font-bold">📢 Thầy nhắc:</span>
+            <span>Thi GK1 Chiều Thứ 2 (02/11) • Bắt buộc mang <strong>2 bút chì 2B &amp; tẩy mềm</strong> • Ôn chắc Unit 1 - 3!</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={onGoToExam}
-              className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-xs"
+              className="px-2.5 py-0.5 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[11px] transition cursor-pointer"
             >
               ✍️ Làm Đề GK1
             </button>
             <button
               type="button"
               onClick={() => onGoToVocabUnit(1, grade)}
-              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition cursor-pointer shadow-xs"
+              className="px-2.5 py-0.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[11px] transition cursor-pointer"
             >
-              📚 Luyện Từ Vựng
+              📚 Học Từ Vựng
             </button>
           </div>
         </div>
       )}
 
-      {/* 3. KHI MỞ RỘNG: 3 CARD NHẮC NHỞ HÀNH ĐỘNG CỐT LÕI */}
+      {/* 3. KHI MỞ RỘNG: BỐ CỤC ĐƠN GIẢN HÓA - ĐỌC NHANH TRONG 3 GIÂY */}
       {isExpanded && (
-        <div className="p-4 sm:p-5 space-y-4">
-
-
-          {/* LƯU Ý SƯ PHẠM: LỊCH KIỂM TRA GK1 TIẾNG ANH VÀO CHIỀU THỨ 2 TUẦN SAU */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-950/60 via-amber-950/40 to-indigo-950/60 border-2 border-amber-400/60 shadow-lg relative overflow-hidden">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-amber-400/30">
-              <div className="flex items-center gap-2.5">
-                <span className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0 animate-bounce">
-                  📢
-                </span>
-                <div>
-                  <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider mb-0.5">
-                    LỘ TRÌNH KIỂM TRA CHÍNH THỨC TRÊN LỚP
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-amber-300 uppercase tracking-tight">
-                    LỊCH KIỂM TRA GK1 TIẾNG ANH: CHIỀU THỨ HAI TUẦN SAU (02/11/2026)
-                  </h3>
-                </div>
-              </div>
-              <div className="shrink-0 bg-black/40 px-3 py-1.5 rounded-xl border border-amber-400/30 text-amber-200 text-xs font-bold text-center">
-                ⏰ Đã thông báo toàn khối • Sẵn sàng bứt phá
+        <div className="p-3 sm:p-4 space-y-3">
+          {/* LƯỚI 4 LƯU Ý TRỌNG TÂM - NGẮN GỌN 1 DÒNG */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
+            <div className="p-2.5 rounded-xl bg-amber-400/15 border border-amber-400/50 flex items-start gap-2 shadow-2xs">
+              <span className="text-base shrink-0">✏️</span>
+              <div>
+                <strong className="text-amber-300 block text-xs">1. Thẻ Dụng Cụ:</strong>
+                <p className="text-white/95 text-[11px] font-medium leading-tight mt-0.5">
+                  Ít nhất <strong>2 bút chì 2B</strong> gọt sẵn + <strong>hòn tẩy mềm</strong> tô trắc nghiệm.
+                </p>
               </div>
             </div>
 
-            {/* 4 HÀNH TRANG BẮT BUỘC HỌC SINH CẦN CHUẨN BỊ */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-3.5 text-xs">
-              <div className="p-3.5 rounded-2xl bg-amber-400/20 border-2 border-amber-400/70 space-y-1.5 shadow-md">
-                <div className="font-black text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
-                  <span>✏️ 1. Thẻ Dụng Cụ: Bút Chì 2B &amp; Hòn Tẩy Mềm</span>
-                </div>
-                <p className="text-white leading-relaxed text-xs font-semibold">
-                  Học sinh <strong className="text-amber-300 underline font-black">BẮT BUỘC MANG THẺ DỤNG CỤ</strong>: gồm <strong>ít nhất 2 bút chì (2B hoặc 3B gọt sẵn)</strong> và <strong>hòn tẩy (gôm mềm sạch)</strong> để làm bài kiểm tra trắc nghiệm chính thức trên lớp. Tuyệt đối không dùng bút mực tô ô tròn!
+            <div className="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-400/30 flex items-start gap-2 shadow-2xs">
+              <span className="text-base shrink-0">🧠</span>
+              <div>
+                <strong className="text-cyan-300 block text-xs">2. Kiến Thức Trọng Tâm:</strong>
+                <p className="text-blue-100/90 text-[11px] leading-tight mt-0.5">
+                  Từ vựng <strong>Unit 1 - 3</strong> &amp; thì Hiện tại đơn, Quá khứ đơn, V-ing.
                 </p>
               </div>
+            </div>
 
-              <div className="p-3 rounded-xl bg-black/30 border border-cyan-400/20 space-y-1">
-                <div className="font-black text-cyan-300 flex items-center gap-1.5">
-                  <span>🧠 2. Kiến Thức Trọng Tâm</span>
-                </div>
-                <p className="text-blue-100/90 leading-relaxed text-[11px]">
-                  Ôn chắc toàn bộ từ vựng <strong>Unit 1, Unit 2, Unit 3</strong>; ngữ pháp Hiện tại đơn, Quá khứ đơn, V-ing sau động từ chỉ sở thích, phát âm đuôi -s/es và -ed.
+            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-400/30 flex items-start gap-2 shadow-2xs">
+              <span className="text-base shrink-0">⏱️</span>
+              <div>
+                <strong className="text-emerald-300 block text-xs">3. Lịch Thi GK1:</strong>
+                <p className="text-blue-100/90 text-[11px] leading-tight mt-0.5">
+                  <strong>Chiều Thứ Hai (02/11/2026)</strong> trên lớp • Làm đề thử online để rèn phản xạ.
                 </p>
               </div>
+            </div>
 
-              <div className="p-3 rounded-xl bg-black/30 border border-emerald-400/20 space-y-1">
-                <div className="font-black text-emerald-300 flex items-center gap-1.5">
-                  <span>💻 3. Luyện Kiểm Tra Thử Trên Web</span>
-                </div>
-                <p className="text-blue-100/90 leading-relaxed text-[11px]">
-                  Vào mục <strong>"Kiểm Tra Thử Online"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận dạng câu hỏi và kỹ năng phân bổ thời gian làm bài hợp lý.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/30 border border-purple-400/20 space-y-1">
-                <div className="font-black text-purple-300 flex items-center gap-1.5">
-                  <span>🛡️ 4. Trách Nhiệm TT &amp; TP</span>
-                </div>
-                <p className="text-blue-100/90 leading-relaxed text-[11px]">
-                  <strong>Tổ Trưởng (TT) &amp; Tổ Phó (TP)</strong> đôn đốc các bạn trong tổ ôn tập đầy đủ, nhắc nhở các bạn mang đủ bút chì 2B và đi thi đúng giờ chiều Thứ Hai!
+            <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-400/30 flex items-start gap-2 shadow-2xs">
+              <span className="text-base shrink-0">🛡️</span>
+              <div>
+                <strong className="text-purple-300 block text-xs">4. Trách Nhiệm TT &amp; TP:</strong>
+                <p className="text-blue-100/90 text-[11px] leading-tight mt-0.5">
+                  Đôn đốc các bạn trong tổ ôn tập đầy đủ và mang đủ bút chì 2B đi thi.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {/* LỜI NHẮC 1: LÀM BÀI KIỂM TRA ONLINE ĐỀ GIỮA KỲ 1 (GK1) */}
-            <div className="rounded-2xl bg-[#0B1E36]/90 border border-amber-400/40 p-4 flex flex-col justify-between shadow-md hover:border-amber-300 transition-all group">
+          {/* 3 THẺ HÀNH ĐỘNG CỐT LÕI (NGẮN GỌN & NÚT BẤM RÕ RÀNG) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            {/* THẺ 1: ĐỀ THI ONLINE GK1 */}
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-amber-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-amber-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-xs">
-                    ✍️ Trọng Tâm Nhận Dạng Đề
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="text-[10px] font-black uppercase text-amber-300">
+                    ✍️ Đề Minh Họa GK1
                   </span>
-                  <span className="text-[11px] font-black text-amber-300">
+                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/30">
                     +30đ Thi Đua
                   </span>
                 </div>
-
-                <h4 className="text-sm sm:text-base font-black text-white group-hover:text-amber-300 transition-colors">
-                  Kiểm Tra Thử Online Đề Minh Họa GK1 (Lớp {grade})
+                <h4 className="text-xs sm:text-sm font-black text-white">
+                  Kiểm Tra Thử Online Lớp {grade}
                 </h4>
-
-                <p className="text-xs text-blue-100/90 leading-relaxed mt-1.5 font-normal">
-                  <strong>Mục đích:</strong> Giúp em làm quen với ma trận 40 câu trắc nghiệm chuẩn Bộ GD&amp;ĐT (Ngữ âm, Trọng âm, Tìm lỗi sai, Đọc hiểu). Cọ xát đề có bấm giờ 45-60 phút để không bỡ ngỡ và tự tin đạt điểm 9-10 khi thi trên lớp!
+                <p className="text-[11px] text-blue-200/80 mt-1 line-clamp-1">
+                  40 câu trắc nghiệm chuẩn ma trận Bộ GD&ĐT, tự động bấm giờ.
                 </p>
-
-                <div className="mt-2.5 space-y-1 text-[11px] text-cyan-200 font-medium">
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>Làm quen dạng bài bẫy thường gặp</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>Chấm điểm tự động &amp; xem giải thích từng câu</span>
-                  </div>
-                </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-blue-500/30 flex items-center gap-2">
+              <div className="mt-3 pt-2 border-t border-blue-500/20 flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onGoToExam}
-                  className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
-                  title="Mở phân hệ Đề Kiểm Tra Online Giữa Kỳ 1"
+                  className="flex-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1"
                 >
-                  <Award className="w-4 h-4 text-slate-950" />
-                  <span>Vào Kiểm Tra Thử Minh Họa GK1</span>
+                  <Award className="w-3.5 h-3.5 text-slate-950" />
+                  <span>Vào Thi Thử GK1</span>
                 </button>
                 <button
                   type="button"
                   onClick={onGoToQuiz}
-                  className="px-2.5 py-2 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-cyan-200 hover:text-white font-bold text-xs transition cursor-pointer border border-blue-700/50"
-                  title="Thử sức bài kiểm tra trắc nghiệm nhanh 5 phút rèn phản xạ"
+                  className="px-2 py-1.5 rounded-lg bg-blue-900/60 hover:bg-blue-800 text-cyan-200 font-bold text-xs transition cursor-pointer border border-blue-700/50"
+                  title="Kiểm tra trắc nghiệm 5 phút nhanh"
                 >
                   KT 5 Phút
                 </button>
               </div>
             </div>
 
-            {/* LỜI NHẮC 2: HỌC TỪ VỰNG TRỌNG TÂM ĐỂ TĂNG ĐIỂM SỐ NHANH HƠN */}
-            <div className="rounded-2xl bg-[#0B1E36]/90 border border-emerald-400/40 p-4 flex flex-col justify-between shadow-md hover:border-emerald-300 transition-all group">
+            {/* THẺ 2: TỪ VỰNG UNIT 1-3 */}
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-emerald-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-emerald-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xs">
-                    📚 Tăng Điểm Thần Tốc
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="text-[10px] font-black uppercase text-emerald-300">
+                    📚 Chiếm 50% Điểm GK1
                   </span>
-                  <span className="text-[11px] font-black text-emerald-300">
-                    +15đ / Bài Học
+                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                    +15đ / Bài
                   </span>
                 </div>
-
-                <h4 className="text-sm sm:text-base font-black text-white group-hover:text-emerald-300 transition-colors">
+                <h4 className="text-xs sm:text-sm font-black text-white">
                   Luyện Từ Vựng Unit 1 - Unit 3
                 </h4>
 
-                <p className="text-xs text-blue-100/90 leading-relaxed mt-1.5 font-normal">
-                  <strong>Mục đích:</strong> Từ vựng Unit 1 - 3 chiếm 50% điểm số bài kiểm tra GK1. Mỗi bài từ vựng hoàn thành giúp em nhận ngay <strong>+15đ thi đua</strong> (+35% ngày vàng) để bứt phá bảng xếp hạng toàn trường!
-                </p>
-
-                <div className="mt-2.5 flex flex-wrap gap-1.5 text-[11px]">
+                <div className="mt-1.5 flex flex-wrap gap-1">
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(1, grade)}
-                    className="px-2 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-bold transition flex items-center gap-1 cursor-pointer"
-                    title={`Mở từ vựng ${unit1.title}`}
+                    className="px-1.5 py-0.5 rounded-md bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
                   >
-                    <span>Unit 1</span>
-                    <span className="text-[9px] text-emerald-300">({unit1.wordCount} từ)</span>
+                    U1 ({unit1.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(2, grade)}
-                    className="px-2 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-bold transition flex items-center gap-1 cursor-pointer"
-                    title={`Mở từ vựng ${unit2.title}`}
+                    className="px-1.5 py-0.5 rounded-md bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
                   >
-                    <span>Unit 2</span>
-                    <span className="text-[9px] text-emerald-300">({unit2.wordCount} từ)</span>
+                    U2 ({unit2.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(3, grade)}
-                    className="px-2 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 font-bold transition flex items-center gap-1 cursor-pointer"
-                    title={`Mở từ vựng ${unit3.title}`}
+                    className="px-1.5 py-0.5 rounded-md bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
                   >
-                    <span>Unit 3</span>
-                    <span className="text-[9px] text-emerald-300">({unit3.wordCount} từ)</span>
+                    U3 ({unit3.wordCount} từ)
                   </button>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-blue-500/30">
+              <div className="mt-3 pt-2 border-t border-blue-500/20">
                 <button
                   type="button"
                   onClick={() => onGoToVocabUnit(1, grade)}
-                  className="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1"
                 >
-                  <BookOpen className="w-4 h-4 text-white" />
-                  <span>Vào Luyện Từ Vựng Ngay</span>
+                  <BookOpen className="w-3.5 h-3.5 text-white" />
+                  <span>Vào Luyện Từ Vựng</span>
                 </button>
               </div>
             </div>
 
-            {/* LỜI NHẮC 3: ÔN ĐỀ CƯƠNG GK1 TOÀN DIỆN */}
-            <div className="rounded-2xl bg-[#0B1E36]/90 border border-cyan-400/40 p-4 flex flex-col justify-between shadow-md hover:border-cyan-300 transition-all group md:col-span-2 lg:col-span-1">
+            {/* THẺ 3: ĐỀ CƯƠNG ÔN TẬP */}
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-cyan-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-cyan-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-xs">
-                    📖 Đề Cương Bám Sát SGK & Ma Trận
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="text-[10px] font-black uppercase text-cyan-300">
+                    📖 Bám Sát SGK
                   </span>
-                  <span className="text-[11px] font-black text-cyan-300">
-                    Tài Liệu Ôn Tập SGK
+                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-cyan-500/20 text-cyan-200 border border-cyan-400/30">
+                    Có Đáp Án
                   </span>
                 </div>
-
-                <h4 className="text-sm sm:text-base font-black text-white group-hover:text-cyan-300 transition-colors">
-                  Ôn Đề Cương GK1 Có Đáp Án Chi Tiết
+                <h4 className="text-xs sm:text-sm font-black text-white">
+                  Đề Cương GK1 Lớp {grade}
                 </h4>
-
-                <p className="text-xs text-blue-100/90 leading-relaxed mt-1.5 font-normal">
-                  <strong>Mục đích:</strong> Nắm chắc lý thuyết ngữ pháp trọng tâm và làm toàn bộ bài tập tự luận, viết lại câu theo đề cương thực dạy của Thầy Thành.
+                <p className="text-[11px] text-blue-200/80 mt-1 line-clamp-1">
+                  Ngữ pháp trọng tâm &amp; bài tập tự luận có đáp án đối chiếu.
                 </p>
-
-                <div className="mt-2.5 p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-[11px] text-cyan-100">
-                  <span>💡 <strong>Lưu ý của Thầy:</strong> Học sinh Lớp 6 ôn Đề cương Anh 6; Học sinh Lớp 8 ôn Đề cương Anh 8 có sẵn đáp án đối chiếu.</span>
-                </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-blue-500/30 flex items-center gap-2">
+              <div className="mt-3 pt-2 border-t border-blue-500/20 flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={onGoToDecuong}
-                  className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+                  className="flex-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1"
                 >
-                  <FileText className="w-4 h-4 text-white" />
-                  <span>Mở Đề Cương GK1 Lớp {grade}</span>
+                  <FileText className="w-3.5 h-3.5 text-white" />
+                  <span>Mở Đề Cương</span>
                 </button>
                 <button
                   type="button"
                   onClick={onGoToLeaderboard}
-                  className="px-2.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition cursor-pointer border border-amber-400/30 flex items-center gap-1"
-                  title="Xem thứ hạng thi đua hiện tại"
+                  className="px-2 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition cursor-pointer border border-amber-400/30 flex items-center gap-1"
+                  title="Xem Bảng Vàng thi đua"
                 >
                   <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="hidden sm:inline">Bảng Vàng</span>
+                  <span className="text-[11px]">Bảng Vàng</span>
                 </button>
               </div>
             </div>
-
           </div>
 
-          {/* 4. MẸO SƯ PHẠM NHẬN DẠNG ĐỀ KIỂM TRA GK1 CỦA THẦY ĐINH THÀNH */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-blue-950/60 border border-blue-400/30">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-amber-400 text-base">💡</span>
-                <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide">
-                  Phương Pháp Tư Duy & Kỹ Năng Làm Bài Kiểm Tra Minh Họa Của Thầy Thành
+          {/* 4. PHƯƠNG PHÁP TƯ DUY & MẸO NHẬN DIỆN CỦA THẦY THÀNH (THIẾT KẾ GỌN) */}
+          <div className="p-2.5 sm:p-3 rounded-xl bg-blue-950/60 border border-blue-400/30 text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-amber-400 text-sm">💡</span>
+                <span className="text-xs font-black text-amber-300 uppercase tracking-wide">
+                  Mẹo Làm Bài Thi GK1 Của Thầy Thành
                 </span>
               </div>
-              <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg text-[11px] font-bold">
+              <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg text-[10px] font-bold">
                 <button
                   type="button"
                   onClick={() => setActiveTipTab('pronunciation')}
-                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                  className={`px-2 py-0.5 rounded transition cursor-pointer ${
                     activeTipTab === 'pronunciation' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
                   }`}
                 >
@@ -430,7 +381,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTipTab('grammar')}
-                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                  className={`px-2 py-0.5 rounded transition cursor-pointer ${
                     activeTipTab === 'grammar' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
                   }`}
                 >
@@ -439,16 +390,16 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTipTab('error_find')}
-                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                  className={`px-2 py-0.5 rounded transition cursor-pointer ${
                     activeTipTab === 'error_find' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
                   }`}
                 >
-                  3. Tìm Lỗi Sai
+                  3. Lỗi Sai
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTipTab('reading')}
-                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                  className={`px-2 py-0.5 rounded transition cursor-pointer ${
                     activeTipTab === 'reading' ? 'bg-amber-400 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
                   }`}
                 >
@@ -457,50 +408,49 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               </div>
             </div>
 
-            {/* NỘI DUNG MẸO TƯƠNG ỨNG */}
-            <div className="text-xs text-blue-100 leading-relaxed bg-[#0B1E36]/80 p-3 rounded-lg border border-blue-500/20">
-
+            {/* NỘI DUNG MẸO SÚC TÍCH */}
+            <div className="text-[11px] text-blue-100/95 leading-relaxed bg-[#0B1E36]/90 p-2.5 rounded-lg border border-blue-500/20">
               {activeTipTab === 'pronunciation' && (
                 <div>
-                  <strong className="text-amber-300">🔊 Bí quyết câu Ngữ âm &amp; Trọng âm:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-200">
-                    <li><strong>Đuôi -s/-es:</strong> Nhớ câu thần chú <em>"Thời phong kiến f-p-k-t-th"</em> phát âm là <code>/s/</code>; đuôi <em>s, x, ch, sh, z, ge</em> phát âm là <code>/iz/</code>; còn lại phát âm là <code>/z/</code>.</li>
-                    <li><strong>Đuôi -ed:</strong> Tận cùng là <em>t, d</em> phát âm là <code>/id/</code> (tiền đô); tận cùng <em>p, k, f, s, sh, ch</em> phát âm là <code>/t/</code>; còn lại là <code>/d/</code>.</li>
-                    <li><strong>Trọng âm từ 2 âm tiết:</strong> Danh từ &amp; Tính từ thường nhấn <strong>âm 1</strong> (như <em>village, country, happy</em>); Động từ thường nhấn <strong>âm 2</strong> (như <em>relax, collect, enjoy</em>).</li>
-                  </ul>
+                  <strong className="text-amber-300">🔊 Bí quyết Ngữ âm &amp; Trọng âm:</strong>
+                  <div className="mt-1 space-y-0.5 text-slate-200">
+                    <p>• <strong>Đuôi -s/-es:</strong> Nhớ <em>"Thời phong kiến f-p-k-t-th"</em> ➔ <code>/s/</code>; đuôi <em>s, x, ch, sh, z, ge</em> ➔ <code>/iz/</code>; còn lại ➔ <code>/z/</code>.</p>
+                    <p>• <strong>Đuôi -ed:</strong> Tận cùng <em>t, d</em> ➔ <code>/id/</code>; tận cùng <em>p, k, f, s, sh, ch</em> ➔ <code>/t/</code>; còn lại ➔ <code>/d/</code>.</p>
+                    <p>• <strong>Trọng âm từ 2 âm tiết:</strong> Danh/Tính từ thường nhấn <strong>âm 1</strong>; Động từ thường nhấn <strong>âm 2</strong>.</p>
+                  </div>
                 </div>
               )}
 
               {activeTipTab === 'grammar' && (
                 <div>
-                  <strong className="text-amber-300">🧩 Bí quyết nhận diện câu Ngữ pháp:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-200">
-                    <li>Thấy dấu hiệu <em>always, usually, often, every day, on Sundays</em> ➔ Chọn <strong>Hiện tại đơn</strong> (He/She/It + V-s/es).</li>
-                    <li>Thấy dấu hiệu <em>yesterday, last week, ago, in 2020</em> ➔ Chọn <strong>Quá khứ đơn</strong> (V2/V-ed).</li>
-                    <li>Sau các động từ chỉ sở thích/cảm xúc: <em>like, love, enjoy, fancy, adore, dislike, hate</em> ➔ Bắt buộc đi với <strong>V-ing</strong> (ví dụ: <em>enjoy playing, hate cooking</em>).</li>
-                  </ul>
+                  <strong className="text-amber-300">🧩 Bí quyết câu Ngữ pháp:</strong>
+                  <div className="mt-1 space-y-0.5 text-slate-200">
+                    <p>• <em>always, usually, often, every day</em> ➔ <strong>Hiện tại đơn</strong> (He/She/It + V-s/es).</p>
+                    <p>• <em>yesterday, last week, ago, in 2020</em> ➔ <strong>Quá khứ đơn</strong> (V2/V-ed).</p>
+                    <p>• Sau động từ sở thích <em>like, love, enjoy, fancy, hate</em> ➔ Bắt buộc đi với <strong>V-ing</strong>.</p>
+                  </div>
                 </div>
               )}
 
               {activeTipTab === 'error_find' && (
                 <div>
-                  <strong className="text-amber-300">🔍 Kỹ thuật nhận diện Tìm Lỗi Sai trong 5 giây:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-200">
-                    <li><strong>Lỗi chia động từ:</strong> Kiểm tra chủ ngữ số ít hay số nhiều (như <em>Every student have ➔ has</em>).</li>
-                    <li><strong>Lỗi cấu trúc song hành:</strong> Trước và sau từ nối <em>and, but, or</em> phải cùng dạng (như <em>swimming, singing and dance ➔ dancing</em>).</li>
-                    <li><strong>Lỗi mạo từ &amp; lượng từ:</strong> <em>many</em> đi với danh từ đếm được số nhiều; <em>much</em> đi với danh từ không đếm được.</li>
-                  </ul>
+                  <strong className="text-amber-300">🔍 Kỹ thuật Tìm Lỗi Sai trong 5 giây:</strong>
+                  <div className="mt-1 space-y-0.5 text-slate-200">
+                    <p>• <strong>Chia động từ:</strong> Xem chủ ngữ số ít hay nhiều (ví dụ: <em>Every student have ➔ has</em>).</p>
+                    <p>• <strong>Cấu trúc song hành:</strong> Trước và sau <em>and, but, or</em> phải cùng dạng từ (ví dụ: <em>singing and dance ➔ dancing</em>).</p>
+                    <p>• <strong>Lượng từ:</strong> <em>many</em> + danh từ đếm được; <em>much</em> + danh từ không đếm được.</p>
+                  </div>
                 </div>
               )}
 
               {activeTipTab === 'reading' && (
                 <div>
-                  <strong className="text-amber-300">📖 Chiến thuật làm bài Đọc hiểu nhanh không cần dịch hết:</strong>
-                  <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-200">
-                    <li><strong>Đọc câu hỏi trước:</strong> Gạch chân từ khóa (tên riêng, năm tháng, địa danh hoặc thuật ngữ chính).</li>
-                    <li><strong>Quét (Scan) đoạn văn:</strong> Tìm dòng chứa từ khóa đó trong bài đọc ➔ Đọc kỹ câu trước và câu sau dòng đó để chọn đáp án.</li>
-                    <li><strong>Câu hỏi ý chính (Main idea / Title):</strong> Thường nằm ở 1-2 câu đầu tiên hoặc câu cuối cùng của đoạn văn mở đầu.</li>
-                  </ul>
+                  <strong className="text-amber-300">📖 Chiến thuật Đọc hiểu nhanh:</strong>
+                  <div className="mt-1 space-y-0.5 text-slate-200">
+                    <p>• <strong>Đọc câu hỏi trước:</strong> Gạch chân từ khóa (tên riêng, số năm, thuật ngữ).</p>
+                    <p>• <strong>Quét (Scan) bài đọc:</strong> Tìm dòng chứa từ khóa ➔ Đọc câu trước và sau để chốt đáp án.</p>
+                    <p>• <strong>Câu hỏi ý chính:</strong> Thường nằm ở 1-2 câu đầu đoạn 1 hoặc câu cuối bài.</p>
+                  </div>
                 </div>
               )}
             </div>

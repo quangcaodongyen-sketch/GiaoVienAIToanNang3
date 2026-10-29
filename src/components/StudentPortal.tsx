@@ -3014,58 +3014,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-      {/* DẢI THÔNG BÁO LỘ TRÌNH THI GK1 TIẾNG ANH CHIỀU THỨ 2 TUẦN SAU (02/11) */}
-      <div className="mb-3 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-rose-500/15 via-amber-500/15 to-indigo-500/15 border border-rose-400/40 shadow-2xs flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="w-6 h-6 rounded-lg bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-            📢
-          </span>
-          <span className="font-extrabold text-slate-900 dark:text-white">
-            <strong className="text-rose-600 dark:text-rose-400">LỊCH KIỂM TRA GK1 TIẾNG ANH:</strong> Chiều Thứ Hai tuần sau (02/11/2026)!
-          </span>
-          <span className="text-xs text-slate-700 dark:text-slate-200 font-bold">
-            • Bắt buộc mang <strong className="text-amber-600 dark:text-amber-300 underline font-black">THẺ DỤNG CỤ: Ít nhất 2 Bút Chì 2B &amp; Hòn Tẩy Mềm</strong> để làm bài kiểm tra trắc nghiệm trên lớp!
-          </span>
-        </div>
-        <button
-          type="button"
-          onClick={() => setActiveTab('exam')}
-          className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-black text-[11px] transition cursor-pointer shadow-xs flex items-center gap-1"
-        >
-          <span>Luyện Đề Thử Ngay &rarr;</span>
-        </button>
-      </div>
-
-      {/* BANNER KHUYẾN MẠI NGẮN GỌN & TINH TẾ (THEO CHỈ ĐẠO CỦA THẦY ĐINH THÀNH) */}
-      <div className="mb-4 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 border border-amber-400/40 shadow-2xs flex flex-wrap items-center justify-between gap-2.5 text-xs">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-base shrink-0">🎁</span>
-          <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black tracking-wider uppercase shadow-2xs">
-            {loginRewardInfo.promoBadge || 'KHUYẾN MẠI'}
-          </span>
-          <span className="font-extrabold text-slate-900 dark:text-white">
-            {loginRewardInfo.title}
-          </span>
-          <span className="text-[11px] text-rose-600 dark:text-rose-300 font-bold bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-300 dark:border-rose-800">
-            ⏰ {loginRewardInfo.expiresAtDisplay}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-black text-[11px] shadow-2xs">
-            +{loginRewardInfo.points}đ Đăng Nhập
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-black text-[11px] shadow-2xs">
-            +35% Bài Từ Vựng
-          </span>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          LỜI NHẮC ÔN TẬP GK1 & HỌC TỪ VỰNG TĂNG ĐIỂM SỐ - THẦY ĐINH THÀNH
-          ========================================================================= */}
       <StudentStudyReminder
         currentStudent={currentStudent}
+        loginRewardInfo={loginRewardInfo}
         onGoToExam={() => {
           setActiveTab('exam');
           window.scrollTo({ top: 350, behavior: 'smooth' });
