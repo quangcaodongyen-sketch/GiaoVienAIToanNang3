@@ -3130,18 +3130,21 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <span className={['exam', 'quiz'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>4. Đề Kiểm Tra Online</span>
         </button>
 
-        {/* 5. Tổ Thi Đua & Thống Kê (Hợp nhất theo yêu cầu Thầy Đinh Thành: Toàn trường, Khối, Lớp & 4 Tổ) */}
+        {/* 5. Tổ Thi Đua & Thống Kê (Hợp nhất theo yêu cầu Thầy Đinh Thành: 4 Tổ, Theo Lớp, Theo Khối, Toàn trường) */}
         <button
           type="button"
           onClick={() => {
             setActiveTab('teams');
+            if (competitionSubTab === 'all') {
+              setCompetitionSubTab('teams');
+            }
           }}
           className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
             ['teams', 'leaderboard', 'tracking'].includes(activeTab)
               ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.7),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950/80 -translate-y-0.5 scale-[1.03]'
               : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.15),inset_0_1.5px_1px_rgba(255,255,255,1)]'
           }`}
-          title="Lộ trình 5: Thống kê toàn trường, theo khối, theo lớp & thi đua 4 tổ"
+          title="Thống kê kết quả cá nhân, 4 tổ thi đua, theo lớp và theo khối"
         >
           <Trophy className={`w-4 h-4 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950 drop-shadow-sm' : 'text-amber-600 dark:text-amber-400'}`} />
           <span className={['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>5. Tổ Thi Đua &amp; Thống Kê</span>
@@ -3163,49 +3166,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </button>
       </div>
 
-      {/* THANH CHUYỂN NHANH PHỤ (SUB-NAV) KHI Ở CÁC PHÂN HỆ CÓ NHIỀU MỤC - CHUẨN 3D TRONG SUỐT & TƯƠNG PHẢN */}
-      {/* THANH ĐIỀU HƯỚNG PHÂN HỆ THI ĐUA & THỐNG KÊ (GỘP GỌN 4 CHẾ ĐỘ: TOÀN TRƯỜNG, THEO KHỐI, THEO LỚP, 4 TỔ THI ĐUA) */}
+      {/* THANH ĐIỀU HƯỚNG PHÂN HỆ THI ĐUA & THỐNG KÊ (GỘP GỌN 4 CHẾ ĐỘ: 4 TỔ THI ĐUA, THEO LỚP, THEO KHỐI, TOÀN TRƯỜNG) */}
       {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('all')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'all'
-                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê Bảng Vàng vinh danh toàn trường THCS Đồng Yên"
-          >
-            <span>🏫 1. Toàn Trường</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('grade')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'grade'
-                ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-[0_4px_14px_rgba(79,70,229,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-indigo-300 border-b-2 border-indigo-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê xếp hạng theo từng khối lớp (Khối 6, 7, 8, 9)"
-          >
-            <span>🎓 2. Theo Khối</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('class')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'class'
-                ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê xếp hạng và chuyên cần theo từng lớp học"
-          >
-            <span>👥 3. Theo Lớp</span>
-          </button>
-
           <button
             type="button"
             onClick={() => setCompetitionSubTab('teams')}
@@ -3216,7 +3179,46 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             }`}
             title="Đua Top và so tài điểm số giữa 4 Tổ thi đua trong lớp"
           >
-            <span>⚔️ 4. Thi Đua Các Tổ</span>
+            <span>⚔️ 1. Thi Đua Các Tổ</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('class')}
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'class'
+                ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê xếp hạng và chuyên cần của tất cả học sinh theo từng lớp học"
+          >
+            <span>👥 2. Theo Lớp</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('grade')}
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'grade'
+                ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-[0_4px_14px_rgba(79,70,229,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-indigo-300 border-b-2 border-indigo-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê xếp hạng học sinh theo từng khối lớp (Khối 6, 7, 8, 9)"
+          >
+            <span>🎓 3. Theo Khối</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('all')}
+            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'all'
+                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê Bảng Vàng vinh danh toàn trường THCS Đồng Yên"
+          >
+            <span>🏫 4. Toàn Trường</span>
           </button>
         </div>
       )}
