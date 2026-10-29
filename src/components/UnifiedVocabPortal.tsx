@@ -92,151 +92,170 @@ type PracticeMode =
 
 
 
-// ==================== HỆ THỐNG ÂM THANH SƯ PHẠM & HIỆU ỨNG ĐIỂM THƯỞNG BAY LÊN ====================
+// ==================== HỆ THỐNG ÂM THANH SƯ PHẠM WEB AUDIO SINGLETON TỐC ĐỘ CAO (0MS LATENCY) ====================
+let sharedAudioCtx: AudioContext | null = null;
 
-const playCorrectSound = () => {
-
+const getSharedAudioContext = (): AudioContext | null => {
   try {
-
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-
-    if (!AudioCtx) return;
-
-    const ctx = new AudioCtx();
-
-    if (ctx.state === 'suspended') ctx.resume();
-
-    const now = ctx.currentTime;
-
-
-
-    // Hợp âm 4 nốt arpeggio thánh thót ngân vang: C5 (523Hz) -> E5 (659Hz) -> G5 (784Hz) -> C6 (1046Hz)
-
-    const freqs = [523.25, 659.25, 783.99, 1046.50];
-
-    freqs.forEach((freq, idx) => {
-
-      const osc = ctx.createOscillator();
-
-      const gain = ctx.createGain();
-
-
-
-      osc.type = 'triangle'; // Âm sắc chuông ấm áp trong trẻo
-
-      osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-
-
-
-      gain.gain.setValueAtTime(0, now + idx * 0.07);
-
-      gain.gain.linearRampToValueAtTime(0.28, now + idx * 0.07 + 0.015);
-
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.48);
-
-
-
-      osc.connect(gain);
-
-      gain.connect(ctx.destination);
-
-
-
-      osc.start(now + idx * 0.07);
-
-      osc.stop(now + idx * 0.07 + 0.52);
-
-    });
-
-
-
-    // Nốt chuông ngân cao tinh tế C7 (2093Hz)
-
-    const chime = ctx.createOscillator();
-
-    const chimeGain = ctx.createGain();
-
-    chime.type = 'sine';
-
-    chime.frequency.setValueAtTime(2093, now + 0.22);
-
-    chimeGain.gain.setValueAtTime(0, now + 0.22);
-
-    chimeGain.gain.linearRampToValueAtTime(0.12, now + 0.24);
-
-    chimeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
-
-    chime.connect(chimeGain);
-
-    chimeGain.connect(ctx.destination);
-
-    chime.start(now + 0.22);
-
-    chime.stop(now + 0.7);
-
+    if (typeof window === 'undefined') return null;
+    if (!sharedAudioCtx || sharedAudioCtx.state === 'closed') {
+      const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioCtxClass) {
+        sharedAudioCtx = new AudioCtxClass();
+      }
+    }
+    if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume().catch(() => {});
+    }
+    return sharedAudioCtx;
   } catch (err) {
-
-    console.warn('Audio play error:', err);
-
+    console.warn('AudioContext init error:', err);
+    return null;
   }
-
 };
 
+// Tự động mở khóa AudioContext khi học sinh chạm màn hình lần đầu (Khử đơ lác trên Điện thoại & Safari/Chrome)
+if (typeof window !== 'undefined') {
+  const unlockAudio = () => {
+    try {
+      const ctx = getSharedAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+    } catch (e) {}
+    window.removeEventListener('pointerdown', unlockAudio);
+    window.removeEventListener('touchstart', unlockAudio);
+    window.removeEventListener('keydown', unlockAudio);
+  };
+  window.addEventListener('pointerdown', unlockAudio, { passive: true, once: true });
+  window.addEventListener('touchstart', unlockAudio, { passive: true, once: true });
+  window.addEventListener('keydown', unlockAudio, { passive: true, once: true });
+}
 
-
-const playWrongSound = () => {
-
+/**
+ * Âm thanh "DING" ngân vang trong trẻo, vui tai khi chọn đúng đáp án từ vựng (Chuẩn Duolingo/Kahoot)
+ * Hòa âm chuông đôi Crystal Bell: E6 (1318.5Hz) & B6 (1975.5Hz) cùng hài âm lấp lánh E7 & B7
+ * Tấn công tức thì 0ms, không độ trễ, ngân vang 450ms mang lại cảm giác thích thú cho học sinh.
+ */
+const playCorrectSound = () => {
   try {
-
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-
-    if (!AudioCtx) return;
-
-    const ctx = new AudioCtx();
-
-    if (ctx.state === 'suspended') ctx.resume();
-
+    const ctx = getSharedAudioContext();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
     const now = ctx.currentTime;
 
+    // --- TIẾNG DING 1: Chuông chính trong trẻo E6 (1318.51 Hz) ---
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(1318.51, now);
 
+    gain1.gain.setValueAtTime(0.0001, now);
+    gain1.gain.linearRampToValueAtTime(0.32, now + 0.003); // Tấn công siêu tốc 3ms
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.42); // Ngân vang chuông
+
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.45);
+
+    // Hài âm lấp lánh Shimmer 1: E7 (2637.02 Hz)
+    const chime1 = ctx.createOscillator();
+    const chimeGain1 = ctx.createGain();
+    chime1.type = 'triangle';
+    chime1.frequency.setValueAtTime(2637.02, now);
+
+    chimeGain1.gain.setValueAtTime(0.0001, now);
+    chimeGain1.gain.linearRampToValueAtTime(0.16, now + 0.003);
+    chimeGain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+    chime1.connect(chimeGain1);
+    chimeGain1.connect(ctx.destination);
+    chime1.start(now);
+    chime1.stop(now + 0.30);
+
+    // --- TIẾNG DING 2: Nốt chuông hoa mỹ ngân cao vui tai B6 (1975.53 Hz) sau 65ms ---
+    const t2 = now + 0.065;
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1975.53, t2);
+
+    gain2.gain.setValueAtTime(0.0001, t2);
+    gain2.gain.linearRampToValueAtTime(0.24, t2 + 0.003);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.48);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(t2);
+    osc2.stop(t2 + 0.50);
+
+    // Hài âm lấp lánh Shimmer 2: B7 (3951.06 Hz)
+    const chime2 = ctx.createOscillator();
+    const chimeGain2 = ctx.createGain();
+    chime2.type = 'triangle';
+    chime2.frequency.setValueAtTime(3951.06, t2);
+
+    chimeGain2.gain.setValueAtTime(0.0001, t2);
+    chimeGain2.gain.linearRampToValueAtTime(0.09, t2 + 0.003);
+    chimeGain2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.25);
+
+    chime2.connect(chimeGain2);
+    chimeGain2.connect(ctx.destination);
+    chime2.start(t2);
+    chime2.stop(t2 + 0.28);
+
+    // Nốt âm vang siêu nhẹ (Sparkle Overtone C7 ~2093Hz) tạo đuôi ngân bay bổng
+    const chime3 = ctx.createOscillator();
+    const chimeGain3 = ctx.createGain();
+    chime3.type = 'sine';
+    chime3.frequency.setValueAtTime(2093, t2 + 0.03);
+
+    chimeGain3.gain.setValueAtTime(0.0001, t2 + 0.03);
+    chimeGain3.gain.linearRampToValueAtTime(0.06, t2 + 0.035);
+    chimeGain3.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.38);
+
+    chime3.connect(chimeGain3);
+    chimeGain3.connect(ctx.destination);
+    chime3.start(t2 + 0.03);
+    chime3.stop(t2 + 0.40);
+  } catch (err) {
+    console.warn('Audio play error:', err);
+  }
+};
+
+/**
+ * Âm thanh báo sai nhẹ nhàng, lịch sự (không gay gắt gây hoảng cho học sinh)
+ */
+const playWrongSound = () => {
+  try {
+    const ctx = getSharedAudioContext();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+    const now = ctx.currentTime;
 
     const osc = ctx.createOscillator();
-
     const gain = ctx.createGain();
-
     osc.type = 'sine';
-
     osc.frequency.setValueAtTime(240, now);
+    osc.frequency.exponentialRampToValueAtTime(140, now + 0.18);
 
-    osc.frequency.exponentialRampToValueAtTime(140, now + 0.22);
-
-
-
-    gain.gain.setValueAtTime(0.16, now);
-
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-
-
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
     osc.connect(gain);
-
     gain.connect(ctx.destination);
 
-
-
     osc.start(now);
-
-    osc.stop(now + 0.23);
-
+    osc.stop(now + 0.20);
   } catch (e) {
-
     // ignore
-
   }
-
 };
-
-
 
 interface FloatingScore {
 
@@ -361,40 +380,20 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
 
-    setFloatingScores(prev => [...prev, newScore]);
-
-
+    setFloatingScores(prev => [...prev.slice(-2), newScore]);
 
     setTimeout(() => {
-
       setFloatingScores(prev => prev.filter(item => item.id !== newScore.id));
-
-    }, 1300);
-
-
+    }, 1100);
 
     if (currentStudent) {
-
       studentGradebookService.recordPracticeMerit(
-
         currentStudent.id,
-
         `Đúng từ vựng Unit ${selectedUnit}`,
-
         10
-
       );
-
       refreshStudentScore();
-
-      if (onRewardMerit) {
-
-        onRewardMerit(`Đúng từ vựng Unit ${selectedUnit}`, 10);
-
-      }
-
     }
-
   };
 
 
@@ -772,40 +771,23 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
   const handleQuizAnswer = (selectedMeaning: string, e?: React.MouseEvent) => {
-
     if (quizSelectedOption !== null) return; // Đã chọn rồi
-
     setQuizSelectedOption(selectedMeaning);
-
     const isCorrect = selectedMeaning === currentQuizWord?.meaning;
-
     if (isCorrect) {
-
       setQuizScore(s => s + 1);
-
+      playCorrectSound();
       triggerScorePopup(e, '+10 Điểm! ⭐');
-
     } else {
-
       playWrongSound();
-
     }
 
-
-
-    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO SAU 1.3 GIÂY
-
+    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO: 650ms khi đúng (nhanh, mượt), 950ms khi sai (đủ đọc đáp án đúng)
     if (autoNextQuizTimerRef.current) clearTimeout(autoNextQuizTimerRef.current);
-
     autoNextQuizTimerRef.current = setTimeout(() => {
-
       handleNextQuiz();
-
-    }, 1300);
-
+    }, isCorrect ? 650 : 950);
   };
-
-
 
   const handleNextQuiz = () => {
 
@@ -970,40 +952,23 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
   const handleListenAnswer = (selectedWord: string, e?: React.MouseEvent) => {
-
     if (listenSelectedOption !== null) return;
-
     setListenSelectedOption(selectedWord);
-
     const isCorrect = selectedWord === currentListenWord?.word;
-
     if (isCorrect) {
-
       setListenScore(s => s + 1);
-
+      playCorrectSound();
       triggerScorePopup(e, '+10 Điểm! ⭐');
-
     } else {
-
       playWrongSound();
-
     }
 
-
-
-    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO SAU 1.4 GIÂY
-
+    // TỰ ĐỘNG CHUYỂN SANG CÂU TIẾP THEO: 650ms khi đúng, 950ms khi sai
     if (autoNextListenTimerRef.current) clearTimeout(autoNextListenTimerRef.current);
-
     autoNextListenTimerRef.current = setTimeout(() => {
-
       handleNextListen();
-
-    }, 1400);
-
+    }, isCorrect ? 650 : 950);
   };
-
-
 
   const handleNextListen = () => {
 
@@ -1267,6 +1232,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       // Ghép chuẩn: Nổi âm thanh báo đúng và +10 điểm bay lên
 
+      playCorrectSound();
       triggerScorePopup(e, '+10 Điểm! ⭐');
 
 
@@ -1298,6 +1264,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       if (newCards.every(c => c.isMatched)) {
 
         setMatchFinished(true);
+        playCorrectSound();
 
         if (currentStudent) {
 
@@ -1402,27 +1369,17 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
     if (cleanInput === cleanTarget) {
-
       setSpellFeedback('correct');
-
+      playCorrectSound();
       speakWord(currentSpellWord.word);
-
       setSpellScore(s => s + 1);
-
       triggerScorePopup(null, '+10 Điểm! ⭐');
 
-
-
-      // TỰ ĐỘNG CHUYỂN SANG TỪ TIẾP THEO SAU 1.3 GIÂY
-
+      // TỰ ĐỘNG CHUYỂN SANG TỪ TIẾP THEO SAU 750MS (Mượt mà, không chờ đợi lâu)
       if (autoNextSpellTimerRef.current) clearTimeout(autoNextSpellTimerRef.current);
-
       autoNextSpellTimerRef.current = setTimeout(() => {
-
         handleSpellNext();
-
-      }, 1300);
-
+      }, 750);
     } else {
 
       setSpellFeedback('wrong');
@@ -3006,7 +2963,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                       className="h-full bg-white/90"
 
-                      style={{ animation: 'autoAdvanceTimerQuiz 1.3s linear forwards' }}
+                      style={{ animation: `autoAdvanceTimerQuiz ${quizSelectedOption === currentQuizWord?.meaning ? 0.65 : 0.95}s linear forwards` }}
 
                     />
 
@@ -3384,7 +3341,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                       className="h-full bg-white/90"
 
-                      style={{ animation: 'autoAdvanceTimerListen 1.4s linear forwards' }}
+                      style={{ animation: `autoAdvanceTimerListen ${listenSelectedOption === currentListenWord?.word ? 0.65 : 0.95}s linear forwards` }}
 
                     />
 
@@ -4032,7 +3989,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                         className="h-full bg-white/90"
 
-                        style={{ animation: 'autoAdvanceTimerSpell 1.3s linear forwards' }}
+                        style={{ animation: 'autoAdvanceTimerSpell 0.75s linear forwards' }}
 
                       />
 

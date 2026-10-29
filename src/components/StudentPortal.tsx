@@ -279,6 +279,31 @@ const MOTIVATIONAL_QUOTES = [
 
 
 
+// Sub-component tối ưu hóa: Độc lập re-render đồng hồ 1s mà không làm giật đơ StudentPortal
+const PromoCountdownDisplay: React.FC = React.memo(() => {
+  const [timeStr, setTimeStr] = useState<string>('');
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const diffMs = endOfDay.getTime() - now.getTime();
+      if (diffMs <= 0) {
+        setTimeStr('00:00:00');
+      } else {
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+        setTimeStr(`${hours.toString().padStart(2, '0')} giờ ${minutes.toString().padStart(2, '0')} phút ${seconds.toString().padStart(2, '0')} giây`);
+      }
+    };
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return <span>Hiệu lực hôm nay: Còn <strong>{timeStr || 'đang tính...'}</strong></span>;
+});
+
 export interface StudentPortalProps {
 
   onSwitchToTeachers?: () => void;
@@ -447,34 +472,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     return () => clearInterval(timer2Min);
   }, [currentStudent]);
 
-  // Đếm ngược thời gian thực tới 23:59:59 của ngày hôm nay
-  const [timeRemainingToday, setTimeRemainingToday] = useState<string>('');
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-      const diffMs = endOfDay.getTime() - now.getTime();
-      if (diffMs <= 0) {
-        setTimeRemainingToday('00:00:00');
-        const realDate = getLocalDateString();
-        if (realDate !== currentPromoDate) {
-          setCurrentPromoDate(realDate);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('gvai_daily_promo_rollover', { detail: { newDate: realDate } }));
-            window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { newDate: realDate } }));
-          }
-        }
-      } else {
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
-        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-        setTimeRemainingToday(`${hours.toString().padStart(2, '0')} giờ ${minutes.toString().padStart(2, '0')} phút ${seconds.toString().padStart(2, '0')} giây`);
-      }
-    };
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
-    return () => clearInterval(timer);
-  }, [currentPromoDate]);
+  // (Đồng hồ đếm ngược hôm nay đã được tách độc lập sang PromoCountdownDisplay để chống re-render giật lag)
+
 
   // Tự động kiểm tra theo thời gian thực: Hết ngày (qua 00:00:00) tự động xoá bỏ chương trình cũ và nạp chương trình ngày mới!
   useEffect(() => {
@@ -3519,7 +3518,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   <div className="flex items-center gap-2 flex-wrap mt-2.5">
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/30 backdrop-blur-xs text-[11px] font-bold text-amber-200 border border-amber-300/30">
                       <Clock className="w-3.5 h-3.5 text-amber-400 animate-spin" />
-                      <span>Hiệu lực hôm nay: Còn <strong>{timeRemainingToday || 'đang tính...'}</strong></span>
+                      <PromoCountdownDisplay />
                     </div>
 
                     <button
