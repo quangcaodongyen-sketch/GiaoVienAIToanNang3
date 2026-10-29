@@ -180,17 +180,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
       {/* 3. KHI MỞ RỘNG: 3 CARD NHẮC NHỞ HÀNH ĐỘNG CỐT LÕI */}
       {isExpanded && (
         <div className="p-4 sm:p-5 space-y-4">
-          {/* CAM KẾT BẢO MẬT ĐỀ KIỂM TRA HỌC ĐƯỜNG */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start sm:items-center gap-3 text-amber-900 dark:text-amber-200">
-            <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 font-bold shadow-xs text-base">
-              🔒
-            </div>
-            <div className="text-xs sm:text-sm leading-relaxed">
-              <strong className="font-black text-amber-950 dark:text-amber-100 uppercase">Quy Chế Bảo Mật Đề Kiểm Tra:</strong>{' '}
-              Toàn bộ bài tập và đề kiểm tra trên website là <strong>ĐỀ KIỂM TRA THỬ MINH HỌA &amp; LUYỆN TẬP MÔ PHỎNG</strong> theo ma trận Công văn 7991/BGDĐT.
-              Website <strong>TUYỆT ĐỐI KHÔNG ĐƯA ĐỀ KIỂM TRA CHÍNH THỨC</strong> của nhà trường lên mạng internet để bảo đảm tuyệt đối tính bảo mật và công bằng học tập cho học sinh.
-            </div>
-          </div>
+
 
           {/* LƯU Ý SƯ PHẠM: LỊCH KIỂM TRA GK1 TIẾNG ANH VÀO CHIỀU THỨ 2 TUẦN SAU */}
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-950/60 via-amber-950/40 to-indigo-950/60 border-2 border-amber-400/60 shadow-lg relative overflow-hidden">
@@ -469,9 +459,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
             {/* NỘI DUNG MẸO TƯƠNG ỨNG */}
             <div className="text-xs text-blue-100 leading-relaxed bg-[#0B1E36]/80 p-3 rounded-lg border border-blue-500/20">
-              <div className="mb-2 p-2 rounded bg-amber-500/10 border border-amber-400/20 text-[11px] text-amber-200">
-                🔒 <strong>Quy chế bảo mật &amp; sư phạm:</strong> Các bí quyết trên nhằm rèn phương pháp tư duy và kỹ năng làm bài tập Tiếng Anh nói chung. Tuyệt đối nghiêm cấm việc gợi ý hoặc ngụ ý câu hỏi có trong đề kiểm tra chính thức. Hệ thống nghiêm cấm lộ đề dưới mọi hình thức!
-              </div>
+
               {activeTipTab === 'pronunciation' && (
                 <div>
                   <strong className="text-amber-300">🔊 Bí quyết câu Ngữ âm &amp; Trọng âm:</strong>

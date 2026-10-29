@@ -612,8 +612,8 @@ export const English8RevisionPortal: React.FC<English8RevisionPortalProps> = ({
                 LẦN LÀM BÀI: LẦN {attemptCount}
               </span>
             </div>
-            <div className="text-[11px] text-amber-200/90 font-medium italic pt-1">
-              🔒 Lưu ý sư phạm: Toàn bộ bài tập nhằm ôn củng cố kiến thức ngữ pháp &amp; từ vựng. Tuyệt đối không phải và không gợi ý bất kỳ câu hỏi nào trong đề kiểm tra chính thức của nhà trường.
+            <div className="text-[11px] text-cyan-200/90 font-medium pt-1">
+              💡 Toàn bộ bài tập ôn luyện bám sát kiến thức SGK Global Success &amp; định hướng phát triển năng lực.
             </div>
 
             {/* BỘ CHUYỂN CỠ CHỮ TO RÕ TIỆN DỤNG */}

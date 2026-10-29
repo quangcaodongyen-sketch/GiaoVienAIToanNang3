@@ -819,7 +819,7 @@ startxref
                     <ShieldCheck className="w-4 h-4 text-pink-400" /> Ưu Điểm Độc Quyền
                   </h4>
                   <ul className="text-xs text-slate-300 space-y-1.5 list-disc pl-4">
-                    <li>Xử lý trực tiếp trên máy tính, không sợ lộ đề kiểm tra, giáo án.</li>
+                    <li>Xử lý an toàn trực tiếp trên máy tính, bảo mật tuyệt đối giáo án và tài liệu.</li>
                     <li>Không giới hạn dung lượng và số lượng tệp cần gộp.</li>
                     <li>Giữ nguyên độ sắc nét chuẩn in ấn 300dpi.</li>
                   </ul>

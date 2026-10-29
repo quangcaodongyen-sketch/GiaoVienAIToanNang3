@@ -1551,12 +1551,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               Audio 2 giọng Nam & Nữ • Chấm điểm & Giải thích chi tiết
             </div>
           </div>
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-400/20 border border-amber-300/30 text-amber-200 text-xs font-semibold">
-              <span className="text-base shrink-0">🔒</span>
-              <span>
-                <strong>Quy chế bảo mật đề kiểm tra:</strong> Toàn bộ đề kiểm tra tại đây là <strong>ĐỀ LUYỆN TẬP MINH HỌA</strong> theo ma trận CV 7991 của Bộ GD&amp;ĐT. Hệ thống <strong>TUYỆT ĐỐI KHÔNG ĐĂNG TẢI</strong> đề kiểm tra chính thức của nhà trường. <strong>NGHIÊM CẤM GỢI Ý HOẶC NGỤ Ý CÂU HỎI CÓ TRONG ĐỀ KIỂM TRA CHÍNH THỨC 100%</strong>. Nghiêm cấm lộ đề dưới mọi hình thức.
-              </span>
-            </div>
+
 
           {/* DÒNG 1: KHÓA ĐÚNG KHỐI LỚP CỦA HỌC SINH (HOẶC CHỌN KHỐI NẾU KHÁCH) */}
           {studentGrade ? (
@@ -1881,16 +1876,10 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   <span className="px-2 py-0.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
                     ĐỀ LUYỆN TẬP MINH HỌA (CV 7991)
                   </span>
-                  <span className="px-2 py-0.5 rounded text-[10px] sm:text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                    🔒 KHÔNG PHẢI ĐỀ KIỂM TRA CHÍNH THỨC CỦA NHÀ TRƯỜNG
-                  </span>
                 </div>
                 <h3 className="text-lg sm:text-2xl font-black text-slate-800 mt-1 uppercase leading-tight">
-                  {currentExam.typeTitle.replace(/ĐỀ KIỂM TRA/g, 'ĐỀ KIỂM TRA THỬ MINH HỌA')} (MÔ PHỎNG)
+                  {currentExam.typeTitle}
                 </h3>
-                <div className="text-[11px] text-rose-600 font-semibold italic mt-0.5">
-                  * Lưu ý bảo mật: Đây là đề luyện tập mô phỏng dạng bài, tuyệt đối không phải đề kiểm tra chính thức của nhà trường.
-                </div>
                 <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600 mt-1 flex-wrap">
                   <span>Thời gian: <strong>{currentExam.durationMinutes} phút</strong></span>
                   <span>•</span>
