@@ -1858,195 +1858,182 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
         <div className="space-y-4">
 
-          {/* BỤC VINH DANH TOP 3 HỌC SINH QUÁN QUÂN, Á QUÂN, QUÝ QUÂN (PODIUM 3D) */}
-
+          {/* BỤC VINH DANH TOP 3 HỌC SINH QUÁN QUÂN, Á QUÂN, QUÝ QUÂN (PODIUM 3D ĐẲNG CẤP SƯ PHẠM TRANG TRỌNG) */}
           {leaderboard.length >= 3 && !searchQuery && (
+            <div className="relative overflow-hidden rounded-3xl border-2 border-amber-500/50 bg-gradient-to-b from-[#0F1C36] via-[#091224] to-[#040814] p-4 sm:p-7 shadow-[0_15px_50px_rgba(0,0,0,0.65)] backdrop-blur-xl mb-6">
+              {/* Hiệu ứng hào quang ánh vàng kim sang trọng phía trên */}
+              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 sm:w-[500px] h-64 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
 
-            <div className="bg-gradient-to-b from-slate-900 to-slate-950 p-5 rounded-3xl border border-slate-800 shadow-lg">
-
-              <div className="text-center mb-4">
-
-                <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-black uppercase tracking-wider border border-amber-400/30">
-
-                  <CrownIcon className="w-3.5 h-3.5 text-amber-300" />
-
-                  <span>Bục Vinh Danh Top 3 Dẫn Đầu</span>
-
+              {/* TIÊU ĐỀ BỤC VINH DANH TRANG TRỌNG */}
+              <div className="text-center relative z-10 mb-4 sm:mb-6">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/25 via-yellow-400/30 to-amber-500/25 text-amber-300 text-[11px] sm:text-xs font-black uppercase tracking-wider border border-amber-400/50 shadow-sm">
+                  <CrownIcon className="w-4 h-4 text-amber-300 drop-shadow animate-pulse" />
+                  <span>BẢNG VÀNG VINH DANH • TOP 3 DẪN ĐẦU</span>
                 </span>
 
-                <h3 className="text-lg font-black text-white mt-1">
-
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 bg-clip-text text-transparent mt-2 tracking-tight drop-shadow-md">
                   Gương Mặt Xuất Sắc — {scopeFilter === 'all' ? 'Toàn Trường THCS Đồng Yên' : (scopeFilter === 'grade' ? `Khối ${selectedGrade}` : `Lớp ${selectedClass}`)}
-
                 </h3>
 
+                <p className="text-[11px] sm:text-xs text-slate-300 font-medium mt-1">
+                  ✨ Vinh danh những tấm gương tiêu biểu dẫn đầu phong trào thi đua học tập xuất sắc
+                </p>
               </div>
 
+              {/* BỤC 3 VỊ TRÍ (Á QUÂN - QUÁN QUÂN - QUÝ QUÂN) */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-5 max-w-3xl mx-auto items-end pt-4 sm:pt-6 relative z-10">
 
-
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-2xl mx-auto items-end pt-4">
-
-                {/* TOP 2 - Á QUÂN BẠC */}
-
+                {/* TOP 2 - Á QUÂN BẠC (BÊN TRÁI) */}
                 {top2Student && (
-
-                  <div className="flex flex-col items-center order-1">
-
-                    <div className="relative">
-
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-slate-400 to-slate-200 p-0.5 shadow-lg flex items-center justify-center font-black text-slate-800 text-lg">
-
-                        {top2Student.gender === 'Nữ' ? '👧' : '👦'}
-
+                  <div className="flex flex-col items-center order-1 w-full min-w-0">
+                    <div className="relative group">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-slate-400 via-slate-100 to-slate-300 p-1 shadow-[0_0_25px_rgba(203,213,225,0.5)] ring-4 ring-slate-300/50 flex items-center justify-center font-black text-slate-800 text-xl sm:text-2xl">
+                        <div className="w-full h-full rounded-full bg-gradient-to-b from-slate-100 to-slate-300 flex items-center justify-center shadow-inner">
+                          {top2Student.gender === 'Nữ' ? '👧' : '👦'}
+                        </div>
                       </div>
-
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl drop-shadow">
-
+                      <span className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 text-2xl sm:text-3xl drop-shadow select-none">
                         🥈
-
                       </span>
-
                     </div>
 
-                    <div className="mt-2 text-center">
-
-                      <div className="text-xs sm:text-sm font-black text-slate-200 truncate max-w-[100px] sm:max-w-[130px]">
-
+                    <div className="mt-2.5 sm:mt-3 text-center w-full px-0.5">
+                      {/* Hiển thị trọn vẹn 100% họ và tên không bị cắt dấu ... */}
+                      <div 
+                        className="text-xs sm:text-sm md:text-base font-black text-slate-100 leading-snug drop-shadow-sm break-words"
+                        title={top2Student.studentName}
+                      >
                         {top2Student.studentName}
-
                       </div>
 
-                      <div className="text-[10px] text-slate-400">{top2Student.className}</div>
-
-                      <div className="inline-block mt-1 px-2 py-0.5 rounded-full bg-slate-800 text-slate-200 text-[10px] font-black border border-slate-700">
-
-                        {top2Student.totalMeritPoints}đ
-
+                      <div className="mt-1">
+                        <span className="inline-block px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-600/50 text-slate-300 text-[10px] sm:text-[11px] font-bold">
+                          {top2Student.className}
+                        </span>
                       </div>
 
+                      <div className="mt-1.5">
+                        <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-200 text-[10px] sm:text-xs font-black border border-slate-600 shadow-xs">
+                          {top2Student.totalMeritPoints.toLocaleString('vi-VN')}đ
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="w-full bg-gradient-to-t from-slate-800 to-slate-700 h-20 rounded-t-2xl mt-2 flex items-center justify-center font-black text-slate-300 text-xl border-t border-slate-600">
-
-                      2
-
+                    {/* BỆ BẠC HẠNG 2 */}
+                    <div className="w-full bg-gradient-to-b from-slate-400 via-slate-600 to-slate-800 h-22 sm:h-28 rounded-t-2xl sm:rounded-t-3xl mt-3 flex flex-col items-center justify-center border-t-4 border-l border-r border-slate-200 shadow-[0_10px_25px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-black/20 pointer-events-none" />
+                      <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white drop-shadow relative z-10 leading-none">
+                        2
+                      </span>
+                      <span className="text-[9px] sm:text-[10px] font-black uppercase text-slate-200/90 tracking-wider relative z-10 mt-1">
+                        Á QUÂN
+                      </span>
                     </div>
-
                   </div>
-
                 )}
 
-
-
-                {/* TOP 1 - QUÁN QUÂN VÀNG (CAO NHẤT) */}
-
+                {/* TOP 1 - QUÁN QUÂN VÀNG (Ở GIỮA, CAO NHẤT & UY NGHIÊM NHẤT) */}
                 {top1Student && (
-
-                  <div className="flex flex-col items-center order-2 -mt-4">
-
-                    <div className="relative">
-
-                      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-500 via-yellow-300 to-amber-600 p-1 shadow-2xl flex items-center justify-center font-black text-slate-900 text-2xl ring-4 ring-amber-400/30 animate-pulse">
-
-                        {top1Student.gender === 'Nữ' ? '👸' : '🤴'}
-
+                  <div className="flex flex-col items-center order-2 w-full min-w-0 -mt-5 sm:-mt-7">
+                    <div className="relative group">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-300 to-amber-500 p-1 shadow-[0_0_35px_rgba(245,158,11,0.6)] ring-4 ring-amber-400/60 flex items-center justify-center font-black text-slate-900 text-2xl sm:text-3xl">
+                        <div className="w-full h-full rounded-full bg-gradient-to-b from-amber-200 via-yellow-200 to-amber-400 flex items-center justify-center shadow-inner">
+                          {top1Student.gender === 'Nữ' ? '👸' : '🤴'}
+                        </div>
                       </div>
-
-                      <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-3xl drop-shadow-lg animate-bounce">
-
+                      <span className="absolute -top-6 sm:-top-7 left-1/2 -translate-x-1/2 text-3xl sm:text-4xl drop-shadow-[0_4px_10px_rgba(245,158,11,0.8)] animate-bounce select-none">
                         👑
-
                       </span>
-
                     </div>
 
-                    <div className="mt-2 text-center">
-
-                      <div className="text-sm sm:text-base font-black text-amber-300 truncate max-w-[120px] sm:max-w-[160px]">
-
+                    <div className="mt-3 sm:mt-3.5 text-center w-full px-0.5">
+                      {/* Hiển thị trọn vẹn 100% họ và tên Hoàng Trung Nguyên */}
+                      <div 
+                        className="text-sm sm:text-base md:text-lg font-black text-yellow-300 leading-snug drop-shadow-md break-words"
+                        title={top1Student.studentName}
+                      >
                         {top1Student.studentName}
-
                       </div>
 
-                      <div className="text-xs text-amber-100 font-bold">{top1Student.className}</div>
-
-                      <div className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-black shadow-sm">
-
-                        {top1Student.totalMeritPoints} Điểm
-
+                      <div className="mt-1">
+                        <span className="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/25 border border-amber-400/40 text-amber-200 text-[11px] sm:text-xs font-black">
+                          {top1Student.className}
+                        </span>
                       </div>
 
+                      <div className="mt-1.5">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-[0_4px_14px_rgba(245,158,11,0.5)] border border-yellow-200">
+                          ⭐ {top1Student.totalMeritPoints.toLocaleString('vi-VN')} Điểm
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="w-full bg-gradient-to-t from-amber-600 to-amber-500 h-28 rounded-t-2xl mt-2 flex items-center justify-center font-black text-slate-950 text-3xl border-t-2 border-yellow-300 shadow-lg">
-
-                      1
-
+                    {/* BỆ VÀNG HẠNG 1 */}
+                    <div className="w-full bg-gradient-to-b from-amber-400 via-amber-500 to-amber-700 h-30 sm:h-38 rounded-t-2xl sm:rounded-t-3xl mt-3 flex flex-col items-center justify-center border-t-4 border-l border-r border-yellow-200 shadow-[0_12px_35px_rgba(245,158,11,0.45)] relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-black/25 pointer-events-none" />
+                      <span className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-950 drop-shadow-[0_2px_4px_rgba(255,255,255,0.4)] relative z-10 leading-none">
+                        1
+                      </span>
+                      <span className="text-[10px] sm:text-xs font-black uppercase text-slate-950/90 tracking-wider relative z-10 mt-1">
+                        QUÁN QUÂN
+                      </span>
                     </div>
-
                   </div>
-
                 )}
 
-
-
-                {/* TOP 3 - QUÝ QUÂN ĐỒNG */}
-
+                {/* TOP 3 - QUÝ QUÂN ĐỒNG (BÊN PHẢI) */}
                 {top3Student && (
-
-                  <div className="flex flex-col items-center order-3">
-
-                    <div className="relative">
-
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-amber-700 to-amber-600 p-0.5 shadow-lg flex items-center justify-center font-black text-amber-100 text-lg">
-
-                        {top3Student.gender === 'Nữ' ? '👧' : '👦'}
-
+                  <div className="flex flex-col items-center order-3 w-full min-w-0">
+                    <div className="relative group">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-700 via-amber-500 to-amber-800 p-1 shadow-[0_0_25px_rgba(180,83,9,0.5)] ring-4 ring-amber-600/50 flex items-center justify-center font-black text-amber-100 text-xl sm:text-2xl">
+                        <div className="w-full h-full rounded-full bg-gradient-to-b from-amber-600 to-amber-800 flex items-center justify-center shadow-inner">
+                          {top3Student.gender === 'Nữ' ? '👧' : '👦'}
+                        </div>
                       </div>
-
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl drop-shadow">
-
+                      <span className="absolute -top-3.5 sm:-top-4 left-1/2 -translate-x-1/2 text-2xl sm:text-3xl drop-shadow select-none">
                         🥉
-
                       </span>
-
                     </div>
 
-                    <div className="mt-2 text-center">
-
-                      <div className="text-xs sm:text-sm font-black text-amber-200 truncate max-w-[100px] sm:max-w-[130px]">
-
+                    <div className="mt-2.5 sm:mt-3 text-center w-full px-0.5">
+                      {/* Hiển thị trọn vẹn 100% họ và tên không bị cắt dấu ... */}
+                      <div 
+                        className="text-xs sm:text-sm md:text-base font-black text-amber-200 leading-snug drop-shadow-sm break-words"
+                        title={top3Student.studentName}
+                      >
                         {top3Student.studentName}
-
                       </div>
 
-                      <div className="text-[10px] text-amber-300/80">{top3Student.className}</div>
-
-                      <div className="inline-block mt-1 px-2 py-0.5 rounded-full bg-slate-800 text-amber-300 text-[10px] font-black border border-amber-900/50">
-
-                        {top3Student.totalMeritPoints}đ
-
+                      <div className="mt-1">
+                        <span className="inline-block px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-800/50 text-amber-300/90 text-[10px] sm:text-[11px] font-bold">
+                          {top3Student.className}
+                        </span>
                       </div>
 
+                      <div className="mt-1.5">
+                        <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-900/90 text-amber-300 text-[10px] sm:text-xs font-black border border-amber-900/60 shadow-xs">
+                          {top3Student.totalMeritPoints.toLocaleString('vi-VN')}đ
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="w-full bg-gradient-to-t from-amber-900 to-amber-800 h-16 rounded-t-2xl mt-2 flex items-center justify-center font-black text-amber-200 text-lg border-t border-amber-700">
-
-                      3
-
+                    {/* BỆ ĐỒNG HẠNG 3 */}
+                    <div className="w-full bg-gradient-to-b from-amber-700 via-amber-800 to-amber-950 h-18 sm:h-22 rounded-t-2xl sm:rounded-t-3xl mt-3 flex flex-col items-center justify-center border-t-4 border-l border-r border-amber-500 shadow-[0_10px_25px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-black/20 pointer-events-none" />
+                      <span className="text-2xl sm:text-3xl md:text-4xl font-black text-amber-100 drop-shadow relative z-10 leading-none">
+                        3
+                      </span>
+                      <span className="text-[9px] sm:text-[10px] font-black uppercase text-amber-200/90 tracking-wider relative z-10 mt-1">
+                        QUÝ QUÂN
+                      </span>
                     </div>
-
                   </div>
-
                 )}
 
               </div>
-
             </div>
-
           )}
-
-
 
           {/* DANH SÁCH BẢNG XẾP HẠNG CHI TIẾT */}
 
