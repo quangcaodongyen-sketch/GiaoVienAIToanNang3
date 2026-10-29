@@ -98,31 +98,31 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             <Bell className="w-4 h-4 text-slate-950" />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="text-xs sm:text-sm font-black text-white tracking-tight">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-sm sm:text-base md:text-lg font-black text-white tracking-tight">
                 LỜI NHẮC ÔN TẬP GK1 &amp; NHẬN NHIỆM VỤ
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 shadow-2xs">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-400 text-slate-950 shadow-2xs">
                 Thầy Đinh Thành
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/30 text-cyan-200 border border-blue-400/30 truncate">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/30 text-cyan-200 border border-blue-400/30 truncate">
                 {studentName} ({className})
               </span>
             </div>
 
-            {/* DÒNG NHẮC LỊCH VÀ DỤNG CỤ ĐƠN GIẢN */}
-            <div className="text-[11px] sm:text-xs text-blue-100/90 font-medium mt-1 flex items-center gap-2 flex-wrap">
-              <span className="text-amber-300 font-bold flex items-center gap-1">
+            {/* DÒNG NHẮC LỊCH VÀ DỤNG CỤ ĐƠN GIẢN - CHỮ TO RÕ RÀNG */}
+            <div className="text-xs sm:text-sm md:text-[15px] text-blue-100 font-medium mt-1.5 flex items-center gap-2 sm:gap-3 flex-wrap">
+              <span className="text-amber-300 font-black flex items-center gap-1.5">
                 <span>📢 Lịch thi:</span>
-                <strong>Chiều Thứ 2 (02/11/2026)</strong>
+                <strong className="underline decoration-amber-400 underline-offset-2">Chiều Thứ 2 (02/11/2026)</strong>
               </span>
-              <span className="text-white/40">•</span>
-              <span className="text-cyan-200 flex items-center gap-1">
+              <span className="text-white/40 hidden sm:inline">•</span>
+              <span className="text-cyan-200 font-bold flex items-center gap-1.5">
                 <span>✏️ Dụng cụ:</span>
                 <strong>2 bút chì 2B gọt sẵn + tẩy mềm + bút mực</strong>
               </span>
-              <span className="text-white/40">•</span>
-              <span className="text-emerald-300 font-bold">
+              <span className="text-white/40 hidden sm:inline">•</span>
+              <span className="text-emerald-300 font-black bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-500/30">
                 🎁 +{promoPts}đ Chuyên cần
               </span>
             </div>
@@ -168,138 +168,138 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
       {/* 2. KHI MỞ RỘNG: 3 THẺ NHẬN NHIỆM VỤ & BẮT ĐẦU HỌC TẬP NGAY (TINH GỌN) */}
       {isExpanded && (
         <div className="p-3 sm:p-4 space-y-3">
-          {/* LƯỚI 3 NHIỆM VỤ HỌC TẬP CHÍNH */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+          {/* LƯỚI 3 NHIỆM VỤ HỌC TẬP CHÍNH - CHỮ TO RÕ RÀNG */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* NHIỆM VỤ 1: TỪ VỰNG UNIT 1-3 */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-emerald-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-emerald-300 transition-all">
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-emerald-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-emerald-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-1.5 mb-1">
-                  <span className="text-[10px] font-black uppercase text-emerald-300 flex items-center gap-1">
+                <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                  <span className="text-xs sm:text-sm font-black uppercase text-emerald-300 flex items-center gap-1">
                     <span>📚 Nhiệm vụ 1: Từ Vựng</span>
                   </span>
-                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                  <span className="text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
                     +15đ / Bài
                   </span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-black text-white">
+                <h4 className="text-sm sm:text-base font-black text-white">
                   Luyện Từ Vựng Unit 1 - Unit 3
                 </h4>
-                <p className="text-[11px] text-blue-200/80 mt-1 line-clamp-1">
+                <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
                   Chiếm 50% điểm đề thi. Nghe phát âm &amp; nhớ mặt từ siêu tốc.
                 </p>
 
-                <div className="mt-2 flex flex-wrap gap-1">
+                <div className="mt-2.5 flex flex-wrap gap-1.5">
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(1, grade)}
-                    className="px-2 py-0.5 rounded-md bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
                     U1 ({unit1.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(2, grade)}
-                    className="px-2 py-0.5 rounded-md bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
                     U2 ({unit2.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(3, grade)}
-                    className="px-2 py-0.5 rounded-md bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-[10px] font-bold transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
                     U3 ({unit3.wordCount} từ)
                   </button>
                 </div>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-blue-500/20">
+              <div className="mt-3.5 pt-2.5 border-t border-blue-500/20">
                 <button
                   type="button"
                   onClick={() => onGoToVocabUnit(1, grade)}
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1 active:scale-95"
+                  className="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-xs flex items-center justify-center gap-1.5 active:scale-95"
                 >
-                  <BookOpen className="w-3.5 h-3.5 text-white" />
+                  <BookOpen className="w-4 h-4 text-white" />
                   <span>Vào Học Từ Vựng</span>
-                  <ArrowRight className="w-3 h-3 text-white/80" />
+                  <ArrowRight className="w-3.5 h-3.5 text-white/80" />
                 </button>
               </div>
             </div>
 
             {/* NHIỆM VỤ 2: ĐỀ CƯƠNG ÔN TẬP */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-cyan-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-cyan-300 transition-all">
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-cyan-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-cyan-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-1.5 mb-1">
-                  <span className="text-[10px] font-black uppercase text-cyan-300 flex items-center gap-1">
+                <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                  <span className="text-xs sm:text-sm font-black uppercase text-cyan-300 flex items-center gap-1">
                     <span>📖 Nhiệm vụ 2: Đề Cương</span>
                   </span>
-                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-cyan-500/20 text-cyan-200 border border-cyan-400/30">
+                  <span className="text-xs font-black px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">
                     Bám Sát SGK
                   </span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-black text-white">
+                <h4 className="text-sm sm:text-base font-black text-white">
                   Đề Cương Ôn Tập GK1 Lớp {grade}
                 </h4>
-                <p className="text-[11px] text-blue-200/80 mt-1 line-clamp-1">
+                <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
                   Luyện chắc ngữ pháp Hiện tại đơn, Quá khứ đơn, V-ing &amp; tự luận.
                 </p>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-blue-500/20 flex items-center gap-1.5">
+              <div className="mt-3.5 pt-2.5 border-t border-blue-500/20 flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onGoToDecuong}
-                  className="flex-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1 active:scale-95"
+                  className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-xs flex items-center justify-center gap-1.5 active:scale-95"
                 >
-                  <FileText className="w-3.5 h-3.5 text-white" />
+                  <FileText className="w-4 h-4 text-white" />
                   <span>Mở Đề Cương Ôn</span>
-                  <ArrowRight className="w-3 h-3 text-white/80" />
+                  <ArrowRight className="w-3.5 h-3.5 text-white/80" />
                 </button>
                 <button
                   type="button"
                   onClick={onGoToLeaderboard}
-                  className="px-2 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition cursor-pointer border border-amber-400/30 flex items-center gap-1"
+                  className="px-2.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs sm:text-sm transition cursor-pointer border border-amber-400/30 flex items-center gap-1"
                   title="Xem kết quả thi đua cá nhân, tổ và lớp"
                 >
-                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="text-[11px]">Bảng Vàng</span>
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                  <span>Bảng Vàng</span>
                 </button>
               </div>
             </div>
 
             {/* NHIỆM VỤ 3: THI THỬ ONLINE */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-amber-400/40 p-3 flex flex-col justify-between shadow-xs hover:border-amber-300 transition-all">
+            <div className="rounded-xl bg-[#0B1E36]/90 border border-amber-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-amber-300 transition-all">
               <div>
-                <div className="flex items-center justify-between gap-1.5 mb-1">
-                  <span className="text-[10px] font-black uppercase text-amber-300 flex items-center gap-1">
+                <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                  <span className="text-xs sm:text-sm font-black uppercase text-amber-300 flex items-center gap-1">
                     <span>✍️ Nhiệm vụ 3: Thi Thử</span>
                   </span>
-                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                  <span className="text-xs font-black px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/40">
                     +30đ Thi Đua
                   </span>
                 </div>
-                <h4 className="text-xs sm:text-sm font-black text-white">
+                <h4 className="text-sm sm:text-base font-black text-white">
                   Kiểm Tra Thử Online Lớp {grade}
                 </h4>
-                <p className="text-[11px] text-blue-200/80 mt-1 line-clamp-1">
+                <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
                   Chuẩn ma trận Bộ GD&amp;ĐT, tự động bấm giờ &amp; giải thích chi tiết.
                 </p>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-blue-500/20 flex items-center gap-1.5">
+              <div className="mt-3.5 pt-2.5 border-t border-blue-500/20 flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onGoToExam}
-                  className="flex-1 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1 active:scale-95"
+                  className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 text-slate-950 font-black text-xs sm:text-sm transition cursor-pointer shadow-xs flex items-center justify-center gap-1.5 active:scale-95"
                 >
-                  <Award className="w-3.5 h-3.5 text-slate-950" />
+                  <Award className="w-4 h-4 text-slate-950" />
                   <span>Vào Thi Thử GK1</span>
-                  <ArrowRight className="w-3 h-3 text-slate-950/80" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-950/80" />
                 </button>
                 <button
                   type="button"
                   onClick={onGoToQuiz}
-                  className="px-2 py-1.5 rounded-lg bg-blue-900/60 hover:bg-blue-800 text-cyan-200 font-bold text-xs transition cursor-pointer border border-blue-700/50"
+                  className="px-2.5 py-2 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-cyan-200 font-bold text-xs sm:text-sm transition cursor-pointer border border-blue-700/50"
                   title="Kiểm tra trắc nghiệm 5 phút nhanh"
                 >
                   KT 5 Phút
@@ -308,41 +308,41 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             </div>
           </div>
 
-          {/* 3. CHIẾN THUẬT LÀM BÀI NHẮC NGẮN GỌN (TINH TÚY - KHÔNG DÀI DÒNG) */}
-          <div className="p-2.5 rounded-xl bg-blue-950/60 border border-blue-400/30 text-xs">
+          {/* 3. CHIẾN THUẬT LÀM BÀI NHẮC NGẮN GỌN (TINH TÚY - CHỮ TO RÕ RÀNG) */}
+          <div className="p-3 rounded-xl bg-blue-950/60 border border-blue-400/30 text-xs sm:text-sm">
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              <div className="flex items-center gap-1.5">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span className="text-[11px] font-black text-amber-300 uppercase tracking-wide">
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-300 shrink-0" />
+                <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide">
                   Chiến Thuật Bỏ Túi Của Thầy Thành:
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setShowFullTips(!showFullTips)}
-                className="text-[11px] font-bold text-cyan-300 hover:text-white transition cursor-pointer flex items-center gap-1"
+                className="text-xs sm:text-sm font-bold text-cyan-300 hover:text-white transition cursor-pointer flex items-center gap-1"
               >
                 <span>{showFullTips ? 'Thu gọn mẹo' : 'Xem chi tiết mẹo'}</span>
-                {showFullTips ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                {showFullTips ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               </button>
             </div>
 
             {/* DÒNG CHIẾN THUẬT RÚT GỌN 3 Ý CỐT LÕI */}
-            <div className="mt-1.5 grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px] text-blue-100/95 font-medium">
-              <div className="p-1.5 rounded-lg bg-black/30 border border-white/10 flex items-center gap-1.5">
-                <span className="text-amber-400 font-bold">1. Ngữ âm:</span>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm text-blue-100 font-medium">
+              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
+                <span className="text-amber-400 font-black shrink-0">1. Ngữ âm:</span>
                 <span className="truncate" title="Đuôi -s: thời phong kiến f,p,k,t,th -> /s/. Đuôi -ed: t,d -> /id/">
                   Đuôi <em>-s</em> (f-p-k-t-th ➔ /s/), <em>-ed</em> (t,d ➔ /id/).
                 </span>
               </div>
-              <div className="p-1.5 rounded-lg bg-black/30 border border-white/10 flex items-center gap-1.5">
-                <span className="text-emerald-400 font-bold">2. Ngữ pháp:</span>
+              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
+                <span className="text-emerald-400 font-black shrink-0">2. Ngữ pháp:</span>
                 <span className="truncate" title="Thói quen -> Hiện tại đơn; Quá khứ -> V2/-ed; sau like/love -> V-ing">
                   Thói quen ➔ HTĐ; Quá khứ ➔ V2/-ed; like/love ➔ V-ing.
                 </span>
               </div>
-              <div className="p-1.5 rounded-lg bg-black/30 border border-white/10 flex items-center gap-1.5">
-                <span className="text-cyan-400 font-bold">3. Kỹ năng:</span>
+              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
+                <span className="text-cyan-400 font-black shrink-0">3. Kỹ năng:</span>
                 <span className="truncate" title="Câu dễ làm trước, khó làm sau. Gạch chân từ khóa. Tô kín ô trắc nghiệm!">
                   Dễ làm trước, khó làm sau; tô kín ô đáp án 2B.
                 </span>
