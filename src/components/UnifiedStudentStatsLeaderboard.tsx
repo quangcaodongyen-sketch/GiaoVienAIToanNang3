@@ -269,7 +269,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   // Chế độ thống nhất 1 kiểu: Mặc định lọc học sinh THỰC TẾ ĐÃ THAM GIA HỌC
 
-  const [onlyActiveStudents, setOnlyActiveStudents] = useState<boolean>(true);
+  const [onlyActiveStudents, setOnlyActiveStudents] = useState<boolean>(false);
 
 
 
@@ -544,7 +544,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   const actualStudyingStudents = useMemo(() => {
 
-    return leaderboard.filter(s => s.isActuallyStudying || s.hasEntered || (s.totalMeritPoints && s.totalMeritPoints > 15) || (s.testsCount && s.testsCount > 0));
+    return leaderboard.filter(s => s.isActuallyStudying || s.hasEntered || (s.totalMeritPoints && s.totalMeritPoints >= 15) || (s.testsCount && s.testsCount > 0));
 
   }, [leaderboard]);
 

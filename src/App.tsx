@@ -1482,10 +1482,10 @@ export default function App() {
           )}
         </nav>
 
-        {/* CỔNG CHỌN NHANH 2 PHÂN HỆ: DÀNH CHO GV & DÀNH CHO HS + ADMIN (TONE XANH DỊU MẮT, CHỮ TRẮNG TƯƠNG PHẢN CAO) */}
-        <div className="bg-[#0B1E36] border-t border-b border-blue-500/30 py-2 px-3 sm:px-6 shadow-md transition-all">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
+        {/* CỔNG CHỌN NHANH PHÂN HỆ: TRANG CHỦ, GV, HS, ADMIN - TAB 3D TRONG SUỐT GLASSMORPHISM ĐỈNH CAO */}
+        <div className="bg-[#0B1E36]/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-b border-white/10 py-2 px-3 sm:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.35)] transition-all">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-white/10 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] flex-1 sm:flex-initial">
               
               {/* Nút 0: TRANG CHỦ */}
               <button
@@ -1495,10 +1495,10 @@ export default function App() {
                   window.history.pushState(null, '', '/');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'welcome'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
+                    ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
                 }`}
                 title="Về Cổng Chào Mừng dekiemtraso.com"
               >
@@ -1513,10 +1513,10 @@ export default function App() {
                   setMainViewTab('teachers');
                   window.history.pushState(null, '', '/giaovien');
                 }}
-                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'teachers'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
+                    ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
                 }`}
                 title="Dành Cho Giáo Viên: Kho Tiện Ích & Phần Mềm Tạo Đề Kiểm Tra"
               >
@@ -1531,10 +1531,10 @@ export default function App() {
                   setMainViewTab('students');
                   window.history.pushState(null, '', '/hocsinh');
                 }}
-                className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
                   (mainViewTab as string) === 'students'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
+                    ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white font-black shadow-[0_6px_20px_rgba(16,185,129,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-emerald-300/60 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
                 }`}
                 title="Dành Cho Học Sinh: Học Từ Vựng, Kiểm Tra Thử Online & Xem Điểm"
               >
@@ -1543,7 +1543,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* Nút 3: ADMIN (TỐI GIẢN - XANH DỊU MẮT - CHỮ TRẮNG) */}
+            {/* Nút 3: ADMIN (TAB 3D TRONG SUỐT VÀNG ÁNH KIM) */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -1551,14 +1551,14 @@ export default function App() {
                   setMainViewTab('admin');
                   window.history.pushState(null, '', '/admin');
                 }}
-                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'admin'
-                    ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300'
-                    : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/50'
+                    ? 'bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200/80 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 hover:text-amber-200 font-extrabold border border-amber-400/20 backdrop-blur-md'
                 }`}
                 title="Quản trị hệ thống (Thầy Đinh Thành)"
               >
-                <Crown className="w-3.5 h-3.5 text-blue-300" />
+                <Crown className="w-3.5 h-3.5 text-amber-300" />
                 <span>{isAdminSession ? 'Quản Trị Admin' : 'Admin'}</span>
               </button>
             </div>
@@ -1716,14 +1716,14 @@ export default function App() {
               </div>
             </div>
 
-            {/* Các nút liên kết & Cổng Quản trị tinh gọn */}
+            {/* Các nút liên kết & Cổng Quản trị 3D Glassmorphism tinh gọn */}
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold shrink-0">
               <a
                 href={BRAND.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center gap-1.5 shadow-2xs"
-                title={`Hotline / Zalo: ${BRAND.phone}`}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition-all flex items-center gap-1.5 shadow-[0_4px_12px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.4)] border border-emerald-400/40"
+                title={`Hotline / Zalo hỗ trợ cài đặt & trải nghiệm: ${BRAND.phone}`}
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span>Zalo: {BRAND.phone}</span>
@@ -1733,7 +1733,7 @@ export default function App() {
                 href={BRAND.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-blue-600/70 hover:bg-blue-600 text-white border border-blue-500/40 transition-all flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white border border-white/15 backdrop-blur-md transition-all flex items-center gap-1.5"
                 title="Trang Facebook tác giả"
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -1747,7 +1747,7 @@ export default function App() {
                   window.location.hash = '#admin';
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 font-bold border border-amber-400/30 transition-all flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 hover:text-amber-200 font-bold border border-amber-400/30 backdrop-blur-md transition-all flex items-center gap-1.5 cursor-pointer"
                 title="Cổng Quản Trị Hệ Thống"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-400" />

@@ -3438,6 +3438,108 @@ class StudentGradebookService {
 
    */
 
+  // ==================== HỢP NHẤT TOÀN DIỆN MỌI TÀI KHOẢN TRÙNG LẶP (1 HỌC SINH = 1 TÀI KHOẢN DUY NHẤT) ====================
+  public mergeAllDuplicateStudentAccounts(): number {
+    const studentGroups = new Map<string, StudentProfile[]>();
+
+    // Nhóm tất cả học sinh theo Họ Tên chuẩn hóa + Lớp
+    (this.students || []).forEach(s => {
+      if (!s || !s.name) return;
+      const key = `${normalizeVietnameseName(s.name)}__${normalizeClassName(s.className || '').toLowerCase()}`;
+      const group = studentGroups.get(key) || [];
+      group.push(s);
+      studentGroups.set(key, group);
+    });
+
+    const canonicalStudents: StudentProfile[] = [];
+    const idMigrationMap = new Map<string, string>();
+    let mergedCount = 0;
+
+    studentGroups.forEach((group, key) => {
+      if (group.length === 1) {
+        canonicalStudents.push(group[0]);
+        return;
+      }
+
+      mergedCount += (group.length - 1);
+      // Sắp xếp để chọn profile chuẩn mực nhất: 1. Có SBD chính thức, 2. Điểm cao hơn, 3. Tạo sớm hơn
+      group.sort((a, b) => {
+        const aHasCode = a.studentCode && !a.studentCode.includes('random') ? 1 : 0;
+        const bHasCode = b.studentCode && !b.studentCode.includes('random') ? 1 : 0;
+        if (aHasCode !== bHasCode) return bHasCode - aHasCode;
+        const aPts = a.totalMeritPoints || 0;
+        const bPts = b.totalMeritPoints || 0;
+        if (aPts !== bPts) return bPts - aPts;
+        return (a.createdAt || '').localeCompare(b.createdAt || '');
+      });
+
+      const canonical = { ...group[0] };
+      const otherIds = group.slice(1).map(s => s.id);
+
+      // Hợp nhất điểm cao nhất và các thành phần điểm
+      canonical.attendancePoints = Math.max(...group.map(s => s.attendancePoints || 0));
+      canonical.vocabPoints = Math.max(...group.map(s => s.vocabPoints || 0));
+      canonical.examBonusPoints = Math.max(...group.map(s => s.examBonusPoints || 0));
+      canonical.practicePoints = Math.max(...group.map(s => s.practicePoints || 0));
+      canonical.timePoints = Math.max(...group.map(s => s.timePoints || 0));
+      canonical.teacherBonus = Math.max(...group.map(s => s.teacherBonus || 0));
+      canonical.encouragementBonus = Math.max(...group.map(s => s.encouragementBonus ?? 15), 15);
+      canonical.studyTimeMinutes = Math.max(...group.map(s => s.studyTimeMinutes || 0));
+      canonical.vocabUnitsCompletedCount = Math.max(...group.map(s => s.vocabUnitsCompletedCount || 0));
+      canonical.studyProgressPercent = Math.max(...group.map(s => s.studyProgressPercent || 0));
+
+      const dates = group.map(s => s.lastLoginDate).filter(Boolean) as string[];
+      dates.sort();
+      if (dates.length > 0) canonical.lastLoginDate = dates[dates.length - 1];
+
+      // Tra cứu baseline điểm cao
+      const baseInfo = VERIFIED_HIGH_SCORE_BASELINE[key];
+      const baseTotal = baseInfo ? baseInfo.total : 0;
+      const vaultMax = Math.max(
+        getStudentVaultMaxPoints(canonical.id, canonical.name, canonical.className),
+        ...otherIds.map(oid => getStudentVaultMaxPoints(oid, canonical.name, canonical.className))
+      );
+
+      const sumParts = (canonical.attendancePoints || 0) + (canonical.vocabPoints || 0) +
+        (canonical.examBonusPoints || 0) + (canonical.practicePoints || 0) +
+        (canonical.timePoints || 0) + (canonical.teacherBonus || 0) + (canonical.encouragementBonus || 15);
+
+      const maxCandidateTotal = Math.max(...group.map(s => s.totalMeritPoints || 0));
+      canonical.totalMeritPoints = Math.max(maxCandidateTotal, vaultMax, baseTotal, sumParts, 15);
+
+      // Lưu lại vào Vault
+      saveStudentVaultMaxPoints(canonical.id, canonical.totalMeritPoints, canonical.name, canonical.className);
+      otherIds.forEach(oid => {
+        idMigrationMap.set(oid, canonical.id);
+        saveStudentVaultMaxPoints(oid, canonical.totalMeritPoints, canonical.name, canonical.className);
+      });
+
+      canonicalStudents.push(canonical);
+    });
+
+    if (mergedCount > 0) {
+      this.students = canonicalStudents;
+      if (this.submissions) {
+        this.submissions.forEach(sub => {
+          if (idMigrationMap.has(sub.studentId)) {
+            sub.studentId = idMigrationMap.get(sub.studentId)!;
+          }
+        });
+      }
+      if (this.checkinLogs) {
+        this.checkinLogs.forEach(log => {
+          if (idMigrationMap.has(log.studentId)) {
+            log.studentId = idMigrationMap.get(log.studentId)!;
+          }
+        });
+      }
+      this.saveStudents(false);
+      this.saveSubmissions(false);
+    }
+
+    return mergedCount;
+  }
+
   public auditAndRestoreAllStudentPoints(triggerCloudSync: boolean = true): {
 
     auditedCount: number;
@@ -3449,6 +3551,8 @@ class StudentGradebookService {
     details: string[];
 
   } {
+
+    this.mergeAllDuplicateStudentAccounts();
 
     let restoredCount = 0;
 
@@ -6703,172 +6807,15 @@ class StudentGradebookService {
    */
 
   public resetAllTestProgress(studentId?: string, forceAdminBypass: boolean = false): { success: boolean; count: number } {
-    // KHÓA BẢO VỆ CHẶT CHẼ: TUYỆT ĐỐI KHÔNG CHO RESET ĐIỂM BỪA BÃI ĐỂ BẢO VỆ ĐIỂM SỐ HỌC SINH
-    if (!forceAdminBypass) {
-      console.warn('🔒 [BẢO VỆ ĐIỂM SỐ] Yêu cầu reset điểm bị từ chối để tránh mất điểm học sinh theo chỉ đạo của Thầy Đinh Thành!');
-      return { success: false, count: 0 };
-    }
-
-    let affectedCount = 0;
-
-
-
-    if (studentId) {
-
-      const s = this.students.find(st => st.id === studentId);
-
-      if (s) {
-
-        s.attendancePoints = 0;
-
-        s.vocabPoints = 0;
-
-        s.examBonusPoints = 0;
-
-        s.practicePoints = 0;
-
-        s.studyTimeMinutes = 0;
-
-        s.timePoints = 0;
-
-        s.totalMeritPoints = 0;
-
-        s.lastLoginDate = undefined;
-
-        affectedCount = 1;
-
-
-
-        try {
-
-          localStorage.removeItem('MIDTERM_MISSION_EVAL_' + s.id);
-
-          localStorage.removeItem('gvai_dob_verified_' + s.id);
-
-        } catch {}
-
-      }
-
-      this.submissions = this.submissions.filter(sub => sub.studentId !== studentId);
-
-      this.checkinLogs = this.checkinLogs.filter(log => log.studentId !== studentId);
-
-    } else {
-
-      this.students.forEach(s => {
-
-        s.attendancePoints = 0;
-
-        s.vocabPoints = 0;
-
-        s.examBonusPoints = 0;
-
-        s.practicePoints = 0;
-
-        s.studyTimeMinutes = 0;
-
-        s.timePoints = 0;
-
-        s.totalMeritPoints = 0;
-
-        s.lastLoginDate = undefined;
-
-        affectedCount++;
-
-
-
-        try {
-
-          localStorage.removeItem('MIDTERM_MISSION_EVAL_' + s.id);
-
-          localStorage.removeItem('gvai_dob_verified_' + s.id);
-
-        } catch {}
-
-      });
-
-
-
-      try {
-
-        const keysToRemove: string[] = [];
-
-        for (let i = 0; i < localStorage.length; i++) {
-
-          const k = localStorage.key(i);
-
-          if (k && (k.startsWith('MIDTERM_MISSION_EVAL_') || k.startsWith('gvai_dob_verified_'))) {
-
-            keysToRemove.push(k);
-
-          }
-
-        }
-
-        keysToRemove.forEach(k => localStorage.removeItem(k));
-
-      } catch {}
-
-
-
-      this.submissions = [];
-
-      this.checkinLogs = [];
-
-    }
-
-
-
-    this.saveStudents();
-
-    this.saveSubmissions();
-
-    try {
-
-      localStorage.setItem(STORAGE_KEYS.CHECKIN_LOGS, JSON.stringify(this.checkinLogs));
-
-    } catch {}
-
-
-
-    const active = this.getActiveStudent();
-
-    if (active && (!studentId || active.id === studentId)) {
-
-      const updated = this.students.find(s => s.id === active.id);
-
-      if (updated) {
-
-        this.setActiveStudent(updated);
-
-      }
-
-    }
-
-
-
-    return { success: true, count: affectedCount };
-
+    // KHÓA BẢO VỆ TUYỆT ĐỐI THEO CHỈ ĐẠO CỦA THẦY ĐINH THÀNH: NGHIÊM CẤM RESET HOẶC GIẢM ĐIỂM HỌC SINH!
+    console.warn('🔒 [LỆNH THẦY ĐINH THÀNH: NGHIÊM CẤM RESET ĐIỂM] Toàn bộ điểm số học sinh được bảo toàn 100%, tuyệt đối không trừ hay reset điểm!');
+    return { success: false, count: 0 };
   }
 
-
-
-  // Khôi phục dữ liệu mẫu ban đầu
-
+  // Khôi phục bảo vệ dữ liệu chuẩn (Tuyệt đối không reset mất điểm học sinh)
   public resetToDefault() {
-
-    this.classes = DEFAULT_CLASSES;
-
-    this.students = DEFAULT_STUDENTS;
-
-    this.submissions = DEFAULT_SUBMISSIONS;
-
-    this.saveClasses();
-
-    this.saveStudents();
-
-    this.saveSubmissions();
-
+    console.warn('🔒 [LỆNH THẦY ĐINH THÀNH: NGHIÊM CẤM RESET] Bảo toàn 100% danh sách học sinh và điểm số thực tế!');
+    this.auditAndRestoreAllStudentPoints();
   }
 
 
@@ -6911,7 +6858,7 @@ class StudentGradebookService {
 
     const origTotal = student.totalMeritPoints || 0;
 
-    const vaultMax = getStudentVaultMaxPoints(student.id);
+    const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
 
     const addedPoints = 
 
@@ -7061,7 +7008,7 @@ class StudentGradebookService {
 
     const origTotal = student.totalMeritPoints || 0;
 
-    const vaultMax = getStudentVaultMaxPoints(student.id);
+    const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
 
 
 
@@ -7767,7 +7714,7 @@ class StudentGradebookService {
 
       const tch = student.teacherBonus || 0;
 
-      const vaultMax = getStudentVaultMaxPoints(student.id);
+      const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
 
       const calculatedSum = att + voc + exm + prc + tme + enc + tch;
 
