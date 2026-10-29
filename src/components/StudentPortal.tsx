@@ -89,7 +89,7 @@ import { StudentForumView } from './StudentForumView';
 
 import { StudentMessageAdminView } from './StudentMessageAdminView';
 
-import { studentGradebookService, StudentProfile, validateEducationalStudentName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString, TeacherLuckyBoxResult, getPromoRoadmapSchedule, PromoRoadmapDay } from '../services/studentGradebookService';
+import { studentGradebookService, StudentProfile, validateEducationalStudentName, normalizeVietnameseName, getDailyLoginRewardInfo, DailyLoginRewardInfo, getLocalDateString, getYesterdayDateString, TeacherLuckyBoxResult, getPromoRoadmapSchedule, PromoRoadmapDay } from '../services/studentGradebookService';
 
 import { launchFireworks } from '../utils/fireworks';
 
@@ -835,83 +835,65 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
   const handleQuickAccessSubmit = (e?: React.FormEvent) => {
-
     if (e) e.preventDefault();
-
+    const rawInput = quickFullName.trim();
+    if (!rawInput) {
+      setQuickError('Vui lòng chọn hoặc nhập Họ và tên học sinh!');
+      return;
+    }
     setQuickError('');
-
-
 
     const cls = quickClassName.trim() || '8A1';
 
-    // Tự động chuẩn hóa chính tả theo danh sách lớp của Thầy Thành
-
-    const std = studentGradebookService.standardizeStudentName(quickFullName, cls);
-
-    const cleanedInputName = std.standardizedName || quickFullName.trim();
+    // 1. Tự động chuẩn hóa chính tả theo danh sách lớp của Thầy Thành
+    const std = studentGradebookService.standardizeStudentName(rawInput, cls);
+    const cleanedInputName = std.standardizedName || rawInput;
 
     if (std.changed) {
-
       setQuickFullName(std.standardizedName);
-
       setQuickAutocorrectNote({
-
         original: std.originalName,
-
         corrected: std.standardizedName,
-
         isOfficial: std.isOfficialMatched
-
       });
-
     }
 
+    // 2. RÀ SOÁT DANH SÁCH HỌC SINH: ĐỐI CHIẾU TRỰC TIẾP VỚI SỔ ĐIỂM CHÍNH THỨC
+    // Khi học sinh đã chọn tên và lớp trong danh sách: CHO ĐĂNG NHẬP NGAY LẬP TỨC!
+    const roster = studentGradebookService.getOfficialRoster(cls);
+    const normInput = normalizeVietnameseName(cleanedInputName);
+    const directMatch = roster.find(rName => normalizeVietnameseName(rName) === normInput);
 
+    let finalName = directMatch || cleanedInputName;
+    let finalClass = cls;
 
-    const val = validateEducationalStudentName(cleanedInputName, cls);
-
-    if (!val.isValid) {
-
-      const msg = val.errorMessage || 'Họ và tên học sinh không hợp lệ!';
-
-      setQuickError(msg);
-
-      alert('⚠️ ' + msg);
-
-      return;
-
+    if (!directMatch) {
+      // 3. Nếu không tìm thấy trong lớp đang chọn, tìm trong toàn bộ 390 học sinh của trường
+      const allStudents = studentGradebookService.getStudents();
+      const globalMatch = allStudents.find(s => normalizeVietnameseName(s.name) === normInput);
+      
+      if (globalMatch) {
+        finalName = globalMatch.name;
+        finalClass = globalMatch.className;
+        setQuickClassName(globalMatch.className);
+      } else {
+        // 4. Nếu là học sinh ngoài danh sách chính thức, mới kiểm tra bộ lọc tên
+        const val = validateEducationalStudentName(cleanedInputName, cls);
+        if (!val.isValid && !val.isOfficialMatched) {
+          const msg = val.errorMessage || 'Họ và tên học sinh không hợp lệ!';
+          setQuickError(msg);
+          alert('⚠️ ' + msg);
+          return;
+        }
+        finalName = val.cleanName || cleanedInputName;
+      }
     }
 
-
-
-    // Kiểm tra đối chiếu với Sổ điểm chính thức (Khối THCS Thầy dạy)
-
-    const verify = studentGradebookService.verifyStudentInRoster(val.cleanName, cls);
-
-    if (!verify.allowed) {
-
-      const msg = verify.reason || 'Tên học sinh không có trong danh sách chính thức!';
-
-      setQuickError(msg);
-
-      alert('⚠️ ' + msg);
-
-      return;
-
-    }
-
-
-
-    const finalName = verify.matchedName || val.cleanName;
-
-    const student = studentGradebookService.quickAccessStudent(finalName, cls);
-
+    // 5. ĐĂNG NHẬP NGAY LẬP TỨC CHO HỌC SINH!
+    const student = studentGradebookService.quickAccessStudent(finalName, finalClass);
     setCurrentStudent(student);
-
     saveStudentToDevice(student);
-
     triggerWelcomeModal(student, false);
-
   };
 
 

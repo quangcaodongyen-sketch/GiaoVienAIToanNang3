@@ -1477,157 +1477,110 @@ export interface NameValidationResult {
 
 
 export function validateEducationalStudentName(rawName: string, className?: string): NameValidationResult {
-
   if (!rawName || typeof rawName !== 'string') {
-
     return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập Họ và tên học sinh!' };
-
   }
-
-
 
   const trimmed = rawName.trim().replace(/\s+/g, ' ');
-
-  if (trimmed.length < 4) {
-
-    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh quá ngắn (tối thiểu 4 ký tự)!' };
-
+  if (!trimmed) {
+    return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập Họ và tên học sinh!' };
   }
-
-  if (trimmed.length > 45) {
-
-    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh không được vượt quá 45 ký tự!' };
-
-  }
-
-
-
-  // Chặn số
-
-  if (/\d/.test(trimmed)) {
-
-    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên thật của học sinh không được chứa chữ số!' };
-
-  }
-
-
-
-  // Chấp nhận chữ cái tiếng Việt và khoảng trắng
-
-  const vietnameseLetterRegex = /^[\p{L}\s]+$/u;
-
-  if (!vietnameseLetterRegex.test(trimmed)) {
-
-    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên chỉ được chứa chữ cái tiếng Việt và khoảng cách, không được chứa ký tự đặc biệt hay biểu tượng emoji!' };
-
-  }
-
-
-
-  // Bắt buộc tối thiểu 2 từ (Họ + Tên)
-
-  const words = trimmed.split(' ');
-
-  if (words.length < 2) {
-
-    return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập đầy đủ cả Họ và Tên (gồm tối thiểu 2 từ, ví dụ: Nguyễn Văn An), không nhập tên cụt 1 từ!' };
-
-  }
-
-
-
-  // Chuẩn hóa không dấu chữ thường để rà soát từ tục / spam
 
   const norm = normalizeVietnameseName(trimmed);
 
+  // 1. ƯU TIÊN TUYỆT ĐỐI SỐ 1: ĐỐI CHIẾU DANH SÁCH 390 HỌC SINH CHÍNH THỨC CỦA NHÀ TRƯỜNG
+  // Nếu học sinh thuộc danh sách chính thức (khớp có dấu hoặc không dấu), LẬP TỨC PHÊ DUYỆT 100% HỢP LỆ!
+  // Đảm bảo em Hoàng Tiểu May (8A2) và toàn bộ 390 học sinh đăng nhập thông suốt ngay lập tức.
+  const cleanCls = className ? normalizeClassName(className) : '';
+  const rosterData = officialRosterData as Record<string, OfficialStudentRosterItem[]>;
+  
+  let officialMatch: OfficialStudentRosterItem | undefined;
+  if (cleanCls && rosterData[cleanCls]) {
+    officialMatch = rosterData[cleanCls].find(s => normalizeVietnameseName(s.name) === norm);
+  }
+  if (!officialMatch) {
+    // Tìm trong toàn bộ 10 lớp của trường
+    for (const clsKey of Object.keys(rosterData)) {
+      const found = rosterData[clsKey].find(s => normalizeVietnameseName(s.name) === norm);
+      if (found) {
+        officialMatch = found;
+        break;
+      }
+    }
+  }
 
+  if (officialMatch) {
+    return {
+      isValid: true,
+      cleanName: officialMatch.name,
+      isOfficialMatched: true
+    };
+  }
 
-  // 1. Danh sách từ ngữ tục tĩu, phi giáo dục
+  // 2. NẾU LÀ HỌC SINH TỰ DO / VÃNG LAI: KIỂM TRA ĐỘ DÀI VÀ KÝ TỰ CƠ BẢN
+  if (trimmed.length < 3) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh quá ngắn (tối thiểu 3 ký tự)!' };
+  }
 
+  if (trimmed.length > 50) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên học sinh không được vượt quá 50 ký tự!' };
+  }
+
+  // Chặn số
+  if (/\d/.test(trimmed)) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên thật của học sinh không được chứa chữ số!' };
+  }
+
+  // Chấp nhận chữ cái tiếng Việt và khoảng trắng
+  const vietnameseLetterRegex = /^[\p{L}\s]+$/u;
+  if (!vietnameseLetterRegex.test(trimmed)) {
+    return { isValid: false, cleanName: '', errorMessage: 'Họ và tên chỉ được chứa chữ cái tiếng Việt và khoảng cách, không được chứa ký tự đặc biệt!' };
+  }
+
+  // Bắt buộc tối thiểu 2 từ (Họ + Tên)
+  const words = trimmed.split(' ');
+  if (words.length < 2) {
+    return { isValid: false, cleanName: '', errorMessage: 'Vui lòng nhập đầy đủ cả Họ và Tên (ví dụ: Nguyễn Văn An)!' };
+  }
+
+  // 3. DANH SÁCH TỪ NGỮ TỤC TĨU (ĐÃ LOẠI BỎ TRIỆT ĐỂ CÁC TỪ TRÙNG VỚI TÊN THẬT NHƯ 'may', 'cu', 'dam', 'dien', 'dai', 'thang')
   const VULGAR_WORDS = [
-
-    'dm', 'dcm', 'vcl', 'cl', 'dit', 'lon', 'buoi', 'cac', 'dai', 'cho', 'may', 'tao',
-
-    'ngu', 'oc cho', 'dien', 'dam', 'sex', 'porn', 'vl', 'deo', 'de tien', 'thang',
-
-    'con me', 'me may', 'du ma', 'mat day', 'vo van', 'chet', 'giet', 'khung', 'dot',
-
-    'ham', 'buom', 'chim', 'cu', 'penis', 'vagina', 'bitch', 'fuck', 'shit', 'ass', 'idiot'
-
+    'dm', 'dcm', 'vcl', 'clgt', 'vl', 'dit me', 'du ma', 'me may', 'con me may',
+    'oc cho', 'mat day', 'de tien', 'fuck', 'shit', 'bitch', 'ass', 'penis', 'vagina'
   ];
-
-
 
   for (const vw of VULGAR_WORDS) {
-
     const regex = new RegExp(`(^|\\s)${vw}(\\s|$)`, 'i');
-
     if (regex.test(norm)) {
-
       return { isValid: false, cleanName: '', errorMessage: 'Tên học sinh chứa từ ngữ không phù hợp với chuẩn mực môi trường giáo dục!' };
-
     }
-
   }
 
-
-
-  // 2. Danh sách chuỗi spam mashing bàn phím vô nghĩa
-
-  const SPAM_PATTERNS = ['asdf', 'qwerty', 'zxcv', 'jkl;', 'test', 'demo', 'abcde', '1234', 'xxx', 'zzz', 'aaa', 'kkk', 'fake'];
-
+  // 4. Danh sách chuỗi spam mashing bàn phím vô nghĩa
+  const SPAM_PATTERNS = ['asdf', 'qwerty', 'zxcv', 'jkl;', 'test123', 'fake123', 'abcde'];
   for (const sp of SPAM_PATTERNS) {
-
     if (norm.includes(sp)) {
-
-      return { isValid: false, cleanName: '', errorMessage: 'Tên học sinh không hợp lệ. Vui lòng nhập đúng Họ và tên thật của em để Thầy ghi nhận điểm chuyên cần và thi đua nhé!' };
-
+      return { isValid: false, cleanName: '', errorMessage: 'Tên học sinh không hợp lệ. Vui lòng nhập đúng Họ và tên thật của em!' };
     }
-
   }
 
-
-
-  // 3. Danh sách mạo danh hệ thống hoặc giáo viên
-
-  const IMPERSONATION_WORDS = [
-
-    'admin', 'administrator', 'root', 'mod', 'giao vien', 'thay co', 'thay giao',
-
-    'co giao', 'hieu truong', 'bo giao duc', 'so giao duc', 'chu nhiem', 'hacker', 'hoc sinh'
-
-  ];
-
+  // 5. Danh sách mạo danh hệ thống
+  const IMPERSONATION_WORDS = ['admin', 'administrator', 'root', 'hacker'];
   for (const iw of IMPERSONATION_WORDS) {
-
     const regex = new RegExp(`(^|\\s)${iw}(\\s|$)`, 'i');
-
     if (regex.test(norm)) {
-
-      return { isValid: false, cleanName: '', errorMessage: 'Vui lòng sử dụng đúng Họ và tên thật của học sinh, không dùng danh xưng hệ thống hoặc chức danh giáo viên!' };
-
+      return { isValid: false, cleanName: '', errorMessage: 'Vui lòng sử dụng đúng Họ và tên thật của học sinh, không dùng danh xưng hệ thống!' };
     }
-
   }
 
-
-
-  // 4. Kiểm tra lặp ký tự quá mức (ví dụ "aaaaaa", "hhhhhh")
-
-  if (/(.)\1{3,}/i.test(trimmed)) {
-
+  // 6. Kiểm tra lặp ký tự quá mức (ví dụ "aaaaaa", "hhhhhh")
+  if (/(.)\1{4,}/i.test(trimmed)) {
     return { isValid: false, cleanName: '', errorMessage: 'Họ và tên không hợp lệ do có quá nhiều ký tự lặp lại!' };
-
   }
-
-
 
   // Tự động chuẩn hóa chính tả theo danh sách lớp hoặc Title Case
-
   const std = standardizeStudentName(trimmed, className);
-
   return { isValid: true, cleanName: std.standardizedName, isOfficialMatched: std.isOfficialMatched };
-
 }
 
 
