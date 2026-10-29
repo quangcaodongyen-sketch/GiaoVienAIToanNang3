@@ -10832,7 +10832,7 @@ const STUDENT_SYSTEM = {
 
         window.parent.postMessage({
 
-          type: 'GVAI_VOCAB_PROGRESS',
+          type: 'GVAI_VOCAB_PROGRESS_ONLY',
 
           unit: unit,
 
@@ -10842,7 +10842,7 @@ const STUDENT_SYSTEM = {
 
           total: total,
 
-          xp: xp,
+          xp: 10,
 
           grade: typeof CURRENT_GRADE !== 'undefined' ? CURRENT_GRADE : '8',
 
