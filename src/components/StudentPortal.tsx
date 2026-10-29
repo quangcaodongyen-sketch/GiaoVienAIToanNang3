@@ -3040,10 +3040,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             📢
           </span>
           <span className="font-extrabold text-slate-900 dark:text-white">
-            <strong className="text-rose-600 dark:text-rose-400">LỊCH THI GK1 TIẾNG ANH:</strong> Chiều Thứ Hai tuần sau (02/11/2026)!
+            <strong className="text-rose-600 dark:text-rose-400">LỊCH KIỂM TRA GK1 TIẾNG ANH:</strong> Chiều Thứ Hai tuần sau (02/11/2026)!
           </span>
-          <span className="text-[11px] text-slate-600 dark:text-slate-300">
-            • Các em chuẩn bị <strong>bút chì 2B tô trắc nghiệm</strong>, tẩy sạch và ôn chắc kiến thức <strong>Unit 1, 2, 3</strong> nhé!
+          <span className="text-xs text-slate-700 dark:text-slate-200 font-bold">
+            • Bắt buộc mang <strong className="text-amber-600 dark:text-amber-300 underline font-black">THẺ DỤNG CỤ: Ít nhất 2 Bút Chì 2B &amp; Hòn Tẩy Mềm</strong> để làm bài kiểm tra trắc nghiệm trên lớp!
           </span>
         </div>
         <button

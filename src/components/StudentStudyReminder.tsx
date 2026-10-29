@@ -215,12 +215,12 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
             {/* 4 HÀNH TRANG BẮT BUỘC HỌC SINH CẦN CHUẨN BỊ */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-3.5 text-xs">
-              <div className="p-3 rounded-xl bg-black/30 border border-amber-400/20 space-y-1">
-                <div className="font-black text-amber-300 flex items-center gap-1.5">
-                  <span>✏️ 1. Dụng Cụ Tô Trắc Nghiệm</span>
+              <div className="p-3.5 rounded-2xl bg-amber-400/20 border-2 border-amber-400/70 space-y-1.5 shadow-md">
+                <div className="font-black text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                  <span>✏️ 1. Thẻ Dụng Cụ: Bút Chì 2B &amp; Hòn Tẩy Mềm</span>
                 </div>
-                <p className="text-blue-100/90 leading-relaxed text-[11px]">
-                  Chuẩn bị <strong>ít nhất 2 bút chì 2B hoặc 3B gọt sẵn</strong>, <strong>tẩy chì mềm sạch</strong> (gôm), thước kẻ, bút mực. Tuyệt đối không dùng bút mực tô trắc nghiệm.
+                <p className="text-white leading-relaxed text-xs font-semibold">
+                  Học sinh <strong className="text-amber-300 underline font-black">BẮT BUỘC MANG THẺ DỤNG CỤ</strong>: gồm <strong>ít nhất 2 bút chì (2B hoặc 3B gọt sẵn)</strong> và <strong>hòn tẩy (gôm mềm sạch)</strong> để làm bài kiểm tra trắc nghiệm chính thức trên lớp. Tuyệt đối không dùng bút mực tô ô tròn!
                 </p>
               </div>
 

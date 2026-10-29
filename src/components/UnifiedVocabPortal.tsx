@@ -1700,6 +1700,29 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       </div>
 
+      {/* THÔNG BÁO NHẮC NHỞ HỌC SINH MANG THẺ DỤNG CỤ: BÚT CHÌ & HÒN TẨY */}
+      <div className="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 border-2 border-amber-400/80 shadow-lg flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-slate-900 dark:text-white backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl sm:text-3xl shrink-0 p-1.5 bg-amber-400 text-slate-950 rounded-2xl shadow-md">✏️</span>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-amber-800 dark:text-amber-300 font-black uppercase tracking-wider text-xs">
+                LỜI NHẮC CỦA THẦY ĐINH THÀNH:
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wide">
+                BẮT BUỘC KHI KIỂM TRA
+              </span>
+            </div>
+            <p className="text-slate-800 dark:text-slate-100 font-extrabold leading-relaxed mt-0.5">
+              Khi đi làm bài kiểm tra trắc nghiệm chính thức trên lớp, các em <strong className="text-rose-600 dark:text-rose-400 underline font-black">BẮT BUỘC MANG THẺ DỤNG CỤ</strong>: gồm <strong>ít nhất 2 bút chì (2B hoặc 3B gọt sẵn)</strong> và <strong>hòn tẩy (gôm mềm sạch)</strong> để làm bài kiểm tra trắc nghiệm!
+            </p>
+          </div>
+        </div>
+        <span className="hidden md:inline-flex px-3.5 py-1.5 rounded-2xl bg-amber-400 text-slate-950 font-black text-xs shrink-0 shadow-md">
+          🎒 Thẻ Dụng Cụ
+        </span>
+      </div>
+
 
 
       {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP ==================== */}
@@ -1834,558 +1857,393 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
               </div>
             </div>
 
-            {/* Cột phải: 4 Thẻ điểm số chi tiết */}
+            {/* Cột phải: 4 Thẻ điểm số chi tiết 3D Glassmorphism - Tương phản cực cao */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
               {/* Thẻ 1: Tổng điểm thi đua */}
-              <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-amber-400 shadow-sm text-center">
-                <span className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 block tracking-wider">
+              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border-2 border-amber-400 shadow-md text-center">
+                <span className="text-[10px] uppercase font-black text-amber-300 block tracking-wider">
                   Tổng Điểm Thi Đua
                 </span>
-                <div className="text-2xl sm:text-3xl font-black text-amber-500 dark:text-amber-400 flex items-center justify-center gap-1 my-0.5">
+                <div className="text-2xl sm:text-3xl font-black text-amber-400 flex items-center justify-center gap-1 my-0.5">
                   <span>{(liveStudent || currentStudent)?.totalMeritPoints || 0}</span>
-                  <span className="text-xs font-bold text-amber-600">đ</span>
+                  <span className="text-xs font-bold text-amber-300">đ</span>
                 </div>
-                <span className="text-[9px] text-slate-400 block font-medium">Bảo toàn vĩnh viễn</span>
+                <span className="text-[10px] text-slate-200 block font-bold">Bảo toàn vĩnh viễn</span>
               </div>
 
               {/* Thẻ 2: Điểm từ vựng */}
-              <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-400/60 shadow-xs text-center">
-                <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block">
+              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-emerald-400/80 shadow-md text-center">
+                <span className="text-[10px] uppercase font-black text-emerald-300 block">
                   Điểm Từ Vựng
                 </span>
-                <div className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1 my-0.5">
+                <div className="text-2xl sm:text-3xl font-black text-emerald-400 flex items-center justify-center gap-1 my-0.5">
                   <span>{(liveStudent || currentStudent)?.vocabPoints || 0}</span>
-                  <span className="text-xs font-bold text-emerald-600">đ</span>
+                  <span className="text-xs font-bold text-emerald-300">đ</span>
                 </div>
-                <span className="text-[9px] text-slate-400 block font-medium">Flashcard &amp; Bài tập</span>
+                <span className="text-[10px] text-slate-200 block font-bold">Flashcard &amp; Bài tập</span>
               </div>
 
               {/* Thẻ 3: Điểm luyện tập & Chuyên cần */}
-              <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-blue-400/60 shadow-xs text-center">
-                <span className="text-[10px] uppercase font-bold text-blue-600 dark:text-blue-400 block">
+              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-blue-400/80 shadow-md text-center">
+                <span className="text-[10px] uppercase font-black text-cyan-300 block">
                   Luyện Tập &amp; Chuyên Cần
                 </span>
-                <div className="text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1 my-0.5">
+                <div className="text-2xl sm:text-3xl font-black text-cyan-400 flex items-center justify-center gap-1 my-0.5">
                   <span>{((liveStudent || currentStudent)?.practicePoints || 0) + ((liveStudent || currentStudent)?.attendancePoints || 0)}</span>
-                  <span className="text-xs font-bold text-blue-600">đ</span>
+                  <span className="text-xs font-bold text-cyan-300">đ</span>
                 </div>
-                <span className="text-[9px] text-slate-400 block font-medium">Đăng nhập &amp; Trắc nghiệm</span>
+                <span className="text-[10px] text-slate-200 block font-bold">Đăng nhập &amp; Trắc nghiệm</span>
               </div>
 
               {/* Thẻ 4: Thứ hạng thi đua toàn trường */}
-              <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-purple-400/60 shadow-xs text-center">
-                <span className="text-[10px] uppercase font-bold text-purple-600 dark:text-purple-400 block">
+              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-purple-400/80 shadow-md text-center">
+                <span className="text-[10px] uppercase font-black text-purple-300 block">
                   Hạng Toàn Trường
                 </span>
-                <div className="text-2xl sm:text-3xl font-black text-purple-600 dark:text-purple-400 flex items-center justify-center gap-0.5 my-0.5">
+                <div className="text-2xl sm:text-3xl font-black text-purple-300 flex items-center justify-center gap-0.5 my-0.5">
                   <span className="text-sm font-bold text-purple-400">Top</span>
                   <span>{studentRank}</span>
                 </div>
-                <span className="text-[9px] text-slate-400 block font-medium">Bảng Vàng Thi Đua</span>
+                <span className="text-[10px] text-slate-200 block font-bold">Bảng Vàng Thi Đua</span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ==================== 2. THANH CHỌN BÀI (UNIT) & CÔNG CỤ ÂM THANH ==================== */}
-
-      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-
-        {/* Hàng trên: Chọn Unit & Tùy chọn xem khối khác */}
-
+      {/* ==================== 2. THANH CHỌN BÀI (UNIT) 3D TRONG SUỐT GLASSMORPHISM & TỐI ƯU DI ĐỘNG ==================== */}
+      <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-3.5 sm:p-4 rounded-3xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] space-y-3">
+        {/* Hàng trên: Chọn Unit & Công cụ âm thanh */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs w-full sm:w-auto">
-
-            <span className="font-bold text-slate-500 dark:text-slate-400 shrink-0">Chọn Bài:</span>
-
-            {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => {
-
-              const uMission = missionState?.mission1.units[u.unitNumber];
-
-              const isGK1Target = [1, 2, 3].includes(u.unitNumber);
-
-              return (
-
-                <button
-
-                  key={u.unitNumber}
-
-                  type="button"
-
-                  onClick={() => {
-
-                    setSelectedUnit(u.unitNumber);
-
-                    setCardIndex(0);
-
-                    setIsFlipped(false);
-
-                    handleRestartQuiz();
-
-                    handleRestartListen();
-
-                    handleSpellRestart();
-
-                  }}
-
-                  className={`px-3 py-1.5 rounded-xl font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
-
-                    selectedUnit === u.unitNumber
-
-                      ? 'bg-amber-400 text-slate-950 shadow-sm font-black'
-
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
-
-                  }`}
-
-                >
-
-                  <span>Unit {u.unitNumber}</span>
-
-                  {isGK1Target && uMission !== undefined && (
-
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-black ${
-
-                      uMission.unitPercent >= 100
-
-                        ? 'bg-emerald-500 text-slate-950'
-
-                        : (uMission.unitPercent > 0 ? 'bg-blue-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300')
-
-                    }`}>
-
-                      {uMission.unitPercent}%
-
-                    </span>
-
-                  )}
-
-                </button>
-
-              );
-
-            })}
-
+          
+          {/* TIÊU ĐỀ THANH BÀI HỌC VỚI CHỮ TƯƠNG PHẢN CAO */}
+          <div className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/40 flex items-center justify-center font-bold text-base shadow-xs">
+              📖
+            </span>
+            <div>
+              <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wider block">
+                Chọn Bài Học (Unit 1 - 12):
+              </span>
+              <span className="text-[11px] text-slate-200 font-bold block sm:hidden">
+                Đang học: Unit {selectedUnit} ({filteredVocab.length} từ)
+              </span>
+            </div>
           </div>
 
-
-
-          <div className="flex items-center gap-2 ml-auto">
-
-            {/* Tùy chọn mở xem khối khác (chỉ dành cho khách/giáo viên chưa đăng nhập tài khoản học sinh) */}
-
-            {!currentStudent && (
-
-              <button
-
-                type="button"
-
-                onClick={() => setAllowGradeSwitch(!allowGradeSwitch)}
-
-                className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-
+          {/* GIAO DIỆN DI ĐỘNG: BỘ CHỌN NHANH UNIT CHO ĐIỆN THOẠI (SELECT DROPDOWN + CHIPS TRỌNG TÂM GK1) */}
+          <div className="sm:hidden w-full space-y-2 pt-1">
+            <div className="relative">
+              <select
+                value={selectedUnit}
+                onChange={(e) => {
+                  const uNum = Number(e.target.value);
+                  setSelectedUnit(uNum);
+                  setCardIndex(0);
+                  setIsFlipped(false);
+                  handleRestartQuiz();
+                  handleRestartListen();
+                  handleSpellRestart();
+                }}
+                className="w-full py-2.5 px-3 rounded-2xl bg-slate-950 text-amber-300 font-black text-xs border-2 border-amber-400/70 shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
               >
-
-                {allowGradeSwitch ? '✕ Đóng chọn khối' : '🔄 Xem khối lớp khác'}
-
-              </button>
-
-            )}
-
-
-
-            {onOpenIpaModal && (
-
-              <button
-
-                type="button"
-
-                onClick={onOpenIpaModal}
-
-                className="px-2.5 py-1 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
-
-              >
-
-                <span>🔤 IPA</span>
-
-              </button>
-
-            )}
-
-
-
-            <button
-
-              type="button"
-
-              onClick={() => handleToggleAccent(voiceAccent === 'US' ? 'UK' : 'US')}
-
-              className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold flex items-center gap-1 cursor-pointer border border-slate-200 dark:border-slate-700"
-
-              title="Đổi giọng phát âm Anh - Mỹ hoặc Anh - Anh"
-
-            >
-
-              <span>{voiceAccent === 'US' ? '🇺🇸 Giọng Mỹ' : '🇬🇧 Giọng Anh'}</span>
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-
-        {/* Banner tiến độ nhiệm vụ GK1 cho Unit 1 - 3 */}
-
-        {[1, 2, 3].includes(selectedUnit) && (
-
-          <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-indigo-950/40 border border-blue-200 dark:border-indigo-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-
-            <div className="flex items-center gap-2">
-
-              <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0">🎯 Nhiệm Vụ GK1</span>
-
-              <div>
-
-                <span className="font-bold text-slate-800 dark:text-slate-200">
-
-                  Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/{missionState?.mission1.units[selectedUnit]?.totalRequiredModes || 8} dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
-
-                </span>
-
-                <span className="text-slate-500 dark:text-slate-400 block text-[11px]">
-
-                  🛡️ Chống học chống đối: Chỉ tính % khi em làm đúng từ (đạt độ chính xác từ 60% trở lên).
-
-                </span>
-
-              </div>
-
+                {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
+                  <option key={u.unitNumber} value={u.unitNumber} className="bg-slate-900 text-white font-bold">
+                    Unit {u.unitNumber}: {u.title} ({u.wordCount} từ){[1, 2, 3].includes(u.unitNumber) ? ' ★ TRỌNG TÂM GK1' : ''}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 font-black text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-600 shrink-0 self-start sm:self-auto text-[11px]">
-
-              {missionState?.mission1.units[selectedUnit]?.statusNote}
-
-            </span>
-
+            {/* 3 Nút Bấm Chạm Nhanh GK1 Dành Cho Học Sinh Dùng Điện Thoại */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+              <span className="text-[10px] text-amber-300 font-black uppercase tracking-wider shrink-0">GK1:</span>
+              {[1, 2, 3].map(n => {
+                const isAct = selectedUnit === n;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => {
+                      setSelectedUnit(n);
+                      setCardIndex(0);
+                      setIsFlipped(false);
+                      handleRestartQuiz();
+                      handleRestartListen();
+                      handleSpellRestart();
+                    }}
+                    className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95 ${
+                      isAct
+                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md border border-amber-200'
+                        : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                    }`}
+                  >
+                    <span>Unit {n}</span>
+                    <span className="text-[9px] px-1 rounded-sm bg-rose-600 text-white font-bold">GK1</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-        )}
+          {/* GIAO DIỆN MÁY TÍNH & MÀN LỚN: THANH CUỘN TAB 3D TRONG SUỐT */}
+          <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto pb-1 text-xs max-w-full lg:max-w-3xl">
+            {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => {
+              const uMission = missionState?.mission1.units[u.unitNumber];
+              const isGK1Target = [1, 2, 3].includes(u.unitNumber);
+              const isAct = selectedUnit === u.unitNumber;
 
+              return (
+                <button
+                  key={u.unitNumber}
+                  type="button"
+                  onClick={() => {
+                    setSelectedUnit(u.unitNumber);
+                    setCardIndex(0);
+                    setIsFlipped(false);
+                    handleRestartQuiz();
+                    handleRestartListen();
+                    handleSpellRestart();
+                  }}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
+                    isAct
+                      ? 'bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_16px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-0.5 scale-105'
+                      : 'bg-white/10 hover:bg-white/20 text-white font-extrabold border border-white/15 backdrop-blur-md hover:text-amber-300 shadow-sm'
+                  }`}
+                  title={`${u.title} (${u.wordCount} từ)`}
+                >
+                  <span>Unit {u.unitNumber}</span>
+                  {isGK1Target && (
+                    <span className="text-[9px] px-1 rounded-sm font-black bg-rose-600 text-white shadow-xs">
+                      GK1
+                    </span>
+                  )}
+                  {uMission !== undefined && (
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-black ${
+                      uMission.unitPercent >= 100
+                        ? 'bg-emerald-500 text-slate-950'
+                        : (uMission.unitPercent > 0 ? 'bg-blue-600 text-white' : 'bg-white/20 text-white')
+                    }`}>
+                      {uMission.unitPercent}%
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-
-        {/* Khung chuyển khối lớp mở rộng khi cần (chỉ hiện khi chưa đăng nhập học sinh) */}
-
-        {!currentStudent && allowGradeSwitch && (
-
-          <div className="p-2.5 rounded-xl bg-blue-50/60 dark:bg-slate-800/60 border border-blue-200 dark:border-slate-700 flex items-center gap-2 flex-wrap text-xs animate-in fade-in">
-
-            <span className="font-bold text-slate-600 dark:text-slate-300">Khối lớp:</span>
-
-            {[6, 7, 8, 9, 10, 11, 12].map(g => (
-
+          {/* CỘT CÔNG CỤ ÂM THANH & IPA 3D TRONG SUỐT */}
+          <div className="flex items-center gap-2 ml-auto shrink-0">
+            {!currentStudent && (
               <button
-
-                key={g}
-
                 type="button"
-
-                onClick={() => {
-
-                  setSelectedGrade(g);
-
-                  setSelectedUnit(1);
-
-                  setCardIndex(0);
-
-                  setIsFlipped(false);
-
-                }}
-
-                className={`px-2.5 py-1 rounded-lg font-black transition cursor-pointer ${
-
-                  selectedGrade === g
-
-                    ? 'bg-blue-600 text-white shadow-xs'
-
-                    : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-blue-100'
-
-                }`}
-
+                onClick={() => setAllowGradeSwitch(!allowGradeSwitch)}
+                className="text-xs font-bold text-cyan-300 hover:text-white underline cursor-pointer"
               >
-
-                Lớp {g}
-
+                {allowGradeSwitch ? '✕ Đóng chọn khối' : '🔄 Xem khối khác'}
               </button>
+            )}
 
-            ))}
+            {onOpenIpaModal && (
+              <button
+                type="button"
+                onClick={onOpenIpaModal}
+                className="px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-400/40 text-xs font-black transition flex items-center gap-1 cursor-pointer shadow-xs"
+                title="Bảng Phiên Âm Quốc Tế IPA"
+              >
+                <span>🔤 IPA</span>
+              </button>
+            )}
 
+            <button
+              type="button"
+              onClick={() => handleToggleAccent(voiceAccent === 'US' ? 'UK' : 'US')}
+              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1 cursor-pointer border border-white/20 shadow-xs"
+              title="Đổi giọng phát âm Anh - Mỹ hoặc Anh - Anh"
+            >
+              <span>{voiceAccent === 'US' ? '🇺🇸 Giọng Mỹ' : '🇬🇧 Giọng Anh'}</span>
+            </button>
           </div>
+        </div>
 
+        {/* Banner tiến độ nhiệm vụ GK1 cho Unit 1 - 3 */}
+        {[1, 2, 3].includes(selectedUnit) && (
+          <div className="p-3 rounded-2xl bg-blue-950/70 border border-cyan-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0 shadow-xs">🎯 Nhiệm Vụ GK1</span>
+              <div>
+                <span className="font-extrabold text-white">
+                  Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/{missionState?.mission1.units[selectedUnit]?.totalRequiredModes || 8} dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
+                </span>
+                <span className="text-cyan-200 block text-[11px] font-medium mt-0.5">
+                  🛡️ Tiêu chuẩn chất lượng: Đạt độ chính xác từ 60% trở lên để được tính hoàn thành bài học.
+                </span>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-xl bg-cyan-400/20 text-cyan-200 border border-cyan-400/40 font-black shrink-0 self-start sm:self-auto text-[11px]">
+              {missionState?.mission1.units[selectedUnit]?.statusNote}
+            </span>
+          </div>
         )}
 
+        {/* Khung chuyển khối lớp mở rộng khi cần */}
+        {!currentStudent && allowGradeSwitch && (
+          <div className="p-2.5 rounded-2xl bg-white/10 border border-white/20 flex items-center gap-2 flex-wrap text-xs animate-in fade-in">
+            <span className="font-black text-amber-300">Khối lớp:</span>
+            {[6, 7, 8, 9, 10, 11, 12].map(g => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => {
+                  setSelectedGrade(g);
+                  setSelectedUnit(1);
+                  setCardIndex(0);
+                  setIsFlipped(false);
+                }}
+                className={`px-3 py-1 rounded-xl font-black transition cursor-pointer ${
+                  selectedGrade === g
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md border border-blue-300'
+                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/15'
+                }`}
+              >
+                Lớp {g}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-
-
-      {/* ==================== 3. THANH CHỌN ĐẦY ĐỦ 12 DẠNG BÀI TẬP TỪ VỰNG ==================== */}
-
-      <div className="bg-white dark:bg-slate-900 p-2 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
-
-        <div className="flex items-center justify-between gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 flex-wrap">
-
-          <span className="flex items-center gap-1.5">
-
-            <Sparkles className="w-4 h-4 text-amber-500" />
-
-            <span>Các Dạng Bài Tập Luyện Từ Vựng Toàn Diện (Hiển thị đầy đủ):</span>
-
+      {/* ==================== 3. THANH CHỌN 8 DẠNG BÀI TẬP TỪ VỰNG 3D TRONG SUỐT GLASSMORPHISM ==================== */}
+      <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-3.5 sm:p-4 rounded-3xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] space-y-3">
+        <div className="flex items-center justify-between gap-2 text-xs font-bold text-white flex-wrap">
+          <span className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
+            <span className="text-amber-300 font-black uppercase tracking-wider text-xs">
+              Các Dạng Luyện Từ Vựng 3D Trong Suốt (Chữ Tương Phản Rõ Nét):
+            </span>
           </span>
-
-          <span className="text-[11px] text-blue-600 dark:text-blue-400">
-
-            Khối Lớp {selectedGrade} • Unit {selectedUnit} ({filteredVocab.length} từ)
-
+          <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 border border-blue-400/30 font-bold text-[11px]">
+            Khối {selectedGrade} • Unit {selectedUnit} ({filteredVocab.length} từ)
           </span>
-
         </div>
 
-
-
-        {/* THANH CHỌN CÁC DẠNG BÀI TẬP TỪ VỰNG - HIỂN THỊ ĐẦY ĐỦ, NGẮN GỌN TRÊN 1 MÀN HÌNH */}
-
+        {/* LƯỚI 8 NÚT TAB 3D TRONG SUỐT - TƯƠNG PHẢN CAO - PHÙ HỢP HOÀN HẢO VỚI ĐIỆN THOẠI */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 pt-1 text-xs">
-
+          
           {/* 1. Flashcard */}
-
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('flashcard')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'flashcard'
-
-                ? 'bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_4px_0_#1d4ed8,0_0_15px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-blue-400'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white shadow-[0_6px_20px_rgba(37,99,235,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-blue-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>🃏 1. Thẻ Nhớ</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
 
-
-
-          {/* 2. Ghép Cặp Từ */}
-
+          {/* 2. Ghép Cặp */}
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('match')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'match'
-
-                ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0_4px_0_#3730a3,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-indigo-500 via-purple-600 to-indigo-700 text-white shadow-[0_6px_20px_rgba(99,102,241,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-indigo-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>🧩 2. Ghép Cặp</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
-
-
 
           {/* 3. Trắc Nghiệm */}
-
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('quiz')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'quiz'
-
-                ? 'bg-gradient-to-b from-emerald-500 to-teal-600 text-white shadow-[0_4px_0_#065f46,0_0_15px_rgba(16,185,129,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-emerald-400'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white shadow-[0_6px_20px_rgba(16,185,129,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>🎯 3. Trắc Nghiệm</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
-
-
 
           {/* 4. Luyện Nghe */}
-
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('listen')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'listen'
-
-                ? 'bg-gradient-to-b from-purple-500 to-indigo-600 text-white shadow-[0_4px_0_#6b21a8,0_0_18px_rgba(168,85,247,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-purple-300 ring-2 ring-purple-400/40'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-purple-500 via-fuchsia-600 to-purple-700 text-white shadow-[0_6px_20px_rgba(168,85,247,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-purple-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>🎧 4. Luyện Nghe</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
 
-
-
-          {/* 5. Luyện Gõ Từ */}
-
+          {/* 5. Luyện Gõ */}
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('spelling')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'spelling'
-
-                ? 'bg-gradient-to-b from-sky-500 to-blue-600 text-white shadow-[0_4px_0_#0369a1,0_0_15px_rgba(14,165,233,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-sky-400'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-sky-500 via-blue-600 to-sky-700 text-white shadow-[0_6px_20px_rgba(14,165,233,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-sky-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>✍️ 5. Luyện Gõ</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
-
-
 
           {/* 6. Bài Chant */}
-
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('chant')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'chant'
-
-                ? 'bg-gradient-to-b from-pink-500 to-rose-600 text-white shadow-[0_4px_0_#be123c,0_0_18px_rgba(244,63,94,0.6),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-pink-300 ring-2 ring-pink-400/50'
-
-                : 'bg-pink-500/10 dark:bg-pink-950/40 backdrop-blur-md text-pink-700 dark:text-pink-300 border border-pink-300/60 dark:border-pink-800/60 shadow-[0_2.5px_0_#f472b6] dark:shadow-[0_2.5px_0_#831843] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#ec4899] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-pink-500 via-rose-600 to-pink-700 text-white shadow-[0_6px_20px_rgba(244,63,94,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-pink-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
             title="Bài Chant Nhạc Beat Điệu Call & Response"
-
           >
-
             <span>🎵 6. Bài Chant</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
-
-
 
           {/* 7. Xếp Chữ */}
-
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('scramble')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'scramble'
-
-                ? 'bg-gradient-to-b from-indigo-600 to-blue-700 text-white shadow-[0_4px_0_#1e1b4b,0_0_15px_rgba(99,102,241,0.5),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-indigo-400'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-violet-600 via-indigo-700 to-violet-800 text-white shadow-[0_6px_20px_rgba(124,58,237,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-violet-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>🔤 7. Xếp Chữ</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
 
-
-
-          {/* 8. Phản Xạ 5 Giây */}
-
+          {/* 8. Phản Xạ */}
           <button
-
             type="button"
-
             onClick={() => setCurrentMode('blitz')}
-
-            className={`px-2 py-2 rounded-xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center ${
-
+            className={`px-2 py-2.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer select-none text-center active:scale-95 ${
               currentMode === 'blitz'
-
-                ? 'bg-gradient-to-b from-amber-500 to-orange-600 text-white shadow-[0_4px_0_#c2410c,0_0_18px_rgba(249,115,22,0.6),inset_0_1px_0_rgba(255,255,255,0.6)] -translate-y-0.5 border border-amber-300 ring-2 ring-amber-400/50'
-
-                : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_2.5px_0_#cbd5e1] dark:shadow-[0_2.5px_0_#334155] hover:-translate-y-0.5 hover:shadow-[0_3.5px_0_#94a3b8] active:translate-y-0.5'
-
+                ? 'bg-gradient-to-b from-amber-400 via-orange-500 to-amber-600 text-slate-950 shadow-[0_6px_20px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
             }`}
-
           >
-
             <span>⚡ 8. Phản Xạ</span>
-
             {missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
-
           </button>
 
         </div>
-
       </div>
 
 
@@ -2480,9 +2338,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   </div>
 
-                  <p className="text-xs text-slate-400 italic pt-2">
+                  <p className="text-xs sm:text-sm font-bold text-amber-300 pt-2 flex items-center justify-center gap-1.5">
 
-                    💡 Nhấp vào thẻ bất kỳ đâu để lật xem nghĩa & câu ví dụ
+                    💡 Chạm vào thẻ bất kỳ đâu để lật xem nghĩa & ví dụ
 
                   </p>
 
@@ -2512,7 +2370,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                       {currentWord.exampleMeaning && (
 
-                        <p className="text-xs text-slate-300 italic">
+                        <p className="text-xs sm:text-sm font-bold text-amber-200">
 
                           👉 {currentWord.exampleMeaning}
 
@@ -2756,7 +2614,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     <div className="flex items-center gap-1.5">
 
-                      <span className="text-[11px] font-mono text-slate-400">{idx + 1}.</span>
+                      <span className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-bold">{idx + 1}.</span>
 
                       <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
 
@@ -2772,7 +2630,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-1 mt-0.5">
+                    <p className="text-xs text-slate-800 dark:text-slate-100 font-semibold line-clamp-1 mt-0.5">
 
                       {item.meaning}
 
