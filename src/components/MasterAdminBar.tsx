@@ -13,7 +13,9 @@ import {
   BookOpen, 
   Search, 
   X,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Lock,
+  Unlock
 } from 'lucide-react';
 import { studentGradebookService, StudentProfile } from '../services/studentGradebookService';
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
@@ -38,6 +40,38 @@ export const MasterAdminBar: React.FC<MasterAdminBarProps> = ({
   const [allStudents, setAllStudents] = useState<StudentProfile[]>(() => 
     studentGradebookService.getStudents()
   );
+  const [isMaintenanceLocked, setIsMaintenanceLocked] = useState<boolean>(() => 
+    systemMaintenanceService.isMaintenanceLocked()
+  );
+  const [isTogglingMaintenance, setIsTogglingMaintenance] = useState(false);
+
+  useEffect(() => {
+    const handleMaintChange = (e: any) => {
+      setIsMaintenanceLocked(e?.detail?.locked ?? systemMaintenanceService.isMaintenanceLocked());
+    };
+    window.addEventListener('gvai_maintenance_status_changed', handleMaintChange);
+    return () => window.removeEventListener('gvai_maintenance_status_changed', handleMaintChange);
+  }, []);
+
+  const handleToggleMaintenance = async () => {
+    if (isMaintenanceLocked) {
+      if (window.confirm('Thầy có chắc chắn muốn MỞ KHÓA WEBSITE cho tất cả giáo viên toàn quốc ngay bây giờ?')) {
+        setIsTogglingMaintenance(true);
+        await systemMaintenanceService.setMaintenanceLock(false, 'Mở lại web bởi Thầy Thành từ MasterBar');
+        setIsMaintenanceLocked(false);
+        setIsTogglingMaintenance(false);
+        alert('🎉 ĐÃ MỞ KHÓA WEBSITE THÀNH CÔNG!\n\nTất cả giáo viên trên toàn quốc hiện đã có thể truy cập và sử dụng bình thường.');
+      }
+    } else {
+      if (window.confirm('⚠️ XÁC NHẬN KHÓA WEBSITE ĐỂ NÂNG CẤP:\n\nKhi khóa, tất cả giáo viên khi truy cập website sẽ chỉ xem được thông báo:\n"Web đang nâng cấp, vui lòng ghé thăm sau!"\n\nRiêng Admin có mật khẩu vẫn vào xem và quản lý bình thường.\n\nThầy có chắc chắn muốn KHÓA WEB ngay bây giờ không?')) {
+        setIsTogglingMaintenance(true);
+        await systemMaintenanceService.setMaintenanceLock(true, 'Nâng cấp và bảo trì hệ thống');
+        setIsMaintenanceLocked(true);
+        setIsTogglingMaintenance(false);
+        alert('🔒 ĐÃ KHÓA WEBSITE THÀNH CÔNG!\n\nWebsite hiện đang ở chế độ nâng cấp. Giáo viên truy cập sẽ nhận được thông báo "Web đang nâng cấp, vui lòng ghé thăm sau!".');
+      }
+    }
+  };
 
   useEffect(() => {
     const handleActiveChange = (e: any) => {
@@ -141,6 +175,34 @@ export const MasterAdminBar: React.FC<MasterAdminBarProps> = ({
                 </button>
                 <button
                   type="button"
+                  onClick={handleToggleMaintenance}
+                  disabled={isTogglingMaintenance}
+                  className={`px-3 py-1.5 rounded-xl font-black transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 ${
+                    isMaintenanceLocked
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400 text-slate-950 border-2 border-emerald-300 ring-2 ring-emerald-400/50 animate-pulse'
+                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300'
+                  }`}
+                  title={
+                    isMaintenanceLocked
+                      ? 'Website đang KHÓA NÂNG CẤP. Nhấn để MỞ LẠI cho toàn quốc.'
+                      : 'Nhấn để KHÓA WEBSITE TẠM DỪNG NÂNG CẤP (chỉ Admin xem được).'
+                  }
+                >
+                  {isMaintenanceLocked ? (
+                    <>
+                      <Unlock className="w-3.5 h-3.5 text-slate-950 animate-spin" />
+                      <span>🔓 MỞ KHÓA WEB</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-3.5 h-3.5 text-slate-950" />
+                      <span>🔒 Khóa Web Nâng Cấp</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
                   onClick={handleExitStudentTest}
                   className="px-2.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-200 hover:text-white font-bold transition cursor-pointer flex items-center gap-1 border border-rose-400/30"
                   title="Thoát thử nghiệm học sinh"
@@ -187,6 +249,35 @@ export const MasterAdminBar: React.FC<MasterAdminBarProps> = ({
                 >
                   <Eye className="w-3.5 h-3.5 text-amber-300" />
                   <span>🧪 Thử Nghiệm HS</span>
+                </button>
+
+                {/* NÚT KHÓA / MỞ KHÓA WEBSITE ĐỂ NÂNG CẤP */}
+                <button
+                  type="button"
+                  onClick={handleToggleMaintenance}
+                  disabled={isTogglingMaintenance}
+                  className={`px-3 py-1.5 rounded-xl font-black transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 ${
+                    isMaintenanceLocked
+                      ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400 text-slate-950 border-2 border-emerald-300 ring-2 ring-emerald-400/50 animate-pulse'
+                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300'
+                  }`}
+                  title={
+                    isMaintenanceLocked
+                      ? 'Website đang KHÓA NÂNG CẤP. Nhấn để MỞ LẠI cho toàn quốc.'
+                      : 'Nhấn để KHÓA WEBSITE TẠM DỪNG NÂNG CẤP (chỉ Admin xem được).'
+                  }
+                >
+                  {isMaintenanceLocked ? (
+                    <>
+                      <Unlock className="w-3.5 h-3.5 text-slate-950 animate-spin" />
+                      <span>🔓 MỞ KHÓA WEB</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-3.5 h-3.5 text-slate-950" />
+                      <span>🔒 Khóa Web Để Nâng Cấp</span>
+                    </>
+                  )}
                 </button>
 
                 <button

@@ -69,15 +69,18 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
     return classTeamService.getGradeTeamLeaderboard(currentGrade);
   }, [currentGrade, refreshTrigger]);
 
-  // Thao tác chia lại tổ ngẫu nhiên (chỉ Admin hoặc khi cần đổi mới)
+  // Thao tác chia lại tổ ngẫu nhiên (CHỈ ADMIN MỚI CÓ QUYỀN!)
   const handleReshuffleTeams = () => {
     if (!isAdmin) {
-      if (!window.confirm(`Thầy/Cô có chắc chắn muốn TÁI PHÂN CHIA 4 TỔ NGẪU NHIÊN CÂN BẰNG cho Lớp ${selectedClass} không?\nHệ thống sẽ tự động cân bằng lại Nam/Nữ và bầu lại Tổ Trưởng, Tổ Phó.`)) {
-        return;
-      }
+      alert('⛔ Quyền bị từ chối: Chỉ có Quản trị viên (Admin) mới có quyền chia lại danh sách tổ của lớp!');
+      return;
+    }
+    if (!window.confirm(`Thầy có chắc chắn muốn TÁI PHÂN CHIA 4 TỔ NGẪU NHIÊN CÂN BẰNG cho Lớp ${selectedClass} không?\nHệ thống sẽ tự động cân bằng lại Nam/Nữ và bầu lại Tổ Trưởng, Tổ Phó.`)) {
+      return;
     }
     classTeamService.getClassTeams(selectedClass, true);
     setRefreshTrigger(prev => prev + 1);
+    alert(`🎉 ĐÃ CHIA LẠI 4 TỔ CHO LỚP ${selectedClass} THÀNH CÔNG!`);
   };
 
   // Mở tin nhắn nhắc nhở bạn học
@@ -215,16 +218,23 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
               ))}
             </div>
 
-            {/* NÚT TÁI PHÂN TỔ (DÀNH CHO ADMIN HOẶC RESET) */}
-            <button
-              type="button"
-              onClick={handleReshuffleTeams}
-              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 ml-auto"
-              title="Phân chia lại 4 tổ ngẫu nhiên cân bằng Nam/Nữ và Bầu lại TT, TP"
-            >
-              <RotateCw className="w-3.5 h-3.5" />
-              <span>🎲 Chia Lại 4 Tổ Cân Bằng</span>
-            </button>
+            {/* NÚT TÁI PHÂN TỔ: CHỈ ADMIN MỚI CÓ QUYỀN VÀ HIỂN THỊ */}
+            {isAdmin ? (
+              <button
+                type="button"
+                onClick={handleReshuffleTeams}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 ml-auto border border-amber-300"
+                title="Chỉ có Quản trị viên (Admin) mới có quyền phân chia lại 4 tổ ngẫu nhiên cân bằng Nam/Nữ và Bầu lại TT, TP"
+              >
+                <RotateCw className="w-3.5 h-3.5" />
+                <span>🎲 Chia Lại 4 Tổ (Quyền Admin)</span>
+              </button>
+            ) : (
+              <div className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 text-slate-200 text-xs font-semibold border border-white/15">
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+                <span>Danh sách 4 Tổ cố định (Chỉ Admin mới có quyền chia lại)</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

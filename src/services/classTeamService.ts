@@ -11,6 +11,7 @@
 
 import officialRosterData from '../data/officialStudentRoster.json';
 import { studentGradebookService, StudentProfile, OfficialStudentRosterItem } from './studentGradebookService';
+import { systemMaintenanceService } from './systemMaintenanceService';
 
 export type TeamRole = 'leader' | 'vice_leader' | 'member';
 
@@ -164,6 +165,12 @@ class ClassTeamService {
   public getClassTeams(className: string, forceReshuffle: boolean = false): ClassTeam[] {
     const cleanCls = className.trim().toUpperCase();
     if (!cleanCls) return [];
+
+    // BẢO VỆ PHÂN QUYỀN SƯ PHẠM: CHỈ ADMIN MỚI CÓ QUYỀN CHIA LẠI TỔ!
+    if (forceReshuffle && !systemMaintenanceService.isAdminSession() && !systemMaintenanceService.isSessionAuthenticated()) {
+      console.warn('⛔ Từ chối chia lại tổ: Thao tác này bắt buộc phải có quyền Quản trị viên (Admin)');
+      forceReshuffle = false;
+    }
 
     if (!forceReshuffle && this.cache[cleanCls] && this.cache[cleanCls].length === 4) {
       // Cập nhật lại điểm số thời gian thực của các thành viên từ Sổ điểm

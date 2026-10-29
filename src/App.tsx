@@ -14,6 +14,8 @@ import {
   FileText, 
   Layers,
   Crown,
+  Lock,
+  Unlock,
   Search,
   CheckCircle2,
   Check,
@@ -1086,9 +1088,37 @@ export default function App() {
                       THCS Đồng Yên
                     </span>
                     {isAdminSession && (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500 text-slate-950">
-                        Admin Test
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-500 text-slate-950">
+                          Admin
+                        </span>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (isMaintenanceLocked) {
+                              if (window.confirm('Thầy có chắc chắn muốn MỞ KHÓA WEBSITE cho tất cả giáo viên toàn quốc ngay bây giờ?')) {
+                                await systemMaintenanceService.setMaintenanceLock(false, 'Mở lại web bởi Thầy Thành từ Header');
+                                setIsMaintenanceLocked(false);
+                                alert('🎉 ĐÃ MỞ KHÓA WEBSITE THÀNH CÔNG!');
+                              }
+                            } else {
+                              if (window.confirm('⚠️ XÁC NHẬN KHÓA WEBSITE ĐỂ NÂNG CẤP:\n\nKhi khóa, tất cả giáo viên khi truy cập website sẽ chỉ xem được thông báo:\n"Web đang nâng cấp, vui lòng ghé thăm sau!"\n\nRiêng Admin có mật khẩu vẫn vào xem và quản lý bình thường.\n\nThầy có chắc chắn muốn KHÓA WEB ngay bây giờ không?')) {
+                                await systemMaintenanceService.setMaintenanceLock(true, 'Nâng cấp và bảo trì hệ thống');
+                                setIsMaintenanceLocked(true);
+                                alert('🔒 ĐÃ KHÓA WEBSITE THÀNH CÔNG!');
+                              }
+                            }
+                          }}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-black shadow-xs flex items-center gap-1 cursor-pointer transition ${
+                            isMaintenanceLocked
+                              ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 animate-pulse'
+                              : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                          }`}
+                          title={isMaintenanceLocked ? 'Website đang khóa nâng cấp. Nhấn để mở.' : 'Nhấn để khóa website nâng cấp'}
+                        >
+                          {isMaintenanceLocked ? '🔓 Mở Khóa' : '🔒 Khóa Web'}
+                        </button>
+                      </div>
                     )}
                   </div>
                   <p className="text-[11px] sm:text-xs text-blue-200/90 font-medium hidden sm:block">
@@ -1543,8 +1573,47 @@ export default function App() {
               </button>
             </div>
 
-            {/* Nút 3: ADMIN (TAB 3D TRONG SUỐT VÀNG ÁNH KIM) */}
+            {/* Nút 3: ADMIN & NÚT KHÓA WEB NÂNG CẤP (DÀNH CHO ADMIN) */}
             <div className="flex items-center gap-2">
+              {isAdminSession && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (isMaintenanceLocked) {
+                      if (window.confirm('Thầy có chắc chắn muốn MỞ KHÓA WEBSITE cho tất cả giáo viên toàn quốc ngay bây giờ?')) {
+                        await systemMaintenanceService.setMaintenanceLock(false, 'Mở lại web bởi Thầy Thành từ Header');
+                        setIsMaintenanceLocked(false);
+                        alert('🎉 ĐÃ MỞ KHÓA WEBSITE THÀNH CÔNG!\n\nTất cả giáo viên trên toàn quốc hiện đã có thể truy cập và sử dụng bình thường.');
+                      }
+                    } else {
+                      if (window.confirm('⚠️ XÁC NHẬN KHÓA WEBSITE ĐỂ NÂNG CẤP:\n\nKhi khóa, tất cả giáo viên khi truy cập website sẽ chỉ xem được thông báo:\n"Web đang nâng cấp, vui lòng ghé thăm sau!"\n\nRiêng Admin có mật khẩu vẫn vào xem và quản lý bình thường.\n\nThầy có chắc chắn muốn KHÓA WEB ngay bây giờ không?')) {
+                        await systemMaintenanceService.setMaintenanceLock(true, 'Nâng cấp và bảo trì hệ thống');
+                        setIsMaintenanceLocked(true);
+                        alert('🔒 ĐÃ KHÓA WEBSITE THÀNH CÔNG!\n\nWebsite hiện đang ở chế độ nâng cấp. Giáo viên truy cập sẽ nhận được thông báo "Web đang nâng cấp, vui lòng ghé thăm sau!".');
+                      }
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-md ${
+                    isMaintenanceLocked
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 border-2 border-emerald-300 animate-pulse'
+                      : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 border border-amber-300'
+                  }`}
+                  title={isMaintenanceLocked ? 'Website đang khóa nâng cấp. Nhấn để mở khóa.' : 'Nhấn để khóa website tạm dừng nâng cấp.'}
+                >
+                  {isMaintenanceLocked ? (
+                    <>
+                      <Unlock className="w-3.5 h-3.5 text-slate-950 animate-spin" />
+                      <span>🔓 Mở Khóa Web</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-3.5 h-3.5 text-slate-950" />
+                      <span>🔒 Khóa Web Nâng Cấp</span>
+                    </>
+                  )}
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => {

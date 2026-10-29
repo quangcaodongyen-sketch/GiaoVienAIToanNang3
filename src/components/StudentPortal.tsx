@@ -4584,7 +4584,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {activeTab === 'teams' && (
         <ClassTeamBattleView
           currentStudent={currentStudent}
-          isAdmin={isAdminUnlocked || systemMaintenanceService.isSessionAuthenticated()}
+          isAdmin={Boolean(isAdminUnlocked || systemMaintenanceService.isAdminSession() || systemMaintenanceService.isSessionAuthenticated())}
           onGoToVocab={() => setActiveTab('vocab')}
           onGoToExam={() => setActiveTab('exam')}
         />
