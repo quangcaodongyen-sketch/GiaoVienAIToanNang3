@@ -4946,6 +4946,16 @@ class StudentGradebookService {
 
         cloudStudents.forEach(cStu => {
           if (!cStu || !cStu.name) return;
+          if (isStudentScoreInflated(cStu) || isVerifiedHighScore(cStu.name, cStu.className)) {
+            const clean = getAuthenticStudentScore(cStu);
+            cStu.totalMeritPoints = clean.total;
+            cStu.vocabPoints = clean.voc;
+            cStu.practicePoints = clean.prc;
+            cStu.attendancePoints = clean.att;
+            cStu.examBonusPoints = clean.exm;
+            cStu.teacherBonus = clean.tch;
+            cStu.encouragementBonus = clean.enc;
+          }
           const localMatch = this.students.find(s => matchStudent(s, cStu));
           if (localMatch) {
             // NGUYÊN TẮC CỦA THẦY ĐINH THÀNH: Nếu web làm sai, BẮT BUỘC trả lại điểm thực tế!
@@ -5091,6 +5101,16 @@ class StudentGradebookService {
 
       remoteStudents.forEach(s => {
         if (!s || !s.name) return;
+        if (isStudentScoreInflated(s) || isVerifiedHighScore(s.name, s.className)) {
+          const clean = getAuthenticStudentScore(s);
+          s.totalMeritPoints = clean.total;
+          s.vocabPoints = clean.voc;
+          s.practicePoints = clean.prc;
+          s.attendancePoints = clean.att;
+          s.examBonusPoints = clean.exm;
+          s.teacherBonus = clean.tch;
+          s.encouragementBonus = clean.enc;
+        }
         const k = getNormKey(s) || s.id;
         mergedMap.set(k, { ...s });
       });
@@ -5099,10 +5119,24 @@ class StudentGradebookService {
         if (!s || !s.name) return;
         const k = getNormKey(s) || s.id;
         const existing = mergedMap.get(k);
+        const mustReconcile = isStudentScoreInflated(s) || (existing && isStudentScoreInflated(existing)) || isVerifiedHighScore(s.name, s.className);
+        if (mustReconcile) {
+          const clean = getAuthenticStudentScore(s);
+          const reconciled: StudentProfile = {
+            ...(existing || s),
+            totalMeritPoints: clean.total,
+            vocabPoints: clean.voc,
+            practicePoints: clean.prc,
+            attendancePoints: clean.att,
+            examBonusPoints: clean.exm,
+            teacherBonus: clean.tch,
+            encouragementBonus: clean.enc
+          };
+          mergedMap.set(k, reconciled);
+          return;
+        }
         if (!existing) {
-          if (!isStudentScoreInflated(s)) {
-            mergedMap.set(k, { ...s });
-          }
+          mergedMap.set(k, { ...s });
         } else {
           // TUYỆT ĐỐI KHÔNG GHI ĐÈ ĐIỂM ẢO LÊN CLOUD:
           if (!isStudentScoreInflated(s)) {
