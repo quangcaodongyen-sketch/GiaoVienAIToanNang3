@@ -1,0 +1,13 @@
+{
+  "appName": "Trộn Đề Kiểm Tra Các Môn Pro (Chuẩn BGD&ĐT)",
+  "currentVersion": "5.0.0",
+  "latestVersion": "5.0.0",
+  "releaseDate": "30/10/2026",
+  "changelog": "• [30/10/2026 - v5.0.0] Phiên bản Chính thức Chuẩn Bộ Giáo dục & Đào tạo:\n• Đảo nhóm câu từ câu X đến Y linh hoạt theo ma trận nhận thức\n• Khóa câu cố định (đọc hiểu, đoạn văn chung, tự luận) không bị xáo trộn\n• Đảo đáp án thông minh, tự động giữ nguyên các đáp án đặc biệt (Cả A và B, Tất cả các đáp án trên...)\n• Bảo toàn 100% công thức MathType, OMML native và hình vẽ vector không vỡ font\n• Tự động xuất Bản Giáo viên, Bản Học sinh, Bảng đối chiếu song song và Ma trận hoán vị\n• Tự động tạo thư mục De_Kiem_Tra_Da_Tron ngoài Desktop lưu trữ sản phẩm",
+  "downloadUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  "zipUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  "websiteUrl": "https://dekiemtraso.com/",
+  "author": "Đinh Thành (Tel/zalo: 0915.213717)",
+  "appId": "tronde-pro",
+  "version": "5.0.0"
+}
