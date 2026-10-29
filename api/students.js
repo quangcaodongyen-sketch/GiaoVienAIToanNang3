@@ -135,7 +135,16 @@ export default async function handler(req, res) {
         existingSubmissions.forEach(sub => { if (sub?.id) subMap.set(sub.id, sub); });
         incomingSubmissions.forEach(sub => { if (sub?.id && !subMap.has(sub.id)) subMap.set(sub.id, sub); });
 
-        const mergedStudents = Array.from(studentMap.values());
+        // Loc giu lai cac hoc sinh co diem tich luy hoac hoat dong de tranh vuot qua payload 100KB (HTTP 413)
+        const mergedStudents = Array.from(studentMap.values()).filter(s =>
+          (s.totalMeritPoints && s.totalMeritPoints > 15) ||
+          (s.vocabPoints && s.vocabPoints > 0) ||
+          (s.practicePoints && s.practicePoints > 0) ||
+          (s.examBonusPoints && s.examBonusPoints > 0) ||
+          (s.attendancePoints && s.attendancePoints > 0) ||
+          (s.studyTimeMinutes && s.studyTimeMinutes > 0) ||
+          (s.password && s.password !== '12345')
+        );
         const mergedSubmissions = Array.from(subMap.values());
 
         const finalPayload = JSON.stringify({
