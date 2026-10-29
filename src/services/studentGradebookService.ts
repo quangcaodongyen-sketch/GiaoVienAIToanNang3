@@ -2001,7 +2001,7 @@ class StudentGradebookService {
 
             studyTimeMinutes: 0,
 
-            totalMeritPoints: 0
+            totalMeritPoints: Math.max(getStudentVaultMaxPoints(undefined, name, className), 15)
 
           });
 
@@ -5088,43 +5088,48 @@ class StudentGradebookService {
 
 
   public addStudent(data: Omit<StudentProfile, 'id' | 'createdAt'>): StudentProfile {
-
+    const vaultMax = getStudentVaultMaxPoints(undefined, data.name, data.className);
+    const guaranteedMerit = Math.max(data.totalMeritPoints || 0, vaultMax, 15);
     const newStudent: StudentProfile = {
-
       ...data,
-
       id: 'stu-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
-
-      createdAt: new Date().toISOString()
-
+      createdAt: new Date().toISOString(),
+      totalMeritPoints: guaranteedMerit
     };
-
+    saveStudentVaultMaxPoints(newStudent.id, guaranteedMerit, newStudent.name, newStudent.className);
     this.students.push(newStudent);
-
     this.saveStudents();
-
     this.syncToCloud().catch(() => {});
-
     return newStudent;
-
   }
 
 
 
   public updateStudent(id: string, data: Partial<StudentProfile>): boolean {
-
     const idx = this.students.findIndex(s => s.id === id);
-
     if (idx === -1) return false;
+    const current = this.students[idx];
+    const vaultMax = getStudentVaultMaxPoints(current.id, current.name, current.className);
+    
+    // NGUYÊN TẮC BẢO VỆ ĐIỂM SỐ CỦA THẦY ĐINH THÀNH: ĐIỂM CHỈ CÓ TĂNG, NGHIÊM CẤM HẠ ĐIỂM
+    const safeData: Partial<StudentProfile> = { ...data };
+    if (safeData.totalMeritPoints !== undefined) {
+      safeData.totalMeritPoints = Math.max(current.totalMeritPoints || 0, safeData.totalMeritPoints, vaultMax);
+    } else {
+      safeData.totalMeritPoints = Math.max(current.totalMeritPoints || 0, vaultMax);
+    }
+    if (safeData.attendancePoints !== undefined) safeData.attendancePoints = Math.max(current.attendancePoints || 0, safeData.attendancePoints);
+    if (safeData.vocabPoints !== undefined) safeData.vocabPoints = Math.max(current.vocabPoints || 0, safeData.vocabPoints);
+    if (safeData.examBonusPoints !== undefined) safeData.examBonusPoints = Math.max(current.examBonusPoints || 0, safeData.examBonusPoints);
+    if (safeData.practicePoints !== undefined) safeData.practicePoints = Math.max(current.practicePoints || 0, safeData.practicePoints);
+    if (safeData.timePoints !== undefined) safeData.timePoints = Math.max(current.timePoints || 0, safeData.timePoints);
+    if (safeData.teacherBonus !== undefined) safeData.teacherBonus = Math.max(current.teacherBonus || 0, safeData.teacherBonus);
 
-    this.students[idx] = { ...this.students[idx], ...data };
-
+    this.students[idx] = { ...this.students[idx], ...safeData };
+    saveStudentVaultMaxPoints(current.id, this.students[idx].totalMeritPoints, current.name, current.className);
     this.saveStudents();
-
     this.syncToCloud().catch(() => {});
-
     return true;
-
   }
 
 
@@ -5350,71 +5355,64 @@ class StudentGradebookService {
 
 
   private saveStudents(dispatchUpdate: boolean = true) {
-
     try {
+      // BẢO VỆ TUYỆT ĐỐI THEO CHỈ ĐẠO CỦA THẦY ĐINH THÀNH:
+      // "Điểm học sinh đã được bao nhiêu thì chỉ có tăng lên thôi nhé, nghiêm cấm hạ điểm của học sinh."
+      if (this.students && this.students.length > 0) {
+        for (const stu of this.students) {
+          if (!stu || !stu.name) continue;
+          const vaultMax = getStudentVaultMaxPoints(stu.id, stu.name, stu.className);
+          const currentTotal = stu.totalMeritPoints || 0;
+          
+          // Điểm chỉ có tăng lên, tuyệt đối nghiêm cấm giảm điểm:
+          const guaranteedTotal = Math.max(currentTotal, vaultMax, 15);
+          stu.totalMeritPoints = guaranteedTotal;
+          saveStudentVaultMaxPoints(stu.id, guaranteedTotal, stu.name, stu.className);
+
+          // Bảo đảm các thành phần điểm không bị âm:
+          if ((stu.attendancePoints || 0) < 0) stu.attendancePoints = 0;
+          if ((stu.vocabPoints || 0) < 0) stu.vocabPoints = 0;
+          if ((stu.examBonusPoints || 0) < 0) stu.examBonusPoints = 0;
+          if ((stu.practicePoints || 0) < 0) stu.practicePoints = 0;
+          if ((stu.timePoints || 0) < 0) stu.timePoints = 0;
+          if ((stu.teacherBonus || 0) < 0) stu.teacherBonus = 0;
+        }
+      }
 
       localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(this.students));
 
       // Lưu trữ bền vững vĩnh viễn vào Vault và các bản sao lưu
-
       if (this.students && this.students.length > 0) {
-
         localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
-
         localStorage.setItem('gvai_students_backup', JSON.stringify(this.students));
-
         localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(this.students));
-
       }
 
       // Đồng bộ thông tin học sinh hiện tại sang ENG_STUDENT_PROFILE cho App Từ Vựng
-
       const active = this.getActiveStudent();
-
       if (active) {
-
         const engProfile = {
-
           id: active.id,
-
           username: active.username || active.studentCode,
-
           fullName: active.name,
-
           className: active.className,
-
           grade: active.grade || 6,
-
           phone: active.parentPhone || '',
-
           avatar: active.gender === 'Nữ' ? 'av_girl1' : 'av_boy1',
-
           xp: 200,
-
           streakDays: 3,
-
           registeredAt: active.createdAt || 'Chính thức',
-
           lastActiveAt: new Date().toLocaleString('vi-VN')
-
         };
-
         localStorage.setItem('ENG_STUDENT_PROFILE', JSON.stringify(engProfile));
-
       }
 
       if (dispatchUpdate && typeof window !== 'undefined') {
-
         window.dispatchEvent(new CustomEvent('gvai_gradebook_updated', { detail: { timestamp: Date.now() } }));
-
       }
-
     } catch (e) {
-
       console.error('Failed to save students:', e);
-
     }
-
   }
 
 
@@ -6503,7 +6501,9 @@ class StudentGradebookService {
 
         // BẢO VỆ ĐIỂM TỐI CAO: Ít nhất bằng điểm cũ + điểm thưởng hôm nay
 
-        existing.totalMeritPoints = Math.max(prevTotal + loginReward.points, sumParts);
+        const vaultMax = getStudentVaultMaxPoints(existing.id, existing.name, existing.className);
+        existing.totalMeritPoints = Math.max(prevTotal + loginReward.points, vaultMax + loginReward.points, sumParts);
+        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
 
         this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+${loginReward.points}đ: ${loginReward.title})`);
 
@@ -6527,7 +6527,9 @@ class StudentGradebookService {
 
         );
 
-        existing.totalMeritPoints = Math.max(prevTotal, sumParts);
+        const vaultMax = getStudentVaultMaxPoints(existing.id, existing.name, existing.className);
+        existing.totalMeritPoints = Math.max(prevTotal, vaultMax, sumParts);
+        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
 
         this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
 
@@ -6667,7 +6669,7 @@ class StudentGradebookService {
 
       encouragementBonus: 15,
 
-      totalMeritPoints: 15 + loginReward.points,
+      totalMeritPoints: Math.max(15 + loginReward.points, getStudentVaultMaxPoints(undefined, cleanName, cleanCls) + loginReward.points),
 
       lastLoginDate: todayStr
 

@@ -198,7 +198,8 @@ class ClassTeamService {
     const updatedTeams = teams.map(team => {
       const updatedMembers = team.members.map(m => {
         const found = profileMap.get(m.name.trim().toLowerCase()) || profileMap.get(m.studentCode);
-        const pts = found?.totalMeritPoints || m.points || 0;
+        const vaultPts = studentGradebookService.getVaultMaxPoints(found?.id || m.studentCode, m.name, className);
+        const pts = Math.max(found?.totalMeritPoints || 0, m.points || 0, vaultPts);
         const vCnt = (found as any)?.vocabLearnedCount || m.vocabCount || 0;
         const hasPart = pts > 0 || (found?.attendancePoints || 0) > 0;
 
@@ -310,7 +311,8 @@ class ClassTeamService {
     const candidateList: ClassTeamMember[] = rawRoster.map((item, idx) => {
       const found = profileMap.get(item.name.trim().toLowerCase()) || profileMap.get(item.studentCode);
       const gender = found?.gender || inferVietnameseGender(item.name);
-      const pts = found?.totalMeritPoints || 0;
+      const vaultPts = studentGradebookService.getVaultMaxPoints(found?.id || item.studentCode, item.name, cleanCls);
+      const pts = Math.max(found?.totalMeritPoints || 0, vaultPts);
       const vCnt = (found as any)?.vocabLearnedCount || 0;
       const hasPart = pts > 0 || (found?.attendancePoints || 0) > 0;
 

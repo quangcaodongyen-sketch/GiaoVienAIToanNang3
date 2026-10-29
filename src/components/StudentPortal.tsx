@@ -333,11 +333,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   useEffect(() => {
 
     const handleActiveChange = (e: any) => {
-
       const stu = e?.detail !== undefined ? e.detail : studentGradebookService.getActiveStudent();
-
-      setCurrentStudent(stu);
-
+      if (!stu) {
+        setCurrentStudent(null);
+        return;
+      }
+      const vPts = studentGradebookService.getVaultMaxPoints ? studentGradebookService.getVaultMaxPoints(stu.id, stu.name, stu.className) : 0;
+      setCurrentStudent(prev => {
+        const prevPts = (prev && prev.name.trim().toLowerCase() === stu.name.trim().toLowerCase()) ? (prev.totalMeritPoints || 0) : 0;
+        const maxPts = Math.max(stu.totalMeritPoints || 0, prevPts, vPts, 15);
+        return { ...stu, totalMeritPoints: maxPts };
+      });
     };
 
     window.addEventListener('gvai_active_student_changed', handleActiveChange);
