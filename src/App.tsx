@@ -1034,7 +1034,7 @@ export default function App() {
   return (
     <div className={`min-h-screen ${t.pageBg} ${t.textBody} flex flex-col font-sans transition-colors duration-300 relative`}>
       {/* BANNER NỔI BẬT DÀNH CHO ADMIN KHI WEB ĐANG KHÓA NÂNG CẤP */}
-      {isMaintenanceLocked && (
+      {isMaintenanceLocked ? (
         <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white px-3 sm:px-6 py-2.5 text-xs sm:text-sm font-bold flex flex-wrap items-center justify-between gap-2 shadow-xl z-50 sticky top-0 border-b border-red-400/40">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
@@ -1062,7 +1062,7 @@ export default function App() {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
 
             {/* =========================================================================
           GIAO DIỆN HEADER DÀNH RIÊNG CHO HỌC SINH
@@ -1102,12 +1102,12 @@ export default function App() {
                 {/* Nút đổi giao diện Sáng / Tối */}
                 <button
                   type="button"
-                  onClick={() => changeTheme(themeMode === 'pedagogy' ? 'dark' : 'pedagogy')}
+                  onClick={() => changeTheme(themeMode === 'pedagogical' ? 'dark-cyber' : 'pedagogical')}
                   className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/50 transition cursor-pointer text-xs font-bold flex items-center gap-1.5"
                   title="Chuyển đổi giao diện Sáng / Tối"
                 >
-                  <span>{themeMode === 'pedagogy' ? '🌙' : '☀️'}</span>
-                  <span className="hidden md:inline">{themeMode === 'pedagogy' ? 'Chế độ Tối' : 'Chế độ Sáng'}</span>
+                  <span>{themeMode === 'dark-cyber' ? '☀️' : '🌙'}</span>
+                  <span className="hidden md:inline">{themeMode === 'dark-cyber' ? 'Chế độ Sáng' : 'Chế độ Tối'}</span>
                 </button>
 
                 {/* NÚT QUAY LẠI TOÀN TRANG WEB (CÓ GIÁO VIÊN & ADMIN) */}
@@ -1130,6 +1130,7 @@ export default function App() {
           </nav>
         </header>
       ) : (
+        <>
 {/* MASTER ADMIN TOP BAR DÀNH CHO ADMIN THẦY THÀNH (QUẢN TRỊ TOÀN WEB & THỬ NGHIỆM VAI TRÒ HỌC SINH) */}
       {isAdminSession && (
         <MasterAdminBar
@@ -1458,7 +1459,7 @@ export default function App() {
                   setIsMobileMenuOpen(false);
                 }}
                 className={`px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-2.5 transition-colors text-left cursor-pointer ${
-                  mainViewTab === 'students' ? 'bg-emerald-600 text-white' : 'hover:bg-emerald-50 text-slate-800 dark:text-slate-200'
+                  (mainViewTab as string) === 'students' ? 'bg-emerald-600 text-white' : 'hover:bg-emerald-50 text-slate-800 dark:text-slate-200'
                 }`}
               >
                 <GraduationCap className="w-4 h-4 text-emerald-500" />
@@ -1531,7 +1532,7 @@ export default function App() {
                   window.history.pushState(null, '', '/hocsinh');
                 }}
                 className={`flex-1 sm:flex-initial px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer ${
-                  mainViewTab === 'students'
+                  (mainViewTab as string) === 'students'
                     ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-blue-950/60 hover:bg-blue-900 text-blue-100 hover:text-white border border-blue-700/40'
                 }`}
@@ -1564,6 +1565,7 @@ export default function App() {
           </div>
         </div>
       </header>
+      </>
       )}
 
       <main className="flex-1">

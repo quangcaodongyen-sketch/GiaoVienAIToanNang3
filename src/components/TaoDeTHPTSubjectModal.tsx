@@ -61,7 +61,7 @@ export const TaoDeTHPTSubjectModal: React.FC<TaoDeTHPTSubjectModalProps> = ({
   const [currentSubKey, setCurrentSubKey] = useState<string>(initialSubject || 'TOAN');
   const [activeTab, setActiveTab] = useState<'download' | 'register'>('download');
 
-  const curSub = EXAM_THPT_RESOURCES.subjects[currentSubKey as keyof typeof EXAM_THPT_RESOURCES.subjects] || EXAM_THPT_RESOURCES.subjects.TOAN;
+  const curSub: any = EXAM_THPT_RESOURCES.subjects[currentSubKey as keyof typeof EXAM_THPT_RESOURCES.subjects] || EXAM_THPT_RESOURCES.subjects.TOAN;
 
   // Bản quyền & Dùng thử 5 lượt
   const [trialRemaining, setTrialRemaining] = useState<number>(5);

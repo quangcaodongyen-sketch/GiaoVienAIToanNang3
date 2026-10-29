@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 
 import { 
 
@@ -1573,7 +1573,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       // Ghi nhận chất lượng cho dạng bài hiện tại vào Nhiệm Vụ GK1
 
-      const acc = currentMode === 'minitest' ? 80 : 100;
+      const acc = (currentMode as any) === 'minitest' ? 80 : 100;
 
       const res = midtermMissionService.recordVocabPracticeQuality(
 

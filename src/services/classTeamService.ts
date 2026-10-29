@@ -192,7 +192,7 @@ class ClassTeamService {
       const updatedMembers = team.members.map(m => {
         const found = profileMap.get(m.name.trim().toLowerCase()) || profileMap.get(m.studentCode);
         const pts = found?.totalMeritPoints || m.points || 0;
-        const vCnt = found?.vocabLearnedCount || m.vocabCount || 0;
+        const vCnt = (found as any)?.vocabLearnedCount || m.vocabCount || 0;
         const hasPart = pts > 0 || (found?.attendancePoints || 0) > 0;
 
         return {
@@ -304,7 +304,7 @@ class ClassTeamService {
       const found = profileMap.get(item.name.trim().toLowerCase()) || profileMap.get(item.studentCode);
       const gender = found?.gender || inferVietnameseGender(item.name);
       const pts = found?.totalMeritPoints || 0;
-      const vCnt = found?.vocabLearnedCount || 0;
+      const vCnt = (found as any)?.vocabLearnedCount || 0;
       const hasPart = pts > 0 || (found?.attendancePoints || 0) > 0;
 
       return {

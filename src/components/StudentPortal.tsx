@@ -8,7 +8,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 
 import { 
 
-  GraduationCap, 
+  GraduationCap,
+  Users, 
 
   BookOpen, 
 

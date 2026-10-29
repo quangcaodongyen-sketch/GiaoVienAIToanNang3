@@ -1539,16 +1539,16 @@ export function getTHCS8MonExamSuite(
           essayGuide: [
             {
               question: 'Câu 9: Giá trị lịch sử khu di tích Tân Trào (2,5 điểm)',
-              step: '- Nơi Trung ương Đảng và Bác Hồ chọn làm Thủ đô Khu giải phóng (Thủ đô Kháng chiến) (1,0đ).
+              step: `- Nơi Trung ương Đảng và Bác Hồ chọn làm Thủ đô Khu giải phóng (Thủ đô Kháng chiến) (1,0đ).
 - Diễn ra Hội nghị cán bộ toàn quốc của Đảng và Quốc dân Đại hội Tân Trào (0,75đ).
-- Phát lệnh Tổng khởi nghĩa giành chính quyền trong cả nước tháng 8/1945 (0,75đ).',
+- Phát lệnh Tổng khởi nghĩa giành chính quyền trong cả nước tháng 8/1945 (0,75đ).`,
               point: '2,5 điểm'
             },
             {
               question: 'Câu 10: Hành động của học sinh gìn giữ di sản (2,5 điểm)',
-              step: '- Tích cực tìm hiểu, học tập nâng cao hiểu biết về văn hóa quê hương (0,75đ).
+              step: `- Tích cực tìm hiểu, học tập nâng cao hiểu biết về văn hóa quê hương (0,75đ).
 - Giữ gìn vệ sinh môi trường tại các điểm di tích, không vứt rác, không vẽ bậy (0,75đ).
-- Tự hào giới thiệu cảnh đẹp và nét văn hóa với bạn bè qua mạng xã hội lành mạnh (1,0đ).',
+- Tự hào giới thiệu cảnh đẹp và nét văn hóa với bạn bè qua mạng xã hội lành mạnh (1,0đ).`,
               point: '2,5 điểm'
             }
           ]
@@ -1640,16 +1640,16 @@ export function getTHCS8MonExamSuite(
           essayGuide: [
             {
               question: 'Câu 5: Xử lý mâu thuẫn nhóm (2,5 điểm)',
-              step: '- Lắng nghe bình tĩnh ý kiến của cả 2 bạn An và Bình (0,75đ).
+              step: `- Lắng nghe bình tĩnh ý kiến của cả 2 bạn An và Bình (0,75đ).
 - Phân tích điểm hợp lí và chưa hợp lí của từng ý tưởng trên tinh thần tôn trọng (0,75đ).
-- Gợi ý kết hợp các điểm mạnh của cả hai hoặc biểu quyết dân chủ trong nhóm (1,0đ).',
+- Gợi ý kết hợp các điểm mạnh của cả hai hoặc biểu quyết dân chủ trong nhóm (1,0đ).`,
               point: '2,5 điểm'
             },
             {
               question: 'Câu 6: Kế hoạch rèn luyện tự học (2,5 điểm)',
-              step: '- Nêu rõ mục tiêu cụ thể, khả thi (0,75đ).
+              step: `- Nêu rõ mục tiêu cụ thể, khả thi (0,75đ).
 - Liệt kê các khung giờ tự học cố định, tránh xa điện thoại/mạng xã hội (1,0đ).
-- Phương pháp tự kiểm tra và tự thưởng khi hoàn thành mục tiêu (0,75đ).',
+- Phương pháp tự kiểm tra và tự thưởng khi hoàn thành mục tiêu (0,75đ).`,
               point: '2,5 điểm'
             }
           ]

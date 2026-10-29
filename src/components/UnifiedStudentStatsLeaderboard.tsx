@@ -99,6 +99,7 @@ import {
   MeritBonusItem,
 
   getDailyLoginRewardInfo,
+  getLocalDateString,
 
   TeacherLuckyBoxResult
 
@@ -1053,6 +1054,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
 
 
+            <div className="flex items-center gap-2 flex-wrap shrink-0">
             <button
 
               type="button"

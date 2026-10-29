@@ -1212,49 +1212,7 @@ const STORAGE_KEYS = {
 
 
 
-// Hàm chuẩn hóa tiếng Việt loại bỏ dấu và ký tự thừa để rà soát trùng lặp chính xác
-
-function normalizeVietnameseName(str: string): string {
-
-  if (!str) return '';
-
-  return str
-
-    .toLowerCase()
-
-    .normalize('NFD')
-
-    .replace(/[\u0300-\u036f]/g, '')
-
-    .replace(/[đĐ]/g, 'd')
-
-    .replace(/[^a-z0-9]/g, ' ')
-
-    .trim()
-
-    .replace(/\s+/g, ' ');
-
-}
-
-
-
-function normalizeClassName(cls: string): string {
-
-  if (!cls) return '';
-
-  return cls
-
-    .toUpperCase()
-
-    .replace(/LỚP\s*/gi, '')
-
-    .replace(/LOP\s*/gi, '')
-
-    .replace(/\s+/g, '')
-
-    .trim();
-
-}
+// Duplicate functions removed
 
 
 
