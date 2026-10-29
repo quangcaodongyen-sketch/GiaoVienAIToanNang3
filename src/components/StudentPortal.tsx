@@ -60,8 +60,6 @@ import { BRAND } from '../config/brand';
 
 import { OnlineExamPortal } from './OnlineExamPortal';
 import { StudentStudyReminder } from './StudentStudyReminder';
-import { OnlineStudentsBar } from './OnlineStudentsBar';
-import { onlinePresenceService } from '../services/onlinePresenceService';
 
 import { English8RevisionPortal } from './English8RevisionPortal';
 
@@ -102,6 +100,8 @@ import { Trophy, Target, Upload, Trash2, PlusCircle, Lock, ShieldCheck, AlertCir
 import { documentStorageService, StorageFileItem } from '../services/documentStorageService';
 
 import { systemMaintenanceService } from '../services/systemMaintenanceService';
+import { OnlineStudentsBar } from './OnlineStudentsBar';
+import { onlinePresenceService } from '../services/onlinePresenceService';
 
 
 

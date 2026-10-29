@@ -1,10 +1,11 @@
 // ==============================================================================
 // DỊCH VỤ QUẢN LÝ HỌC SINH ĐANG ONLINE THỜI GIAN THỰC (REAL-TIME PRESENCE)
 // Tác giả: Thầy giáo Đinh Văn Thành - ĐT: 0915.213717
-// Hệ thống nhận diện học sinh đang học, cập nhật hoạt động tức thì, tạo không khí học đường sôi nổi
+// ĐỘC LẬP HOÀN TOÀN - KHÔNG PHỤ THUỘC VÒNG TRÒN - AN TOÀN TUYỆT ĐỐI
 // ==============================================================================
 
-import { studentGradebookService, StudentProfile } from './studentGradebookService';
+import type { StudentProfile } from './studentGradebookService';
+import officialRosterData from '../data/officialStudentRoster.json';
 
 export interface OnlineStudentItem {
   id: string;
@@ -19,8 +20,8 @@ export interface OnlineStudentItem {
 }
 
 const STORAGE_ONLINE_KEY = 'gvai_online_presence_v1';
-const HEARTBEAT_INTERVAL = 25000; // 25s gửi tín hiệu đang học
-const TIMEOUT_OFFLINE = 4 * 60 * 1000; // 4 phút không hoạt động thì offline
+const HEARTBEAT_INTERVAL = 30000; // 30s
+const TIMEOUT_OFFLINE = 4 * 60 * 1000; // 4 phút
 
 const AVATAR_COLORS = [
   'from-blue-500 to-indigo-600',
@@ -31,7 +32,6 @@ const AVATAR_COLORS = [
   'from-cyan-500 to-blue-600'
 ];
 
-// Danh sách các hoạt động học tập thực tế phong phú
 const REALISTIC_ACTIVITIES = [
   'Đang luyện Từ Vựng Unit 1',
   'Đang luyện Từ Vựng Unit 2',
@@ -50,27 +50,38 @@ class OnlinePresenceService {
   private currentAction: string = 'Đang xem bài học';
   private heartbeatTimer: any = null;
   private listeners: Set<() => void> = new Set();
+  private isInitialized: boolean = false;
 
   constructor() {
-    if (typeof window !== 'undefined') {
+    // Không thực thi logic nặng trong constructor để tránh Temporal Dead Zone lúc import
+  }
+
+  private ensureInit() {
+    if (this.isInitialized || typeof window === 'undefined') return;
+    this.isInitialized = true;
+
+    try {
       window.addEventListener('storage', (e) => {
         if (e.key === STORAGE_ONLINE_KEY) {
           this.notifyListeners();
         }
       });
 
-      // Lắng nghe tương tác người dùng để refresh trạng thái online
       ['click', 'keydown', 'touchstart'].forEach(evt => {
         window.addEventListener(evt, () => {
           this.touchActivity();
         }, { passive: true });
       });
 
-      this.startHeartbeat();
-    }
+      if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = setInterval(() => {
+        this.sendHeartbeat();
+      }, HEARTBEAT_INTERVAL);
+    } catch {}
   }
 
   public subscribe(cb: () => void): () => void {
+    this.ensureInit();
     this.listeners.add(cb);
     return () => this.listeners.delete(cb);
   }
@@ -82,6 +93,7 @@ class OnlinePresenceService {
   }
 
   public setCurrentStudent(student: StudentProfile | null) {
+    this.ensureInit();
     this.currentStudent = student;
     if (student) {
       this.sendHeartbeat();
@@ -89,6 +101,7 @@ class OnlinePresenceService {
   }
 
   public updateAction(action: string, detail?: string) {
+    this.ensureInit();
     this.currentAction = detail ? `${action}: ${detail}` : action;
     this.sendHeartbeat();
   }
@@ -97,13 +110,6 @@ class OnlinePresenceService {
     if (this.currentStudent) {
       this.sendHeartbeat();
     }
-  }
-
-  private startHeartbeat() {
-    if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
-    this.heartbeatTimer = setInterval(() => {
-      this.sendHeartbeat();
-    }, HEARTBEAT_INTERVAL);
   }
 
   // Ghi nhận phiên đang online của máy tính/điện thoại này
@@ -116,7 +122,7 @@ class OnlinePresenceService {
       const now = Date.now();
 
       // Dọn dẹp các phiên quá cũ (> 4 phút)
-      list = list.filter(item => now - item.lastActiveTime < TIMEOUT_OFFLINE);
+      list = list.filter(item => item && item.lastActiveTime && (now - item.lastActiveTime < TIMEOUT_OFFLINE));
 
       if (this.currentStudent && this.currentStudent.name) {
         const studentName = this.currentStudent.name.trim();
@@ -132,7 +138,7 @@ class OnlinePresenceService {
         const avatarColor = AVATAR_COLORS[hash % AVATAR_COLORS.length];
 
         const myEntry: OnlineStudentItem = {
-          id: 'me-' + this.currentStudent.id,
+          id: 'me-' + (this.currentStudent.id || studentName),
           name: studentName,
           className: className.toUpperCase(),
           grade,
@@ -164,7 +170,7 @@ class OnlinePresenceService {
       const now = Date.now();
 
       // Giữ các phiên online hợp lệ trong 4 phút
-      realList = realList.filter(item => now - item.lastActiveTime < TIMEOUT_OFFLINE);
+      realList = realList.filter(item => item && item.lastActiveTime && (now - item.lastActiveTime < TIMEOUT_OFFLINE));
 
       // Nếu đang có học sinh đăng nhập, đảm bảo học sinh hiện tại luôn đứng đầu tiên
       if (this.currentStudent) {
@@ -177,7 +183,6 @@ class OnlinePresenceService {
       }
 
       // Tạo thêm các bạn học sinh đang cùng online từ Sổ điểm chính thức của Thầy Thành
-      // Để tạo không khí học tập sôi động chân thực giữa các bạn cùng lớp/toàn trường
       const simulatedList = this.generateClassmatePresence(realList, now);
 
       let combined = [...realList];
@@ -199,50 +204,53 @@ class OnlinePresenceService {
     }
   }
 
-  // Sinh danh sách bạn học đang online dựa trên sổ điểm thực tế của Thầy Thành
+  // Sinh danh sách bạn học đang online dựa trên file officialStudentRoster.json độc lập
   private generateClassmatePresence(existingList: OnlineStudentItem[], now: number): OnlineStudentItem[] {
     const defaultClasses = ['8A1', '8A2', '6A1', '6A4', '8A3', '6A3', '8A5'];
     const classmates: OnlineStudentItem[] = [];
 
-    // Chọn lớp ưu tiên: nếu học sinh đang đăng nhập lớp nào thì ưu tiên sinh các bạn lớp đó đang học
-    const myClass = this.currentStudent?.className || '8A1';
-    const activeClasses = [myClass, ...defaultClasses.filter(c => c !== myClass)];
+    try {
+      const rosterMap = (officialRosterData || {}) as Record<string, Array<{ name: string }>>;
+      const myClass = (this.currentStudent?.className || '8A1').toUpperCase().replace(/\s+/g, '');
+      const activeClasses = [myClass, ...defaultClasses.filter(c => c !== myClass)];
 
-    activeClasses.forEach((cls, clsIdx) => {
-      const roster = studentGradebookService.getOfficialRoster(cls);
-      if (!roster || roster.length === 0) return;
+      activeClasses.forEach((cls, clsIdx) => {
+        const classItems = rosterMap[cls];
+        if (!classItems || !Array.isArray(classItems) || classItems.length === 0) return;
 
-      // Mỗi lớp chọn từ 2 đến 4 bạn đang online (dựa trên thời gian trong ngày để luân phiên)
-      const hour = new Date().getHours();
-      const countPerClass = cls === myClass ? 4 : 2;
+        const roster = classItems.map(item => item.name).filter(Boolean);
+        if (roster.length === 0) return;
 
-      for (let i = 0; i < countPerClass && i < roster.length; i++) {
-        const studentIndex = (hour * 3 + i * 5 + clsIdx * 7) % roster.length;
-        const studentName = roster[studentIndex];
+        const hour = new Date().getHours();
+        const countPerClass = cls === myClass ? 4 : 2;
 
-        // Tránh trùng với học sinh đang đăng nhập trên máy này
-        if (this.currentStudent && studentName.toLowerCase() === this.currentStudent.name.toLowerCase()) {
-          continue;
+        for (let i = 0; i < countPerClass && i < roster.length; i++) {
+          const studentIndex = (hour * 3 + i * 5 + clsIdx * 7) % roster.length;
+          const studentName = roster[studentIndex];
+
+          if (this.currentStudent && studentName.toLowerCase() === this.currentStudent.name.toLowerCase()) {
+            continue;
+          }
+
+          const grade = parseInt(cls.replace(/\D/g, ''), 10) || 8;
+          const actIndex = (studentIndex + hour + i) % REALISTIC_ACTIVITIES.length;
+          const minutesAgo = (i * 2 + (studentIndex % 3)) * 60 * 1000;
+          const hash = (studentName + cls).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+          const avatarColor = AVATAR_COLORS[hash % AVATAR_COLORS.length];
+
+          classmates.push({
+            id: `sim-${cls}-${studentIndex}`,
+            name: studentName,
+            className: cls,
+            grade,
+            action: REALISTIC_ACTIVITIES[actIndex],
+            lastActiveTime: now - minutesAgo,
+            isCurrentDevice: false,
+            avatarColor
+          });
         }
-
-        const grade = parseInt(cls.replace(/\D/g, ''), 10) || 8;
-        const actIndex = (studentIndex + hour + i) % REALISTIC_ACTIVITIES.length;
-        const minutesAgo = (i * 2 + (studentIndex % 3)) * 60 * 1000;
-        const hash = (studentName + cls).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-        const avatarColor = AVATAR_COLORS[hash % AVATAR_COLORS.length];
-
-        classmates.push({
-          id: `sim-${cls}-${studentIndex}`,
-          name: studentName,
-          className: cls,
-          grade,
-          action: REALISTIC_ACTIVITIES[actIndex],
-          lastActiveTime: now - minutesAgo,
-          isCurrentDevice: false,
-          avatarColor
-        });
-      }
-    });
+      });
+    } catch {}
 
     return classmates;
   }

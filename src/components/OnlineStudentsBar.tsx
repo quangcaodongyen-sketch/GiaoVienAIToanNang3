@@ -18,7 +18,7 @@ import {
   Activity
 } from 'lucide-react';
 import { onlinePresenceService, OnlineStudentItem } from '../services/onlinePresenceService';
-import { StudentProfile } from '../services/studentGradebookService';
+import type { StudentProfile } from '../services/studentGradebookService';
 
 interface OnlineStudentsBarProps {
   currentStudent?: StudentProfile | null;
