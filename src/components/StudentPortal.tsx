@@ -536,27 +536,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     if (fresh) setCurrentStudent({ ...fresh });
   };
 
-  // Đồng bộ trạng thái học sinh đang online và hoạt động học tập hiện tại
-  useEffect(() => {
-    onlinePresenceService.setCurrentStudent(currentStudent);
-    if (!currentStudent) return;
 
-    if (activeTab === 'vocab') {
-      onlinePresenceService.updateAction('Đang luyện Từ Vựng Tiếng Anh');
-    } else if (activeTab === 'exam') {
-      onlinePresenceService.updateAction('Đang làm Đề Kiểm Tra GK1');
-    } else if (activeTab === 'quiz') {
-      onlinePresenceService.updateAction('Đang làm trắc nghiệm 5 phút');
-    } else if (['decuong_e8', 'decuong_e6', 'sgk'].includes(activeTab)) {
-      onlinePresenceService.updateAction('Đang ôn Đề Cương GK1');
-    } else if (['teams', 'leaderboard'].includes(activeTab)) {
-      onlinePresenceService.updateAction('Đang xem Thi Đua 4 Tổ & Bảng Vàng');
-    } else if (activeTab === 'forum') {
-      onlinePresenceService.updateAction('Đang hỏi bài Thầy Thành');
-    } else {
-      onlinePresenceService.updateAction('Đang vào học trực tuyến');
-    }
-  }, [activeTab, currentStudent]);
 
   // Lắng nghe sự kiện nổ pháo hoa từ service nếu có
 
@@ -2647,6 +2627,28 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     return 'missions';
 
   });
+
+  // Đồng bộ trạng thái học sinh đang online và hoạt động học tập hiện tại (đặt sau khi activeTab đã khởi tạo)
+  useEffect(() => {
+    onlinePresenceService.setCurrentStudent(currentStudent);
+    if (!currentStudent) return;
+
+    if (activeTab === 'vocab') {
+      onlinePresenceService.updateAction('Đang luyện Từ Vựng Tiếng Anh');
+    } else if (activeTab === 'exam') {
+      onlinePresenceService.updateAction('Đang làm Đề Kiểm Tra GK1');
+    } else if (activeTab === 'quiz') {
+      onlinePresenceService.updateAction('Đang làm trắc nghiệm 5 phút');
+    } else if (['decuong_e8', 'decuong_e6', 'sgk'].includes(activeTab)) {
+      onlinePresenceService.updateAction('Đang ôn Đề Cương GK1');
+    } else if (['teams', 'leaderboard'].includes(activeTab)) {
+      onlinePresenceService.updateAction('Đang xem Thi Đua 4 Tổ & Bảng Vàng');
+    } else if (activeTab === 'forum') {
+      onlinePresenceService.updateAction('Đang hỏi bài Thầy Thành');
+    } else {
+      onlinePresenceService.updateAction('Đang vào học trực tuyến');
+    }
+  }, [activeTab, currentStudent]);
 
   const [copiedLink, setCopiedLink] = useState(false);
 
