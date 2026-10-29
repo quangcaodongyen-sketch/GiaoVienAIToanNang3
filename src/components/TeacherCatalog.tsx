@@ -28,6 +28,11 @@ const CDN_BASE = 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfz
 
 // Bảng ánh xạ link tải file .exe hoặc .zip cho từng phần mềm (100% link thật CDN)
 const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
+  'tron-de-kiem-tra-pro': {
+    exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
+  },
+
   'tichhop-nls-ai-thcs': {
     exe: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
     zip: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing'
