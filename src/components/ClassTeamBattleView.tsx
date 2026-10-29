@@ -494,12 +494,12 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
                               : 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/40'
                           }`}
                         >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="w-5 text-center font-bold text-slate-400 text-[11px]">
+                          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                            <span className="w-4 sm:w-5 text-center font-bold text-slate-400 text-[11px] shrink-0">
                               {memIdx + 1}
                             </span>
 
-                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-black ${
+                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-black shrink-0 ${
                               mem.role === 'leader'
                                 ? 'bg-amber-400 text-slate-950'
                                 : mem.role === 'vice_leader'
@@ -509,17 +509,13 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
                               {mem.roleBadge}
                             </span>
 
-                            <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                              mem.gender === 'Nữ'
-                                ? 'bg-pink-100 text-pink-700 dark:bg-pink-950 dark:text-pink-300'
-                                : 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                            }`}>
-                              {mem.gender}
-                            </span>
-
-                            <span className="font-bold text-slate-800 dark:text-slate-200 truncate">
+                            {/* Bỏ cột giới tính Nam/Nữ để tên học sinh hiển thị trọn vẹn trên điện thoại */}
+                            <span 
+                              className="font-bold text-slate-800 dark:text-slate-200 truncate flex-1 min-w-0 text-xs sm:text-sm"
+                              title={mem.name}
+                            >
                               {mem.name}
-                              {isMe && <span className="ml-1 text-amber-600 dark:text-amber-400 font-black">(Em)</span>}
+                              {isMe && <span className="ml-1 text-amber-600 dark:text-amber-400 font-black shrink-0">(Em)</span>}
                             </span>
                           </div>
 
