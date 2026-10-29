@@ -118,6 +118,8 @@ interface UnifiedStudentStatsLeaderboardProps {
 
   defaultClassName?: string;
 
+  initialScope?: 'all' | 'grade' | 'class';
+
   isAdmin?: boolean;
 
   onStartExercise?: () => void;
@@ -127,6 +129,8 @@ interface UnifiedStudentStatsLeaderboardProps {
   onStartExam?: () => void;
 
   onStartVocab?: () => void;
+
+  onGoToTeams?: () => void;
 
 }
 
@@ -140,6 +144,8 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   defaultClassName,
 
+  initialScope,
+
   isAdmin: propIsAdmin,
 
   onStartExercise,
@@ -148,7 +154,9 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   onStartExam,
 
-  onStartVocab
+  onStartVocab,
+
+  onGoToTeams
 
 }) => {
 
@@ -189,7 +197,13 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   // 2. PHẠM VI THỐNG KÊ: 'all' (Toàn trường), 'grade' (Theo khối), 'class' (Theo lớp)
 
-  const [scopeFilter, setScopeFilter] = useState<'all' | 'grade' | 'class'>('all');
+  const [scopeFilter, setScopeFilter] = useState<'all' | 'grade' | 'class'>(initialScope || 'all');
+
+  useEffect(() => {
+    if (initialScope) {
+      setScopeFilter(initialScope);
+    }
+  }, [initialScope]);
 
   const [selectedGrade, setSelectedGrade] = useState<number>(defaultGrade || 8);
 
@@ -1697,6 +1711,18 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
               ))}
 
             </select>
+
+            {/* Nút 4 Tổ Thi Đua tích hợp nhanh */}
+            {onGoToTeams && (
+              <button
+                type="button"
+                onClick={onGoToTeams}
+                className="px-3 py-1.5 rounded-lg font-black transition cursor-pointer bg-amber-400/20 hover:bg-amber-400/30 text-amber-800 dark:text-amber-200 border border-amber-400/40 flex items-center gap-1.5 shadow-2xs"
+                title="Xem chi tiết 4 Tổ Thi Đua của lớp"
+              >
+                <span>⚔️ 4 Tổ Thi Đua</span>
+              </button>
+            )}
 
 
 

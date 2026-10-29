@@ -2560,6 +2560,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
+  const [competitionSubTab, setCompetitionSubTab] = useState<'all' | 'grade' | 'class' | 'teams'>('all');
   const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e6' | 'teams'>(() => {
 
     try {
@@ -3043,7 +3044,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           window.scrollTo({ top: 350, behavior: 'smooth' });
         }}
         onGoToLeaderboard={() => {
-          setActiveTab('leaderboard');
+          setActiveTab('teams');
+          setCompetitionSubTab('all');
           window.scrollTo({ top: 350, behavior: 'smooth' });
         }}
       />
@@ -3122,19 +3124,21 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <span className={['exam', 'quiz'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>4. Đề Kiểm Tra Online</span>
         </button>
 
-        {/* 5. 4 Tổ Thi Đua (Team Battle) */}
+        {/* 5. Tổ Thi Đua & Thống Kê (Hợp nhất theo yêu cầu Thầy Đinh Thành: Toàn trường, Khối, Lớp & 4 Tổ) */}
         <button
           type="button"
-          onClick={() => setActiveTab('teams')}
+          onClick={() => {
+            setActiveTab('teams');
+          }}
           className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            activeTab === 'teams'
-              ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-sky-600 text-white font-black shadow-[0_6px_20px_rgba(79,70,229,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-indigo-300/90 border-b-2 border-indigo-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
+            ['teams', 'leaderboard', 'tracking'].includes(activeTab)
+              ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.7),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950/80 -translate-y-0.5 scale-[1.03]'
+              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.15),inset_0_1.5px_1px_rgba(255,255,255,1)]'
           }`}
-          title="Lộ trình 5: Xem 4 tổ thi đua của lớp, danh sách Tổ Trưởng, Tổ Phó và bảng đua top"
+          title="Lộ trình 5: Thống kê toàn trường, theo khối, theo lớp & thi đua 4 tổ"
         >
-          <Users className={`w-4 h-4 shrink-0 ${activeTab === 'teams' ? 'text-cyan-200 drop-shadow-sm' : 'text-sky-600 dark:text-sky-400'}`} />
-          <span className={activeTab === 'teams' ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>5. 4 Tổ Thi Đua</span>
+          <Trophy className={`w-4 h-4 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950 drop-shadow-sm' : 'text-amber-600 dark:text-amber-400'}`} />
+          <span className={['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>5. Tổ Thi Đua &amp; Thống Kê</span>
         </button>
 
         {/* 6. Diễn Đàn & Hỏi Thầy */}
@@ -3151,24 +3155,67 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <MessageSquare className={`w-4 h-4 shrink-0 ${['forum', 'messages'].includes(activeTab) ? 'text-amber-300 drop-shadow-sm' : 'text-purple-600 dark:text-purple-400'}`} />
           <span className={['forum', 'messages'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>6. Diễn Đàn &amp; Hỏi Thầy</span>
         </button>
-
-        {/* 7. Thống Kê & Bảng Vàng */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('leaderboard')}
-          className={`relative px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            ['leaderboard', 'tracking'].includes(activeTab)
-              ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.7),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.15),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 7: Bảng Vàng Vinh Danh & Tổng Hợp Điểm Thi Đua của từng khối lớp"
-        >
-          <Trophy className={`w-4 h-4 shrink-0 ${['leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950 drop-shadow-sm' : 'text-amber-600 dark:text-amber-400'}`} />
-          <span className={['leaderboard', 'tracking'].includes(activeTab) ? 'drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>7. Thống Kê &amp; Bảng Vàng</span>
-        </button>
       </div>
 
       {/* THANH CHUYỂN NHANH PHỤ (SUB-NAV) KHI Ở CÁC PHÂN HỆ CÓ NHIỀU MỤC - CHUẨN 3D TRONG SUỐT & TƯƠNG PHẢN */}
+      {/* THANH ĐIỀU HƯỚNG PHÂN HỆ THI ĐUA & THỐNG KÊ (GỘP GỌN 4 CHẾ ĐỘ: TOÀN TRƯỜNG, THEO KHỐI, THEO LỚP, 4 TỔ THI ĐUA) */}
+      {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('all')}
+            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'all'
+                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê Bảng Vàng vinh danh toàn trường THCS Đồng Yên"
+          >
+            <span>🏫 1. Toàn Trường</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('grade')}
+            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'grade'
+                ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-[0_4px_14px_rgba(79,70,229,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-indigo-300 border-b-2 border-indigo-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê xếp hạng theo từng khối lớp (Khối 6, 7, 8, 9)"
+          >
+            <span>🎓 2. Theo Khối</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('class')}
+            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'class'
+                ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Thống kê xếp hạng và chuyên cần theo từng lớp học"
+          >
+            <span>👥 3. Theo Lớp</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCompetitionSubTab('teams')}
+            className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+              competitionSubTab === 'teams'
+                ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_14px_rgba(245,158,11,0.5),inset_0_1.5px_1px_rgba(255,255,255,0.7),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950 -translate-y-0.5 scale-[1.02]'
+                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
+            }`}
+            title="Đua Top và so tài điểm số giữa 4 Tổ thi đua trong lớp"
+          >
+            <span>⚔️ 4. Thi Đua Các Tổ</span>
+          </button>
+        </div>
+      )}
+
+      
       {['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) && (
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs font-black">
           {(!currentStudent || currentStudent.grade === 6) && (
@@ -4409,40 +4456,30 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-      {/* ==================== PHÂN HỆ THỐNG KÊ & BẢNG VÀNG THI ĐUA THỐNG NHẤT THỜI GIAN THỰC ==================== */}
+      {/* ==================== PHÂN HỆ THI ĐUA & THỐNG KÊ (HỢP NHẤT TOÀN TRƯỜNG, THEO KHỐI, THEO LỚP & 4 TỔ) ==================== */}
 
-      {['leaderboard', 'tracking'].includes(activeTab) && (
-
-        <UnifiedStudentStatsLeaderboard 
-
-          defaultClassId={currentStudent?.classId}
-
-          defaultGrade={currentStudent?.grade}
-
-          defaultClassName={currentStudent?.className}
-
-          isAdmin={isAdminUnlocked || systemMaintenanceService.isSessionAuthenticated()}
-
-          onStartExercise={() => setActiveTab('sgk')}
-
-          onStartQuiz={() => setActiveTab('quiz')}
-
-          onStartExam={() => setActiveTab('exam')}
-
-          onStartVocab={() => setActiveTab('vocab')}
-
-        />
-
-      )}
-
-      {/* ==================== PHÂN HỆ 4 TỔ THI ĐUA (TEAM BATTLE) ==================== */}
-      {activeTab === 'teams' && (
-        <ClassTeamBattleView
-          currentStudent={currentStudent}
-          isAdmin={Boolean(isAdminUnlocked || systemMaintenanceService.isAdminSession() || systemMaintenanceService.isSessionAuthenticated())}
-          onGoToVocab={() => setActiveTab('vocab')}
-          onGoToExam={() => setActiveTab('exam')}
-        />
+      {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
+        competitionSubTab === 'teams' ? (
+          <ClassTeamBattleView
+            currentStudent={currentStudent}
+            isAdmin={Boolean(isAdminUnlocked || systemMaintenanceService.isAdminSession() || systemMaintenanceService.isSessionAuthenticated())}
+            onGoToVocab={() => setActiveTab('vocab')}
+            onGoToExam={() => setActiveTab('exam')}
+          />
+        ) : (
+          <UnifiedStudentStatsLeaderboard 
+            defaultClassId={currentStudent?.classId}
+            defaultGrade={currentStudent?.grade}
+            defaultClassName={currentStudent?.className}
+            initialScope={competitionSubTab}
+            isAdmin={isAdminUnlocked || systemMaintenanceService.isSessionAuthenticated()}
+            onStartExercise={() => setActiveTab('sgk')}
+            onStartQuiz={() => setActiveTab('quiz')}
+            onStartExam={() => setActiveTab('exam')}
+            onStartVocab={() => setActiveTab('vocab')}
+            onGoToTeams={() => setCompetitionSubTab('teams')}
+          />
+        )
       )}
 
       {/* ==================== PHÂN HỆ 4: TẢI ĐỀ KIỂM TRA & TÀI LIỆU ==================== */}
