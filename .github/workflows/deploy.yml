@@ -38,6 +38,8 @@ jobs:
         run: |
           npm run build
           cp dist/index.html dist/404.html
+          mkdir -p dist/hocsinh && cp dist/index.html dist/hocsinh/index.html
+          mkdir -p dist/admin && cp dist/index.html dist/admin/index.html
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
