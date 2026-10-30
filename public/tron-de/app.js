@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="q-header">
           <div class="q-badge">
-            <span>Câu ${qNum}</span>
+            <span>${q.hasPrefix ? `${q.prefixWord} ${qNum}` : `${qNum}.`}</span>
             <div class="q-tags">
               <span class="tag-pill">${typeBadge}</span>
               ${q.hasMath ? '<span class="tag-pill">∑ Math</span>' : ''}
@@ -445,7 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
       school: entrySchool.value.trim(),
       teacher: entryTeacher.value.trim(),
       schoolYear: entrySchoolYear.value.trim() || '2026 - 2027',
-      level: schoolLevel
+      level: schoolLevel,
+      allowSchoolOverride: false // Bảo toàn 100% nguyên vẹn tiêu đề & trường học của đề gốc, không ghi đè
     };
 
     try {

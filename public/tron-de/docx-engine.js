@@ -36,6 +36,10 @@
       this.originalCorrectAnswer = '';
       this.hasMath = false;
       this.hasImage = false;
+      // Định dạng nhãn gốc: Bảo toàn 100% nguyên văn, KHÔNG tự ý thêm từ "Câu"
+      this.hasPrefix = false;       // true nếu đề gốc có từ khóa 'Câu', 'Question', 'Bài'...
+      this.prefixWord = '';         // Từ tiền tố chính xác trong đề gốc ('Câu', 'Question', 'Bài'...)
+      this.separator = '. ';        // Dấu ngăn cách gốc (': ', '. ', ') '...)
     }
   }
 
@@ -100,9 +104,49 @@
       let firstQuestionFound = false;
       let currentQuestionNodes = [];
       let currentQIndex = 0;
+      let lastQInfo = null;
 
-      // Regex nhận diện câu hỏi
-      const qRegex = /^(?:Câu|Bài|Question|Cau|câu|bài)\s*(\d+)[\s.:\-–]/i;
+      // Hàm nhận diện câu hỏi thông minh & bảo toàn nguyên văn thể thức gốc
+      const detectQuestion = (text, firstFound, expectedNext) => {
+        if (!text) return null;
+        const trimmed = text.trim();
+
+        // 1. Trường hợp có từ khóa tiền tố (Câu, Bài, Question, Cau, cÂu...)
+        const mPrefix = trimmed.match(/^(Câu|Bài|Question|Cau|câu|bài)\s*(\d+)[\s.:\-–\)\/]/i);
+        if (mPrefix) {
+          const num = parseInt(mPrefix[2], 10);
+          const afterNum = trimmed.slice(mPrefix[0].length - 1);
+          const sepMatch = afterNum.match(/^([.:\-–\)\/]+[\s\t]*)/);
+          const separator = sepMatch ? sepMatch[1] : ': ';
+          return {
+            hasPrefix: true,
+            prefixWord: mPrefix[1], // Giữ nguyên đúng chữ hoa/thường: "Câu", "Question", "Bài"...
+            number: num,
+            separator: separator
+          };
+        }
+
+        // 2. Trường hợp KHÔNG CÓ từ "Câu" (chỉ có số thứ tự ví dụ 1. , 1: , 1) , 1/ ...)
+        const mNum = trimmed.match(/^(\d+)[\s.:\-–\)\/]/);
+        if (mNum) {
+          const num = parseInt(mNum[1], 10);
+          // Điều kiện nhận diện: Nếu chưa tìm thấy câu nào thì số phải là 1 (tránh nhầm lớp học hay năm học)
+          // Nếu đã bắt đầu danh sách câu hỏi: chấp nhận số liên tiếp hoặc hợp lý
+          if ((!firstFound && num === 1) || (firstFound && (num === expectedNext || (num > 0 && num <= expectedNext + 2)))) {
+            const afterNum = trimmed.slice(mNum[0].length - 1);
+            const sepMatch = afterNum.match(/^([.:\-–\)\/]+[\s\t]*)/);
+            const separator = sepMatch ? sepMatch[1] : '. ';
+            return {
+              hasPrefix: false,
+              prefixWord: '', // Tuyệt đối không có tiền tố
+              number: num,
+              separator: separator
+            };
+          }
+        }
+
+        return null;
+      };
 
       for (let i = 0; i < children.length; i++) {
         const node = children[i];
@@ -115,16 +159,18 @@
         }
 
         const text = node.textContent.trim();
-        const match = text.match(qRegex);
+        const expectedNext = this.questions.length + 1;
+        const qInfo = detectQuestion(text, firstQuestionFound, expectedNext);
 
-        if (match) {
+        if (qInfo) {
           firstQuestionFound = true;
           // Lưu câu hỏi trước đó nếu có
           if (currentQuestionNodes.length > 0) {
-            this._finalizeQuestion(currentQIndex, currentQuestionNodes);
+            this._finalizeQuestion(currentQIndex, currentQuestionNodes, lastQInfo);
             currentQuestionNodes = [];
           }
-          currentQIndex = parseInt(match[1], 10) || (this.questions.length + 1);
+          currentQIndex = qInfo.number || expectedNext;
+          lastQInfo = qInfo;
           currentQuestionNodes.push(node);
         } else {
           if (!firstQuestionFound) {
@@ -146,13 +192,20 @@
 
       // Lưu câu hỏi cuối cùng
       if (currentQuestionNodes.length > 0) {
-        this._finalizeQuestion(currentQIndex, currentQuestionNodes);
+        this._finalizeQuestion(currentQIndex, currentQuestionNodes, lastQInfo);
       }
     }
 
-    _finalizeQuestion(index, nodes) {
+    _finalizeQuestion(index, nodes, qInfo) {
       const fullText = nodes.map(n => n.textContent).join('\n');
       const q = new ExamQuestion(index, nodes, fullText);
+
+      // Lưu trữ thông tin tiền tố và dấu ngăn cách gốc của câu hỏi
+      if (qInfo) {
+        q.hasPrefix = qInfo.hasPrefix;
+        q.prefixWord = qInfo.prefixWord;
+        q.separator = qInfo.separator;
+      }
 
       // Kiểm tra công thức và hình vẽ
       const xmlStr = nodes.map(n => new XMLSerializer().serializeToString(n)).join(' ');
@@ -420,25 +473,28 @@
     _updateHeaderNode(node, testCode, schoolInfo) {
       const text = node.textContent;
 
+      // CHỈ CẬP NHẬT MÃ ĐỀ: Bảo toàn 100% nguyên vẹn cơ quan, trường học, tiêu đề của đề gốc
       if (/mã đề|made|ma de/i.test(text)) {
         this._replaceTextInXml(node, /(?:Mã đề|MÃ ĐỀ|Mã Đề|Ma de|MADE)[:\s]*[0-9A-Z_-]*/gi, `Mã đề: ${testCode}`);
       }
 
-      if (schoolInfo.agency && /UBND|SỞ GD|PHÒNG GD/i.test(text)) {
-        this._replaceTextInXml(node, /UBND\s+[^\n/]+|SỞ\s+GD&ĐT\s+[^\n/]+/gi, schoolInfo.agency);
-      }
-      if (schoolInfo.school && /TRƯỜNG/i.test(text)) {
-        this._replaceTextInXml(node, /TRƯỜNG\s+[^\n/]+/gi, schoolInfo.school);
+      // TUYỆT ĐỐI KHÔNG tự ý chèn văn bản hoặc ghi đè tên trường/UBND nếu đề gốc đã có thông tin
+      if (schoolInfo && schoolInfo.allowSchoolOverride) {
+        if (schoolInfo.agency && /UBND|SỞ GD|PHÒNG GD/i.test(text)) {
+          this._replaceTextInXml(node, /UBND\s+[^\n/]+|SỞ\s+GD&ĐT\s+[^\n/]+/gi, schoolInfo.agency);
+        }
+        if (schoolInfo.school && /TRƯỜNG/i.test(text)) {
+          this._replaceTextInXml(node, /TRƯỜNG\s+[^\n/]+/gi, schoolInfo.school);
+        }
       }
     }
 
     _updateQuestionParagraph(pNode, q, newQNum, isTeacherDoc) {
-      const qRegex = /^(?:Câu|Bài|Question|Cau|câu|bài)\s*(\d+)[\s.:\-–]/i;
-      const pText = pNode.textContent.trim();
-
-      if (qRegex.test(pText)) {
-        this._replaceTextInXml(pNode, /^(?:Câu|Bài|Question|Cau|câu|bài)\s*\d+([\s.:\-–])/i, `Câu ${newQNum}$1`);
-      }
+      // 1. CẬP NHẬT NHÃN CÂU HỎI
+      // QUY TẮC BẮT BUỘC: KHÔNG TỰ Ý THÊM TỪ "CÂU" VÀO TRONG ĐỀ!
+      // - Nếu đề gốc có từ "Câu" (hoặc "Question", "Bài") -> Giữ nguyên đúng từ đó: `${q.prefixWord} ${newQNum}${q.separator}`
+      // - Nếu đề gốc KHÔNG CÓ từ "Câu" (chỉ có số thứ tự ví dụ "1.", "1:", "1)") -> TUYỆT ĐỐI KHÔNG THÊM từ "Câu", chỉ cập nhật số thứ tự: `${newQNum}${q.separator}`
+      this._replaceQuestionLabelInParagraph(pNode, q, newQNum);
 
       // Tô màu đỏ cho đáp án đúng nếu là bản Giáo viên
       if (isTeacherDoc && q.options && q.options.length > 0) {
@@ -459,6 +515,72 @@
               }
               color.setAttribute('w:val', 'FF0000');
             }
+          }
+        }
+      }
+    /**
+     * Cập nhật nhãn số thứ tự câu hỏi trong đoạn văn XML OpenXML
+     * QUY TẮC BẮT BUỘC: KHÔNG TỰ Ý THÊM TỪ "CÂU" VÀO ĐỀ!
+     */
+    _replaceQuestionLabelInParagraph(pNode, q, newQNum) {
+      const texts = Array.from(pNode.querySelectorAll('w\\:t, t'));
+      if (texts.length === 0) return;
+
+      // Xác định nhãn mới:
+      // Nếu đề gốc có từ khóa ("Câu", "Question", "Bài") -> giữ đúng từ khóa đó
+      // Nếu đề gốc không có từ khóa (chỉ có số thứ tự "1.", "1:", "1)") -> TUYỆT ĐỐI KHÔNG THÊM từ "Câu"
+      const newLabel = q.hasPrefix 
+        ? `${q.prefixWord} ${newQNum}${q.separator}`
+        : `${newQNum}${q.separator}`;
+
+      // Xây dựng regex tìm nhãn cũ ở đầu đoạn văn
+      const oldRegex = q.hasPrefix
+        ? new RegExp(`^\\s*(?:${q.prefixWord})\\s*\\d+[\\s.:\\-–\\)\\/]*`, 'i')
+        : /^\s*\d+[\s.:\-–\)\/]+/;
+
+      // Kiểm tra nếu text của <w:t> đầu tiên khớp trọn vẹn
+      let firstText = texts[0].textContent;
+      if (oldRegex.test(firstText)) {
+        texts[0].textContent = firstText.replace(oldRegex, newLabel);
+        return;
+      }
+
+      // Trường hợp nhãn bị Word tách thành nhiều run (<w:t>Câu </w:t><w:t>1: </w:t>)
+      let combined = '';
+      for (const t of texts) {
+        combined += t.textContent;
+      }
+
+      const match = combined.match(oldRegex);
+      if (match) {
+        let matchedLen = match[0].length;
+        let labelInserted = false;
+
+        for (let i = 0; i < texts.length; i++) {
+          const tNode = texts[i];
+          const tLen = tNode.textContent.length;
+
+          if (matchedLen > 0) {
+            if (!labelInserted) {
+              if (tLen >= matchedLen) {
+                tNode.textContent = newLabel + tNode.textContent.slice(matchedLen);
+                matchedLen = 0;
+              } else {
+                tNode.textContent = newLabel;
+                matchedLen -= tLen;
+              }
+              labelInserted = true;
+            } else {
+              if (tLen <= matchedLen) {
+                tNode.textContent = '';
+                matchedLen -= tLen;
+              } else {
+                tNode.textContent = tNode.textContent.slice(matchedLen);
+                matchedLen = 0;
+              }
+            }
+          } else {
+            break;
           }
         }
       }
