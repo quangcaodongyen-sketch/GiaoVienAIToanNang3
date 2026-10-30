@@ -89,9 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // 1. XỬ LÝ CHỌN FILE & KÉO THẢ
   // =========================================================================
-  btnBrowse.addEventListener('click', () => fileInput.click());
+  btnBrowse.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.value = '';
+    fileInput.click();
+  });
+
   uploadZone.addEventListener('click', (e) => {
-    if (e.target !== btnBrowse) fileInput.click();
+    if (e.target !== fileInput) {
+      fileInput.value = '';
+      fileInput.click();
+    }
   });
 
   fileInput.addEventListener('change', (e) => {
