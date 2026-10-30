@@ -1,0 +1,12 @@
+{
+  "name": "tron-de-kiem-tra-pro-web",
+  "version": "1.0.0",
+  "description": "Ứng dụng Trộn Đề Kiểm Tra Các Môn Pro - Bản Web Chuẩn Bộ Giáo dục & Đào tạo",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "python -m http.server 3000"
+  },
+  "author": "Thầy giáo Đinh Văn Thành (0915.213717)",
+  "license": "MIT"
+}

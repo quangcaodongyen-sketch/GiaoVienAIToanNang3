@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trộn Đề Kiểm Tra Các Môn Pro - Chuẩn Bộ GD&ĐT (Web Edition)</title>
+  <meta name="description" content="Phần mềm Trộn đề kiểm tra các môn cấp THCS và THPT online chuẩn Bộ Giáo dục & Đào tạo. Bảo toàn 100% công thức toán MathType, OMML, hình vẽ, sơ đồ. Tác giả: Thầy giáo Đinh Văn Thành.">
+  <link rel="icon" type="image/png" href="app_logo.png">
+
+  <!-- Google Fonts: Outfit & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- JSZip Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. THANH HEADER PRO (TOP HEADER)
+       ========================================================================= -->
+  <header class="top-header">
+    <div class="header-brand">
+      <img src="app_logo.png" alt="Logo Trộn Đề Pro" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' rx=\'20\' fill=\'%230284C7\'/><text x=\'50\' y=\'65\' font-size=\'45\' font-family=\'Arial\' font-weight=\'bold\' fill=\'%23FDE047\' text-anchor=\'middle\'>PRO</text></svg>'">
+      <div class="brand-text">
+        <h1>TRỘN ĐỀ KIỂM TRA CÁC MÔN PRO</h1>
+        <p>Chuẩn BGD&ĐT • Bảo toàn 100% công thức MathType/OMML & hình vẽ • Hotline/Zalo: <span class="highlight">0915.213717</span></p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="https://dekiemtraso.com" target="_blank" class="btn-header">🌐 dekiemtraso.com</a>
+      <div class="badge-tag pro">👑 Bản Quyền Pro</div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       2. THANH HƯỚNG DẪN NHANH (SUB-BANNER)
+       ========================================================================= -->
+  <div class="sub-banner">
+    <div class="guide">💡 Bước 1: Chọn đề Word ➔ Bước 2: Chọn số mã & dải câu ➔ Bấm 'Bắt đầu trộn đề ngay'!</div>
+    <div class="ai-note">⚠️ Note: Sản phẩm do AI tạo - Hãy kiểm tra trước khi sử dụng !</div>
+  </div>
+
+  <!-- =========================================================================
+       3. BỐ CỤC CHÍNH 2 CỘT SPLIT VIEW RESPONSIVE
+       ========================================================================= -->
+  <main class="main-wrapper">
+
+    <!-- CỘT TRÁI: ĐIỀU KHIỂN & CẤU HÌNH -->
+    <section class="left-column">
+
+      <!-- CARD 1: BƯỚC 1: CHỌN ĐỀ GỐC -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span>📁 BƯỚC 1: CHỌN ĐỀ GỐC (.DOCX)</span>
+          <span style="font-size: 0.75rem; color: var(--text-cyan);">Mọi môn học THCS & THPT</span>
+        </div>
+
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="file-input" accept=".docx" style="display: none;">
+          <div class="upload-content">
+            <button type="button" class="btn-upload" id="btn-browse">📂 CHỌN ĐỀ KIỂM TRA WORD (.DOCX)...</button>
+            <span class="upload-hint">hoặc kéo thả tệp .docx vào đây</span>
+          </div>
+        </div>
+
+        <div class="file-status-bar">
+          <span id="file-status-text">Chưa chọn file đề. Vui lòng bấm nút 'Chọn đề kiểm tra Word (.docx)' ở trên.</span>
+        </div>
+
+        <div class="file-summary-box" id="file-summary-box" style="display: none;">
+          <div class="stat-row" id="stat-subject">✓ Môn: Toán • Mã đề gốc: 101</div>
+          <div class="stat-sub" id="stat-counts">✓ Tổng số câu: 16 câu (16 Trắc nghiệm, 0 Đúng/Sai, 0 Tự luận)</div>
+          <div class="stat-sub" id="stat-fidelity">✓ Nhận diện đáp án: 16/16 câu • Bảo toàn 100%: 12 câu công thức, 4 câu hình vẽ.</div>
+        </div>
+      </div>
+
+      <!-- CARD 2: BƯỚC 2: SỐ LƯỢNG MÃ ĐỀ -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span>🏷️ BƯỚC 2: SỐ LƯỢNG MÃ ĐỀ</span>
+          <span style="font-size: 0.75rem; color: var(--text-cyan);">Tự động sinh mã chuẩn</span>
+        </div>
+
+        <div class="code-controls">
+          <div class="row-cfg">
+            <span class="row-label">Số mã:</span>
+            <div class="segmented-group" id="seg-num-codes">
+              <button type="button" class="seg-btn" data-val="2">2</button>
+              <button type="button" class="seg-btn" data-val="3">3</button>
+              <button type="button" class="seg-btn active" data-val="4">4</button>
+              <button type="button" class="seg-btn" data-val="5">5</button>
+              <button type="button" class="seg-btn" data-val="6">6</button>
+              <button type="button" class="seg-btn" data-val="8">8</button>
+              <button type="button" class="seg-btn" data-val="10">10</button>
+            </div>
+
+            <div class="segmented-group" id="seg-code-mode">
+              <button type="button" class="seg-btn active" data-mode="101">📌 Từ 101+</button>
+              <button type="button" class="seg-btn" data-mode="custom">✏️ Tự đặt</button>
+            </div>
+
+            <input type="text" class="input-box" id="entry-start-code" value="101" style="width: 55px; text-align: center;" disabled>
+          </div>
+
+          <div class="row-cfg">
+            <span class="row-label">Mã đề:</span>
+            <input type="text" class="input-box wide" id="entry-test-codes" value="101, 102, 103, 104">
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: TÙY CHỌN NÂNG CAO (TABVIEW 3-TRONG-1) -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span>⚙️ TÙY CHỌN NÂNG CAO</span>
+          <span style="font-size: 0.75rem; color: var(--text-gold);">Đảo khoảng, Trường học, File xuất</span>
+        </div>
+
+        <div class="tabview-container">
+          <div class="tab-nav">
+            <button type="button" class="tab-btn active" data-target="tab-rules">🎯 Đảo nhóm & Khóa câu</button>
+            <button type="button" class="tab-btn" data-target="tab-school">🏛️ Thông tin trường & GV</button>
+            <button type="button" class="tab-btn" data-target="tab-export">💾 File xuất bản</button>
+          </div>
+
+          <!-- TAB 1: ĐẢO NHÓM & KHÓA CÂU -->
+          <div class="tab-content active" id="tab-rules">
+            <div class="rule-input-row">
+              <select class="rule-select" id="rule-action-select">
+                <option value="shuffle">🎲 Đảo nhóm câu (Đảo đáp án)</option>
+                <option value="shuffle_questions_only">🔁 Đảo nhóm câu (Cố định đáp án)</option>
+                <option value="shuffle_options_only">🔀 Chỉ đảo đáp án (cố định câu)</option>
+                <option value="lock">🔒 Khóa cố định</option>
+                <option value="lock_options">🚫 Khóa đáp án</option>
+              </select>
+
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">Từ</span>
+              <input type="number" class="input-box" id="rule-start-input" value="1" min="1" style="width: 46px; text-align: center;">
+
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">➔ Đến</span>
+              <input type="number" class="input-box" id="rule-end-input" value="16" min="1" style="width: 46px; text-align: center;">
+
+              <button type="button" class="btn-add-rule" id="btn-add-rule">+ Thêm dải câu</button>
+              <button type="button" class="btn-reset-rules" id="btn-reset-rules" style="margin-left: auto;">↺ Xóa hết</button>
+            </div>
+
+            <div class="rules-badge-container" id="rules-badges-container">
+              <span style="font-size: 0.76rem; color: #94A3B8; font-style: italic;">* Tự do chọn dải câu: Chọn hành động, nhập "Từ... Đến..." và bấm "+ Thêm dải câu". (Nếu không thêm: Mặc định trộn tất cả trắc nghiệm)</span>
+            </div>
+          </div>
+
+          <!-- TAB 2: THÔNG TIN TRƯỜNG & GV -->
+          <div class="tab-content" id="tab-school">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Cấp học:</label>
+                <div class="segmented-group" id="seg-school-level">
+                  <button type="button" class="seg-btn active" data-val="THCS">THCS</button>
+                  <button type="button" class="seg-btn" data-val="THPT">THPT</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Năm học:</label>
+                <input type="text" class="input-box" id="entry-school-year" value="2026 - 2027">
+              </div>
+
+              <div class="form-group">
+                <label>Cơ quan quản lý:</label>
+                <input type="text" class="input-box" id="entry-agency" value="UBND XÃ........">
+              </div>
+
+              <div class="form-group">
+                <label>Tên trường:</label>
+                <input type="text" class="input-box" id="entry-school" value="TRƯỜNG THCS........">
+              </div>
+
+              <div class="form-group" style="grid-column: span 2;">
+                <label>Giáo viên ra đề (để trống nếu không in):</label>
+                <input type="text" class="input-box" id="entry-teacher" placeholder="Để trống nếu không in tên giáo viên">
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: FILE XUẤT BẢN -->
+          <div class="tab-content" id="tab-export">
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="cb-student" checked>
+                <span>Đề Học sinh (in phát ngay)</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="cb-teacher" checked>
+                <span>Đề Giáo viên (đáp án đỏ)</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="cb-summary" checked>
+                <span>Bảng đáp án tổng hợp (N cột)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: QUẢNG CÁO HỆ SINH THÁI AI SƯ PHẠM (1 DÒNG GỌN GÀNG) -->
+      <div class="glass-card" style="padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-gold);">🎁 AI Sư phạm:</span>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="https://dekiemtraso.com" target="_blank" style="background:#0284C7; color:#fff; text-decoration:none; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:4px;">🇬🇧 Tạo Đề Tiếng Anh THCS</a>
+          <a href="https://dekiemtraso.com" target="_blank" style="background:#0D9488; color:#fff; text-decoration:none; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:4px;">🎧 Smart Listening Pro</a>
+          <a href="https://dekiemtraso.com" target="_blank" style="background:transparent; border:1px solid #38BDF8; color:#38BDF8; text-decoration:none; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:4px;">🌐 dekiemtraso.com</a>
+        </div>
+      </div>
+
+      <!-- NÚT HERO BẮT ĐẦU TRỘN ĐỀ - CỐ ĐỊNH Ở ĐÁY CỘT TRÁI -->
+      <div class="hero-action-bar">
+        <button type="button" class="btn-hero" id="btn-hero">
+          <span id="hero-btn-text">⚡ BẮT ĐẦU TRỘN ĐỀ NGAY ➔</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- CỘT PHẢI: CẤU TRÚC ĐỀ & TIẾN TRÌNH THỜI GIAN THỰC -->
+    <section class="right-column">
+      <div class="panel-header">
+        <h2>📋 CẤU TRÚC ĐỀ & TIẾN TRÌNH</h2>
+        <span class="badge-tag" id="questions-count-badge">Chưa nạp đề</span>
+      </div>
+
+      <div class="right-tabs-nav">
+        <button type="button" class="right-tab-btn active" data-target="questions-list">📋 Cấu trúc câu hỏi</button>
+        <button type="button" class="right-tab-btn" data-target="terminal-view">📝 Nhật ký tiến trình</button>
+      </div>
+
+      <div class="panel-body">
+        <!-- VIEW 1: DANH SÁCH CÂU HỎI -->
+        <div class="panel-view questions-list active" id="questions-list">
+          <div class="empty-placeholder">
+            <div class="icon">📂</div>
+            <p><strong>VUI LÒNG BẤM 'CHỌN ĐỀ KIỂM TRA WORD (.DOCX)' Ở BƯỚC 1</strong><br>
+            Để tải đề kiểm tra vào hệ thống phân tích & trộn đề tự động<br><br>
+            <span style="color:#FDE047; font-size: 0.78rem;">⚠️ Note: Sản phẩm do AI tạo - Hãy kiểm tra trước khi sử dụng !</span></p>
+          </div>
+        </div>
+
+        <!-- VIEW 2: TERMINAL NHẬT KÝ TIẾN TRÌNH -->
+        <div class="panel-view terminal-view" id="terminal-view">Hệ thống Trộn Đề Kiểm Tra Các Môn Pro đã sẵn sàng...
+Vui lòng nạp đề Word (.docx) ở Bước 1.
+</div>
+      </div>
+
+      <!-- KHUNG THÔNG BÁO HOÀN TẤT & TẢI VỀ -->
+      <div class="success-card" id="success-card">
+        <div class="success-title">
+          <span>✓ TRỘN ĐỀ HOÀN TẤT THÀNH CÔNG!</span>
+        </div>
+        <div class="success-desc" id="success-desc">
+          Đã tạo thành công các file đề thi chuẩn Bộ GD&ĐT.
+        </div>
+        <div class="success-buttons">
+          <button type="button" class="btn-download-all" id="btn-download-all">
+            <span>💾 TẢI VỀ TRỌN BỘ ĐỀ (.ZIP)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       4. THANH CHÂN TRANG (PAGE FOOTER)
+       ========================================================================= -->
+  <footer class="page-footer">
+    <div class="footer-left">
+      <span>Tác giả: <strong class="author">Thầy giáo Đinh Văn Thành (0915.213717)</strong></span>
+      <span>•</span>
+      <span>Website: <a href="https://dekiemtraso.com" target="_blank">dekiemtraso.com</a></span>
+      <span>•</span>
+      <span>Chuẩn Bộ GD&ĐT (CV 7991 THCS & QĐ 764 THPT)</span>
+    </div>
+    <div>
+      <span style="color: #FDE047;">⚠️ Note: Sản phẩm do AI tạo - Hãy kiểm tra trước khi sử dụng !</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="docx-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "tron-de-kiem-tra-pro",
+  "builds": [
+    {
+      "src": "*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
