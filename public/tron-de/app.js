@@ -134,14 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     currentFile = file;
     fileStatusText.textContent = `⏳ Đang đọc và phân tích: ${file.name}...`;
-    fileStatusText.style.color = '#38BDF8';
+    fileStatusText.style.color = '#0284C7';
     log(`► Bắt đầu phân tích tệp: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
 
     try {
       examData = await engine.loadAndParse(file, file.name);
 
       fileStatusText.textContent = `✓ Đã nạp thành công: ${file.name}`;
-      fileStatusText.style.color = '#34D399';
+      fileStatusText.style.color = '#15803D';
 
       // Cập nhật thẻ tóm tắt
       statSubject.textContent = `✓ Môn: ${examData.detectedSubject || 'Tự động'} • Mã đề gốc: ${examData.detectedMaDe || '101'}`;
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error(err);
       fileStatusText.textContent = `✗ Lỗi nạp tệp: ${err.message}`;
-      fileStatusText.style.color = '#F87171';
+      fileStatusText.style.color = '#DC2626';
       log(`✗ LỖI: ${err.message}`);
       alert(`Không thể đọc tệp đề thi:\n${err.message}`);
     }

@@ -16,7 +16,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
   <!-- Custom Stylesheet with Cache Busting -->
-  <link rel="stylesheet" href="styles.css?v=20261030_1850">
+  <link rel="stylesheet" href="styles.css?v=20261030_1905">
   <script>
     // Global Error Catcher for Browser Console Visibility
     window.addEventListener('error', function(e) {
@@ -115,7 +115,7 @@
               <button type="button" class="seg-btn" data-mode="custom">✏️ Tự đặt</button>
             </div>
 
-            <input type="text" class="input-box" id="entry-start-code" value="101" style="width: 55px; text-align: center;" disabled>
+            <input type="text" class="input-box rule-input-num" id="entry-start-code" value="101" disabled>
           </div>
 
           <div class="row-cfg">
@@ -150,11 +150,11 @@
                 <option value="lock_options">🚫 Khóa đáp án</option>
               </select>
 
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">Từ</span>
-              <input type="number" class="input-box" id="rule-start-input" value="1" min="1" style="width: 46px; text-align: center;">
+              <span class="rule-label-text">Từ:</span>
+              <input type="number" class="input-box rule-input-num" id="rule-start-input" value="1" min="1">
 
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">➔ Đến</span>
-              <input type="number" class="input-box" id="rule-end-input" value="16" min="1" style="width: 46px; text-align: center;">
+              <span class="rule-label-text">➔ Đến:</span>
+              <input type="number" class="input-box rule-input-num" id="rule-end-input" value="16" min="1">
 
               <button type="button" class="btn-add-rule" id="btn-add-rule">+ Thêm dải câu</button>
               <button type="button" class="btn-reset-rules" id="btn-reset-rules" style="margin-left: auto;">↺ Xóa hết</button>
@@ -303,7 +303,7 @@ Vui lòng nạp đề Word (.docx) ở Bước 1.
   </footer>
 
   <!-- Scripts with Cache Busting -->
-  <script src="docx-engine.js?v=20261030_1850"></script>
-  <script src="app.js?v=20261030_1850"></script>
+  <script src="docx-engine.js?v=20261030_1905"></script>
+  <script src="app.js?v=20261030_1905"></script>
 </body>
 </html>
