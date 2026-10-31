@@ -32,6 +32,7 @@ import {
   Award,
   Zap
 } from 'lucide-react';
+import { VisitorStatsBar } from './components/VisitorStatsBar';
 import { BRAND } from './config/brand';
 import { apps, AppCard } from './data/apps';
 import { AdminDashboard } from './components/AdminDashboard';
