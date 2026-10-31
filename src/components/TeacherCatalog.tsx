@@ -167,6 +167,246 @@ const APP_DOWNLOAD_LINKS: Record<string, { exe?: string; zip?: string }> = {
   }
 };
 
+
+// ==================== BẢNG DỮ LIỆU ĐẶC BIỆT: THANH 3D TRONG SUỐT VỚI CHỮ NGẮN GỌN, TƯƠNG PHẢN CAO CHO TỪNG APP ====================
+export interface AppHighlightInfo {
+  icon: string;
+  shortText: string;
+  tag: string;
+  theme: 'blue' | 'emerald' | 'purple' | 'amber' | 'rose' | 'cyan';
+}
+
+export const APP_HIGHLIGHT_BARS: Record<string, AppHighlightInfo> = {
+  'tron-de-kiem-tra-pro': {
+    icon: '⚡',
+    shortText: 'Giữ 100% MathType & Hình vẽ • Đảo N mã đề & Đáp án đỏ',
+    tag: 'CHUẨN BGD',
+    theme: 'blue'
+  },
+  'studio-ai-anh-the-hang-loat': {
+    icon: '📸',
+    shortText: 'Căn chuẩn 68% • Khử viền xanh • Thay vest sơ mi chuẩn 300 DPI',
+    tag: 'IN 1-CHẠM',
+    theme: 'emerald'
+  },
+  'hoc-tu-vung-tieng-anh-6-12': {
+    icon: '💡',
+    shortText: 'Flashcard 3D • Nhạc Chant sôi động • 11 game trí tuệ',
+    tag: 'MIỄN PHÍ',
+    theme: 'blue'
+  },
+  'tichhop-nls-ai-thcs': {
+    icon: '🚀',
+    shortText: 'Tự động chèn NLS, STEM, AI vào giáo án • Chuẩn CV 5512 BGD',
+    tag: 'CV 5512',
+    theme: 'purple'
+  },
+  'tao-de-tieng-anh-tieu-hoc': {
+    icon: '🎒',
+    shortText: 'Đề thi 4 kỹ năng Nghe - Nói - Đọc - Viết • Ma trận 4 mức độ',
+    tag: 'TT 27',
+    theme: 'amber'
+  },
+  'tao-de-tieng-viet-tieu-hoc': {
+    icon: '📝',
+    shortText: 'Đọc hiểu ngoài SGK & Tập làm văn • Chuẩn Thông tư 27',
+    tag: 'TT 27',
+    theme: 'rose'
+  },
+  'tao-de-tieng-anh-thcs': {
+    icon: '🇬🇧',
+    shortText: 'Ma trận 16 cột 3 tầng • Bản đặc tả 7 cột • Đáp án đỏ #FF0000',
+    tag: 'CV 7991',
+    theme: 'blue'
+  },
+  'tao-de-15p-tienganh': {
+    icon: '⏱️',
+    shortText: 'Đề 15 phút trắc nghiệm siêu tốc • Tự sinh ma trận nhận thức',
+    tag: '15 PHÚT',
+    theme: 'amber'
+  },
+  'tao-de-toan-thcs': {
+    icon: '📐',
+    shortText: '100% MathType OMML • Ma trận 3 tầng chuẩn CV 7991',
+    tag: 'CV 7991',
+    theme: 'blue'
+  },
+  'tao-de-van-thcs': {
+    icon: '✍️',
+    shortText: 'Đọc hiểu ngoài SGK & Viết đoạn văn • Rubric biểu điểm chi tiết',
+    tag: 'CV 7991',
+    theme: 'purple'
+  },
+  'tao-de-khtn-thcs': {
+    icon: '🔬',
+    shortText: 'Tích hợp Lý - Hóa - Sinh • Cân bằng điểm số chuẩn PPCT',
+    tag: 'CV 7991',
+    theme: 'emerald'
+  },
+  'tao-de-sudia-thcs': {
+    icon: '🧭',
+    shortText: 'Tích hợp Lịch sử 50% & Địa lí 50% • Khóa nhóm câu đọc hiểu',
+    tag: 'CV 7991',
+    theme: 'emerald'
+  },
+  'tao-de-lich-su-thcs': {
+    icon: '🛡️',
+    shortText: 'Đề chuẩn CV 7991: 12 TN + 4 Đúng/Sai + 2 TL • Ma trận 18 cột',
+    tag: 'CV 7991',
+    theme: 'rose'
+  },
+  'tao-de-dia-li-thcs': {
+    icon: '🗺️',
+    shortText: 'Đề chuẩn CV 7991: 12 TN + 3 Đúng/Sai + 2 Điền số + 2 TL',
+    tag: 'CV 7991',
+    theme: 'cyan'
+  },
+  'tao-de-gdcd-thcs': {
+    icon: '⚖️',
+    shortText: 'Tình huống đạo đức & Pháp luật thực tiễn • Trắc nghiệm 4 lựa chọn',
+    tag: 'CV 7991',
+    theme: 'blue'
+  },
+  'tao-de-tin-thcs': {
+    icon: '💻',
+    shortText: 'Chuẩn CV 7991: 12 MCQ + 2 Đúng/Sai + 4 TL ngắn + Biên bản phản biện',
+    tag: 'CV 7991',
+    theme: 'blue'
+  },
+  'tao-de-cn-thcs': {
+    icon: '🔧',
+    shortText: 'Nông nghiệp & Công nghiệp • Ma trận phân hóa 4 mức độ',
+    tag: 'CV 7991',
+    theme: 'amber'
+  },
+  'tao-de-gddp-thcs': {
+    icon: '🏮',
+    shortText: '5 Mẫu đề kiểm tra đa dạng • 100% ngữ liệu tỉnh thành chuẩn CV 7991',
+    tag: 'CV 7991',
+    theme: 'rose'
+  },
+  'tao-de-hdtn-thcs': {
+    icon: '🎯',
+    shortText: '3 Mạch nội dung HĐTN • Cân bằng 10.0đ thời gian thực All-in-One',
+    tag: 'CV 7991',
+    theme: 'emerald'
+  },
+  'sinhdebienthe': {
+    icon: '🤖',
+    shortText: 'Sinh ngay 3 đề biến thể tương đương chống sao chép thi',
+    tag: 'AI PRO',
+    theme: 'purple'
+  },
+  'tao-de-tieng-anh-thpt': {
+    icon: '🇬🇧',
+    shortText: 'Định dạng mới QĐ 764: Đọc hiểu, điền từ & Trắc nghiệm 4 lựa chọn',
+    tag: 'QĐ 764',
+    theme: 'blue'
+  },
+  'tao-de-toan-thpt': {
+    icon: '📐',
+    shortText: '3 Phần mới: MCQ 4 lựa chọn, Đúng/Sai 4 ý, Trả lời ngắn • 100% MathType',
+    tag: 'QĐ 764',
+    theme: 'blue'
+  },
+  'tao-de-van-thpt': {
+    icon: '✍️',
+    shortText: 'Đọc hiểu ngoài SGK • Viết đoạn NLXH & Bài NLVH chuẩn QĐ 764',
+    tag: 'QĐ 764',
+    theme: 'purple'
+  },
+  'tao-de-vatli-thpt': {
+    icon: '⚡',
+    shortText: 'Đồ thị vector sắc nét • Trắc nghiệm Đúng/Sai & Câu hỏi ngắn',
+    tag: 'QĐ 764',
+    theme: 'cyan'
+  },
+  'tao-de-hoahoc-thpt': {
+    icon: '🧪',
+    shortText: 'Phương trình hóa học & Cấu tạo phân tử • Ma trận chuẩn QĐ 764',
+    tag: 'QĐ 764',
+    theme: 'cyan'
+  },
+  'tao-de-sinhhoc-thpt': {
+    icon: '🧬',
+    shortText: 'Trắc nghiệm 4 lựa chọn, Đúng/Sai 4 ý & Câu hỏi trả lời ngắn',
+    tag: 'QĐ 764',
+    theme: 'emerald'
+  },
+  'tao-de-tin-thpt': {
+    icon: '💻',
+    shortText: 'Khoa học máy tính (CS) & Tin học ứng dụng (ICT) chuẩn QĐ 764',
+    tag: 'QĐ 764',
+    theme: 'blue'
+  },
+  'tao-de-lichsu-thpt': {
+    icon: '🏛️',
+    shortText: 'Định dạng mới 2025+: Lịch sử VN & Thế giới • Đáp án đỏ #FF0000',
+    tag: 'QĐ 764',
+    theme: 'rose'
+  },
+  'tao-de-diali-thpt': {
+    icon: '🌍',
+    shortText: 'Lý thuyết kết hợp kỹ năng Atlat & Biểu đồ • Chuẩn QĐ 764',
+    tag: 'QĐ 764',
+    theme: 'cyan'
+  },
+  'tao-de-gdktpl-thpt': {
+    icon: '⚖️',
+    shortText: 'Xử lý tình huống pháp lý & Kinh tế thực tiễn • Trắc nghiệm chuẩn',
+    tag: 'QĐ 764',
+    theme: 'amber'
+  },
+  'tao-de-cn-thpt': {
+    icon: '⚙️',
+    shortText: 'Công nghệ Công nghiệp & Nông nghiệp công nghệ cao 2025+',
+    tag: 'QĐ 764',
+    theme: 'amber'
+  },
+  'smart-listening-pro': {
+    icon: '🎧',
+    shortText: 'Chuyển văn bản thành Audio giọng bản ngữ kèm chuông hiệu lệnh',
+    tag: 'MP3 CHUẨN',
+    theme: 'blue'
+  },
+  'mathstudio-pro': {
+    icon: '🧮',
+    shortText: 'Chuyển Mathpix LaTeX sang Word Equation native • Giữ nguyên cỡ chữ',
+    tag: 'MATHTYPE',
+    theme: 'blue'
+  },
+  'chuanhoavanbanvip': {
+    icon: '📜',
+    shortText: 'Căn lề, Quốc hiệu, Font 13pt Times New Roman • Chuẩn NĐ 30/2020',
+    tag: 'NĐ 30/2020',
+    theme: 'emerald'
+  },
+  'screen-record-v2': {
+    icon: '🎥',
+    shortText: 'Quay màn hình bài giảng Full HD sắc nét • Khử tạp âm • Spotlight',
+    tag: 'FULL HD',
+    theme: 'rose'
+  },
+  'TACH-GOP-PDF': {
+    icon: '📂',
+    shortText: 'Ghép nối & Cắt tách giáo án PDF siêu tốc offline • Tự lọc trang trắng',
+    tag: 'OFFLINE 100%',
+    theme: 'amber'
+  },
+  'dinhthanh-cleaner-pro': {
+    icon: '🧹',
+    shortText: 'Dọn rác Zalo, temp phình ổ C & Giải phóng RAM • Tăng tốc 200%',
+    tag: 'TĂNG TỐC',
+    theme: 'cyan'
+  },
+  'trolyGVCN': {
+    icon: '📋',
+    shortText: 'Sổ liên lạc điện tử • Tự sinh nhận xét học sinh & Họp phụ huynh',
+    tag: 'CHỦ NHIỆM',
+    theme: 'purple'
+  }
+};
+
 export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({ 
   onOpenAppModal, 
   onCopyShareLink 
@@ -318,7 +558,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                 <th className="py-3 px-3 w-10 text-center">STT</th>
                 <th className="py-3 px-3 min-w-[200px]">Tên Phần Mềm & Ứng Dụng</th>
                 <th className="py-3 px-3 min-w-[120px]">Cấp Học / Môn</th>
-                <th className="py-3 px-3 min-w-[250px]">Chức Năng Chính</th>
+                <th className="py-3 px-3 min-w-[340px]">✨ Tính Năng Nổi Bật (3D Glass)</th>
                 <th className="py-3 px-3 text-center min-w-[130px]">Trải Nghiệm Trực Tuyến</th>
                 <th className="py-3 px-3 text-center min-w-[170px]">Tải Bộ Cài Đặt</th>
                 <th className="py-3 px-3 text-center min-w-[150px]">Hỗ Trợ Cài Đặt</th>
@@ -331,7 +571,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                   return (
                     <tr 
                       key={app.id} 
-                      className="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition group"
+                      className="hover:bg-blue-50/50 dark:hover:bg-slate-800/70 transition-all duration-200 group hover:shadow-[0_4px_16px_rgba(37,99,235,0.06)]"
                     >
                       {/* STT */}
                       <td className="py-3 px-3 text-center text-slate-400 font-mono font-semibold">
@@ -349,7 +589,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                           </button>
                         </div>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="text-[10px] px-1.5 py-0.2 rounded font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                          <span className="text-[10px] px-2 py-0.5 rounded-md font-black bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-[0_2px_6px_rgba(37,99,235,0.3),inset_0_1px_0_rgba(255,255,255,0.4)] border border-blue-400/40">
                             {app.badge || 'PRO'}
                           </span>
                           <button
@@ -365,7 +605,7 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
 
                       {/* CẤP HỌC / MÔN */}
                       <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded-md font-bold text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <span className="px-2.5 py-0.5 rounded-lg font-black text-[11px] bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-800 dark:text-slate-100 border border-slate-300/80 dark:border-slate-600 shadow-[0_2px_4px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)]">
                           {app.levelBadge || 'TIỆN ÍCH'}
                         </span>
                         <p className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[130px]">
@@ -373,9 +613,76 @@ export const TeacherCatalog: React.FC<TeacherCatalogProps> = ({
                         </p>
                       </td>
 
-                      {/* CHỨC NĂNG CHÍNH */}
-                      <td className="py-3 px-3 text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {app.description}
+                      {/* TÍNH NĂNG NỔI BẬT: THANH 3D TRONG SUỐT VỚI CHỮ NGẮN GỌN, TƯƠNG PHẢN CAO */}
+                      <td className="py-2 px-3 min-w-[340px]">
+                        {(() => {
+                          const hl = APP_HIGHLIGHT_BARS[app.id] || {
+                            icon: '⚡',
+                            shortText: app.description.length > 70 ? app.description.slice(0, 68) + '...' : app.description,
+                            tag: app.levelBadge || 'PRO 2026',
+                            theme: 'blue' as const
+                          };
+
+                          const themeStyles = {
+                            blue: {
+                              bar: 'bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-sky-500/10 border-blue-300/70 dark:border-blue-400/40 text-blue-950 dark:text-blue-50 shadow-[0_3px_12px_rgba(37,99,235,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-blue-500/80 hover:shadow-[0_6px_20px_rgba(37,99,235,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-[0_2px_6px_rgba(37,99,235,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-blue-400/40',
+                              tagBg: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border border-blue-400/50 shadow-[0_2px_6px_rgba(37,99,235,0.3)]'
+                            },
+                            emerald: {
+                              bar: 'bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 border-emerald-300/70 dark:border-emerald-400/40 text-emerald-950 dark:text-emerald-50 shadow-[0_3px_12px_rgba(16,185,129,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-emerald-500/80 hover:shadow-[0_6px_20px_rgba(16,185,129,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-[0_2px_6px_rgba(16,185,129,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-emerald-400/40',
+                              tagBg: 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border border-emerald-400/50 shadow-[0_2px_6px_rgba(16,185,129,0.3)]'
+                            },
+                            purple: {
+                              bar: 'bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-indigo-500/10 border-purple-300/70 dark:border-purple-400/40 text-purple-950 dark:text-purple-50 shadow-[0_3px_12px_rgba(168,85,247,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-purple-500/80 hover:shadow-[0_6px_20px_rgba(168,85,247,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white shadow-[0_2px_6px_rgba(168,85,247,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-purple-400/40',
+                              tagBg: 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white border border-purple-400/50 shadow-[0_2px_6px_rgba(168,85,247,0.3)]'
+                            },
+                            amber: {
+                              bar: 'bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-yellow-500/10 border-amber-300/70 dark:border-amber-400/40 text-amber-950 dark:text-amber-50 shadow-[0_3px_12px_rgba(245,158,11,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-amber-500/80 hover:shadow-[0_6px_20px_rgba(245,158,11,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-amber-600 to-orange-600 text-white shadow-[0_2px_6px_rgba(245,158,11,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-amber-400/40',
+                              tagBg: 'bg-gradient-to-r from-amber-600 to-orange-600 text-white border border-amber-400/50 shadow-[0_2px_6px_rgba(245,158,11,0.3)]'
+                            },
+                            rose: {
+                              bar: 'bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-red-500/10 border-rose-300/70 dark:border-rose-400/40 text-rose-950 dark:text-rose-50 shadow-[0_3px_12px_rgba(244,63,94,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-rose-500/80 hover:shadow-[0_6px_20px_rgba(244,63,94,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-rose-600 to-pink-600 text-white shadow-[0_2px_6px_rgba(244,63,94,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-rose-400/40',
+                              tagBg: 'bg-gradient-to-r from-rose-600 to-red-600 text-white border border-rose-400/50 shadow-[0_2px_6px_rgba(244,63,94,0.3)]'
+                            },
+                            cyan: {
+                              bar: 'bg-gradient-to-r from-cyan-500/10 via-sky-500/10 to-blue-500/10 border-cyan-300/70 dark:border-cyan-400/40 text-slate-900 dark:text-cyan-50 shadow-[0_3px_12px_rgba(6,182,212,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-cyan-500/80 hover:shadow-[0_6px_20px_rgba(6,182,212,0.18)]',
+                              iconBg: 'bg-gradient-to-br from-cyan-600 to-blue-600 text-white shadow-[0_2px_6px_rgba(6,182,212,0.35),inset_0_1px_0_rgba(255,255,255,0.5)] border border-cyan-400/40',
+                              tagBg: 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white border border-cyan-400/50 shadow-[0_2px_6px_rgba(6,182,212,0.3)]'
+                            }
+                          };
+
+                          const curTheme = themeStyles[hl.theme] || themeStyles.blue;
+
+                          return (
+                            <div 
+                              className={`relative group/bar flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl backdrop-blur-md transition-all duration-300 border ${curTheme.bar} hover:-translate-y-0.5 cursor-default`}
+                              title={app.description}
+                            >
+                              {/* Vệt sáng bóng kính 3D chạy chéo */}
+                              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/30 dark:via-white/10 to-transparent pointer-events-none opacity-0 group-hover/bar:opacity-100 transition-opacity duration-300" />
+
+                              {/* Icon 3D + Chữ ngắn gọn tương phản cao */}
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className={`shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold ${curTheme.iconBg}`}>
+                                  {hl.icon}
+                                </span>
+                                <span className="text-[12px] font-black text-slate-900 dark:text-white tracking-tight leading-snug line-clamp-2">
+                                  {hl.shortText}
+                                </span>
+                              </div>
+
+                              {/* Tag chuẩn 3D nhỏ gọn tương phản cao */}
+                              <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${curTheme.tagBg}`}>
+                                {hl.tag}
+                              </span>
+                            </div>
+                          );
+                        })()}
                       </td>
 
                       {/* DÙNG THỬ TRỰC TUYẾN (5 LƯỢT) */}
