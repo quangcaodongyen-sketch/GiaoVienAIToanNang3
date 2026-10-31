@@ -18,6 +18,8 @@ import {
   Activity
 } from 'lucide-react';
 import { onlinePresenceService, OnlineStudentItem } from '../services/onlinePresenceService';
+import { VisitorStatsBar } from './VisitorStatsBar';
+
 import type { StudentProfile } from '../services/studentGradebookService';
 
 interface OnlineStudentsBarProps {
@@ -157,6 +159,9 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
           </button>
         </div>
       </div>
+
+      {/* KHỐI BỘ ĐẾM LƯỢT TRUY CẬP VÀ HỌC TẬP THỜI GIAN THỰC (CHUẨN BGD&ĐT) */}
+      <VisitorStatsBar className="my-2.5" />
 
       {/* DANH SÁCH CUỘN NGANG CÁC BẠN ĐANG ONLINE (CHỮ TO RÕ, ĐẸP MẮT TRÊN MÁY TÍNH & ĐIỆN THOẠI) */}
       <div className="mt-3 flex items-center gap-2.5 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-emerald-300 dark:scrollbar-thumb-emerald-700">
