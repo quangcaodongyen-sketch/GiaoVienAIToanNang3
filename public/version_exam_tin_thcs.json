@@ -1,12 +1,12 @@
 {
   "appId": "tao-de-tin-thcs",
-  "appName": "Tạo Đề Tin Học THCS Pro (CV 7991)",
-  "currentVersion": "3.9.0",
-  "latestVersion": "3.9.0",
-  "releaseDate": "24/10/2026",
-  "changelog": "✦ [24/10/2026 - v3.9.0] Cập nhật nâng cấp toàn diện cho giáo viên:\n✦ Chuẩn hóa Ma trận 16 cột 3 tầng và Bản đặc tả 7 cột có dòng Tổng chuẩn Công văn 7991/BGDĐT\n✦ Tích hợp tính năng xuất Ma trận & Bản đặc tả độc lập 1-chạm\n✦ Tích hợp xuất Biên bản phản biện đề thi chuyên môn chuẩn quy định sư phạm\n✦ Tự động tương thích hoàn hảo Microsoft Word 2016-2024, không lỗi dãn dòng thưa chữ\n✦ Cung cấp bản cài đặt 1-Click tự động tích hợp Add-in Word và Shortcut Desktop.",
+  "appName": "TẠO ĐỀ TIN HỌC THCS PRO 2026 – Phần Mềm Tạo Đề Kiểm Tra Môn Tin Học THCS (Lớp 6, 7, 8, 9)",
+  "currentVersion": "4.1.0",
+  "latestVersion": "4.1.0",
+  "releaseDate": "01/11/2026",
+  "changelog": "• [01/11/2026 - v4.1.0] NÂNG CẤP HỆ THỐNG KÍCH HOẠT BẢN QUYỀN & ĐĂNG KÝ GIÁO VIÊN:\n• Bổ sung form điền đầy đủ thông tin Giáo viên: Họ và tên (*), Số điện thoại/Zalo (*), Trường/Đơn vị (*), Tỉnh/Thành phố\n• Nút 1-click 'Gửi thông tin đăng ký cho Thầy Đinh Thành (Zalo: 0915.213717)' tự động định dạng tin nhắn chuẩn và mở Zalo\n• Tự động lưu nhớ thông tin GV trên máy và đồng bộ hai chiều với ô Tác giả ra đề trên giao diện chính\n• Bổ sung tính năng Kiểm tra & Đồng bộ bản quyền Pro từ xa (Web Cloud Sync)\n• Hỗ trợ đầy đủ Lớp 6, 7, 8, 9 SGK Kết nối tri thức chuẩn Công văn 7991/BGDĐT\n• Đóng gói All-in-One 2-in-1 tự động đồng bộ Google Drive PC và phát hành web.",
   "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
   "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
-  "websiteUrl": "https://dekiemtraso.com/",
-  "author": "Đinh Thành (Tel/zalo: 0915.213717) - THCS Đồng Yên"
+  "websiteUrl": "https://dekiemtraso.com/#tao-de-tin",
+  "author": "Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717)"
 }
