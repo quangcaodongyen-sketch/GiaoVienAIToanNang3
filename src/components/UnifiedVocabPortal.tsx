@@ -1548,7 +1548,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       </div>
 
       {/* THÔNG BÁO MỚI NHẤT TỪ THẦY ĐINH THÀNH: LỊCH KIỂM TRA GK1 & KẾ HOẠCH ÔN TẬP BỨT PHÁ */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-indigo-950/90 via-slate-900/95 to-amber-950/90 border-2 border-amber-400/80 shadow-2xl text-slate-100 backdrop-blur-xl relative overflow-hidden">
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-400 shadow-lg text-slate-800 relative overflow-hidden">
         {/* Đường viền trang trí đa sắc */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-rose-500 to-indigo-500"></div>
 
@@ -1570,30 +1570,30 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   Trọng Tâm Unit 4, 5, 6
                 </span>
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-black text-amber-300 uppercase tracking-tight mt-1">
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-emerald-950 uppercase tracking-tight mt-1">
                 LỘ TRÌNH HỌC MỚI: TIẾP TỤC HỌC TẬP UNIT 4, 5, 6 - CHUẨN BỊ CHO KIỂM TRA CUỐI HỌC KỲ 1 (CK1)!
               </h3>
             </div>
           </div>
-          <div className="shrink-0 bg-black/40 px-3.5 py-2 rounded-2xl border border-amber-400/30 text-amber-200 text-xs font-bold text-center">
+          <div className="shrink-0 bg-emerald-100 px-3.5 py-2 rounded-2xl border-2 border-emerald-300 text-emerald-900 text-xs font-black text-center shadow-xs">
             🚀 Đã kích hoạt lộ trình mới • Sẵn sàng bứt phá
           </div>
         </div>
 
         {/* Lời dặn dò viết lại chuẩn sư phạm */}
-        <div className="mt-3.5 p-3 rounded-2xl bg-black/30 border-l-4 border-amber-400 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+        <div className="mt-3.5 p-3.5 rounded-2xl bg-white border-l-4 border-emerald-500 text-xs sm:text-sm text-slate-800 shadow-sm leading-relaxed font-medium">
           <strong>Kính gửi các em học sinh thân yêu:</strong> Toàn khối chính thức bước vào <strong>LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong>Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
         </div>
 
         {/* 4 Khối nhiệm vụ trọng tâm Lộ trình mới Unit 4, 5, 6 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3.5 text-xs">
           {/* Nhiệm vụ 1: Ôn luyện từ vựng Unit 4, 5, 6 */}
-          <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-400/40 flex flex-col justify-between gap-2 shadow-xs">
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-emerald-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
             <div>
-              <div className="font-black text-emerald-300 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-emerald-900 flex items-center gap-1.5 text-xs sm:text-sm">
                 <span>🧠 1. Từ Vựng Unit 4, 5, 6</span>
               </div>
-              <p className="text-emerald-100/90 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
                 Học kỹ toàn bộ từ vựng mới <strong>Unit 4, Unit 5, Unit 6</strong> (trọng tâm đề thi Cuối kỳ 1). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ phản xạ.
               </p>
             </div>
@@ -1603,12 +1603,12 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
 
           {/* Nhiệm vụ 2: Làm kỹ đề cương Cuối kỳ 1 */}
-          <div className="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-400/40 flex flex-col justify-between gap-2 shadow-xs">
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-teal-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
             <div>
-              <div className="font-black text-cyan-300 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-teal-900 flex items-center gap-1.5 text-xs sm:text-sm">
                 <span>📑 2. Đề Cương Cuối Kỳ 1</span>
               </div>
-              <p className="text-cyan-100/90 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
                 Nắm vững các chủ điểm ngữ pháp Unit 4 - 6, hoàn thành toàn bộ câu hỏi trắc nghiệm, phát âm và bài đọc hiểu trong đề cương Cuối kỳ 1.
               </p>
             </div>
@@ -1618,12 +1618,12 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
 
           {/* Nhiệm vụ 3: Làm bài Cuối kỳ 1 (thi thử) */}
-          <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-400/40 flex flex-col justify-between gap-2 shadow-xs">
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-amber-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
             <div>
-              <div className="font-black text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-amber-900 flex items-center gap-1.5 text-xs sm:text-sm">
                 <span>📝 3. Luyện Đề Cuối Kỳ 1</span>
               </div>
-              <p className="text-amber-100/90 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
                 Vào mục <strong>"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm các đề minh họa Cuối học kỳ 1 bấm giờ chuẩn ma trận 40 câu hỏi Bộ GD&ĐT để rèn phản xạ và tránh bẫy đề thi.
               </p>
             </div>
@@ -1633,12 +1633,12 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
 
           {/* Nhiệm vụ 4: Giữ vững tinh thần bứt phá */}
-          <div className="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-400/50 flex flex-col justify-between gap-2 shadow-xs">
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-rose-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
             <div>
-              <div className="font-black text-rose-300 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-rose-900 flex items-center gap-1.5 text-xs sm:text-sm">
                 <span>🎯 4. Bứt Phá Điểm 10 CK1</span>
               </div>
-              <p className="text-rose-100/90 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
                 Duy trì việc vào học mỗi ngày, tích lũy điểm thi đua chuyên cần, hoàn thành nhiệm vụ từng bài và giúp đỡ các bạn trong tổ cùng tiến bộ.
               </p>
             </div>
@@ -1650,7 +1650,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
         {/* Chân thông báo & Lời chúc */}
         <div className="mt-3.5 pt-2.5 border-t border-amber-400/20 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span className="text-amber-200 font-semibold italic">
+          <span className="text-emerald-900 font-bold italic">
             ⭐ Lời chúc từ Thầy Đinh Thành: "Kiên trì mỗi ngày - Chăm chỉ ôn luyện - Làm chủ Unit 4, 5, 6 để đạt điểm 9, 10 Cuối Kỳ 1 rực rỡ!"
           </span>
           <span className="text-cyan-300 font-bold">
@@ -1661,7 +1661,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP (3D GLASSMORPHISM) ==================== */}
 
-      <div className="bg-gradient-to-r from-slate-900/90 via-indigo-950/80 to-slate-950/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] flex flex-col md:flex-row md:items-center justify-between gap-4 text-white">
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border-2 border-emerald-400 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4 text-slate-900">
 
         <div className="flex items-center gap-3">
 
@@ -1675,7 +1675,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
             <div className="flex items-center gap-2 flex-wrap">
 
-              <h3 className="text-base sm:text-lg font-black text-amber-300 drop-shadow-sm">
+              <h3 className="text-base sm:text-lg font-black text-slate-950">
 
                 Học & Luyện Tập Từ Vựng Tiếng Anh
 
@@ -1695,7 +1695,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
             </div>
 
-            <p className="text-xs text-slate-300 font-bold mt-0.5">
+            <p className="text-xs text-slate-600 font-semibold mt-0.5">
 
               Tự động hiển thị đúng chương trình của lớp em để tránh nhầm lẫn • Tích hợp đầy đủ các dạng luyện tập
 
@@ -1794,7 +1794,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             {/* Cột phải: 4 Thẻ điểm số chi tiết 3D Glassmorphism - Tương phản cực cao */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0">
               {/* Thẻ 1: Tổng điểm thi đua */}
-              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border-2 border-amber-400 shadow-md text-center">
+              <div className="p-3 rounded-2xl bg-white border-2 border-amber-400 shadow-sm text-center">
                 <span className="text-[10px] uppercase font-black text-amber-300 block tracking-wider">
                   Tổng Điểm Thi Đua
                 </span>
@@ -1802,11 +1802,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   <span>{(liveStudent || currentStudent)?.totalMeritPoints || 0}</span>
                   <span className="text-xs font-bold text-amber-300">đ</span>
                 </div>
-                <span className="text-[10px] text-slate-200 block font-bold">Bảo toàn vĩnh viễn</span>
+                <span className="text-[10px] text-slate-500 block font-bold">Bảo toàn vĩnh viễn</span>
               </div>
 
               {/* Thẻ 2: Điểm từ vựng */}
-              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-emerald-400/80 shadow-md text-center">
+              <div className="p-3 rounded-2xl bg-white border-2 border-emerald-400 shadow-sm text-center">
                 <span className="text-[10px] uppercase font-black text-emerald-300 block">
                   Điểm Từ Vựng
                 </span>
@@ -1814,11 +1814,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   <span>{(liveStudent || currentStudent)?.vocabPoints || 0}</span>
                   <span className="text-xs font-bold text-emerald-300">đ</span>
                 </div>
-                <span className="text-[10px] text-slate-200 block font-bold">Flashcard &amp; Bài tập</span>
+                <span className="text-[10px] text-slate-500 block font-bold">Flashcard &amp; Bài tập</span>
               </div>
 
               {/* Thẻ 3: Điểm luyện tập & Chuyên cần */}
-              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-blue-400/80 shadow-md text-center">
+              <div className="p-3 rounded-2xl bg-white border-2 border-blue-400 shadow-sm text-center">
                 <span className="text-[10px] uppercase font-black text-cyan-300 block">
                   Luyện Tập &amp; Chuyên Cần
                 </span>
@@ -1826,11 +1826,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   <span>{((liveStudent || currentStudent)?.practicePoints || 0) + ((liveStudent || currentStudent)?.attendancePoints || 0)}</span>
                   <span className="text-xs font-bold text-cyan-300">đ</span>
                 </div>
-                <span className="text-[10px] text-slate-200 block font-bold">Đăng nhập &amp; Trắc nghiệm</span>
+                <span className="text-[10px] text-slate-500 block font-bold">Đăng nhập &amp; Trắc nghiệm</span>
               </div>
 
               {/* Thẻ 4: Thứ hạng thi đua toàn trường */}
-              <div className="p-3 rounded-2xl bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-xl border border-purple-400/80 shadow-md text-center">
+              <div className="p-3 rounded-2xl bg-white border-2 border-purple-400 shadow-sm text-center">
                 <span className="text-[10px] uppercase font-black text-purple-300 block">
                   Hạng Toàn Trường
                 </span>
@@ -1838,7 +1838,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   <span className="text-sm font-bold text-purple-400">Top</span>
                   <span>{studentRank}</span>
                 </div>
-                <span className="text-[10px] text-slate-200 block font-bold">Bảng Vàng Thi Đua</span>
+                <span className="text-[10px] text-slate-500 block font-bold">Bảng Vàng Thi Đua</span>
               </div>
             </div>
           </div>
@@ -1846,7 +1846,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* ==================== 2. THANH CHỌN BÀI (UNIT) 3D TRONG SUỐT GLASSMORPHISM & TỐI ƯU DI ĐỘNG ==================== */}
-      <div className="bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-slate-900/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400/60 shadow-[0_15px_40px_rgba(16,185,129,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] space-y-3.5 text-white">
+      <div className="bg-white/95 backdrop-blur-xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400 shadow-lg space-y-3.5 text-slate-900">
         {/* Hàng trên: Chọn Unit & Công cụ âm thanh */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           
@@ -1856,10 +1856,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
               📖
             </span>
             <div>
-              <span className="text-sm sm:text-base md:text-lg font-black text-amber-300 uppercase tracking-wider block">
+              <span className="text-sm sm:text-base md:text-lg font-black text-emerald-950 uppercase tracking-wider block">
                 Chọn Bài Học (Unit 1 - 12):
               </span>
-              <span className="text-[11px] text-slate-200 font-bold block sm:hidden">
+              <span className="text-[11px] text-slate-700 font-bold block sm:hidden">
                 Đang học: Unit {selectedUnit} ({filteredVocab.length} từ)
               </span>
             </div>
@@ -1882,7 +1882,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 className="w-full py-3 px-3.5 rounded-2xl bg-emerald-800 text-white font-black text-sm sm:text-base border-2 border-emerald-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer"
               >
                 {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
-                  <option key={u.unitNumber} value={u.unitNumber} className="bg-emerald-950 text-white font-bold text-sm sm:text-base">
+                  <option key={u.unitNumber} value={u.unitNumber} className="bg-white text-slate-900 font-bold text-sm sm:text-base">
                     Unit {u.unitNumber}: {u.title} ({u.wordCount} từ){[4, 5, 6].includes(u.unitNumber) ? ' ★ TRỌNG TÂM CUỐI KỲ 1 (CK1)' : ([1, 2, 3].includes(u.unitNumber) ? ' (GK1 Đã Học)' : '')}
                   </option>
                 ))}
@@ -1891,7 +1891,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
             {/* 3 Nút Bấm Chạm Nhanh CK1 Dành Cho Học Sinh Dùng Điện Thoại (Lộ trình mới Unit 4, 5, 6) */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-              <span className="text-[10px] text-emerald-300 font-black uppercase tracking-wider shrink-0">CK1:</span>
+              <span className="text-[10px] text-emerald-900 font-black uppercase tracking-wider shrink-0">CK1:</span>
               {[4, 5, 6].map(n => {
                 const isAct = selectedUnit === n;
                 return (
@@ -1909,7 +1909,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95 ${
                       isAct
                         ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-lg border-2 border-white scale-102'
-                        : 'bg-white/20 text-white font-black border-2 border-white/35 backdrop-blur-xl hover:bg-emerald-600/35'
+                        : 'bg-emerald-50 text-emerald-950 font-black border-2 border-emerald-300 hover:bg-emerald-100 shadow-xs'
                     }`}
                   >
                     <span>Unit {n}</span>
@@ -1943,7 +1943,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   className={`px-4 py-2.5 rounded-2xl font-black text-sm sm:text-base md:text-lg transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
                     isAct
                       ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.85)] border-2 border-emerald-200 -translate-y-1 scale-105'
-                      : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl hover:border-emerald-300 hover:text-white shadow-md hover:-translate-y-0.5'
+                      : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 hover:border-emerald-500 hover:text-emerald-900 shadow-xs hover:-translate-y-0.5'
                   }`}
                   title={`${u.title} (${u.wordCount} từ)`}
                 >
@@ -2012,7 +2012,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             <div className="flex items-center gap-2">
               <span className="p-1.5 rounded-lg bg-emerald-600 text-white font-black text-xs shrink-0 shadow-xs">🚀 Nhiệm Vụ CK1</span>
               <div>
-                <span className="font-extrabold text-white">
+                <span className="font-extrabold text-slate-900">
                   Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/{missionState?.mission1.units[selectedUnit]?.totalRequiredModes || 8} dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
                 </span>
                 <span className="text-emerald-200 block text-[11px] font-medium mt-0.5">
@@ -2031,7 +2031,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             <div className="flex items-center gap-2">
               <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0 shadow-xs">🎯 Ôn Lại GK1</span>
               <div>
-                <span className="font-extrabold text-white">
+                <span className="font-extrabold text-slate-900">
                   Unit {selectedUnit}: Đã hoàn thành trong đợt Giữa Kỳ 1 ({missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/8 dạng bài đạt chất lượng).
                 </span>
                 <span className="text-cyan-200 block text-[11px] font-medium mt-0.5">
@@ -2073,15 +2073,15 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       </div>
 
       {/* ==================== 3. THANH CHỌN 8 DẠNG BÀI TẬP TỪ VỰNG 3D TRONG SUỐT GLASSMORPHISM ==================== */}
-      <div className="bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-slate-900/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400/60 shadow-[0_15px_40px_rgba(16,185,129,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] space-y-3.5 text-white">
-        <div className="flex items-center justify-between gap-2 text-xs font-bold text-white flex-wrap">
+      <div className="bg-white/95 backdrop-blur-xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400 shadow-lg space-y-3.5 text-slate-900">
+        <div className="flex items-center justify-between gap-2 text-xs font-bold flex-wrap">
           <span className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
-            <span className="text-amber-300 font-black uppercase tracking-wider text-sm sm:text-base">
-              Các Dạng Luyện Từ Vựng 3D Trong Suốt (Chữ To Tương Phản Rõ Nét):
+            <Sparkles className="w-5 h-5 text-emerald-600" />
+            <span className="text-emerald-950 font-black uppercase tracking-wider text-sm sm:text-base md:text-lg">
+              Các Dạng Luyện Từ Vựng (Chữ To • Nền Sáng Tươi Tắn • Rõ Nét):
             </span>
           </span>
-          <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 border border-blue-400/30 font-bold text-[11px]">
+          <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border-2 border-emerald-300 font-black text-xs sm:text-sm shadow-xs">
             Khối {selectedGrade} • Unit {selectedUnit} ({filteredVocab.length} từ)
           </span>
         </div>
@@ -2096,7 +2096,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'flashcard'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>🃏 1. Thẻ Nhớ</span>
@@ -2110,7 +2110,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'match'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>🧩 2. Ghép Cặp</span>
@@ -2124,7 +2124,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'quiz'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>🎯 3. Trắc Nghiệm</span>
@@ -2138,7 +2138,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'listen'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>🎧 4. Luyện Nghe</span>
@@ -2152,7 +2152,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'spelling'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>✍️ 5. Luyện Gõ</span>
@@ -2166,7 +2166,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'chant'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
             title="Bài Chant Nhạc Beat Điệu Call & Response"
           >
@@ -2181,7 +2181,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'scramble'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>🔤 7. Xếp Chữ</span>
@@ -2195,7 +2195,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'blitz'
                 ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-black border-2 border-emerald-300/80 shadow-xs hover:border-emerald-500 hover:text-emerald-900 -translate-y-0.5'
             }`}
           >
             <span>⚡ 8. Phản Xạ</span>
@@ -2223,7 +2223,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
               onClick={() => setIsFlipped(!isFlipped)}
 
-              className="w-full min-h-[320px] sm:min-h-[360px] rounded-3xl p-6 sm:p-8 border-2 border-blue-400/60 bg-gradient-to-br from-slate-950/95 via-blue-950/90 to-indigo-950/95 text-white shadow-[0_20px_50px_rgba(37,99,235,0.4),inset_0_2px_4px_rgba(255,255,255,0.3)] flex flex-col justify-between cursor-pointer select-none transition-all hover:border-blue-300 hover:scale-[1.01] relative overflow-hidden backdrop-blur-2xl"
+              className="w-full min-h-[320px] sm:min-h-[360px] rounded-3xl p-6 sm:p-8 border-2 border-emerald-400 bg-gradient-to-br from-white via-emerald-50/40 to-teal-50/50 text-slate-900 shadow-[0_15px_45px_rgba(16,185,129,0.18)] flex flex-col justify-between cursor-pointer select-none transition-all hover:border-emerald-500 hover:scale-[1.01] relative overflow-hidden"
 
             >
 
@@ -2263,13 +2263,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                 <div className="text-center py-6 sm:py-8 space-y-3">
 
-                  <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white flex items-center justify-center gap-3">
+                  <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-950 flex items-center justify-center gap-3">
 
                     <span>{currentWord.word}</span>
 
                   </h2>
 
-                  <div className="flex items-center justify-center gap-2 text-base sm:text-xl font-mono text-sky-300">
+                  <div className="flex items-center justify-center gap-2 text-xl sm:text-2xl font-mono text-emerald-700 font-black">
 
                     <span>/{currentWord.phonetic}/</span>
 
@@ -2285,7 +2285,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                       }}
 
-                      className="p-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-white shadow-md transition hover:scale-110 active:scale-95 cursor-pointer ml-1"
+                      className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition hover:scale-110 active:scale-95 cursor-pointer ml-1"
 
                       title="Nghe phát âm chuẩn"
 
@@ -2297,7 +2297,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   </div>
 
-                  <p className="text-xs sm:text-sm font-bold text-amber-300 pt-2 flex items-center justify-center gap-1.5">
+                  <p className="text-xs sm:text-sm font-black text-emerald-800 pt-2 flex items-center justify-center gap-1.5">
 
                     💡 Chạm vào thẻ bất kỳ đâu để lật xem nghĩa & ví dụ
 
@@ -2309,9 +2309,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                 <div className="text-center py-4 sm:py-6 space-y-3">
 
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Nghĩa Tiếng Việt</span>
+                  <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Nghĩa Tiếng Việt</span>
 
-                  <h3 className="text-2xl sm:text-4xl font-black text-amber-300">
+                  <h3 className="text-3xl sm:text-5xl font-black text-emerald-900">
 
                     {currentWord.meaning}
 
@@ -2319,9 +2319,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   {currentWord.example && (
 
-                    <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 text-left space-y-1.5 max-w-xl mx-auto">
+                    <div className="mt-4 p-4 rounded-2xl bg-white border-2 border-emerald-200 shadow-sm text-left space-y-1.5 max-w-xl mx-auto">
 
-                      <p className="text-xs sm:text-sm font-semibold text-sky-200">
+                      <p className="text-xs sm:text-sm font-bold text-slate-900">
 
                         💬 "{currentWord.example}"
 
@@ -2363,7 +2363,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   }}
 
-                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 font-black text-xs sm:text-sm flex items-center gap-1.5 transition cursor-pointer border-2 border-emerald-300 shadow-xs"
 
                 >
 
@@ -2387,7 +2387,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   }}
 
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-black text-xs shadow-md flex items-center gap-2 transition hover:scale-105 cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs sm:text-sm shadow-md border-2 border-emerald-200 flex items-center gap-2 transition hover:scale-105 cursor-pointer"
 
                 >
 
@@ -2417,7 +2417,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   }}
 
-                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 font-black text-xs sm:text-sm flex items-center gap-1.5 transition cursor-pointer border-2 border-emerald-300 shadow-xs"
 
                 >
 
@@ -2501,7 +2501,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
           {/* CỘT PHẢI: BẢNG TỪ GỘP CHUNG RÚT GỌN */}
 
-          <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] flex flex-col h-[420px] sm:h-[460px] text-white">
+          <div className="bg-white p-4 sm:p-5 rounded-3xl border-2 border-emerald-400 shadow-xl flex flex-col h-[420px] sm:h-[460px] text-slate-900">
 
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 gap-2">
 
@@ -2531,7 +2531,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                   placeholder="Tìm từ / nghĩa..."
 
-                  className="w-full pl-8 pr-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white"
+                  className="w-full pl-8 pr-2.5 py-2 rounded-xl border-2 border-emerald-300 bg-slate-50 text-xs sm:text-sm text-slate-950 font-bold placeholder-slate-400"
 
                 />
 
@@ -2575,7 +2575,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                       <span className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-bold">{idx + 1}.</span>
 
-                      <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                      <span className="text-xs sm:text-sm md:text-base font-black text-slate-950">
 
                         {item.word}
 
@@ -2589,7 +2589,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     </div>
 
-                    <p className="text-xs text-slate-800 dark:text-slate-100 font-semibold line-clamp-1 mt-0.5">
+                    <p className="text-xs sm:text-sm text-emerald-800 font-bold line-clamp-1 mt-0.5">
 
                       {item.meaning}
 
@@ -2661,7 +2661,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'quiz' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-emerald-400/50 shadow-[0_20px_50px_rgba(16,185,129,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
+        <div className="bg-white p-4 sm:p-6 rounded-3xl border-2 border-emerald-400 shadow-xl max-w-2xl mx-auto space-y-4 text-slate-900">
 
           {!quizFinished ? (
 
@@ -2819,13 +2819,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     optClasses = `
 
-                      bg-white/10 dark:bg-slate-800/80 backdrop-blur-md
+                      bg-white hover:bg-emerald-50
 
-                      border-2 border-white/20 hover:border-emerald-400 hover:bg-white/20
+                      border-2 border-slate-200 hover:border-emerald-500
 
-                      text-white font-extrabold text-xs sm:text-sm
+                      text-slate-900 font-extrabold text-xs sm:text-sm
 
-                      shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                      shadow-sm
 
                       hover:-translate-y-0.5 active:translate-y-0.5
 
@@ -3053,7 +3053,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'listen' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-purple-400/50 shadow-[0_20px_50px_rgba(168,85,247,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
+        <div className="bg-white p-4 sm:p-6 rounded-3xl border-2 border-emerald-400 shadow-xl max-w-2xl mx-auto space-y-4 text-slate-900">
 
           {!listenFinished ? (
 
@@ -3213,13 +3213,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     optClasses = `
 
-                      bg-white/10 dark:bg-slate-800/80 backdrop-blur-md
+                      bg-white hover:bg-emerald-50
 
-                      border-2 border-white/20 hover:border-purple-400 hover:bg-white/20
+                      border-2 border-slate-200 hover:border-emerald-500
 
-                      text-white font-black text-sm sm:text-base
+                      text-slate-900 font-black text-sm sm:text-base
 
-                      shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
+                      shadow-sm
 
                       hover:-translate-y-0.5 active:translate-y-0.5
 
@@ -3429,7 +3429,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'match' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl p-5 sm:p-8 rounded-3xl border-2 border-indigo-400/50 shadow-[0_25px_60px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-4xl mx-auto space-y-6 text-white">
+        <div className="bg-white p-5 sm:p-8 rounded-3xl border-2 border-emerald-400 shadow-xl max-w-4xl mx-auto space-y-6 text-slate-900">
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
 
@@ -3805,7 +3805,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'spelling' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-sky-400/50 shadow-[0_20px_50px_rgba(14,165,233,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
+        <div className="bg-white p-4 sm:p-6 rounded-3xl border-2 border-emerald-400 shadow-xl max-w-2xl mx-auto space-y-4 text-slate-900">
 
           {!spellFinished ? (
 
@@ -4169,7 +4169,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'chant' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-rose-400/50 shadow-[0_20px_50px_rgba(244,63,94,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
+        <div className="bg-white rounded-3xl border-2 border-emerald-400 shadow-xl overflow-hidden space-y-3 text-slate-900">
 
           <div className="bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
 
@@ -4249,7 +4249,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'scramble' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-violet-400/50 shadow-[0_20px_50px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
+        <div className="bg-white rounded-3xl border-2 border-emerald-400 shadow-xl overflow-hidden space-y-3 text-slate-900">
 
           <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
 
@@ -4329,7 +4329,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'blitz' && (
 
-        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-amber-400/50 shadow-[0_20px_50px_rgba(245,158,11,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
+        <div className="bg-white rounded-3xl border-2 border-emerald-400 shadow-xl overflow-hidden space-y-3 text-slate-900">
 
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-slate-950 flex items-center justify-between flex-wrap gap-2">
 
@@ -4365,7 +4365,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                 onClick={handleRewardUnitCompletion}
 
-                className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-amber-300 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center gap-1.5"
 
               >
 

@@ -82,7 +82,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
   const promoPts = loginRewardInfo?.points || 15;
 
   return (
-    <div className="mb-4 rounded-3xl bg-gradient-to-br from-emerald-950/95 via-teal-950/90 to-slate-900/95 border-2 border-emerald-400/60 shadow-[0_15px_35px_rgba(16,185,129,0.25)] text-white overflow-hidden transition-all duration-300">
+    <div className="mb-4 rounded-3xl bg-white border-2 border-emerald-400 shadow-lg text-slate-900 overflow-hidden transition-all duration-300">
       {/* TOAST THÔNG BÁO NHANH */}
       {toastMsg && (
         <div className="bg-amber-400 text-slate-950 px-4 py-1.5 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in">
@@ -92,14 +92,14 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
       )}
 
       {/* 1. THANH LỜI NHẮC GỌN NHẸ: LỊCH KIỂM TRA + DỤNG CỤ + TẶNG ĐIỂM */}
-      <div className="p-3 sm:p-3.5 bg-gradient-to-r from-emerald-900/95 via-teal-950/90 to-emerald-900/95 border-b border-emerald-400/40 flex flex-wrap items-center justify-between gap-2.5">
+      <div className="p-3 sm:p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100 border-b-2 border-emerald-300 flex flex-wrap items-center justify-between gap-2.5 text-slate-900">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center shadow-md font-black shrink-0">
             <Bell className="w-4 h-4 text-slate-950" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-sm sm:text-base md:text-lg font-black text-white tracking-tight">
+              <h3 className="text-sm sm:text-base md:text-lg font-black text-emerald-950 tracking-tight">
                 LỘ TRÌNH HỌC MỚI: UNIT 4, 5, 6 &amp; NHẬN NHIỆM VỤ CUỐI KỲ 1
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-400 text-slate-950 shadow-2xs">
@@ -111,18 +111,18 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             </div>
 
             {/* DÒNG NHẮC LỊCH VÀ DỤNG CỤ ĐƠN GIẢN - CHỮ TO RÕ RÀNG */}
-            <div className="text-xs sm:text-sm md:text-[15px] text-blue-100 font-medium mt-1.5 flex items-center gap-2 sm:gap-3 flex-wrap">
-              <span className="text-amber-300 font-black flex items-center gap-1.5">
+            <div className="text-xs sm:text-sm md:text-[15px] text-slate-700 font-semibold mt-1.5 flex items-center gap-2 sm:gap-3 flex-wrap">
+              <span className="text-amber-800 font-black flex items-center gap-1.5">
                 <span>📢 Lịch thi:</span>
                 <strong className="underline decoration-amber-400 underline-offset-2">Chiều Thứ 2 (02/11/2026)</strong>
               </span>
-              <span className="text-white/40 hidden sm:inline">•</span>
-              <span className="text-cyan-200 font-bold flex items-center gap-1.5">
+              <span className="text-slate-400 hidden sm:inline">•</span>
+              <span className="text-teal-800 font-bold flex items-center gap-1.5">
                 <span>✏️ Dụng cụ:</span>
                 <strong>2 bút chì 2B gọt sẵn + tẩy mềm + bút mực</strong>
               </span>
-              <span className="text-white/40 hidden sm:inline">•</span>
-              <span className="text-emerald-300 font-black bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-500/30">
+              <span className="text-slate-400 hidden sm:inline">•</span>
+              <span className="text-emerald-900 font-black bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
                 🎁 +{promoPts}đ Chuyên cần
               </span>
             </div>
@@ -137,7 +137,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border ${
               isBellEnabled 
                 ? 'bg-amber-400/20 text-amber-300 border-amber-400/40 hover:bg-amber-400/30' 
-                : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+                : 'bg-emerald-50 text-emerald-800 border-2 border-emerald-300 hover:bg-emerald-100'
             }`}
             title={isBellEnabled ? 'Đang bật chuông nhắc nhở' : 'Bấm để bật chuông nhắc nhở'}
           >
@@ -320,7 +320,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               <button
                 type="button"
                 onClick={() => setShowFullTips(!showFullTips)}
-                className="text-xs sm:text-sm font-bold text-cyan-300 hover:text-white transition cursor-pointer flex items-center gap-1"
+                className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-900 transition cursor-pointer flex items-center gap-1"
               >
                 <span>{showFullTips ? 'Thu gọn mẹo' : 'Xem chi tiết mẹo'}</span>
                 {showFullTips ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -328,21 +328,21 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             </div>
 
             {/* DÒNG CHIẾN THUẬT RÚT GỌN 3 Ý CỐT LÕI */}
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm text-blue-100 font-medium">
-              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
-                <span className="text-amber-400 font-black shrink-0">1. Ngữ âm:</span>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm text-slate-800 font-medium">
+              <div className="p-2.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 flex items-center gap-2 text-slate-800">
+                <span className="text-amber-800 font-black shrink-0">1. Ngữ âm:</span>
                 <span className="truncate" title="Đuôi -s: thời phong kiến f,p,k,t,th -> /s/. Đuôi -ed: t,d -> /id/">
                   Đuôi <em>-s</em> (f-p-k-t-th ➔ /s/), <em>-ed</em> (t,d ➔ /id/).
                 </span>
               </div>
-              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
-                <span className="text-emerald-400 font-black shrink-0">2. Ngữ pháp:</span>
+              <div className="p-2.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 flex items-center gap-2 text-slate-800">
+                <span className="text-emerald-800 font-black shrink-0">2. Ngữ pháp:</span>
                 <span className="truncate" title="Thói quen -> Hiện tại đơn; Quá khứ -> V2/-ed; sau like/love -> V-ing">
                   Thói quen ➔ HTĐ; Quá khứ ➔ V2/-ed; like/love ➔ V-ing.
                 </span>
               </div>
-              <div className="p-2 rounded-lg bg-black/30 border border-white/10 flex items-center gap-2">
-                <span className="text-cyan-400 font-black shrink-0">3. Kỹ năng:</span>
+              <div className="p-2.5 rounded-xl bg-emerald-50 border-2 border-emerald-200 flex items-center gap-2 text-slate-800">
+                <span className="text-teal-800 font-black shrink-0">3. Kỹ năng:</span>
                 <span className="truncate" title="Câu dễ làm trước, khó làm sau. Gạch chân từ khóa. Tô kín ô trắc nghiệm!">
                   Dễ làm trước, khó làm sau; tô kín ô đáp án 2B.
                 </span>
@@ -351,15 +351,15 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
 
             {/* CHI TIẾT MẸO KHI HỌC SINH MUỐN XEM ĐẦY ĐỦ */}
             {showFullTips && (
-              <div className="mt-2 pt-2 border-t border-blue-500/20 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-200">
-                <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-700/50 space-y-1">
-                  <strong className="text-amber-300 block">🔊 Ngữ âm &amp; Trọng âm:</strong>
+              <div className="mt-2 pt-2 border-t border-emerald-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-800">
+                <div className="p-2.5 rounded-xl bg-white border-2 border-emerald-200 space-y-1 shadow-xs text-slate-800">
+                  <strong className="text-amber-900 block">🔊 Ngữ âm &amp; Trọng âm:</strong>
                   <p>• <strong>Đuôi -s/-es:</strong> Nhớ <em>"Thời phong kiến f-p-k-t-th"</em> ➔ <code>/s/</code>; đuôi <em>s, x, ch, sh, z, ge</em> ➔ <code>/iz/</code>; còn lại ➔ <code>/z/</code>.</p>
                   <p>• <strong>Đuôi -ed:</strong> Tận cùng <em>t, d</em> ➔ <code>/id/</code>; tận cùng <em>p, k, f, s, sh, ch</em> ➔ <code>/t/</code>; còn lại ➔ <code>/d/</code>.</p>
                   <p>• <strong>Trọng âm từ 2 âm tiết:</strong> Danh/Tính từ thường nhấn <strong>âm 1</strong>; Động từ nhấn <strong>âm 2</strong>.</p>
                 </div>
-                <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-700/50 space-y-1">
-                  <strong className="text-cyan-300 block">📖 Chiến thuật Đọc hiểu &amp; Làm bài:</strong>
+                <div className="p-2.5 rounded-xl bg-white border-2 border-emerald-200 space-y-1 shadow-xs text-slate-800">
+                  <strong className="text-teal-900 block">📖 Chiến thuật Đọc hiểu &amp; Làm bài:</strong>
                   <p>• <strong>Đọc câu hỏi trước:</strong> Gạch chân từ khóa (tên riêng, số năm, địa danh) rồi quét vào bài tìm câu trả lời.</p>
                   <p>• <strong>Quản lý thời gian:</strong> 40 câu làm trong 45 phút ➔ Mỗi câu khoảng 1 phút, để dành 5 phút cuối kiểm tra tô đáp án.</p>
                   <p>• <strong>Tuyệt đối không bỏ trống:</strong> Luôn tô kín 100% các ô trên phiếu trắc nghiệm bằng bút chì 2B.</p>
