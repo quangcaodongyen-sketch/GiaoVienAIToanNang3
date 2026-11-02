@@ -1792,7 +1792,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               Hiện Chưa Có Mã Đề Kiểm Tra Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Hệ thống hiện tại lưu trữ <b>đầy đủ các mã đề chuẩn Giữa Học Kỳ 1 Lớp 6: Mã 601, Mã 602, Mã 603, Mã 604, Mã 605</b> và <b>Lớp 8: Đủ 3 mã đề chuẩn (Mã 801, Mã 802, Mã 803)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
+              Hệ thống hiện tại lưu trữ <b>đầy đủ các mã đề chuẩn Giữa Học Kỳ 1 toàn trường THCS Đồng Yên: Lớp 6 (Mã 601 - 605), Lớp 7 (Mã 701 - 703), Lớp 8 (Mã 801 - 803), Lớp 9 (Mã 901 - 903)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
             </p>
           </div>
           <div className="pt-2 flex items-center justify-center gap-2.5 flex-wrap">
@@ -1835,28 +1835,78 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                 </button>
               </>
             )}
+            {(!studentGrade || studentGrade === 7) && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(7); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>📙 Lớp 7 - Mã 701 (Tự đảo 🎲)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(7); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-600 to-amber-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>📗 Lớp 7 - Mã 702 (Tự đảo 🎲)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(7); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-red-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>📕 Lớp 7 - Mã 703 (Tự đảo 🎲)</span>
+                </button>
+              </>
+            )}
             {(!studentGrade || studentGrade === 8) && (
               <>
                 <button
                   type="button"
                   onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🎓 Lớp 8 - Mã 801 (Tự đảo 🎲)</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🎓 Lớp 8 - Mã 802 (Tự đảo 🎲)</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🎓 Lớp 8 - Mã 803 (Tự đảo 🎲)</span>
+                </button>
+              </>
+            )}
+            {(!studentGrade || studentGrade === 9) && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(9); setExamType('giua-ky-1'); setSelectedExamIndex(0); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>🎓 Lớp 9 - Mã 901 (Tự đảo 🎲)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(9); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>🎓 Lớp 9 - Mã 902 (Tự đảo 🎲)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedGrade(9); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
+                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-800 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>🎓 Lớp 9 - Mã 903 (Tự đảo 🎲)</span>
                 </button>
               </>
             )}

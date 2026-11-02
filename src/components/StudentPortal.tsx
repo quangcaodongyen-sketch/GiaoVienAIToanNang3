@@ -64,6 +64,8 @@ import { StudentStudyReminder } from './StudentStudyReminder';
 import { English8RevisionPortal } from './English8RevisionPortal';
 
 import { English6RevisionPortal } from './English6RevisionPortal';
+import { English7RevisionPortal } from './English7RevisionPortal';
+import { English9RevisionPortal } from './English9RevisionPortal';
 
 import { UnifiedVocabPortal } from './UnifiedVocabPortal';
 
@@ -2583,7 +2585,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
   const [competitionSubTab, setCompetitionSubTab] = useState<'all' | 'grade' | 'class' | 'teams'>('all');
-  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e6' | 'teams'>(() => {
+  const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e7' | 'decuong_e6' | 'decuong_e9' | 'teams'>(() => {
 
     try {
 
@@ -2655,7 +2657,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       onlinePresenceService.updateAction('Đang làm Đề Kiểm Tra GK1');
     } else if (activeTab === 'quiz') {
       onlinePresenceService.updateAction('Đang làm trắc nghiệm 5 phút');
-    } else if (['decuong_e8', 'decuong_e6', 'sgk'].includes(activeTab)) {
+    } else if (['decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk'].includes(activeTab)) {
       onlinePresenceService.updateAction('Đang ôn Đề Cương GK1');
     } else if (['teams', 'leaderboard'].includes(activeTab)) {
       onlinePresenceService.updateAction('Đang xem Thi Đua 4 Tổ & Bảng Vàng');
@@ -2724,18 +2726,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       // Tự động đồng bộ tab đề cương theo đúng khối lớp của học sinh
 
-      if (currentStudent.grade === 6 && activeTab === 'decuong_e8') {
-
+      if (currentStudent.grade === 6 && ['decuong_e7', 'decuong_e8', 'decuong_e9'].includes(activeTab)) {
         setActiveTab('decuong_e6');
-
-      } else if (currentStudent.grade === 8 && activeTab === 'decuong_e6') {
-
+      } else if (currentStudent.grade === 7 && ['decuong_e6', 'decuong_e8', 'decuong_e9'].includes(activeTab)) {
+        setActiveTab('decuong_e7');
+      } else if (currentStudent.grade === 8 && ['decuong_e6', 'decuong_e7', 'decuong_e9'].includes(activeTab)) {
         setActiveTab('decuong_e8');
-
-      } else if (currentStudent.grade !== 6 && currentStudent.grade !== 8 && (activeTab === 'decuong_e8' || activeTab === 'decuong_e6')) {
-
+      } else if (currentStudent.grade === 9 && ['decuong_e6', 'decuong_e7', 'decuong_e8'].includes(activeTab)) {
+        setActiveTab('decuong_e9');
+      } else if (![6, 7, 8, 9].includes(currentStudent.grade) && ['decuong_e6', 'decuong_e7', 'decuong_e8', 'decuong_e9'].includes(activeTab)) {
         setActiveTab('vocab');
-
       }
 
     }
@@ -3674,7 +3674,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 type="button"
                 onClick={() => {
                   const g = currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.replace(/\D/g, ''), 10) || 8) : 8);
-                  setActiveTab(g === 6 ? 'decuong_e6' : 'decuong_e8');
+                  setActiveTab(g === 6 ? 'decuong_e6' : g === 7 ? 'decuong_e7' : g === 8 ? 'decuong_e8' : 'decuong_e9');
                 }}
                 className="px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 transition cursor-pointer"
               >
@@ -3712,18 +3712,18 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           <button
             type="button"
             onClick={() => {
-              if (!['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)) {
+              if (!['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg'].includes(activeTab)) {
                 setActiveTab('vocab');
               }
             }}
             className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
-              ['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab)
+              ['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab)
                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
                 : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
             }`}
             title="Bước 3: Luyện từ vựng SGK 3D và Ôn đề cương trọng tâm Giữa Kỳ 1"
           >
-            <BookOpen className={`w-5 h-5 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-600'}`} />
+            <BookOpen className={`w-5 h-5 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-600'}`} />
             <div className="min-w-0">
               <div className="text-xs sm:text-sm font-black truncate">3. VÀO HỌC</div>
               <div className="text-[10px] opacity-80 truncate hidden sm:block">Từ Vựng &amp; Đề Cương</div>
@@ -3805,7 +3805,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       </div>
 
       {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 3: VÀO HỌC */}
-      {['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab) && (
+      {['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) && (
         <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-slate-500 font-bold px-1 hidden sm:inline">Nội dung học:</span>
@@ -3835,6 +3835,20 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </button>
             )}
 
+            {(!currentStudent || currentStudent.grade === 7) && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('decuong_e7')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                  activeTab === 'decuong_e7'
+                    ? 'bg-amber-600 text-white font-black shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+                }`}
+              >
+                <span>📖 2. Đề Cương GK1 Anh 7</span>
+              </button>
+            )}
+
             {(!currentStudent || currentStudent.grade === 8) && (
               <button
                 type="button"
@@ -3846,6 +3860,20 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 }`}
               >
                 <span>📖 2. Đề Cương GK1 Anh 8</span>
+              </button>
+            )}
+
+            {(!currentStudent || currentStudent.grade === 9) && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('decuong_e9')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                  activeTab === 'decuong_e9'
+                    ? 'bg-purple-600 text-white font-black shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-purple-50'
+                }`}
+              >
+                <span>📖 2. Đề Cương GK1 Anh 9</span>
               </button>
             )}
 
@@ -3955,7 +3983,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {/* NHẮC NHỞ NHẸ NẾU HỌC SINH ĐANG Ở BƯỚC 3 HOẶC BƯỚC 4 MÀ CHƯA ĐĂNG NHẬP */}
-      {!currentStudent && ['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'exam', 'quiz', 'hsg'].includes(activeTab) && (
+      {!currentStudent && ['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'exam', 'quiz', 'hsg'].includes(activeTab) && (
         <div className="p-3 bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-700 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-900 dark:text-amber-200 mb-3">
           <div className="flex items-center gap-2">
             <span className="text-base">💡</span>
@@ -4053,6 +4081,58 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       )}
 
+      {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 7 ==================== */}
+
+      {(!currentStudent || currentStudent.grade === 7) && activeTab === 'decuong_e7' && (
+
+        <English7RevisionPortal
+
+          student={currentStudent}
+
+          onGoToExam={() => setActiveTab('exam')}
+
+          onGoToVocab={() => setActiveTab('vocab')}
+
+          onCompleteSection={(secTitle, pts) => {
+            if (!currentStudent) return;
+            studentGradebookService.recordPracticeMerit(currentStudent.id, secTitle, pts);
+
+            const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
+
+            if (fresh) setCurrentStudent({ ...fresh });
+
+          }}
+
+        />
+
+      )}
+
+      {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 9 ==================== */}
+
+      {(!currentStudent || currentStudent.grade === 9) && activeTab === 'decuong_e9' && (
+
+        <English9RevisionPortal
+
+          student={currentStudent}
+
+          onGoToExam={() => setActiveTab('exam')}
+
+          onGoToVocab={() => setActiveTab('vocab')}
+
+          onCompleteSection={(secTitle, pts) => {
+            if (!currentStudent) return;
+            studentGradebookService.recordPracticeMerit(currentStudent.id, secTitle, pts);
+
+            const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
+
+            if (fresh) setCurrentStudent({ ...fresh });
+
+          }}
+
+        />
+
+      )}
+
 
 
       {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
@@ -4111,7 +4191,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 type="button"
 
-                onClick={() => setActiveTab('decuong_e8')}
+                onClick={() => {
+                  const g = currentStudent?.grade || 8;
+                  setActiveTab(g === 6 ? 'decuong_e6' : g === 7 ? 'decuong_e7' : g === 8 ? 'decuong_e8' : 'decuong_e9');
+                }}
 
                 className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition shrink-0 cursor-pointer flex items-center gap-1.5"
 
