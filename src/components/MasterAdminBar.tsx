@@ -90,7 +90,7 @@ export const MasterAdminBar: React.FC<MasterAdminBarProps> = ({
       if (s.className) classSet.add(s.className.trim());
     });
     if (classSet.size === 0) {
-      return ['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'];
+      return ['6A1', '6A2', '6A3', '6A4', '6A5', '7A1', '7A2', '7A3', '7A4', '7A5', '8A1', '8A2', '8A3', '8A4', '8A5', '9A1', '9A2', '9A3', '9A4'];
     }
     return Array.from(classSet).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
   }, [allStudents]);

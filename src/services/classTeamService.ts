@@ -494,12 +494,16 @@ class ClassTeamService {
   }
 
   /**
-   * Lấy Bảng xếp hạng Đua Top tất cả các tổ cùng một khối (20 tổ Khối 6 hoặc 20 tổ Khối 8)
+   * Lấy Bảng xếp hạng Đua Top tất cả các tổ cùng một khối (Khối 6, 7, 8, 9)
    */
   public getGradeTeamLeaderboard(grade: number): Array<ClassTeam & { rankInGrade: number }> {
     const classList = grade === 6 
       ? ['6A1', '6A2', '6A3', '6A4', '6A5'] 
-      : ['8A1', '8A2', '8A3', '8A4', '8A5'];
+      : grade === 7
+      ? ['7A1', '7A2', '7A3', '7A4', '7A5']
+      : grade === 8
+      ? ['8A1', '8A2', '8A3', '8A4', '8A5']
+      : ['9A1', '9A2', '9A3', '9A4'];
 
     const allTeams: ClassTeam[] = [];
     classList.forEach(cls => {

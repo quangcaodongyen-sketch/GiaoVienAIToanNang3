@@ -50,7 +50,7 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
   const [copiedRemindText, setCopiedRemindText] = useState<boolean>(false);
 
   // Danh sách 10 lớp chính thức của Thầy Thành
-  const officialClasses = ['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'];
+  const officialClasses = ['6A1', '6A2', '6A3', '6A4', '6A5', '7A1', '7A2', '7A3', '7A4', '7A5', '8A1', '8A2', '8A3', '8A4', '8A5', '9A1', '9A2', '9A3', '9A4'];
 
   // Dữ liệu 4 tổ của lớp đang chọn
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
@@ -456,7 +456,7 @@ export const ClassTeamBattleView: React.FC<ClassTeamBattleViewProps> = ({
                 <span>BẢNG VÀNG ĐUA TOP 20 TỔ KHỐI {currentGrade}</span>
               </h3>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                20 tổ của 5 lớp Khối {currentGrade} (6A1-6A5 hoặc 8A1-8A5) đua tài giành Cúp Vàng
+                {currentGrade === 9 ? '16 tổ của 4 lớp Khối 9' : `20 tổ của 5 lớp Khối ${currentGrade}`} đua tài giành Cúp Vàng
               </p>
             </div>
 

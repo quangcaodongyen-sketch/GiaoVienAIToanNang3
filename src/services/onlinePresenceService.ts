@@ -206,7 +206,7 @@ class OnlinePresenceService {
 
   // Sinh danh sách bạn học đang online dựa trên file officialStudentRoster.json độc lập
   private generateClassmatePresence(existingList: OnlineStudentItem[], now: number): OnlineStudentItem[] {
-    const defaultClasses = ['8A1', '8A2', '6A1', '6A4', '8A3', '6A3', '8A5'];
+    const defaultClasses = ['8A1', '8A2', '7A1', '9A1', '6A1', '7A2', '9A2', '6A4', '8A3', '7A3', '9A3', '6A3', '8A5'];
     const classmates: OnlineStudentItem[] = [];
 
     try {

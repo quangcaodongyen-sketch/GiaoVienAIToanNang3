@@ -1295,10 +1295,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
   };
 
-
-
-  const [regFullName, setRegFullName] = useState<string>('');
-
   const [nameAutocorrectNote, setNameAutocorrectNote] = useState<{
 
     original: string;
@@ -1314,8 +1310,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const [regUsernameUserEdited, setRegUsernameUserEdited] = useState<boolean>(false);
 
   const [regPassword, setRegPassword] = useState<string>('');
-
-  const [regClassName, setRegClassName] = useState<string>('8A1');
 
   const [regGrade, setRegGrade] = useState<number>(8);
 
@@ -1372,8 +1366,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const [regPhone, setRegPhone] = useState<string>('');
 
   const [regGender, setRegGender] = useState<'Nam' | 'Nữ'>('Nam');
-
-  const [regError, setRegError] = useState<string>('');
 
 
 
@@ -3016,16 +3008,53 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </span>
                 </div>
 
-                {/* KHỐI 8 */}
+                {/* KHỐI 9 */}
                 <div className="space-y-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    <span>Khối 9 (4 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                  </div>
+                  <div className="grid grid-cols-4 sm:grid-cols-4 gap-1.5">
+                    {['9A1', '9A2', '9A3', '9A4'].map(cls => {
+                      const isSelected = quickClassName.trim().toUpperCase() === cls;
+                      const count = studentGradebookService.getOfficialRoster(cls).length || 42;
+                      return (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setQuickClassName(cls);
+                            setQuickError('');
+                            const newRoster = studentGradebookService.getOfficialRoster(cls);
+                            if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
+                              setQuickFullName('');
+                              setQuickAutocorrectNote(null);
+                            }
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-purple-300 scale-[1.02]'
+                              : 'bg-purple-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-purple-200/70 dark:border-slate-600 hover:bg-purple-100'
+                          }`}
+                        >
+                          <span className="text-xs sm:text-sm font-black">{cls}</span>
+                          <span className={`text-[10px] ${isSelected ? 'text-purple-100' : 'text-slate-400'}`}>{count} em</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* KHỐI 8 */}
+                <div className="space-y-1 pt-1">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <span>Khối 8 (5 lớp Thầy Thành dạy):</span>
+                    <span>Khối 8 (5 lớp - Thầy Đinh Thành dạy):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => {
                       const isSelected = quickClassName.trim().toUpperCase() === cls;
-                      const count = studentGradebookService.getOfficialRoster(cls).length || 37;
+                      const count = studentGradebookService.getOfficialRoster(cls).length || 36;
                       return (
                         <button
                           key={cls}
@@ -3053,11 +3082,48 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </div>
                 </div>
 
+                {/* KHỐI 7 */}
+                <div className="space-y-1 pt-1">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span>Khối 7 (5 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {['7A1', '7A2', '7A3', '7A4', '7A5'].map(cls => {
+                      const isSelected = quickClassName.trim().toUpperCase() === cls;
+                      const count = studentGradebookService.getOfficialRoster(cls).length || 37;
+                      return (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setQuickClassName(cls);
+                            setQuickError('');
+                            const newRoster = studentGradebookService.getOfficialRoster(cls);
+                            if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
+                              setQuickFullName('');
+                              setQuickAutocorrectNote(null);
+                            }
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white font-black shadow-md ring-2 ring-amber-300 scale-[1.02]'
+                              : 'bg-amber-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-amber-200/70 dark:border-slate-600 hover:bg-amber-100'
+                          }`}
+                        >
+                          <span className="text-xs sm:text-sm font-black">{cls}</span>
+                          <span className={`text-[10px] ${isSelected ? 'text-amber-100' : 'text-slate-400'}`}>{count} em</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* KHỐI 6 */}
                 <div className="space-y-1 pt-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Khối 6 (5 lớp Thầy Thành dạy):</span>
+                    <span>Khối 6 (5 lớp - Thầy Đinh Thành dạy):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => {
@@ -3280,11 +3346,38 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </span>
                 </div>
 
-                {/* KHỐI 8 */}
+                {/* KHỐI 9 */}
                 <div className="space-y-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    <span>Khối 9 (4 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {['9A1', '9A2', '9A3', '9A4'].map(cls => {
+                      const isSelected = regClassName.trim().toUpperCase() === cls;
+                      return (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => { setRegClassName(cls); setRegError(''); }}
+                          className={`py-2 px-1 rounded-xl text-center transition cursor-pointer font-black text-xs sm:text-sm ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md ring-2 ring-purple-300 scale-[1.02]'
+                              : 'bg-purple-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-purple-200/70 hover:bg-purple-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* KHỐI 8 */}
+                <div className="space-y-1 pt-1">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <span>Khối 8 (5 lớp Thầy Thành dạy):</span>
+                    <span>Khối 8 (5 lớp - Thầy Đinh Thành dạy):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => {
@@ -3307,11 +3400,38 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </div>
                 </div>
 
+                {/* KHỐI 7 */}
+                <div className="space-y-1 pt-1">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span>Khối 7 (5 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {['7A1', '7A2', '7A3', '7A4', '7A5'].map(cls => {
+                      const isSelected = regClassName.trim().toUpperCase() === cls;
+                      return (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => { setRegClassName(cls); setRegError(''); }}
+                          className={`py-2 px-1 rounded-xl text-center transition cursor-pointer font-black text-xs sm:text-sm ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-md ring-2 ring-amber-300 scale-[1.02]'
+                              : 'bg-amber-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-amber-200/70 hover:bg-amber-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 {/* KHỐI 6 */}
                 <div className="space-y-1 pt-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Khối 6 (5 lớp Thầy Thành dạy):</span>
+                    <span>Khối 6 (5 lớp - Thầy Đinh Thành dạy):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => {
@@ -3892,7 +4012,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           onGoToVocab={() => setActiveTab('vocab')}
 
           onCompleteSection={(secTitle, pts) => {
-
+            if (!currentStudent) return;
             studentGradebookService.recordPracticeMerit(currentStudent.id, secTitle, pts);
 
             const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
@@ -3920,7 +4040,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           onGoToVocab={() => setActiveTab('vocab')}
 
           onCompleteSection={(secTitle, pts) => {
-
+            if (!currentStudent) return;
             studentGradebookService.recordPracticeMerit(currentStudent.id, secTitle, pts);
 
             const fresh = studentGradebookService.getStudents().find(s => s.id === currentStudent.id);
@@ -4999,104 +5119,108 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   {/* Khối 8 */}
 
+                  {/* Khối 9 */}
                   <div className="space-y-1">
-
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 8 (THCS Đồng Yên):</div>
-
-                    <div className="grid grid-cols-5 gap-1.5">
-
-                      {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
-
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 9 (Cô Hoàng Thị Vươn):</div>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {['9A1', '9A2', '9A3', '9A4'].map(cls => (
                         <button
-
                           key={cls}
-
                           type="button"
-
                           onClick={() => {
-
                             setRegClassName(cls);
-
-                            setRegGrade(8);
-
+                            setRegGrade(9);
                             setLoginStudentInput('');
-
                             setLoginError('');
-
                           }}
-
                           className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
-
                             regClassName === cls
-
-                              ? 'bg-blue-600 text-white border-blue-500 shadow-sm ring-2 ring-blue-300 dark:ring-blue-800 scale-102'
-
-                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-blue-100'
-
+                              ? 'bg-purple-600 text-white border-purple-500 shadow-sm ring-2 ring-purple-300 dark:ring-purple-800 scale-102'
+                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-purple-100'
                           }`}
-
                         >
-
                           {cls}
-
                         </button>
-
                       ))}
-
                     </div>
-
                   </div>
 
+                  {/* Khối 8 */}
+                  <div className="space-y-1 pt-1">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 8 (Thầy Đinh Thành):</div>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setRegClassName(cls);
+                            setRegGrade(8);
+                            setLoginStudentInput('');
+                            setLoginError('');
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
+                            regClassName === cls
+                              ? 'bg-blue-600 text-white border-blue-500 shadow-sm ring-2 ring-blue-300 dark:ring-blue-800 scale-102'
+                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-blue-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
+                  {/* Khối 7 */}
+                  <div className="space-y-1 pt-1">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 7 (Cô Hoàng Thị Vươn):</div>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {['7A1', '7A2', '7A3', '7A4', '7A5'].map(cls => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => {
+                            setRegClassName(cls);
+                            setRegGrade(7);
+                            setLoginStudentInput('');
+                            setLoginError('');
+                          }}
+                          className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
+                            regClassName === cls
+                              ? 'bg-amber-600 text-white border-amber-500 shadow-sm ring-2 ring-amber-300 dark:ring-amber-800 scale-102'
+                              : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-amber-100'
+                          }`}
+                        >
+                          {cls}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   {/* Khối 6 */}
-
                   <div className="space-y-1 pt-1">
-
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 6 (THCS Đồng Yên):</div>
-
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 6 (Thầy Đinh Thành):</div>
                     <div className="grid grid-cols-5 gap-1.5">
-
                       {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => (
-
                         <button
-
                           key={cls}
-
                           type="button"
-
                           onClick={() => {
-
                             setRegClassName(cls);
-
                             setRegGrade(6);
-
                             setLoginStudentInput('');
-
                             setLoginError('');
-
                           }}
-
                           className={`py-1.5 px-1 rounded-xl text-xs font-black transition cursor-pointer border ${
-
                             regClassName === cls
-
                               ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm ring-2 ring-emerald-300 dark:ring-emerald-800 scale-102'
-
                               : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-emerald-100'
-
                           }`}
-
                         >
-
                           {cls}
-
                         </button>
-
                       ))}
-
                     </div>
-
                   </div>
 
 
@@ -5989,7 +6113,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 <div className="flex gap-2 flex-wrap items-center">
 
-                  {['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
+                  {['6A1', '6A2', '6A3', '6A4', '6A5', '7A1', '7A2', '7A3', '7A4', '7A5', '8A1', '8A2', '8A3', '8A4', '8A5', '9A1', '9A2', '9A3', '9A4'].map(cls => (
 
                     <button
 

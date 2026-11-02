@@ -191,7 +191,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
               SỔ ĐIỂM DANH &amp; TIẾN ĐỘ VÀO HỌC TỪNG LỚP
             </h3>
             <p className="text-blue-100 text-xs sm:text-sm max-w-2xl">
-              Cập nhật đầy đủ 390 học sinh chính thức từ 10 lớp Thầy dạy (6A1-6A5 và 8A1-8A5).
+              Cập nhật đầy đủ 743 học sinh chính thức từ 19 lớp toàn trường THCS Đồng Yên (Khối 6, 7, 8, 9 - Thầy Đinh Thành & Cô Hoàng Thị Vươn).
               Mọi người có thể kiểm tra danh sách từng lớp xem ai đã vào học, tổng điểm bao nhiêu và ai chưa vào học để nhắc nhở kịp thời.
             </p>
           </div>
@@ -342,7 +342,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                   <span>Chọn Lớp Điểm Danh &amp; Tra Cứu:</span>
                 </span>
                 <span className="text-xs text-slate-500">
-                  10 lớp • 390 học sinh chính thức
+                  19 lớp • 743 học sinh chính thức
                 </span>
               </div>
 
@@ -356,7 +356,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
-                  <span>Toàn Bộ 10 Lớp (390 HS)</span>
+                  <span>Toàn Bộ 19 Lớp (743 HS)</span>
                 </button>
 
                 {/* Khối 6 */}
@@ -367,8 +367,25 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                     onClick={() => setSelectedClass(c.name)}
                     className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
                       selectedClass === c.name
-                        ? 'bg-indigo-600 text-white shadow-md font-black'
-                        : 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100'
+                        ? 'bg-emerald-600 text-white shadow-md font-black'
+                        : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
+                    }`}
+                  >
+                    <span>Lớp {c.name}</span>
+                    <span className="text-[10px] opacity-75">({c.totalStudents})</span>
+                  </button>
+                ))}
+
+                {/* Khối 7 */}
+                {officialClasses.filter(c => c.grade === 7).map(c => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => setSelectedClass(c.name)}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                      selectedClass === c.name
+                        ? 'bg-amber-600 text-white shadow-md font-black'
+                        : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100'
                     }`}
                   >
                     <span>Lớp {c.name}</span>
@@ -384,8 +401,25 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
                     onClick={() => setSelectedClass(c.name)}
                     className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
                       selectedClass === c.name
-                        ? 'bg-emerald-600 text-white shadow-md font-black'
-                        : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
+                        ? 'bg-blue-600 text-white shadow-md font-black'
+                        : 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100'
+                    }`}
+                  >
+                    <span>Lớp {c.name}</span>
+                    <span className="text-[10px] opacity-75">({c.totalStudents})</span>
+                  </button>
+                ))}
+
+                {/* Khối 9 */}
+                {officialClasses.filter(c => c.grade === 9).map(c => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => setSelectedClass(c.name)}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                      selectedClass === c.name
+                        ? 'bg-purple-600 text-white shadow-md font-black'
+                        : 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100'
                     }`}
                   >
                     <span>Lớp {c.name}</span>

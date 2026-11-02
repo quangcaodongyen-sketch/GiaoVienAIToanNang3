@@ -1186,7 +1186,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
     // Kiểm tra khớp
-
+    if (selectedFirstCard.wordId === card.wordId) {
       // Ghép chuẩn: Nổi âm thanh báo đúng và +2 điểm bay lên
       playCorrectSound();
       triggerScorePopup(e, '+2 Điểm! ⭐');

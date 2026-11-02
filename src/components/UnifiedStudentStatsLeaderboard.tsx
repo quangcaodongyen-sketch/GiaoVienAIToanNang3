@@ -2795,6 +2795,8 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           </div>
 
+        </div>
+
       )}
 
       {/* =========================================================================
@@ -2908,7 +2910,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
-                  Toàn Trường (Khối 6 &amp; 8)
+                  Toàn Trường (Khối 6, 7, 8, 9)
                 </button>
 
                 <button
@@ -2919,11 +2921,26 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                   }}
                   className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
                     unloggedScope === 'grade' && unloggedGrade === 6
-                      ? 'bg-indigo-600 text-white shadow-xs'
+                      ? 'bg-emerald-600 text-white shadow-xs'
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
                   Khối 6 (5 Lớp)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUnloggedScope('grade');
+                    setUnloggedGrade(7);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    unloggedScope === 'grade' && unloggedGrade === 7
+                      ? 'bg-amber-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Khối 7 (5 Lớp)
                 </button>
 
                 <button
@@ -2939,6 +2956,21 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                   }`}
                 >
                   Khối 8 (5 Lớp)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUnloggedScope('grade');
+                    setUnloggedGrade(9);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    unloggedScope === 'grade' && unloggedGrade === 9
+                      ? 'bg-purple-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Khối 9 (4 Lớp)
                 </button>
               </div>
 
@@ -2970,14 +3002,14 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
                 Tất Cả Lớp
               </button>
 
-              {['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
+              {['6A1', '6A2', '6A3', '6A4', '6A5', '7A1', '7A2', '7A3', '7A4', '7A5', '8A1', '8A2', '8A3', '8A4', '8A5', '9A1', '9A2', '9A3', '9A4'].map(cls => (
                 <button
                   key={cls}
                   type="button"
                   onClick={() => {
                     setUnloggedScope('class');
                     setUnloggedClass(cls);
-                    setUnloggedGrade(cls.startsWith('6') ? 6 : 8);
+                    setUnloggedGrade(parseInt(cls[0], 10));
                   }}
                   className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
                     unloggedScope === 'class' && unloggedClass === cls

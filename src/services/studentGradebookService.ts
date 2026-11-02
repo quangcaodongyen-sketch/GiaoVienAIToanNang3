@@ -2622,7 +2622,7 @@ class StudentGradebookService {
 
           className: cleanCls,
 
-          grade: item.grade || (cleanCls.startsWith('6') ? 6 : 8),
+          grade: item.grade || (parseInt(cleanCls.replace(/\D/g, '')[0], 10) || 6),
 
           dob: item.dob || '',
 
@@ -3679,9 +3679,6 @@ class StudentGradebookService {
   }
 
   public auditAndRestoreAllStudentPoints(triggerCloudSync: boolean = true): {
-    sanitizeInflatedVaultScores();
-
-
     auditedCount: number;
 
     restoredCount: number;
@@ -3691,7 +3688,7 @@ class StudentGradebookService {
     details: string[];
 
   } {
-
+    sanitizeInflatedVaultScores();
     this.mergeAllDuplicateStudentAccounts();
 
     let restoredCount = 0;
@@ -4925,7 +4922,6 @@ class StudentGradebookService {
               15
             );
             saveStudentVaultMaxPoints(localMatch.id, localMatch.totalMeritPoints, localMatch.name, localMatch.className);
-          }
             if (cStu.password && !localMatch.password) localMatch.password = cStu.password;
             if (cStu.dob && !localMatch.dob) localMatch.dob = cStu.dob;
             if (cStu.lastLoginDate && (!localMatch.lastLoginDate || cStu.lastLoginDate > localMatch.lastLoginDate)) {
@@ -8462,7 +8458,7 @@ class StudentGradebookService {
   // =========================================================================
   public getUnloggedStudentsReport(scope: 'all' | 'grade' | 'class' = 'all', target?: string | number): UnloggedStudentsReport {
     let filterStr = 'ALL';
-    let scopeTitle = 'Toàn Trường THCS Đồng Yên (Khối 6 & 8)';
+    let scopeTitle = 'Toàn Trường THCS Đồng Yên (Khối 6, 7, 8, 9)';
 
     if (scope === 'grade' && target) {
       filterStr = `Khối ${target}`;
@@ -8476,14 +8472,20 @@ class StudentGradebookService {
     const unloggedStudents = attRep.students.filter(s => !s.hasEntered);
 
     // Thống kê theo từng khối
-    const gradesList = [6, 8];
+    const gradesList = [6, 7, 8, 9];
     const byGrade = gradesList.map(g => {
       const gStudents = attRep.students.filter(s => s.grade === g);
       const gEntered = gStudents.filter(s => s.hasEntered).length;
       const gNotEntered = gStudents.length - gEntered;
       const gPercent = gStudents.length > 0 ? Math.round((gNotEntered / gStudents.length) * 100) : 0;
       
-      const classNames = g === 6 ? ['6A1', '6A2', '6A3', '6A4', '6A5'] : ['8A1', '8A2', '8A3', '8A4', '8A5'];
+      const classNames = g === 6 
+        ? ['6A1', '6A2', '6A3', '6A4', '6A5'] 
+        : g === 7
+        ? ['7A1', '7A2', '7A3', '7A4', '7A5']
+        : g === 8
+        ? ['8A1', '8A2', '8A3', '8A4', '8A5']
+        : ['9A1', '9A2', '9A3', '9A4'];
       const classes = classNames.map(cls => {
         const cStudents = gStudents.filter(s => normalizeClassName(s.className) === normalizeClassName(cls));
         const cEntered = cStudents.filter(s => s.hasEntered).length;
@@ -8508,11 +8510,16 @@ class StudentGradebookService {
       };
     });
 
-    // Thống kê theo tất cả 10 lớp chính thức
-    const officialClassNames = ['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'];
+    // Thống kê theo tất cả 19 lớp chính thức
+    const officialClassNames = [
+      '6A1', '6A2', '6A3', '6A4', '6A5',
+      '7A1', '7A2', '7A3', '7A4', '7A5',
+      '8A1', '8A2', '8A3', '8A4', '8A5',
+      '9A1', '9A2', '9A3', '9A4'
+    ];
     const byClass = officialClassNames.map(cls => {
       const cStudents = attRep.students.filter(s => normalizeClassName(s.className) === normalizeClassName(cls));
-      const grade = cls.startsWith('6') ? 6 : 8;
+      const grade = parseInt(cls[0], 10);
       const entered = cStudents.filter(s => s.hasEntered).length;
       const notEntered = cStudents.length - entered;
       const notEnteredPercentage = cStudents.length > 0 ? Math.round((notEntered / cStudents.length) * 100) : 0;
