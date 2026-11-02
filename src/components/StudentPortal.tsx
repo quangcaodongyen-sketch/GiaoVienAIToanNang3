@@ -2605,7 +2605,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     return 'vocab';
 
   });
-  const [isNoticeExpanded, setIsNoticeExpanded] = useState<boolean>(true);
+
 
   // Đồng bộ trạng thái học sinh đang online và hoạt động học tập hiện tại (đặt sau khi activeTab đã khởi tạo)
   useEffect(() => {
@@ -3204,101 +3204,27 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                 </div>
 
-                {/* DANH SÁCH CUỘN CHẠM CHỌN HỌC SINH TINH GỌN (CHỈ HIỂN THỊ KHI CẦN TÌM HOẶC LỌC) */}
-                {(() => {
-                  const roster = studentGradebookService.getOfficialRoster(quickClassName) || [];
-                  if (roster.length === 0) return null;
-
-                  const filteredRoster = quickFullName.trim()
-                    ? roster.map((name, idx) => ({ name, stt: idx + 1 })).filter(({ name }) => {
-                        const q = removeDiacritics(quickFullName).toLowerCase().replace(/\s+/g, '');
-                        const n = removeDiacritics(name).toLowerCase().replace(/\s+/g, '');
-                        return n.includes(q);
-                      })
-                    : roster.map((name, idx) => ({ name, stt: idx + 1 }));
-
-                  return (
-                    <div className="p-3 rounded-2xl bg-amber-50/60 dark:bg-slate-800/60 border border-amber-200/80 dark:border-amber-900/40 space-y-2">
-                      <div className="flex items-center justify-between text-[11px] font-bold text-amber-950 dark:text-amber-200">
-                        <span className="flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                          <span>Danh sách Lớp {quickClassName.trim().toUpperCase()} ({roster.length} em): Chạm vào tên em để chọn</span>
-                        </span>
-                        <span>{quickFullName.trim() ? `Lọc thấy ${filteredRoster.length}/${roster.length} em` : 'Cuộn để xem'}</span>
-                      </div>
-
-                      <div className="max-h-36 overflow-y-auto flex flex-wrap gap-1.5 pr-1">
-                        {filteredRoster.map(({ name, stt }) => {
-                          const isSelected = quickFullName === name;
-                          return (
-                            <button
-                              key={stt}
-                              type="button"
-                              onClick={() => {
-                                setQuickFullName(name);
-                                setQuickError('');
-                                setQuickAutocorrectNote({
-                                  original: quickFullName,
-                                  corrected: name,
-                                  isOfficial: true
-                                });
-                              }}
-                              className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                                isSelected
-                                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md font-black ring-2 ring-blue-300 scale-105'
-                                  : 'bg-white dark:bg-slate-700/80 hover:bg-amber-100 text-slate-800 dark:text-slate-200 border border-amber-200/70 dark:border-amber-800/50'
-                              }`}
-                            >
-                              <span className={`text-[10px] ${isSelected ? 'text-blue-100 font-bold' : 'text-slate-400 font-mono'}`}>#{stt}</span>
-                              <span>{name}</span>
-                              {isSelected && <span>✓</span>}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Thông tin học sinh đã chọn */}
-                      {quickFullName.trim() && (
-                        <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-blue-500/15 to-indigo-500/15 border border-emerald-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base">🎉</span>
-                            <span>
-                              Đã chọn: <strong className="text-blue-700 dark:text-blue-300 font-black text-sm">{quickFullName}</strong> — Lớp <strong className="text-emerald-700 dark:text-emerald-300 font-black text-sm">{quickClassName.trim().toUpperCase()}</strong>
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setQuickFullName('');
-                              setQuickAutocorrectNote(null);
-                            }}
-                            className="text-rose-500 hover:text-rose-700 font-bold text-xs underline cursor-pointer self-end sm:self-center"
-                          >
-                            ✕ Chọn bạn khác
-                          </button>
-                        </div>
-                      )}
+                {/* Thông tin học sinh đã chọn (gọn gàng, thanh lịch) */}
+                {quickFullName.trim() && (
+                  <div className="mt-3 p-3 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-blue-500/15 to-indigo-500/15 border border-emerald-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs animate-in fade-in">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">🎉</span>
+                      <span>
+                        Học sinh đã chọn: <strong className="text-blue-700 dark:text-blue-300 font-black text-sm">{quickFullName}</strong> — Lớp <strong className="text-emerald-700 dark:text-emerald-300 font-black text-sm">{quickClassName.trim().toUpperCase()}</strong>
+                      </span>
                     </div>
-                  );
-                })()}
-
-              </div>
-              {/* LỐI TẮT CHUYỂN SANG ĐĂNG KÝ NHANH NẾU MẤT TÀI KHOẢN HOẶC KHÔNG CÓ TÊN */}
-              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300/80 dark:border-amber-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span className="text-xs text-amber-900 dark:text-amber-200 font-bold">
-                  💡 Không thấy tên em trong lớp hoặc bị mất tài khoản?
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('register');
-                    setRegClassName(quickClassName);
-                    if (quickFullName.trim()) setRegFullName(quickFullName.trim());
-                  }}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-xs transition cursor-pointer shrink-0"
-                >
-                  👉 Bấm vào đây để Đăng Ký Nhanh Theo Lớp
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuickFullName('');
+                        setQuickAutocorrectNote(null);
+                      }}
+                      className="text-rose-500 hover:text-rose-700 font-bold text-xs underline cursor-pointer self-end sm:self-center"
+                    >
+                      ✕ Chọn bạn khác
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* NÚT VÀO HỌC NGAY */}
@@ -3309,6 +3235,21 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <Sparkles className="w-5 h-5 text-amber-300" />
                 <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}đ Lần Đầu Trong Ngày)</span>
               </button>
+
+              {/* Lối tắt nhỏ gọn nếu học sinh mất tài khoản hoặc cần đăng ký mới */}
+              <div className="text-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('register');
+                    setRegClassName(quickClassName);
+                    if (quickFullName.trim()) setRegFullName(quickFullName.trim());
+                  }}
+                  className="text-xs text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-300 underline cursor-pointer transition"
+                >
+                  💡 Em chưa có tên trong danh sách hoặc đổi thiết bị? Bấm vào đây để đăng ký nhanh
+                </button>
+              </div>
             </form>
           ) : (
             /* =========================================================================
@@ -3597,115 +3538,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       )}
 
-      {/* =========================================================================
-          BƯỚC 2: XEM THÔNG BÁO NGẮN GỌN (THẦY ĐINH THÀNH)
-      ========================================================================= */}
-      <div className="rounded-2xl border-2 border-amber-400/50 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-3.5 sm:p-4 shadow-md mb-4 text-slate-900 dark:text-white transition-all">
-        <div className="flex items-center justify-between gap-2 cursor-pointer select-none" onClick={() => setIsNoticeExpanded(!isNoticeExpanded)}>
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="px-2.5 py-0.5 rounded-lg bg-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-wider shadow-xs flex items-center gap-1">
-              <span>📢</span>
-              <span>BƯỚC 2: THÔNG BÁO</span>
-            </span>
-            <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-              <span>LỊCH THI &amp; QUY ĐỊNH ÔN TẬP TỪ THẦY ĐINH THÀNH</span>
-            </h3>
-            <span className="text-[11px] px-2 py-0.5 rounded-md bg-black/10 dark:bg-white/10 text-slate-600 dark:text-slate-300 font-bold">
-              📅 Hôm nay: 02/11/2026
-            </span>
-          </div>
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsNoticeExpanded(!isNoticeExpanded);
-            }}
-            className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-slate-800 text-amber-900 dark:text-amber-300 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
-          >
-            <span>{isNoticeExpanded ? '▲ Thu Gọn' : '▼ Xem Chi Tiết'}</span>
-          </button>
-        </div>
-
-        {/* Nội dung thông báo ngắn gọn 4 gạch đầu dòng súc tích */}
-        {isNoticeExpanded && (
-          <div className="mt-3 pt-3 border-t border-amber-200/80 dark:border-slate-800 space-y-2 text-xs sm:text-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-2.5">
-              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
-                <span className="text-base shrink-0">📅</span>
-                <div>
-                  <strong className="text-blue-600 dark:text-cyan-300 font-black">1. Lịch thi Giữa Kỳ 1 môn Tiếng Anh:</strong>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
-                    Hôm nay kiểm tra chính thức khối 6 &amp; 8. Các em đọc kỹ từng câu, tự tin làm bài đạt điểm 9-10!
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
-                <span className="text-base shrink-0">🎁</span>
-                <div>
-                  <strong className="text-amber-600 dark:text-amber-300 font-black">2. Thưởng thi đua đặc biệt trưa nay:</strong>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
-                    Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập lần đầu mỗi ngày &amp; <strong>+5 điểm</strong> mỗi 5 phút tích cực ôn tập đề cương.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
-                <span className="text-base shrink-0">✏️</span>
-                <div>
-                  <strong className="text-emerald-600 dark:text-emerald-300 font-black">3. Dặn dò dụng cụ phòng thi:</strong>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
-                    Chuẩn bị tối thiểu 2 bút chì 2B gọt sẵn, tẩy mềm sạch, thước kẻ và thẻ dự thi trước khi vào phòng.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
-                <span className="text-base shrink-0">🔒</span>
-                <div>
-                  <strong className="text-indigo-600 dark:text-indigo-300 font-black">4. Bảo toàn 100% điểm số:</strong>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
-                    Hệ thống tự động lưu điểm thi đua trên Cloud, tuyệt đối không bị trừ về 0 khi thoát trang.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Các nút bấm tắt vào nhanh các phần */}
-            <div className="flex items-center gap-2 pt-1 flex-wrap text-xs font-bold">
-              <span className="text-slate-500">Lối tắt nhanh:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  const g = currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.replace(/\D/g, ''), 10) || 8) : 8);
-                  setActiveTab(g === 6 ? 'decuong_e6' : g === 7 ? 'decuong_e7' : g === 8 ? 'decuong_e8' : 'decuong_e9');
-                }}
-                className="px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 transition cursor-pointer"
-              >
-                📖 Xem Đề Cương GK1 &rarr;
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('exam')}
-                className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/70 text-amber-900 dark:text-amber-200 transition cursor-pointer"
-              >
-                ✍️ Thi Thử Có Bấm Giờ &rarr;
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('leaderboard');
-                  setCompetitionSubTab('all');
-                }}
-                className="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-200 transition cursor-pointer"
-              >
-                📊 Xem Bảng Điểm Thi Đua &rarr;
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* =========================================================================
           THANH 3 BƯỚC HỌC TẬP CHÍNH: BƯỚC 3 (VÀO HỌC) • BƯỚC 4 (KIỂM TRA) • BƯỚC 5 (THỐNG KÊ)
@@ -3730,7 +3563,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           >
             <BookOpen className={`w-5 h-5 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-600'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">3. VÀO HỌC</div>
+              <div className="text-xs sm:text-sm font-black truncate">VÀO HỌC</div>
               <div className="text-[10px] opacity-80 truncate hidden sm:block">Từ Vựng &amp; Đề Cương</div>
             </div>
           </button>
@@ -3752,7 +3585,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           >
             <Award className={`w-5 h-5 shrink-0 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-amber-600'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">4. KIỂM TRA THỬ</div>
+              <div className="text-xs sm:text-sm font-black truncate">KIỂM TRA THỬ</div>
               <div className="text-[10px] opacity-80 truncate hidden sm:block">5 Phút &amp; Đề GK1</div>
             </div>
           </button>
@@ -3773,7 +3606,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
           >
             <Trophy className={`w-5 h-5 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950' : 'text-amber-600'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">5. THỐNG KÊ ĐIỂM</div>
+              <div className="text-xs sm:text-sm font-black truncate">THỐNG KÊ ĐIỂM</div>
               <div className="text-[10px] opacity-80 truncate hidden sm:block">Điểm &amp; Xếp Hạng</div>
             </div>
           </button>
