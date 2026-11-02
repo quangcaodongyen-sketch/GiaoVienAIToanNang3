@@ -1070,7 +1070,39 @@ export interface ClassAttendanceReport {
 
 }
 
-
+export interface UnloggedStudentsReport {
+  scope: 'all' | 'grade' | 'class';
+  scopeTitle: string;
+  totalRoster: number;
+  enteredCount: number;
+  notEnteredCount: number;
+  enteredPercentage: number;
+  notEnteredPercentage: number;
+  byGrade: Array<{
+    grade: number;
+    total: number;
+    entered: number;
+    notEntered: number;
+    notEnteredPercentage: number;
+    classes: Array<{
+      className: string;
+      total: number;
+      entered: number;
+      notEntered: number;
+      notEnteredPercentage: number;
+    }>;
+  }>;
+  byClass: Array<{
+    className: string;
+    grade: number;
+    total: number;
+    entered: number;
+    notEntered: number;
+    notEnteredPercentage: number;
+  }>;
+  unloggedStudents: ClassAttendanceStudentStatus[];
+  allStudents: ClassAttendanceStudentStatus[];
+}
 
 export type AcademicRank = 'XUAT_SAC' | 'GIOI' | 'KHA' | 'DAT' | 'CAN_CO_GANG';
 
@@ -8118,11 +8150,20 @@ class StudentGradebookService {
 
       const key = `${normalizeVietnameseName(item.name)}__${normalizeClassName(item.className)}`;
 
-      const profile = studentProfileMap.get(key) || (item.studentCode ? studentProfileMap.get(item.studentCode.trim().toLowerCase()) : undefined);
+      let profile = studentProfileMap.get(key) || (item.studentCode ? studentProfileMap.get(item.studentCode.trim().toLowerCase()) : undefined);
 
-      const studentSubs = subMap.get(key) || [];
+      // Fuzzy matching nếu tên hoặc cách viết lớp có chút sai lệch
+      if (!profile) {
+        const normItemName = normalizeVietnameseName(item.name);
+        profile = this.students.find(s => {
+          if (normalizeVietnameseName(s.name) === normItemName) {
+            return s.grade === item.grade || normalizeClassName(s.className) === normalizeClassName(item.className);
+          }
+          return false;
+        });
+      }
 
-
+      const studentSubs = subMap.get(key) || (profile ? (subMap.get(`${normalizeVietnameseName(profile.name)}__${normalizeClassName(profile.className)}`) || []) : []);
 
       // Học sinh được tính là đã vào học nếu có hoạt động thực tế (đã đăng nhập, chuyên cần, thời gian học, bài nộp, từ vựng)
 
@@ -8152,21 +8193,26 @@ class StudentGradebookService {
 
       );
 
-
-
       if (hasEntered) enteredCount++;
 
+      // ================= BẢO TOÀN ĐIỂM SỐ SƯ PHẠM — TUYỆT ĐỐI KHÔNG BỊ TRỪ VỀ 0Đ =================
+      const baseKey = `${normalizeVietnameseName(item.name)}__${normalizeClassName(item.className).toLowerCase()}`;
+      const baseInfo = VERIFIED_HIGH_SCORE_BASELINE[baseKey];
+      const vaultMax = profile 
+        ? getStudentVaultMaxPoints(profile.id, profile.name, profile.className) 
+        : getStudentVaultMaxPoints(item.studentCode, item.name, item.className);
+      const baseTotal = baseInfo ? baseInfo.total : 0;
+      const earnedMerit = profile ? (profile.totalMeritPoints || 0) : 0;
 
-
-      const vaultMax = profile ? getStudentVaultMaxPoints(profile.id) : 0;
-
-      const merit = profile ? Math.max(profile.totalMeritPoints || 0, vaultMax) : 0;
+      // Học sinh chưa đăng nhập cũng được tặng sẵn tối thiểu 15 điểm khuyến khích chào mừng,
+      // học sinh đã học thì bảo toàn 100% điểm cao nhất (không bao giờ hiển thị 0đ):
+      const merit = Math.max(earnedMerit, vaultMax, baseTotal, 15);
 
       if (profile && merit > (profile.totalMeritPoints || 0)) {
 
         profile.totalMeritPoints = merit;
 
-        saveStudentVaultMaxPoints(profile.id, merit);
+        saveStudentVaultMaxPoints(profile.id, merit, profile.name, profile.className);
 
       }
 
@@ -8388,6 +8434,168 @@ class StudentGradebookService {
 
     };
 
+  }
+
+  // =========================================================================
+  // THỐNG KÊ & XUẤT DANH SÁCH HỌC SINH CHƯA ĐĂNG NHẬP THEO LỚP & THEO KHỐI
+  // Phục vụ Thầy Đinh Thành đôn đốc, nhắc nhở và theo dõi nề nếp vào học
+  // =========================================================================
+  public getUnloggedStudentsReport(scope: 'all' | 'grade' | 'class' = 'all', target?: string | number): UnloggedStudentsReport {
+    let filterStr = 'ALL';
+    let scopeTitle = 'Toàn Trường THCS Đồng Yên (Khối 6 & 8)';
+
+    if (scope === 'grade' && target) {
+      filterStr = `Khối ${target}`;
+      scopeTitle = `Khối ${target} (5 Lớp)`;
+    } else if (scope === 'class' && target) {
+      filterStr = String(target);
+      scopeTitle = `Lớp ${normalizeClassName(String(target))}`;
+    }
+
+    const attRep = this.getClassAttendanceReport(filterStr);
+    const unloggedStudents = attRep.students.filter(s => !s.hasEntered);
+
+    // Thống kê theo từng khối
+    const gradesList = [6, 8];
+    const byGrade = gradesList.map(g => {
+      const gStudents = attRep.students.filter(s => s.grade === g);
+      const gEntered = gStudents.filter(s => s.hasEntered).length;
+      const gNotEntered = gStudents.length - gEntered;
+      const gPercent = gStudents.length > 0 ? Math.round((gNotEntered / gStudents.length) * 100) : 0;
+      
+      const classNames = g === 6 ? ['6A1', '6A2', '6A3', '6A4', '6A5'] : ['8A1', '8A2', '8A3', '8A4', '8A5'];
+      const classes = classNames.map(cls => {
+        const cStudents = gStudents.filter(s => normalizeClassName(s.className) === normalizeClassName(cls));
+        const cEntered = cStudents.filter(s => s.hasEntered).length;
+        const cNotEntered = cStudents.length - cEntered;
+        const cPercent = cStudents.length > 0 ? Math.round((cNotEntered / cStudents.length) * 100) : 0;
+        return {
+          className: cls,
+          total: cStudents.length,
+          entered: cEntered,
+          notEntered: cNotEntered,
+          notEnteredPercentage: cPercent
+        };
+      });
+
+      return {
+        grade: g,
+        total: gStudents.length,
+        entered: gEntered,
+        notEntered: gNotEntered,
+        notEnteredPercentage: gPercent,
+        classes
+      };
+    });
+
+    // Thống kê theo tất cả 10 lớp chính thức
+    const officialClassNames = ['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'];
+    const byClass = officialClassNames.map(cls => {
+      const cStudents = attRep.students.filter(s => normalizeClassName(s.className) === normalizeClassName(cls));
+      const grade = cls.startsWith('6') ? 6 : 8;
+      const entered = cStudents.filter(s => s.hasEntered).length;
+      const notEntered = cStudents.length - entered;
+      const notEnteredPercentage = cStudents.length > 0 ? Math.round((notEntered / cStudents.length) * 100) : 0;
+      return {
+        className: cls,
+        grade,
+        total: cStudents.length,
+        entered,
+        notEntered,
+        notEnteredPercentage
+      };
+    });
+
+    const notEnteredCount = unloggedStudents.length;
+    const notEnteredPercentage = attRep.totalRoster > 0 ? Math.round((notEnteredCount / attRep.totalRoster) * 100) : 0;
+
+    return {
+      scope,
+      scopeTitle,
+      totalRoster: attRep.totalRoster,
+      enteredCount: attRep.enteredCount,
+      notEnteredCount,
+      enteredPercentage: attRep.enteredPercentage,
+      notEnteredPercentage,
+      byGrade,
+      byClass,
+      unloggedStudents,
+      allStudents: attRep.students
+    };
+  }
+
+  public exportUnloggedStudentsZaloText(report: UnloggedStudentsReport, specificClass?: string): string {
+    const timeStr = `⏰ Thống kê lúc: ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}`;
+    
+    // Nếu xuất cho 1 lớp cụ thể
+    if (specificClass || report.scope === 'class') {
+      const clsName = specificClass || report.scopeTitle.replace('Lớp ', '');
+      const clsStudents = report.unloggedStudents.filter(s => normalizeClassName(s.className) === normalizeClassName(clsName));
+      const totalInClass = report.allStudents.filter(s => normalizeClassName(s.className) === normalizeClassName(clsName)).length || 39;
+      const enteredInClass = totalInClass - clsStudents.length;
+      const enteredPercent = Math.round((enteredInClass / totalInClass) * 100);
+
+      const header = `📢 THÔNG BÁO TỪ THẦY ĐINH THÀNH — ĐÔN ĐỐC HỌC SINH VÀO ÔN TẬP
+🏫 Lớp: ${clsName} • Môn: Tiếng Anh THCS
+${timeStr}
+👨‍🏫 Giáo viên phụ trách: Thầy Đinh Văn Thành (0915.213717)
+📊 Tình hình học tập: Đã vào học ${enteredInClass}/${totalInClass} em (${enteredPercent}%) — Còn ${clsStudents.length} em chưa đăng nhập.\n`;
+
+      if (clsStudents.length === 0) {
+        return `${header}\n🎉 Chúc mừng lớp ${clsName}! 100% học sinh đã vào học ôn tập đầy đủ!`;
+      }
+
+      const body = `Kính gửi Quý Phụ huynh lớp ${clsName},
+Hôm nay các em học sinh có đợt ôn luyện đề thi giữa kỳ trực tuyến. Kính nhờ Quý Phụ huynh đôn đốc ${clsStudents.length} em học sinh sau khẩn trương vào học:
+${clsStudents.map((s, idx) => ` ${idx + 1}. ${s.name} (Mã HS: ${s.studentCode || 'Chưa cấp'}) - Điểm bảo toàn: ${s.totalMeritPoints}đ`).join('\n')}
+
+👉 Link Cổng Học Tập & Luyện Đề: https://dekiemtraso.com
+(Học sinh chỉ cần chọn đúng Lớp ${clsName} và Tên của mình là vào học ngay, không cần mật khẩu. Vào học trưa nay được cộng ngay +30 điểm chuyên cần!)
+
+🛡️ Lưu ý: Toàn bộ điểm số của học sinh đều được bảo toàn 100%, không bị trừ về 0. Thầy Thành chúc các em làm bài đạt điểm 9, điểm 10 rực rỡ!`;
+
+      return `${header}\n${body}`;
+    }
+
+    // Nếu xuất báo cáo theo Khối hoặc Toàn trường
+    const header = `📢 BÁO CÁO THỐNG KÊ HỌC SINH CHƯA ĐĂNG NHẬP — ${report.scopeTitle.toUpperCase()}
+${timeStr}
+👨‍🏫 Phụ trách: Thầy Đinh Văn Thành (0915.213717)
+📊 TỔNG QUAN: Sĩ số: ${report.totalRoster} em • Đã vào học: ${report.enteredCount} em (${report.enteredPercentage}%) • Chưa đăng nhập: ${report.notEnteredCount} em (${report.notEnteredPercentage}%)\n`;
+
+    const classBreakdown = `📋 TÌNH HÌNH CHƯA ĐĂNG NHẬP THEO TỪNG LỚP:
+${report.byClass.map(c => `• Lớp ${c.className}: ${c.notEntered}/${c.total} em chưa vào (${c.notEnteredPercentage}%)`).join('\n')}\n`;
+
+    const instructions = `👉 Link Cổng Học Tập: https://dekiemtraso.com
+(Học sinh chỉ cần chọn Lớp và Tên để vào học trực tuyến)
+Kính nhờ các Thầy/Cô Chủ nhiệm và Quý Phụ huynh phối hợp đôn đốc các em vào ôn luyện đề thi trưa nay!`;
+
+    return `${header}\n${classBreakdown}\n${instructions}`;
+  }
+
+  public exportUnloggedStudentsCSV(report: UnloggedStudentsReport, specificClass?: string): string {
+    const list = specificClass 
+      ? report.unloggedStudents.filter(s => normalizeClassName(s.className) === normalizeClassName(specificClass))
+      : report.unloggedStudents;
+
+    let csv = '\uFEFF'; // UTF-8 BOM for perfect Excel Vietnamese display
+    csv += 'STT,Mã Học Sinh,Họ và Tên,Lớp,Khối,Ngày Sinh,Trạng Thái Đăng Nhập,Điểm Bảo Toàn,Số Bài Đã Làm,Lời Dặn Nhắc Nhở\n';
+
+    list.forEach((s, idx) => {
+      const code = `"${s.studentCode || ''}"`;
+      const name = `"${s.name}"`;
+      const cls = `"${s.className}"`;
+      const grade = s.grade;
+      const dob = `"${s.dob || ''}"`;
+      const status = '"Chưa đăng nhập"';
+      const merit = `${s.totalMeritPoints}đ`;
+      const subs = `${s.submissionsCount} bài`;
+      const note = '"Nhắc nhở vào học ôn từ vựng và luyện đề giữa kỳ (Tặng +30đ chuyên cần)"';
+
+      csv += [idx + 1, code, name, cls, grade, dob, status, merit, subs, note].join(',') + '\n';
+    });
+
+    return csv;
   }
 
 

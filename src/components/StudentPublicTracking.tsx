@@ -141,10 +141,12 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
     const header = `📢 DANH SÁCH HỌC SINH CHƯA VÀO HỌC TRỰC TUYẾN — ${selectedClass === 'ALL' ? 'TOÀN TRƯỜNG' : `LỚP ${selectedClass}`}`;
     const timeStr = `⏰ Điểm danh lúc: ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}`;
     const subheader = `Kính nhờ Quý Phụ huynh và Thầy/Cô đôn đốc ${missing.length} em học sinh sau vào học ôn tập:`;
-    const studentLines = missing.map((s, idx) => `${idx + 1}. ${s.name} (${s.className}) - Mã HS: ${s.studentCode || 'Chưa cấp'}`);
+    const studentLines = missing.map((s, idx) => ` ${idx + 1}. ${s.name} (${s.className}) - Mã HS: ${s.studentCode || 'Chưa cấp'} - Điểm bảo toàn: ${s.totalMeritPoints}đ`);
     const footer = `
 👉 Link Cổng Học Tập & Ôn Tập Tiếng Anh: https://dekiemtraso.com
-(Học sinh chỉ cần chọn đúng Tên và Lớp là vào học được ngay, không cần mật khẩu)`;
+(Học sinh chỉ cần chọn đúng Tên và Lớp là vào học ngay, không cần mật khẩu. Vào học hôm nay được cộng ngay +30 điểm chuyên cần!)
+
+🛡️ Lưu ý: Điểm số của học sinh luôn được bảo toàn 100%, không bị trừ về 0. Thầy Thành chúc các em làm bài thật tốt!`;
 
     const fullText = [header, timeStr, subheader, '', ...studentLines, footer].join('\n');
     navigator.clipboard.writeText(fullText);

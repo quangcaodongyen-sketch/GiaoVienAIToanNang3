@@ -90,6 +90,8 @@ import {
 
   ClassAttendanceStudentStatus,
 
+  UnloggedStudentsReport,
+
   StudentCheckinLog,
 
   StudentLevelInfo,
@@ -189,9 +191,23 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   // 'attendance'  = Sổ Điểm Danh & % Vào Học Chuẩn (Tỷ lệ %, DS đã vào / chưa vào học)
 
+  // 'unlogged'    = Thống Kê Học Sinh Chưa Đăng Nhập & Xuất Danh Sách Nhắc Nhở
+
   // 'live_feed'   = Nhật Ký Thời Gian Thực (Live Stream các hoạt động học tập)
 
-  const [activeTab, setActiveTab] = useState<'leaderboard' | 'attendance' | 'live_feed'>('leaderboard');
+  const [activeTab, setActiveTab] = useState<'leaderboard' | 'attendance' | 'unlogged' | 'live_feed'>('leaderboard');
+
+
+
+  // State riêng cho Phân hệ Học Sinh Chưa Đăng Nhập
+
+  const [unloggedScope, setUnloggedScope] = useState<'all' | 'grade' | 'class'>('all');
+
+  const [unloggedGrade, setUnloggedGrade] = useState<number>(defaultGrade || 6);
+
+  const [unloggedClass, setUnloggedClass] = useState<string>(defaultClassName || '6A1');
+
+  const [unloggedSearchQuery, setUnloggedSearchQuery] = useState<string>('');
 
 
 
@@ -691,6 +707,54 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
     });
 
   }, [attendanceReport, onlyActiveStudents, attendanceStatusFilter, searchQuery]);
+
+  // ==================== THỐNG KÊ HỌC SINH CHƯA ĐĂNG NHẬP (THEO LỚP & KHỐI) ====================
+  const unloggedReport: UnloggedStudentsReport = useMemo(() => {
+    const target = unloggedScope === 'class' ? unloggedClass : (unloggedScope === 'grade' ? unloggedGrade : undefined);
+    return studentGradebookService.getUnloggedStudentsReport(unloggedScope, target);
+  }, [unloggedScope, unloggedGrade, unloggedClass, isRefreshing, leaderboard, attendanceReport]);
+
+  const filteredUnloggedStudents = useMemo(() => {
+    if (!unloggedReport) return [];
+    let list = unloggedReport.unloggedStudents;
+    if (unloggedSearchQuery.trim()) {
+      const q = unloggedSearchQuery.toLowerCase().trim();
+      list = list.filter(s => 
+        s.name.toLowerCase().includes(q) ||
+        (s.studentCode || '').toLowerCase().includes(q) ||
+        s.className.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [unloggedReport, unloggedSearchQuery]);
+
+  const handleCopyUnloggedZalo = (specificClass?: string) => {
+    const text = studentGradebookService.exportUnloggedStudentsZaloText(unloggedReport, specificClass);
+    navigator.clipboard.writeText(text);
+    showToast(specificClass ? `📋 Đã sao chép tin nhắn nhắc nhở lớp ${specificClass}!` : '📋 Đã sao chép danh sách học sinh chưa đăng nhập!');
+  };
+
+  const handleExportUnloggedCSV = (specificClass?: string) => {
+    const csv = studentGradebookService.exportUnloggedStudentsCSV(unloggedReport, specificClass);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const filename = specificClass 
+      ? `DS_Chua_Dang_Nhap_Lop_${specificClass}_${new Date().toISOString().slice(0, 10)}.csv`
+      : `DS_Chua_Dang_Nhap_${unloggedReport.scopeTitle.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('📥 Đã tải file Excel danh sách học sinh chưa đăng nhập!');
+  };
+
+  const handleCopyIndividualReminder = (student: ClassAttendanceStudentStatus) => {
+    const msg = `📢 Lời nhắc từ Thầy Đinh Thành: Em ${student.name} (Lớp ${student.className}) khẩn trương vào Cổng học trực tuyến https://dekiemtraso.com để ôn từ vựng & luyện đề thi giữa kỳ nhé! Điểm số ${student.totalMeritPoints}đ của em đã được bảo toàn và hôm nay vào học được thưởng ngay +30đ chuyên cần!`;
+    navigator.clipboard.writeText(msg);
+    showToast(`📋 Đã sao chép tin nhắn nhắc nhở riêng cho em ${student.name}!`);
+  };
 
 
 
@@ -1525,6 +1589,30 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
               <BarChart3 className="w-5 h-5 text-emerald-400 shrink-0" />
 
               <span>📊 Sổ Điểm &amp; % Vào Học Chuẩn</span>
+
+            </button>
+
+            <button
+
+              type="button"
+
+              onClick={() => setActiveTab('unlogged')}
+
+              className={`px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl transition-all duration-200 flex items-center gap-2 cursor-pointer ${
+
+                activeTab === 'unlogged'
+
+                  ? 'bg-gradient-to-b from-rose-600 via-rose-700 to-red-800 text-white font-black shadow-md shadow-rose-500/30 border-t border-rose-300 border-b-2 border-rose-950 -translate-y-0.5 scale-[1.02]'
+
+                  : 'text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50'
+
+              }`}
+
+            >
+
+              <UserX className="w-5 h-5 text-rose-400 shrink-0" />
+
+              <span>📢 Chưa Đăng Nhập ({unloggedReport?.notEnteredCount || 0})</span>
 
             </button>
 
@@ -2707,16 +2795,357 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           </div>
 
-        </div>
-
       )}
 
+      {/* =========================================================================
+          TAB 3: THỐNG KÊ HỌC SINH CHƯA ĐĂNG NHẬP & XUẤT DANH SÁCH THEO LỚP, THEO KHỐI
+          ========================================================================= */}
+      {activeTab === 'unlogged' && unloggedReport && (
+        <div className="space-y-4 animate-in fade-in duration-300">
+          {/* BANNER THÔNG BÁO QUY TẮC BẢO TOÀN ĐIỂM SƯ PHẠM */}
+          <div className="bg-gradient-to-r from-rose-950 via-slate-900 to-indigo-950 rounded-2xl p-4 sm:p-5 text-white border-2 border-rose-500/40 shadow-lg relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/30 text-[11px] font-black uppercase">
+                    <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Đôn Đốc Nề Nếp Vào Học • Thầy Đinh Văn Thành</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-black">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                    <span>Bảo Toàn 100% Điểm Số (≥15đ Khuyến Khích)</span>
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                  <UserX className="w-6 h-6 text-rose-400" />
+                  <span>DANH SÁCH HỌC SINH CHƯA ĐĂNG NHẬP — {unloggedReport.scopeTitle.toUpperCase()}</span>
+                </h3>
+                <p className="text-xs text-rose-100/90 max-w-3xl leading-relaxed">
+                  🛡️ <strong>Nguyên tắc sư phạm của Thầy Đinh Thành:</strong> Học sinh chưa đăng nhập <strong>tuyệt đối không bị trừ điểm về 0</strong>. Hệ thống bảo lưu toàn bộ điểm số tích lũy và tặng sẵn ít nhất 15 điểm khuyến khích. Thầy/Cô sử dụng các nút dưới đây để sao chép danh sách gửi nhóm Zalo lớp hoặc tải file Excel để nhắc nhở các em kịp thời ôn luyện.
+                </p>
+              </div>
 
+              {/* NÚT TÁC VỤ 1-CLICK */}
+              <div className="flex items-center gap-2 flex-wrap shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleCopyUnloggedZalo(unloggedScope === 'class' ? unloggedClass : undefined)}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  title="Sao chép nội dung tin nhắn gửi vào nhóm Zalo lớp để đôn đốc học sinh"
+                >
+                  <Copy className="w-4 h-4 text-emerald-200" />
+                  <span>📋 Sao Chép Zalo Nhắc Nhở</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleExportUnloggedCSV(unloggedScope === 'class' ? unloggedClass : undefined)}
+                  className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  title="Xuất file Excel CSV có tiếng Việt chuẩn UTF-8"
+                >
+                  <Download className="w-4 h-4 text-emerald-400" />
+                  <span>📥 Xuất Excel (.CSV)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer border border-white/20"
+                  title="In danh sách hoặc lưu PDF"
+                >
+                  <Printer className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* 4 THẺ THỐNG KÊ NHANH */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-rose-500/20">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                <div className="text-[11px] text-blue-200 font-semibold mb-0.5">Sĩ Số Phạm Vi</div>
+                <div className="text-xl sm:text-2xl font-black text-white">{unloggedReport.totalRoster} <span className="text-xs font-normal text-slate-300">học sinh</span></div>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                <div className="text-[11px] text-emerald-300 font-semibold mb-0.5">Đã Vào Học</div>
+                <div className="text-xl sm:text-2xl font-black text-emerald-300">
+                  {unloggedReport.enteredCount} <span className="text-xs font-bold text-emerald-400">({unloggedReport.enteredPercentage}%)</span>
+                </div>
+              </div>
+
+              <div className="bg-rose-500/20 backdrop-blur-sm rounded-xl p-3 border border-rose-400/30">
+                <div className="text-[11px] text-rose-300 font-bold mb-0.5">Chưa Đăng Nhập</div>
+                <div className="text-xl sm:text-2xl font-black text-rose-300">
+                  {unloggedReport.notEnteredCount} <span className="text-xs font-bold text-rose-400">({unloggedReport.notEnteredPercentage}%)</span>
+                </div>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+                <div className="text-[11px] text-amber-300 font-semibold mb-0.5">Bảo Toàn Điểm Số</div>
+                <div className="text-sm sm:text-base font-black text-amber-300 flex items-center gap-1 mt-1">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>100% Không Trừ 0đ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BỘ LỌC PHẠM VI (THEO KHỐI / THEO LỚP) */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {/* Chọn Khối */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Filter className="w-3.5 h-3.5" />
+                  <span>Phạm Vi:</span>
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setUnloggedScope('all')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    unloggedScope === 'all'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Toàn Trường (Khối 6 &amp; 8)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUnloggedScope('grade');
+                    setUnloggedGrade(6);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    unloggedScope === 'grade' && unloggedGrade === 6
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Khối 6 (5 Lớp)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUnloggedScope('grade');
+                    setUnloggedGrade(8);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer ${
+                    unloggedScope === 'grade' && unloggedGrade === 8
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  Khối 8 (5 Lớp)
+                </button>
+              </div>
+
+              {/* Ô tìm kiếm học sinh */}
+              <div className="relative w-full sm:w-64">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={unloggedSearchQuery}
+                  onChange={(e) => setUnloggedSearchQuery(e.target.value)}
+                  placeholder="Tìm học sinh chưa vào..."
+                  className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </div>
+            </div>
+
+            {/* Chọn Từng Lớp Cụ Thể (Pill Buttons) */}
+            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 flex-wrap text-xs">
+              <span className="font-bold text-slate-500 mr-1">Chọn Lớp:</span>
+              <button
+                type="button"
+                onClick={() => setUnloggedScope(unloggedScope === 'class' ? 'grade' : unloggedScope)}
+                className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                  unloggedScope !== 'class'
+                    ? 'bg-rose-600 text-white font-black shadow-2xs'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                Tất Cả Lớp
+              </button>
+
+              {['6A1', '6A2', '6A3', '6A4', '6A5', '8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
+                <button
+                  key={cls}
+                  type="button"
+                  onClick={() => {
+                    setUnloggedScope('class');
+                    setUnloggedClass(cls);
+                    setUnloggedGrade(cls.startsWith('6') ? 6 : 8);
+                  }}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                    unloggedScope === 'class' && unloggedClass === cls
+                      ? 'bg-rose-600 text-white font-black shadow-2xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  {cls}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* BẢNG TỔNG HỢP CHI TIẾT TỪNG LỚP TRONG KHỐI / TOÀN TRƯỜNG */}
+          {unloggedScope !== 'class' && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+              <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-indigo-600" />
+                <span>Tổng Hợp Tỷ Lệ Chưa Đăng Nhập Từng Lớp (Bấm Vào Để Xem Chi Tiết Hoặc Nhắc Nhở)</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                {unloggedReport.byClass
+                  .filter(c => unloggedScope === 'all' || (unloggedScope === 'grade' && c.grade === unloggedGrade))
+                  .map(c => (
+                    <div 
+                      key={c.className}
+                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 hover:border-rose-400 transition flex flex-col justify-between gap-2.5 shadow-2xs"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-black text-slate-900 dark:text-white">Lớp {c.className}</span>
+                          <span className="text-[11px] font-black px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">
+                            Chưa vào: {c.notEntered}/{c.total}
+                          </span>
+                        </div>
+                        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mt-2 overflow-hidden">
+                          <div 
+                            className="bg-rose-500 h-1.5 rounded-full transition-all duration-500" 
+                            style={{ width: `${c.notEnteredPercentage}%` }}
+                            title={`Chưa đăng nhập: ${c.notEnteredPercentage}%`}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                        <button
+                          type="button"
+                          onClick={() => handleCopyUnloggedZalo(c.className)}
+                          className="flex-1 py-1 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition flex items-center justify-center gap-1 cursor-pointer"
+                          title={`Sao chép tin nhắn Zalo gửi phụ huynh lớp ${c.className}`}
+                        >
+                          <Copy className="w-3 h-3" />
+                          <span>Nhắc Zalo</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleExportUnloggedCSV(c.className)}
+                          className="p-1 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer"
+                          title={`Tải danh sách Excel lớp ${c.className}`}
+                        >
+                          <Download className="w-3 h-3 text-emerald-600" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* BẢNG DANH SÁCH CHI TIẾT HỌC SINH CHƯA ĐĂNG NHẬP */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+              <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <UserX className="w-4 h-4 text-rose-600" />
+                <span>Danh Sách Học Sinh Chưa Đăng Nhập ({filteredUnloggedStudents.length} em)</span>
+              </h4>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500">
+                  Hiển thị: <strong>{filteredUnloggedStudents.length}</strong> / {unloggedReport.notEnteredCount} em chưa vào
+                </span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-bold border-b border-slate-200 dark:border-slate-800">
+                    <th className="py-3 px-3 text-center w-12">STT</th>
+                    <th className="py-3 px-3">Họ và Tên</th>
+                    <th className="py-3 px-3 text-center">Lớp</th>
+                    <th className="py-3 px-3 text-center">Khối</th>
+                    <th className="py-3 px-3 text-center">Mã HS</th>
+                    <th className="py-3 px-3 text-center">Ngày Sinh</th>
+                    <th className="py-3 px-3 text-center">Trạng Thái</th>
+                    <th className="py-3 px-3 text-center">Điểm Bảo Toàn</th>
+                    <th className="py-3 px-3 text-center">Thao Tác Nhắc Nhở</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {filteredUnloggedStudents.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="py-8 text-center text-slate-400">
+                        🎉 Tuyệt vời! Không có học sinh nào chưa đăng nhập trong phạm vi này hoặc không tìm thấy kết quả phù hợp!
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredUnloggedStudents.map((item, idx) => (
+                      <tr 
+                        key={`${item.studentCode}-${item.stt}-${idx}`}
+                        className="hover:bg-rose-50/50 dark:hover:bg-rose-950/20 transition"
+                      >
+                        <td className="py-2.5 px-3 text-center font-bold text-slate-400">
+                          {idx + 1}
+                        </td>
+                        <td className="py-2.5 px-3">
+                          <div className="font-black text-slate-900 dark:text-white">
+                            {item.name}
+                          </div>
+                        </td>
+                        <td className="py-2.5 px-3 text-center font-bold text-slate-700 dark:text-slate-300">
+                          {item.className}
+                        </td>
+                        <td className="py-2.5 px-3 text-center font-bold text-slate-500">
+                          Khối {item.grade}
+                        </td>
+                        <td className="py-2.5 px-3 text-center text-slate-400 font-mono text-[11px]">
+                          {item.studentCode || '---'}
+                        </td>
+                        <td className="py-2.5 px-3 text-center text-slate-500 text-[11px]">
+                          {item.dob || '---'}
+                        </td>
+                        <td className="py-2.5 px-3 text-center">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 font-black text-[11px]">
+                            <XCircle className="w-3 h-3 text-rose-600" />
+                            <span>Chưa Đăng Nhập</span>
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 text-center">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-200 font-black text-[11px]">
+                            <ShieldCheck className="w-3 h-3 text-amber-600" />
+                            <span>{item.totalMeritPoints}đ (Bảo Toàn)</span>
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyIndividualReminder(item)}
+                            className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 font-bold text-[11px] transition inline-flex items-center gap-1 cursor-pointer"
+                            title={`Sao chép tin nhắn nhắc nhở riêng cho em ${item.name}`}
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>Nhắc em này</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* =========================================================================
-
-          TAB 3: NHẬT KÝ THỜI GIAN THỰC (LIVE STREAM FEED)
-
+          TAB 4: NHẬT KÝ THỜI GIAN THỰC (LIVE STREAM FEED)
           ========================================================================= */}
 
       {activeTab === 'live_feed' && (
