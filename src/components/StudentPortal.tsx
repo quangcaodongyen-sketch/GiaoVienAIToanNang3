@@ -2616,9 +2616,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     } catch (e) {}
 
-    return 'missions';
+    return 'vocab';
 
   });
+  const [isNoticeExpanded, setIsNoticeExpanded] = useState<boolean>(true);
 
   // Đồng bộ trạng thái học sinh đang online và hoạt động học tập hiện tại (đặt sau khi activeTab đã khởi tạo)
   useEffect(() => {
@@ -2804,1503 +2805,811 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-      {/* HEADER GÓC HỌC SINH TONE XANH DỊU MẮT, CHỮ TRẮNG TƯƠNG PHẢN CAO */}
+      {/* =========================================================================
+          CỔNG HỌC TẬP VÀ THI THỬ TRỰC TUYẾN - 5 BƯỚC SƯ PHẠM KHOA HỌC TỪ TRÊN XUỐNG
+          Thầy giáo Đinh Văn Thành - Trường THCS Đồng Yên - SĐT/Zalo: 0915.213717
+          1. Bước 1: Đăng nhập (Chọn Lớp & Tên học sinh)
+          2. Bước 2: Xem thông báo ngắn gọn
+          3. Bước 3: Vào học (Luyện Từ Vựng 3D & Ôn Đề Cương GK1)
+          4. Bước 4: Kiểm tra thử (Trắc nghiệm 5 phút & Đề thi thử GK1)
+          5. Bước 5: Thống kê xem điểm (Cá nhân, Lớp, Khối, Toàn trường, DS Chưa Đăng Nhập)
+      ========================================================================= */}
 
-      <div className="bg-[#0B1E36] border border-blue-500/30 rounded-2xl p-4 sm:p-5 text-white shadow-md mb-4">
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-
-          <div>
-
-            <div className="flex items-center gap-2">
-
-              <h2 className="text-lg sm:text-xl font-black tracking-tight text-white">
-
-                Góc Học Tập Trực Tuyến
-
-              </h2>
-
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-500/25 text-cyan-200 border border-blue-400/30 font-bold">
-
-                THCS Đồng Yên
-
-              </span>
-
-            </div>
-
-            <p className="text-xs text-blue-200/90 mt-0.5">
-
-              Ôn tập đề cương, luyện từ vựng & kiểm tra trực tuyến
-
-            </p>
-
+      {/* HEADER TỔNG QUAN: CỔNG HỌC TẬP THCS ĐỒNG YÊN */}
+      <div className="bg-gradient-to-r from-[#07172C] via-[#0B2548] to-[#0A1F3B] border border-blue-500/30 rounded-2xl p-3.5 sm:p-4 text-white shadow-md mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-inner">
+            🎓
           </div>
-
-
-
-          {/* Thẻ học sinh hiển thị đĩnh đạc, tone xanh chữ trắng kèm Widget Chuyên Cần Thực Tế */}
-
-          {currentStudent ? (
-
-            <div className="flex items-center gap-2.5 flex-wrap">
-
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0F2A4A] border border-blue-400/40 text-white shadow-xs">
-
-                <span className="text-sm">{currentStudent.gender === 'Nữ' ? '👧' : '👦'}</span>
-
-                <span className="text-xs font-bold text-white">{currentStudent.name}</span>
-
-                <span className="text-[11px] text-cyan-300 font-bold">Lớp {currentStudent.className}</span>
-
-                <span className="text-[11px] px-1.5 py-0.2 rounded-md bg-blue-600 text-white font-bold">⭐ {currentStudent.totalMeritPoints || 15}đ</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold hidden sm:inline-flex items-center gap-1" title="Điểm tự động đồng bộ mỗi 2 phút, bảo toàn điểm số an toàn tuyệt đối">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  <span>Tự cập nhật 2 phút • {lastAutoSyncTime}</span>
-                </span>
-                {myTeamInfo && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('teams')}
-                    className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/30 hover:bg-indigo-500/50 text-indigo-200 border border-indigo-400/40 font-bold text-[11px] transition cursor-pointer"
-                    title="Bấm để xem chi tiết 4 Tổ Thi Đua của lớp em"
-                  >
-                    <span>🛡️ {myTeamInfo.team.name.split('(')[0]}</span>
-                    <span className="px-1 py-0.2 rounded bg-amber-400 text-slate-950 font-black text-[9px]">
-                      {myTeamInfo.member.roleBadge}
-                    </span>
-                  </button>
-                )}
-
-              </div>
-
-
-
-              {/* WIDGET THEO DÕI CHUYÊN CẦN HỌC THỰC TẾ & CHỐNG TREO MÁY */}
-
-              <div 
-
-                onClick={() => setShowStudyRulesModal(true)}
-
-                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all cursor-pointer shadow-xs ${
-
-                  isActiveLearning 
-
-                    ? 'bg-emerald-950/80 border-emerald-500/60 hover:bg-emerald-900/90 text-emerald-100 ring-1 ring-emerald-500/30' 
-
-                    : 'bg-amber-950/70 border-amber-500/50 hover:bg-amber-900/80 text-amber-100 ring-1 ring-amber-500/30'
-
-                }`}
-
-                title="Bấm để xem Quy Chế Chuyên Cần: Cứ mỗi 10 phút học thực tế có tương tác = +3 điểm thi đua (Chống treo máy)"
-
-              >
-
-                <div className="relative flex items-center justify-center shrink-0">
-
-                  <span className={`w-2.5 h-2.5 rounded-full ${isActiveLearning ? 'bg-emerald-400 animate-ping absolute' : ''}`} />
-
-                  <span className={`w-2.5 h-2.5 rounded-full ${isActiveLearning ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-
-                </div>
-
-                <div className="flex flex-col text-left">
-
-                  <div className="flex items-center gap-2 text-[11px] font-black leading-tight">
-
-                    <span className="flex items-center gap-1">
-
-                      {isActiveLearning ? (
-
-                        <>
-
-                          <span className="text-emerald-300">Đang Học Thực Tế</span>
-
-                          <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/30 text-emerald-200">Đang tính giờ</span>
-
-                        </>
-
-                      ) : (
-
-                        <>
-
-                          <span className="text-amber-300">Tạm Dừng Tính Giờ</span>
-
-                          <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/30 text-amber-200">Chờ tương tác</span>
-
-                        </>
-
-                      )}
-
-                    </span>
-
-                    <span className="text-cyan-300 font-black">
-
-                      ⏱️ {currentStudent.studyTimeMinutes || 0} phút
-
-                    </span>
-
-                  </div>
-
-                  <div className="flex items-center gap-1.5 mt-0.5">
-
-                    {/* Mini progress bar 10 phút */}
-
-                    <div className="w-20 h-1.5 bg-black/50 rounded-full overflow-hidden border border-white/10">
-
-                      <div 
-
-                        className={`h-full rounded-full transition-all duration-500 ${isActiveLearning ? 'bg-gradient-to-r from-emerald-400 to-teal-300' : 'bg-amber-400'}`}
-
-                        style={{ width: `${Math.min(100, (((currentStudent.studyTimeMinutes || 0) % 10) / 10) * 100)}%` }}
-
-                      />
-
-                    </div>
-
-                    <span className="text-[10px] text-white/90 font-bold">
-
-                      {(currentStudent.studyTimeMinutes || 0) % 10}/10p (+3đ)
-
-                    </span>
-
-                    <span className="text-[9px] text-emerald-300 font-extrabold bg-emerald-950/90 px-1 rounded border border-emerald-500/30">
-
-                      +{currentStudent.timePoints || 0}đ
-
-                    </span>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-
-
-              {/* Đã khóa nút Hộp Quà theo chỉ đạo của Thầy Đinh Thành */}
-
-              {/* Nút Xem Tổng Hợp Điểm & Vào Học Nhanh */}
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('leaderboard');
-                  window.scrollTo({ top: 350, behavior: 'smooth' });
-                }}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1.5"
-                title="Bấm để xem Bảng Vàng và Tổng Hợp Điểm Thi Đua của em và cả lớp"
-              >
-                <Trophy className="w-3.5 h-3.5 text-slate-950" />
-                <span>Xem Bảng Vàng &amp; Tổng Điểm</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('vocab');
-                  window.scrollTo({ top: 350, behavior: 'smooth' });
-                }}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1.5"
-                title="Bấm để vào phòng Luyện Từ Vựng ngay"
-              >
-                <BookOpen className="w-3.5 h-3.5 text-white" />
-                <span>Học Từ Vựng Ngay</span>
-              </button>
-
-              <button
-
-                type="button"
-
-                onClick={handleSwitchOtherStudent}
-
-                className="px-2.5 py-1.5 rounded-xl bg-blue-900/60 hover:bg-blue-800 text-blue-100 hover:text-white text-xs font-bold transition cursor-pointer border border-blue-700/50 flex items-center gap-1"
-
-                title="Đổi bạn học khác"
-
-              >
-
-                <RotateCw className="w-3.5 h-3.5 text-cyan-300" />
-
-                <span>Đổi Bạn</span>
-
-              </button>
-
-
-
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-base sm:text-lg font-black tracking-tight text-white">
+                Cổng Học Tập &amp; Thi Thử Trực Tuyến
+              </h2>
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-500/25 text-cyan-200 border border-blue-400/30 font-bold">
+                THCS Đồng Yên
+              </span>
             </div>
-
-          ) : null}
-
+            <p className="text-xs text-blue-200/90 mt-0.5">
+              Hệ thống ôn tập chuẩn ma trận GDPT 2018 do Thầy giáo Đinh Văn Thành xây dựng • ĐT/Zalo: 0915.213717
+            </p>
+          </div>
         </div>
 
+        <div className="flex items-center gap-2 flex-wrap text-xs font-bold shrink-0">
+          <span className="px-2.5 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>Tự cập nhật 2 phút • {lastAutoSyncTime}</span>
+          </span>
+          <span className="px-2.5 py-1 rounded-xl bg-blue-500/20 text-blue-200 border border-blue-400/30">
+            🔒 Bảo toàn 100% điểm số
+          </span>
+        </div>
       </div>
 
-      {/* THANH HIỂN THỊ CÁC BẠN HỌC SINH ĐANG ONLINE THỜI GIAN THỰC (CHỮ TO RÕ RÀNG) */}
+      {/* THANH HIỂN THỊ HỌC SINH ĐANG ONLINE THỜI GIAN THỰC */}
       <OnlineStudentsBar currentStudent={currentStudent} />
 
-      <StudentStudyReminder
-        currentStudent={currentStudent}
-        loginRewardInfo={loginRewardInfo}
-        onGoToExam={() => {
-          setActiveTab('exam');
-          window.scrollTo({ top: 350, behavior: 'smooth' });
-        }}
-        onGoToQuiz={() => {
-          setActiveTab('quiz');
-          window.scrollTo({ top: 350, behavior: 'smooth' });
-        }}
-        onGoToVocabUnit={(unitNumber, targetGrade) => {
-          if (targetGrade && targetGrade !== selectedGrade) {
-            setSelectedGrade(targetGrade);
-          }
-          setSelectedUnit(unitNumber);
-          setActiveTab('vocab');
-          window.scrollTo({ top: 350, behavior: 'smooth' });
-        }}
-        onGoToDecuong={() => {
-          const g = currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.replace(/\D/g, ''), 10) || 8) : 8);
-          if (g === 6) {
-            setActiveTab('decuong_e6');
-          } else {
-            setActiveTab('decuong_e8');
-          }
-          window.scrollTo({ top: 350, behavior: 'smooth' });
-        }}
-        onGoToLeaderboard={() => {
-          setActiveTab('teams');
-          setCompetitionSubTab('all');
-          window.scrollTo({ top: 350, behavior: 'smooth' });
-        }}
-      />
-
-      {/* THANH ĐIỀU HƯỚNG TAB 3D TRONG SUỐT CHO HỌC SINH (HIỂN THỊ ĐỦ KHÔNG BỊ CẮT, KÍNH 3D NỔI BẬT & CHỮ TƯƠNG PHẢN CAO) */}
-      <div className="p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_8px_30px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] flex flex-wrap items-center gap-1.5 sm:gap-2 mb-4">
-        {/* 1. Nhiệm Vụ GK1 */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('missions')}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            activeTab === 'missions'
-              ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 1: Nhiệm vụ ôn tập giữa kỳ và mục tiêu học tập hàng ngày"
-        >
-          <Target className={`w-4 h-4 shrink-0 ${activeTab === 'missions' ? 'text-amber-300 drop-shadow-sm' : 'text-rose-600 dark:text-rose-400'}`} />
-          <span className={activeTab === 'missions' ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>1. Nhiệm Vụ GK1</span>
-        </button>
-
-        {/* 2. Từ Vựng */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('vocab')}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            activeTab === 'vocab'
-              ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 2: Học từ vựng SGK Tiếng Anh theo Unit kèm phát âm AI & Flashcard"
-        >
-          <BookOpen className={`w-4 h-4 shrink-0 ${activeTab === 'vocab' ? 'text-amber-300 drop-shadow-sm' : 'text-emerald-600 dark:text-emerald-400'}`} />
-          <span className={activeTab === 'vocab' ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>2. Từ Vựng</span>
-        </button>
-
-        {/* 3. Đề Cương & Bài Tập */}
-        <button
-          type="button"
-          onClick={() => {
-            if (currentStudent?.grade === 6) {
-              setActiveTab('decuong_e6');
-            } else if (!currentStudent || currentStudent.grade === 8) {
-              setActiveTab('decuong_e8');
-            } else {
-              setActiveTab('sgk');
-            }
-          }}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            ['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)
-              ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 3: Đề cương ôn tập và bài tập SGK có đáp án chi tiết"
-        >
-          <FileText className={`w-4 h-4 shrink-0 ${['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) ? 'text-amber-300 drop-shadow-sm' : 'text-cyan-600 dark:text-cyan-400'}`} />
-          <span className={['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>3. Đề Cương &amp; Bài Tập</span>
-        </button>
-
-        {/* 4. Đề Kiểm Tra Online */}
-        <button
-          type="button"
-          onClick={() => {
-            if (!['exam', 'quiz'].includes(activeTab)) {
-              setActiveTab('quiz'); // Mở Kiểm Tra 5 Phút trước theo lộ trình khởi động
-            }
-          }}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            ['exam', 'quiz'].includes(activeTab)
-              ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 4: Luyện đề kiểm tra 5 phút & đề kiểm tra giữa kỳ online tự động bấm giờ"
-        >
-          <Award className={`w-4 h-4 shrink-0 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300 drop-shadow-sm' : 'text-amber-600 dark:text-amber-400'}`} />
-          <span className={['exam', 'quiz'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>4. Đề Kiểm Tra Online</span>
-        </button>
-
-        {/* 5. Tổ Thi Đua & Thống Kê (Hợp nhất theo yêu cầu Thầy Đinh Thành: 4 Tổ, Theo Lớp, Theo Khối, Toàn trường) */}
-        <button
-          type="button"
-          onClick={() => {
-            setActiveTab('teams');
-            if (competitionSubTab === 'all') {
-              setCompetitionSubTab('teams');
-            }
-          }}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            ['teams', 'leaderboard', 'tracking'].includes(activeTab)
-              ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_6px_20px_rgba(245,158,11,0.55),inset_0_1.5px_1.5px_rgba(255,255,255,0.7),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.15),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Thống kê kết quả cá nhân, 4 tổ thi đua, theo lớp và theo khối"
-        >
-          <Trophy className={`w-4 h-4 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950 drop-shadow-sm' : 'text-amber-600 dark:text-amber-400'}`} />
-          <span className={['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'drop-shadow-[0_1px_0_rgba(255,255,255,0.4)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>5. Tổ Thi Đua &amp; Thống Kê</span>
-        </button>
-
-        {/* 6. Diễn Đàn & Hỏi Thầy */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('forum')}
-          className={`relative px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] md:text-base font-black transition-all duration-200 cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 ${
-            ['forum', 'messages'].includes(activeTab)
-              ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.45),inset_0_1.5px_1.5px_rgba(255,255,255,0.65),inset_0_-2.5px_0_rgba(0,0,0,0.25)] border-t border-blue-300/90 border-b-2 border-blue-950/80 -translate-y-0.5 scale-[1.03]'
-              : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/80 dark:hover:bg-slate-700/80 text-slate-950 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 font-black border border-white/85 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_3px_10px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9),inset_0_-2px_3px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.1),inset_0_1.5px_1px_rgba(255,255,255,1)]'
-          }`}
-          title="Lộ trình 6: Hỏi bài Thầy Đinh Thành hoặc thảo luận cùng các bạn"
-        >
-          <MessageSquare className={`w-4 h-4 shrink-0 ${['forum', 'messages'].includes(activeTab) ? 'text-amber-300 drop-shadow-sm' : 'text-purple-600 dark:text-purple-400'}`} />
-          <span className={['forum', 'messages'].includes(activeTab) ? 'drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]' : 'drop-shadow-[0_1px_0_rgba(255,255,255,0.85)] dark:drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'}>6. Diễn Đàn &amp; Hỏi Thầy</span>
-        </button>
-      </div>
-
-      {/* THANH ĐIỀU HƯỚNG PHÂN HỆ THI ĐUA & THỐNG KÊ (GỘP GỌN 4 CHẾ ĐỘ: 4 TỔ THI ĐUA, THEO LỚP, THEO KHỐI, TOÀN TRƯỜNG) */}
-      {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('teams')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'teams'
-                ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_14px_rgba(245,158,11,0.5),inset_0_1.5px_1px_rgba(255,255,255,0.7),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-amber-950 dark:text-amber-200 hover:text-amber-600 font-black border border-amber-200/90 dark:border-amber-800/60 border-b-2 border-amber-300/80 dark:border-amber-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Đua Top và so tài điểm số giữa 4 Tổ thi đua trong lớp"
-          >
-            <span>⚔️ 1. Thi Đua Các Tổ</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('class')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'class'
-                ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê xếp hạng và chuyên cần của tất cả học sinh theo từng lớp học"
-          >
-            <span>👥 2. Theo Lớp</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('grade')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'grade'
-                ? 'bg-gradient-to-b from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-[0_4px_14px_rgba(79,70,229,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-indigo-300 border-b-2 border-indigo-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê xếp hạng học sinh theo từng khối lớp (Khối 6, 7, 8, 9)"
-          >
-            <span>🎓 3. Theo Khối</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCompetitionSubTab('all')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              competitionSubTab === 'all'
-                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Thống kê Bảng Vàng vinh danh toàn trường THCS Đồng Yên"
-          >
-            <span>🏫 4. Toàn Trường</span>
-          </button>
-        </div>
-      )}
-
-      
-      {['decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
-          {(!currentStudent || currentStudent.grade === 6) && (
-            <button
-              type="button"
-              onClick={() => setActiveTab('decuong_e6')}
-              className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-                activeTab === 'decuong_e6'
-                  ? 'bg-gradient-to-b from-teal-600 via-emerald-600 to-teal-700 text-white font-black shadow-[0_4px_14px_rgba(13,148,136,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-teal-300 border-b-2 border-teal-950 -translate-y-0.5 scale-[1.02]'
-                  : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-              }`}
-            >
-              <span>📖 Đề Cương GK1 Anh 6</span>
-            </button>
-          )}
-
-          {(!currentStudent || currentStudent.grade === 8) && (
-            <button
-              type="button"
-              onClick={() => setActiveTab('decuong_e8')}
-              className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-                activeTab === 'decuong_e8'
-                  ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                  : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-              }`}
-            >
-              <span>📖 Đề Cương GK1 Anh 8</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('sgk')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'sgk'
-                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-          >
-            <span>📘 Bài Tập SGK</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('hsg')}
-            className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'hsg'
-                ? 'bg-gradient-to-b from-purple-600 via-indigo-600 to-purple-700 text-white font-black shadow-[0_4px_14px_rgba(147,51,234,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-purple-300 border-b-2 border-purple-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-          >
-            <span>🏆 Ôn Thi HSG</span>
-          </button>
-        </div>
-      )}
-
-      {['exam', 'quiz'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
-          {/* LỘ TRÌNH 1: KIỂM TRA 5 PHÚT (KHỞI ĐỘNG NHANH) */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('quiz')}
-            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'quiz'
-                ? 'bg-gradient-to-b from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_14px_rgba(245,158,11,0.5),inset_0_1.5px_1px_rgba(255,255,255,0.7),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-amber-200 border-b-2 border-amber-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white hover:text-amber-600 font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Lộ trình 1: Bài kiểm tra 5 phút trắc nghiệm nhanh rèn phản xạ từng Unit"
-          >
-            <Clock className={`w-3.5 h-3.5 ${activeTab === 'quiz' ? 'text-slate-950' : 'text-amber-600'}`} />
-            <span>⏱️ Kiểm Tra 5 Phút</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ml-1 ${
-              activeTab === 'quiz' ? 'bg-black/20 text-slate-950' : 'bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200'
-            }`}>
-              Khởi động
-            </span>
-          </button>
-
-          {/* LỘ TRÌNH 2: ĐỀ KIỂM TRA GIỮA KỲ (THỰC CHIẾN) */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('exam')}
-            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'exam'
-                ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white hover:text-blue-600 font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-            title="Lộ trình 2: Kiểm tra thử đề kiểm tra giữa kỳ 1 chuẩn ma trận cấu trúc Bộ GD&ĐT"
-          >
-            <Award className={`w-3.5 h-3.5 ${activeTab === 'exam' ? 'text-amber-300' : 'text-blue-600'}`} />
-            <span>📝 Đề Kiểm Tra Giữa Kỳ</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ml-1 ${
-              activeTab === 'exam' ? 'bg-white/20 text-white' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-900 dark:text-blue-200'
-            }`}>
-              Thực chiến
-            </span>
-          </button>
-        </div>
-      )}
-
-      {activeTab === 'vocab' && (
-        <div className="flex items-center justify-between gap-2 mb-4">
-          <div className="text-xs text-slate-700 dark:text-slate-300 font-bold">
-            Học từ vựng SGK theo Unit và làm bài tập tương tác
-          </div>
-          <button
-            type="button"
-            onClick={() => setIsIpaModalOpen(true)}
-            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95 border-t border-amber-300 border-b border-amber-700"
-          >
-            <span>🗣️ Bảng Âm IPA</span>
-          </button>
-        </div>
-      )}
-
-      {['forum', 'messages'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 mb-4 rounded-2xl bg-white/45 dark:bg-slate-900/45 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-[0_6px_20px_rgba(0,0,0,0.06),inset_0_1.5px_1px_rgba(255,255,255,0.9)] w-fit text-xs sm:text-sm md:text-base font-black">
-          <button
-            type="button"
-            onClick={() => setActiveTab('forum')}
-            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'forum'
-                ? 'bg-gradient-to-b from-blue-600 to-indigo-600 text-white font-black shadow-[0_4px_14px_rgba(37,99,235,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white hover:text-blue-600 font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-          >
-            <span>💬 Diễn Đàn Trao Đổi</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('messages')}
-            className={`px-4 py-2 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-              activeTab === 'messages'
-                ? 'bg-gradient-to-b from-cyan-600 to-blue-600 text-white font-black shadow-[0_4px_14px_rgba(8,145,178,0.45),inset_0_1.5px_1px_rgba(255,255,255,0.65),inset_0_-2px_0_rgba(0,0,0,0.25)] border-t border-cyan-300 border-b-2 border-cyan-950 -translate-y-0.5 scale-[1.02]'
-                : 'bg-white/55 dark:bg-slate-800/55 hover:bg-white/85 dark:hover:bg-slate-700/85 text-slate-950 dark:text-white hover:text-cyan-600 font-black border border-white/90 dark:border-white/20 border-b-2 border-slate-300/80 dark:border-slate-700/80 shadow-[0_2px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)] hover:-translate-y-0.5'
-            }`}
-          >
-            <span>✉️ Nhắn Tin Thầy Thành</span>
-          </button>
-        </div>
-      )}
-
-      {/* ==================== PHÂN HỆ 0: NHIỆM VỤ ÔN TẬP GIỮA KỲ 1 ==================== */}
-
-      {currentStudent && activeTab === 'missions' && (
-
-        <MidtermMissionCard
-
-          currentStudent={currentStudent}
-
-          onGoToVocabUnit={(u) => {
-
-            setSelectedUnit(u);
-
-            setActiveTab('vocab');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-          }}
-
-          onGoToDecuong={() => {
-
-            if (currentStudent?.grade === 6) {
-
-              setActiveTab('decuong_e6');
-
-            } else {
-
-              setActiveTab('decuong_e8');
-
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-          }}
-
-          onGoToExam={() => {
-
-            setActiveTab('exam');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-          }}
-
-        />
-
-      )}
-
-{/* ==================== VÀO HỌC NHANH SIÊU ĐƠN GIẢN (CHỈ CẦN TÊN & LỚP - KHÔNG CẦN ĐĂNG KÝ) ==================== */}
-
-      {!currentStudent && ['missions', 'vocab', 'sgk', 'exam', 'quiz', 'hsg', 'decuong_e8', 'decuong_e6'].includes(activeTab) && (
-
-        <div className="bg-gradient-to-br from-white via-blue-50/60 to-indigo-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-2xl border-2 border-blue-500/40 p-4 sm:p-5 shadow-lg max-w-2xl mx-auto my-3 sm:my-4 animate-in fade-in space-y-3.5">
-
-          
-
-{/* BANNER THÔNG BÁO ƯU ĐÃI ĐỘNG (THIẾT KẾ ÍT TỪ, CHỮ TO RÕ RÀNG DỄ ĐỌC THEO YÊU CẦU THẦY ĐINH THÀNH) */}
-          <div className="p-3 sm:p-4 rounded-2xl shadow-lg border-2 text-white relative overflow-hidden transition-all bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 border-amber-300">
-            <div className="flex items-center justify-between gap-3 relative z-10">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl sm:text-3xl shadow-inner shrink-0">
-                  🎁
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/25 text-white text-[11px] font-black uppercase tracking-wider">
-                      {loginRewardInfo.promoBadge || '🔥 KHUYẾN MẠI'}
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/30 text-amber-200 text-[11px] font-bold">
-                      📅 {loginRewardInfo.dateDisplay}
-                    </span>
-                  </div>
-
-                  <h3 className="text-base sm:text-lg font-black text-white leading-tight mt-1 truncate drop-shadow-sm">
-                    Tặng +{loginRewardInfo.points} Điểm Đăng Nhập Học Sinh!
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-amber-100 font-extrabold leading-tight mt-0.5 line-clamp-1 drop-shadow-xs">
-                    {loginRewardInfo.bannerText || `Nhân đôi điểm từ vựng (+20đ/Unit) để bứt phá Top 1!`}
-                  </p>
-
-                  {/* ĐỒNG HỒ ĐẾM NGƯỢC THỜI GIAN THỰC & NÚT XEM LỘ TRÌNH TINH GỌN */}
-                  <div className="flex items-center gap-2 flex-wrap mt-1.5">
-                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-black/35 backdrop-blur-xs text-xs font-bold text-amber-200 border border-amber-300/30">
-                      <Clock className="w-3.5 h-3.5 text-amber-400" />
-                      <PromoCountdownDisplay />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowPromoRoadmapModal(true)}
-                      className="px-2.5 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-black text-xs transition flex items-center gap-1 cursor-pointer border border-white/25 active:scale-95 shadow-2xs"
-                      title="Xem trước lộ trình ưu đãi các ngày sắp tới"
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-amber-300" />
-                      <span>Lộ Trình Ưu Đãi &rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="shrink-0 flex items-center">
-                <span className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-md inline-flex items-center gap-1.5 active:scale-95">
-                  <span>+{loginRewardInfo.points} Điểm</span>
-                  <span>🎉</span>
-                </span>
-              </div>
+      {/* =========================================================================
+          BƯỚC 1: ĐĂNG NHẬP / THÔNG TIN HỌC SINH ĐANG HỌC
+      ========================================================================= */}
+      {!currentStudent ? (
+        /* Trường hợp 1: Chưa đăng nhập -> Hiện Form Đăng Nhập trực quan 1-Chạm */
+        <div className="bg-gradient-to-br from-white via-blue-50/70 to-indigo-50/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-2xl border-2 border-blue-500/50 p-4 sm:p-5 shadow-xl mb-4 animate-in fade-in space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-blue-200/80 dark:border-slate-800">
+            <div className="flex items-center gap-2.5">
+              <span className="px-3 py-1 rounded-xl bg-blue-600 text-white font-black text-xs uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                <span>🔑</span>
+                <span>BƯỚC 1: ĐĂNG NHẬP</span>
+              </span>
+              <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                CHỌN LỚP &amp; HỌ TÊN EM ĐỂ VÀO HỌC
+              </h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-xs font-bold">
+                🎁 Tặng +{loginRewardInfo.points}đ đăng nhập hôm nay
+              </span>
+              <span className="text-xs text-slate-500 font-bold hidden sm:inline">
+                Miễn phí 100%
+              </span>
             </div>
           </div>
 
           {/* GỢI Ý 1-CHẠM VÀO HỌC LẠI NẾU ĐÃ CÓ BẢN LƯU TRÊN THIẾT BỊ NÀY */}
-
           {rememberedStudent && (
-
-            <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 p-4 sm:p-5 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-2 border-emerald-300">
-
-              <div className="flex items-center gap-3">
-
-                <div className="w-11 h-11 rounded-full bg-white text-emerald-700 flex items-center justify-center font-black text-xl shadow-sm shrink-0">
-
+            <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-3.5 sm:p-4 rounded-xl text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-emerald-300/60">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-full bg-white text-emerald-700 flex items-center justify-center font-black text-lg shadow-xs shrink-0">
                   👋
-
                 </div>
-
                 <div>
-
-                  <div className="text-[11px] text-emerald-100 font-black uppercase tracking-wider">
-
-                    Gợi ý thiết bị này (Đúng tên & đúng lớp):
-
+                  <div className="text-[11px] text-emerald-100 font-bold uppercase tracking-wider">
+                    Thiết bị ghi nhận tên em:
                   </div>
-
-                  <h4 className="text-base sm:text-lg font-black text-white">
-
+                  <h4 className="text-sm sm:text-base font-black text-white">
                     {rememberedStudent.name} — Lớp {rememberedStudent.className}
-
                   </h4>
-
                 </div>
-
               </div>
-
               <div className="flex items-center gap-2">
-
                 <button
-
                   type="button"
-
                   onClick={() => handleOneTapLogin(rememberedStudent.name, rememberedStudent.className)}
-
-                  className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
-
+                  className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
                 >
-
                   <Sparkles className="w-4 h-4 text-slate-900" />
-
-                  <span>🚀 1-Chạm Vào Học Ngay (+{loginRewardInfo.points}đ{loginRewardInfo.isPromoToday ? ' Khuyến Mại' : ''})</span>
-
+                  <span>🚀 1-Chạm Vào Học Ngay (+{loginRewardInfo.points}đ)</span>
                 </button>
-
                 <button
-
                   type="button"
-
                   onClick={() => {
-
                     localStorage.removeItem('DONGYEN_REMEMBERED_STUDENT');
-
                     setRememberedStudent(null);
-
                     setQuickFullName('');
-
                   }}
-
-                  className="px-3 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition cursor-pointer"
-
+                  className="px-3 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition cursor-pointer"
                   title="Nhập học sinh khác"
-
                 >
-
-                  Bạn Khác
-
+                  Chọn Bạn Khác
                 </button>
-
               </div>
-
             </div>
-
           )}
-
-
 
           {/* GỢI Ý CÁC BẠN VỪA HỌC TRÊN THIẾT BỊ (CHO ANH CHỊ EM DÙNG CHUNG MÁY) */}
-
           {recentStudents.length > 1 && (
-
-            <div className="flex items-center gap-2 flex-wrap p-2.5 rounded-xl bg-blue-50/70 dark:bg-slate-800/60 border border-blue-200 dark:border-slate-700">
-
-              <span className="text-xs text-slate-600 dark:text-slate-300 font-bold shrink-0">Chọn nhanh bạn học:</span>
-
+            <div className="flex items-center gap-2 flex-wrap p-2 rounded-xl bg-blue-50/70 dark:bg-slate-800/60 border border-blue-200 dark:border-slate-700 text-xs">
+              <span className="text-slate-600 dark:text-slate-300 font-bold shrink-0">Chọn nhanh bạn học:</span>
               {recentStudents.map((rc, idx) => (
-
                 <button
-
                   key={idx}
-
                   type="button"
-
                   onClick={() => handleOneTapLogin(rc.name, rc.className)}
-
-                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 text-blue-900 dark:text-blue-200 border border-blue-200 dark:border-slate-600 hover:bg-blue-100 text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-xs"
-
+                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 text-blue-900 dark:text-blue-200 border border-blue-200 dark:border-slate-600 hover:bg-blue-100 font-bold transition flex items-center gap-1 cursor-pointer"
                 >
-
                   <span>👤 {rc.name} ({rc.className})</span>
-
                 </button>
-
               ))}
-
             </div>
-
           )}
 
-
-
-          <div className="text-center space-y-2">
-
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300 text-xs font-black">
-
-              🎁 HOÀN TOÀN MIỄN PHÍ 100% • KHÔNG THU HỌC PHÍ
-
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-
-              CHỌN TÊN VÀO HỌC MIỄN PHÍ
-
-            </h3>
-
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-
-              Chương trình ôn tập trực tuyến do Thầy giáo Đinh Văn Thành xây dựng phi lợi nhuận phục vụ học sinh THCS Đồng Yên. Chọn Lớp và Họ Tên để bắt đầu:
-
-            </p>
-
-          </div>
-
-
-
-          {/* Form 2 ô nhập liệu */}
-
-          <form onSubmit={handleQuickAccessSubmit} className="space-y-4 max-w-xl mx-auto">
-
+          {/* FORM CHỌN LỚP & CHỌN TÊN */}
+          <form onSubmit={handleQuickAccessSubmit} className="space-y-3.5">
             {quickError && (
-
               <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-bold text-center">
-
                 ⚠️ {quickError}
-
               </div>
-
             )}
 
-
-
-            {/* BƯỚC 1: CHỌN LỚP HỌC (ĐẦY ĐỦ 10 LỚP THẦY ĐINH VĂN THÀNH DẠY TẠI THCS ĐỒNG YÊN) */}
-
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800/90 border-2 border-blue-200 dark:border-blue-900/60 shadow-xs space-y-3">
-
-              <div className="flex items-center justify-between">
-
-                <label className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-
-                  <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-black shadow-xs">1</span>
-
-                  <span>1. Chọn Lớp Học:</span>
-
-                </label>
-
-                <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">
-
-                  Bấm 1 chạm chọn lớp Thầy Thành dạy
-
+            {/* PHẦN 1: CHỌN LỚP */}
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-blue-200 dark:border-blue-900/60 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+                  <span>Bước 1.1: Bấm chọn Lớp của em (*):</span>
                 </span>
-
+                <span className="text-[11px] text-blue-600 dark:text-blue-400 font-bold">
+                  Đang chọn: Lớp {quickClassName.trim().toUpperCase()}
+                </span>
               </div>
 
-
-
-              {/* KHỐI 8 (5 LỚP) */}
-
+              {/* KHỐI 8 */}
               <div className="space-y-1">
-
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
-
-                  <span className="flex items-center gap-1.5">
-
-                    <span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
-
-                    <span>Khối 8 (5 lớp Thầy Thành dạy):</span>
-
-                  </span>
-
-                  <span className="text-[10px] text-slate-400">181 học sinh</span>
-
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  <span>Khối 8 (5 lớp Thầy Thành dạy):</span>
                 </div>
-
-                <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-
+                <div className="grid grid-cols-5 gap-1.5">
                   {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => {
-
                     const isSelected = quickClassName.trim().toUpperCase() === cls;
-
                     const count = studentGradebookService.getOfficialRoster(cls).length || 37;
-
                     return (
-
                       <button
-
                         key={cls}
-
                         type="button"
-
                         onClick={() => {
-
                           setQuickClassName(cls);
-
                           setQuickError('');
-
                           const newRoster = studentGradebookService.getOfficialRoster(cls);
-
                           if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
-
                             setQuickFullName('');
-
                             setQuickAutocorrectNote(null);
-
                           }
-
                         }}
-
-                        className={`py-2 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
-
-                          isSelected
-
-                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.03]'
-
-                            : 'bg-blue-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-blue-200/70 dark:border-slate-600 hover:bg-blue-100 dark:hover:bg-slate-700'
-
-                        }`}
-
-                      >
-
-                        <span className="text-xs sm:text-sm font-black">{cls}</span>
-
-                        <span className={`text-[10px] ${isSelected ? 'text-blue-100 font-bold' : 'text-slate-500 dark:text-slate-400'}`}>
-
-                          {count} em
-
-                        </span>
-
-                      </button>
-
-                    );
-
-                  })}
-
-                </div>
-
-              </div>
-
-
-
-              {/* KHỐI 6 (5 LỚP) */}
-
-              <div className="space-y-1 pt-1">
-
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
-
-                  <span className="flex items-center gap-1.5">
-
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-
-                    <span>Khối 6 (5 lớp Thầy Thành dạy):</span>
-
-                  </span>
-
-                  <span className="text-[10px] text-slate-400">209 học sinh</span>
-
-                </div>
-
-                <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-
-                  {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => {
-
-                    const isSelected = quickClassName.trim().toUpperCase() === cls;
-
-                    const count = studentGradebookService.getOfficialRoster(cls).length || 42;
-
-                    return (
-
-                      <button
-
-                        key={cls}
-
-                        type="button"
-
-                        onClick={() => {
-
-                          setQuickClassName(cls);
-
-                          setQuickError('');
-
-                          const newRoster = studentGradebookService.getOfficialRoster(cls);
-
-                          if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
-
-                            setQuickFullName('');
-
-                            setQuickAutocorrectNote(null);
-
-                          }
-
-                        }}
-
-                        className={`py-2 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
-
-                          isSelected
-
-                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black shadow-md ring-2 ring-emerald-300 scale-[1.03]'
-
-                            : 'bg-emerald-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-emerald-200/70 dark:border-slate-600 hover:bg-emerald-100 dark:hover:bg-slate-700'
-
-                        }`}
-
-                      >
-
-                        <span className="text-xs sm:text-sm font-black">{cls}</span>
-
-                        <span className={`text-[10px] ${isSelected ? 'text-emerald-100 font-bold' : 'text-slate-500 dark:text-slate-400'}`}>
-
-                          {count} em
-
-                        </span>
-
-                      </button>
-
-                    );
-
-                  })}
-
-                </div>
-
-              </div>
-
-
-
-              {/* CẤP THPT (KHỐI 10, 11, 12 - TỰ DO GHI TÊN & GHI LỚP, GHI LỚP NÀO HỌC LỚP ĐÓ) */}
-
-              <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
-
-                <div className="flex items-center justify-between text-[11px] font-bold text-indigo-700 dark:text-indigo-300">
-
-                  <span className="flex items-center gap-1.5">
-
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
-
-                    <span>🎓 Cấp THPT (Khối 10, 11, 12 - Tự ghi tên & lớp, ghi lớp nào học lớp đó):</span>
-
-                  </span>
-
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 font-bold">
-
-                    Tự do ghi lớp
-
-                  </span>
-
-                </div>
-
-                <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
-
-                  {['10A1', '10A2', '11A1', '11A2', '12A1', '12A2'].map(cls => {
-
-                    const isSelected = quickClassName.trim().toUpperCase() === cls;
-
-                    return (
-
-                      <button
-
-                        key={cls}
-
-                        type="button"
-
-                        onClick={() => {
-
-                          setQuickClassName(cls);
-
-                          setQuickError('');
-
-                        }}
-
                         className={`py-1.5 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
-
                           isSelected
-
-                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black shadow-md ring-2 ring-indigo-300 scale-[1.03]'
-
-                            : 'bg-indigo-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-indigo-200/70 dark:border-slate-600 hover:bg-indigo-100 dark:hover:bg-slate-700'
-
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
+                            : 'bg-blue-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-blue-200/70 dark:border-slate-600 hover:bg-blue-100'
                         }`}
-
                       >
-
                         <span className="text-xs sm:text-sm font-black">{cls}</span>
-
-                        <span className={`text-[10px] ${isSelected ? 'text-indigo-100 font-bold' : 'text-slate-500 dark:text-slate-400'}`}>
-
-                          THPT
-
-                        </span>
-
+                        <span className={`text-[10px] ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>{count} em</span>
                       </button>
-
                     );
-
                   })}
-
                 </div>
-
               </div>
 
+              {/* KHỐI 6 */}
+              <div className="space-y-1 pt-1">
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>Khối 6 (5 lớp Thầy Thành dạy):</span>
+                </div>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => {
+                    const isSelected = quickClassName.trim().toUpperCase() === cls;
+                    const count = studentGradebookService.getOfficialRoster(cls).length || 42;
+                    return (
+                      <button
+                        key={cls}
+                        type="button"
+                        onClick={() => {
+                          setQuickClassName(cls);
+                          setQuickError('');
+                          const newRoster = studentGradebookService.getOfficialRoster(cls);
+                          if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
+                            setQuickFullName('');
+                            setQuickAutocorrectNote(null);
+                          }
+                        }}
+                        className={`py-1.5 px-1 rounded-xl text-center transition cursor-pointer flex flex-col items-center justify-center ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black shadow-md ring-2 ring-emerald-300 scale-[1.02]'
+                            : 'bg-emerald-50/50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-emerald-200/70 dark:border-slate-600 hover:bg-emerald-100'
+                        }`}
+                      >
+                        <span className="text-xs sm:text-sm font-black">{cls}</span>
+                        <span className={`text-[10px] ${isSelected ? 'text-emerald-100' : 'text-slate-400'}`}>{count} em</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-
-              {/* Hoặc gõ lớp khác */}
-
+              {/* THPT hoặc gõ lớp */}
               <div className="pt-1 flex items-center gap-2">
-
-                <span className="text-[11px] text-slate-400 dark:text-slate-400 whitespace-nowrap">Hoặc gõ lớp:</span>
-
+                <span className="text-[11px] text-slate-400 whitespace-nowrap">Khối khác hoặc tự gõ:</span>
                 <input
-
                   type="text"
-
                   value={quickClassName}
-
                   onChange={(e) => {
-
                     setQuickClassName(e.target.value);
-
                     setQuickError('');
-
                   }}
-
-                  placeholder="Ví dụ: 8A1, 8A2, 8A3, 8A4, 8A5, 6A1, 6A2..."
-
-                  className="flex-1 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-bold uppercase font-mono focus:border-blue-500 outline-hidden"
-
+                  placeholder="Ví dụ: 8A1, 6A2, 10A1..."
+                  className="flex-1 px-3 py-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-bold uppercase font-mono outline-hidden"
                 />
-
               </div>
-
             </div>
 
-
-
-            {/* BƯỚC 2: CHỌN HỌ VÀ TÊN HỌC SINH THEO SỔ ĐIỂM */}
-
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-800/90 border-2 border-amber-200 dark:border-amber-900/60 shadow-xs space-y-3">
-
-              <div className="flex items-center justify-between">
-
-                <label className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
-
-                  <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs font-black shadow-xs">2</span>
-
-                  <span>👤 Chọn Hoặc Gõ Họ Và Tên Em (*):</span>
-
-                </label>
-
-                <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1">
-
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-
-                  <span>Tự động đối chiếu sổ điểm</span>
-
+            {/* PHẦN 2: CHỌN HỌ VÀ TÊN */}
+            <div className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-amber-200 dark:border-amber-900/60 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-md bg-amber-500 text-white flex items-center justify-center text-xs">2</span>
+                  <span>Bước 1.2: Bấm chọn Họ và Tên em (*):</span>
                 </span>
-
+                <span className="text-[11px] text-amber-700 dark:text-amber-400 font-bold flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span>Sổ điểm Lớp {quickClassName.trim().toUpperCase()}</span>
+                </span>
               </div>
-
-
-
-              {/* Ô gõ lọc / nhập tên */}
 
               <input
-
                 type="text"
-
                 required
-
                 value={quickFullName}
-
                 onChange={(e) => {
-
                   setQuickFullName(e.target.value);
-
                   setQuickError('');
-
                   setQuickAutocorrectNote(null);
-
                 }}
-
                 onBlur={handleQuickFullNameBlur}
-
-                placeholder={`Gõ để lọc nhanh tên em trong Lớp ${quickClassName.trim().toUpperCase() || '8A1'}...`}
-
-                className="w-full px-4 py-3 rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50/30 dark:bg-slate-900 text-slate-900 dark:text-white text-sm sm:text-base font-bold focus:border-amber-500 focus:outline-hidden transition shadow-xs"
-
+                placeholder={`Gõ để tìm nhanh tên em trong Lớp ${quickClassName.trim().toUpperCase()}...`}
+                className="w-full px-3.5 py-2.5 rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50/30 dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-bold focus:border-amber-500 outline-hidden"
               />
 
-
-
-              {/* Thông báo tự động sửa chuẩn chính tả */}
-
+              {/* Autocorrect note */}
               {quickAutocorrectNote && (
-
-                <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-between gap-1.5 animate-fadeIn">
-
-                  <div className="flex items-center gap-1.5">
-
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-
-                    <span>
-
-                      {quickAutocorrectNote.isOfficial
-
-                        ? `✨ Đã tự động chuẩn hóa chính tả theo Danh sách lớp ${quickClassName}: "${quickAutocorrectNote.corrected}"`
-
-                        : `✨ Đã tự động viết hoa chuẩn tên riêng: "${quickAutocorrectNote.corrected}"`}
-
-                    </span>
-
-                  </div>
-
-                  <button
-
-                    type="button"
-
-                    onClick={() => setQuickAutocorrectNote(null)}
-
-                    className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
-
-                  >
-
+                <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center justify-between">
+                  <span>✨ Đã chuẩn hóa chính tả: "{quickAutocorrectNote.corrected}"</span>
+                  <button type="button" onClick={() => setQuickAutocorrectNote(null)} className="text-slate-400 hover:text-slate-600">
                     <X className="w-3.5 h-3.5" />
-
                   </button>
-
                 </div>
-
               )}
 
-
-
-              {/* DANH SÁCH TÊN THEO SỔ ĐIỂM CHÍNH THỨC CỦA LỚP */}
-
+              {/* Roster list */}
               {(() => {
-
                 const roster = studentGradebookService.getOfficialRoster(quickClassName);
-
                 if (roster && roster.length > 0) {
-
                   const filteredRoster = quickFullName.trim()
-
                     ? roster.map((name, idx) => ({ name, stt: idx + 1 })).filter(({ name }) => {
-
                         const q = removeDiacritics(quickFullName).toLowerCase().replace(/\s+/g, '');
-
                         const n = removeDiacritics(name).toLowerCase().replace(/\s+/g, '');
-
                         return n.includes(q);
-
                       })
-
                     : roster.map((name, idx) => ({ name, stt: idx + 1 }));
 
-
-
                   return (
-
-                    <div className="p-3 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-2">
-
-                      <div className="flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-200">
-
-                        <span className="flex items-center gap-1.5">
-
-                          <span>📋</span>
-
-                          <span>Sổ điểm Lớp {quickClassName.trim().toUpperCase()} ({roster.length} em theo sổ điểm Thầy Thành):</span>
-
-                        </span>
-
-                        <span className="text-[11px] text-amber-700 dark:text-amber-300 font-bold">
-
-                          {quickFullName.trim() ? `Lọc thấy ${filteredRoster.length}/${roster.length} em` : 'Chạm để chọn tên em'}
-
-                        </span>
-
+                    <div className="p-2.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 dark:text-amber-200">
+                        <span>Danh sách Lớp {quickClassName.trim().toUpperCase()} ({roster.length} em):</span>
+                        <span>{quickFullName.trim() ? `Lọc thấy ${filteredRoster.length}/${roster.length} em` : 'Chạm để chọn tên em'}</span>
                       </div>
-
-
-
-                      <div className="max-h-52 sm:max-h-60 overflow-y-auto flex flex-wrap gap-1.5 pr-1">
-
+                      <div className="max-h-48 overflow-y-auto flex flex-wrap gap-1.5 pr-1">
                         {filteredRoster.map(({ name, stt }) => {
-
                           const isSelected = quickFullName === name;
-
                           return (
-
                             <button
-
                               key={stt}
-
                               type="button"
-
                               onClick={() => {
-
                                 setQuickFullName(name);
-
                                 setQuickError('');
-
                                 setQuickAutocorrectNote({
-
                                   original: quickFullName,
-
                                   corrected: name,
-
                                   isOfficial: true
-
                                 });
-
                               }}
-
-                              className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-
+                              className={`px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
                                 isSelected
-
                                   ? 'bg-blue-600 text-white shadow-md font-black ring-2 ring-blue-300 scale-105'
-
                                   : 'bg-white dark:bg-slate-800 hover:bg-amber-100 text-slate-800 dark:text-slate-200 border border-amber-200 dark:border-amber-700'
-
                               }`}
-
                             >
-
-                              <span className={`text-[10px] ${isSelected ? 'text-blue-200' : 'text-slate-400 font-mono'}`}>
-
-                                #{stt}
-
-                              </span>
-
+                              <span className={`text-[10px] ${isSelected ? 'text-blue-200' : 'text-slate-400 font-mono'}`}>#{stt}</span>
                               <span>{name}</span>
-
                               {isSelected && <span>✓</span>}
-
                             </button>
-
                           );
-
                         })}
-
                       </div>
-
-
-
                       {quickFullName.trim() && (
-
-                        <div className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between pt-1 border-t border-amber-200/60 dark:border-amber-800/60">
-
+                        <div className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between pt-1 border-t border-amber-200/60">
                           <span>Đã chọn: <strong className="text-blue-600 dark:text-blue-400 font-bold">{quickFullName}</strong> - Lớp <strong className="text-blue-600 dark:text-blue-400 font-bold">{quickClassName.trim().toUpperCase()}</strong></span>
-
                           <button
-
                             type="button"
-
                             onClick={() => {
-
                               setQuickFullName('');
-
                               setQuickAutocorrectNote(null);
-
                             }}
-
                             className="text-rose-500 hover:underline cursor-pointer font-bold"
-
                           >
-
                             Chọn bạn khác
-
                           </button>
-
                         </div>
-
                       )}
-
                     </div>
-
                   );
-
                 }
-
-
-
-                if (studentGradebookService.isTHPTClass(quickClassName)) {
-
-                  return (
-
-                    <div className="p-3.5 rounded-xl bg-indigo-50/90 dark:bg-indigo-950/40 border border-indigo-300 dark:border-indigo-800 text-xs text-indigo-900 dark:text-indigo-200 space-y-1">
-
-                      <div className="flex items-center gap-2 font-bold">
-
-                        <span>🎓</span>
-
-                        <span>Học sinh Cấp THPT (Lớp {quickClassName.trim().toUpperCase()}):</span>
-
-                      </div>
-
-                      <p className="text-[11px] text-indigo-800 dark:text-indigo-300 leading-relaxed">
-
-                        Em tự do ghi tên và ghi lớp. Hệ thống tự động xếp em vào <strong>Lớp {quickClassName.trim().toUpperCase()}</strong> để học và kiểm tra thử đúng chương trình lớp đó!
-
-                      </p>
-
-                    </div>
-
-                  );
-
-                }
-
-
-
                 return null;
-
               })()}
-
             </div>
 
-
-
+            {/* NÚT VÀO HỌC NGAY */}
             <button
-
               type="submit"
-
-              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2 mt-4"
-
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2"
             >
-
               <Sparkles className="w-5 h-5 text-amber-300" />
-
-              <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}Đ{loginRewardInfo.isPromoToday ? ' TẶNG HÔM NAY!' : ''})</span>
-
+              <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}Đ THƯỞNG HÔM NAY)</span>
             </button>
-
           </form>
-
-
-
-          {/* BẢO VỆ ĐIỂM SỐ HỌC SINH: ĐÃ XÓA BỎ HOÀN TOÀN NÚT RESET ĐIỂM ĐỂ CHỐNG MẤT ĐIỂM */}
-          <div className="pt-2 pb-1 text-center">
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>🔒 Điểm tự động cập nhật chuẩn xác mỗi 2 phút • Bảo toàn 100% điểm số</span>
-            </span>
-          </div>
-
-
-
-          {/* Thống kê học sinh đang học tóm tắt bên dưới */}
-
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
-
-            <span className="flex items-center gap-1.5">
-
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-
-              <span>Hệ thống ghi nhận lịch sử vào học & bảng xếp hạng công khai toàn trường</span>
-
-            </span>
-
-
-
-            <button
-
-              type="button"
-
-              onClick={() => setActiveTab('leaderboard')}
-
-              className="font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer flex items-center gap-1"
-
-            >
-
-              <span>Xem Bảng Vàng &amp; Thống Kê Thi Đua Toàn Trường</span>
-
-              <ArrowRight className="w-3.5 h-3.5" />
-
-            </button>
-
-          </div>
-
         </div>
+      ) : (
+        /* Trường hợp 2: ĐÃ ĐĂNG NHẬP -> Thẻ học sinh tinh tế, đĩnh đạc */
+        <div className="bg-gradient-to-r from-[#0C2444] via-[#0E2C52] to-[#0A1F3B] border-2 border-emerald-400/50 rounded-2xl p-3.5 sm:p-4 text-white shadow-lg mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center text-2xl shadow-md shrink-0">
+                {currentStudent.gender === 'Nữ' ? '👧' : '👦'}
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950 font-black text-[10px] uppercase tracking-wider">
+                    ✅ BƯỚC 1: ĐÃ ĐĂNG NHẬP
+                  </span>
+                  <span className="text-base sm:text-lg font-black text-white">
+                    {currentStudent.name}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-lg bg-blue-600 text-white font-black text-xs">
+                    Lớp {currentStudent.className}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-950 font-black text-xs shadow-xs">
+                    ⭐ {currentStudent.totalMeritPoints || 15}đ thi đua
+                  </span>
+                  {myTeamInfo && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('teams');
+                        setCompetitionSubTab('teams');
+                      }}
+                      className="px-2 py-0.5 rounded-lg bg-indigo-500/40 text-indigo-200 border border-indigo-400/40 font-bold text-xs hover:bg-indigo-500/60 transition cursor-pointer flex items-center gap-1"
+                      title="Xem chi tiết 4 Tổ Thi Đua của lớp em"
+                    >
+                      <span>🛡️ {myTeamInfo.team.name.split('(')[0]}</span>
+                      <span className="px-1 rounded bg-amber-400 text-slate-950 font-black text-[9px]">
+                        {myTeamInfo.member.roleBadge}
+                      </span>
+                    </button>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-1 text-xs text-blue-200/90 flex-wrap">
+                  <span className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Học thực tế: <strong className="text-cyan-300 font-bold">{currentStudent.studyTimeMinutes || 0} phút</strong> (+3đ/10p)</span>
+                  </span>
+                  <span>•</span>
+                  <span className="text-emerald-300 font-bold">🔒 Tự động cập nhật 2 phút ({lastAutoSyncTime})</span>
+                </div>
+              </div>
+            </div>
 
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={handleSwitchOtherStudent}
+                className="px-3 py-1.5 rounded-xl bg-blue-900/70 hover:bg-blue-800 text-blue-100 hover:text-white text-xs font-bold transition cursor-pointer border border-blue-600/50 flex items-center gap-1.5 shadow-xs"
+                title="Đổi bạn học khác vào học"
+              >
+                <RotateCw className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Đổi Bạn Khác</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
+      {/* =========================================================================
+          BƯỚC 2: XEM THÔNG BÁO NGẮN GỌN (THẦY ĐINH THÀNH)
+      ========================================================================= */}
+      <div className="rounded-2xl border-2 border-amber-400/50 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-3.5 sm:p-4 shadow-md mb-4 text-slate-900 dark:text-white transition-all">
+        <div className="flex items-center justify-between gap-2 cursor-pointer select-none" onClick={() => setIsNoticeExpanded(!isNoticeExpanded)}>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="px-2.5 py-0.5 rounded-lg bg-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-wider shadow-xs flex items-center gap-1">
+              <span>📢</span>
+              <span>BƯỚC 2: THÔNG BÁO</span>
+            </span>
+            <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>LỊCH THI &amp; QUY ĐỊNH ÔN TẬP TỪ THẦY ĐINH THÀNH</span>
+            </h3>
+            <span className="text-[11px] px-2 py-0.5 rounded-md bg-black/10 dark:bg-white/10 text-slate-600 dark:text-slate-300 font-bold">
+              📅 Hôm nay: 02/11/2026
+            </span>
+          </div>
 
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsNoticeExpanded(!isNoticeExpanded);
+            }}
+            className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-slate-800 text-amber-900 dark:text-amber-300 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+          >
+            <span>{isNoticeExpanded ? '▲ Thu Gọn' : '▼ Xem Chi Tiết'}</span>
+          </button>
+        </div>
 
+        {/* Nội dung thông báo ngắn gọn 4 gạch đầu dòng súc tích */}
+        {isNoticeExpanded && (
+          <div className="mt-3 pt-3 border-t border-amber-200/80 dark:border-slate-800 space-y-2 text-xs sm:text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
+                <span className="text-base shrink-0">📅</span>
+                <div>
+                  <strong className="text-blue-600 dark:text-cyan-300 font-black">1. Lịch thi Giữa Kỳ 1 môn Tiếng Anh:</strong>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    Hôm nay kiểm tra chính thức khối 6 &amp; 8. Các em đọc kỹ từng câu, tự tin làm bài đạt điểm 9-10!
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
+                <span className="text-base shrink-0">🎁</span>
+                <div>
+                  <strong className="text-amber-600 dark:text-amber-300 font-black">2. Thưởng thi đua đặc biệt trưa nay:</strong>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập &amp; <strong>+5 điểm</strong> mỗi 5 phút tích cực ôn tập đề cương.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
+                <span className="text-base shrink-0">✏️</span>
+                <div>
+                  <strong className="text-emerald-600 dark:text-emerald-300 font-black">3. Dặn dò dụng cụ phòng thi:</strong>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    Chuẩn bị tối thiểu 2 bút chì 2B gọt sẵn, tẩy mềm sạch, thước kẻ và thẻ dự thi trước khi vào phòng.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 border border-amber-200/60 dark:border-slate-700">
+                <span className="text-base shrink-0">🔒</span>
+                <div>
+                  <strong className="text-indigo-600 dark:text-indigo-300 font-black">4. Bảo toàn 100% điểm số:</strong>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    Hệ thống tự động lưu điểm thi đua trên Cloud, tuyệt đối không bị trừ về 0 khi thoát trang.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Các nút bấm tắt vào nhanh các phần */}
+            <div className="flex items-center gap-2 pt-1 flex-wrap text-xs font-bold">
+              <span className="text-slate-500">Lối tắt nhanh:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const g = currentStudent?.grade || (currentStudent?.className ? (parseInt(currentStudent.className.replace(/\D/g, ''), 10) || 8) : 8);
+                  setActiveTab(g === 6 ? 'decuong_e6' : 'decuong_e8');
+                }}
+                className="px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-blue-950/70 text-blue-900 dark:text-blue-200 transition cursor-pointer"
+              >
+                📖 Xem Đề Cương GK1 &rarr;
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('exam')}
+                className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/70 text-amber-900 dark:text-amber-200 transition cursor-pointer"
+              >
+                ✍️ Thi Thử Có Bấm Giờ &rarr;
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('leaderboard');
+                  setCompetitionSubTab('all');
+                }}
+                className="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-200 transition cursor-pointer"
+              >
+                📊 Xem Bảng Điểm Thi Đua &rarr;
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* =========================================================================
+          THANH 3 BƯỚC HỌC TẬP CHÍNH: BƯỚC 3 (VÀO HỌC) • BƯỚC 4 (KIỂM TRA) • BƯỚC 5 (THỐNG KÊ)
+      ========================================================================= */}
+      <div className="p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-lg flex flex-col md:flex-row items-center justify-between gap-2 mb-3">
+        {/* Bộ 3 nút điều hướng học tập lớn */}
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full md:w-auto flex-1">
+          {/* BƯỚC 3: VÀO HỌC */}
+          <button
+            type="button"
+            onClick={() => {
+              if (!['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg'].includes(activeTab)) {
+                setActiveTab('vocab');
+              }
+            }}
+            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+              ['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab)
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+            }`}
+            title="Bước 3: Luyện từ vựng SGK 3D và Ôn đề cương trọng tâm Giữa Kỳ 1"
+          >
+            <BookOpen className={`w-5 h-5 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-600'}`} />
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-black truncate">3. VÀO HỌC</div>
+              <div className="text-[10px] opacity-80 truncate hidden sm:block">Từ Vựng &amp; Đề Cương</div>
+            </div>
+          </button>
+
+          {/* BƯỚC 4: KIỂM TRA THỬ */}
+          <button
+            type="button"
+            onClick={() => {
+              if (!['exam', 'quiz'].includes(activeTab)) {
+                setActiveTab('exam');
+              }
+            }}
+            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+              ['exam', 'quiz'].includes(activeTab)
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+            }`}
+            title="Bước 4: Kiểm tra nhanh 5 phút & Đề thi thử Giữa kỳ 1 chuẩn ma trận Bộ GD&ĐT"
+          >
+            <Award className={`w-5 h-5 shrink-0 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-amber-600'}`} />
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-black truncate">4. KIỂM TRA THỬ</div>
+              <div className="text-[10px] opacity-80 truncate hidden sm:block">5 Phút &amp; Đề GK1</div>
+            </div>
+          </button>
+
+          {/* BƯỚC 5: THỐNG KÊ XEM ĐIỂM */}
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('leaderboard');
+              setCompetitionSubTab('all');
+            }}
+            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+              ['teams', 'leaderboard', 'tracking'].includes(activeTab)
+                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-md ring-2 ring-amber-300 scale-[1.02]'
+                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+            }`}
+            title="Bước 5: Thống kê xem điểm cá nhân, theo lớp, theo khối, toàn trường và danh sách chưa đăng nhập"
+          >
+            <Trophy className={`w-5 h-5 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950' : 'text-amber-600'}`} />
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-black truncate">5. THỐNG KÊ ĐIỂM</div>
+              <div className="text-[10px] opacity-80 truncate hidden sm:block">Điểm &amp; Xếp Hạng</div>
+            </div>
+          </button>
+        </div>
+
+        {/* Nút tiện ích phụ: Tài Liệu Tải Về & Hỏi Thầy */}
+        <div className="flex items-center gap-1.5 shrink-0 self-end md:self-center">
+          <button
+            type="button"
+            onClick={() => setActiveTab('downloads')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+              activeTab === 'downloads'
+                ? 'bg-blue-600 text-white font-black'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+            }`}
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Tài Liệu</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('forum')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+              ['forum', 'messages'].includes(activeTab)
+                ? 'bg-blue-600 text-white font-black'
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Hỏi Thầy</span>
+          </button>
+        </div>
+      </div>
+
+      {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 3: VÀO HỌC */}
+      {['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'hsg', 'missions'].includes(activeTab) && (
+        <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-slate-500 font-bold px-1 hidden sm:inline">Nội dung học:</span>
+            <button
+              type="button"
+              onClick={() => setActiveTab('vocab')}
+              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                activeTab === 'vocab'
+                  ? 'bg-blue-600 text-white font-black shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+              }`}
+            >
+              <span>📘 1. Luyện Từ Vựng SGK 3D</span>
+            </button>
+
+            {(!currentStudent || currentStudent.grade === 6) && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('decuong_e6')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                  activeTab === 'decuong_e6'
+                    ? 'bg-teal-600 text-white font-black shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-teal-50'
+                }`}
+              >
+                <span>📖 2. Đề Cương GK1 Anh 6</span>
+              </button>
+            )}
+
+            {(!currentStudent || currentStudent.grade === 8) && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('decuong_e8')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                  activeTab === 'decuong_e8'
+                    ? 'bg-indigo-600 text-white font-black shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50'
+                }`}
+              >
+                <span>📖 2. Đề Cương GK1 Anh 8</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('sgk')}
+              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                activeTab === 'sgk'
+                  ? 'bg-blue-600 text-white font-black shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+              }`}
+            >
+              <span>📘 3. Bài Tập SGK</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('hsg')}
+              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                activeTab === 'hsg'
+                  ? 'bg-purple-600 text-white font-black shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-purple-50'
+              }`}
+            >
+              <span>🏆 4. Ôn Thi HSG</span>
+            </button>
+          </div>
+
+          {activeTab === 'vocab' && (
+            <button
+              type="button"
+              onClick={() => setIsIpaModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1 cursor-pointer shadow-xs shrink-0"
+            >
+              <span>🗣️ Bảng Âm IPA</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 4: KIỂM TRA THỬ */}
+      {['exam', 'quiz'].includes(activeTab) && (
+        <div className="flex flex-wrap items-center gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
+          <span className="text-slate-500 font-bold px-1 hidden sm:inline">Chế độ kiểm tra:</span>
+          <button
+            type="button"
+            onClick={() => setActiveTab('quiz')}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'quiz'
+                ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>⏱️ 1. Kiểm Tra Nhanh 5 Phút (Khởi Động)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('exam')}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'exam'
+                ? 'bg-blue-600 text-white font-black shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+            }`}
+          >
+            <Award className="w-3.5 h-3.5" />
+            <span>📝 2. Đề Thi Thử Giữa Kỳ 1 (Bấm Giờ &amp; Tự Chấm Điểm Chuẩn)</span>
+          </button>
+        </div>
+      )}
+
+      {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 5: THỐNG KÊ XEM ĐIỂM */}
+      {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
+        <div className="flex flex-wrap items-center gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('leaderboard');
+              setCompetitionSubTab('all');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'leaderboard'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+            }`}
+          >
+            <Trophy className="w-3.5 h-3.5 text-slate-950" />
+            <span>🏆 1. Bảng Tổng Hợp Điểm (Toàn Trường, Khối, Lớp, DS Chưa Đăng Nhập)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('teams');
+              setCompetitionSubTab('teams');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'teams'
+                ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-black shadow-xs'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50'
+            }`}
+          >
+            <span>⚔️ 2. Đua Top 4 Tổ Thi Đua Trong Lớp</span>
+          </button>
+        </div>
+      )}
+
+      {/* NHẮC NHỞ NHẸ NẾU HỌC SINH ĐANG Ở BƯỚC 3 HOẶC BƯỚC 4 MÀ CHƯA ĐĂNG NHẬP */}
+      {!currentStudent && ['vocab', 'decuong_e8', 'decuong_e6', 'sgk', 'exam', 'quiz', 'hsg'].includes(activeTab) && (
+        <div className="p-3 bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-700 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-900 dark:text-amber-200 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-base">💡</span>
+            <span>
+              <strong>Lưu ý:</strong> Em chưa đăng nhập ở <strong>BƯỚC 1</strong> (phía trên). Hãy chọn Lớp &amp; Tên để hệ thống tự động cộng +30đ và lưu kết quả bài làm cho em nhé!
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition cursor-pointer shrink-0 self-end sm:self-center"
+          >
+            ⬆️ Lên Bước 1 Đăng Nhập
+          </button>
+        </div>
+      )}
       {/* ==================== PHÂN HỆ 1: HỌC TỪ VỰNG TIẾNG ANH 6 - 12 ==================== */}
 
       {/* ==================== PHÂN HỆ 1: TỔNG HỢP HỌC TỪ VỰNG SIÊU TRÍ NHỚ (TỰ ĐỘNG KHÓA ĐÚNG KHỐI LỚP) ==================== */}
 
-      {currentStudent && activeTab === 'vocab' && (
+      {activeTab === 'vocab' && (
 
         <UnifiedVocabPortal
 
@@ -4325,7 +3634,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 8 ==================== */}
 
-      {currentStudent && (!currentStudent.grade || currentStudent.grade === 8) && activeTab === 'decuong_e8' && (
+      {(!currentStudent || currentStudent.grade === 8) && activeTab === 'decuong_e8' && (
 
         <English8RevisionPortal
 
@@ -4353,7 +3662,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ ĐỀ CƯƠNG ÔN TẬP GIỮA KỲ 1 TIẾNG ANH 6 ==================== */}
 
-      {currentStudent && (!currentStudent.grade || currentStudent.grade === 6) && activeTab === 'decuong_e6' && (
+      {(!currentStudent || currentStudent.grade === 6) && activeTab === 'decuong_e6' && (
 
         <English6RevisionPortal
 
@@ -4381,7 +3690,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ 2: BÀI TẬP SGK TỪNG PHẦN ==================== */}
 
-      {currentStudent && activeTab === 'sgk' && (
+      {activeTab === 'sgk' && (
 
         <TextbookExercisePortal studentGrade={currentStudent?.grade} />
 
@@ -4391,7 +3700,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ MỚI: ĐỀ KIỂM TRA GIỮA KỲ & CUỐI KỲ ONLINE (10 ĐỀ HOÁN ĐỔI) ==================== */}
 
-      {currentStudent && activeTab === 'exam' && (
+      {activeTab === 'exam' && (
 
         <div className="space-y-4">
 
@@ -4461,7 +3770,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ 3: KIỂM TRA ONLINE ==================== */}
 
-      {currentStudent && activeTab === 'quiz' && (
+      {activeTab === 'quiz' && (
 
         <OnlineQuizPortal studentGrade={currentStudent?.grade} />
 
@@ -5201,7 +4510,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* ==================== PHÂN HỆ MỚI: ÔN THI HỌC SINH GIỎI THCS ==================== */}
 
-      {currentStudent && activeTab === 'hsg' && (
+      {activeTab === 'hsg' && (
 
         <HsgEnglishPreparationPortal />
 
