@@ -1548,113 +1548,123 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       </div>
 
       {/* THÔNG BÁO MỚI NHẤT TỪ THẦY ĐINH THÀNH: LỊCH KIỂM TRA GK1 & KẾ HOẠCH ÔN TẬP BỨT PHÁ */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-400 shadow-lg text-slate-800 relative overflow-hidden">
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-400 shadow-lg text-slate-900 relative overflow-hidden">
         {/* Đường viền trang trí đa sắc */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-rose-500 to-indigo-500"></div>
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600"></div>
 
         {/* Header thông báo */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-amber-400/30">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b-2 border-emerald-200">
           <div className="flex items-center gap-3">
-            <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0 animate-bounce">
+            <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-md shrink-0">
               📢
             </span>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
-                  LỘ TRÌNH HỌC MỚI: HỌC KỲ 1
+                <span className="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-black uppercase tracking-wider shadow-xs border-2 border-emerald-300">
+                  🚀 LỘ TRÌNH HỌC MỚI: HỌC KỲ 1
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[11px] font-extrabold">
-                  Thầy Đinh Thành
+                <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 border-2 border-amber-500 text-xs font-black shadow-xs">
+                  👨‍🏫 Thầy Đinh Thành
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 text-[11px] font-bold">
-                  Trọng Tâm Unit 4, 5, 6
+                <span className="px-3 py-1 rounded-full bg-purple-600 text-white border-2 border-purple-300 text-xs font-black shadow-xs">
+                  🎯 Trọng Tâm Unit 4, 5, 6
                 </span>
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-black text-emerald-950 uppercase tracking-tight mt-1">
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-emerald-950 uppercase tracking-tight mt-1.5">
                 LỘ TRÌNH HỌC MỚI: TIẾP TỤC HỌC TẬP UNIT 4, 5, 6 - CHUẨN BỊ CHO KIỂM TRA CUỐI HỌC KỲ 1 (CK1)!
               </h3>
             </div>
           </div>
-          <div className="shrink-0 bg-emerald-100 px-3.5 py-2 rounded-2xl border-2 border-emerald-300 text-emerald-900 text-xs font-black text-center shadow-xs">
+          <div className="shrink-0 bg-emerald-700 px-4 py-2 rounded-2xl border-2 border-emerald-300 text-white text-xs sm:text-sm font-black text-center shadow-md">
             🚀 Đã kích hoạt lộ trình mới • Sẵn sàng bứt phá
           </div>
         </div>
 
         {/* Lời dặn dò viết lại chuẩn sư phạm */}
-        <div className="mt-3.5 p-3.5 rounded-2xl bg-white border-l-4 border-emerald-500 text-xs sm:text-sm text-slate-800 shadow-sm leading-relaxed font-medium">
-          <strong>Kính gửi các em học sinh thân yêu:</strong> Toàn khối chính thức bước vào <strong>LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong>Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
+        <div className="mt-3.5 p-4 rounded-2xl bg-white border-2 border-emerald-400 text-sm sm:text-base text-slate-900 shadow-sm leading-relaxed font-semibold">
+          <strong className="text-emerald-950 font-black">Kính gửi các em học sinh thân yêu:</strong> Toàn khối chính thức bước vào <strong className="text-emerald-800 font-black">LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong className="text-emerald-800 font-black">Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
         </div>
 
         {/* 4 Khối nhiệm vụ trọng tâm Lộ trình mới Unit 4, 5, 6 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3.5 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-3.5">
           {/* Nhiệm vụ 1: Ôn luyện từ vựng Unit 4, 5, 6 */}
-          <div className="p-3.5 rounded-2xl bg-white border-2 border-emerald-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
+          <div className="p-4 rounded-2xl bg-white border-2 border-emerald-400 flex flex-col justify-between gap-3 shadow-sm text-slate-900">
             <div>
-              <div className="font-black text-emerald-900 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-emerald-950 flex items-center gap-1.5 text-sm sm:text-base">
                 <span>🧠 1. Từ Vựng Unit 4, 5, 6</span>
               </div>
-              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
-                Học kỹ toàn bộ từ vựng mới <strong>Unit 4, Unit 5, Unit 6</strong> (trọng tâm đề thi Cuối kỳ 1). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ phản xạ.
+              <p className="text-slate-800 font-semibold leading-relaxed text-xs sm:text-sm mt-1.5">
+                Học kỹ toàn bộ từ vựng mới <strong className="text-emerald-900">Unit 4, Unit 5, Unit 6</strong> (trọng tâm đề thi Cuối kỳ 1). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ phản xạ.
               </p>
             </div>
-            <div className="flex gap-1 pt-1.5 border-t border-emerald-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">U4 - U6 Trọng Tâm CK1</span>
+            <div className="pt-2 border-t-2 border-emerald-100 flex items-center">
+              <span className="w-full text-center px-3 py-1.5 rounded-xl bg-emerald-700 text-white font-black text-xs sm:text-sm shadow-xs border border-emerald-300">
+                ✓ U4 - U6 Trọng Tâm CK1
+              </span>
             </div>
           </div>
 
           {/* Nhiệm vụ 2: Làm kỹ đề cương Cuối kỳ 1 */}
-          <div className="p-3.5 rounded-2xl bg-white border-2 border-teal-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
+          <div className="p-4 rounded-2xl bg-white border-2 border-teal-400 flex flex-col justify-between gap-3 shadow-sm text-slate-900">
             <div>
-              <div className="font-black text-teal-900 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-teal-950 flex items-center gap-1.5 text-sm sm:text-base">
                 <span>📑 2. Đề Cương Cuối Kỳ 1</span>
               </div>
-              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-800 font-semibold leading-relaxed text-xs sm:text-sm mt-1.5">
                 Nắm vững các chủ điểm ngữ pháp Unit 4 - 6, hoàn thành toàn bộ câu hỏi trắc nghiệm, phát âm và bài đọc hiểu trong đề cương Cuối kỳ 1.
               </p>
             </div>
-            <div className="flex gap-1 pt-1.5 border-t border-cyan-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[10px]">Đề Cương Cuối Kỳ 1</span>
+            <div className="pt-2 border-t-2 border-teal-100 flex items-center">
+              <span className="w-full text-center px-3 py-1.5 rounded-xl bg-teal-700 text-white font-black text-xs sm:text-sm shadow-xs border border-teal-300">
+                ✓ Đề Cương Cuối Kỳ 1
+              </span>
             </div>
           </div>
 
           {/* Nhiệm vụ 3: Làm bài Cuối kỳ 1 (thi thử) */}
-          <div className="p-3.5 rounded-2xl bg-white border-2 border-amber-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
+          <div className="p-4 rounded-2xl bg-white border-2 border-amber-400 flex flex-col justify-between gap-3 shadow-sm text-slate-900">
             <div>
-              <div className="font-black text-amber-900 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-amber-950 flex items-center gap-1.5 text-sm sm:text-base">
                 <span>📝 3. Luyện Đề Cuối Kỳ 1</span>
               </div>
-              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
-                Vào mục <strong>"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm các đề minh họa Cuối học kỳ 1 bấm giờ chuẩn ma trận 40 câu hỏi Bộ GD&ĐT để rèn phản xạ và tránh bẫy đề thi.
+              <p className="text-slate-800 font-semibold leading-relaxed text-xs sm:text-sm mt-1.5">
+                Vào mục <strong className="text-amber-900">"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm các đề minh họa Cuối học kỳ 1 bấm giờ chuẩn ma trận 40 câu hỏi Bộ GD&ĐT để rèn phản xạ và tránh bẫy đề thi.
               </p>
             </div>
-            <div className="flex gap-1 pt-1.5 border-t border-amber-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-[10px]">+30đ Thi Đua CK1</span>
+            <div className="pt-2 border-t-2 border-amber-100 flex items-center">
+              <span className="w-full text-center px-3 py-1.5 rounded-xl bg-amber-600 text-white font-black text-xs sm:text-sm shadow-xs border border-amber-200">
+                ⭐ +30đ Thi Đua CK1
+              </span>
             </div>
           </div>
 
           {/* Nhiệm vụ 4: Giữ vững tinh thần bứt phá */}
-          <div className="p-3.5 rounded-2xl bg-white border-2 border-rose-300 flex flex-col justify-between gap-2 shadow-sm text-slate-800">
+          <div className="p-4 rounded-2xl bg-white border-2 border-rose-400 flex flex-col justify-between gap-3 shadow-sm text-slate-900">
             <div>
-              <div className="font-black text-rose-900 flex items-center gap-1.5 text-xs sm:text-sm">
+              <div className="font-black text-rose-950 flex items-center gap-1.5 text-sm sm:text-base">
                 <span>🎯 4. Bứt Phá Điểm 10 CK1</span>
               </div>
-              <p className="text-slate-700 leading-relaxed text-[11px] mt-1">
+              <p className="text-slate-800 font-semibold leading-relaxed text-xs sm:text-sm mt-1.5">
                 Duy trì việc vào học mỗi ngày, tích lũy điểm thi đua chuyên cần, hoàn thành nhiệm vụ từng bài và giúp đỡ các bạn trong tổ cùng tiến bộ.
               </p>
             </div>
-            <div className="flex gap-1 pt-1.5 border-t border-rose-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-rose-500/30 text-rose-200 font-bold text-[10px]">🏆 Bứt Phá Điểm 10</span>
+            <div className="pt-2 border-t-2 border-rose-100 flex items-center">
+              <span className="w-full text-center px-3 py-1.5 rounded-xl bg-rose-700 text-white font-black text-xs sm:text-sm shadow-xs border border-rose-300">
+                🏆 Bứt Phá Điểm 10
+              </span>
             </div>
           </div>
         </div>
 
         {/* Chân thông báo & Lời chúc */}
-        <div className="mt-3.5 pt-2.5 border-t border-amber-400/20 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span className="text-emerald-900 font-bold italic">
-            ⭐ Lời chúc từ Thầy Đinh Thành: "Kiên trì mỗi ngày - Chăm chỉ ôn luyện - Làm chủ Unit 4, 5, 6 để đạt điểm 9, 10 Cuối Kỳ 1 rực rỡ!"
+        <div className="mt-4 pt-3 border-t-2 border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs sm:text-sm">
+          <span className="text-emerald-950 font-black flex items-center gap-1.5">
+            <span>⭐</span>
+            <span>Lời chúc từ Thầy Đinh Thành: "Kiên trì mỗi ngày - Chăm chỉ ôn luyện - Làm chủ Unit 4, 5, 6 để đạt điểm 9, 10 Cuối Kỳ 1 rực rỡ!"</span>
           </span>
-          <span className="text-cyan-300 font-bold">
-            🛡️ Tổ Trưởng &amp; Tổ Phó: Đôn đốc các bạn trong tổ ôn tập và mang đủ dụng cụ đi thi!
+          <span className="text-rose-900 font-black bg-rose-100 px-3 py-1.5 rounded-xl border border-rose-300 shadow-xs flex items-center gap-1.5 shrink-0">
+            <span>🛡️</span>
+            <span>Tổ Trưởng &amp; Tổ Phó: Đôn đốc các bạn trong tổ ôn tập và mang đủ dụng cụ đi thi!</span>
           </span>
         </div>
       </div>
