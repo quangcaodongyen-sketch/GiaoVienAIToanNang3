@@ -1153,6 +1153,7 @@ export interface StudentProfile {
   totalMeritPoints?: number; // Tổng điểm thi đua chuyên cần
 
   lastLoginDate?: string;    // Ngày đăng nhập gần nhất (YYYY-MM-DD)
+  lastLoginRewardDate?: string; // Ngày gần nhất đã nhận điểm thưởng đăng nhập (YYYY-MM-DD)
 
   stt?: number;              // Số thứ tự theo sổ điểm chính thức
 
@@ -6580,22 +6581,59 @@ class StudentGradebookService {
 
 
 
-      // Khuyến mại duy nhất hôm nay cộng 10 điểm, từ ngày mai cộng 5 điểm cho lần đăng nhập đầu tiên
-      // NGUYÊN TẮC BẮT BUỘC CỦA THẦY ĐINH THÀNH: Mỗi ngày đăng nhập CHỈ CỘNG THƯỞNG 1 LẦN DUY NHẤT!
-      const loginAwardKey = `GVAI_DAILY_LOGIN_AWARDED_${existing.id}_${todayStr}`;
+      // Khuyến mại đăng nhập: Thầy Đinh Thành quy định CHỈ CỘNG 1 LẦN DUY NHẤT MỖI NGÀY
+      const loginAwardKeyId = `GVAI_DAILY_LOGIN_AWARDED_${existing.id}_${todayStr}`;
+      const loginAwardKeyName = `GVAI_DAILY_LOGIN_AWARDED_${normalizeVietnameseName(existing.name)}_${cleanCls.toLowerCase()}_${todayStr}`;
       const isAlreadyAwardedToday = 
-        (existing.lastLoginDate && existing.lastLoginDate.slice(0, 10) === todayStr) ||
-        (typeof window !== 'undefined' && window.localStorage?.getItem(loginAwardKey) === 'true');
+        (existing.lastLoginRewardDate === todayStr) ||
+        (existing.lastLoginDate && existing.lastLoginDate.slice(0, 10) === todayStr && (existing.attendancePoints || 0) > 0) ||
+        (typeof window !== 'undefined' && (
+          window.localStorage?.getItem(loginAwardKeyId) === 'true' ||
+          window.localStorage?.getItem(loginAwardKeyName) === 'true'
+        ));
+
+      let awardedLoginPoints = 0;
+      let isFirstLoginToday = false;
 
       if (!isAlreadyAwardedToday) {
+        awardedLoginPoints = loginReward.points;
+        isFirstLoginToday = true;
         existing.attendancePoints = (existing.attendancePoints || 0) + loginReward.points;
         existing.lastLoginDate = todayStr;
+        existing.lastLoginRewardDate = todayStr;
         if (typeof window !== 'undefined') {
-          try { window.localStorage?.setItem(loginAwardKey, 'true'); } catch {}
+          try {
+            window.localStorage?.setItem(loginAwardKeyId, 'true');
+            window.localStorage?.setItem(loginAwardKeyName, 'true');
+          } catch {}
         }
         this.recordCheckin(existing, 'Điểm danh chuyên cần', `Đăng nhập ngày ${todayStr} (+${loginReward.points}đ: ${loginReward.title})`);
       } else {
-        this.recordCheckin(existing, 'Vào học trực tuyến', `Tiếp tục học tập & ôn luyện Lớp ${cleanCls}`);
+        existing.lastLoginDate = todayStr;
+        this.recordCheckin(existing, 'Vào học trực tuyến', `Quay lại học tập Lớp ${cleanCls} (Tiếp tục tích lũy điểm thi đua)`);
+      }
+
+      // THƯỞNG PHÁO HOA +20 ĐIỂM CHĂM CHỈ LIÊN TIẾP (CHỈ CỘNG 1 LẦN DUY NHẤT VÀO LẦN ĐĂNG NHẬP ĐẦU TIÊN TRONG NGÀY)
+      const streakAwardKeyId = `GVAI_STREAK_AWARDED_${existing.id}_${todayStr}`;
+      const streakAwardKeyName = `GVAI_STREAK_AWARDED_${normalizeVietnameseName(existing.name)}_${cleanCls.toLowerCase()}_${todayStr}`;
+      const isAlreadyStreakAwardedToday = 
+        existing.streakBonusAwardedDate === todayStr ||
+        (typeof window !== 'undefined' && (
+          window.localStorage?.getItem(streakAwardKeyId) === 'true' ||
+          window.localStorage?.getItem(streakAwardKeyName) === 'true'
+        ));
+
+      let streakAwardedToday = 0;
+      if (studiedYesterday && !isAlreadyStreakAwardedToday && isFirstLoginToday) {
+        existing.streakBonusAwardedDate = todayStr;
+        if (typeof window !== 'undefined') {
+          try {
+            window.localStorage?.setItem(streakAwardKeyId, 'true');
+            window.localStorage?.setItem(streakAwardKeyName, 'true');
+          } catch {}
+        }
+        streakAwardedToday = 20;
+        existing.teacherBonus = (existing.teacherBonus || 0) + streakAwardedToday;
       }
 
       const sumParts = (
@@ -6611,31 +6649,21 @@ class StudentGradebookService {
       existing.totalMeritPoints = Math.max(vaultMax, sumParts, 15);
       saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
 
-      // ================= THƯỞNG PHÁO HOA +20 ĐIỂM NẾU HÔM QUA ĐÃ HỌC VÀ HÔM NAY TIẾP TỤC HỌC =================
-      const streakAwardKey = `GVAI_STREAK_AWARDED_${existing.id}_${todayStr}`;
-      const canAwardStreak = 
-        studiedYesterday && 
-        (!existing.streakBonusAwardedDate || existing.streakBonusAwardedDate.slice(0, 10) !== todayStr) &&
-        (typeof window === 'undefined' || window.localStorage?.getItem(streakAwardKey) !== 'true');
+      // Gắn cờ trạng thái nhận thưởng để WelcomeModal hiển thị chuẩn xác không bị điểm ảo
+      (existing as any)._awardedLoginPoints = awardedLoginPoints;
+      (existing as any)._awardedStreakPoints = streakAwardedToday;
+      (existing as any)._isFirstToday = isFirstLoginToday;
 
-      if (canAwardStreak) {
-        existing.streakBonusAwardedDate = todayStr;
-        if (typeof window !== 'undefined') {
-          try { window.localStorage?.setItem(streakAwardKey, 'true'); } catch {}
-        }
-        const STREAK_BONUS = 20;
-        existing.teacherBonus = (existing.teacherBonus || 0) + STREAK_BONUS;
-        existing.totalMeritPoints = (existing.totalMeritPoints || 0) + STREAK_BONUS;
-        saveStudentVaultMaxPoints(existing.id, existing.totalMeritPoints, existing.name, existing.className);
+      if (streakAwardedToday > 0) {
         this.recordCheckin(
           existing,
           '🎆 NỔ PHÁO HOA ĂN MỪNG',
-          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${getYesterdayDateString(todayStr)}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${STREAK_BONUS} điểm thi đua chăm chỉ!`
+          `🎆 Nổ pháo hoa rực rỡ! Đã học hôm qua (${getYesterdayDateString(todayStr)}) và tiếp tục vào học hôm nay (${todayStr})! Thầy Thành tặng thêm +${streakAwardedToday} điểm thi đua chăm chỉ!`
         );
         if (typeof window !== 'undefined') {
           try {
             window.dispatchEvent(new CustomEvent('gvai_fireworks_streak_reward', {
-              detail: { student: existing, streakPoints: STREAK_BONUS, todayStr }
+              detail: { student: existing, streakPoints: streakAwardedToday, todayStr }
             }));
           } catch {}
         }
@@ -6697,49 +6725,46 @@ class StudentGradebookService {
 
 
 
+    const alreadyAwardedNew = typeof window !== 'undefined' && (
+      window.localStorage?.getItem(`GVAI_DAILY_LOGIN_AWARDED_${normalizeVietnameseName(cleanName)}_${cleanCls.toLowerCase()}_${todayStr}`) === 'true'
+    );
+    const initialLoginPoints = alreadyAwardedNew ? 0 : loginReward.points;
+
     const newStudent: StudentProfile = {
-
       id: 'stu-' + Date.now().toString(36) + '-' + Math.floor(Math.random() * 1000),
-
       studentCode: code,
-
       username: slug || code.toLowerCase(),
-
       password: '12345',
-
       name: cleanName,
-
       classId: targetClass.id,
-
       className: cleanCls,
-
       grade: grade,
-
       gender: 'Nam',
-
       note: 'Vào học nhanh trực tiếp không cần đăng ký',
-
       createdAt: new Date().toISOString(),
-
-      attendancePoints: loginReward.points,
-
+      attendancePoints: initialLoginPoints,
       vocabPoints: 0,
-
       examBonusPoints: 0,
-
       practicePoints: 0,
-
       studyTimeMinutes: 0,
-
       timePoints: 0,
-
       encouragementBonus: 15,
-
-      totalMeritPoints: Math.max(15 + loginReward.points, getStudentVaultMaxPoints(undefined, cleanName, cleanCls) + loginReward.points),
-
-      lastLoginDate: todayStr
-
+      // Tuyệt đối không cộng thêm loginReward.points vào vaultMax khi đăng nhập lại
+      totalMeritPoints: Math.max(15 + initialLoginPoints, getStudentVaultMaxPoints(undefined, cleanName, cleanCls)),
+      lastLoginDate: todayStr,
+      lastLoginRewardDate: alreadyAwardedNew ? undefined : todayStr
     };
+
+    (newStudent as any)._awardedLoginPoints = initialLoginPoints;
+    (newStudent as any)._awardedStreakPoints = 0;
+    (newStudent as any)._isFirstToday = !alreadyAwardedNew;
+
+    if (!alreadyAwardedNew && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(`GVAI_DAILY_LOGIN_AWARDED_${newStudent.id}_${todayStr}`, 'true');
+        localStorage.setItem(`GVAI_DAILY_LOGIN_AWARDED_${normalizeVietnameseName(cleanName)}_${cleanCls.toLowerCase()}_${todayStr}`, 'true');
+      } catch {}
+    }
 
     try {
 
@@ -6767,7 +6792,11 @@ class StudentGradebookService {
 
     this.setActiveStudent(newStudent);
 
-    this.recordCheckin(newStudent, 'Vào học trực tuyến', `Bắt đầu buổi học mới tại Lớp ${cleanCls} (+${loginReward.points}đ: ${loginReward.title})`);
+    if (initialLoginPoints > 0) {
+      this.recordCheckin(newStudent, 'Điểm danh chuyên cần', `Bắt đầu buổi học tại Lớp ${cleanCls} (+${initialLoginPoints}đ: ${loginReward.title})`);
+    } else {
+      this.recordCheckin(newStudent, 'Vào học trực tuyến', `Quay lại học tập tại Lớp ${cleanCls}`);
+    }
 
     this.syncToCloud().catch(() => {});
 

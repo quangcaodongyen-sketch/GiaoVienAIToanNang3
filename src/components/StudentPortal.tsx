@@ -558,133 +558,94 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-  const triggerWelcomeModal = (student: StudentProfile, isReturn: boolean = true, pointsGiven?: number) => {
+  const triggerWelcomeModal = (
+    student: StudentProfile, 
+    isReturn: boolean = true, 
+    pointsGiven?: number,
+    streakGiven?: number,
+    isFirstTodayInput?: boolean
+  ) => {
+    const awarded = pointsGiven !== undefined ? pointsGiven : ((student as any)._awardedLoginPoints ?? 0);
+    const streakAwarded = streakGiven !== undefined ? streakGiven : ((student as any)._awardedStreakPoints ?? 0);
+    const isFirstToday = isFirstTodayInput !== undefined ? isFirstTodayInput : ((student as any)._isFirstToday ?? (awarded > 0 || streakAwarded > 0));
 
-    const todayStr = getLocalDateString();
-
-    const studiedYesterday = studentGradebookService.didStudentStudyYesterday(student.id, student.name, student.className, todayStr);
-
-    const hasStreakBonus = student.streakBonusAwardedDate === todayStr;
-
-
-
-    // ================= BẮN PHÁO HOA ĂN MỪNG NẾU HÔM QUA ĐÃ HỌC VÀ HÔM NAY TIẾP TỤC HỌC =================
-
-    if (studiedYesterday || hasStreakBonus) {
-
-      launchFireworks(5500);
-
-
-
-      const streakPoints = 20;
-
-      const basePoints = pointsGiven !== undefined ? pointsGiven : loginRewardInfo.points;
-
-      const totalAwardedToday = basePoints + streakPoints;
-
-
-
+    // ================= TRƯỜNG HỢP 1: ĐĂNG NHẬP LẠI TRONG NGÀY (KHÔNG CỘNG THÊM ĐIỂM) =================
+    // Tuyệt đối không cộng điểm ảo, không bắn pháo hoa, không cho phép lạm dụng đăng xuất / đăng nhập
+    if (!isFirstToday || (awarded === 0 && streakAwarded === 0)) {
       setWelcomeModalData({
-
         isOpen: true,
-
         studentName: student.name,
-
         studentClass: student.className,
-
-        pointsAwarded: totalAwardedToday,
-
-        totalPoints: student.totalMeritPoints || totalAwardedToday,
-
-        mascotEmoji: '⭐',
-        badgeTitle: '⭐ SIÊU SAO CHĂM CHỈ LIÊN TIẾP (+20Đ) ⭐',
+        pointsAwarded: 0,
+        totalPoints: student.totalMeritPoints || 15,
+        mascotEmoji: '📚',
+        badgeTitle: 'Chiến Binh Chăm Ngoan 🛡️',
         hasFireworks: false,
-        isStreakHero: true,
-        streakPoints: streakPoints,
-        cheerMessage: `⭐ VINH DANH CHĂM CHỈ! Thầy giáo Đinh Văn Thành vô cùng tự hào và khen ngợi em ${student.name} (Lớp ${student.className})! Hôm qua em đã rất chăm chỉ học bài, hôm nay em lại tiếp tục kiên trì quay lại ôn luyện! Thầy Thành tặng em +${streakPoints} ĐIỂM THƯỞNG CHĂM CHỈ vào Bảng xếp hạng thi đua! Chúc em luôn giữ vững ngọn lửa đam mê và gặt hái thật nhiều điểm 9, 10 rực rỡ!`
-
+        isStreakHero: false,
+        streakPoints: 0,
+        cheerMessage: `Thầy giáo Đinh Văn Thành rất vui mừng khi thấy em ${student.name} (Lớp ${student.className}) tiếp tục quay lại học bài! Điểm danh chuyên cần hôm nay em đã nhận trọn vẹn rồi. Bây giờ em hãy vào luyện từ vựng, làm đề cương và thi thử để tích lũy thêm thật nhiều điểm thưởng thi đua cho Tổ mình nhé! Chúc em học giỏi!`
       });
-
       return;
-
     }
 
+    // ================= TRƯỜNG HỢP 2: LẦN ĐẦU TIÊN TRONG NGÀY CÓ PHÁO HOA THƯỞNG HỌC LIÊN TIẾP (+20Đ) =================
+    if (streakAwarded > 0) {
+      launchFireworks(5500);
+      const totalAwardedToday = awarded + streakAwarded;
+      setWelcomeModalData({
+        isOpen: true,
+        studentName: student.name,
+        studentClass: student.className,
+        pointsAwarded: totalAwardedToday,
+        totalPoints: student.totalMeritPoints || totalAwardedToday,
+        mascotEmoji: '⭐',
+        badgeTitle: '⭐ SIÊU SAO CHĂM CHỈ LIÊN TIẾP (+20Đ) ⭐',
+        hasFireworks: true,
+        isStreakHero: true,
+        streakPoints: streakAwarded,
+        cheerMessage: `⭐ VINH DANH CHĂM CHỈ! Thầy giáo Đinh Văn Thành vô cùng tự hào và khen ngợi em ${student.name} (Lớp ${student.className})! Hôm qua em đã rất chăm chỉ học bài, hôm nay em lại tiếp tục kiên trì quay lại ôn luyện! Thầy Thành tặng em +${streakAwarded} ĐIỂM THƯỞNG CHĂM CHỈ + quà chuyên cần vào Bảng xếp hạng thi đua! Chúc em luôn giữ vững ngọn lửa đam mê và gặt hái thật nhiều điểm 9, 10 rực rỡ!`
+      });
+      return;
+    }
 
-
-    const awarded = pointsGiven !== undefined ? pointsGiven : loginRewardInfo.points;
-
+    // ================= TRƯỜNG HỢP 3: LẦN ĐẦU TIÊN TRONG NGÀY CỘNG ĐIỂM CHUYÊN CẦN / KHUYẾN MẠI (1 LẦN DUY NHẤT) =================
     const mascots = ['🦉', '🐱', '🚀', '🌟', '🐼', '🦁', '🐝'];
-
     const titles = [
-
       'Chiến Binh Chăm Ngoan 🛡️',
-
       'Ong Vàng Cần Mẫn 🐝',
-
       'Thần Đồng Anh Ngữ ⚡',
-
       'Siêu Sao Bứt Phá 🌟',
-
       'Cú Vàng Thông Thái 🦉',
-
       'Nhà Vô Địch Tương Lai 🏆'
-
     ];
-
     const cheers = loginRewardInfo.isPromoToday ? [
-
       `🎁 Thầy Thành chúc mừng em ${student.name} đã đăng nhập hôm nay và nhận trọn vẹn +${awarded} ĐIỂM KHUYẾN MẠI ĐẶC BIỆT DUY NHẤT HÔM NAY! Chúc em học thật say mê và đạt nhiều hoa điểm 10 rực rỡ!`,
-
       `🔥 Khuyến mại vàng duy nhất hôm nay: Thầy Thành tặng ngay +${awarded} điểm chuyên cần cho em ${student.name} (Lớp ${student.className})! Hãy bắt đầu buổi học thật hăng say nhé!`,
-
       `🌟 Tự giác học bài là phẩm chất đáng quý nhất! Thầy gửi tặng em +${awarded} điểm thi đua hôm nay và chúc em tự tin chinh phục mọi bài tập tiếng Anh!`,
-
       `🏆 Hoan hô tinh thần học tập của em ${student.name}! +${awarded} điểm thưởng khuyến mại hôm nay đã được cộng vào Bảng xếp hạng của lớp ${student.className}!`
-
     ] : [
-
       `Thầy Thành rất vui khi thấy em ${student.name} chăm chỉ quay lại học bài hôm nay! Mỗi ngày tiến bộ một chút, thành công sẽ đến với em!`,
-
       `Chào mừng em ${student.name} đã trở lại bàn học! Thầy Thành tin chắc hôm nay em sẽ ghi trọn điểm 10 rực rỡ!`,
-
       `Tự giác học tập là phẩm chất tuyệt vời nhất! Thầy Thành gửi tặng em +${awarded} điểm chuyên cần và chúc em có một buổi học thật say mê!`,
-
       `Hoan hô tinh thần học tập của em ${student.name} (Lớp ${student.className})! Thầy luôn đồng hành và dõi theo từng bước tiến của em!`
-
     ];
 
     const randomMascot = mascots[Math.floor(Math.random() * mascots.length)];
-
     const randomTitle = titles[Math.floor(Math.random() * titles.length)];
-
     const randomCheer = cheers[Math.floor(Math.random() * cheers.length)];
 
-
-
     setWelcomeModalData({
-
       isOpen: true,
-
       studentName: student.name,
-
       studentClass: student.className,
-
       pointsAwarded: awarded,
-
       totalPoints: student.totalMeritPoints || awarded,
-
       mascotEmoji: randomMascot,
-
       badgeTitle: randomTitle,
-
       cheerMessage: randomCheer,
-
       hasFireworks: false,
-
       isStreakHero: false
-
     });
-
   };
 
   // ==================== VÀO HỌC NHANH & NHỚ THIẾT BỊ 1-CHẠM (KHÔNG CẦN ĐĂNG KÝ) ====================
@@ -904,7 +865,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     const student = studentGradebookService.quickAccessStudent(finalName, finalClass);
     setCurrentStudent(student);
     saveStudentToDevice(student);
-    triggerWelcomeModal(student, false);
+    triggerWelcomeModal(student, false, (student as any)._awardedLoginPoints, (student as any)._awardedStreakPoints, (student as any)._isFirstToday);
   };
 
 
@@ -921,7 +882,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     saveStudentToDevice(student);
 
-    triggerWelcomeModal(student, true);
+    triggerWelcomeModal(student, true, (student as any)._awardedLoginPoints, (student as any)._awardedStreakPoints, (student as any)._isFirstToday);
 
   };
 
@@ -943,7 +904,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     setCurrentStudent(res.student);
     saveStudentToDevice(res.student);
-    triggerWelcomeModal(res.student, res.isRecovered);
+    triggerWelcomeModal(res.student, res.isRecovered, (res.student as any)._awardedLoginPoints, (res.student as any)._awardedStreakPoints, (res.student as any)._isFirstToday);
     setRegSuccessMessage(res.message);
     setTimeout(() => setRegSuccessMessage(null), 6000);
   };
@@ -1612,7 +1573,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
     saveStudentToDevice(updated);
 
-    triggerWelcomeModal(updated, true, loginRewardRes.awarded || (loginRewardRes.isFirstToday ? loginRewardInfo.points : 0));
+    triggerWelcomeModal(updated, true, (updated as any)._awardedLoginPoints ?? (loginRewardRes.awarded || 0), (updated as any)._awardedStreakPoints ?? 0, (updated as any)._isFirstToday ?? loginRewardRes.isFirstToday);
 
   };
 
@@ -2891,7 +2852,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-xs font-bold">
-                🎁 Tặng +{loginRewardInfo.points}đ đăng nhập hôm nay
+                🎁 Tặng +{loginRewardInfo.points}đ đăng nhập lần đầu mỗi ngày
               </span>
               <span className="text-xs text-slate-500 font-bold hidden sm:inline">
                 Miễn phí 100%
@@ -2922,7 +2883,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm shadow-md transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4 text-slate-900" />
-                  <span>🚀 1-Chạm Vào Học Ngay (+{loginRewardInfo.points}đ)</span>
+                  <span>🚀 1-Chạm Vào Học Ngay</span>
                 </button>
                 <button
                   type="button"
@@ -3346,7 +3307,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-500/25 transition cursor-pointer flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-5 h-5 text-amber-300" />
-                <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}Đ THƯỞNG HÔM NAY)</span>
+                <span>🚀 VÀO HỌC NGAY (+{loginRewardInfo.points}đ Lần Đầu Trong Ngày)</span>
               </button>
             </form>
           ) : (
@@ -3374,7 +3335,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   • <strong>Bị mất tài khoản / Đổi thiết bị?</strong> Chỉ cần chọn đúng Lớp và gõ Họ và Tên em, hệ thống sẽ <strong>tự động tìm lại và bảo toàn 100% điểm số cũ</strong> của em!
                 </p>
                 <p className="text-[11px] leading-relaxed">
-                  • <strong>Học sinh mới:</strong> Tặng ngay <strong>+{loginRewardInfo.points} điểm hôm nay</strong> + 15 điểm khuyến khích khởi động thi đua!
+                  • <strong>Học sinh mới:</strong> Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập lần đầu hôm nay + 15 điểm khuyến khích khởi động thi đua!
                 </p>
               </div>
 
@@ -3556,7 +3517,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-500/25 transition cursor-pointer flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-5 h-5 text-amber-300" />
-                <span>🚀 BẤM ĐĂNG KÝ VÀ VÀO HỌC NGAY (+{loginRewardInfo.points}Đ THƯỞNG HÔM NAY)</span>
+                <span>🚀 BẤM ĐĂNG KÝ VÀ VÀO HỌC NGAY (+{loginRewardInfo.points}đ Lần Đầu)</span>
               </button>
 
               <div className="text-center pt-1">
@@ -3685,7 +3646,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div>
                   <strong className="text-amber-600 dark:text-amber-300 font-black">2. Thưởng thi đua đặc biệt trưa nay:</strong>
                   <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
-                    Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập &amp; <strong>+5 điểm</strong> mỗi 5 phút tích cực ôn tập đề cương.
+                    Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập lần đầu mỗi ngày &amp; <strong>+5 điểm</strong> mỗi 5 phút tích cực ôn tập đề cương.
                   </p>
                 </div>
               </div>
@@ -6893,69 +6854,56 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
             {/* HỘP QUÀ TẶNG ĐIỂM RỰC RỠ */}
-
             <div className={`my-4 py-3.5 px-4 rounded-2xl text-white shadow-xl border ${
-
               welcomeModalData.hasFireworks
-
                 ? 'bg-gradient-to-r from-rose-600 via-amber-500 to-indigo-600 border-amber-300 shadow-rose-500/30'
-
-                : 'bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 border-amber-300/50 shadow-amber-500/25'
-
+                : welcomeModalData.pointsAwarded === 0
+                  ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-600 border-blue-300/40 shadow-blue-500/25'
+                  : 'bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 border-amber-300/50 shadow-amber-500/25'
             }`}>
-
               <div className="text-[11px] font-black uppercase tracking-wider text-amber-100 flex items-center justify-center gap-1.5 flex-wrap">
-
                 {welcomeModalData.hasFireworks ? (
-
                   <>
-
                     <span>🎆🎇</span>
-
                     <span>ĐẶC QUYỀN PHÁO HOA: CHĂM CHỈ HỌC TẬP LIÊN TIẾP</span>
-
                     <span>🎇🎆</span>
-
                   </>
-
+                ) : welcomeModalData.pointsAwarded === 0 ? (
+                  '📚 CHÀO MỪNG EM TIẾP TỤC QUAY LẠI HỌC BÀI'
                 ) : loginRewardInfo.isPromoToday ? (
-
                   '🎁 QUÀ TẶNG KHUYẾN MẠI DUY NHẤT HÔM NAY'
-
                 ) : (
-
-                  '⭐ ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP'
-
+                  '⭐ ĐIỂM CHUYÊN CẦN ĐĂNG NHẬP (1 LẦN/NGÀY)'
                 )}
-
               </div>
 
-              <div className="text-3xl sm:text-4xl font-black tracking-tight my-1 drop-shadow-sm flex items-center justify-center gap-2">
-
-                <span>+{welcomeModalData.pointsAwarded} ĐIỂM</span>
-
-                {welcomeModalData.hasFireworks && <span className="animate-spin text-2xl">✨</span>}
-
-              </div>
+              {welcomeModalData.pointsAwarded === 0 ? (
+                <div className="my-2 py-2 px-3 rounded-xl bg-blue-950/40 border border-blue-300/30 text-center">
+                  <div className="text-sm sm:text-base font-black text-amber-300 flex items-center justify-center gap-1.5">
+                    <span>🛡️</span>
+                    <span>ĐÃ NHẬN ĐIỂM CHUYÊN CẦN HÔM NAY</span>
+                  </div>
+                  <div className="text-[11px] text-blue-100 font-medium mt-1">
+                    (Điểm danh chuyên cần chỉ cộng 1 lần/ngày. Em hãy luyện từ vựng và làm bài thi để ghi thêm nhiều điểm thi đua nhé!)
+                  </div>
+                </div>
+              ) : (
+                <div className="text-3xl sm:text-4xl font-black tracking-tight my-1 drop-shadow-sm flex items-center justify-center gap-2">
+                  <span>+{welcomeModalData.pointsAwarded} ĐIỂM</span>
+                  {welcomeModalData.hasFireworks && <span className="animate-spin text-2xl">✨</span>}
+                </div>
+              )}
 
               {welcomeModalData.hasFireworks && (
-
                 <div className="text-[11px] font-bold text-amber-100 mb-1">
-
                   (Bao gồm +{welcomeModalData.streakPoints || 20}đ thưởng pháo hoa học liên tiếp {loginRewardInfo.isPromoToday ? '+ 10đ quà hôm nay' : '+ 5đ chuyên cần'})
-
                 </div>
-
               )}
 
               <div className="text-xs font-semibold text-white/95 flex items-center justify-center gap-1">
-
                 <span>Tổng điểm thi đua hiện tại:</span>
-
                 <span className="font-black text-yellow-200">⭐ {welcomeModalData.totalPoints}đ</span>
-
               </div>
-
             </div>
 
 
