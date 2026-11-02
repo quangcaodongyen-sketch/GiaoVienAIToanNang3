@@ -48,7 +48,7 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
 
     update();
     const unsubscribe = onlinePresenceService.subscribe(update);
-    const interval = setInterval(update, 10000); // 10s tự động refresh
+    const interval = setInterval(update, 7000); // 7s tự động refresh để bắt nhịp xoay tua
 
     return () => {
       unsubscribe();
@@ -197,6 +197,11 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
                         (Em)
                       </span>
                     )}
+                    {student.points !== undefined && student.points > 0 && (
+                      <span className="px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 text-[10px] sm:text-xs font-black shrink-0">
+                        ⭐ {student.points.toLocaleString('vi-VN')}đ
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -278,6 +283,11 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
                         {st.isCurrentDevice && (
                           <span className="px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 text-xs font-black">
                             (Em)
+                          </span>
+                        )}
+                        {st.points !== undefined && st.points > 0 && (
+                          <span className="px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 text-xs font-black">
+                            ⭐ {st.points.toLocaleString('vi-VN')}đ
                           </span>
                         )}
                       </div>
