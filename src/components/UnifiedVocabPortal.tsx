@@ -462,7 +462,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
 
-  const [selectedUnit, setSelectedUnit] = useState<number>(1);
+  const [selectedUnit, setSelectedUnit] = useState<number>(4);
 
   const [vocabSearch, setVocabSearch] = useState<string>('');
 
@@ -1560,90 +1560,90 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
             </span>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
-                  LỊCH KIỂM TRA CHÍNH THỨC
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+                  LỘ TRÌNH HỌC MỚI: HỌC KỲ 1
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[11px] font-extrabold">
                   Thầy Đinh Thành
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-200 border border-blue-400/30 text-[11px] font-bold">
-                  Chiều Thứ Hai • 02/11/2026
+                <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 text-[11px] font-bold">
+                  Trọng Tâm Unit 4, 5, 6
                 </span>
               </div>
               <h3 className="text-base sm:text-lg md:text-xl font-black text-amber-300 uppercase tracking-tight mt-1">
-                LỊCH KIỂM TRA GIỮA KỲ 1 (GK1) TIẾNG ANH: CHIỀU NGÀY MAI (THỨ HAI, 02/11/2026)
+                LỘ TRÌNH HỌC MỚI: TIẾP TỤC HỌC TẬP UNIT 4, 5, 6 - CHUẨN BỊ CHO KIỂM TRA CUỐI HỌC KỲ 1 (CK1)!
               </h3>
             </div>
           </div>
           <div className="shrink-0 bg-black/40 px-3.5 py-2 rounded-2xl border border-amber-400/30 text-amber-200 text-xs font-bold text-center">
-            ⏰ Đã thông báo toàn khối • Sẵn sàng bứt phá
+            🚀 Đã kích hoạt lộ trình mới • Sẵn sàng bứt phá
           </div>
         </div>
 
         {/* Lời dặn dò viết lại chuẩn sư phạm */}
         <div className="mt-3.5 p-3 rounded-2xl bg-black/30 border-l-4 border-amber-400 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-          <strong>Kính gửi các em học sinh thân yêu:</strong> Chiều ngày mai <strong>(Thứ Hai, ngày 02/11/2026)</strong>, toàn khối sẽ tiến hành làm bài kiểm tra Giữa học kỳ 1 môn Tiếng Anh. Thầy Thành yêu cầu tất cả các em tập trung cao độ, ôn luyện chắc từ vựng, làm kỹ đề cương và làm bài thi thử giữa kỳ 1 để tự tin bứt phá điểm 9, điểm 10 rực rỡ nhé!
+          <strong>Kính gửi các em học sinh thân yêu:</strong> Toàn khối chính thức bước vào <strong>LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong>Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
         </div>
 
-        {/* 4 Khối nhiệm vụ trọng tâm */}
+        {/* 4 Khối nhiệm vụ trọng tâm Lộ trình mới Unit 4, 5, 6 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3.5 text-xs">
-          {/* Nhiệm vụ 1: Ôn luyện từ vựng */}
+          {/* Nhiệm vụ 1: Ôn luyện từ vựng Unit 4, 5, 6 */}
           <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-400/40 flex flex-col justify-between gap-2 shadow-xs">
             <div>
               <div className="font-black text-emerald-300 flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>🧠 1. Ôn Luyện Từ Vựng</span>
+                <span>🧠 1. Từ Vựng Unit 4, 5, 6</span>
               </div>
               <p className="text-emerald-100/90 leading-relaxed text-[11px] mt-1">
-                Ôn kỹ toàn bộ từ vựng trọng tâm <strong>Unit 1, Unit 2, Unit 3</strong> (chiếm 50% đề kiểm tra). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ.
+                Học kỹ toàn bộ từ vựng mới <strong>Unit 4, Unit 5, Unit 6</strong> (trọng tâm đề thi Cuối kỳ 1). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ phản xạ.
               </p>
             </div>
             <div className="flex gap-1 pt-1.5 border-t border-emerald-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">U1 - U3 Trọng Tâm</span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">U4 - U6 Trọng Tâm CK1</span>
             </div>
           </div>
 
-          {/* Nhiệm vụ 2: Làm kỹ đề cương */}
+          {/* Nhiệm vụ 2: Làm kỹ đề cương Cuối kỳ 1 */}
           <div className="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-400/40 flex flex-col justify-between gap-2 shadow-xs">
             <div>
               <div className="font-black text-cyan-300 flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>📑 2. Làm Kỹ Đề Cương</span>
+                <span>📑 2. Đề Cương Cuối Kỳ 1</span>
               </div>
               <p className="text-cyan-100/90 leading-relaxed text-[11px] mt-1">
-                Hoàn thành toàn bộ câu hỏi trắc nghiệm thì Hiện tại đơn, Quá khứ đơn, V-ing, phát âm -s/es, -ed và đọc hiểu trong đề cương.
+                Nắm vững các chủ điểm ngữ pháp Unit 4 - 6, hoàn thành toàn bộ câu hỏi trắc nghiệm, phát âm và bài đọc hiểu trong đề cương Cuối kỳ 1.
               </p>
             </div>
             <div className="flex gap-1 pt-1.5 border-t border-cyan-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[10px]">Đề Cương Đã Phát</span>
+              <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[10px]">Đề Cương Cuối Kỳ 1</span>
             </div>
           </div>
 
-          {/* Nhiệm vụ 3: Làm bài giữa kỳ 1 (thi thử) */}
+          {/* Nhiệm vụ 3: Làm bài Cuối kỳ 1 (thi thử) */}
           <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-400/40 flex flex-col justify-between gap-2 shadow-xs">
             <div>
               <div className="font-black text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>📝 3. Làm Đề Giữa Kỳ 1</span>
+                <span>📝 3. Luyện Đề Cuối Kỳ 1</span>
               </div>
               <p className="text-amber-100/90 leading-relaxed text-[11px] mt-1">
-                Vào mục <strong>"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận diện câu hỏi và tránh các bẫy đề thi.
+                Vào mục <strong>"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm các đề minh họa Cuối học kỳ 1 bấm giờ chuẩn ma trận 40 câu hỏi Bộ GD&ĐT để rèn phản xạ và tránh bẫy đề thi.
               </p>
             </div>
             <div className="flex gap-1 pt-1.5 border-t border-amber-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-[10px]">+30đ Thi Đua</span>
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-[10px]">+30đ Thi Đua CK1</span>
             </div>
           </div>
 
-          {/* Nhiệm vụ 4: Thẻ dụng cụ bắt buộc */}
+          {/* Nhiệm vụ 4: Giữ vững tinh thần bứt phá */}
           <div className="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-400/50 flex flex-col justify-between gap-2 shadow-xs">
             <div>
               <div className="font-black text-rose-300 flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>✏️ 4. Thẻ Dụng Cụ Bắt Buộc</span>
+                <span>🎯 4. Bứt Phá Điểm 10 CK1</span>
               </div>
               <p className="text-rose-100/90 leading-relaxed text-[11px] mt-1">
-                Bắt buộc mang <strong>ít nhất 2 bút chì 2B/3B gọt sẵn</strong>, <strong>tẩy mềm (gôm)</strong> và bút mực. Tuyệt đối không dùng bút mực tô trắc nghiệm!
+                Duy trì việc vào học mỗi ngày, tích lũy điểm thi đua chuyên cần, hoàn thành nhiệm vụ từng bài và giúp đỡ các bạn trong tổ cùng tiến bộ.
               </p>
             </div>
             <div className="flex gap-1 pt-1.5 border-t border-rose-400/20">
-              <span className="px-2 py-0.5 rounded-md bg-rose-500/30 text-rose-200 font-bold text-[10px]">🎒 Bút Chì 2B + Tẩy</span>
+              <span className="px-2 py-0.5 rounded-md bg-rose-500/30 text-rose-200 font-bold text-[10px]">🏆 Bứt Phá Điểm 10</span>
             </div>
           </div>
         </div>
@@ -1651,7 +1651,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         {/* Chân thông báo & Lời chúc */}
         <div className="mt-3.5 pt-2.5 border-t border-amber-400/20 flex flex-wrap items-center justify-between gap-2 text-xs">
           <span className="text-amber-200 font-semibold italic">
-            ⭐ Lời chúc từ Thầy Đinh Thành: "Bình tĩnh - Tự tin - Đọc kỹ đề - Chúc tất cả các em đạt điểm 9, 10 rực rỡ!"
+            ⭐ Lời chúc từ Thầy Đinh Thành: "Kiên trì mỗi ngày - Chăm chỉ ôn luyện - Làm chủ Unit 4, 5, 6 để đạt điểm 9, 10 Cuối Kỳ 1 rực rỡ!"
           </span>
           <span className="text-cyan-300 font-bold">
             🛡️ Tổ Trưởng &amp; Tổ Phó: Đôn đốc các bạn trong tổ ôn tập và mang đủ dụng cụ đi thi!
@@ -1883,16 +1883,16 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
               >
                 {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
                   <option key={u.unitNumber} value={u.unitNumber} className="bg-slate-900 text-white font-bold">
-                    Unit {u.unitNumber}: {u.title} ({u.wordCount} từ){[1, 2, 3].includes(u.unitNumber) ? ' ★ TRỌNG TÂM GK1' : ''}
+                    Unit {u.unitNumber}: {u.title} ({u.wordCount} từ){[4, 5, 6].includes(u.unitNumber) ? ' ★ TRỌNG TÂM CUỐI KỲ 1 (CK1)' : ([1, 2, 3].includes(u.unitNumber) ? ' (GK1 Đã Học)' : '')}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* 3 Nút Bấm Chạm Nhanh GK1 Dành Cho Học Sinh Dùng Điện Thoại */}
+            {/* 3 Nút Bấm Chạm Nhanh CK1 Dành Cho Học Sinh Dùng Điện Thoại (Lộ trình mới Unit 4, 5, 6) */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-              <span className="text-[10px] text-amber-300 font-black uppercase tracking-wider shrink-0">GK1:</span>
-              {[1, 2, 3].map(n => {
+              <span className="text-[10px] text-emerald-300 font-black uppercase tracking-wider shrink-0">CK1:</span>
+              {[4, 5, 6].map(n => {
                 const isAct = selectedUnit === n;
                 return (
                   <button
@@ -1913,7 +1913,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     }`}
                   >
                     <span>Unit {n}</span>
-                    <span className="text-[9px] px-1 rounded-sm bg-rose-600 text-white font-bold">GK1</span>
+                    <span className="text-[9px] px-1 rounded-sm bg-rose-600 text-white font-bold">CK1</span>
                   </button>
                 );
               })}
@@ -1924,6 +1924,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <div className="hidden sm:flex items-center gap-2 overflow-x-auto pb-1 text-xs sm:text-sm md:text-base max-w-full lg:max-w-3xl">
             {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => {
               const uMission = missionState?.mission1.units[u.unitNumber];
+              const isCK1Target = [4, 5, 6].includes(u.unitNumber);
               const isGK1Target = [1, 2, 3].includes(u.unitNumber);
               const isAct = selectedUnit === u.unitNumber;
 
@@ -1947,8 +1948,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   title={`${u.title} (${u.wordCount} từ)`}
                 >
                   <span>Unit {u.unitNumber}</span>
-                  {isGK1Target && (
-                    <span className="text-[9px] px-1 rounded-sm font-black bg-rose-600 text-white shadow-xs">
+                  {isCK1Target && (
+                    <span className="text-[9px] px-1 rounded-sm font-black bg-rose-600 text-white shadow-xs animate-pulse">
+                      CK1
+                    </span>
+                  )}
+                  {isGK1Target && !isCK1Target && (
+                    <span className="text-[9px] px-1 rounded-sm font-bold bg-slate-700/80 text-slate-300">
                       GK1
                     </span>
                   )}
@@ -2000,22 +2006,41 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
         </div>
 
-        {/* Banner tiến độ nhiệm vụ GK1 cho Unit 1 - 3 */}
-        {[1, 2, 3].includes(selectedUnit) && (
-          <div className="p-3 rounded-2xl bg-blue-950/70 border border-cyan-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        {/* Banner tiến độ nhiệm vụ Lộ trình mới Unit 4 - 6 (CK1) hoặc Unit 1 - 3 (GK1 đã học) */}
+        {[4, 5, 6].includes(selectedUnit) && (
+          <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-blue-950/80 to-purple-950/80 border border-emerald-400/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0 shadow-xs">🎯 Nhiệm Vụ GK1</span>
+              <span className="p-1.5 rounded-lg bg-emerald-600 text-white font-black text-xs shrink-0 shadow-xs">🚀 Nhiệm Vụ CK1</span>
               <div>
                 <span className="font-extrabold text-white">
                   Unit {selectedUnit}: Đã đạt {missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/{missionState?.mission1.units[selectedUnit]?.totalRequiredModes || 8} dạng bài ({missionState?.mission1.units[selectedUnit]?.unitPercent || 0}% hoàn thành).
                 </span>
+                <span className="text-emerald-200 block text-[11px] font-medium mt-0.5">
+                  🛡️ Tiêu chuẩn chất lượng: Đạt độ chính xác từ 60% trở lên để được tính hoàn thành bài học Unit {selectedUnit}.
+                </span>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded-xl bg-emerald-400/20 text-emerald-200 border border-emerald-400/40 font-black shrink-0 self-start sm:self-auto text-[11px]">
+              {missionState?.mission1.units[selectedUnit]?.statusNote || 'Lộ trình mới Unit 4 - 6'}
+            </span>
+          </div>
+        )}
+
+        {[1, 2, 3].includes(selectedUnit) && (
+          <div className="p-3 rounded-2xl bg-blue-950/70 border border-cyan-400/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-blue-600 text-white font-black text-xs shrink-0 shadow-xs">🎯 Ôn Lại GK1</span>
+              <div>
+                <span className="font-extrabold text-white">
+                  Unit {selectedUnit}: Đã hoàn thành trong đợt Giữa Kỳ 1 ({missionState?.mission1.units[selectedUnit]?.qualityPassedCount || 0}/8 dạng bài đạt chất lượng).
+                </span>
                 <span className="text-cyan-200 block text-[11px] font-medium mt-0.5">
-                  🛡️ Tiêu chuẩn chất lượng: Đạt độ chính xác từ 60% trở lên để được tính hoàn thành bài học.
+                  💡 Em có thể tiếp tục ôn luyện để củng cố vững chắc kiến thức nền tảng.
                 </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-xl bg-cyan-400/20 text-cyan-200 border border-cyan-400/40 font-black shrink-0 self-start sm:self-auto text-[11px]">
-              {missionState?.mission1.units[selectedUnit]?.statusNote}
+              Đợt Giữa Kỳ 1
             </span>
           </div>
         )}

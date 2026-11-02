@@ -129,7 +129,7 @@ export class MidtermMissionService {
    */
   private createNewState(studentId: string, studentName: string, className: string, grade: number): MidtermMissionState {
     const units: Record<number, UnitMissionProgress> = {};
-    for (const u of [1, 2, 3]) {
+    for (const u of [1, 2, 3, 4, 5, 6]) {
       const modes: Record<string, VocabModeQualityResult> = {};
       for (const m of VOCAB_MODES_CONFIG) {
         modes[m.id] = {
@@ -160,8 +160,8 @@ export class MidtermMissionService {
       className,
       grade,
       mission1: {
-        title: 'Nhiệm vụ 1: Làm chủ từ vựng Unit 1 - Unit 3',
-        description: 'Phải học đầy đủ 11 dạng bài tập từ vựng, nắm vững từ (đạt >= 60% độ chính xác). Không làm chống đối.',
+        title: 'Nhiệm vụ 1: Làm chủ từ vựng Unit 4 - Unit 6 (Lộ trình Cuối kỳ 1)',
+        description: 'Phải học đầy đủ các dạng bài tập từ vựng Unit 4, 5, 6, nắm vững từ (đạt >= 60% độ chính xác) để chuẩn bị thi Cuối Kỳ 1.',
         units,
         overallPercent: 0,
         isFullyCompleted: false,
@@ -169,11 +169,11 @@ export class MidtermMissionService {
         totalRequiredCount: VOCAB_MODES_CONFIG.length * 3
       },
       mission2: {
-        title: 'Nhiệm vụ 2: Ôn đề cương & kiểm tra thử Giữa Kỳ 1',
+        title: 'Nhiệm vụ 2: Ôn đề cương & kiểm tra thử Cuối Kỳ 1 (CK1)',
         description: 'Học kỹ đề cương và làm bài kiểm tra thử giữa kỳ (tối thiểu 1 lần/bài). Điểm số >= 5.0đ, làm nghiêm túc không chọn bừa.',
         decuong: {
           type: 'decuong',
-          title: `Đề Cương Ôn Tập Giữa Kỳ 1 (Kèm Audio & Chấm Điểm)`,
+          title: `Đề Cương Ôn Tập Cuối Kỳ 1 (Kèm Audio & Chấm Điểm)`,
           attemptsCount: 0,
           highestScore: 0,
           lastScore: 0,
@@ -183,7 +183,7 @@ export class MidtermMissionService {
         },
         midtermExam: {
           type: 'midterm_exam',
-          title: `Đề Kiểm Tra Thử Giữa Kỳ 1 Chuẩn Cấu Trúc BGD&ĐT`,
+          title: `Đề Kiểm Tra Thử Cuối Kỳ 1 Chuẩn Cấu Trúc BGD&ĐT`,
           attemptsCount: 0,
           highestScore: 0,
           lastScore: 0,
@@ -198,7 +198,7 @@ export class MidtermMissionService {
       academicLevel: 'CHUA_HOAN_THANH',
       levelBadgeText: 'Chưa hoàn thành',
       levelColor: 'text-slate-500 bg-slate-100',
-      teacherEvaluation: 'Bắt đầu ôn tập: Hoàn thành từ vựng Unit 1 - 3 và làm bài đề cương, đề kiểm tra thử.',
+      teacherEvaluation: 'Bắt đầu lộ trình mới: Hoàn thành từ vựng Unit 4 - 6 và làm bài đề cương, đề kiểm tra thử Cuối Kỳ 1.',
       lastUpdatedAt: new Date().toISOString()
     };
 
@@ -222,7 +222,7 @@ export class MidtermMissionService {
     const state = this.getMissionState(studentId, studentName, className, grade);
     
     // Chỉ áp dụng cho Unit 1, 2, 3 của nhiệm vụ GK1
-    if (![1, 2, 3].includes(unitNumber)) {
+    if (![1, 2, 3, 4, 5, 6].includes(unitNumber)) {
       return { state, passedQuality: true, message: 'Đã ghi nhận bài tập' };
     }
 
@@ -340,7 +340,7 @@ export class MidtermMissionService {
     unitNumber: number
   ): MidtermMissionState {
     const state = this.getMissionState(studentId, studentName, className, grade);
-    if ([1, 2, 3].includes(unitNumber)) {
+    if ([1, 2, 3, 4, 5, 6].includes(unitNumber)) {
       const unit = state.mission1.units[unitNumber];
       if (unit) {
         unit.isUnitCompleted = true;
@@ -372,11 +372,40 @@ export class MidtermMissionService {
    * Quy chuẩn sư phạm: Học sinh học được 1 - 2 bài từ vựng là % phải tăng vọt rõ ràng cho các em thấy!
    */
   private recalculateState(state: MidtermMissionState) {
-    // 1. Tính % Nhiệm vụ 1 (Từ vựng Unit 1 - 3)
+    // Đảm bảo các Unit 1 đến 6 luôn được khởi tạo đầy đủ
+    for (const uNum of [1, 2, 3, 4, 5, 6]) {
+      if (!state.mission1.units[uNum]) {
+        const modes: Record<string, VocabModeQualityResult> = {};
+        for (const m of VOCAB_MODES_CONFIG) {
+          modes[m.id] = {
+            modeId: m.id,
+            modeTitle: m.title,
+            icon: m.icon,
+            completed: false,
+            qualityPassed: false,
+            accuracyPercent: 0,
+            note: `Chưa học (Yêu cầu: ${m.minPassReq})`
+          };
+        }
+        state.mission1.units[uNum] = {
+          unitNumber: uNum,
+          unitTitle: `Unit ${uNum}`,
+          modes,
+          totalRequiredModes: VOCAB_MODES_CONFIG.length,
+          qualityPassedCount: 0,
+          unitPercent: 0,
+          isMastered: false,
+          statusNote: uNum >= 4 ? 'Lộ trình mới Cuối Kỳ 1' : 'Đã học GK1'
+        };
+      }
+    }
+
+    // 1. Tính % Nhiệm vụ 1: Lộ trình trọng tâm Unit 4 - 6 (CK1)
     let totalQualityPassedVocab = 0;
     let sumUnitPercents = 0;
+    const activeTargetUnits = [4, 5, 6];
 
-    for (const uNum of [1, 2, 3]) {
+    for (const uNum of activeTargetUnits) {
       const u = state.mission1.units[uNum];
       if (!u) continue;
 

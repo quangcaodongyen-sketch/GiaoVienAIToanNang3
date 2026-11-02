@@ -57,11 +57,11 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
   const studentName = currentStudent?.name || 'Em';
   const className = currentStudent?.className || `${grade}A1`;
 
-  // Lấy danh sách Unit thực tế của khối lớp
+  // Lấy danh sách Unit thực tế của khối lớp (Lộ trình mới Unit 4, 5, 6)
   const units = vocabularyService.getUnitsByGrade(grade);
-  const unit1 = units.find(u => u.unitNumber === 1) || { unitNumber: 1, title: 'Unit 1', wordCount: 22 };
-  const unit2 = units.find(u => u.unitNumber === 2) || { unitNumber: 2, title: 'Unit 2', wordCount: 23 };
-  const unit3 = units.find(u => u.unitNumber === 3) || { unitNumber: 3, title: 'Unit 3', wordCount: 23 };
+  const unit4 = units.find(u => u.unitNumber === 4) || { unitNumber: 4, title: 'Unit 4', wordCount: 22 };
+  const unit5 = units.find(u => u.unitNumber === 5) || { unitNumber: 5, title: 'Unit 5', wordCount: 24 };
+  const unit6 = units.find(u => u.unitNumber === 6) || { unitNumber: 6, title: 'Unit 6', wordCount: 24 };
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
@@ -100,7 +100,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm sm:text-base md:text-lg font-black text-white tracking-tight">
-                LỜI NHẮC ÔN TẬP GK1 &amp; NHẬN NHIỆM VỤ
+                LỘ TRÌNH HỌC MỚI: UNIT 4, 5, 6 &amp; NHẬN NHIỆM VỤ CUỐI KỲ 1
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-400 text-slate-950 shadow-2xs">
                 Thầy Đinh Thành
@@ -170,45 +170,45 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
         <div className="p-3 sm:p-4 space-y-3">
           {/* LƯỚI 3 NHIỆM VỤ HỌC TẬP CHÍNH - CHỮ TO RÕ RÀNG */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* NHIỆM VỤ 1: TỪ VỰNG UNIT 1-3 */}
+            {/* NHIỆM VỤ 1: TỪ VỰNG UNIT 4-6 (LỘ TRÌNH MỚI CUỐI KỲ 1) */}
             <div className="rounded-xl bg-[#0B1E36]/90 border border-emerald-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-emerald-300 transition-all">
               <div>
                 <div className="flex items-center justify-between gap-1.5 mb-1.5">
                   <span className="text-xs sm:text-sm font-black uppercase text-emerald-300 flex items-center gap-1">
-                    <span>📚 Nhiệm vụ 1: Từ Vựng</span>
+                    <span>📚 Nhiệm vụ 1: Từ Vựng CK1</span>
                   </span>
                   <span className="text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
                     +15đ / Bài
                   </span>
                 </div>
                 <h4 className="text-sm sm:text-base font-black text-white">
-                  Luyện Từ Vựng Unit 1 - Unit 3
+                  Luyện Từ Vựng Unit 4 - Unit 6
                 </h4>
                 <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
-                  Chiếm 50% điểm đề thi. Nghe phát âm &amp; nhớ mặt từ siêu tốc.
+                  Trọng tâm kiểm tra Cuối kỳ 1. Nghe phát âm &amp; nhớ mặt từ siêu tốc.
                 </p>
 
                 <div className="mt-2.5 flex flex-wrap gap-1.5">
                   <button
                     type="button"
-                    onClick={() => onGoToVocabUnit(1, grade)}
+                    onClick={() => onGoToVocabUnit(4, grade)}
                     className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
-                    U1 ({unit1.wordCount} từ)
+                    U4 ({unit4.wordCount} từ)
                   </button>
                   <button
                     type="button"
-                    onClick={() => onGoToVocabUnit(2, grade)}
+                    onClick={() => onGoToVocabUnit(5, grade)}
                     className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
-                    U2 ({unit2.wordCount} từ)
+                    U5 ({unit5.wordCount} từ)
                   </button>
                   <button
                     type="button"
-                    onClick={() => onGoToVocabUnit(3, grade)}
+                    onClick={() => onGoToVocabUnit(6, grade)}
                     className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
                   >
-                    U3 ({unit3.wordCount} từ)
+                    U6 ({unit6.wordCount} từ)
                   </button>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
               <div className="mt-3.5 pt-2.5 border-t border-blue-500/20">
                 <button
                   type="button"
-                  onClick={() => onGoToVocabUnit(1, grade)}
+                  onClick={() => onGoToVocabUnit(4, grade)}
                   className="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-xs flex items-center justify-center gap-1.5 active:scale-95"
                 >
                   <BookOpen className="w-4 h-4 text-white" />
@@ -238,10 +238,10 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                   </span>
                 </div>
                 <h4 className="text-sm sm:text-base font-black text-white">
-                  Đề Cương Ôn Tập GK1 Lớp {grade}
+                  Đề Cương Ôn Tập Cuối Kỳ 1 Lớp {grade}
                 </h4>
                 <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
-                  Luyện chắc ngữ pháp Hiện tại đơn, Quá khứ đơn, V-ing &amp; tự luận.
+                  Luyện chắc ngữ pháp Unit 4, 5, 6 &amp; bài tập trắc nghiệm cuối kỳ.
                 </p>
               </div>
 
@@ -279,7 +279,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                   </span>
                 </div>
                 <h4 className="text-sm sm:text-base font-black text-white">
-                  Kiểm Tra Thử Online Lớp {grade}
+                  Kiểm Tra Thử Cuối Kỳ 1 Lớp {grade}
                 </h4>
                 <p className="text-xs sm:text-sm text-blue-200/90 mt-1 line-clamp-1">
                   Chuẩn ma trận Bộ GD&amp;ĐT, tự động bấm giờ &amp; giải thích chi tiết.
