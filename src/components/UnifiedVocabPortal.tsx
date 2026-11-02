@@ -641,12 +641,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           }
           awardedExercisesRef.current.add(dedupKey);
 
-          // Cố định 10 điểm thưởng cho 1 bài tập hoàn thành (tuyệt đối không lấy data.xp tích lũy của game)
-          const pts = 10;
+          // Quy định chuẩn: Làm đúng mỗi câu + 2 điểm
+          const correctQuestions = Number(data.correctCount ?? data.score ?? 5);
+          const pts = Math.max(2, correctQuestions * 2);
           studentGradebookService.recordVocabUnitCompleted(currentStudent.id, u, g);
           studentGradebookService.recordPracticeMerit(
             currentStudent.id,
-            `${exerciseType} Unit ${u}`,
+            `${exerciseType} Unit ${u} (Đúng mỗi câu +2đ)`,
             pts
           );
           refreshStudentScore();
@@ -662,6 +663,27 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     window.addEventListener('message', handleVocabMessage);
     return () => window.removeEventListener('message', handleVocabMessage);
   }, [currentStudent, selectedUnit, selectedGrade, onRewardMerit, refreshStudentScore]);
+
+  // TÍCH LŨY THỜI GIAN ÔN LUYỆN THỰC TẾ: Cứ mỗi 5 phút ôn luyện thực sự -> Tặng nóng +5 điểm thi đua
+  useEffect(() => {
+    if (!currentStudent) return;
+    let secondsActive = 0;
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        secondsActive += 1;
+        if (secondsActive >= 300) { // Đủ 5 phút (300 giây)
+          secondsActive = 0;
+          const res = studentGradebookService.recordActiveStudyTime(currentStudent.id, 5);
+          if (res.awarded) {
+            refreshStudentScore();
+            if (onRewardMerit) onRewardMerit('Chuyên cần ôn luyện 5 phút', res.pointsAwarded);
+            triggerScorePopup(null, `+${res.pointsAwarded}đ Chuyên Cần 5 Phút! ⭐`);
+          }
+        }
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentStudent, onRewardMerit, refreshStudentScore]);
 
 
 
@@ -770,7 +792,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     if (isCorrect) {
       setQuizScore(s => s + 1);
       playCorrectSound();
-      triggerScorePopup(e, '+10 Điểm! ⭐');
+      triggerScorePopup(e, '+2 Điểm! ⭐');
     } else {
       playWrongSound();
     }
@@ -783,66 +805,38 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleNextQuiz = () => {
-
     if (autoNextQuizTimerRef.current) {
-
       clearTimeout(autoNextQuizTimerRef.current);
-
       autoNextQuizTimerRef.current = null;
-
     }
 
     if (quizIndex < practiceVocabList.length - 1) {
-
       setQuizIndex(i => i + 1);
-
       setQuizSelectedOption(null);
-
     } else {
-
       setQuizFinished(true);
-
       if (currentStudent) {
-
         const finalScore = quizScore;
-
         const totalQ = practiceVocabList.length;
-
         const acc = Math.round((finalScore / totalQ) * 100);
 
-
-
         // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
-
         const qRes = midtermMissionService.recordVocabPracticeQuality(
-
           currentStudent.id,
-
           currentStudent.name,
-
           currentStudent.className,
-
           selectedGrade,
-
           selectedUnit,
-
           'quiz',
-
           acc,
-
           { score: finalScore, totalQuestions: totalQ }
-
         );
-
         setMissionUpdateTrigger(t => t + 1);
 
-
-
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Trắc nghiệm từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
-
+        const earnedPoints = Math.max(2, finalScore * 2);
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Trắc nghiệm từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ}) - Đúng mỗi câu +2đ`, earnedPoints);
         studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-
-        if (onRewardMerit) onRewardMerit(`Trắc nghiệm từ vựng Unit ${selectedUnit}`, 10);
+        if (onRewardMerit) onRewardMerit(`Trắc nghiệm từ vựng Unit ${selectedUnit}`, earnedPoints);
 
 
 
@@ -951,7 +945,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
     if (isCorrect) {
       setListenScore(s => s + 1);
       playCorrectSound();
-      triggerScorePopup(e, '+10 Điểm! ⭐');
+      triggerScorePopup(e, '+2 Điểm! ⭐');
     } else {
       playWrongSound();
     }
@@ -964,66 +958,38 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
   };
 
   const handleNextListen = () => {
-
     if (autoNextListenTimerRef.current) {
-
       clearTimeout(autoNextListenTimerRef.current);
-
       autoNextListenTimerRef.current = null;
-
     }
 
     if (listenIndex < practiceVocabList.length - 1) {
-
       setListenIndex(i => i + 1);
-
       setListenSelectedOption(null);
-
     } else {
-
       setListenFinished(true);
-
       if (currentStudent) {
-
         const finalScore = listenScore;
-
         const totalQ = practiceVocabList.length;
-
         const acc = Math.round((finalScore / totalQ) * 100);
 
-
-
         // Ghi nhận chất lượng vào Nhiệm Vụ GK1 (Chống học chống đối: Yêu cầu >= 60%)
-
         const lRes = midtermMissionService.recordVocabPracticeQuality(
-
           currentStudent.id,
-
           currentStudent.name,
-
           currentStudent.className,
-
           selectedGrade,
-
           selectedUnit,
-
           'listen',
-
           acc,
-
           { score: finalScore, totalQuestions: totalQ }
-
         );
-
         setMissionUpdateTrigger(t => t + 1);
 
-
-
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện nghe từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
-
+        const earnedPoints = Math.max(2, finalScore * 2);
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện nghe từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ}) - Đúng mỗi câu +2đ`, earnedPoints);
         studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-
-        if (onRewardMerit) onRewardMerit(`Luyện nghe từ vựng Unit ${selectedUnit}`, 10);
+        if (onRewardMerit) onRewardMerit(`Luyện nghe từ vựng Unit ${selectedUnit}`, earnedPoints);
 
 
 
@@ -1221,75 +1187,43 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
     // Kiểm tra khớp
 
-    if (selectedFirstCard.wordId === card.wordId) {
-
-      // Ghép chuẩn: Nổi âm thanh báo đúng và +10 điểm bay lên
-
+      // Ghép chuẩn: Nổi âm thanh báo đúng và +2 điểm bay lên
       playCorrectSound();
-      triggerScorePopup(e, '+10 Điểm! ⭐');
-
-
+      triggerScorePopup(e, '+2 Điểm! ⭐');
 
       const newCards = matchCards.map(c => {
-
         if (c.wordId === card.wordId) {
-
           return { ...c, isMatched: true };
-
         }
-
         return c;
-
       });
-
       setMatchCards(newCards);
-
       setSelectedFirstCard(null);
-
       const newCount = matchCount + 1;
-
       setMatchCount(newCount);
 
-
-
       // Nếu đã ghép hết
-
       if (newCards.every(c => c.isMatched)) {
-
         setMatchFinished(true);
         playCorrectSound();
 
         if (currentStudent) {
-
           const mRes = midtermMissionService.recordVocabPracticeQuality(
-
             currentStudent.id,
-
             currentStudent.name,
-
             currentStudent.className,
-
             selectedGrade,
-
             selectedUnit,
-
             'match',
-
             100,
-
             { note: 'Hoàn thành ghép nối toàn bộ từ vựng' }
-
           );
-
           setMissionUpdateTrigger(t => t + 1);
 
-
-
-          studentGradebookService.recordPracticeMerit(currentStudent.id, `Nối cặp từ vựng Unit ${selectedUnit}`, 10);
-
+          const earnedPoints = Math.max(2, Math.round(matchCards.length / 2) * 2);
+          studentGradebookService.recordPracticeMerit(currentStudent.id, `Nối cặp từ vựng Unit ${selectedUnit} (${Math.round(matchCards.length / 2)} cặp) - Đúng mỗi câu +2đ`, earnedPoints);
           studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-
-          if (onRewardMerit) onRewardMerit(`Nối cặp từ vựng Unit ${selectedUnit}`, 10);
+          if (onRewardMerit) onRewardMerit(`Nối cặp từ vựng Unit ${selectedUnit}`, earnedPoints);
 
 
 
@@ -1366,7 +1300,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       playCorrectSound();
       speakWord(currentSpellWord.word);
       setSpellScore(s => s + 1);
-      triggerScorePopup(null, '+10 Điểm! ⭐');
+      triggerScorePopup(null, '+2 Điểm! ⭐');
 
       // TỰ ĐỘNG CHUYỂN SANG TỪ TIẾP THEO SAU 750MS (Mượt mà, không chờ đợi lâu)
       if (autoNextSpellTimerRef.current) clearTimeout(autoNextSpellTimerRef.current);
@@ -1374,84 +1308,47 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         handleSpellNext();
       }, 750);
     } else {
-
       setSpellFeedback('wrong');
-
       playWrongSound();
-
     }
-
   };
 
-
-
   const handleSpellNext = () => {
-
     if (autoNextSpellTimerRef.current) {
-
       clearTimeout(autoNextSpellTimerRef.current);
-
       autoNextSpellTimerRef.current = null;
-
     }
 
     if (spellIndex < practiceVocabList.length - 1) {
-
       setSpellIndex(i => i + 1);
-
       setSpellInput('');
-
       setSpellFeedback(null);
-
       setSpellHintCount(0);
-
       setSpellShowAnswer(false);
-
       setTimeout(() => spellInputRef.current?.focus(), 100);
-
     } else {
-
       setSpellFinished(true);
-
       if (currentStudent) {
-
         const finalScore = spellScore;
-
         const totalQ = practiceVocabList.length;
-
         const acc = Math.round((finalScore / totalQ) * 100);
 
-
-
         const sRes = midtermMissionService.recordVocabPracticeQuality(
-
           currentStudent.id,
-
           currentStudent.name,
-
           currentStudent.className,
-
           selectedGrade,
-
           selectedUnit,
-
           'spelling',
-
           acc,
-
           { score: finalScore, totalQuestions: totalQ }
-
         );
-
         setMissionUpdateTrigger(t => t + 1);
 
-
-
-        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện gõ từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ})`, 10);
-
+        const earnedPoints = Math.max(2, finalScore * 2);
+        studentGradebookService.recordPracticeMerit(currentStudent.id, `Luyện gõ từ vựng Unit ${selectedUnit} (${finalScore}/${totalQ}) - Đúng mỗi câu +2đ`, earnedPoints);
         studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-
-        if (onRewardMerit) onRewardMerit(`Luyện gõ từ vựng Unit ${selectedUnit}`, 10);
+        if (onRewardMerit) onRewardMerit(`Luyện gõ từ vựng Unit ${selectedUnit}`, earnedPoints);
 
 
 
@@ -1650,30 +1547,117 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       </div>
 
-      {/* THÔNG BÁO NHẮC NHỞ HỌC SINH MANG THẺ DỤNG CỤ: BÚT CHÌ & HÒN TẨY */}
-      <div className="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-rose-500/20 border-2 border-amber-400/80 shadow-lg flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-slate-900 dark:text-white backdrop-blur-xl">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl sm:text-3xl shrink-0 p-1.5 bg-amber-400 text-slate-950 rounded-2xl shadow-md">✏️</span>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-amber-800 dark:text-amber-300 font-black uppercase tracking-wider text-xs">
-                LỜI NHẮC CỦA THẦY ĐINH THÀNH:
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wide">
-                BẮT BUỘC KHI KIỂM TRA
-              </span>
+      {/* THÔNG BÁO MỚI NHẤT TỪ THẦY ĐINH THÀNH: LỊCH KIỂM TRA GK1 & KẾ HOẠCH ÔN TẬP BỨT PHÁ */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-indigo-950/90 via-slate-900/95 to-amber-950/90 border-2 border-amber-400/80 shadow-2xl text-slate-100 backdrop-blur-xl relative overflow-hidden">
+        {/* Đường viền trang trí đa sắc */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-rose-500 to-indigo-500"></div>
+
+        {/* Header thông báo */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-amber-400/30">
+          <div className="flex items-center gap-3">
+            <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0 animate-bounce">
+              📢
+            </span>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
+                  LỊCH KIỂM TRA CHÍNH THỨC
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[11px] font-extrabold">
+                  Thầy Đinh Thành
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-200 border border-blue-400/30 text-[11px] font-bold">
+                  Chiều Thứ Hai • 02/11/2026
+                </span>
+              </div>
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-amber-300 uppercase tracking-tight mt-1">
+                LỊCH KIỂM TRA GIỮA KỲ 1 (GK1) TIẾNG ANH: CHIỀU NGÀY MAI (THỨ HAI, 02/11/2026)
+              </h3>
             </div>
-            <p className="text-slate-800 dark:text-slate-100 font-extrabold leading-relaxed mt-0.5">
-              Khi đi làm bài kiểm tra trắc nghiệm chính thức trên lớp, các em <strong className="text-rose-600 dark:text-rose-400 underline font-black">BẮT BUỘC MANG THẺ DỤNG CỤ</strong>: gồm <strong>ít nhất 2 bút chì (2B hoặc 3B gọt sẵn)</strong> và <strong>hòn tẩy (gôm mềm sạch)</strong> để làm bài kiểm tra trắc nghiệm!
-            </p>
+          </div>
+          <div className="shrink-0 bg-black/40 px-3.5 py-2 rounded-2xl border border-amber-400/30 text-amber-200 text-xs font-bold text-center">
+            ⏰ Đã thông báo toàn khối • Sẵn sàng bứt phá
           </div>
         </div>
-        <span className="hidden md:inline-flex px-3.5 py-1.5 rounded-2xl bg-amber-400 text-slate-950 font-black text-xs shrink-0 shadow-md">
-          🎒 Thẻ Dụng Cụ
-        </span>
+
+        {/* Lời dặn dò viết lại chuẩn sư phạm */}
+        <div className="mt-3.5 p-3 rounded-2xl bg-black/30 border-l-4 border-amber-400 text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+          <strong>Kính gửi các em học sinh thân yêu:</strong> Chiều ngày mai <strong>(Thứ Hai, ngày 02/11/2026)</strong>, toàn khối sẽ tiến hành làm bài kiểm tra Giữa học kỳ 1 môn Tiếng Anh. Thầy Thành yêu cầu tất cả các em tập trung cao độ, ôn luyện chắc từ vựng, làm kỹ đề cương và làm bài thi thử giữa kỳ 1 để tự tin bứt phá điểm 9, điểm 10 rực rỡ nhé!
+        </div>
+
+        {/* 4 Khối nhiệm vụ trọng tâm */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-3.5 text-xs">
+          {/* Nhiệm vụ 1: Ôn luyện từ vựng */}
+          <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-400/40 flex flex-col justify-between gap-2 shadow-xs">
+            <div>
+              <div className="font-black text-emerald-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>🧠 1. Ôn Luyện Từ Vựng</span>
+              </div>
+              <p className="text-emerald-100/90 leading-relaxed text-[11px] mt-1">
+                Ôn kỹ toàn bộ từ vựng trọng tâm <strong>Unit 1, Unit 2, Unit 3</strong> (chiếm 50% đề kiểm tra). Luyện thẻ 3D, Luyện gõ từ và Xếp chữ.
+              </p>
+            </div>
+            <div className="flex gap-1 pt-1.5 border-t border-emerald-400/20">
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">U1 - U3 Trọng Tâm</span>
+            </div>
+          </div>
+
+          {/* Nhiệm vụ 2: Làm kỹ đề cương */}
+          <div className="p-3.5 rounded-2xl bg-cyan-950/40 border border-cyan-400/40 flex flex-col justify-between gap-2 shadow-xs">
+            <div>
+              <div className="font-black text-cyan-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>📑 2. Làm Kỹ Đề Cương</span>
+              </div>
+              <p className="text-cyan-100/90 leading-relaxed text-[11px] mt-1">
+                Hoàn thành toàn bộ câu hỏi trắc nghiệm thì Hiện tại đơn, Quá khứ đơn, V-ing, phát âm -s/es, -ed và đọc hiểu trong đề cương.
+              </p>
+            </div>
+            <div className="flex gap-1 pt-1.5 border-t border-cyan-400/20">
+              <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-bold text-[10px]">Đề Cương Đã Phát</span>
+            </div>
+          </div>
+
+          {/* Nhiệm vụ 3: Làm bài giữa kỳ 1 (thi thử) */}
+          <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-400/40 flex flex-col justify-between gap-2 shadow-xs">
+            <div>
+              <div className="font-black text-amber-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>📝 3. Làm Đề Giữa Kỳ 1</span>
+              </div>
+              <p className="text-amber-100/90 leading-relaxed text-[11px] mt-1">
+                Vào mục <strong>"Đề Giữa Kỳ / Cuối Kỳ"</strong> làm 1-2 đề minh họa bấm giờ để rèn phản xạ nhận diện câu hỏi và tránh các bẫy đề thi.
+              </p>
+            </div>
+            <div className="flex gap-1 pt-1.5 border-t border-amber-400/20">
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-[10px]">+30đ Thi Đua</span>
+            </div>
+          </div>
+
+          {/* Nhiệm vụ 4: Thẻ dụng cụ bắt buộc */}
+          <div className="p-3.5 rounded-2xl bg-rose-950/40 border border-rose-400/50 flex flex-col justify-between gap-2 shadow-xs">
+            <div>
+              <div className="font-black text-rose-300 flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>✏️ 4. Thẻ Dụng Cụ Bắt Buộc</span>
+              </div>
+              <p className="text-rose-100/90 leading-relaxed text-[11px] mt-1">
+                Bắt buộc mang <strong>ít nhất 2 bút chì 2B/3B gọt sẵn</strong>, <strong>tẩy mềm (gôm)</strong> và bút mực. Tuyệt đối không dùng bút mực tô trắc nghiệm!
+              </p>
+            </div>
+            <div className="flex gap-1 pt-1.5 border-t border-rose-400/20">
+              <span className="px-2 py-0.5 rounded-md bg-rose-500/30 text-rose-200 font-bold text-[10px]">🎒 Bút Chì 2B + Tẩy</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Chân thông báo & Lời chúc */}
+        <div className="mt-3.5 pt-2.5 border-t border-amber-400/20 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span className="text-amber-200 font-semibold italic">
+            ⭐ Lời chúc từ Thầy Đinh Thành: "Bình tĩnh - Tự tin - Đọc kỹ đề - Chúc tất cả các em đạt điểm 9, 10 rực rỡ!"
+          </span>
+          <span className="text-cyan-300 font-bold">
+            🛡️ Tổ Trưởng &amp; Tổ Phó: Đôn đốc các bạn trong tổ ôn tập và mang đủ dụng cụ đi thi!
+          </span>
+        </div>
       </div>
-
-
 
       {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP ==================== */}
 

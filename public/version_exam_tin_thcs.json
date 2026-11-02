@@ -1,12 +1,12 @@
 {
   "appId": "tao-de-tin-thcs",
   "appName": "TẠO ĐỀ TIN HỌC THCS PRO 2026 – Phần Mềm Tạo Đề Kiểm Tra Môn Tin Học THCS (Lớp 6, 7, 8, 9)",
-  "currentVersion": "4.1.0",
-  "latestVersion": "4.1.0",
+  "currentVersion": "4.2.0",
+  "latestVersion": "4.2.0",
   "releaseDate": "01/11/2026",
-  "changelog": "• [01/11/2026 - v4.1.0] NÂNG CẤP HỆ THỐNG KÍCH HOẠT BẢN QUYỀN & ĐĂNG KÝ GIÁO VIÊN:\n• Bổ sung form điền đầy đủ thông tin Giáo viên: Họ và tên (*), Số điện thoại/Zalo (*), Trường/Đơn vị (*), Tỉnh/Thành phố\n• Nút 1-click 'Gửi thông tin đăng ký cho Thầy Đinh Thành (Zalo: 0915.213717)' tự động định dạng tin nhắn chuẩn và mở Zalo\n• Tự động lưu nhớ thông tin GV trên máy và đồng bộ hai chiều với ô Tác giả ra đề trên giao diện chính\n• Bổ sung tính năng Kiểm tra & Đồng bộ bản quyền Pro từ xa (Web Cloud Sync)\n• Hỗ trợ đầy đủ Lớp 6, 7, 8, 9 SGK Kết nối tri thức chuẩn Công văn 7991/BGDĐT\n• Đóng gói All-in-One 2-in-1 tự động đồng bộ Google Drive PC và phát hành web.",
-  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS.exe",
-  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
+  "changelog": "• [01/11/2026 - v4.2.0] NÂNG CẤP ĐỘT PHÁ CẤU TRÚC ĐỀ CV 7991 MỚI & TÙY CHỌN 5 - 10 MÃ ĐỀ:\n• Chuẩn hóa cấu trúc đề duy nhất: Phần I (12 câu TN nhiều lựa chọn - 3.0đ) + Phần II (4 câu Đúng/Sai 4 ý nhỏ - 4.0đ, mỗi ý đúng 0.25đ) + Phần III (3 câu Tự luận chia 4 ý nhỏ a, b, c, d - 3.0đ, mỗi ý 0.25đ kèm bảng Rubric 12 dòng chi tiết 0.25đ/dòng).\n• Nội dung ra đề bám sát PPCT SGK Kết nối tri thức, tuyệt đối không lấy kiến thức chưa học. Bài nhiều tiết chiếm tỷ trọng điểm cao hơn. Đề Cuối kỳ (CK1 & CK2) lấy lại 30% kiến thức trước giữa kỳ chuẩn quy định BGD&ĐT.\n• Hỗ trợ tạo đồng thời 5 - 10 mã đề hoán vị độc lập (601..605, 701..705, 801..805, 901..905) xoay vòng cân bằng đáp án.\n• Tích hợp nút gỡ cài đặt Ribbon Add-in khỏi Word ngay trên App, Ribbon Word và bộ cài đặt All-in-One.\n• Bản cài đặt All-in-One tự động tạo Shortcut Desktop, đồng bộ Google Drive PC & Web.",
+  "downloadUrl": "https://drive.google.com/uc?export=download&id=1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86",
+  "zipUrl": "https://drive.google.com/uc?export=download&id=1UoyLxirC4th9u7dGvyZarlWBTRs6ISny",
   "websiteUrl": "https://dekiemtraso.com/#tao-de-tin",
   "author": "Thầy giáo Đinh Văn Thành (Hotline/Zalo: 0915.213717)"
 }

@@ -594,17 +594,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
         totalPoints: student.totalMeritPoints || totalAwardedToday,
 
-        mascotEmoji: '🎆',
-
-        badgeTitle: '🎆 SIÊU SAO CHĂM CHỈ LIÊN TIẾP (+20Đ PHÁO HOA) 🎆',
-
-        hasFireworks: true,
-
+        mascotEmoji: '⭐',
+        badgeTitle: '⭐ SIÊU SAO CHĂM CHỈ LIÊN TIẾP (+20Đ) ⭐',
+        hasFireworks: false,
         isStreakHero: true,
-
         streakPoints: streakPoints,
-
-        cheerMessage: `🎆 BẮN PHÁO HOA RỰC RỠ ĂN MỪNG! Thầy giáo Đinh Văn Thành vô cùng tự hào và khen ngợi em ${student.name} (Lớp ${student.className})! Hôm qua em đã rất chăm chỉ học bài, hôm nay em lại tiếp tục kiên trì quay lại bàn học! Thầy Thành tặng em trọn vẹn màn PHÁO HOA ĂN MỪNG và +${streakPoints} ĐIỂM THƯỞNG CHĂM CHỈ vào Bảng xếp hạng thi đua! Chúc em luôn giữ vững ngọn lửa đam mê và gặt hái thật nhiều điểm 10 rực rỡ!`
+        cheerMessage: `⭐ VINH DANH CHĂM CHỈ! Thầy giáo Đinh Văn Thành vô cùng tự hào và khen ngợi em ${student.name} (Lớp ${student.className})! Hôm qua em đã rất chăm chỉ học bài, hôm nay em lại tiếp tục kiên trì quay lại ôn luyện! Thầy Thành tặng em +${streakPoints} ĐIỂM THƯỞNG CHĂM CHỈ vào Bảng xếp hạng thi đua! Chúc em luôn giữ vững ngọn lửa đam mê và gặt hái thật nhiều điểm 9, 10 rực rỡ!`
 
       });
 
@@ -1564,11 +1559,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
       if (!isPassCorrect) {
-
-        setLoginError('Mật khẩu chưa đúng. Em có thể để trống ô mật khẩu để vào học ngay nhé!');
-
-        return;
-
+        // Hỗ trợ tối đa: Không chặn học sinh vào học, tự động cập nhật hoặc cho phép vào học ngay
+        console.warn('Mật khẩu không khớp hoàn toàn, tự động mở quyền vào học cho học sinh');
       }
 
     }
@@ -7161,27 +7153,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
 
-            {/* NÚT BẮN LẠI PHÁO HOA ĂN MỪNG NẾU LÀ HỌC SINH CHĂM CHỈ */}
 
-            {welcomeModalData.hasFireworks && (
-
-              <button
-
-                type="button"
-
-                onClick={() => launchFireworks(4500)}
-
-                className="mb-3 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-black text-xs flex items-center justify-center gap-1.5 mx-auto transition cursor-pointer shadow-xs active:scale-95"
-
-              >
-
-                <span>🎆</span>
-
-                <span>Bắn Lại Pháo Hoa Rực Rỡ!</span>
-
-              </button>
-
-            )}
 
 
 

@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <!-- Auto redirect /tron-de -> /tron-de/ for relative assets safety -->
+  <script>
+    if (!window.location.protocol.startsWith('file:') && window.location.pathname.endsWith('/tron-de')) {
+      window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trộn Đề Kiểm Tra Các Môn Pro - Chuẩn Bộ GD&ĐT (Web Edition)</title>
   <meta name="description" content="Phần mềm Trộn đề kiểm tra các môn cấp THCS và THPT online chuẩn Bộ Giáo dục & Đào tạo. Bảo toàn 100% công thức toán MathType, OMML, hình vẽ, sơ đồ. Tác giả: Thầy giáo Đinh Văn Thành.">
-  <link rel="icon" type="image/png" href="app_logo.png">
+    <link rel="icon" type="image/png" href="./app_logo.png">
+  <link rel="apple-touch-icon" href="./app_logo.png">
 
   <!-- Google Fonts: Outfit & Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +43,7 @@
        ========================================================================= -->
   <header class="top-header">
     <div class="header-brand">
-      <img src="app_logo.png" alt="Logo Trộn Đề Pro" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' rx=\'20\' fill=\'%230284C7\'/><text x=\'50\' y=\'65\' font-size=\'45\' font-family=\'Arial\' font-weight=\'bold\' fill=\'%23FDE047\' text-anchor=\'middle\'>PRO</text></svg>'">
+      <img src="./app_logo.png" alt="Logo Trộn Đề Pro" class="brand-logo" onerror="if(this.src.indexOf('/tron-de/app_logo.png') === -1){ this.src='/tron-de/app_logo.png'; } else if(this.src.indexOf('/app_logo.png') === -1){ this.src='/app_logo.png'; } else { this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' rx=\'22\' fill=\'%230284C7\'/><path d=\'M25 35 L75 35 L50 75 Z\' fill=\'%23FDE047\'/><text x=\'50\' y=\'62\' font-size=\'26\' font-family=\'Arial\' font-weight=\'900\' fill=\'%230F172A\' text-anchor=\'middle\'>PRO</text></svg>'; }"><rect width=\'100\' height=\'100\' rx=\'20\' fill=\'%230284C7\'/><text x=\'50\' y=\'65\' font-size=\'45\' font-family=\'Arial\' font-weight=\'bold\' fill=\'%23FDE047\' text-anchor=\'middle\'>PRO</text></svg>'">
       <div class="brand-text">
         <h1>TRỘN ĐỀ KIỂM TRA CÁC MÔN PRO</h1>
         <p>Chuẩn BGD&ĐT • Bảo toàn 100% công thức MathType/OMML & hình vẽ • Hotline/Zalo: <span class="highlight">0915.213717</span></p>

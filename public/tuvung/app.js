@@ -1,5 +1,12 @@
 
 
+// =========================================================================
+// HỆ THỐNG ÔN LUYỆN TỪ VỰNG TIẾNG ANH - THẦY ĐINH VĂN THÀNH (0915.213717)
+// Đã lược bỏ tính năng bắn pháo hoa theo yêu cầu
+// =========================================================================
+window.launchConfetti = function() {};
+window.confetti = function() {};
+
 // ==================== BỘ LỌC TÊN VÀ TÀI KHOẢN PHI GIÁO DỤC, VI PHẠM CHÍNH SÁCH ====================
 
 const INAPPROPRIATE_KEYWORDS = [
@@ -1609,13 +1616,9 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
   if (isCorrect) {
 
     clickedBtn.classList.add('correct');
-
-    triggerAnswerSuccess(clickedBtn, 10, 'Đúng trắc nghiệm');
-
+    triggerAnswerSuccess(clickedBtn, 2, 'Đúng trắc nghiệm');
     STATE.quiz.streak++;
-
-    const points = 10 + (STATE.quiz.streak > 1 ? (STATE.quiz.streak - 1) * 5 : 0);
-
+    const points = 2;
     STATE.quiz.score += points;
 
     document.getElementById('quizScoreVal').textContent = STATE.quiz.score;
@@ -2125,10 +2128,8 @@ function renderListenQuestion(autoSpeak = false) {
       if (opt.id === q.id) {
 
         btn.classList.add('correct');
-
-        triggerAnswerSuccess(btn, 10, 'Đúng bài nghe');
-
-        STATE.listen.score += 10;
+        triggerAnswerSuccess(btn, 2, 'Đúng bài nghe');
+        STATE.listen.score += 2;
 
         document.getElementById('listenScoreVal').textContent = STATE.listen.score;
 
@@ -3606,15 +3607,10 @@ function handleBlitzAnswer(userChoice) {
 
   if (isRight) {
 
-    triggerAnswerSuccess(card, 10, 'Đúng phản xạ chớp nhoáng');
-
+    triggerAnswerSuccess(card, 2, 'Đúng phản xạ chớp nhoáng');
     STATE.blitz.streak++;
-
     STATE.blitz.correctCount++;
-
-    const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
-
-    STATE.blitz.score += (10 + bonus);
+    STATE.blitz.score += 2;
 
     if (card) {
 
@@ -3881,10 +3877,8 @@ function checkSpellingAnswer() {
   if (userVal === targetVal) {
 
     input.className = 'spelling-input correct';
-
-    triggerAnswerSuccess(input, 10, 'Gõ đúng chính tả');
-
-    STATE.spelling.score += 10;
+    triggerAnswerSuccess(input, 2, 'Gõ đúng chính tả');
+    STATE.spelling.score += 2;
 
     const scoreEl = document.getElementById('spellingScoreVal');
 
@@ -8043,6 +8037,20 @@ const TEACHER_CHAT = {
   init() {
 
     this.loadMessages();
+
+    // AUTO-INJECT LATEST EXAM ANNOUNCEMENT FROM THẦY THÀNH (CHIỀU MAI 02/11/2026)
+    const hasExamNotice = this.messages && this.messages.some(m => m.id === 'MSG_EXAM_GK1_20261102' || (m.text && m.text.includes('02/11/2026')));
+    if (!hasExamNotice && Array.isArray(this.messages)) {
+      this.messages.push({
+        id: 'MSG_EXAM_GK1_20261102',
+        sender: 'teacher',
+        teacherName: 'Thầy Đinh Văn Thành',
+        text: '📢 [THÔNG BÁO QUAN TRỌNG TỪ THẦY THÀNH - LỊCH THI CHIỀU MAI 02/11/2026]: Chiều ngày mai (Thứ Hai, ngày 02/11/2026), toàn khối sẽ tiến hành làm bài kiểm tra Giữa học kỳ 1 môn Tiếng Anh! Thầy dặn tất cả các em: 1) Ôn kỹ từ vựng trọng tâm Unit 1, Unit 2, Unit 3 (chiếm 50% đề thi). 2) Hoàn thành toàn bộ câu hỏi trắc nghiệm và đọc hiểu trong Đề cương ôn tập GK1. 3) Làm thử 1 - 2 đề minh họa tại mục "Đề Giữa Kỳ / Cuối Kỳ" trên web để rèn phản xạ bấm giờ. 4) BẮT BUỘC mang ít nhất 2 bút chì 2B gọt sẵn và hòn tẩy mềm sạch để tô phiếu trắc nghiệm (tuyệt đối không dùng bút mực tô trắc nghiệm). Chúc các em bình tĩnh, tự tin và đạt điểm 9, 10 rực rỡ! 🌟',
+        timestamp: '08:30 01/11/2026',
+        read: false
+      });
+      this.saveMessages();
+    }
 
     this.renderMessages();
 

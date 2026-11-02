@@ -46,6 +46,11 @@
       "permanent": false
     },
     {
+      "source": "/Cai_Dat_TaoDe_Tin_THCS.exe",
+      "destination": "https://drive.google.com/file/d/1JLQCqAuTnesXkq3haEoFtQ1OZKMnAv86/view?usp=sharing",
+      "permanent": false
+    },
+    {
       "source": "/Tao_De_Tin_Hoc_THCS_Pass_123.zip",
       "destination": "https://drive.google.com/file/d/1UoyLxirC4th9u7dGvyZarlWBTRs6ISny/view?usp=sharing",
       "permanent": false

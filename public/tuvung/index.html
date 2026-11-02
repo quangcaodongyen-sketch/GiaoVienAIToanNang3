@@ -4272,6 +4272,312 @@ header, .app-header {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
 }
 </style>
+
+  <!-- STYLING FOR LATEST EXAM ANNOUNCEMENT BANNER (THẦY ĐINH THÀNH) -->
+  <style>
+    .exam-notice-container {
+      max-width: 1300px;
+      margin: 0.85rem auto 0 auto;
+      padding: 0 1.25rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .exam-notice-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(67, 20, 7, 0.92) 100%);
+      border: 2px solid rgba(251, 191, 36, 0.75);
+      border-radius: 1.1rem;
+      box-shadow: 0 10px 30px -5px rgba(245, 158, 11, 0.3), 0 0 18px rgba(251, 191, 36, 0.2);
+      padding: 1rem 1.25rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      color: #f8fafc;
+      box-sizing: border-box;
+    }
+
+    .exam-notice-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6, #10b981);
+    }
+
+    .exam-notice-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.25);
+    }
+
+    .exam-notice-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .exam-pulse-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+      flex-shrink: 0;
+      animation: pulseNotice 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseNotice {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6); }
+    }
+
+    .exam-notice-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .exam-notice-tags {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .exam-tag-urgent {
+      background: #dc2626;
+      color: #ffffff;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+    }
+
+    .exam-tag-author {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde047;
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+    }
+
+    .exam-tag-date {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+    }
+
+    .exam-notice-heading {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #fef08a;
+      margin: 0;
+      line-height: 1.35;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .exam-notice-toggle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #cbd5e1;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .exam-notice-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-color: rgba(251, 191, 36, 0.5);
+    }
+
+    .exam-notice-summary {
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.65rem 0.9rem;
+      border-radius: 0.65rem;
+      border-left: 3px solid #f59e0b;
+    }
+
+    .exam-notice-summary strong {
+      color: #fde047;
+    }
+
+    .exam-notice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .exam-notice-col {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .exam-notice-col:hover {
+      transform: translateY(-2px);
+    }
+
+    .col-vocab { border-color: rgba(16, 185, 129, 0.4); background: rgba(6, 78, 59, 0.2); }
+    .col-decuong { border-color: rgba(6, 182, 212, 0.4); background: rgba(8, 51, 68, 0.2); }
+    .col-exam { border-color: rgba(245, 158, 11, 0.4); background: rgba(69, 26, 3, 0.2); }
+    .col-tools { border-color: rgba(239, 68, 68, 0.4); background: rgba(69, 10, 10, 0.2); }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .col-icon {
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .col-header strong {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .col-header small {
+      display: block;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
+
+    .col-vocab strong { color: #6ee7b7; }
+    .col-decuong strong { color: #67e8f9; }
+    .col-exam strong { color: #fde047; }
+    .col-tools strong { color: #fca5a5; }
+
+    .exam-notice-col p {
+      font-size: 0.78rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .col-action-btn {
+      padding: 0.4rem 0.65rem;
+      border-radius: 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn-action-vocab {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+    .btn-action-vocab:hover { background: linear-gradient(135deg, #34d399, #10b981); }
+
+    .btn-action-decuong {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+    }
+    .btn-action-decuong:hover { background: linear-gradient(135deg, #38bdf8, #0284c7); }
+
+    .btn-action-exam {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a;
+    }
+    .btn-action-exam:hover { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+
+    .tool-badge-pill {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px dashed rgba(239, 68, 68, 0.6);
+      color: #fca5a5;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .exam-notice-footer {
+      margin-top: 0.75rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+    }
+
+    .exam-footer-tip {
+      color: #fef08a;
+      font-weight: 600;
+    }
+
+    .exam-footer-duty {
+      color: #a5b4fc;
+      font-size: 0.74rem;
+    }
+
+    @media (max-width: 640px) {
+      .exam-notice-grid {
+        grid-template-columns: 1fr;
+      }
+      .exam-notice-heading {
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+
 </head>
 <body>
   <!-- Ambient background lighting -->
@@ -4394,6 +4700,106 @@ header, .app-header {
         <!-- Dynamically injected with rich bilingual info -->
       </div>
     </nav>
+
+    
+    <!-- ==============================================================================
+         LATEST EXAM ANNOUNCEMENT BANNER - THÔNG BÁO MỚI NHẤT TỪ THẦY ĐINH THÀNH
+         ============================================================================== -->
+    <section class="exam-notice-container" id="examNoticeSection" aria-label="Thông báo lịch kiểm tra GK1">
+      <div class="exam-notice-card">
+        <div class="exam-notice-top">
+          <div class="exam-notice-badge-group">
+            <span class="exam-pulse-icon">📢</span>
+            <div class="exam-notice-titles">
+              <div class="exam-notice-tags">
+                <span class="exam-tag-urgent">LỊCH KIỂM TRA CHÍNH THỨC</span>
+                <span class="exam-tag-author">Thầy Đinh Thành</span>
+                <span class="exam-tag-date">Chiều Thứ Hai • 02/11/2026</span>
+              </div>
+              <h2 class="exam-notice-heading">
+                THÔNG BÁO KIỂM TRA GIỮA KỲ 1 (GK1) TIẾNG ANH & KẾ HOẠCH ÔN TẬP BỨT PHÁ
+              </h2>
+            </div>
+          </div>
+          <button class="exam-notice-toggle-btn" id="examNoticeToggleBtn" onclick="toggleExamNoticeCollapse()" title="Thu gọn / Mở rộng thông báo">
+            <span id="examNoticeToggleIcon">▲</span> <span id="examNoticeToggleText">Thu Gọn</span>
+          </button>
+        </div>
+
+        <div class="exam-notice-body" id="examNoticeBody">
+          <div class="exam-notice-summary">
+            <p>
+              <strong>Kính gửi các em học sinh thân yêu:</strong> Chiều ngày mai <strong>(Thứ Hai, ngày 02/11/2026)</strong>, toàn khối sẽ tiến hành làm bài kiểm tra Giữa học kỳ 1 môn Tiếng Anh. Thầy Thành yêu cầu tất cả các em tập trung cao độ, thực hiện nghiêm túc <strong>4 nhiệm vụ trọng tâm</strong> dưới đây để tự tin bứt phá điểm 9, điểm 10 rực rỡ nhé!
+            </p>
+          </div>
+
+          <div class="exam-notice-grid">
+            <div class="exam-notice-col col-vocab">
+              <div class="col-header">
+                <span class="col-icon">🧠</span>
+                <div>
+                  <strong>1. Ôn Luyện Từ Vựng</strong>
+                  <small>Unit 1 - Unit 3 (Chiếm 50% đề)</small>
+                </div>
+              </div>
+              <p>Ôn chắc nghĩa, từ loại và phát âm toàn bộ từ vựng Unit 1, 2, 3 bằng Thẻ 3D, Luyện Gõ và Xếp Chữ.</p>
+              <button class="col-action-btn btn-action-vocab" onclick="scrollToVocabUnits()">
+                📖 Ôn Ngay Unit 1 - 3
+              </button>
+            </div>
+
+            <div class="exam-notice-col col-decuong">
+              <div class="col-header">
+                <span class="col-icon">📑</span>
+                <div>
+                  <strong>2. Làm Kỹ Đề Cương</strong>
+                  <small>Ngữ pháp & Đọc hiểu GK1</small>
+                </div>
+              </div>
+              <p>Hoàn thành toàn bộ câu hỏi trắc nghiệm thì Hiện tại đơn, Quá khứ đơn, V-ing và phát âm -s/es, -ed trong đề cương.</p>
+              <button class="col-action-btn btn-action-decuong" onclick="openDecuongSection()">
+                📘 Rà Soát Đề Cương
+              </button>
+            </div>
+
+            <div class="exam-notice-col col-exam">
+              <div class="col-header">
+                <span class="col-icon">📝</span>
+                <div>
+                  <strong>3. Làm Đề Thi Thử GK1</strong>
+                  <small>Chuẩn ma trận Bộ GD&ĐT</small>
+                </div>
+              </div>
+              <p>Vào mục "Đề Giữa Kỳ / Cuối Kỳ" làm 1-2 đề bấm giờ chuẩn thời gian để rèn phản xạ nhận diện câu hỏi và tránh bẫy.</p>
+              <button class="col-action-btn btn-action-exam" onclick="switchToOnlineExamTab()">
+                ✍️ Vào Thi Thử GK1
+              </button>
+            </div>
+
+            <div class="exam-notice-col col-tools">
+              <div class="col-header">
+                <span class="col-icon">✏️</span>
+                <div>
+                  <strong>4. Thẻ Dụng Cụ Bắt Buộc</strong>
+                  <small>Quy chuẩn thi trắc nghiệm</small>
+                </div>
+              </div>
+              <p>Bắt buộc mang <strong>ít nhất 2 bút chì 2B gọt sẵn</strong>, <strong>tẩy mềm (gôm)</strong> và bút mực. Tuyệt đối không dùng bút mực tô trắc nghiệm!</p>
+              <div class="tool-badge-pill">🎒 Mang Đủ 2 Bút Chì 2B + Tẩy</div>
+            </div>
+          </div>
+
+          <div class="exam-notice-footer">
+            <span class="exam-footer-tip">
+              ⭐ <em>Lời chúc từ Thầy Đinh Thành: "Bình tĩnh - Cẩn thận - Đọc kỹ đề - Chúc các em đạt điểm 9, 10 trọn vẹn!"</em>
+            </span>
+            <span class="exam-footer-duty">
+              🛡️ <strong>Tổ Trưởng & Tổ Phó:</strong> Đôn đốc các bạn trong tổ ôn tập và nhắc nhở mang đủ dụng cụ!
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Learning Modes Navigation Bar -->
     <div class="modes-bar">
@@ -6189,5 +6595,49 @@ header, .app-header {
   <script src="vocabulary_data.js?v=20261027_grade_lock_v2"></script>
   <script src="online_midterm_exams_data.js?v=20261022_official_4_exams"></script>
   <script src="app.js?v=20261027_grade_lock_v2"></script>
+<script>
+
+    // ==============================================================================
+    // HANDLERS FOR LATEST EXAM ANNOUNCEMENT BANNER (THẦY ĐINH THÀNH)
+    // ==============================================================================
+    function toggleExamNoticeCollapse() {
+      const body = document.getElementById('examNoticeBody');
+      const icon = document.getElementById('examNoticeToggleIcon');
+      const text = document.getElementById('examNoticeToggleText');
+      if (!body) return;
+      if (body.style.display === 'none') {
+        body.style.display = 'block';
+        if (icon) icon.textContent = '▲';
+        if (text) text.textContent = 'Thu Gọn';
+        try { sessionStorage.setItem('examNoticeCollapsed', 'false'); } catch (e) {}
+      } else {
+        body.style.display = 'none';
+        if (icon) icon.textContent = '▼';
+        if (text) text.textContent = 'Mở Rộng';
+        try { sessionStorage.setItem('examNoticeCollapsed', 'true'); } catch (e) {}
+      }
+    }
+
+    function scrollToVocabUnits() {
+      const el = document.getElementById('unitPillsContainer') || document.getElementById('currentUnitMeta');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (typeof selectUnit === 'function') {
+        try { selectUnit(1); } catch (e) {}
+      }
+    }
+
+    function openDecuongSection() {
+      switchToOnlineExamTab();
+    }
+
+    function switchToOnlineExamTab() {
+      const btn = document.querySelector('[data-tab="tab-online-exam"]');
+      if (btn) {
+        btn.click();
+        btn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+</script>
 </body>
 </html>

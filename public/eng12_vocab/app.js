@@ -1,4 +1,8 @@
 
+// Vô hiệu hóa bắn pháo hoa theo yêu cầu sư phạm
+window.launchConfetti = function() {};
+window.confetti = function() {};
+
 // ==================== BỘ LỌC TÊN VÀ TÀI KHOẢN PHI GIÁO DỤC, VI PHẠM CHÍNH SÁCH ====================
 const INAPPROPRIATE_KEYWORDS = [
   'dit', 'lon', 'buoi', 'cac', 'cc', 'dcm', 'cl', 'vcl', 'vl', 'dm', 'dkm', 'đụ', 'địt', 'lồn', 'buồi', 'cặc', 'đĩ', 'chó',
@@ -753,7 +757,7 @@ function handleQuizAnswer(isCorrect, clickedBtn, correctId) {
     clickedBtn.classList.add('correct');
     SFX.playCorrect();
     STATE.quiz.streak++;
-    const points = 10 + (STATE.quiz.streak > 1 ? (STATE.quiz.streak - 1) * 5 : 0);
+    const points = 2;
     STATE.quiz.score += points;
     document.getElementById('quizScoreVal').textContent = STATE.quiz.score;
     document.getElementById('quizStreakVal').textContent = STATE.quiz.streak;
@@ -1018,7 +1022,7 @@ function renderListenQuestion(autoSpeak = false) {
       if (opt.id === q.id) {
         btn.classList.add('correct');
         SFX.playCorrect();
-        STATE.listen.score += 10;
+        STATE.listen.score += 2;
         document.getElementById('listenScoreVal').textContent = STATE.listen.score;
       } else {
         btn.classList.add('wrong');
@@ -1708,8 +1712,7 @@ function handleBlitzAnswer(userChoice) {
     if (typeof SFX !== 'undefined') SFX.playCorrect();
     STATE.blitz.streak++;
     STATE.blitz.correctCount++;
-    const bonus = STATE.blitz.streak > 1 ? (STATE.blitz.streak - 1) * 5 : 0;
-    STATE.blitz.score += (10 + bonus);
+    STATE.blitz.score += 2;
     if (card) {
       card.style.borderColor = '#10b981';
       card.style.boxShadow = '0 0 35px rgba(16, 185, 129, 0.45)';
@@ -1844,7 +1847,7 @@ function checkSpellingAnswer() {
   if (userVal === targetVal) {
     input.className = 'spelling-input correct';
     SFX.playCorrect();
-    STATE.spelling.score += 10;
+    STATE.spelling.score += 2;
     const scoreEl = document.getElementById('spellingScoreVal');
     if (scoreEl) scoreEl.textContent = STATE.spelling.score;
     STATE.mastered.add(q.id);
