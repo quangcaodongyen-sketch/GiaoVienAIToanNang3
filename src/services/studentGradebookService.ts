@@ -635,22 +635,40 @@ export function normalizeClassName(cls: string): string {
 export const VERIFIED_HIGH_SCORE_BASELINE: Record<string, { total: number; vocab?: number; attendance?: number; practice?: number; exam?: number; encouragement?: number; notes?: string }> = {
   'hoang minh nhat__6a4': { total: 2799, vocab: 1370, attendance: 25, practice: 1340, encouragement: 15, notes: 'Hoàng Minh Nhật (Lớp 6A4)' },
   'nguyen quoc trong__8a2': { total: 2166, vocab: 1650, attendance: 30, practice: 290, exam: 98, encouragement: 15, notes: 'Nguyễn Quốc Trọng (Lớp 8A2)' },
-  'nguyen dinh huy hoang__6a1': { total: 2032, vocab: 1240, attendance: 5, practice: 660, exam: 58, encouragement: 15, notes: 'Nguyễn Đình Huy Hoàng (Lớp 6A1)' },
-  'hoang thuy chi__6a1': { total: 1307, vocab: 637, attendance: 10, practice: 594, exam: 30, encouragement: 15, notes: 'Hoàng Thùy Chi (Lớp 6A1)' },
-  'hoang ha giang__6a1': { total: 1304, vocab: 637, attendance: 10, practice: 594, exam: 30, encouragement: 15, notes: 'Hoàng Hà Giang (Lớp 6A1)' },
-  'pham quoc huy__6a5': { total: 1287, vocab: 620, attendance: 10, practice: 636, encouragement: 15, notes: 'Phạm Quốc Huy (Lớp 6A5)' },
-  'nguyen anh quan__8a4': { total: 1254, vocab: 1220, attendance: 10, encouragement: 15, notes: 'Nguyễn Anh Quân (Lớp 8A4)' },
-  'hoang thu trang__8a5': { total: 961, vocab: 460, attendance: 10, practice: 473, encouragement: 15, notes: 'Hoàng Thu Trang (Lớp 8A5)' },
-  'nguyen an nguyen__6a3': { total: 738, vocab: 710, attendance: 10, encouragement: 15, notes: 'Nguyễn An Nguyên (Lớp 6A3)' },
-  'nguyen thi tinh san__6a3': { total: 563, attendance: 5, exam: 513, encouragement: 15, notes: 'Nguyễn Thị Tinh San (Lớp 6A3)' },
-  'nguyen thanh tung__6a5': { total: 560, vocab: 255, attendance: 10, practice: 268, encouragement: 15, notes: 'Nguyễn Thanh Tùng (Lớp 6A5)' },
-  'bui tuong vy__6a5': { total: 551, vocab: 255, attendance: 10, practice: 268, encouragement: 15, notes: 'Bùi Tường Vy (Lớp 6A5)' },
-  'hoang duy dat__8a3': { total: 483, vocab: 455, attendance: 10, encouragement: 15, notes: 'Hoàng Duy Đạt (Lớp 8A3)' },
-  'hoang hien phat__6a5': { total: 470, vocab: 450, attendance: 5, encouragement: 15, notes: 'Hoàng Hiền Phát (Lớp 6A5)' },
-  'hoang ngoc thanh truc__6a1': { total: 326, vocab: 20, attendance: 10, practice: 260, encouragement: 15, notes: 'Hoàng Ngọc Thanh Trúc (Lớp 6A1)' },
-  'hoang hai khang__6a3': { total: 298, vocab: 270, attendance: 10, encouragement: 15, notes: 'Hoàng Hải Khang (Lớp 6A3)' },
-  'hoang ngoc chuc__6a2': { total: 259, vocab: 20, attendance: 10, practice: 190, encouragement: 15, notes: 'Hoàng Ngọc Chúc (Lớp 6A2)' },
-  'nguyen anh thu__6a5': { total: 197, practice: 10, exam: 163, encouragement: 15, notes: 'Nguyễn Anh Thư (Lớp 6A5)' },
+  'ma hong cham__8a3': { total: 2115, vocab: 120, attendance: 30, practice: 1470, exam: 242, encouragement: 15, notes: 'Mã Hồng Châm (Lớp 8A3)' },
+  'nguyen dinh huy hoang__6a1': { total: 2045, vocab: 1240, attendance: 15, practice: 660, exam: 58, encouragement: 15, notes: 'Nguyễn Đình Huy Hoàng (Lớp 6A1)' },
+  'nguyen anh quan__8a4': { total: 1335, vocab: 1220, attendance: 15, exam: 58, encouragement: 15, notes: 'Nguyễn Anh Quân (Lớp 8A4)' },
+  'hoang thuy chi__6a1': { total: 1312, vocab: 637, attendance: 15, practice: 594, exam: 30, encouragement: 15, notes: 'Hoàng Thùy Chi (Lớp 6A1)' },
+  'hoang ha giang__6a1': { total: 1309, vocab: 637, attendance: 15, practice: 594, exam: 30, encouragement: 15, notes: 'Hoàng Hà Giang (Lớp 6A1)' },
+  'pham quoc huy__6a5': { total: 1292, vocab: 620, attendance: 15, practice: 636, encouragement: 15, notes: 'Phạm Quốc Huy (Lớp 6A5)' },
+  'hoang thu trang__8a5': { total: 966, vocab: 460, attendance: 15, practice: 473, encouragement: 15, notes: 'Hoàng Thu Trang (Lớp 8A5)' },
+  'hoang gia bao__8a2': { total: 785, vocab: 740, attendance: 15, encouragement: 15, notes: 'Hoàng Gia Bảo (Lớp 8A2)' },
+  'nguyen an nguyen__6a3': { total: 755, vocab: 710, attendance: 15, encouragement: 15, notes: 'Nguyễn An Nguyên (Lớp 6A3)' },
+  'nguyen thi tinh san__6a3': { total: 593, vocab: 20, attendance: 15, exam: 513, encouragement: 15, notes: 'Nguyễn Thị Tinh San (Lớp 6A3)' },
+  'vu hoang tung duong__8a2': { total: 590, vocab: 560, attendance: 15, encouragement: 15, notes: 'Vũ Hoàng Tùng Dương (Lớp 8A2)' },
+  'vu huyen linh__8a3': { total: 568, vocab: 480, practice: 40, attendance: 15, encouragement: 15, notes: 'Vũ Huyền Linh (Lớp 8A3)' },
+  'nguyen thanh tung__6a5': { total: 565, vocab: 255, attendance: 15, practice: 268, encouragement: 15, notes: 'Nguyễn Thanh Tùng (Lớp 6A5)' },
+  'bui tuong vy__6a5': { total: 556, vocab: 255, attendance: 15, practice: 268, encouragement: 15, notes: 'Bùi Tường Vy (Lớp 6A5)' },
+  'hoang gia bao__6a1': { total: 519, vocab: 400, practice: 40, exam: 28, attendance: 15, encouragement: 15, notes: 'Hoàng Gia Bảo (Lớp 6A1)' },
+  'hoang duy dat__8a3': { total: 488, vocab: 455, attendance: 15, encouragement: 15, notes: 'Hoàng Duy Đạt (Lớp 8A3)' },
+  'hoang hien phat__6a5': { total: 480, vocab: 450, attendance: 15, encouragement: 15, notes: 'Hoàng Hiền Phát (Lớp 6A5)' },
+  'trieugiabao__8a3': { total: 479, practice: 80, exam: 348, attendance: 15, encouragement: 15, notes: 'Triệu Gia Bảo (Lớp 8A3)' },
+  'pham cong son__8a2': { total: 404, vocab: 300, practice: 40, exam: 28, attendance: 15, encouragement: 15, notes: 'Phạm Công Sơn (Lớp 8A2)' },
+  'hoang ngoc thanh truc__6a1': { total: 331, vocab: 20, attendance: 15, practice: 260, encouragement: 15, notes: 'Hoàng Ngọc Thanh Trúc (Lớp 6A1)' },
+  'pham gia khiem__8a2': { total: 310, vocab: 280, attendance: 15, encouragement: 15, notes: 'Phạm Gia Khiêm (Lớp 8A2)' },
+  'hoang hai khang__6a3': { total: 303, vocab: 270, attendance: 15, encouragement: 15, notes: 'Hoàng Hải Khang (Lớp 6A3)' },
+  'hoang thu duyen__8a1': { total: 302, vocab: 260, attendance: 15, encouragement: 15, notes: 'Hoàng Thu Duyên (Lớp 8A1)' },
+  'vi anh thu__6a1': { total: 300, vocab: 100, practice: 40, exam: 91, attendance: 15, encouragement: 15, notes: 'Vi Anh Thư (Lớp 6A1)' },
+  'nguyen thi diem quynh__6a5': { total: 279, vocab: 60, practice: 40, exam: 128, attendance: 15, encouragement: 15, notes: 'Nguyễn Thị Diễm Quỳnh (Lớp 6A5)' },
+  'vi bao ngoc__8a1': { total: 279, vocab: 200, practice: 40, attendance: 15, encouragement: 15, notes: 'Vi Bảo Ngọc (Lớp 8A1)' },
+  'ly huong tra__8a3': { total: 274, vocab: 180, practice: 40, attendance: 15, encouragement: 15, notes: 'Lý Hương Trà (Lớp 8A3)' },
+  'hoang ngoc chuc__6a2': { total: 264, vocab: 20, attendance: 15, practice: 190, encouragement: 15, notes: 'Hoàng Ngọc Chúc (Lớp 6A2)' },
+  'nguyen anh thu__6a5': { total: 258, vocab: 40, practice: 10, exam: 163, attendance: 15, encouragement: 15, notes: 'Nguyễn Anh Thư (Lớp 6A5)' },
+  'hoang ngoc han__6a5': { total: 231, vocab: 140, practice: 40, attendance: 15, encouragement: 15, notes: 'Hoàng Ngọc Hân (Lớp 6A5)' },
+  'nguyen ngoc diep__6a1': { total: 228, vocab: 60, practice: 40, exam: 62, attendance: 15, encouragement: 15, notes: 'Nguyễn Ngọc Diệp (Lớp 6A1)' },
+  'nguyen duc hai__6a1': { total: 219, vocab: 180, attendance: 15, encouragement: 15, notes: 'Nguyễn Đức Hải (Lớp 6A1)' },
+  'loc binh minh__6a4': { total: 219, vocab: 140, practice: 40, attendance: 15, encouragement: 15, notes: 'Lộc Bình Minh (Lớp 6A4)' },
+  'dinh thien bao__8a3': { total: 173, vocab: 150, attendance: 8, encouragement: 15, notes: 'Đinh Thiên Bảo (Lớp 8A3)' },
   'nguyen huong giang__6a2': { total: 135, attendance: 5, exam: 88, encouragement: 15, notes: 'Nguyễn Hương Giang (Lớp 6A2)' },
   'trinh binh van__8a2': { total: 130, vocab: 110, attendance: 5, encouragement: 15, notes: 'Trịnh Bình Văn (Lớp 8A2)' },
   'ly ngoc hang__6a1': { total: 119, attendance: 5, practice: 1, exam: 95, encouragement: 15, notes: 'Lý Ngọc Hằng (Lớp 6A1)' },
@@ -675,46 +693,8 @@ export const VERIFIED_HIGH_SCORE_BASELINE: Record<string, { total: number; vocab
   'bui bao chuc__6a5': { total: 30, vocab: 10, attendance: 5, encouragement: 15, notes: 'Bùi Bảo Chúc (Lớp 6A5)' },
   'do doan dung__8a1': { total: 30, vocab: 10, attendance: 5, encouragement: 15, notes: 'Đỗ Đoàn Dũng (Lớp 8A1)' },
   'nguyen ngoc kim loan__8a2': { total: 30, attendance: 15, encouragement: 15, notes: 'Nguyễn Ngọc Kim Loan (Lớp 8A2)' },
-  'pham cong son__8a2': { total: 30, vocab: 10, attendance: 5, encouragement: 15, notes: 'Phạm Công Sơn (Lớp 8A2)' },
   'hoang minh hieu__8a5': { total: 30, attendance: 5, practice: 10, encouragement: 15, notes: 'Hoàng Minh Hiếu (Lớp 8A5)' },
-  'nguyen thanh binh__8a1': { total: 29, attendance: 5, encouragement: 15, notes: 'Nguyễn Thanh Bình (Lớp 8A1)' },
-  'hoang gia bao__8a2': { total: 29, attendance: 5, encouragement: 15, notes: 'Hoàng Gia Bảo (Lớp 8A2)' },
-  'hua thi hang nga__8a5': { total: 25, attendance: 10, encouragement: 15, notes: 'Hứa Thị Hằng Nga (Lớp 8A5)' },
-  'hoang kim nhi__8a2': { total: 23, attendance: 5, encouragement: 15, notes: 'Hoàng Kim Nhi (Lớp 8A2)' },
-  'hoang hai nam__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Hải Nam (Lớp 6A1)' },
-  'nguyen khanh ly__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Khánh Ly (Lớp 6A1)' },
-  'hua ngoc anh__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Hứa Ngọc Anh (Lớp 6A1)' },
-  'luu quynh chi__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Lưu Quỳnh Chi (Lớp 6A1)' },
-  'nguyen duc hai__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Đức Hải (Lớp 6A1)' },
-  'mai dieu linh__6a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Mai Diệu Linh (Lớp 6A1)' },
-  'bui gia linh__6a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Bùi Gia Linh (Lớp 6A2)' },
-  'hoang nguyen bao an__6a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Nguyễn Bảo An (Lớp 6A2)' },
-  'hoang nguyen tuan anh__6a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Nguyễn Tuấn Anh (Lớp 6A2)' },
-  'tran khoi my__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Trần Khởi My (Lớp 6A3)' },
-  'le thanh tuyen__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Lê Thành Tuyên (Lớp 6A3)' },
-  'vu thi hang__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Vũ Thị Hằng (Lớp 6A3)' },
-  'nguyen huu viet anh__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Hữu Việt Anh (Lớp 6A3)' },
-  'hoang le khuong__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Lê Khương (Lớp 6A3)' },
-  'vu van truong__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Vũ Văn Trường (Lớp 6A3)' },
-  'nguyen cam vy__6a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Cẩm Vy (Lớp 6A3)' },
-  'bui ngoc han__6a4': { total: 20, attendance: 5, encouragement: 15, notes: 'Bùi Ngọc Hân (Lớp 6A4)' },
-  'hoang van toan__6a5': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Văn Toàn (Lớp 6A5)' },
-  'hoang thu duyen__8a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Thu Duyên (Lớp 8A1)' },
-  'nguyen ngoc ha__8a1': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Ngọc Hà (Lớp 8A1)' },
-  'hoang xa hoi__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Xà Hồi (Lớp 8A2)' },
-  'ly quang hau__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Lý Quang Hậu (Lớp 8A2)' },
-  'ly quang hai__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Lý Quang Hải (Lớp 8A2)' },
-  'vu hoang tung duong__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Vũ Hoàng Tùng Dương (Lớp 8A2)' },
-  'do thanh an__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Đỗ Thành An (Lớp 8A2)' },
-  'hoang viet thanh__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Việt Thành (Lớp 8A2)' },
-  'hoang ngoc anh__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Hoàng Ngọc Ánh (Lớp 8A2)' },
-  'pham gia khiem__8a2': { total: 20, attendance: 5, encouragement: 15, notes: 'Phạm Gia Khiêm (Lớp 8A2)' },
-  'dinh thien bao__8a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Đinh Thiên Bảo (Lớp 8A3)' },
-  'nguyen thi gam__8a3': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Thị Gấm (Lớp 8A3)' },
-  'nguyen thu huong__8a4': { total: 20, attendance: 5, encouragement: 15, notes: 'Nguyễn Thu Hường (Lớp 8A4)' },
-  'ha duc uy__8a5': { total: 20, attendance: 5, encouragement: 15, notes: 'Hà Đức Uy (Lớp 8A5)' },
-  'dang trieu duy khanh__8a5': { total: 20, attendance: 5, encouragement: 15, notes: 'Đặng Triệu Duy Khánh (Lớp 8A5)' },
-};
+  'nguyen thanh binh__8a1': { total: 29, attendance: 5, encouragement: 15, notes: 'Nguyễn Thanh Bình (Lớp 8A1)' }};
 
 // ==================== VAULT BẢO TOÀN ĐIỂM SỐ TỐI CAO (CÓ LỢI CHO HỌC SINH) ====================
 // Bảo đảm điểm số học sinh đã học KHÔNG BAO GIỜ bị giảm, không bị xóa bớt dù tải lại trang hay reset
@@ -6797,6 +6777,46 @@ class StudentGradebookService {
 
     return newStudent;
 
+  }
+
+  /**
+   * ĐĂNG KÝ NHANH THEO LỚP CHO HỌC SINH BỊ MẤT TÀI KHOẢN HOẶC HỌC SINH MỚI
+   * Tác giả: Thầy giáo Đinh Văn Thành - SĐT: 0915.213717 - THCS Đồng Yên
+   */
+  public registerQuickStudentByClass(
+    rawName: string,
+    rawClass: string,
+    parentPhone?: string
+  ): { student: StudentProfile; isRecovered: boolean; message: string } {
+    const cleanName = rawName.trim().replace(/\s+/g, ' ');
+    let cleanCls = normalizeClassName(rawClass) || '8A1';
+
+    // Chuẩn hóa tên theo danh sách lớp nếu khớp
+    const std = this.standardizeStudentName(cleanName, cleanCls);
+    const finalName = std.standardizedName || cleanName;
+
+    // Đăng nhập hoặc tạo mới với đầy đủ bảo toàn điểm số
+    const student = this.quickAccessStudent(finalName, cleanCls);
+
+    if (parentPhone && parentPhone.trim()) {
+      student.parentPhone = parentPhone.trim();
+    }
+
+    const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
+    const isRecovered = (student.totalMeritPoints || 0) > 45 || vaultMax > 15;
+
+    let message = '';
+    if (isRecovered) {
+      message = `Khôi phục thành công! Chào ${student.name}, hệ thống đã bảo toàn nguyên vẹn ${student.totalMeritPoints} điểm tích lũy của em tại Lớp ${student.className}!`;
+    } else {
+      message = `Đăng ký thành công! Chào mừng ${student.name} gia nhập Lớp ${student.className}. Thầy Thành tặng em +${student.totalMeritPoints} điểm khởi động để vào học ngay!`;
+    }
+
+    this.saveStudents();
+    this.setActiveStudent(student);
+    this.syncToCloud().catch(() => {});
+
+    return { student, isRecovered, message };
   }
 
 
