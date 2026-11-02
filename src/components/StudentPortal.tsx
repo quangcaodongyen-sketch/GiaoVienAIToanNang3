@@ -879,7 +879,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     let finalClass = cls;
 
     if (!directMatch) {
-      // 3. Nếu không tìm thấy trong lớp đang chọn, tìm trong toàn bộ 390 học sinh của trường
+      // 3. Nếu không tìm thấy trong lớp đang chọn, tìm trong toàn bộ 743 học sinh của trường
       const allStudents = studentGradebookService.getStudents();
       const globalMatch = allStudents.find(s => normalizeVietnameseName(s.name) === normInput);
       
@@ -2969,7 +2969,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               }`}
             >
               <span>🔑</span>
-              <span>1. CHỌN TÊN TRONG LỚP (397 Em)</span>
+              <span>1. CHỌN TÊN TRONG LỚP (743 Em - 19 Lớp)</span>
             </button>
             <button
               type="button"
@@ -3010,7 +3010,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                         Chọn Khối ➔ Chọn Lớp ➔ Chọn Tên Em Để Vào Học
                       </h4>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        Hệ thống tự động đồng bộ theo danh sách 19 lớp và 397 học sinh toàn trường
+                        Hệ thống tự động đồng bộ theo danh sách 19 lớp và 743 học sinh toàn trường
                       </p>
                     </div>
                   </div>
@@ -3565,7 +3565,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   onClick={() => setAuthMode('pick')}
                   className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-bold cursor-pointer"
                 >
-                  ← Quay lại danh sách có sẵn (Chọn tên trong 397 em)
+                  ← Quay lại danh sách có sẵn (Chọn tên trong 743 em)
                 </button>
               </div>
             </form>

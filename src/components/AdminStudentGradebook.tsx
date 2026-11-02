@@ -402,7 +402,7 @@ export const AdminStudentGradebook: React.FC = () => {
 
 
 
-  // Lọc sạch tài khoản demo, đối chiếu và đồng nhất theo Sổ điểm 390 học sinh, cộng +15đ khuyến khích
+  // Lọc sạch tài khoản demo, đối chiếu và đồng nhất theo Sổ điểm 743 học sinh toàn trường, cộng +15đ khuyến khích
 
   const handlePurgeDemoAndSyncRoster = () => {
 
@@ -412,7 +412,7 @@ export const AdminStudentGradebook: React.FC = () => {
 
       '1. Lọc và xóa sạch tất cả tài khoản demo, nick ảo, bài kiểm tra thử.\n' +
 
-      '2. Đối chiếu toàn bộ tài khoản cũ/mới với Sổ điểm chính thức (390 học sinh Khối 6 & Khối 8).\n' +
+      '2. Đối chiếu toàn bộ tài khoản cũ/mới với Sổ điểm chính thức (743 học sinh Khối 6, 7, 8, 9 toàn trường).\n' +
 
       '3. Đồng nhất mỗi học sinh chỉ có đúng 1 tài khoản chính thống, bảo toàn 100% điểm cao nhất và lịch sử học tập.\n' +
 

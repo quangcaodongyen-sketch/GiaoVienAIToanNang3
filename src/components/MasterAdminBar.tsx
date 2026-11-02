@@ -221,7 +221,7 @@ export const MasterAdminBar: React.FC<MasterAdminBarProps> = ({
                       ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300'
                       : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
                   }`}
-                  title="Mở Sổ điểm 390 học sinh và Quản trị toàn hệ thống"
+                  title="Mở Sổ điểm 743 học sinh và Quản trị toàn hệ thống"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5 text-amber-300" />
                   <span>📋 Sổ Điểm (390 HS)</span>
