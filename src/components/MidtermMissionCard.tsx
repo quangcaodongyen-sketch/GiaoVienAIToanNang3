@@ -85,7 +85,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
       </div>
 
       {/* THANH TIẾN ĐỘ DỊU MẮT */}
-      <div className="h-2 w-full bg-slate-900 relative overflow-hidden">
+      <div className="h-2.5 w-full bg-emerald-950 border border-emerald-500/30 relative overflow-hidden">
         <div 
           className="h-full bg-gradient-to-r from-blue-500 via-teal-400 to-cyan-400 transition-all duration-500 ease-out"
           style={{ width: `${missionState.totalProgressPercent}%` }}
@@ -120,7 +120,7 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                 </p>
 
                 {/* Tabs Chọn Unit */}
-                <div className="flex items-center gap-1.5 p-1 bg-[#091B30] rounded-lg mb-3 border border-blue-900/50">
+                <div className="flex items-center gap-2 p-1.5 bg-emerald-950/80 rounded-xl mb-3 border-2 border-emerald-500/40 backdrop-blur-md">
                   {[1, 2, 3].map(uNum => {
                     const uData = missionState.mission1.units[uNum];
                     const isActive = activeUnitTab === uNum;
@@ -129,14 +129,14 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                         key={uNum}
                         type="button"
                         onClick={() => setActiveUnitTab(uNum)}
-                        className={`flex-1 py-1.5 px-2 rounded-md text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1 ${
+                        className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                           isActive
-                            ? 'bg-blue-600 text-white shadow-xs'
-                            : 'text-blue-200 hover:text-white hover:bg-blue-900/40'
+                            ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-md border border-emerald-200'
+                            : 'bg-white/20 hover:bg-emerald-600/30 text-white font-bold border border-white/30 backdrop-blur-md hover:border-emerald-300'
                         }`}
                       >
                         <span>Unit {uNum}</span>
-                        <span className={`text-[10px] px-1 rounded ${uData?.unitPercent >= 100 ? 'bg-emerald-500/30 text-emerald-300' : 'text-blue-300'}`}>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${uData?.unitPercent >= 100 ? 'bg-white text-emerald-800' : 'bg-emerald-900/80 text-emerald-200 border border-emerald-500/40'}`}>
                           {uData?.unitPercent || 0}%
                         </span>
                       </button>

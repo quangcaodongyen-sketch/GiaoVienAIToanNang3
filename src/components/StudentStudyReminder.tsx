@@ -82,7 +82,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
   const promoPts = loginRewardInfo?.points || 15;
 
   return (
-    <div className="mb-4 rounded-2xl bg-gradient-to-br from-[#0B1E36] via-[#0F2A4A] to-[#123863] border border-blue-500/40 shadow-xl text-white overflow-hidden transition-all duration-300">
+    <div className="mb-4 rounded-3xl bg-gradient-to-br from-emerald-950/95 via-teal-950/90 to-slate-900/95 border-2 border-emerald-400/60 shadow-[0_15px_35px_rgba(16,185,129,0.25)] text-white overflow-hidden transition-all duration-300">
       {/* TOAST THÔNG BÁO NHANH */}
       {toastMsg && (
         <div className="bg-amber-400 text-slate-950 px-4 py-1.5 text-xs font-black text-center flex items-center justify-center gap-2 animate-in fade-in">
@@ -92,7 +92,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
       )}
 
       {/* 1. THANH LỜI NHẮC GỌN NHẸ: LỊCH KIỂM TRA + DỤNG CỤ + TẶNG ĐIỂM */}
-      <div className="p-3 sm:p-3.5 bg-gradient-to-r from-blue-950/95 via-slate-900/90 to-blue-950/95 border-b border-blue-500/30 flex flex-wrap items-center justify-between gap-2.5">
+      <div className="p-3 sm:p-3.5 bg-gradient-to-r from-emerald-900/95 via-teal-950/90 to-emerald-900/95 border-b border-emerald-400/40 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center shadow-md font-black shrink-0">
             <Bell className="w-4 h-4 text-slate-950" />
@@ -171,7 +171,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
           {/* LƯỚI 3 NHIỆM VỤ HỌC TẬP CHÍNH - CHỮ TO RÕ RÀNG */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* NHIỆM VỤ 1: TỪ VỰNG UNIT 4-6 (LỘ TRÌNH MỚI CUỐI KỲ 1) */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-emerald-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-emerald-300 transition-all">
+            <div className="rounded-2xl bg-gradient-to-b from-emerald-950/80 to-teal-950/80 border-2 border-emerald-400/70 p-4 flex flex-col justify-between shadow-md hover:border-emerald-300 transition-all">
               <div>
                 <div className="flex items-center justify-between gap-1.5 mb-1.5">
                   <span className="text-xs sm:text-sm font-black uppercase text-emerald-300 flex items-center gap-1">
@@ -192,21 +192,21 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(4, grade)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-emerald-600/40 border-2 border-white/30 text-white text-xs sm:text-sm font-black backdrop-blur-md transition cursor-pointer shadow-xs"
                   >
                     U4 ({unit4.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(5, grade)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-emerald-600/40 border-2 border-white/30 text-white text-xs sm:text-sm font-black backdrop-blur-md transition cursor-pointer shadow-xs"
                   >
                     U5 ({unit5.wordCount} từ)
                   </button>
                   <button
                     type="button"
                     onClick={() => onGoToVocabUnit(6, grade)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-black transition cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-emerald-600/40 border-2 border-white/30 text-white text-xs sm:text-sm font-black backdrop-blur-md transition cursor-pointer shadow-xs"
                   >
                     U6 ({unit6.wordCount} từ)
                   </button>
@@ -227,7 +227,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             </div>
 
             {/* NHIỆM VỤ 2: ĐỀ CƯƠNG ÔN TẬP */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-cyan-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-cyan-300 transition-all">
+            <div className="rounded-2xl bg-gradient-to-b from-teal-950/80 to-cyan-950/80 border-2 border-teal-400/70 p-4 flex flex-col justify-between shadow-md hover:border-teal-300 transition-all">
               <div>
                 <div className="flex items-center justify-between gap-1.5 mb-1.5">
                   <span className="text-xs sm:text-sm font-black uppercase text-cyan-300 flex items-center gap-1">
@@ -268,7 +268,7 @@ export const StudentStudyReminder: React.FC<StudentStudyReminderProps> = ({
             </div>
 
             {/* NHIỆM VỤ 3: THI THỬ ONLINE */}
-            <div className="rounded-xl bg-[#0B1E36]/90 border border-amber-400/50 p-3.5 flex flex-col justify-between shadow-xs hover:border-amber-300 transition-all">
+            <div className="rounded-2xl bg-gradient-to-b from-emerald-950/80 to-amber-950/80 border-2 border-amber-400/70 p-4 flex flex-col justify-between shadow-md hover:border-amber-300 transition-all">
               <div>
                 <div className="flex items-center justify-between gap-1.5 mb-1.5">
                   <span className="text-xs sm:text-sm font-black uppercase text-amber-300 flex items-center gap-1">

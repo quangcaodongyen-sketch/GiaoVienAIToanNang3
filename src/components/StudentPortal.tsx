@@ -3478,9 +3478,9 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       {/* =========================================================================
           THANH 3 BƯỚC HỌC TẬP CHÍNH: BƯỚC 3 (VÀO HỌC) • BƯỚC 4 (KIỂM TRA) • BƯỚC 5 (THỐNG KÊ)
       ========================================================================= */}
-      <div className="p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/80 dark:border-slate-700/60 shadow-lg flex flex-col md:flex-row items-center justify-between gap-2 mb-3">
+      <div className="p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-emerald-950/95 via-teal-950/95 to-slate-900/95 backdrop-blur-2xl border-2 border-emerald-400/60 shadow-[0_15px_40px_rgba(16,185,129,0.3)] flex flex-col md:flex-row items-center justify-between gap-2.5 mb-3">
         {/* Bộ 3 nút điều hướng học tập lớn */}
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full md:w-auto flex-1">
+        <div className="grid grid-cols-3 gap-2 sm:gap-2.5 w-full md:w-auto flex-1">
           {/* BƯỚC 3: VÀO HỌC */}
           <button
             type="button"
@@ -3489,17 +3489,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 setActiveTab('vocab');
               }
             }}
-            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+            className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2.5 ${
               ['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab)
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
-                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 ring-2 ring-emerald-300 scale-[1.02]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
             }`}
             title="Bước 3: Luyện từ vựng SGK 3D và Ôn đề cương trọng tâm Giữa Kỳ 1"
           >
-            <BookOpen className={`w-5 h-5 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-600'}`} />
+            <BookOpen className={`w-5 h-5 sm:w-6 sm:h-6 shrink-0 ${['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-300'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">VÀO HỌC</div>
-              <div className="text-[10px] opacity-80 truncate hidden sm:block">Từ Vựng &amp; Đề Cương</div>
+              <div className="text-sm sm:text-base md:text-lg font-black truncate">VÀO HỌC</div>
+              <div className="text-xs sm:text-sm text-emerald-100 font-bold truncate hidden sm:block">Từ Vựng &amp; Đề Cương</div>
             </div>
           </button>
 
@@ -3511,17 +3511,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 setActiveTab('exam');
               }
             }}
-            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+            className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2.5 ${
               ['exam', 'quiz'].includes(activeTab)
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md ring-2 ring-blue-300 scale-[1.02]'
-                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 ring-2 ring-emerald-300 scale-[1.02]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
             }`}
             title="Bước 4: Kiểm tra nhanh 5 phút & Đề thi thử Giữa kỳ 1 chuẩn ma trận Bộ GD&ĐT"
           >
-            <Award className={`w-5 h-5 shrink-0 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-amber-600'}`} />
+            <Award className={`w-5 h-5 sm:w-6 sm:h-6 shrink-0 ${['exam', 'quiz'].includes(activeTab) ? 'text-amber-300' : 'text-emerald-300'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">KIỂM TRA THỬ</div>
-              <div className="text-[10px] opacity-80 truncate hidden sm:block">5 Phút &amp; Đề GK1</div>
+              <div className="text-sm sm:text-base md:text-lg font-black truncate">KIỂM TRA THỬ</div>
+              <div className="text-xs sm:text-sm text-emerald-100 font-bold truncate hidden sm:block">5 Phút &amp; Đề GK1</div>
             </div>
           </button>
 
@@ -3532,46 +3532,46 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               setActiveTab('leaderboard');
               setCompetitionSubTab('all');
             }}
-            className={`p-2 sm:p-2.5 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2 ${
+            className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl text-left transition-all cursor-pointer flex items-center gap-2.5 ${
               ['teams', 'leaderboard', 'tracking'].includes(activeTab)
-                ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 font-black shadow-md ring-2 ring-amber-300 scale-[1.02]'
-                : 'bg-white/60 dark:bg-slate-800/60 hover:bg-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 ring-2 ring-emerald-300 scale-[1.02]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
             }`}
             title="Bước 5: Thống kê xem điểm cá nhân, theo lớp, theo khối, toàn trường và danh sách chưa đăng nhập"
           >
-            <Trophy className={`w-5 h-5 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-slate-950' : 'text-amber-600'}`} />
+            <Trophy className={`w-5 h-5 sm:w-6 sm:h-6 shrink-0 ${['teams', 'leaderboard', 'tracking'].includes(activeTab) ? 'text-amber-300' : 'text-amber-400'}`} />
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-black truncate">THỐNG KÊ ĐIỂM</div>
-              <div className="text-[10px] opacity-80 truncate hidden sm:block">Điểm &amp; Xếp Hạng</div>
+              <div className="text-sm sm:text-base md:text-lg font-black truncate">THỐNG KÊ ĐIỂM</div>
+              <div className="text-xs sm:text-sm text-emerald-100 font-bold truncate hidden sm:block">Điểm &amp; Xếp Hạng</div>
             </div>
           </button>
         </div>
 
         {/* Nút tiện ích phụ: Tài Liệu Tải Về & Hỏi Thầy */}
-        <div className="flex items-center gap-1.5 shrink-0 self-end md:self-center">
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
           <button
             type="button"
             onClick={() => setActiveTab('downloads')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'downloads'
-                ? 'bg-blue-600 text-white font-black'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-md border border-emerald-200'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300'
             }`}
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-4 h-4 text-emerald-300" />
             <span>Tài Liệu</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('forum')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center gap-1.5 ${
               ['forum', 'messages'].includes(activeTab)
-                ? 'bg-blue-600 text-white font-black'
-                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-md border border-emerald-200'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300'
             }`}
           >
-            <MessageSquare className="w-3.5 h-3.5" />
+            <MessageSquare className="w-4 h-4 text-emerald-300" />
             <span>Hỏi Thầy</span>
           </button>
         </div>
@@ -3579,16 +3579,16 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 3: VÀO HỌC */}
       {['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-slate-500 font-bold px-1 hidden sm:inline">Nội dung học:</span>
+        <div className="flex flex-wrap items-center justify-between gap-2.5 p-2 sm:p-2.5 mb-3 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-900/90 backdrop-blur-2xl border-2 border-emerald-400/50 shadow-md text-xs sm:text-sm md:text-base font-black">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-emerald-200 font-black px-1.5 hidden sm:inline text-sm">Nội dung học:</span>
             <button
               type="button"
               onClick={() => setActiveTab('vocab')}
-              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'vocab'
-                  ? 'bg-blue-600 text-white font-black shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
               }`}
             >
               <span>📘 1. Luyện Từ Vựng SGK 3D</span>
@@ -3598,10 +3598,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('decuong_e6')}
-                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'decuong_e6'
-                    ? 'bg-teal-600 text-white font-black shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-teal-50'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
                 }`}
               >
                 <span>📖 2. Đề Cương GK1 Anh 6</span>
@@ -3612,10 +3612,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('decuong_e7')}
-                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'decuong_e7'
-                    ? 'bg-amber-600 text-white font-black shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
                 }`}
               >
                 <span>📖 2. Đề Cương GK1 Anh 7</span>
@@ -3626,10 +3626,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('decuong_e8')}
-                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'decuong_e8'
-                    ? 'bg-indigo-600 text-white font-black shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
                 }`}
               >
                 <span>📖 2. Đề Cương GK1 Anh 8</span>
@@ -3640,10 +3640,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('decuong_e9')}
-                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'decuong_e9'
-                    ? 'bg-purple-600 text-white font-black shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-purple-50'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
                 }`}
               >
                 <span>📖 2. Đề Cương GK1 Anh 9</span>
@@ -3653,10 +3653,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('sgk')}
-              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'sgk'
-                  ? 'bg-blue-600 text-white font-black shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
               }`}
             >
               <span>📘 3. Bài Tập SGK</span>
@@ -3665,10 +3665,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('hsg')}
-              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 ${
+              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'hsg'
-                  ? 'bg-purple-600 text-white font-black shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-purple-50'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
               }`}
             >
               <span>🏆 4. Ôn Thi HSG</span>
@@ -3679,7 +3679,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             <button
               type="button"
               onClick={() => setIsIpaModalOpen(true)}
-              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1 cursor-pointer shadow-xs shrink-0"
+              className="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-md shrink-0 border border-amber-200"
             >
               <span>🗣️ Bảng Âm IPA</span>
             </button>
@@ -3689,31 +3689,31 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 4: KIỂM TRA THỬ */}
       {['exam', 'quiz'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
-          <span className="text-slate-500 font-bold px-1 hidden sm:inline">Chế độ kiểm tra:</span>
+        <div className="flex flex-wrap items-center gap-2.5 p-2 sm:p-2.5 mb-3 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-900/90 backdrop-blur-2xl border-2 border-emerald-400/50 shadow-md text-xs sm:text-sm md:text-base font-black">
+          <span className="text-emerald-200 font-black px-1.5 hidden sm:inline text-sm">Chế độ kiểm tra:</span>
           <button
             type="button"
             onClick={() => setActiveTab('quiz')}
-            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
               activeTab === 'quiz'
-                ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
             }`}
           >
-            <Clock className="w-3.5 h-3.5" />
+            <Clock className="w-4 h-4 text-amber-300" />
             <span>⏱️ 1. Kiểm Tra Nhanh 5 Phút (Khởi Động)</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('exam')}
-            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
               activeTab === 'exam'
-                ? 'bg-blue-600 text-white font-black shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
             }`}
           >
-            <Award className="w-3.5 h-3.5" />
+            <Award className="w-4 h-4 text-amber-300" />
             <span>📝 2. Đề Thi Thử Giữa Kỳ 1 (Bấm Giờ &amp; Tự Chấm Điểm Chuẩn)</span>
           </button>
         </div>
@@ -3721,20 +3721,20 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 5: THỐNG KÊ XEM ĐIỂM */}
       {['teams', 'leaderboard', 'tracking'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center gap-2 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs text-xs sm:text-sm font-bold">
+        <div className="flex flex-wrap items-center gap-2.5 p-2 sm:p-2.5 mb-3 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-900/90 backdrop-blur-2xl border-2 border-emerald-400/50 shadow-md text-xs sm:text-sm md:text-base font-black">
           <button
             type="button"
             onClick={() => {
               setActiveTab('leaderboard');
               setCompetitionSubTab('all');
             }}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
               activeTab === 'leaderboard'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-50'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
             }`}
           >
-            <Trophy className="w-3.5 h-3.5 text-slate-950" />
+            <Trophy className="w-4 h-4 text-amber-300" />
             <span>🏆 1. Bảng Tổng Hợp Điểm (Toàn Trường, Khối, Lớp, DS Chưa Đăng Nhập)</span>
           </button>
 
@@ -3744,10 +3744,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               setActiveTab('teams');
               setCompetitionSubTab('teams');
             }}
-            className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
               activeTab === 'teams'
-                ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-black shadow-xs'
-                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300 text-xs sm:text-sm md:text-base'
             }`}
           >
             <span>⚔️ 2. Đua Top 4 Tổ Thi Đua Trong Lớp</span>

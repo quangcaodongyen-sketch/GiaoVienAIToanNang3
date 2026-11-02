@@ -1846,7 +1846,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       )}
 
       {/* ==================== 2. THANH CHỌN BÀI (UNIT) 3D TRONG SUỐT GLASSMORPHISM & TỐI ƯU DI ĐỘNG ==================== */}
-      <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-3.5 sm:p-4 rounded-3xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] space-y-3">
+      <div className="bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-slate-900/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400/60 shadow-[0_15px_40px_rgba(16,185,129,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] space-y-3.5 text-white">
         {/* Hàng trên: Chọn Unit & Công cụ âm thanh */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           
@@ -1856,7 +1856,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
               📖
             </span>
             <div>
-              <span className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wider block">
+              <span className="text-sm sm:text-base md:text-lg font-black text-amber-300 uppercase tracking-wider block">
                 Chọn Bài Học (Unit 1 - 12):
               </span>
               <span className="text-[11px] text-slate-200 font-bold block sm:hidden">
@@ -1879,10 +1879,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                   handleRestartListen();
                   handleSpellRestart();
                 }}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-950 text-amber-300 font-black text-xs border-2 border-amber-400/70 shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+                className="w-full py-3 px-3.5 rounded-2xl bg-emerald-800 text-white font-black text-sm sm:text-base border-2 border-emerald-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer"
               >
                 {(availableUnits.length > 0 ? availableUnits : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ unitNumber: n, title: `Unit ${n}`, wordCount: 20 }))).map(u => (
-                  <option key={u.unitNumber} value={u.unitNumber} className="bg-slate-900 text-white font-bold">
+                  <option key={u.unitNumber} value={u.unitNumber} className="bg-emerald-950 text-white font-bold text-sm sm:text-base">
                     Unit {u.unitNumber}: {u.title} ({u.wordCount} từ){[4, 5, 6].includes(u.unitNumber) ? ' ★ TRỌNG TÂM CUỐI KỲ 1 (CK1)' : ([1, 2, 3].includes(u.unitNumber) ? ' (GK1 Đã Học)' : '')}
                   </option>
                 ))}
@@ -1908,8 +1908,8 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     }}
                     className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer active:scale-95 ${
                       isAct
-                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md border border-amber-200'
-                        : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                        ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white shadow-lg border-2 border-white scale-102'
+                        : 'bg-white/20 text-white font-black border-2 border-white/35 backdrop-blur-xl hover:bg-emerald-600/35'
                     }`}
                   >
                     <span>Unit {n}</span>
@@ -1940,10 +1940,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                     handleRestartListen();
                     handleSpellRestart();
                   }}
-                  className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm md:text-base transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
+                  className={`px-4 py-2.5 rounded-2xl font-black text-sm sm:text-base md:text-lg transition-all shrink-0 cursor-pointer flex items-center gap-1.5 duration-200 ${
                     isAct
-                      ? 'bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-black shadow-[0_4px_16px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-0.5 scale-105'
-                      : 'bg-white/10 hover:bg-white/20 text-white font-extrabold border border-white/15 backdrop-blur-md hover:text-amber-300 shadow-sm'
+                      ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.85)] border-2 border-emerald-200 -translate-y-1 scale-105'
+                      : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl hover:border-emerald-300 hover:text-white shadow-md hover:-translate-y-0.5'
                   }`}
                   title={`${u.title} (${u.wordCount} từ)`}
                 >
@@ -2073,12 +2073,12 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
       </div>
 
       {/* ==================== 3. THANH CHỌN 8 DẠNG BÀI TẬP TỪ VỰNG 3D TRONG SUỐT GLASSMORPHISM ==================== */}
-      <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-3.5 sm:p-4 rounded-3xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] space-y-3">
+      <div className="bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-slate-900/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-emerald-400/60 shadow-[0_15px_40px_rgba(16,185,129,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] space-y-3.5 text-white">
         <div className="flex items-center justify-between gap-2 text-xs font-bold text-white flex-wrap">
           <span className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
-            <span className="text-amber-300 font-black uppercase tracking-wider text-xs">
-              Các Dạng Luyện Từ Vựng 3D Trong Suốt (Chữ Tương Phản Rõ Nét):
+            <span className="text-amber-300 font-black uppercase tracking-wider text-sm sm:text-base">
+              Các Dạng Luyện Từ Vựng 3D Trong Suốt (Chữ To Tương Phản Rõ Nét):
             </span>
           </span>
           <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-cyan-300 border border-blue-400/30 font-bold text-[11px]">
@@ -2093,113 +2093,113 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           <button
             type="button"
             onClick={() => setCurrentMode('flashcard')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'flashcard'
-                ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white shadow-[0_6px_20px_rgba(37,99,235,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-blue-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>🃏 1. Thẻ Nhớ</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['flashcard']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 2. Ghép Cặp */}
           <button
             type="button"
             onClick={() => setCurrentMode('match')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'match'
-                ? 'bg-gradient-to-b from-indigo-500 via-purple-600 to-indigo-700 text-white shadow-[0_6px_20px_rgba(99,102,241,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-indigo-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>🧩 2. Ghép Cặp</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['match']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 3. Trắc Nghiệm */}
           <button
             type="button"
             onClick={() => setCurrentMode('quiz')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'quiz'
-                ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white shadow-[0_6px_20px_rgba(16,185,129,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-emerald-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>🎯 3. Trắc Nghiệm</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['quiz']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 4. Luyện Nghe */}
           <button
             type="button"
             onClick={() => setCurrentMode('listen')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'listen'
-                ? 'bg-gradient-to-b from-purple-500 via-fuchsia-600 to-purple-700 text-white shadow-[0_6px_20px_rgba(168,85,247,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-purple-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>🎧 4. Luyện Nghe</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['listen']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 5. Luyện Gõ */}
           <button
             type="button"
             onClick={() => setCurrentMode('spelling')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'spelling'
-                ? 'bg-gradient-to-b from-sky-500 via-blue-600 to-sky-700 text-white shadow-[0_6px_20px_rgba(14,165,233,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-sky-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>✍️ 5. Luyện Gõ</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['spelling']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 6. Bài Chant */}
           <button
             type="button"
             onClick={() => setCurrentMode('chant')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'chant'
-                ? 'bg-gradient-to-b from-pink-500 via-rose-600 to-pink-700 text-white shadow-[0_6px_20px_rgba(244,63,94,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-pink-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
             title="Bài Chant Nhạc Beat Điệu Call & Response"
           >
             <span>🎵 6. Bài Chant</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['chant']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 7. Xếp Chữ */}
           <button
             type="button"
             onClick={() => setCurrentMode('scramble')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'scramble'
-                ? 'bg-gradient-to-b from-violet-600 via-indigo-700 to-violet-800 text-white shadow-[0_6px_20px_rgba(124,58,237,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-violet-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>🔤 7. Xếp Chữ</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['scramble']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
           {/* 8. Phản Xạ */}
           <button
             type="button"
             onClick={() => setCurrentMode('blitz')}
-            className={`px-2.5 py-3 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer select-none text-center text-xs sm:text-sm md:text-[15px] active:scale-95 ${
+            className={`px-3 py-3.5 rounded-2xl font-black transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none text-center text-sm sm:text-base md:text-lg active:scale-95 ${
               currentMode === 'blitz'
-                ? 'bg-gradient-to-b from-amber-400 via-orange-500 to-amber-600 text-slate-950 shadow-[0_6px_20px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.8)] border border-amber-200 -translate-y-1 scale-[1.03]'
-                : 'bg-white/10 hover:bg-white/20 text-white font-black border border-white/20 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-cyan-300 hover:text-cyan-200 hover:-translate-y-0.5'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7),inset_0_1px_0_rgba(255,255,255,0.9)] border-2 border-emerald-200 -translate-y-1 scale-[1.03]'
+                : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-[0_6px_16px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:border-emerald-300 hover:text-white -translate-y-0.5'
             }`}
           >
             <span>⚡ 8. Phản Xạ</span>
-            {missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm shadow-xs">✓</span>}
+            {missionState?.mission1.units[selectedUnit]?.modes['blitz']?.qualityPassed && <span className="text-xs bg-white text-emerald-800 font-black px-1.5 py-0.2 rounded-sm shadow-xs">✓</span>}
           </button>
 
         </div>

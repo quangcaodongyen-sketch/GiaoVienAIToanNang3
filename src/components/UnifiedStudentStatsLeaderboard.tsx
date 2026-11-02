@@ -1542,7 +1542,7 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
           {/* 3 Tab chính của phân hệ thống kê duy nhất - CỠ CHỮ TO RÕ RÀNG */}
 
-          <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-white/70 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/70 shadow-sm w-fit text-sm sm:text-base font-black">
+          <div className="flex flex-wrap items-center gap-2.5 p-2 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-emerald-900/90 backdrop-blur-2xl border-2 border-emerald-400/50 shadow-md w-fit text-sm sm:text-base md:text-lg font-black">
 
             <button
 
@@ -1554,15 +1554,15 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 activeTab === 'leaderboard'
 
-                  ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-md shadow-blue-500/30 border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
 
-                  : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
 
               }`}
 
             >
 
-              <Trophy className="w-5 h-5 text-amber-400 shrink-0" />
+              <Trophy className="w-5 h-5 text-amber-300 shrink-0" />
 
               <span>👑 Bảng Vàng &amp; Thi Đua</span>
 
@@ -1578,15 +1578,15 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 activeTab === 'attendance'
 
-                  ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-md shadow-blue-500/30 border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
 
-                  : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
 
               }`}
 
             >
 
-              <BarChart3 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <BarChart3 className="w-5 h-5 text-emerald-300 shrink-0" />
 
               <span>📊 Sổ Điểm &amp; % Vào Học Chuẩn</span>
 
@@ -1602,15 +1602,15 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 activeTab === 'unlogged'
 
-                  ? 'bg-gradient-to-b from-rose-600 via-rose-700 to-red-800 text-white font-black shadow-md shadow-rose-500/30 border-t border-rose-300 border-b-2 border-rose-950 -translate-y-0.5 scale-[1.02]'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
 
-                  : 'text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
 
               }`}
 
             >
 
-              <UserX className="w-5 h-5 text-rose-400 shrink-0" />
+              <UserX className="w-5 h-5 text-rose-300 shrink-0" />
 
               <span>📢 Chưa Đăng Nhập ({unloggedReport?.notEnteredCount || 0})</span>
 
@@ -1626,15 +1626,15 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 activeTab === 'live_feed'
 
-                  ? 'bg-gradient-to-b from-blue-600 via-indigo-600 to-blue-700 text-white font-black shadow-md shadow-blue-500/30 border-t border-blue-300 border-b-2 border-blue-950 -translate-y-0.5 scale-[1.02]'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
 
-                  : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
 
               }`}
 
             >
 
-              <Activity className="w-5 h-5 text-rose-400 shrink-0" />
+              <Activity className="w-5 h-5 text-teal-300 shrink-0" />
 
               <span>⚡ Nhật Ký Thời Gian Thực</span>
 
@@ -1698,13 +1698,13 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
               }}
 
-              className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm md:text-base transition cursor-pointer ${
 
                 scopeFilter === 'all'
 
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200'
 
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                  : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300'
 
               }`}
 
@@ -1734,13 +1734,13 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
                 }}
 
-                className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm md:text-base transition cursor-pointer ${
 
                   scopeFilter === 'grade' && selectedGrade === g
 
-                    ? 'bg-indigo-600 text-white shadow-xs'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200'
 
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-bold border border-white/35 backdrop-blur-md hover:border-emerald-300'
 
                 }`}
 
@@ -1772,13 +1772,13 @@ ${missing.slice(0, 15).map((s, i) => `${i + 1}. ${s.name} (${s.className})`).joi
 
               }}
 
-              className={`px-3 py-1.5 rounded-lg font-bold border transition cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm md:text-base border-2 transition cursor-pointer ${
 
                 scopeFilter === 'class'
 
-                  ? 'bg-emerald-600 text-white border-emerald-500'
+                  ? 'bg-emerald-700 text-white border-emerald-300 shadow-md'
 
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                  : 'bg-emerald-950/80 text-white border-emerald-400/50 hover:border-emerald-300'
 
               }`}
 

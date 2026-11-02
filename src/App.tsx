@@ -1516,7 +1516,7 @@ export default function App() {
         {/* CỔNG CHỌN NHANH PHÂN HỆ: TRANG CHỦ, GV, HS, ADMIN - TAB 3D TRONG SUỐT GLASSMORPHISM ĐỈNH CAO */}
         <div className="bg-[#0B1E36]/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-b border-white/10 py-2 px-3 sm:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.35)] transition-all">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-white/10 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)] flex-1 sm:flex-initial">
+            <div className="inline-flex items-center gap-2 p-2 rounded-2xl bg-gradient-to-r from-emerald-950/90 via-teal-950/90 to-slate-900/90 backdrop-blur-2xl border-2 border-emerald-400/50 shadow-lg flex-1 sm:flex-initial">
               
               {/* Nút 0: TRANG CHỦ */}
               <button
@@ -1526,10 +1526,10 @@ export default function App() {
                   window.history.pushState(null, '', '/');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`px-4 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                className={`px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base md:text-lg font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'welcome'
-                    ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
-                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
                 }`}
                 title="Về Cổng Chào Mừng dekiemtraso.com"
               >
@@ -1544,14 +1544,14 @@ export default function App() {
                   setMainViewTab('teachers');
                   window.history.pushState(null, '', '/giaovien');
                 }}
-                className={`flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base md:text-lg font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
                   mainViewTab === 'teachers'
-                    ? 'bg-gradient-to-b from-blue-500 via-indigo-600 to-blue-700 text-white font-black shadow-[0_6px_20px_rgba(37,99,235,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-blue-300/60 -translate-y-0.5 scale-[1.02]'
-                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
                 }`}
                 title="Dành Cho Giáo Viên: Kho Tiện Ích & Phần Mềm Tạo Đề Kiểm Tra"
               >
-                <span className="text-sm sm:text-base">👨‍🏫</span>
+                <span className="text-base sm:text-lg">👨‍🏫</span>
                 <span>DÀNH CHO GV</span>
               </button>
 
@@ -1562,14 +1562,14 @@ export default function App() {
                   setMainViewTab('students');
                   window.history.pushState(null, '', '/hocsinh');
                 }}
-                className={`flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-base font-black flex items-center justify-center gap-1.5 sm:gap-2 transition-all duration-200 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base md:text-lg font-black flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
                   (mainViewTab as string) === 'students'
-                    ? 'bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 text-white font-black shadow-[0_6px_20px_rgba(16,185,129,0.6),inset_0_1px_0_rgba(255,255,255,0.7)] border border-emerald-300/60 -translate-y-0.5 scale-[1.02]'
-                    : 'bg-white/5 hover:bg-white/15 text-slate-100 hover:text-white font-extrabold border border-white/10 backdrop-blur-md hover:shadow-md'
+                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-[0_8px_25px_rgba(16,185,129,0.7)] border-2 border-emerald-200 -translate-y-0.5 scale-[1.02]'
+                    : 'bg-white/20 hover:bg-emerald-600/40 text-white font-black border-2 border-white/35 backdrop-blur-2xl shadow-md hover:border-emerald-300'
                 }`}
                 title="Dành Cho Học Sinh: Học Từ Vựng, Kiểm Tra Thử Online & Xem Điểm"
               >
-                <span className="text-sm sm:text-base">🎓</span>
+                <span className="text-base sm:text-lg">🎓</span>
                 <span>DÀNH CHO HS</span>
               </button>
             </div>

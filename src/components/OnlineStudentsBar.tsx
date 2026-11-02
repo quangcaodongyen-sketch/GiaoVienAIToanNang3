@@ -152,12 +152,12 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-xs"></span>
             </div>
 
-            <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
+            <h3 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
               <span>CÁC BẠN ĐANG ONLINE HỌC BÀI</span>
             </h3>
 
             {/* SỐ BẠN ĐANG HỌC */}
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-black border border-emerald-300 dark:border-emerald-800 shadow-2xs">
+            <span className="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs sm:text-sm font-black border-2 border-emerald-300 shadow-md">
               🟢 {currentDisplayedCount} bạn đang học
             </span>
           </div>
@@ -187,14 +187,14 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
 
         {/* BÊN PHẢI: BỘ LỌC CHỌN LỚP / TOÀN TRƯỜNG & NÚT XEM TẤT CẢ */}
         <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
-          <div className="bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-300 dark:border-slate-700 flex items-center text-xs sm:text-sm font-bold">
+          <div className="bg-emerald-50 dark:bg-emerald-950/80 p-1 rounded-2xl border-2 border-emerald-400/50 flex items-center text-xs sm:text-sm font-black shadow-xs">
             <button
               type="button"
               onClick={() => setFilterMode('class')}
               className={`px-3 py-1 rounded-lg transition cursor-pointer ${
                 filterMode === 'class'
-                  ? 'bg-emerald-500 text-white font-black shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-md border border-emerald-200'
+                  : 'text-emerald-900 dark:text-emerald-200 hover:text-emerald-700 font-extrabold'
               }`}
             >
               Lớp {selectedClass} ({classOnlineCount})
@@ -204,8 +204,8 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
               onClick={() => setFilterMode('all')}
               className={`px-3 py-1 rounded-lg transition cursor-pointer ${
                 filterMode === 'all'
-                  ? 'bg-emerald-500 text-white font-black shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black shadow-md border border-emerald-200'
+                  : 'text-emerald-900 dark:text-emerald-200 hover:text-emerald-700 font-extrabold'
               }`}
             >
               Toàn trường ({totalOnlineCount})
@@ -219,7 +219,7 @@ export const OnlineStudentsBar: React.FC<OnlineStudentsBarProps> = ({
               setSelectedClass(e.target.value);
               setFilterMode('class');
             }}
-            className="px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold border border-slate-300 dark:border-slate-700 cursor-pointer focus:outline-emerald-500"
+            className="px-2.5 py-1.5 rounded-xl bg-emerald-800 text-white text-xs sm:text-sm font-black border-2 border-emerald-400 cursor-pointer focus:outline-none shadow-xs"
             title="Đổi lớp hiển thị"
           >
             <optgroup label="Khối 8 (Chủ yếu)">
