@@ -1479,7 +1479,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
   return (
 
-    <div className="space-y-4 animate-in fade-in">
+    <div className="space-y-5 animate-in fade-in pb-10">
 
       {/* BANNER CHÍNH SÁCH KHUYẾN MẠI THI ĐUA & BẬT MÍ NGÀY MAI */}
 
@@ -1659,9 +1659,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
         </div>
       </div>
 
-      {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP ==================== */}
+      {/* ==================== 1. THANH TIÊU ĐỀ & KHÓA KHỐI LỚP (3D GLASSMORPHISM) ==================== */}
 
-      <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-slate-900/90 via-indigo-950/80 to-slate-950/90 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] flex flex-col md:flex-row md:items-center justify-between gap-4 text-white">
 
         <div className="flex items-center gap-3">
 
@@ -1675,7 +1675,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
             <div className="flex items-center gap-2 flex-wrap">
 
-              <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+              <h3 className="text-base sm:text-lg font-black text-amber-300 drop-shadow-sm">
 
                 Học & Luyện Tập Từ Vựng Tiếng Anh
 
@@ -1695,7 +1695,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
             </div>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-300 font-bold mt-0.5">
 
               Tự động hiển thị đúng chương trình của lớp em để tránh nhầm lẫn • Tích hợp đầy đủ các dạng luyện tập
 
@@ -2198,7 +2198,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
               onClick={() => setIsFlipped(!isFlipped)}
 
-              className="w-full min-h-[320px] sm:min-h-[360px] rounded-3xl p-6 sm:p-8 border-2 border-blue-500/30 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white shadow-xl flex flex-col justify-between cursor-pointer select-none transition-all hover:border-blue-400 relative overflow-hidden"
+              className="w-full min-h-[320px] sm:min-h-[360px] rounded-3xl p-6 sm:p-8 border-2 border-blue-400/60 bg-gradient-to-br from-slate-950/95 via-blue-950/90 to-indigo-950/95 text-white shadow-[0_20px_50px_rgba(37,99,235,0.4),inset_0_2px_4px_rgba(255,255,255,0.3)] flex flex-col justify-between cursor-pointer select-none transition-all hover:border-blue-300 hover:scale-[1.01] relative overflow-hidden backdrop-blur-2xl"
 
             >
 
@@ -2476,7 +2476,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
           {/* CỘT PHẢI: BẢNG TỪ GỘP CHUNG RÚT GỌN */}
 
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col h-[420px] sm:h-[460px]">
+          <div className="bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl p-4 sm:p-5 rounded-3xl border-2 border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] flex flex-col h-[420px] sm:h-[460px] text-white">
 
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 gap-2">
 
@@ -2636,7 +2636,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'quiz' && (
 
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
+        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-emerald-400/50 shadow-[0_20px_50px_rgba(16,185,129,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
 
           {!quizFinished ? (
 
@@ -2794,15 +2794,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     optClasses = `
 
-                      bg-white dark:bg-slate-800
+                      bg-white/10 dark:bg-slate-800/80 backdrop-blur-md
 
-                      border-2 border-slate-200 dark:border-slate-700
+                      border-2 border-white/20 hover:border-emerald-400 hover:bg-white/20
 
-                      hover:border-blue-500 dark:hover:border-blue-400
+                      text-white font-extrabold text-xs sm:text-sm
 
-                      text-slate-800 dark:text-slate-100
-
-                      shadow-xs hover:shadow-md
+                      shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
 
                       hover:-translate-y-0.5 active:translate-y-0.5
 
@@ -3030,7 +3028,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'listen' && (
 
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
+        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-purple-400/50 shadow-[0_20px_50px_rgba(168,85,247,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
 
           {!listenFinished ? (
 
@@ -3190,15 +3188,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
                     optClasses = `
 
-                      bg-white dark:bg-slate-800
+                      bg-white/10 dark:bg-slate-800/80 backdrop-blur-md
 
-                      border-2 border-slate-200 dark:border-slate-700
+                      border-2 border-white/20 hover:border-purple-400 hover:bg-white/20
 
-                      hover:border-purple-500 dark:hover:border-purple-400
+                      text-white font-black text-sm sm:text-base
 
-                      text-slate-800 dark:text-slate-100
-
-                      shadow-xs hover:shadow-md
+                      shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]
 
                       hover:-translate-y-0.5 active:translate-y-0.5
 
@@ -3408,7 +3404,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'match' && (
 
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-5 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-4xl mx-auto space-y-6">
+        <div className="bg-slate-950/90 backdrop-blur-2xl p-5 sm:p-8 rounded-3xl border-2 border-indigo-400/50 shadow-[0_25px_60px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-4xl mx-auto space-y-6 text-white">
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
 
@@ -3784,7 +3780,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'spelling' && (
 
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3.5 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl max-w-2xl mx-auto space-y-3 sm:space-y-3.5">
+        <div className="bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 rounded-3xl border-2 border-sky-400/50 shadow-[0_20px_50px_rgba(14,165,233,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] max-w-2xl mx-auto space-y-4 text-white">
 
           {!spellFinished ? (
 
@@ -4148,7 +4144,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'chant' && (
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-pink-200 dark:border-pink-900/50 shadow-lg overflow-hidden space-y-3">
+        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-rose-400/50 shadow-[0_20px_50px_rgba(244,63,94,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
 
           <div className="bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
 
@@ -4228,7 +4224,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'scramble' && (
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-indigo-200 dark:border-indigo-900/50 shadow-lg overflow-hidden space-y-3">
+        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-violet-400/50 shadow-[0_20px_50px_rgba(139,92,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
 
           <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-3 text-white flex items-center justify-between flex-wrap gap-2">
 
@@ -4308,7 +4304,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
       {currentMode === 'blitz' && (
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-amber-200 dark:border-amber-900/50 shadow-lg overflow-hidden space-y-3">
+        <div className="bg-slate-950/90 backdrop-blur-2xl rounded-3xl border-2 border-amber-400/50 shadow-[0_20px_50px_rgba(245,158,11,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] overflow-hidden space-y-3 text-white">
 
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 py-3 text-slate-950 flex items-center justify-between flex-wrap gap-2">
 
