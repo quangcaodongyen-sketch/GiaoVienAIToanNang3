@@ -191,7 +191,7 @@ export const StudentPublicTracking: React.FC<StudentPublicTrackingProps> = ({
               SỔ ĐIỂM DANH &amp; TIẾN ĐỘ VÀO HỌC TỪNG LỚP
             </h3>
             <p className="text-blue-100 text-xs sm:text-sm max-w-2xl">
-              Cập nhật đầy đủ 743 học sinh chính thức từ 19 lớp toàn trường THCS Đồng Yên (Khối 6, 7, 8, 9 - Thầy Đinh Thành & Cô Hoàng Thị Vươn).
+              Cập nhật đầy đủ 743 học sinh chính thức từ 19 lớp toàn trường THCS Đồng Yên (Khối 6, 7, 8, 9 - Môn Tiếng Anh Thầy Đinh Thành).
               Mọi người có thể kiểm tra danh sách từng lớp xem ai đã vào học, tổng điểm bao nhiêu và ai chưa vào học để nhắc nhở kịp thời.
             </p>
           </div>

@@ -3018,39 +3018,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                             }}
                             className="w-full px-3 py-2.5 rounded-xl border-2 border-emerald-400/80 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm font-black focus:border-emerald-500 focus:ring-2 focus:ring-emerald-300 outline-hidden cursor-pointer shadow-xs"
                           >
-                            <option value={6}>Khối 6 (5 lớp • Thầy Đinh Thành dạy)</option>
-                            <option value={7}>Khối 7 (5 lớp • Cô Hoàng Thị Vươn dạy)</option>
-                            <option value={8}>Khối 8 (5 lớp • Thầy Đinh Thành dạy)</option>
-                            <option value={9}>Khối 9 (4 lớp • Cô Hoàng Thị Vươn dạy)</option>
-                            <option value="other">Khối khác / Tự nhập lớp</option>
+                            <option value={6}>Khối 6 (5 lớp • 6A1 đến 6A5)</option>
+                            <option value={7}>Khối 7 (5 lớp • 7A1 đến 7A5)</option>
+                            <option value={8}>Khối 8 (5 lớp • 8A1 đến 8A5)</option>
+                            <option value={9}>Khối 9 (4 lớp • 9A1 đến 9A4)</option>
+                            <option value="other">Tất cả 19 lớp toàn trường</option>
                           </select>
                         </div>
 
-                        {/* Nút bấm chọn nhanh 4 khối */}
-                        <div className="grid grid-cols-4 gap-1 pt-1">
-                          {[6, 7, 8, 9].map(g => {
-                            const isAct = activeGrade === g;
-                            return (
-                              <button
-                                key={g}
-                                type="button"
-                                onClick={() => {
-                                  setQuickClassName(`${g}A1`);
-                                  setQuickFullName('');
-                                  setQuickError('');
-                                  setQuickAutocorrectNote(null);
-                                }}
-                                className={`py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer text-center ${
-                                  isAct
-                                    ? 'bg-emerald-600 text-white shadow-xs scale-105'
-                                    : 'bg-white dark:bg-slate-700/80 hover:bg-emerald-50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600'
-                                }`}
-                              >
-                                K{g}
-                              </button>
-                            );
-                          })}
-                        </div>
+
                       </div>
                     );
                   })()}
@@ -3065,7 +3041,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                       gradeNum === 9 ? ['9A1', '9A2', '9A3', '9A4'] :
                       ['6A1', '6A2', '6A3', '6A4', '6A5', '7A1', '7A2', '7A3', '7A4', '7A5', '8A1', '8A2', '8A3', '8A4', '8A5', '9A1', '9A2', '9A3', '9A4'];
 
-                    const teacherName = (gradeNum === 6 || gradeNum === 8) ? 'Thầy Đinh Thành' : 'Cô Hoàng Thị Vươn';
+                    
 
                     return (
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2.5 shadow-2xs">
@@ -3074,8 +3050,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                             <span className="w-5 h-5 rounded-lg bg-blue-600 text-white flex items-center justify-center text-[11px] font-black">2</span>
                             <span>Chọn Lớp (*):</span>
                           </span>
-                          <span className="text-[11px] text-blue-600 dark:text-blue-400 font-bold truncate max-w-[130px]">
-                            {teacherName}
+                          <span className="text-[11px] text-blue-600 dark:text-blue-400 font-bold">
+                            {classList.length} lớp
                           </span>
                         </label>
 
@@ -3099,41 +3075,14 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                               const count = studentGradebookService.getOfficialRoster(cls).length || 37;
                               return (
                                 <option key={cls} value={cls}>
-                                  Lớp {cls} ({count} học sinh - {teacherName})
+                                  Lớp {cls} ({count} học sinh)
                                 </option>
                               );
                             })}
                           </select>
                         </div>
 
-                        {/* Dãy nút chọn lớp nhanh trong khối */}
-                        <div className="flex items-center gap-1 overflow-x-auto pb-1 pt-1">
-                          {classList.map(cls => {
-                            const isSelected = quickClassName.trim().toUpperCase() === cls;
-                            return (
-                              <button
-                                key={cls}
-                                type="button"
-                                onClick={() => {
-                                  setQuickClassName(cls);
-                                  setQuickError('');
-                                  const newRoster = studentGradebookService.getOfficialRoster(cls);
-                                  if (quickFullName.trim() && !newRoster.includes(quickFullName.trim())) {
-                                    setQuickFullName('');
-                                    setQuickAutocorrectNote(null);
-                                  }
-                                }}
-                                className={`flex-1 py-1 px-1 rounded-lg text-xs font-black transition-all cursor-pointer text-center whitespace-nowrap ${
-                                  isSelected
-                                    ? 'bg-blue-600 text-white shadow-xs font-black ring-2 ring-blue-300 scale-105'
-                                    : 'bg-white dark:bg-slate-700/80 hover:bg-blue-50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600'
-                                }`}
-                              >
-                                {cls}
-                              </button>
-                            );
-                          })}
-                        </div>
+
                       </div>
                     );
                   })()}
@@ -3183,21 +3132,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                           </select>
                         </div>
 
-                        {/* Ô gõ lọc nhanh tên */}
-                        <div className="relative pt-1">
-                          <input
-                            type="text"
-                            value={quickFullName}
-                            onChange={(e) => {
-                              setQuickFullName(e.target.value);
-                              setQuickError('');
-                              setQuickAutocorrectNote(null);
-                            }}
-                            onBlur={handleQuickFullNameBlur}
-                            placeholder="Hoặc gõ để tìm nhanh tên..."
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-bold outline-hidden focus:border-amber-500"
-                          />
-                        </div>
+
                       </div>
                     );
                   })()}
@@ -3296,7 +3231,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="space-y-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    <span>Khối 9 (4 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                    <span>Khối 9 (4 lớp - 9A1 đến 9A4):</span>
                   </div>
                   <div className="grid grid-cols-4 gap-1.5">
                     {['9A1', '9A2', '9A3', '9A4'].map(cls => {
@@ -3323,7 +3258,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="space-y-1 pt-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <span>Khối 8 (5 lớp - Thầy Đinh Thành dạy):</span>
+                    <span>Khối 8 (5 lớp - 8A1 đến 8A5):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => {
@@ -3350,7 +3285,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="space-y-1 pt-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <span>Khối 7 (5 lớp - Cô Hoàng Thị Vươn dạy):</span>
+                    <span>Khối 7 (5 lớp - 7A1 đến 7A5):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['7A1', '7A2', '7A3', '7A4', '7A5'].map(cls => {
@@ -3377,7 +3312,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 <div className="space-y-1 pt-1">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Khối 6 (5 lớp - Thầy Đinh Thành dạy):</span>
+                    <span>Khối 6 (5 lớp - 6A1 đến 6A5):</span>
                   </div>
                   <div className="grid grid-cols-5 gap-1.5">
                     {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => {
@@ -5042,7 +4977,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   {/* Khối 9 */}
                   <div className="space-y-1">
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 9 (Cô Hoàng Thị Vươn):</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 9 (9A1 - 9A4):</div>
                     <div className="grid grid-cols-4 gap-1.5">
                       {['9A1', '9A2', '9A3', '9A4'].map(cls => (
                         <button
@@ -5068,7 +5003,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   {/* Khối 8 */}
                   <div className="space-y-1 pt-1">
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 8 (Thầy Đinh Thành):</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 8 (8A1 - 8A5):</div>
                     <div className="grid grid-cols-5 gap-1.5">
                       {['8A1', '8A2', '8A3', '8A4', '8A5'].map(cls => (
                         <button
@@ -5094,7 +5029,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   {/* Khối 7 */}
                   <div className="space-y-1 pt-1">
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 7 (Cô Hoàng Thị Vươn):</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 7 (7A1 - 7A5):</div>
                     <div className="grid grid-cols-5 gap-1.5">
                       {['7A1', '7A2', '7A3', '7A4', '7A5'].map(cls => (
                         <button
@@ -5120,7 +5055,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
                   {/* Khối 6 */}
                   <div className="space-y-1 pt-1">
-                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 6 (Thầy Đinh Thành):</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase">Khối 6 (6A1 - 6A5):</div>
                     <div className="grid grid-cols-5 gap-1.5">
                       {['6A1', '6A2', '6A3', '6A4', '6A5'].map(cls => (
                         <button
