@@ -104,9 +104,10 @@ const getQuestionTypeMeta = (q: SGKExerciseQuestion) => {
 
 export interface TextbookExercisePortalProps {
   studentGrade?: number;
+  initialUnitNumber?: number;
 }
 
-export const TextbookExercisePortal: React.FC<TextbookExercisePortalProps> = ({ studentGrade }) => {
+export const TextbookExercisePortal: React.FC<TextbookExercisePortalProps> = ({ studentGrade, initialUnitNumber }) => {
   // Navigation State
   const [selectedGrade, setSelectedGrade] = useState<number>(() => {
     return studentGrade || 8;
@@ -117,7 +118,14 @@ export const TextbookExercisePortal: React.FC<TextbookExercisePortalProps> = ({ 
       setSelectedGrade(studentGrade);
     }
   }, [studentGrade]);
-  const [selectedUnitNum, setSelectedUnitNum] = useState<number>(1);
+
+  const [selectedUnitNum, setSelectedUnitNum] = useState<number>(initialUnitNumber || 4);
+
+  useEffect(() => {
+    if (initialUnitNumber) {
+      setSelectedUnitNum(initialUnitNumber);
+    }
+  }, [initialUnitNumber]);
   const [activeSectionId, setActiveSectionId] = useState<string>('getting_started');
   // Lấy thông tin học sinh đang làm bài
   const [activeStudent, setActiveStudent] = useState<StudentProfile | null>(() => studentGradebookService.getActiveStudent());

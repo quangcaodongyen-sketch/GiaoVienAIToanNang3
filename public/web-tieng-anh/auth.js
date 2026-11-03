@@ -22,11 +22,21 @@ const Auth = (() => {
   function initStorage() {
     const savedVer = localStorage.getItem(VERSION_KEY);
     if (savedVer !== CURRENT_VERSION) {
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(DEFAULT_USERS));
-      localStorage.setItem(STORAGE_KEYS.KEYS, JSON.stringify(DEFAULT_LICENSE_KEYS));
-      localStorage.setItem(STORAGE_KEYS.EXAMS, JSON.stringify(DEFAULT_EXAM_RECORDS));
-      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(DEFAULT_STUDENTS));
-      localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(DEFAULT_CLASSES));
+      if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(DEFAULT_USERS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.KEYS)) {
+        localStorage.setItem(STORAGE_KEYS.KEYS, JSON.stringify(DEFAULT_LICENSE_KEYS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.EXAMS)) {
+        localStorage.setItem(STORAGE_KEYS.EXAMS, JSON.stringify(DEFAULT_EXAM_RECORDS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.STUDENTS)) {
+        localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(DEFAULT_STUDENTS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.CLASSES)) {
+        localStorage.setItem(STORAGE_KEYS.CLASSES, JSON.stringify(DEFAULT_CLASSES));
+      }
       localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
     } else {
       if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
@@ -57,6 +67,18 @@ const Auth = (() => {
   }
 
   // ── Students CRUD ───────────────────────────────────────────
+  // ── Session Management ──────────────────────────────────────
+  function setSession(account) {
+    if (!account) return;
+    const session = {
+      userId: account.id,
+      role: account.role || (account.id.startsWith('st-') ? 'student' : 'user'),
+      loginAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+  }
+
+  // ── Students CRUD ───────────────────────────────────────────
   function getStudents() {
     return JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS) || '[]');
   }
@@ -71,18 +93,77 @@ const Auth = (() => {
     const newStudent = {
       id: 'st-' + Date.now(),
       role: 'student',
-      points: 100, // Thưởng 100 điểm khởi tạo tài khoản
+      points: 150, // Thưởng 100 điểm khởi tạo + 50 điểm thi đua khởi động Unit 4
       completedExams: 0,
       createdAt: new Date().toISOString(),
       ...studentData
     };
     list.push(newStudent);
     saveStudents(list);
+    setSession(newStudent); // Tự động ghi nhớ phiên đăng nhập vĩnh viễn
     return { ok: true, student: newStudent };
   }
   function loginStudent(username, password) {
     const list = getStudents();
-    return list.find(s => s.username === username && s.password === password) || null;
+    const st = list.find(s => s.username === username && (password ? s.password === password : true)) || null;
+    if (st) {
+      setSession(st);
+    }
+    return st;
+  }
+  function addStudentPoints(studentId, pointsToAdd) {
+    if (!studentId || !pointsToAdd) return null;
+    const list = getStudents();
+    const idx = list.findIndex(s => s.id === studentId);
+    if (idx >= 0) {
+      list[idx].points = (list[idx].points || 0) + Number(pointsToAdd);
+      saveStudents(list);
+      // Lưu an toàn vào Két Sắt Điểm (Vault) bảo toàn vĩnh viễn
+      try {
+        const vaultKey = 'eduexam_points_vault_' + studentId;
+        const curVault = Number(localStorage.getItem(vaultKey) || '0');
+        if (list[idx].points > curVault) {
+          localStorage.setItem(vaultKey, String(list[idx].points));
+        }
+      } catch (e) {}
+      return list[idx];
+    }
+    return null;
+  }
+  function updateStudent(studentId, updates) {
+    const list = getStudents();
+    const idx = list.findIndex(s => s.id === studentId);
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...updates };
+      saveStudents(list);
+      return list[idx];
+    }
+    return null;
+  }
+  function auditAndRestoreAllStudentPoints() {
+    const list = getStudents();
+    const submissions = getSubmissions();
+    let restored = 0;
+    list.forEach(st => {
+      const vaultKey = 'eduexam_points_vault_' + st.id;
+      const curVault = Number(localStorage.getItem(vaultKey) || '0');
+      const mySubs = submissions.filter(s => s.studentId === st.id || s.studentName === st.name);
+      let examPoints = 0;
+      mySubs.forEach(s => {
+        examPoints += Math.round((s.score || 0) * 10);
+      });
+      // Bảo đảm tối thiểu 150 điểm (100đ khởi tạo + 50đ Unit 4) + điểm các bài thi đã làm
+      const targetPoints = Math.max(st.points || 0, curVault, 150 + examPoints);
+      if (targetPoints !== st.points) {
+        st.points = targetPoints;
+        restored++;
+      }
+      localStorage.setItem(vaultKey, String(st.points));
+    });
+    if (restored > 0) {
+      saveStudents(list);
+    }
+    return { total: list.length, restored };
   }
 
   // ── Classes CRUD ────────────────────────────────────────────
@@ -290,12 +371,23 @@ const Auth = (() => {
   function getSession() {
     const s = localStorage.getItem(STORAGE_KEYS.SESSION);
     if (!s) return null;
-    const session = JSON.parse(s);
-    // 8-hour session
-    if (Date.now() - session.loginAt > 8 * 60 * 60 * 1000) {
+    let session;
+    try {
+      session = JSON.parse(s);
+    } catch (e) {
+      return null;
+    }
+    // Duy trì phiên 30 ngày (cả giáo viên và học sinh không bị văng)
+    if (Date.now() - session.loginAt > 30 * 24 * 60 * 60 * 1000) {
       logout();
       return null;
     }
+    // 1. Tìm trong danh sách học sinh
+    const students = getStudents();
+    const st = students.find(s => s.id === session.userId);
+    if (st) return st;
+
+    // 2. Tìm trong danh sách giáo viên
     const users = getUsers();
     return users.find(u => u.id === session.userId) || null;
   }
@@ -394,15 +486,15 @@ const Auth = (() => {
   }
 
   return {
-    initStorage, login, logout, getSession,
+    initStorage, login, logout, getSession, setSession,
     getUsers, saveUsers, addUser, updateUser, deleteUser,
-    getStudents, saveStudents, registerStudent, loginStudent,
+    getStudents, saveStudents, registerStudent, loginStudent, addStudentPoints, updateStudent, auditAndRestoreAllStudentPoints,
     getClasses, saveClasses, addClass, deleteClass,
     getLicenseKeys, generateKey, activateKey,
     getExamRecords, saveExamRecord,
     getCustomQuestions, saveCustomQuestion, deleteCustomQuestion,
     getPublishedExams, getPublishedExam, publishExam, toggleExamStatus,
-    getSubmissions, saveSubmission, updateSubmission, deleteSubmission,
+    getSubmissions, saveSubmission, addSubmission: saveSubmission, updateSubmission, deleteSubmission,
     getAllQuestions, canAccess, getRemainingExams,
   };
 })();

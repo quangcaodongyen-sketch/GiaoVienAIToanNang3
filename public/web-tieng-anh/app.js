@@ -1,4 +1,7 @@
 
+// Bỏ tính năng pháo hoa / confetti theo yêu cầu
+window.confetti = function() {};
+
 // =================================================================
 // SPEAKING STUDIO & AI SPEECH EVALUATOR (CHUẨN BỘ GD&ĐT 2.0 ĐIỂM)
 // Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717
@@ -753,6 +756,9 @@ const App = {
 
   init() {
     Auth.initStorage();
+    try {
+      Auth.auditAndRestoreAllStudentPoints();
+    } catch (eAudit) {}
 
     // Áp dụng Theme (Sáng / Tối) đã lưu
     const savedTheme = localStorage.getItem('app_theme') || 'light';
@@ -2577,9 +2583,9 @@ const App = {
             const origAnsIdx = q.answer ? (q.answer.charCodeAt(0) - 65) : 0;
             const correctText = rawOpts[origAnsIdx] || rawOpts[0];
 
-            const shuffledRaw = shuffle(rawOpts);
+            const shuffledRaw = [...rawOpts].reverse();
             const newAnsIdx = shuffledRaw.indexOf(correctText);
-            const newAnsLetter = String.fromCharCode(65 + Math.max(0, newAnsIdx));
+            const newAnsLetter = String.fromCharCode(65 + newAnsIdx);
 
             q.options = shuffledRaw.map((txt, i) => `${String.fromCharCode(65 + i)}. ${txt}`);
             q.answer = newAnsLetter;
@@ -5015,9 +5021,18 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
       submittedAt: new Date().toISOString(),
     });
 
-    // Cộng điểm cho học sinh
-    if (this.state.user && this.state.user.role === 'student') {
-      this.state.user.points = (this.state.user.points || 100) + Math.round(finalScore * 10);
+    // Cộng điểm cho học sinh và bảo toàn vĩnh viễn trong Storage Vault
+    const earnedPoints = Math.round(finalScore * 10);
+    if (this.state.user && this.state.user.id) {
+      Auth.addStudentPoints(this.state.user.id, earnedPoints);
+      this.state.user = Auth.getSession();
+    } else if (st && st.name) {
+      // Nếu làm bài theo link chia sẻ mà có tên học sinh trong sổ điểm, cộng điểm vào tài khoản
+      const allSt = Auth.getStudents();
+      const matched = allSt.find(s => s.name === st.name || s.username === st.name);
+      if (matched) {
+        Auth.addStudentPoints(matched.id, earnedPoints);
+      }
     }
 
     const root = document.getElementById('root');
@@ -7740,7 +7755,10 @@ ${esc(suite.fullAudioScript)}
     const item = (typeof GLOBAL_GRAMMAR_MASTER !== 'undefined' ? GLOBAL_GRAMMAR_MASTER : []).find(x => x.id === cardId);
     if (item && optionIndex === item.quiz.answer) {
       UI.toast('🎉 Chính xác! Bạn được cộng +5 điểm XP!', 'success');
-      if (this.state.user) this.state.user.points = (this.state.user.points || 0) + 5;
+      if (this.state.user && this.state.user.id) {
+        Auth.addStudentPoints(this.state.user.id, 5);
+        this.state.user = Auth.getSession();
+      }
     } else {
       UI.toast('Chưa đúng rồi! Hãy đọc lại phần giải thích chi tiết nhé.', 'warn');
     }
@@ -7915,7 +7933,10 @@ ${esc(suite.fullAudioScript)}
     const q = (data.interactiveTest || [])[qIdx];
     if (q && q.answer === letter) {
       UI.toast('🎉 Xuất sắc! Bạn được cộng +5 điểm XP!', 'success');
-      if (this.state.user) this.state.user.points = (this.state.user.points || 0) + 5;
+      if (this.state.user && this.state.user.id) {
+        Auth.addStudentPoints(this.state.user.id, 5);
+        this.state.user = Auth.getSession();
+      }
     } else {
       UI.toast(`Chưa chính xác! Đáp án đúng là ${q?.answer}. Hãy bấm biểu tượng loa để nghe lại nhé!`, 'warn');
     }

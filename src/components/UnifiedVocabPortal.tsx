@@ -59,13 +59,10 @@ import { midtermMissionService, MidtermMissionState } from '../services/midtermM
 
 
 interface UnifiedVocabPortalProps {
-
   currentStudent: StudentProfile | null;
-
+  initialUnitNumber?: number;
   onRewardMerit?: (reason: string, points: number) => void;
-
   onOpenIpaModal?: () => void;
-
 }
 
 
@@ -272,13 +269,10 @@ interface FloatingScore {
 
 
 export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
-
   currentStudent,
-
+  initialUnitNumber,
   onRewardMerit,
-
   onOpenIpaModal
-
 }) => {
 
   // State hiệu ứng điểm bay lên & Chính sách khuyến mại
@@ -462,7 +456,13 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
 
-  const [selectedUnit, setSelectedUnit] = useState<number>(4);
+  const [selectedUnit, setSelectedUnit] = useState<number>(initialUnitNumber || 4);
+
+  useEffect(() => {
+    if (initialUnitNumber) {
+      setSelectedUnit(initialUnitNumber);
+    }
+  }, [initialUnitNumber]);
 
   const [vocabSearch, setVocabSearch] = useState<string>('');
 

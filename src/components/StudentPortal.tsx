@@ -2546,6 +2546,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
 
   const [competitionSubTab, setCompetitionSubTab] = useState<'all' | 'grade' | 'class' | 'teams'>('all');
+  const [vocabTargetUnit, setVocabTargetUnit] = useState<number>(4);
   const [activeTab, setActiveTab] = useState<'missions' | 'vocab' | 'sgk' | 'quiz' | 'exam' | 'hsg' | 'downloads' | 'leaderboard' | 'tracking' | 'forum' | 'messages' | 'decuong_e8' | 'decuong_e7' | 'decuong_e6' | 'decuong_e9' | 'teams'>(() => {
 
     try {
@@ -3473,6 +3474,38 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       )}
 
+      {/* =========================================================================
+          THẺ GIAO NHIỆM VỤ MỚI: CHINH PHỤC TỪ VỰNG & BÀI TẬP SGK UNIT 4 (THẦY ĐINH THÀNH 03/11/2026)
+      ========================================================================= */}
+      {currentStudent && (
+        <MidtermMissionCard
+          currentStudent={currentStudent}
+          onGoToVocabUnit={(unitNum) => {
+            setVocabTargetUnit(unitNum);
+            setActiveTab('vocab');
+            window.scrollTo({ top: 450, behavior: 'smooth' });
+          }}
+          onGoToTextbook={(unitNum?: number) => {
+            if (unitNum) setVocabTargetUnit(unitNum);
+            setActiveTab('sgk');
+            window.scrollTo({ top: 450, behavior: 'smooth' });
+          }}
+          onGoToDecuong={() => {
+            const g = currentStudent.grade || 8;
+            if (g === 6) setActiveTab('decuong_e6');
+            else if (g === 7) setActiveTab('decuong_e7');
+            else if (g === 8) setActiveTab('decuong_e8');
+            else if (g === 9) setActiveTab('decuong_e9');
+            else setActiveTab('decuong_e8');
+            window.scrollTo({ top: 450, behavior: 'smooth' });
+          }}
+          onGoToExam={() => {
+            setActiveTab('quiz');
+            window.scrollTo({ top: 450, behavior: 'smooth' });
+          }}
+        />
+      )}
+
 
 
       {/* =========================================================================
@@ -3582,6 +3615,17 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2.5 p-2 sm:p-2.5 mb-3 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-emerald-300 shadow-sm text-xs sm:text-sm md:text-base font-black text-slate-900">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-emerald-950 font-black px-1.5 hidden sm:inline text-sm">Nội dung học:</span>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab('vocab');
+                setVocabTargetUnit(4);
+              }}
+              className="px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 bg-gradient-to-r from-rose-600 via-amber-500 to-rose-600 text-white font-black shadow-md border-2 border-amber-300 text-xs sm:text-sm animate-pulse"
+              title="Thầy giáo Đinh Văn Thành giao nhiệm vụ mới hôm nay (03/11/2026): Chinh phục Từ Vựng & Bài Tập SGK Unit 4"
+            >
+              <span>🔥 0. NHIỆM VỤ MỚI: UNIT 4</span>
+            </button>
             <button
               type="button"
               onClick={() => setActiveTab('vocab')}
@@ -3782,6 +3826,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         <UnifiedVocabPortal
 
           currentStudent={currentStudent}
+          initialUnitNumber={vocabTargetUnit}
 
           onRewardMerit={(reason, pts) => {
             if (currentStudent) {
@@ -3912,7 +3957,10 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
 
       {activeTab === 'sgk' && (
 
-        <TextbookExercisePortal studentGrade={currentStudent?.grade} />
+        <TextbookExercisePortal 
+          studentGrade={currentStudent?.grade} 
+          initialUnitNumber={vocabTargetUnit}
+        />
 
       )}
 

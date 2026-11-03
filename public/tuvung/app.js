@@ -11710,28 +11710,17 @@ const ADMIN_SYSTEM = {
 
         let list = JSON.parse(saved);
 
-        // Loc sach 100% cac tai khoan demo/thu nghiem rac
-
-        const DEMO_NAMES = ['hoc sinh', 'demo', 'test', 'nguyen van an', 'hoc sinh demo', 'default_student'];
-
+        // Chỉ lọc các tài khoản demo kỹ thuật thật sự, tuyệt đối KHÔNG lọc tên học sinh thật
+        const DEMO_NAMES = ['demo_user_fake', 'test_dummy_acc', 'tai_khoan_mau_ao'];
         list = list.filter(s => {
-
           if (!s || !s.fullName) return false;
-
           const fn = s.fullName.toLowerCase().trim();
-
           const un = (s.username || '').toLowerCase().trim();
-
           const ph = (s.phone || '').trim();
-
-          if (DEMO_NAMES.some(d => fn.includes(d) || un.includes(d))) return false;
-
+          if (DEMO_NAMES.some(d => fn === d || un === d)) return false;
           if (s.id === 'DEFAULT_STUDENT' || s.id === 'DEMO_1' || s.id === 'DEMO_2') return false;
-
           if (ph === '0123456789' || ph === '0900000000' || ph === '0999999999') return false;
-
           return true;
-
         });
 
         localStorage.setItem('ALL_STUDENTS_LIST', JSON.stringify(list));

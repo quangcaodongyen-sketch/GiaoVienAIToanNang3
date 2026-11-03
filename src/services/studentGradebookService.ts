@@ -237,13 +237,38 @@ export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmap
     },
     {
       date: '2026-11-03',
-      badge: '🏆 ĐẤU TRƯỜNG THI ĐUA',
-      title: 'Đấu Trường Thi Đua Khối Lớp Xuất Sắc',
-      description: 'Tặng +15 điểm đăng nhập + Thưởng pháo hoa tập thể cho Top 3 lớp có điểm cao nhất!',
-      points: 15,
+      badge: '🎯 NHIỆM VỤ MỚI: UNIT 4',
+      title: 'Chinh Phục Từ Vựng & Bài Tập SGK Unit 4 (Giao Nhiệm Vụ Mới)',
+      description: 'Thầy giáo Đinh Văn Thành giao nhiệm vụ mới hôm nay: Bắt đầu học Từ vựng Unit 4 và làm toàn bộ bài tập kèm Sách giáo khoa (SGK). Cấp bù & tặng ngay +50 điểm thi đua khởi động!',
+      points: 50,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '🎯 Nhiệm vụ 1: Học & thuộc toàn bộ Từ vựng Unit 4 (Kèm phát âm & nghĩa)',
+        '📘 Nhiệm vụ 2: Hoàn thành Bài tập kèm Sách giáo khoa Unit 4 (A Closer Look 1, 2, Looking Back)',
+        '⚡ Nhiệm vụ 3: Làm bài kiểm tra nhanh 15 phút Unit 4 đạt điểm 9, 10',
+        '⭐ Tặng ngay +50 điểm thi đua khởi động Unit 4 lưu an toàn trong Két Sắt Điểm (Vault)'
+      ]
+    },
+    {
+      date: '2026-11-04',
+      badge: '📘 TĂNG TỐC BÀI TẬP SGK',
+      title: 'Tăng Tốc Bài Tập Sách Giáo Khoa Unit 4',
+      description: 'Luyện tập chuyên sâu Grammar & A Closer Look 2 bám sát SGK Global Success.',
+      points: 20,
       vocabMultiplier: 2,
       vocabPointsPerUnit: 20,
-      rules: ['⭐ Đăng nhập Thứ Ba: +15đ', '🧠 Nhân đôi điểm bài học: +20đ / Unit', '🎆 Thưởng pháo hoa tập thể']
+      rules: ['📘 Hoàn thành A Closer Look 2', '🧠 Ôn lại cấu trúc ngữ pháp Unit 4', '⭐ Thưởng +20 điểm chuyên cần']
+    },
+    {
+      date: '2026-11-05',
+      badge: '⚡ THỬ THÁCH SKILLS UNIT 4',
+      title: 'Bứt Phá Kỹ Năng Skills 1 & Skills 2 Unit 4',
+      description: 'Rèn luyện đọc hiểu bài đọc SGK và luyện viết đoạn văn ngắn 80-100 từ chuẩn CV 7991.',
+      points: 25,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['📖 Đọc hiểu đoạn văn SGK Unit 4', '✍️ Viết đoạn văn mẫu Band 9-10', '⭐ Thưởng +25 điểm thi đua']
     }
   ];
 
@@ -1170,6 +1195,8 @@ export interface StudentProfile {
   vocabUnitsCompletedCount?: number; // Số bài từ vựng đã hoàn thành
 
   studyProgressPercent?: number;     // % Tiến độ học tập tổng thể (1 bài = 35%, 2 bài = 70%, 3 bài = 100%)
+
+  unit4BonusAwarded?: boolean;       // Đã nhận thưởng khởi động nhiệm vụ mới Unit 4 (+50đ)
 
 }
 
@@ -2295,6 +2322,9 @@ class StudentGradebookService {
 
       this.auditAndRestoreAllStudentPoints();
 
+      // 4. Rà soát & cấp đủ điểm cho toàn bộ học sinh + thưởng khởi động nhiệm vụ mới Unit 4 (+50đ)
+      this.grantUnit4BonusAndRestoreAllStudents();
+
 
 
       // Lưu lại nếu chưa từng có
@@ -2844,9 +2874,13 @@ class StudentGradebookService {
         thptGroups.set(thptKey, grp);
 
       } else {
-
-        // TUYỆT ĐỐI KHÔNG PURGE HỌC SINH ĐÃ CÓ ĐIỂM HOẶC HOẠT ĐỘNG
-        if ((cand.totalMeritPoints && cand.totalMeritPoints > 0) || (cand.studyTimeMinutes && cand.studyTimeMinutes > 0)) {
+        // NGUYÊN TẮC: TUYỆT ĐỐI KHÔNG XÓA HỌC SINH CÓ TÊN THẬT (Dù là THCS lớp khác hay mới đăng ký chưa có điểm)
+        if (cName.length >= 2 && !DEMO_REGEX.test(cName)) {
+          const key = `${normN}__${cCls || 'THCS'}`;
+          const grp = thptGroups.get(key) || [];
+          grp.push(cand);
+          thptGroups.set(key, grp);
+        } else if ((cand.totalMeritPoints && cand.totalMeritPoints > 0) || (cand.studyTimeMinutes && cand.studyTimeMinutes > 0)) {
           const key = `${normN}__${cCls || 'THCS'}`;
           const grp = thptGroups.get(key) || [];
           grp.push(cand);
@@ -2855,7 +2889,6 @@ class StudentGradebookService {
           purgedDemoIds.add(cand.id);
           purgedDemoNames.push(cName || cand.id);
         }
-
       }
 
     });
@@ -3413,59 +3446,36 @@ class StudentGradebookService {
 
         const active = JSON.parse(activeRaw);
 
-        if (active?.id && (purgedDemoIds.has(active.id) || DEMO_REGEX.test(active.name || ''))) {
-
+        if (active?.name && DEMO_REGEX.test(active.name)) {
           localStorage.removeItem(STORAGE_KEYS.ACTIVE_STUDENT);
-
-        } else if (active?.id && idMigrationMap.has(active.id)) {
-
-          const canonical = this.students.find(s => s.id === idMigrationMap.get(active.id));
-
+        } else if (active?.id) {
+          const targetId = idMigrationMap.get(active.id) || active.id;
+          const canonical = this.students.find(s => s.id === targetId || s.name === active.name);
           if (canonical) {
-
             this.setActiveStudent(canonical);
-
           }
-
         }
-
       }
 
-
-
       const rememberedRaw = localStorage.getItem('DONGYEN_REMEMBERED_STUDENT');
-
       if (rememberedRaw) {
-
         const rem = JSON.parse(rememberedRaw);
-
-        if (rem?.id && (purgedDemoIds.has(rem.id) || DEMO_REGEX.test(rem.name || ''))) {
-
+        if (rem?.name && DEMO_REGEX.test(rem.name)) {
           localStorage.removeItem('DONGYEN_REMEMBERED_STUDENT');
-
-        } else if (rem?.id && idMigrationMap.has(rem.id)) {
-
-          const canonical = this.students.find(s => s.id === idMigrationMap.get(rem.id));
-
+        } else if (rem?.id) {
+          const targetId = idMigrationMap.get(rem.id) || rem.id;
+          const canonical = this.students.find(s => s.id === targetId || s.name === rem.name);
           if (canonical) {
-
             localStorage.setItem('DONGYEN_REMEMBERED_STUDENT', JSON.stringify({
-
               id: canonical.id,
-
               name: canonical.name,
-
               className: canonical.className,
-
               grade: canonical.grade,
-
               studentCode: canonical.studentCode
-
             }));
-
           }
-
         }
+      }
 
       }
 
@@ -4395,6 +4405,58 @@ class StudentGradebookService {
 
     };
 
+  }
+
+  // ==================== CẤP ĐỦ ĐIỂM & THƯỞNG KHỞI ĐỘNG NHIỆM VỤ UNIT 4 (+50Đ) ====================
+  public grantUnit4BonusAndRestoreAllStudents(): {
+    totalStudents: number;
+    grantedCount: number;
+    totalPointsGranted: number;
+  } {
+    let grantedCount = 0;
+    let totalPointsGranted = 0;
+
+    (this.students || []).forEach(student => {
+      if (!student || !student.name) return;
+      const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
+      
+      // Đảm bảo mỗi học sinh có tối thiểu 100 điểm ban đầu + điểm bài thi/học tập
+      const curMerit = student.totalMeritPoints || 0;
+      let newMerit = Math.max(curMerit, vaultMax, 100);
+
+      // Thưởng 50 điểm khởi động nhiệm vụ mới Unit 4 nếu chưa nhận
+      if (!student.unit4BonusAwarded) {
+        student.unit4BonusAwarded = true;
+        newMerit += 50;
+        student.teacherBonus = (student.teacherBonus || 0) + 50;
+        grantedCount++;
+        totalPointsGranted += 50;
+      }
+
+      if (newMerit > curMerit) {
+        student.totalMeritPoints = newMerit;
+      }
+
+      saveStudentVaultMaxPoints(student.id, student.totalMeritPoints, student.name, student.className);
+    });
+
+    if (grantedCount > 0) {
+      this.saveStudents(false);
+      try {
+        localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
+      } catch {}
+      const active = this.getActiveStudent();
+      if (active) {
+        const updated = this.students.find(s => s.id === active.id);
+        if (updated) this.setActiveStudent(updated);
+      }
+    }
+
+    return {
+      totalStudents: this.students.length,
+      grantedCount,
+      totalPointsGranted
+    };
   }
 
 
