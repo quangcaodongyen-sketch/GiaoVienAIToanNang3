@@ -1412,67 +1412,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
 
-  // Nút thưởng điểm hoàn thành bài & ghi nhận chất lượng dạng bài
-
+  // Khóa tính năng tự bấm nhận điểm (chống gian lận / hack điểm)
+  // Điểm số được hệ thống tự động chấm và cộng vào Sổ Thi Đua khi học sinh làm bài tập thực tế
   const handleRewardUnitCompletion = () => {
-
-    if (currentStudent) {
-
-      // Ghi nhận chất lượng cho dạng bài hiện tại vào Nhiệm Vụ GK1
-
-      const acc = (currentMode as any) === 'minitest' ? 80 : 100;
-
-      const res = midtermMissionService.recordVocabPracticeQuality(
-
-        currentStudent.id,
-
-        currentStudent.name,
-
-        currentStudent.className,
-
-        selectedGrade,
-
-        selectedUnit,
-
-        currentMode,
-
-        acc,
-
-        { note: `Hoàn thành dạng bài ${currentMode}` }
-
-      );
-
-      setMissionUpdateTrigger(t => t + 1);
-
-
-
-      const vRes = studentGradebookService.recordVocabUnitCompleted(currentStudent.id, selectedUnit, selectedGrade);
-      refreshStudentScore();
-
-      if (onRewardMerit) onRewardMerit(`Học từ vựng Unit ${selectedUnit}`, vRes.awardedPoints);
-
-
-
-      alert(
-
-        `🎉 CHÚC MỪNG EM ${currentStudent.name}!\n` +
-
-        `✅ Em đã hoàn thành xuất sắc bài học từ vựng Unit ${selectedUnit} (Tiếng Anh ${selectedGrade})!\n` +
-
-        `⭐ Thưởng: +${vRes.awardedPoints} điểm thi đua ${vRes.isDoubleReward ? '(ĐÃ NHÂN ĐÔI KHUYẾN MẠI 🔥)' : ''} (Tổng hiện tại: ${vRes.totalMeritPoints}đ)!\n` +
-
-        `📈 TIẾN ĐỘ HỌC TẬP TĂNG VỌT: Đạt ${vRes.progressPercent}% (${vRes.vocabUnitsCount} bài đã hoàn thành)!\n\n` +
-
-        `${res.message}`
-
-      );
-
-    } else {
-
-      alert('Em hãy nhập Tên và Lớp ở trên để được ghi nhận điểm chuyên cần nhé!');
-
-    }
-
+    alert('🔒 Điểm thi đua được hệ thống tự động chấm và ghi nhận khi em hoàn thành bài làm thực tế (lật thẻ Flashcard, làm đúng trắc nghiệm, luyện nghe, nối từ, luyện gõ...). Không thể tự bấm nhận điểm thủ công!');
   };
 
 
@@ -1717,27 +1660,17 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
 
-        {/* NÚT HOÀN THÀNH BÀI (+10Đ/20Đ) & NÚT MỞ MINI-GAME */}
+        {/* HUY HIỆU TỰ ĐỘNG CHẤM ĐIỂM & NÚT MỞ MINI-GAME */}
 
         <div className="flex items-center gap-2 flex-wrap self-start md:self-auto">
 
-          <button
-
-            type="button"
-
-            onClick={handleRewardUnitCompletion}
-
-            className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-500/20 transition flex items-center gap-1.5 cursor-pointer"
-
-            title="Bấm để nhận điểm chuyên cần sau khi hoàn thành bài"
-
+          <div 
+            className="px-3.5 py-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center gap-1.5 border border-emerald-300 dark:border-emerald-700 shadow-xs"
+            title="Điểm số được hệ thống tự động chấm và cộng vào Sổ Thi Đua khi em hoàn thành đúng các câu hỏi bài tập thực tế"
           >
-
-            <Sparkles className="w-4 h-4 text-amber-200" />
-
-            <span>🎉 Đã Thuộc Bài Này (+{loginReward.vocabPointsPerUnit || 10}đ)</span>
-
-          </button>
+            <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>⭐ Điểm Cộng Tự Động Khi Làm Bài</span>
+          </div>
 
 
 
@@ -4221,23 +4154,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
             <div className="flex items-center gap-2">
-
-              <button
-
-                type="button"
-
-                onClick={handleRewardUnitCompletion}
-
-                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
-
-              >
-
-                <Sparkles className="w-3.5 h-3.5" />
-
-                <span>+10đ Chuyên Cần</span>
-
-              </button>
-
+              <span className="px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-xs border border-emerald-300 dark:border-emerald-700 flex items-center gap-1 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>Tự động chấm điểm khi chơi</span>
+              </span>
             </div>
 
           </div>
@@ -4301,23 +4221,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
             <div className="flex items-center gap-2">
-
-              <button
-
-                type="button"
-
-                onClick={handleRewardUnitCompletion}
-
-                className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-xs transition cursor-pointer flex items-center gap-1.5"
-
-              >
-
-                <Sparkles className="w-3.5 h-3.5" />
-
-                <span>+10đ Chuyên Cần</span>
-
-              </button>
-
+              <span className="px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-xs border border-emerald-300 dark:border-emerald-700 flex items-center gap-1 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>Tự động chấm điểm khi chơi</span>
+              </span>
             </div>
 
           </div>
@@ -4381,23 +4288,10 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
 
             <div className="flex items-center gap-2">
-
-              <button
-
-                type="button"
-
-                onClick={handleRewardUnitCompletion}
-
-                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center gap-1.5"
-
-              >
-
-                <Sparkles className="w-3.5 h-3.5" />
-
-                <span>+10đ Chuyên Cần</span>
-
-              </button>
-
+              <span className="px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold text-xs border border-emerald-300 dark:border-emerald-700 flex items-center gap-1 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>Tự động chấm điểm khi chơi</span>
+              </span>
             </div>
 
           </div>
