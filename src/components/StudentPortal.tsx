@@ -3610,122 +3610,122 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       </div>
 
-      {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 3: VÀO HỌC */}
+      {/* THANH ĐIỀU HƯỚNG CON CHO BƯỚC 3: VÀO HỌC (THU GỌN TRÊN 1 DÒNG DUY NHẤT) */}
       {['vocab', 'decuong_e8', 'decuong_e7', 'decuong_e6', 'decuong_e9', 'sgk', 'hsg', 'missions'].includes(activeTab) && (
-        <div className="flex flex-wrap items-center justify-between gap-2.5 p-2 sm:p-2.5 mb-3 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-emerald-300 shadow-sm text-xs sm:text-sm md:text-base font-black text-slate-900">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-emerald-950 font-black px-1.5 hidden sm:inline text-sm">Nội dung học:</span>
+        <div className="flex items-center gap-1.5 p-1.5 sm:p-2 mb-3 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-emerald-300 shadow-xs text-xs font-black text-slate-900 overflow-x-auto flex-nowrap scrollbar-none">
+          <span className="text-emerald-950 font-black px-1 text-xs shrink-0 whitespace-nowrap">Nội dung học:</span>
+          
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('vocab');
+              setVocabTargetUnit(4);
+            }}
+            className="px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 bg-gradient-to-r from-rose-600 via-amber-500 to-rose-600 text-white font-black shadow-xs border border-amber-300 text-xs shrink-0 whitespace-nowrap animate-pulse"
+            title="Thầy giáo Đinh Văn Thành giao nhiệm vụ mới: Chinh phục Từ Vựng & Bài Tập SGK Unit 4"
+          >
+            <span>🔥 Unit 4 Mới</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('vocab')}
+            className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+              activeTab === 'vocab'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
+            }`}
+          >
+            <span>📘 Từ Vựng SGK</span>
+          </button>
+
+          {(!currentStudent || currentStudent.grade === 6) && (
             <button
               type="button"
-              onClick={() => {
-                setActiveTab('vocab');
-                setVocabTargetUnit(4);
-              }}
-              className="px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 bg-gradient-to-r from-rose-600 via-amber-500 to-rose-600 text-white font-black shadow-md border-2 border-amber-300 text-xs sm:text-sm animate-pulse"
-              title="Thầy giáo Đinh Văn Thành giao nhiệm vụ mới hôm nay (03/11/2026): Chinh phục Từ Vựng & Bài Tập SGK Unit 4"
-            >
-              <span>🔥 0. NHIỆM VỤ MỚI: UNIT 4</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('vocab')}
-              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'vocab'
-                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
+              onClick={() => setActiveTab('decuong_e6')}
+              className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+                activeTab === 'decuong_e6'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
               }`}
             >
-              <span>📘 1. Luyện Từ Vựng SGK 3D</span>
+              <span>📖 Đề Cương GK1</span>
             </button>
+          )}
 
-            {(!currentStudent || currentStudent.grade === 6) && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('decuong_e6')}
-                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'decuong_e6'
-                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                    : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
-                }`}
-              >
-                <span>📖 2. Đề Cương GK1 Anh 6</span>
-              </button>
-            )}
-
-            {(!currentStudent || currentStudent.grade === 7) && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('decuong_e7')}
-                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'decuong_e7'
-                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                    : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
-                }`}
-              >
-                <span>📖 2. Đề Cương GK1 Anh 7</span>
-              </button>
-            )}
-
-            {(!currentStudent || currentStudent.grade === 8) && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('decuong_e8')}
-                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'decuong_e8'
-                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                    : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
-                }`}
-              >
-                <span>📖 2. Đề Cương GK1 Anh 8</span>
-              </button>
-            )}
-
-            {(!currentStudent || currentStudent.grade === 9) && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('decuong_e9')}
-                className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === 'decuong_e9'
-                    ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                    : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
-                }`}
-              >
-                <span>📖 2. Đề Cương GK1 Anh 9</span>
-              </button>
-            )}
-
+          {(!currentStudent || currentStudent.grade === 7) && (
             <button
               type="button"
-              onClick={() => setActiveTab('sgk')}
-              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'sgk'
-                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
+              onClick={() => setActiveTab('decuong_e7')}
+              className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+                activeTab === 'decuong_e7'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
               }`}
             >
-              <span>📘 3. Bài Tập SGK</span>
+              <span>📖 Đề Cương GK1</span>
             </button>
+          )}
 
+          {(!currentStudent || currentStudent.grade === 8) && (
             <button
               type="button"
-              onClick={() => setActiveTab('hsg')}
-              className={`px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                activeTab === 'hsg'
-                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-md border-2 border-emerald-200 text-xs sm:text-sm md:text-base'
-                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border-2 border-emerald-200/80 shadow-xs hover:border-emerald-500 text-xs sm:text-sm md:text-base'
+              onClick={() => setActiveTab('decuong_e8')}
+              className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+                activeTab === 'decuong_e8'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
               }`}
             >
-              <span>🏆 4. Ôn Thi HSG</span>
+              <span>📖 Đề Cương GK1</span>
             </button>
-          </div>
+          )}
+
+          {(!currentStudent || currentStudent.grade === 9) && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('decuong_e9')}
+              className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+                activeTab === 'decuong_e9'
+                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                  : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
+              }`}
+            >
+              <span>📖 Đề Cương GK1</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('sgk')}
+            className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+              activeTab === 'sgk'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
+            }`}
+          >
+            <span>📘 Bài Tập SGK</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('hsg')}
+            className={`px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 text-xs shrink-0 whitespace-nowrap ${
+              activeTab === 'hsg'
+                ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white font-black shadow-xs border border-emerald-200'
+                : 'bg-emerald-50/90 hover:bg-emerald-100 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
+            }`}
+          >
+            <span>🏆 Thi HSG</span>
+          </button>
 
           {activeTab === 'vocab' && (
             <button
               type="button"
               onClick={() => setIsIpaModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-md shrink-0 border border-amber-200"
+              className="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition flex items-center gap-1 cursor-pointer shadow-xs shrink-0 whitespace-nowrap border border-amber-300"
             >
-              <span>🗣️ Bảng Âm IPA</span>
+              <span>🗣️ Bảng IPA</span>
             </button>
           )}
         </div>
