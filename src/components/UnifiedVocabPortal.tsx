@@ -1582,7 +1582,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
         {/* Lời dặn dò viết lại chuẩn sư phạm */}
         <div className="mt-3.5 p-4 rounded-2xl bg-white border-2 border-emerald-400 text-sm sm:text-base text-slate-900 shadow-sm leading-relaxed font-semibold">
-          <strong className="text-emerald-950 font-black">Kính gửi các em học sinh thân yêu:</strong> Toàn khối chính thức bước vào <strong className="text-emerald-800 font-black">LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong className="text-emerald-800 font-black">Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
+          <strong className="text-emerald-950 font-black">Các em học sinh thân mến !</strong> Toàn khối chính thức bước vào <strong className="text-emerald-800 font-black">LỘ TRÌNH HỌC TẬP MỚI</strong>: Tiến hành học tập và làm chủ toàn diện từ vựng, ngữ pháp các <strong className="text-emerald-800 font-black">Unit 4, Unit 5, Unit 6</strong> để tự tin đạt điểm 9, điểm 10 rực rỡ trong bài kiểm tra Cuối học kỳ 1 (CK1) sắp tới! Thầy Thành yêu cầu tất cả các em tiếp tục tập trung cao độ, hoàn thành từng dạng bài tập, làm kỹ đề cương và tích lũy điểm thi đua nhé!
         </div>
 
         {/* 4 Khối nhiệm vụ trọng tâm Lộ trình mới Unit 4, 5, 6 */}

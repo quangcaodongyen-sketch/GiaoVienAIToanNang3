@@ -5865,7 +5865,7 @@ ${esc(wiz.audioScript || (suite ? suite.fullAudioScript : ''))}
   share15mZalo() {
     const q = this.state.quiz15m;
     const url = `${window.location.origin}${window.location.pathname}?mode=student15m&grade=${q.grade}&unit=${q.unitNum}`;
-    const text = `Kính gửi Quý Phụ huynh và các em Học sinh lớp ${q.grade}!\nThầy Đinh Văn Thành gửi link làm Bài Kiểm Tra 15 Phút Tiếng Anh (Unit ${q.unitNum}) trực tiếp trên điện thoại:\n👉 ${url}\nCác em làm xong nộp bài sẽ có điểm ngay!`;
+    const text = `Các em học sinh thân mến !\nThầy Đinh Văn Thành gửi link làm Bài Kiểm Tra 15 Phút Tiếng Anh (Unit ${q.unitNum}) trực tiếp trên điện thoại:\n👉 ${url}\nCác em làm xong nộp bài sẽ có điểm ngay! (Kính nhờ Quý Phụ huynh đôn đốc các em)`;
 
     navigator.clipboard?.writeText(text).then(() => {
       UI.toast(' Đã sao chép nội dung & link bài thi Zalo!', 'success');
