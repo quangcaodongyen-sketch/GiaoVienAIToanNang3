@@ -3476,9 +3476,6 @@ class StudentGradebookService {
           }
         }
       }
-
-      }
-
     } catch {}
 
 
