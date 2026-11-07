@@ -47,15 +47,15 @@ export const apps: AppCard[] = [
     order: 0
   },
 
-  // ==================== HỌC TỪ VỰNG TIẾNG ANH 6 - 12 GLOBAL SUCCESS ====================
+  // ==================== HỌC TỪ VỰNG TIẾNG ANH THCS (6 - 9) & THPT ADMIN ====================
   {
     id: "hoc-tu-vung-tieng-anh-6-12",
-    title: "SIÊU TRÍ NHỚ TỪ VỰNG 6 - 12",
-    description: "Học từ vựng Tiếng Anh Lớp 6 - 12 (Global Success) siêu tốc qua Flashcard 3D, Nhạc Chant sôi động, 11 game trí tuệ, phát âm AI bản xứ và theo dõi học sinh cho giáo viên.",
+    title: "SIÊU TRÍ NHỚ TỪ VỰNG THCS (6 - 9)",
+    description: "Học từ vựng Tiếng Anh Lớp 6 - 9 (Global Success) siêu tốc qua Flashcard 3D, Nhạc Chant sôi động, 11 game trí tuệ, phát âm AI bản xứ và theo dõi học sinh cho giáo viên. (Khối 10 - 12 dành riêng cho Admin).",
     image: "/trolygvnn.jpg",
     url: "/hocsinh",
     category: "HỌC TỪ VỰNG & LUYỆN THI",
-    levelBadge: "TIỆN ÍCH",
+    levelBadge: "THCS",
     badge: "MIỄN PHÍ 100%",
     active: true,
     featured: true,

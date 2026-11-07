@@ -16973,7 +16973,26 @@ const ALL_VOCABULARY_DATA = {
   ]
 };
 
-// Cấu hình khối lớp mặc định theo Học sinh đăng nhập hoặc THCS Đồng Yên (mặc định Khối 8 hoặc 6)
+// Hàm nhận diện Quản trị viên hệ thống để mở khóa học Khối 10, 11, 12
+function _isSystemAdmin() {
+  try {
+    if (typeof window === 'undefined') return false;
+    const _urlParams = new URLSearchParams(window.location.search);
+    if (_urlParams.get('admin') === '1' || _urlParams.get('role') === 'admin') return true;
+    if (sessionStorage.getItem('ENG_ADMIN_AUTH') === 'true' || 
+        sessionStorage.getItem('admin_authenticated') === 'true' || 
+        localStorage.getItem('ADMIN_AUTH') === 'true' ||
+        sessionStorage.getItem('gvai_admin_unlocked') === 'true') return true;
+    const _stuRaw = localStorage.getItem('ENG_STUDENT_PROFILE');
+    if (_stuRaw) {
+      const _stu = JSON.parse(_stuRaw);
+      if (_stu && (_stu.role === 'admin' || (_stu.username || '').toLowerCase() === 'admin')) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+// Cấu hình khối lớp mặc định theo Học sinh THCS (Khối 6, 7, 8, 9 - Mặc định Khối 8)
 let CURRENT_GRADE = "8";
 try {
   const _urlParams = new URLSearchParams(window.location.search);
@@ -17003,15 +17022,25 @@ try {
   }
 } catch (e) {}
 
+// NẾU KHÔNG PHẢI ADMIN: BẢO VỆ CHẶT CHẼ, TẠM ẨN KHỐI 10-11-12, CHỈ DÙNG CÔNG KHAI KHỐI THCS (6-9)
+if (!['6', '7', '8', '9'].includes(CURRENT_GRADE) && !_isSystemAdmin()) {
+  CURRENT_GRADE = "8";
+}
+
 if (!ALL_VOCABULARY_DATA[CURRENT_GRADE]) CURRENT_GRADE = "8";
 
 // Biến tương thích ngược cho các module hiện tại
 let VOCABULARY_DATA = ALL_VOCABULARY_DATA[CURRENT_GRADE];
 
-// Hàm chuyển đổi lớp linh hoạt
+// Hàm chuyển đổi lớp linh hoạt (Chặn người dùng thường vào lớp 10, 11, 12)
 function switchVocabGrade(newGrade) {
   if (!ALL_VOCABULARY_DATA[newGrade]) {
     console.warn("Khối lớp không tồn tại:", newGrade);
+    return false;
+  }
+  const isTHPT = ['10', '11', '12'].includes(String(newGrade));
+  if (isTHPT && !_isSystemAdmin()) {
+    console.warn("Khối THPT (Lớp 10, 11, 12) hiện tạm khóa, chỉ dành cho Admin.");
     return false;
   }
   CURRENT_GRADE = String(newGrade);

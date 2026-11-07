@@ -4,6 +4,30 @@
 // HỆ THỐNG ÔN LUYỆN TỪ VỰNG TIẾNG ANH - THẦY ĐINH VĂN THÀNH (0915.213717)
 // Đã lược bỏ tính năng bắn pháo hoa theo yêu cầu
 // =========================================================================
+// ==================== HÀM KIỂM TRA QUYỀN QUẢN TRỊ VIÊN (ADMIN) ====================
+function checkIsAdmin() {
+  try {
+    if (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) {
+      const s = STUDENT_SYSTEM.currentStudent;
+      if (s.role === 'admin' || (s.username || '').toLowerCase() === 'admin' || (s.fullName || '').toLowerCase().includes('đinh văn thành')) {
+        return true;
+      }
+    }
+    if (sessionStorage.getItem('ENG_ADMIN_AUTH') === 'true' || 
+        sessionStorage.getItem('admin_authenticated') === 'true' || 
+        localStorage.getItem('ADMIN_AUTH') === 'true' ||
+        sessionStorage.getItem('gvai_admin_unlocked') === 'true') {
+      return true;
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin') === '1' || urlParams.get('role') === 'admin') {
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+window.checkIsAdmin = checkIsAdmin;
+
 window.launchConfetti = function() {};
 window.confetti = function() {};
 
@@ -7358,6 +7382,8 @@ let CURRENT_SEMESTER_FILTER = 'all';
 
 function getActiveStudentGrade() {
 
+  const isAdmin = checkIsAdmin();
+
   try {
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -7365,6 +7391,8 @@ function getActiveStudentGrade() {
     const qGrade = urlParams.get('grade');
 
     if (qGrade && ['6','7','8','9','10','11','12'].includes(qGrade)) {
+
+      if (['10','11','12'].includes(qGrade) && !isAdmin) return "8";
 
       return qGrade;
 
@@ -7378,11 +7406,25 @@ function getActiveStudentGrade() {
 
         const m = String(s.className).match(/^(\d{1,2})/);
 
-        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) return m[1];
+        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) {
+
+          if (['10','11','12'].includes(m[1]) && !isAdmin) return "8";
+
+          return m[1];
+
+        }
 
       }
 
-      if (s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) return String(s.grade);
+      if (s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) {
+
+        const gStr = String(s.grade);
+
+        if (['10','11','12'].includes(gStr) && !isAdmin) return "8";
+
+        return gStr;
+
+      }
 
     }
 
@@ -7402,17 +7444,33 @@ function getActiveStudentGrade() {
 
         const m = String(s.className).match(/^(\d{1,2})/);
 
-        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) return m[1];
+        if (m && ['6','7','8','9','10','11','12'].includes(m[1])) {
+
+          if (['10','11','12'].includes(m[1]) && !isAdmin) return "8";
+
+          return m[1];
+
+        }
 
       }
 
-      if (s && s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) return String(s.grade);
+      if (s && s.grade && ['6','7','8','9','10','11','12'].includes(String(s.grade))) {
+
+        const gStr = String(s.grade);
+
+        if (['10','11','12'].includes(gStr) && !isAdmin) return "8";
+
+        return gStr;
+
+      }
 
     }
 
     const savedGrade = localStorage.getItem('ENG_SELECTED_GRADE');
 
     if (savedGrade && ['6','7','8','9','10','11','12'].includes(savedGrade)) {
+
+      if (['10','11','12'].includes(savedGrade) && !isAdmin) return "8";
 
       return savedGrade;
 
@@ -7438,11 +7496,39 @@ function initGradePills() {
 
 
 
+  const isAdmin = checkIsAdmin();
+
   const studentGrade = getActiveStudentGrade();
 
   const student = (typeof STUDENT_SYSTEM !== 'undefined' && STUDENT_SYSTEM.currentStudent) || null;
 
-  const isAdmin = student && (student.role === 'admin' || (student.username || '').toLowerCase() === 'admin');
+
+
+  // NẾU KHÔNG PHẢI ADMIN VÀ ĐANG Ở LỚP 10-12 THÌ TỰ ĐỘNG CHUYỂN VỀ LỚP 8 THCS
+
+  if (!isAdmin && ['10', '11', '12'].includes(String(CURRENT_GRADE))) {
+
+    CURRENT_GRADE = '8';
+
+    if (typeof ALL_VOCABULARY_DATA !== 'undefined' && ALL_VOCABULARY_DATA['8']) {
+
+      VOCABULARY_DATA = ALL_VOCABULARY_DATA['8'];
+
+    }
+
+    try { localStorage.setItem('ENG_SELECTED_GRADE', '8'); } catch (e) {}
+
+  }
+
+
+
+  // Cập nhật hiển thị các tùy chọn khối lớp Admin (10, 11, 12) trong các modal đăng ký / hồ sơ
+
+  document.querySelectorAll('.admin-only-grade').forEach(opt => {
+
+    opt.style.display = isAdmin ? 'block' : 'none';
+
+  });
 
 
 
@@ -7526,9 +7612,9 @@ function initGradePills() {
 
 
 
-  // Trường hợp Chưa đăng nhập học sinh hoặc là Admin: Hiển thị đầy đủ để chọn
+  // Trường hợp Chưa đăng nhập học sinh hoặc là Admin:
 
-  // Nhóm 1: CẤP THCS (Lớp 6, 7, 8, 9)
+  // Nhóm 1: CẤP THCS (Lớp 6, 7, 8, 9) - DÙNG CÔNG KHAI TOÀN BỘ HỌC SINH
 
   const thcsWrapper = document.createElement('div');
 
@@ -7564,49 +7650,55 @@ function initGradePills() {
 
 
 
-  // Divider
+  // CHỈ HIỂN THỊ CẤP THPT (LỚP 10, 11, 12) KHI ĐÃ ĐĂNG NHẬP ADMIN
 
-  const divider = document.createElement('div');
+  if (isAdmin) {
 
-  divider.className = 'grade-group-divider';
+    const divider = document.createElement('div');
 
-  container.appendChild(divider);
+    divider.className = 'grade-group-divider';
 
-
-
-  // Nhóm 2: CẤP THPT (Lớp 10, 11, 12)
-
-  const thptWrapper = document.createElement('div');
-
-  thptWrapper.className = 'grade-group-block';
-
-  thptWrapper.innerHTML = '<span class="grade-group-label">🎓 THPT:</span>';
+    container.appendChild(divider);
 
 
 
-  const thptGrades = ["10", "11", "12"];
+    const thptWrapper = document.createElement('div');
 
-  thptGrades.forEach(g => {
+    thptWrapper.className = 'grade-group-block';
 
-    const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[g]) || { name: `Lớp ${g}`, icon: "🎓" };
+    thptWrapper.style.cssText = 'background: rgba(234, 179, 8, 0.12); border-color: rgba(234, 179, 8, 0.4);';
 
-    const btn = document.createElement('button');
+    thptWrapper.innerHTML = '<span class="grade-group-label" style="color: #facc15; font-weight: 900;">👑 THPT (Admin VIP):</span>';
 
-    btn.className = `grade-pill ${g === CURRENT_GRADE ? 'active' : ''}`;
 
-    btn.dataset.grade = g;
 
-    btn.innerHTML = `<span>${meta.name}</span>`;
+    const thptGrades = ["10", "11", "12"];
 
-    btn.title = `Chương trình Tiếng Anh ${meta.name} - Sách Global Success`;
+    thptGrades.forEach(g => {
 
-    btn.addEventListener('click', () => switchGrade(g, true));
+      const meta = (typeof GRADE_METADATA !== 'undefined' && GRADE_METADATA[g]) || { name: `Lớp ${g}`, icon: "🎓" };
 
-    thptWrapper.appendChild(btn);
+      const btn = document.createElement('button');
 
-  });
+      btn.className = `grade-pill ${g === CURRENT_GRADE ? 'active' : ''}`;
 
-  container.appendChild(thptWrapper);
+      btn.dataset.grade = g;
+
+      btn.innerHTML = `<span>⭐ ${meta.name}</span>`;
+
+      btn.title = `Chương trình Tiếng Anh ${meta.name} - Dành riêng cho Quản trị viên Thầy Đinh Thành`;
+
+      btn.style.cssText = g === CURRENT_GRADE ? 'background: linear-gradient(135deg, #d97706, #b45309); border-color: #f59e0b; color: white;' : 'border-color: rgba(234, 179, 8, 0.3);';
+
+      btn.addEventListener('click', () => switchGrade(g, true));
+
+      thptWrapper.appendChild(btn);
+
+    });
+
+    container.appendChild(thptWrapper);
+
+  }
 
 
 
@@ -7953,6 +8045,26 @@ function switchGrade(gradeStr, shouldSpeak = false) {
     console.warn("Khối lớp không hợp lệ:", gradeStr);
 
     return;
+
+  }
+
+
+
+  const isTHPT = ['10', '11', '12'].includes(String(gradeStr));
+
+  if (isTHPT && !checkIsAdmin()) {
+
+    alert("🔒 Chương trình Tiếng Anh Lớp 10, 11, 12 hiện đang tạm khóa (chỉ dành riêng cho Quản trị viên Thầy Đinh Thành).\n\nCác em học sinh thân mến, vui lòng chọn khối THCS (Lớp 6, 7, 8, 9) để học tập nhé!");
+
+    if (['10', '11', '12'].includes(String(CURRENT_GRADE))) {
+
+      gradeStr = "8";
+
+    } else {
+
+      return;
+
+    }
 
   }
 
@@ -10946,7 +11058,17 @@ const ADMIN_SYSTEM = {
 
 
 
-    if (u === 'admin' && p === 'Tienganh123@') {
+    if (u === 'admin' && (p === 'Tienganh123@' || p === 'Thaythanh2026@' || p === 'Thaythanh2026')) {
+
+      try {
+
+        sessionStorage.setItem('ENG_ADMIN_AUTH', 'true');
+
+        sessionStorage.setItem('admin_authenticated', 'true');
+
+        localStorage.setItem('ADMIN_AUTH', 'true');
+
+      } catch (err) {}
 
       STUDENT_SYSTEM.currentStudent = {
 
@@ -10960,7 +11082,7 @@ const ADMIN_SYSTEM = {
 
         className: 'Quản Trị Viên',
 
-        grade: CURRENT_GRADE || '12',
+        grade: CURRENT_GRADE || '8',
 
         school: 'Trường THCS Đồng Yên',
 
@@ -10986,7 +11108,11 @@ const ADMIN_SYSTEM = {
 
       this.openAdminModalDirect();
 
-      showAppToast('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)! Đăng nhập thành công.', 'success');
+      if (typeof initGradePills === 'function') initGradePills();
+
+      document.querySelectorAll('.admin-only-grade').forEach(opt => { opt.style.display = 'block'; });
+
+      showAppToast('👑 Kính chào Thầy giáo Đinh Văn Thành (Admin)! Đã mở khóa toàn bộ khối 6 - 12 (kèm THPT 10, 11, 12).', 'success');
 
     } else {
 

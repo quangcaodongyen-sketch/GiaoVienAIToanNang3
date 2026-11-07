@@ -394,39 +394,49 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
   // TỰ ĐỘNG KHÓA KHỐI LỚP CHUẨN XÁC THEO LỚP CỦA HỌC SINH (VD: 8A1 -> LỚP 8, 6A2 -> LỚP 6)
 
+  // Nhận diện Quản trị viên (Admin) để mở khóa Lớp 10, 11, 12
+  const isAdmin = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    if (currentStudent && (currentStudent.role === 'admin' || (currentStudent.username || '').toLowerCase() === 'admin')) return true;
+    try {
+      if (sessionStorage.getItem('ENG_ADMIN_AUTH') === 'true' || 
+          localStorage.getItem('ADMIN_AUTH') === 'true' || 
+          sessionStorage.getItem('admin_authenticated') === 'true' ||
+          sessionStorage.getItem('gvai_admin_unlocked') === 'true') return true;
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === '1' || urlParams.get('role') === 'admin') return true;
+    } catch (e) {}
+    return false;
+  }, [currentStudent]);
+
   const deduceStudentGrade = (): number => {
-
+    let g = 8;
     if (currentStudent?.grade && typeof currentStudent.grade === 'number' && currentStudent.grade >= 6 && currentStudent.grade <= 12) {
-
-      return currentStudent.grade;
-
-    }
-
-    if (currentStudent?.className) {
-
+      g = currentStudent.grade;
+    } else if (currentStudent?.className) {
       const m = String(currentStudent.className).match(/^(\d{1,2})/);
-
       if (m && m[1]) {
-
-        const g = parseInt(m[1], 10);
-
-        if (g >= 6 && g <= 12) return g;
-
+        const parsed = parseInt(m[1], 10);
+        if (parsed >= 6 && parsed <= 12) g = parsed;
       }
-
     }
-
-    return 8;
-
+    // Học sinh thông thường chỉ được học khối THCS (6, 7, 8, 9), mặc định lớp 8
+    if (!isAdmin && g >= 10) return 8;
+    return g;
   };
-
-
 
   const studentGrade = deduceStudentGrade();
 
   const [selectedGrade, setSelectedGrade] = useState<number>(studentGrade);
 
   const [allowGradeSwitch, setAllowGradeSwitch] = useState<boolean>(false);
+
+  // Bảo vệ tự động: Nếu không phải Admin mà đang ở Lớp 10-12 thì tự chuyển về Lớp 8
+  useEffect(() => {
+    if (!isAdmin && selectedGrade >= 10) {
+      setSelectedGrade(8);
+    }
+  }, [isAdmin, selectedGrade]);
 
 
 
@@ -590,7 +600,9 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
     const params = new URLSearchParams();
 
-    params.set('grade', String(selectedGrade));
+    const effectiveGrade = (!isAdmin && selectedGrade >= 10) ? 8 : selectedGrade;
+
+    params.set('grade', String(effectiveGrade));
 
     params.set('unit', String(selectedUnit));
 
@@ -598,11 +610,19 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
     params.set('embedded', '1');
 
+    if (isAdmin) {
+
+      params.set('admin', '1');
+
+    }
+
     if (currentStudent) {
 
       params.set('name', currentStudent.name);
 
       params.set('class', currentStudent.className);
+
+      if (currentStudent.id) params.set('studentId', currentStudent.id);
 
     }
 
@@ -2003,11 +2023,11 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
           </div>
         )}
 
-        {/* Khung chuyển khối lớp mở rộng khi cần */}
+        {/* Khung chuyển khối lớp mở rộng khi cần (Chỉ công khai khối THCS 6-9, Khối 10-12 chỉ cho Admin) */}
         {!currentStudent && allowGradeSwitch && (
           <div className="p-3 rounded-2xl bg-emerald-50/80 border-2 border-emerald-300 flex items-center gap-2 flex-wrap text-xs animate-in fade-in">
-            <span className="font-black text-emerald-950">Chọn khối lớp:</span>
-            {[6, 7, 8, 9, 10, 11, 12].map(g => (
+            <span className="font-black text-emerald-950">🏫 Khối THCS:</span>
+            {[6, 7, 8, 9].map(g => (
               <button
                 key={g}
                 type="button"
@@ -2026,6 +2046,30 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
                 Lớp {g}
               </button>
             ))}
+            {isAdmin && (
+              <>
+                <span className="font-black text-amber-700 ml-2">👑 THPT (Admin VIP):</span>
+                {[10, 11, 12].map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => {
+                      setSelectedGrade(g);
+                      setSelectedUnit(1);
+                      setCardIndex(0);
+                      setIsFlipped(false);
+                    }}
+                    className={`px-3 py-1.5 rounded-xl font-black transition cursor-pointer ${
+                      selectedGrade === g
+                        ? 'bg-gradient-to-r from-amber-600 to-yellow-600 text-white shadow-md border-2 border-amber-300 scale-105'
+                        : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border-2 border-amber-300'
+                    }`}
+                  >
+                    ⭐ Lớp {g}
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -4372,7 +4416,7 @@ export const UnifiedVocabPortal: React.FC<UnifiedVocabPortalProps> = ({
 
               key={iframeKey}
 
-              src={`/tuvung/index.html?grade=${selectedGrade || currentStudent?.grade || 8}&class=${encodeURIComponent(currentStudent?.className || '')}&name=${encodeURIComponent(currentStudent?.name || '')}&studentId=${encodeURIComponent(liveStudent?.id || currentStudent?.id || '')}&embedded=1&v=${Date.now()}`}
+              src={`/tuvung/index.html?grade=${(!isAdmin && (selectedGrade || currentStudent?.grade || 8) >= 10) ? 8 : (selectedGrade || currentStudent?.grade || 8)}&class=${encodeURIComponent(currentStudent?.className || '')}&name=${encodeURIComponent(currentStudent?.name || '')}&studentId=${encodeURIComponent(liveStudent?.id || currentStudent?.id || '')}&embedded=1${isAdmin ? '&admin=1' : ''}&v=${Date.now()}`}
 
               title="App Học Từ Vựng Tiếng Anh (Global Success)"
 
