@@ -8150,15 +8150,15 @@ const TEACHER_CHAT = {
 
     this.loadMessages();
 
-    // AUTO-INJECT LATEST EXAM ANNOUNCEMENT FROM THẦY THÀNH (CHIỀU MAI 02/11/2026)
-    const hasExamNotice = this.messages && this.messages.some(m => m.id === 'MSG_EXAM_GK1_20261102' || (m.text && m.text.includes('02/11/2026')));
-    if (!hasExamNotice && Array.isArray(this.messages)) {
+    // AUTO-INJECT WEEKEND ENCOURAGEMENT MESSAGE (07/11 - 08/11/2026)
+    const hasWeekendNotice = this.messages && this.messages.some(m => m.id === 'MSG_WEEKEND_20261107' || (m.text && m.text.includes('07/11/2026')));
+    if (!hasWeekendNotice && Array.isArray(this.messages)) {
       this.messages.push({
-        id: 'MSG_EXAM_GK1_20261102',
+        id: 'MSG_WEEKEND_20261107',
         sender: 'teacher',
         teacherName: 'Thầy Đinh Văn Thành',
-        text: '📢 [THÔNG BÁO QUAN TRỌNG TỪ THẦY THÀNH - LỊCH THI CHIỀU MAI 02/11/2026]: Chiều ngày mai (Thứ Hai, ngày 02/11/2026), toàn khối sẽ tiến hành làm bài kiểm tra Giữa học kỳ 1 môn Tiếng Anh! Thầy dặn tất cả các em: 1) Ôn kỹ từ vựng trọng tâm Unit 1, Unit 2, Unit 3 (chiếm 50% đề thi). 2) Hoàn thành toàn bộ câu hỏi trắc nghiệm và đọc hiểu trong Đề cương ôn tập GK1. 3) Làm thử 1 - 2 đề minh họa tại mục "Đề Giữa Kỳ / Cuối Kỳ" trên web để rèn phản xạ bấm giờ. 4) BẮT BUỘC mang ít nhất 2 bút chì 2B gọt sẵn và hòn tẩy mềm sạch để tô phiếu trắc nghiệm (tuyệt đối không dùng bút mực tô trắc nghiệm). Chúc các em bình tĩnh, tự tin và đạt điểm 9, 10 rực rỡ! 🌟',
-        timestamp: '08:30 01/11/2026',
+        text: '📢 [THÔNG BÁO TỪ THẦY THÀNH - THI ĐUA HỌC TẬP NGÀY NGHỈ CUỐI TUẦN 07/11 & 08/11/2026]: Các em học sinh thân mến ! Cuối tuần là dịp tuyệt vời để chúng ta vừa nghỉ ngơi vừa rèn luyện thêm vốn từ vựng Tiếng Anh. Thầy Thành thưởng nóng +30 điểm chuyên cần cuối tuần cho mỗi bạn vào học và ôn luyện hôm nay. Chúc các em cuối tuần vui vẻ, tự giác học bài và tích lũy thật nhiều điểm thưởng trên Bảng Vàng nhé! 🌟',
+        timestamp: '08:00 07/11/2026',
         read: false
       });
       this.saveMessages();

@@ -269,6 +269,45 @@ export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmap
       vocabMultiplier: 2,
       vocabPointsPerUnit: 20,
       rules: ['📖 Đọc hiểu đoạn văn SGK Unit 4', '✍️ Viết đoạn văn mẫu Band 9-10', '⭐ Thưởng +25 điểm thi đua']
+    },
+    {
+      date: '2026-11-06',
+      badge: '🔥 TĂNG TỐC VỀ ĐÍCH',
+      title: 'Tăng Tốc Về Đích Cuối Tuần Unit 4',
+      description: 'Hoàn thành bài tập Looking Back & Project Unit 4, củng cố toàn diện vốn từ vựng chuẩn bị cho ngày nghỉ cuối tuần.',
+      points: 20,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['📖 Hoàn thành Looking Back Unit 4', '⭐ Thưởng nóng +20 điểm chuyên cần']
+    },
+    {
+      date: '2026-11-07',
+      badge: '🎉 THI ĐUA CUỐI TUẦN',
+      title: 'Khuyến Mại Ngày Nghỉ Cuối Tuần: Thưởng Nóng +30 Điểm Chuyên Cần!',
+      description: 'Thầy giáo Đinh Văn Thành đôn đốc & khuyến khích các em học sinh tận dụng ngày nghỉ cuối tuần ôn luyện từ vựng Tiếng Anh, rèn phản xạ game 3D. Thưởng nóng +30 điểm chuyên cần và +2 điểm công tâm cho mỗi câu đúng!',
+      points: 30,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '⭐ Vào học Thứ Bảy (07/11): Tặng nóng +30 điểm chuyên cần cuối tuần',
+        '🎯 Học từ vựng & mini-game: +2 điểm/câu đúng thực tế (tự động 100%, công tâm chính xác)',
+        '⏱️ Chuyên cần tích lũy: Cứ mỗi 5 phút học bài thực tế nhận thêm +5 điểm',
+        '🏆 Tuyên dương Bảng Vàng học sinh chăm chỉ ngày nghỉ cuối tuần'
+      ]
+    },
+    {
+      date: '2026-11-08',
+      badge: '🌟 CHỦ NHẬT VỀ ĐÍCH',
+      title: 'Chủ Nhật Về Đích: Thưởng Lớn +35 Điểm Chuyên Cần & Tổng Hợp Bảng Vàng!',
+      description: 'Đợt thi đua bứt phá ngày Chủ Nhật: Ôn tập lại từ khó, làm bài test 15 phút và tổng kết điểm chuyên cần tuần.',
+      points: 35,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '⭐ Vào học Chủ Nhật (08/11): Thưởng lớn +35 điểm chuyên cần ngày nghỉ',
+        '📝 Làm bài test 15 phút hoặc ôn lại từ khó: Nhân đôi điểm thi đua',
+        '🎖️ Tổng kết Bảng Vàng chuyên cần tuần và trao thưởng vinh danh'
+      ]
     }
   ];
 
@@ -317,6 +356,54 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
   const dayName = daysOfWeek[targetDate.getDay()] || 'Hôm nay';
   const dateDisplay = `${dayName}, ngày ${targetDate.getDate().toString().padStart(2, '0')}/${(targetDate.getMonth() + 1).toString().padStart(2, '0')}/${targetDate.getFullYear()}`;
   const expiresAtDisplay = `Hiệu lực đến 23:59:59 đêm nay (Hết ngày tự động hủy bỏ để đón chương trình ngày mới)`;
+
+  // NGÀY NGHỈ CUỐI TUẦN (HÔM NAY THỨ BẢY 07/11/2026) - ĐÔN ĐỐC & KHUYẾN MẠI CHUYÊN CẦN (+30Đ)
+  if (todayStr === '2026-11-07') {
+    return {
+      points: 30, // Vào học ngày nghỉ cuối tuần tặng ngay +30 điểm chuyên cần!
+      isPromoToday: true,
+      promoBadge: '🎉 THI ĐUA CUỐI TUẦN - TẶNG +30Đ',
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      title: '🎉 Khuyến Mại Ngày Nghỉ Cuối Tuần: Vào Học Tặng +30 Điểm Chuyên Cần!',
+      bannerText: 'Vào học ngày nghỉ +30đ chuyên cần, cứ 5 phút ôn luyện +5đ, làm đúng mỗi câu +2đ công tâm!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Vào học Thứ Bảy hôm nay: Thưởng nóng +30 điểm chuyên cần cuối tuần',
+        '⏱️ Chuyên cần tích lũy: Cứ mỗi 5 phút ôn luyện thực sự nhận ngay +5 điểm',
+        '🎯 Ôn luyện từ vựng chuẩn Bộ: Làm đúng mỗi câu +2 điểm (Flashcard 3D, Nhạc Chant, Luyện nghe, Xếp chữ)',
+        '🧠 Tự giác học bài ngày nghỉ, tích lũy điểm thi đua công tâm, chính xác 100%',
+        '⏰ Áp dụng trọn vẹn ngày Thứ Bảy 07/11/2026 đến 23:59:59 đêm nay'
+      ],
+      nextDayPromoPreview: '🌟 NGÀY MAI CHỦ NHẬT (08/11): CHỦ NHẬT VỀ ĐÍCH — Thưởng lớn +35đ chuyên cần và chốt Top Bảng Vàng tuần!',
+      todayStr
+    };
+  }
+
+  // NGÀY NGHỈ CHỦ NHẬT (08/11/2026) - CHỦ NHẬT VỀ ĐÍCH & TỔNG HỢP BẢNG VÀNG (+35Đ)
+  if (todayStr === '2026-11-08') {
+    return {
+      points: 35,
+      isPromoToday: true,
+      promoBadge: '🌟 CHỦ NHẬT VỀ ĐÍCH - TẶNG +35Đ',
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      title: '🌟 Khuyến Mại Chủ Nhật: Thưởng Lớn +35 Điểm Chuyên Cần & Tổng Hợp Bảng Vàng!',
+      bannerText: 'Chủ Nhật về đích bứt phá: Vào học +35đ, ôn bài test 15 phút nhân đôi điểm thi đua!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Vào học Chủ Nhật (08/11): Tặng ngay +35 điểm chuyên cần',
+        '📝 Hoàn thành bài test 15 phút hoặc ôn lại từ khó: Nhân đôi điểm thi đua',
+        '⏱️ Cứ 5 phút học bài nhận thêm +5 điểm chuyên cần',
+        '🏆 Tổng hợp Bảng Vàng và trao cúp thi đua tuần xuất sắc',
+        '⏰ Áp dụng duy nhất Chủ Nhật 08/11/2026 đến 23:59:59'
+      ],
+      nextDayPromoPreview: '🚀 NGÀY MAI THỨ HAI (09/11): KHỞI ĐẦU TUẦN MỚI — Chào đón tuần học mới tràn đầy năng lượng!',
+      todayStr
+    };
+  }
 
   // NGÀY THI CHÍNH THỨC & KHUYẾN MẠI ĐẶC BIỆT TRƯA NAY (02/11/2026)
   if (todayStr === '2026-11-02') {
