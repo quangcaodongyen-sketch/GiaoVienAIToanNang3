@@ -1,0 +1,22 @@
+{
+  "name": "Vocab Master Pro - Học Từ Vựng Tiếng Anh 6 - 12",
+  "short_name": "Vocab Master",
+  "description": "Hệ thống học từ vựng Tiếng Anh 6 - 12 Global Success siêu tốc qua Flashcard 3D, Nhạc Chant và 11 game trí tuệ của Thầy Đinh Văn Thành",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080d1a",
+  "theme_color": "#0284c7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
