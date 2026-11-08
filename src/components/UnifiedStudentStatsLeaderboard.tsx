@@ -574,7 +574,7 @@ export const UnifiedStudentStatsLeaderboard: React.FC<UnifiedStudentStatsLeaderb
 
   const actualStudyingStudents = useMemo(() => {
 
-    return leaderboard.filter(s => s.isActuallyStudying || s.hasEntered || (s.totalMeritPoints && s.totalMeritPoints >= 15) || (s.testsCount && s.testsCount > 0));
+    return leaderboard.filter(s => s.isActuallyStudying || s.hasEntered || (s.totalMeritPoints && s.totalMeritPoints > 0) || (s.testsCount && s.testsCount > 0));
 
   }, [leaderboard]);
 

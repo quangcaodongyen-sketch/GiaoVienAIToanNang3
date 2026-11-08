@@ -110,7 +110,8 @@ export default async function handler(req, res) {
           studentMap.set(k, { ...s });
         });
 
-        // Merge tung hoc sinh incoming: BAO TOAN DIEM CAO NHAT (MATH.MAX), TUYET DOI KHONG HA DIEM
+        // Merge tung hoc sinh incoming: BAO TOAN DIEM CAO NHAT (MATH.MAX), TUYET DOI KHONG HA DIEM HOC SINH HOC THAT
+        // VOI HOC SINH CHUA VAO HOC: CHO VE 0 DIEM THEO CHI DAO CUA THAY DINH THANH
         incomingStudents.forEach(incoming => {
           if (!incoming) return;
           const k = getStudentKey(incoming) || incoming.id;
@@ -119,34 +120,62 @@ export default async function handler(req, res) {
           if (!existing) {
             studentMap.set(k, { ...incoming });
           } else {
-            // Bao toan diem cao nhat
-            existing.attendancePoints = Math.max(existing.attendancePoints || 0, incoming.attendancePoints || 0);
-            existing.vocabPoints = Math.max(existing.vocabPoints || 0, incoming.vocabPoints || 0);
-            existing.examBonusPoints = Math.max(existing.examBonusPoints || 0, incoming.examBonusPoints || 0);
-            existing.practicePoints = Math.max(existing.practicePoints || 0, incoming.practicePoints || 0);
-            existing.timePoints = Math.max(existing.timePoints || 0, incoming.timePoints || 0);
-            existing.studyTimeMinutes = Math.max(existing.studyTimeMinutes || 0, incoming.studyTimeMinutes || 0);
-            existing.teacherBonus = Math.max(existing.teacherBonus || 0, incoming.teacherBonus || 0);
-            existing.encouragementBonus = Math.max(existing.encouragementBonus ?? 15, incoming.encouragementBonus ?? 15);
-            existing.vocabUnitsCompletedCount = Math.max(existing.vocabUnitsCompletedCount || 0, incoming.vocabUnitsCompletedCount || 0);
-            existing.studyProgressPercent = Math.max(existing.studyProgressPercent || 0, incoming.studyProgressPercent || 0);
-
-            const calcSum = (
-              (existing.attendancePoints || 0) +
-              (existing.vocabPoints || 0) +
-              (existing.examBonusPoints || 0) +
-              (existing.practicePoints || 0) +
-              (existing.timePoints || 0) +
-              (existing.encouragementBonus || 15) +
-              (existing.teacherBonus || 0)
+            const hasActivity = Boolean(
+              (incoming.vocabPoints || 0) > 0 ||
+              (incoming.practicePoints || 0) > 0 ||
+              (incoming.examBonusPoints || 0) > 0 ||
+              (incoming.vocabUnitsCompletedCount || 0) > 0 ||
+              (existing.vocabPoints || 0) > 0 ||
+              (existing.practicePoints || 0) > 0 ||
+              (existing.examBonusPoints || 0) > 0 ||
+              (existing.vocabUnitsCompletedCount || 0) > 0
             );
 
-            existing.totalMeritPoints = Math.max(
-              existing.totalMeritPoints || 0,
-              incoming.totalMeritPoints || 0,
-              calcSum,
-              15
-            );
+            if ((incoming.forceZeroReset || incoming.totalMeritPoints === 0) && !hasActivity) {
+              existing.totalMeritPoints = 0;
+              existing.attendancePoints = 0;
+              existing.vocabPoints = 0;
+              existing.practicePoints = 0;
+              existing.examBonusPoints = 0;
+              existing.timePoints = 0;
+              existing.studyTimeMinutes = 0;
+              existing.encouragementBonus = 0;
+              existing.teacherBonus = 0;
+              existing.vocabUnitsCompletedCount = 0;
+              existing.studyProgressPercent = 0;
+            } else {
+              // Bao toan diem cao nhat cho hoc sinh hoc that
+              existing.attendancePoints = Math.max(existing.attendancePoints || 0, incoming.attendancePoints || 0);
+              existing.vocabPoints = Math.max(existing.vocabPoints || 0, incoming.vocabPoints || 0);
+              existing.examBonusPoints = Math.max(existing.examBonusPoints || 0, incoming.examBonusPoints || 0);
+              existing.practicePoints = Math.max(existing.practicePoints || 0, incoming.practicePoints || 0);
+              existing.timePoints = Math.max(existing.timePoints || 0, incoming.timePoints || 0);
+              existing.studyTimeMinutes = Math.max(existing.studyTimeMinutes || 0, incoming.studyTimeMinutes || 0);
+              existing.teacherBonus = Math.max(existing.teacherBonus || 0, incoming.teacherBonus || 0);
+              existing.encouragementBonus = Math.max(existing.encouragementBonus ?? 0, incoming.encouragementBonus ?? 0);
+              existing.vocabUnitsCompletedCount = Math.max(existing.vocabUnitsCompletedCount || 0, incoming.vocabUnitsCompletedCount || 0);
+              existing.studyProgressPercent = Math.max(existing.studyProgressPercent || 0, incoming.studyProgressPercent || 0);
+
+              const calcSum = (
+                (existing.attendancePoints || 0) +
+                (existing.vocabPoints || 0) +
+                (existing.examBonusPoints || 0) +
+                (existing.practicePoints || 0) +
+                (existing.timePoints || 0) +
+                (existing.encouragementBonus || 0) +
+                (existing.teacherBonus || 0)
+              );
+
+              if (hasActivity) {
+                existing.totalMeritPoints = Math.max(
+                  existing.totalMeritPoints || 0,
+                  incoming.totalMeritPoints || 0,
+                  calcSum
+                );
+              } else {
+                existing.totalMeritPoints = incoming.totalMeritPoints !== undefined ? incoming.totalMeritPoints : (existing.totalMeritPoints || 0);
+              }
+            }
 
             if (incoming.password && !existing.password) existing.password = incoming.password;
             if (incoming.dob && !existing.dob) existing.dob = incoming.dob;
@@ -165,13 +194,20 @@ export default async function handler(req, res) {
 
         // Dinh dang toi uu gon nhe cho tat ca hoc sinh de dam bao toan bo 390+ em luon vua van <100KB
         const mergedStudents = Array.from(studentMap.values()).map(s => {
+          const hasActivity = Boolean(
+            (s.vocabPoints || 0) > 0 ||
+            (s.practicePoints || 0) > 0 ||
+            (s.examBonusPoints || 0) > 0 ||
+            (s.vocabUnitsCompletedCount || 0) > 0
+          );
+          const pts = hasActivity ? Math.max(s.totalMeritPoints || 0, 0) : (s.totalMeritPoints || 0);
           const c = {
             id: s.id,
             studentCode: s.studentCode,
             name: s.name,
             className: s.className,
             grade: s.grade || 8,
-            totalMeritPoints: Math.max(s.totalMeritPoints || 15, 15)
+            totalMeritPoints: pts
           };
           if (s.vocabPoints) c.vocabPoints = s.vocabPoints;
           if (s.practicePoints) c.practicePoints = s.practicePoints;
@@ -180,7 +216,7 @@ export default async function handler(req, res) {
           if (s.studyTimeMinutes) c.studyTimeMinutes = s.studyTimeMinutes;
           if (s.timePoints) c.timePoints = s.timePoints;
           if (s.teacherBonus) c.teacherBonus = s.teacherBonus;
-          if (s.encouragementBonus && s.encouragementBonus !== 15) c.encouragementBonus = s.encouragementBonus;
+          if (s.encouragementBonus) c.encouragementBonus = s.encouragementBonus;
           if (s.vocabUnitsCompletedCount) c.vocabUnitsCompletedCount = s.vocabUnitsCompletedCount;
           if (s.studyProgressPercent) c.studyProgressPercent = s.studyProgressPercent;
           if (s.lastLoginDate) c.lastLoginDate = s.lastLoginDate;
