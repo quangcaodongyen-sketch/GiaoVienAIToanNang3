@@ -1792,7 +1792,7 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
               Hiện Chưa Có Mã Đề Kiểm Tra Cho Mục Này (0 Mã Đề)
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Hệ thống hiện tại lưu trữ <b>đầy đủ các mã đề chuẩn Giữa Học Kỳ 1 toàn trường THCS Đồng Yên: Lớp 6 (Mã 601 - 605), Lớp 7 (Mã 701 - 703), Lớp 8 (Mã 801 - 803), Lớp 9 (Mã 901 - 903)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
+              Hệ thống hiện tại lưu trữ <b>đầy đủ các mã đề chuẩn Giữa Học Kỳ 1 toàn trường THCS Đồng Yên: Lớp 6 (Mã 601), Lớp 7 (Mã 701 - 703), Lớp 8 (Mã 801), Lớp 9 (Mã 901 - 903)</b>. Học sinh tự do chọn bất kỳ mã đề nào, mỗi lần làm bài hệ thống đều <b>tự động đảo câu hỏi &amp; đáp án</b> để tránh học tủ, học vẹt!
             </p>
           </div>
           <div className="pt-2 flex items-center justify-center gap-2.5 flex-wrap">
@@ -1804,34 +1804,6 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <span>📘 Lớp 6 - Mã 601 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>📗 Lớp 6 - Mã 602 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>📙 Lớp 6 - Mã 603 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(3); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-sky-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>📕 Lớp 6 - Mã 604 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(6); setExamType('giua-ky-1'); setSelectedExamIndex(4); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>🎯 Lớp 6 - Mã 605 (Tự đảo 🎲)</span>
                 </button>
               </>
             )}
@@ -1868,20 +1840,6 @@ export const OnlineExamPortal: React.FC<OnlineExamPortalProps> = ({ onGoToLeader
                   className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🎓 Lớp 8 - Mã 801 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(1); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>🎓 Lớp 8 - Mã 802 (Tự đảo 🎲)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedGrade(8); setExamType('giua-ky-1'); setSelectedExamIndex(2); }}
-                  className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-700 text-white font-bold text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>🎓 Lớp 8 - Mã 803 (Tự đảo 🎲)</span>
                 </button>
               </>
             )}

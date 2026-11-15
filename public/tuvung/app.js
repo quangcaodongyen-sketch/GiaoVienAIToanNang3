@@ -16019,9 +16019,9 @@ const ONLINE_EXAM_SYSTEM = {
 
 
 
-    // Cập nhật trạng thái Active trên tất cả các nút chọn mã đề (Đủ 4 mã đề Lớp 6 + 2 mã đề Lớp 8 (801, 802))
+    // Cập nhật trạng thái Active trên tất cả các nút chọn mã đề (Mã đề 601 & Mã đề 801)
 
-    ['601', '602', '603', '604', '801', '802', '803'].forEach(c => {
+    ['601', '801'].forEach(c => {
 
       const btn = document.getElementById(`btn_code_${c}`);
 
