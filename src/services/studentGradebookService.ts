@@ -3066,10 +3066,10 @@ class StudentGradebookService {
       let finalAtt = 0;
       let finalPrc = 0;
       let finalExm = 0;
-      let bonus = 0;
+      let finalBonus = 0;
 
       if (isStudying) {
-        bonus = grantBonus ? bonusAmount : 15;
+        finalBonus = grantBonus ? bonusAmount : 15;
         finalVoc = voc;
         finalAtt = att;
         finalPrc = prc;
@@ -3080,7 +3080,7 @@ class StudentGradebookService {
           finalPrc = Math.max(prc, baseInfo.practice ?? 0);
           finalExm = Math.max(exm, baseInfo.exam ?? 0);
         }
-        const calcSumReal = finalAtt + finalVoc + finalExm + finalPrc + timePts + bonus + teacherBonus;
+        const calcSumReal = finalAtt + finalVoc + finalExm + finalPrc + timePts + finalBonus + teacherBonus;
         totalMerit = Math.max(maxCandidateTotal, vaultMax, calcSumReal, baseTotal);
       } else {
         totalMerit = 0;
