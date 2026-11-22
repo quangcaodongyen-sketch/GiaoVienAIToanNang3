@@ -427,7 +427,9 @@
         <div class="form-group">
           <label>Gói bản quyền (Gói duy nhất 1 Năm - Dùng thử nghiệm & Bảo hành chuẩn):</label>
           <select id="manualTierSelect">
-            <option value="YEAR1" selected>🌟 Gói 1 Năm (Duy Nhất)</option>
+            <option value="YEAR1" selected>🌟 Gói 1 Năm (Khuyên Dùng Duy Nhất)</option>
+            <option value="TRIAL7">🎁 Gói Dùng Thử 7 Ngày (TRIAL7)</option>
+            <option value="TRIAL15">🎁 Gói Dùng Thử 15 Ngày (TRIAL15)</option>
           </select>
         </div>
 
@@ -507,6 +509,20 @@
       
       if (tier === "LIFETIME") {
         expStr = "20991231";
+      } else if (tier === "TRIAL7") {
+        const expDate = new Date(today);
+        expDate.setDate(expDate.getDate() + 7);
+        const y = expDate.getFullYear();
+        const m = String(expDate.getMonth() + 1).padStart(2, '0');
+        const d = String(expDate.getDate()).padStart(2, '0');
+        expStr = `${y}${m}${d}`;
+      } else if (tier === "TRIAL15") {
+        const expDate = new Date(today);
+        expDate.setDate(expDate.getDate() + 15);
+        const y = expDate.getFullYear();
+        const m = String(expDate.getMonth() + 1).padStart(2, '0');
+        const d = String(expDate.getDate()).padStart(2, '0');
+        expStr = `${y}${m}${d}`;
       } else {
         let addYears = 1;
         if (tier === "YEAR3") addYears = 3;
@@ -761,12 +777,15 @@
               🎯 Gói yêu cầu: <b>${it.tier_name || it.tier || "Gói 1 Năm"}</b>
             </div>
 
-            <div class="action-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="action-grid" style="grid-template-columns: 1fr 1fr 1.2fr;">
               <a href="https://zalo.me/${cleanPhone}" target="_blank" class="btn btn-zalo">
-                💬 Nhắn Zalo
+                💬 Zalo
               </a>
+              <button class="btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color:#fff; border:none;" onclick="grantTrialExtension('${safeMid}', '${safeName}', '${safePhone}', 7)">
+                🎁 Thử 7N
+              </button>
               <button class="btn btn-success" onclick="approveRegistration('${safeMid}', 'YEAR1', '${safeName}', '${safePhone}')">
-                ⚡ Kích Hoạt 1 Năm
+                ⚡ Duyệt 1N
               </button>
             </div>
           </div>
@@ -790,25 +809,60 @@
 
       let html = "";
       combined.forEach(it => {
-        html += `
-          <div class="reg-card approved">
-            <div class="reg-header">
-              <div>
-                <div class="reg-name">✅ ${it.fullname || "Khách Hàng"}</div>
-                <div class="reg-phone">📞 ${it.phone || ""}</div>
+        const isRevoked = it.status === "REVOKED" || it.revoked === true;
+        const safeName = (it.fullname || "Khách Hàng").replace(/"/g, '&quot;');
+        const safeMid = (it.machine_id || "").trim();
+        const safePhone = (it.phone || "").trim();
+        const cleanPhone = safePhone.replace(/[^0-9]/g, '');
+
+        if (isRevoked) {
+          html += `
+            <div class="reg-card" style="border-color: #ef4444; background: rgba(30, 10, 15, 0.7);">
+              <div class="reg-header">
+                <div>
+                  <div class="reg-name" style="color: #fca5a5;">🚫 ${safeName}</div>
+                  <div class="reg-phone">📞 ${safePhone || "Chưa có SĐT"}</div>
+                </div>
+                <div class="reg-time" style="color: #f87171;">${it.revoked_at || it.approved_at || ""}</div>
               </div>
-              <div class="reg-time">${it.approved_at || ""}</div>
+              <div class="reg-mid" style="border-color: #ef4444; color: #fca5a5;">💻 ID: ${safeMid}</div>
+              <div style="font-size: 0.85rem; color: #ef4444; font-weight: 800; margin-bottom: 8px;">
+                🚫 ĐÃ THU HỒI PRO (${it.revoke_reason || "Chưa thanh toán"})
+              </div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="btn-chip" style="background:#059669; border-color:#10b981; color:#fff;" onclick="approveRegistration('${safeMid}', 'YEAR1', '${safeName}', '${safePhone}')">🟢 Khôi Phục Pro</button>
+                <button class="btn-chip" style="background:#0284c7; border-color:#38bdf8; color:#fff;" onclick="grantTrialExtension('${safeMid}', '${safeName}', '${safePhone}', 7)">🎁 Mở Thử (+7N)</button>
+                ${cleanPhone ? `<a href="https://zalo.me/${cleanPhone}" target="_blank" class="btn-chip" style="text-decoration:none;">💬 Zalo</a>` : ''}
+                <button class="btn-chip" style="background:#7f1d1d; border-color:#ef4444; color:#fff;" onclick="deleteApprovedRecord('${safeMid}')">🗑️ Xóa</button>
+              </div>
             </div>
-            <div class="reg-mid">💻 ID: ${it.machine_id}</div>
-            <div style="font-size: 0.85rem; color: #34d399; font-weight: 800; margin-bottom: 6px;">
-              ${it.tier_name || it.tier}
+          `;
+        } else {
+          const isTrial = it.tier === "TRIAL7" || it.tier === "TRIAL15";
+          const badgeColor = isTrial ? "#38bdf8" : "#34d399";
+          const badgeText = isTrial ? `🎁 ${it.tier_name || 'DÙNG THỬ'}` : `✅ ${it.tier_name || 'BẢN QUYỀN PRO 1 NĂM'}`;
+          html += `
+            <div class="reg-card approved">
+              <div class="reg-header">
+                <div>
+                  <div class="reg-name">✅ ${safeName}</div>
+                  <div class="reg-phone">📞 ${safePhone || ""}</div>
+                </div>
+                <div class="reg-time">${it.approved_at || ""}</div>
+              </div>
+              <div class="reg-mid">💻 ID: ${safeMid}</div>
+              <div style="font-size: 0.85rem; color: ${badgeColor}; font-weight: 800; margin-bottom: 8px;">
+                ${badgeText}
+              </div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="btn-chip" onclick="copyText('${it.license_key}', 'Đã sao chép License Key!')">📋 Chép Key</button>
+                ${cleanPhone ? `<a href="https://zalo.me/${cleanPhone}" target="_blank" class="btn-chip" style="text-decoration:none;">💬 Zalo</a>` : ''}
+                <button class="btn-chip" style="background:#dc2626; border-color:#ef4444; color:#fff;" onclick="revokeLicense('${safeMid}', '${safeName}')">🚫 Thu Hồi Pro</button>
+                <button class="btn-chip" style="background:#0284c7; border-color:#38bdf8; color:#fff;" onclick="grantTrialExtension('${safeMid}', '${safeName}', '${safePhone}', 7)">🎁 +7N Thử</button>
+              </div>
             </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-chip" onclick="copyText('${it.license_key}', 'Đã sao chép License Key!')">📋 Chép Key</button>
-              ${it.phone ? `<a href="https://zalo.me/${it.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn-chip" style="text-decoration:none;">💬 Zalo</a>` : ''}
-            </div>
-          </div>
-        `;
+          `;
+        }
       });
       container.innerHTML = html;
     }
@@ -882,6 +936,131 @@
 
       } catch (err) {
         alert("Lỗi kích hoạt: " + err.message);
+      }
+    }
+
+    // ========================================================
+    // THU HỒI / XÓA BẢN QUYỀN PRO (KHI CHƯA THANH TOÁN)
+    // ========================================================
+    async function revokeLicense(machineId, name) {
+      if (!confirm(`CẢNH BÁO: Thầy có chắc chắn muốn THU HỒI / XÓA PRO của máy:\n${name || 'Khách Hàng'} (ID: ${machineId})?\n\nLý do: Chưa thanh toán phí bản quyền.\nMáy tính khách sẽ bị ngắt Pro ngay lập tức!`)) {
+        return;
+      }
+      showToast("Đang thu hồi bản quyền trên đám mây...");
+      try {
+        const nowStr = new Date().toLocaleString("vi-VN");
+        // 1. Cập nhật approved_licenses.json
+        const appRes = await fetchGitHubJson("public/approved_licenses.json");
+        const list = appRes.data || [];
+        const item = list.find(x => x.machine_id === machineId.toUpperCase());
+        if (item) {
+          item.status = "REVOKED";
+          item.revoked = true;
+          item.revoke_reason = "Chưa thanh toán";
+          item.revoked_at = nowStr;
+        } else {
+          list.unshift({
+            machine_id: machineId.toUpperCase(),
+            status: "REVOKED",
+            revoked: true,
+            revoke_reason: "Chưa thanh toán",
+            revoked_at: nowStr,
+            fullname: name || "Khách Hàng"
+          });
+        }
+        await putGitHubJson("public/approved_licenses.json", list, `Revoke Pro: ${name} (${machineId}) - Chua thanh toan`, appRes.sha);
+
+        // 2. Cập nhật kidodesk_registrations.json
+        try {
+          const regRes = await fetchGitHubJson("public/kidodesk_registrations.json");
+          const rList = regRes.data || [];
+          rList.forEach(r => {
+            if (r.machine_id === machineId.toUpperCase()) {
+              r.status = "REVOKED";
+              r.revoked_at = nowStr;
+            }
+          });
+          await putGitHubJson("public/kidodesk_registrations.json", rList, `Mark REVOKED: ${name} (${machineId})`, regRes.sha);
+        } catch (_) {}
+
+        alert(`🚫 ĐÃ THU HỒI BẢN QUYỀN THÀNH CÔNG!\n\n• Máy: ${machineId}\n• Trạng thái: Đã thu hồi (Chưa thanh toán)\n\nMáy tính của khách sẽ tự động ngắt Pro trong vòng vài giây!`);
+        refreshRegistrations(false);
+      } catch (err) {
+        alert("Lỗi khi thu hồi: " + err.message);
+      }
+    }
+
+    // ========================================================
+    // MỞ THÊM NGÀY DÙNG THỬ (CHO KHÁCH TRẢI NGHIỆM)
+    // ========================================================
+    async function grantTrialExtension(machineId, name, phone, days = 7) {
+      if (!confirm(`Xác nhận MỞ THÊM ${days} NGÀY DÙNG THỬ cho máy:\n${name || 'Khách Hàng'} (ID: ${machineId})?`)) {
+        return;
+      }
+      showToast(`Đang cấp thêm ${days} ngày dùng thử...`);
+      try {
+        const tier = days === 15 ? "TRIAL15" : "TRIAL7";
+        const lic = generateSignedLicenseKey(machineId, tier);
+        const nowStr = new Date().toLocaleString("vi-VN");
+
+        const appRes = await fetchGitHubJson("public/approved_licenses.json");
+        const list = appRes.data || [];
+        const newRecord = {
+          machine_id: machineId.toUpperCase(),
+          license_key: lic.key,
+          tier: tier,
+          tier_name: `Bản Quyền Dùng Thử ${days} Ngày - DT KidoDesk`,
+          fullname: name || "Khách Hàng",
+          phone: phone || "",
+          status: "APPROVED",
+          revoked: false,
+          approved_at: nowStr
+        };
+
+        const idx = list.findIndex(x => x.machine_id === newRecord.machine_id);
+        if (idx >= 0) list[idx] = newRecord;
+        else list.unshift(newRecord);
+
+        await putGitHubJson("public/approved_licenses.json", list, `Grant Trial +${days}D: ${name} (${machineId})`, appRes.sha);
+
+        try {
+          const regRes = await fetchGitHubJson("public/kidodesk_registrations.json");
+          const rList = regRes.data || [];
+          rList.forEach(r => {
+            if (r.machine_id === machineId.toUpperCase()) {
+              r.status = "APPROVED";
+              r.tier = tier;
+              r.tier_name = `Dùng Thử ${days} Ngày`;
+              r.license_key = lic.key;
+              r.approvedAt = nowStr;
+            }
+          });
+          await putGitHubJson("public/kidodesk_registrations.json", rList, `Mark TRIAL: ${name} (${machineId})`, regRes.sha);
+        } catch (_) {}
+
+        copyText(lic.key, "Đã sao chép License Key dùng thử!");
+        alert(`🎁 ĐÃ MỞ THÊM ${days} NGÀY DÙNG THỬ!\n\n• Máy: ${machineId}\n• Key: ${lic.key}\n\nMáy tính của khách sẽ tự động nhận thêm ${days} ngày dùng thử!`);
+        refreshRegistrations(false);
+      } catch (err) {
+        alert("Lỗi cấp dùng thử: " + err.message);
+      }
+    }
+
+    // ========================================================
+    // XÓA BẢN GHI KHÁCH HÀNG KHỎI CLOUD
+    // ========================================================
+    async function deleteApprovedRecord(machineId) {
+      if (!confirm(`Xác nhận xóa hoàn toàn bản ghi máy ${machineId} khỏi danh sách?`)) return;
+      showToast("Đang xóa bản ghi...");
+      try {
+        const appRes = await fetchGitHubJson("public/approved_licenses.json");
+        let list = appRes.data || [];
+        list = list.filter(x => x.machine_id !== machineId.toUpperCase());
+        await putGitHubJson("public/approved_licenses.json", list, `Delete record: ${machineId}`, appRes.sha);
+        showToast("Đã xóa bản ghi thành công!");
+        refreshRegistrations(false);
+      } catch (err) {
+        alert("Lỗi xóa bản ghi: " + err.message);
       }
     }
 
