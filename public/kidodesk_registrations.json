@@ -7,8 +7,10 @@
     "tier": "YEAR1",
     "tier_name": "Bản Quyền 1 Năm - DT KidoDesk Pro",
     "note": "",
-    "status": "PENDING",
-    "createdAt": "22/11/2026 23:35:10"
+    "status": "APPROVED",
+    "createdAt": "22/11/2026 23:35:10",
+    "approvedAt": "23:35:36 22/11/2026",
+    "license_key": "DVT-YEAR1-20271122-qhB-tGiu37mxFjNGqbpV96bYnjM-sbIR60c68FOVT0uGZfMXU74NqGaz62E11MOgodZOmuqrd027D4TuIayfDg"
   },
   {
     "id": "KIDO-TEST-M2",
