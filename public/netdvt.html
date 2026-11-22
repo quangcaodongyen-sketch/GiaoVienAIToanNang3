@@ -217,13 +217,24 @@
     </div>
 
     <div class="footer">
-      Bản quyền © 2027 Đinh Thành • Website: dekiemtraso.com
+      Bản quyền © 2027 Thầy giáo Đinh Văn Thành • Hotline/Zalo: 0915.213717
     </div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const machineId = (params.get("id") || "DVT-9569-E790").trim();
+    let machineId = (params.get("id") || "").trim();
+    if (!machineId) {
+      try {
+        machineId = (localStorage.getItem("netdvt_active_machine_id") || "DVT-9569-E790").trim();
+      } catch(e) {
+        machineId = "DVT-9569-E790";
+      }
+    } else {
+      try {
+        localStorage.setItem("netdvt_active_machine_id", machineId);
+      } catch(e) {}
+    }
     document.getElementById("displayMachineId").innerText = machineId;
 
     const hubTopic = "dvt_hub_" + machineId.replace(/-/g, "_");
