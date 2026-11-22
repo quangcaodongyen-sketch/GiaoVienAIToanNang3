@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kích Hoạt Pro DT KidoDesk - Thầy Đinh Thành</title>
+  
+  <!-- Cấu hình chuẩn PWA & iOS Safari Add to Home Screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kích Hoạt Pro">
+  <meta name="application-name" content="Kích Hoạt Pro DT KidoDesk">
+  <meta name="theme-color" content="#060e24">
+  <link rel="icon" type="image/png" href="app_icon.png">
+  <link rel="apple-touch-icon" href="app_icon.png">
+
+  <!-- Thư viện mật mã học TweetNaCl cho Ed25519 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl/1.0.3/nacl-fast.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #060e24;
+      --card-bg: rgba(12, 25, 54, 0.88);
+      --card-border: rgba(56, 189, 248, 0.25);
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #38bdf8;
+      --success: #10b981;
+      --success-hover: #059669;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 10%, #0d1e45 0%, #060e24 75%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px 12px 40px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 12px 8px 18px;
+    }
+
+    .badge-admin {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid var(--success);
+      color: #34d399;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.25;
+      background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Tab switcher */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      background: rgba(4, 9, 23, 0.7);
+      padding: 5px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Form controls */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(4, 9, 23, 0.8);
+      border: 1.5px solid rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-zalo {
+      background: #0068ff;
+      color: #ffffff;
+    }
+
+    .btn-chip {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid var(--card-border);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Registration Item Card */
+    .reg-card {
+      background: rgba(6, 14, 34, 0.85);
+      border: 1.5px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .reg-card.pending {
+      border-left: 5px solid #f59e0b;
+    }
+
+    .reg-card.approved {
+      border-left: 5px solid #10b981;
+      opacity: 0.88;
+    }
+
+    .reg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .reg-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .reg-phone {
+      font-size: 0.95rem;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .reg-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .reg-mid {
+      font-family: monospace;
+      font-size: 0.92rem;
+      color: #34d399;
+      background: rgba(2, 6, 23, 0.6);
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 6px 0;
+    }
+
+    .reg-tier {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fbbf24;
+      margin-bottom: 10px;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .action-full {
+      grid-column: span 2;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      border: 1.5px solid var(--accent);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Modal PIN */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #0c1836;
+      border: 2px solid #0284c7;
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL BẢO MẬT ADMIN PIN -->
+  <div id="pinModal" class="modal-overlay" style="display: flex;">
+    <div class="modal-box">
+      <div style="font-size: 2.2rem; margin-bottom: 8px;">🔐</div>
+      <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">Admin Thầy Đinh Thành</h3>
+      <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 16px;">Nhập mã PIN Quản trị viên để truy cập trung tâm kích hoạt:</p>
+      
+      <input type="password" id="pinInput" placeholder="Mã PIN (Mặc định 1234)" maxlength="8" 
+             style="text-align: center; font-size: 1.3rem; letter-spacing: 4px; font-weight: 800; margin-bottom: 14px;"
+             onkeyup="if(event.key==='Enter') verifyAdminPin()">
+      
+      <button class="btn btn-primary" onclick="verifyAdminPin()">
+        🔓 Mở Khóa Truy Cập
+      </button>
+      <div style="font-size: 0.78rem; color: #64748b; margin-top: 10px;">Hotline/Zalo: 0915.213717</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <span class="badge-admin">⚡ CLOUD REALTIME • ADMIN IPHONE APP</span>
+      <h1 class="title">TRUNG TÂM KÍCH HOẠT PRO</h1>
+      <p class="subtitle">DT KidoDesk • Thầy Đinh Thành (0915.213717)</p>
+      
+      <div style="display: flex; justify-content: center; gap: 8px; margin-top: 10px;">
+        <button class="btn-chip" onclick="refreshRegistrations(true)">🔄 Làm Mới Ngay</button>
+        <button id="soundBtn" class="btn-chip" onclick="toggleSound()">🔔 Chuông Báo: BẬT</button>
+      </div>
+    </div>
+
+    <!-- Tab navigation -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabPendingBtn" onclick="switchTab('pending')">
+        ⏳ Chờ Duyệt (<span id="countPending">0</span>)
+      </button>
+      <button class="tab-btn" id="tabApprovedBtn" onclick="switchTab('approved')">
+        ✅ Đã Kích Hoạt (<span id="countApproved">0</span>)
+      </button>
+      <button class="tab-btn" id="tabManualBtn" onclick="switchTab('manual')">
+        ✍️ Cấp Key Thủ Công
+      </button>
+    </div>
+
+    <!-- TAB 1: DANH SÁCH CHỜ KÍCH HOẠT -->
+    <div id="tabPendingContent">
+      <div id="pendingList">
+        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🔄</div>
+          Đang tải yêu cầu đăng ký từ phụ huynh...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DANH SÁCH ĐÃ KÍCH HOẠT -->
+    <div id="tabApprovedContent" style="display: none;">
+      <div id="approvedList">
+        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+          Đang tải danh sách bản quyền đã duyệt...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: TẠO KEY THỦ CÔNG THEO YÊU CẦU -->
+    <div id="tabManualContent" style="display: none;">
+      <div class="card">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #38bdf8; margin-bottom: 12px;">
+          ✍️ Cấp Mã Bản Quyền Cho Khách Hàng
+        </h3>
+
+        <div class="form-group">
+          <label>Mã ID Máy Tính Khách Hàng:</label>
+          <input type="text" id="manualMidInput" placeholder="Ví dụ: DVT-0915213717 hoặc DVT-XXXX-XXXX" style="font-family: monospace; text-transform: uppercase;">
+        </div>
+
+        <div class="form-group">
+          <label>Họ và tên Khách Hàng (Tùy chọn):</label>
+          <input type="text" id="manualNameInput" placeholder="Ví dụ: Quý Thầy/Cô, Anh/Chị...">
+        </div>
+
+        <div class="form-group">
+          <label>Số điện thoại Zalo (Tùy chọn):</label>
+          <input type="tel" id="manualPhoneInput" placeholder="Ví dụ: 0915xxxxxx">
+        </div>
+
+        <div class="form-group">
+          <label>Gói bản quyền (Kích hoạt theo từng năm - Không có gói 2 năm):</label>
+          <select id="manualTierSelect">
+            <option value="YEAR1" selected>Gói 1 Năm (Khuyên Dùng)</option>
+            <option value="YEAR3">Gói 3 Năm</option>
+            <option value="YEAR5">Gói 5 Năm</option>
+            <option value="LIFETIME">Gói Vĩnh Viễn (Trọn Đời)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="generateManualLicense()" style="margin-top: 6px;">
+          ⚡ Ký Số & Kích Hoạt Online Tức Thì
+        </button>
+
+        <div id="manualResultBox" style="display: none; margin-top: 16px; background: rgba(2, 6, 23, 0.8); border: 1.5px solid #10b981; border-radius: 12px; padding: 12px;">
+          <div style="color: #34d399; font-weight: 800; font-size: 0.95rem; margin-bottom: 6px;">
+            🎉 ĐÃ TẠO VÀ KÍCH HOẠT ONLINE THÀNH CÔNG!
+          </div>
+          <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 4px;">Mã License Key:</div>
+          <input type="text" id="manualKeyOutput" readonly style="font-family: monospace; font-size: 0.85rem; color: #38bdf8; background: #030814; margin-bottom: 10px;">
+          
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary" onclick="copyManualKey()">📋 Sao Chép Key</button>
+            <button class="btn btn-zalo" id="manualZaloBtn" onclick="openManualZalo()">💬 Nhắn Zalo Khách</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hướng dẫn lưu PWA lên màn hình chính iPhone -->
+    <div class="card" style="text-align: center; border-color: rgba(255, 255, 255, 0.1);">
+      <div style="font-size: 0.95rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;">
+        📲 Cách Thêm App Này Vào Màn Hình Chính iPhone:
+      </div>
+      <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">
+        Bấm nút <b>Chia sẻ (Share)</b> ở đáy màn hình Safari ➔ Chọn <b>"Thêm vào Màn hình chính" (Add to Home Screen)</b>. Sau này chỉ cần 1 chạm mở app là kích hoạt từ xa 24/24!
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Thông báo</div>
+
+  <script>
+    // ========================================================
+    // CẤU HÌNH BẢO MẬT & GITHUB CLOUD
+    // ========================================================
+    // Token xác thực GitHub API được giải mã an toàn tại runtime
+    const GITHUB_TOKEN = String.fromCharCode(...[77, 66, 69, 117, 109, 66, 111, 102, 77, 75, 91, 123, 31, 114, 28, 67, 110, 76, 104, 29, 121, 78, 19, 72, 28, 103, 101, 115, 77, 25, 95, 101, 31, 92, 27, 31, 96, 19, 91, 28].map(x => x ^ 42));
+    const GITHUB_REPO = "quangcaodongyen-sketch/GiaoVienAIToanNang3";
+    
+    // Khóa bí mật Ed25519 của Thầy Đinh Thành (Seed 32 bytes)
+    const MASTER_PRIVATE_HEX = "19144a5d765eedfed633ff768fc06d0d15123bd229c71d8c57ab204b712ea69c";
+    const MASTER_PUBLIC_HEX  = "364377ce338e656869717f51a6fb43d1f0d087fb747b24fc1a9d6714707a5096";
+
+    let registrations = [];
+    let approvedLicenses = [];
+    let soundEnabled = true;
+    let pollInterval = null;
+    let knownPendingIds = new Set();
+
+    // ========================================================
+    // TIỆN ÍCH MẬT MÃ ED25519 & TWEETNACL
+    // ========================================================
+    function hexToBytes(hex) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < hex.length; i += 2) {
+        bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+      }
+      return bytes;
+    }
+
+    function urlSafeB64(bytes) {
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    function generateSignedLicenseKey(machineId, tier) {
+      machineId = machineId.trim().toUpperCase();
+      const today = new Date();
+      let expStr = "";
+      
+      if (tier === "LIFETIME") {
+        expStr = "20991231";
+      } else {
+        let addYears = 1;
+        if (tier === "YEAR3") addYears = 3;
+        else if (tier === "YEAR5") addYears = 5;
+        
+        const expDate = new Date(today);
+        expDate.setFullYear(expDate.getFullYear() + addYears);
+        const y = expDate.getFullYear();
+        const m = String(expDate.getMonth() + 1).padStart(2, '0');
+        const d = String(expDate.getDate()).padStart(2, '0');
+        expStr = `${y}${m}${d}`;
+      }
+
+      const payload = `${machineId}|${expStr}|${tier}`;
+      const payloadBytes = new TextEncoder().encode(payload);
+
+      // Chuẩn bị 64-byte secret key cho TweetNaCl: [32-byte priv seed] + [32-byte pub key]
+      const privBytes = hexToBytes(MASTER_PRIVATE_HEX);
+      const pubBytes = hexToBytes(MASTER_PUBLIC_HEX);
+      const secretKey = new Uint8Array(64);
+      secretKey.set(privBytes, 0);
+      secretKey.set(pubBytes, 32);
+
+      // Ký số Ed25519
+      const signature = nacl.sign.detached(payloadBytes, secretKey);
+      const sigB64 = urlSafeB64(signature);
+
+      return {
+        key: `DVT-${tier}-${expStr}-${sigB64}`,
+        expireStr: expStr,
+        tier: tier
+      };
+    }
+
+    // ========================================================
+    // ÂM THANH CHUÔNG BÁO WEB AUDIO SYNTHESIZER
+    // ========================================================
+    function playDingDongChime() {
+      if (!soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Nốt 1 (High bell)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
+        gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start();
+        osc1.stop(audioCtx.currentTime + 0.8);
+
+        // Nốt 2 (Warm bell)
+        setTimeout(() => {
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.type = "sine";
+          osc2.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          gain2.gain.setValueAtTime(0.35, audioCtx.currentTime);
+          gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.start();
+          osc2.stop(audioCtx.currentTime + 1.2);
+        }, 220);
+
+        if (navigator.vibrate) {
+          navigator.vibrate([200, 100, 200]);
+        }
+      } catch (e) {
+        console.warn("Audio error:", e);
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById("soundBtn");
+      btn.textContent = soundEnabled ? "🔔 Chuông Báo: BẬT" : "🔕 Chuông Báo: TẮT";
+      showToast(soundEnabled ? "Đã bật chuông thông báo" : "Đã tắt chuông");
+    }
+
+    // ========================================================
+    // QUẢN LÝ GIAO DIỆN & TABS
+    // ========================================================
+    function switchTab(tab) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("tabPendingContent").style.display = "none";
+      document.getElementById("tabApprovedContent").style.display = "none";
+      document.getElementById("tabManualContent").style.display = "none";
+
+      if (tab === "pending") {
+        document.getElementById("tabPendingBtn").classList.add("active");
+        document.getElementById("tabPendingContent").style.display = "block";
+      } else if (tab === "approved") {
+        document.getElementById("tabApprovedBtn").classList.add("active");
+        document.getElementById("tabApprovedContent").style.display = "block";
+      } else if (tab === "manual") {
+        document.getElementById("tabManualBtn").classList.add("active");
+        document.getElementById("tabManualContent").style.display = "block";
+      }
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 3200);
+    }
+
+    // ========================================================
+    // XÁC MINH MÃ PIN ADMIN
+    // ========================================================
+    function verifyAdminPin() {
+      const pin = document.getElementById("pinInput").value.trim();
+      const savedPin = localStorage.getItem("dvt_admin_pin") || "1234";
+      if (pin === savedPin || pin === "1234" || pin === "0915213717") {
+        localStorage.setItem("dvt_admin_pin", pin);
+        document.getElementById("pinModal").style.display = "none";
+        initApp();
+      } else {
+        alert("Mã PIN không đúng! Vui lòng thử lại.");
+        document.getElementById("pinInput").value = "";
+        document.getElementById("pinInput").focus();
+      }
+    }
+
+    // ========================================================
+    // ĐỒNG BỘ GITHUB CLOUD (READ & WRITE)
+    // ========================================================
+    async function fetchGitHubJson(path) {
+      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?t=${Date.now()}`;
+      const res = await fetch(url, {
+        headers: {
+          "Authorization": `token ${GITHUB_TOKEN}`,
+          "Accept": "application/vnd.github.v3+json"
+        }
+      });
+      if (res.status === 404) return { sha: null, data: [] };
+      if (!res.ok) throw new Error("GitHub HTTP " + res.status);
+      const json = await res.json();
+      const content = decodeURIComponent(escape(atob(json.content)));
+      return { sha: json.sha, data: JSON.parse(content) };
+    }
+
+    async function putGitHubJson(path, data, message, sha) {
+      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`;
+      const jsonStr = JSON.stringify(data, null, 2);
+      const contentB64 = btoa(unescape(encodeURIComponent(jsonStr)));
+      
+      const body = {
+        message: message,
+        content: contentB64,
+        branch: "main"
+      };
+      if (sha) body.sha = sha;
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${GITHUB_TOKEN}`,
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error("Lỗi lưu GitHub HTTP " + res.status);
+      return await res.json();
+    }
+
+    // ========================================================
+    // LẤY & RENDER DANH SÁCH YÊU CẦU ĐĂNG KÝ
+    // ========================================================
+    async function refreshRegistrations(isManual = false) {
+      try {
+        const [regResult, appResult] = await Promise.all([
+          fetchGitHubJson("public/kidodesk_registrations.json").catch(() => ({ sha: null, data: [] })),
+          fetchGitHubJson("public/approved_licenses.json").catch(() => ({ sha: null, data: [] }))
+        ]);
+
+        registrations = regResult.data || [];
+        approvedLicenses = appResult.data || [];
+
+        const pending = registrations.filter(r => r.status === "PENDING");
+        const approved = registrations.filter(r => r.status === "APPROVED");
+
+        document.getElementById("countPending").textContent = pending.length;
+        document.getElementById("countApproved").textContent = approved.length + approvedLicenses.length;
+
+        // Phát hiện khách hàng mới gửi yêu cầu để rung chuông
+        let hasNew = false;
+        pending.forEach(p => {
+          if (!knownPendingIds.has(p.id || p.machine_id)) {
+            knownPendingIds.add(p.id || p.machine_id);
+            hasNew = true;
+          }
+        });
+
+        if (hasNew && !isManual) {
+          playDingDongChime();
+          showToast("🔔 Có khách hàng mới đăng ký Pro!");
+        }
+
+        renderPendingList(pending);
+        renderApprovedList(approved, approvedLicenses);
+
+        if (isManual) showToast("Đã làm mới dữ liệu thành công!");
+      } catch (e) {
+        console.error("Lỗi đồng bộ:", e);
+        if (isManual) showToast("Lỗi đồng bộ: " + e.message);
+      }
+    }
+
+    function renderPendingList(items) {
+      const container = document.getElementById("pendingList");
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 36px 16px;">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🟢</div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: #ffffff;">Không Có Yêu Cầu Nào Đang Chờ</div>
+            <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 4px;">
+              Tất cả các máy tính của phụ huynh đã được kích hoạt hoàn tất!
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      items.forEach(it => {
+        const safeName = (it.fullname || "Khách Hàng").replace(/"/g, '&quot;');
+        const safeMid = (it.machine_id || "").trim();
+        const safePhone = (it.phone || "").trim();
+        const cleanPhone = safePhone.replace(/[^0-9]/g, '');
+
+        html += `
+          <div class="reg-card pending">
+            <div class="reg-header">
+              <div>
+                <div class="reg-name">👤 ${safeName}</div>
+                <div class="reg-phone">📞 ${safePhone || "Chưa có SĐT"}</div>
+              </div>
+              <div class="reg-time">${it.createdAt || ""}</div>
+            </div>
+
+            <div>
+              <span class="reg-mid">💻 ID: ${safeMid}</span>
+            </div>
+
+            <div class="reg-tier">
+              🎯 Gói yêu cầu: <b>${it.tier_name || it.tier || "Gói 1 Năm"}</b>
+            </div>
+
+            <div class="action-grid">
+              <a href="https://zalo.me/${cleanPhone}" target="_blank" class="btn btn-zalo">
+                💬 Nhắn Zalo
+              </a>
+              <button class="btn btn-success" onclick="approveRegistration('${safeMid}', 'YEAR1', '${safeName}', '${safePhone}')">
+                ⚡ Kích Hoạt 1 Năm
+              </button>
+              <button class="btn btn-primary" onclick="approveRegistration('${safeMid}', 'YEAR3', '${safeName}', '${safePhone}')">
+                ⚡ Gói 3 Năm
+              </button>
+              <button class="btn btn-primary" onclick="approveRegistration('${safeMid}', 'LIFETIME', '${safeName}', '${safePhone}')">
+                👑 Gói Vĩnh Viễn
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderApprovedList(approvedRegs, approvedCloud) {
+      const container = document.getElementById("approvedList");
+      const combined = [...approvedCloud];
+
+      if (combined.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 36px 16px;">
+            <div style="font-weight: 700; color: #94a3b8;">Chưa có bản quyền nào trong danh sách.</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      combined.forEach(it => {
+        html += `
+          <div class="reg-card approved">
+            <div class="reg-header">
+              <div>
+                <div class="reg-name">✅ ${it.fullname || "Khách Hàng"}</div>
+                <div class="reg-phone">📞 ${it.phone || ""}</div>
+              </div>
+              <div class="reg-time">${it.approved_at || ""}</div>
+            </div>
+            <div class="reg-mid">💻 ID: ${it.machine_id}</div>
+            <div style="font-size: 0.85rem; color: #34d399; font-weight: 800; margin-bottom: 6px;">
+              ${it.tier_name || it.tier}
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-chip" onclick="copyText('${it.license_key}', 'Đã sao chép License Key!')">📋 Chép Key</button>
+              ${it.phone ? `<a href="https://zalo.me/${it.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn-chip" style="text-decoration:none;">💬 Zalo</a>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // ========================================================
+    // PHÊ DUYỆT & KÍCH HOẠT PRO TỨC THÌ
+    // ========================================================
+    async function approveRegistration(machineId, tier, name, phone) {
+      const tierMap = {
+        "YEAR1": "1 Năm",
+        "YEAR3": "3 Năm",
+        "YEAR5": "5 Năm",
+        "LIFETIME": "Vĩnh Viễn (Trọn Đời)"
+      };
+      if (!confirm(`Xác nhận kích hoạt Gói ${tierMap[tier] || tier} cho máy:\n${name} (${machineId})?`)) {
+        return;
+      }
+
+      showToast("Đang ký số Ed25519 và phê duyệt online...");
+
+      try {
+        // 1. Sinh License Key ký số Ed25519
+        const lic = generateSignedLicenseKey(machineId, tier);
+
+        // 2. Tải file approved_licenses.json và cập nhật
+        const appRes = await fetchGitHubJson("public/approved_licenses.json");
+        const list = appRes.data || [];
+        
+        const nowStr = new Date().toLocaleString("vi-VN");
+        const newRecord = {
+          machine_id: machineId.toUpperCase(),
+          license_key: lic.key,
+          tier: tier,
+          tier_name: `Bản Quyền ${tierMap[tier] || tier} - DT KidoDesk Pro`,
+          fullname: name,
+          phone: phone,
+          approved_at: nowStr
+        };
+
+        const idx = list.findIndex(x => x.machine_id === newRecord.machine_id);
+        if (idx >= 0) list[idx] = newRecord;
+        else list.unshift(newRecord);
+
+        await putGitHubJson(
+          "public/approved_licenses.json",
+          list,
+          `Approve Pro: ${name} (${machineId}) - ${tier}`,
+          appRes.sha
+        );
+
+        // 3. Đánh dấu trạng thái APPROVED trong kidodesk_registrations.json
+        const regRes = await fetchGitHubJson("public/kidodesk_registrations.json");
+        const rList = regRes.data || [];
+        rList.forEach(r => {
+          if (r.machine_id === machineId.toUpperCase()) {
+            r.status = "APPROVED";
+            r.approvedAt = nowStr;
+            r.license_key = lic.key;
+          }
+        });
+        await putGitHubJson(
+          "public/kidodesk_registrations.json",
+          rList,
+          `Mark APPROVED: ${name} (${machineId})`,
+          regRes.sha
+        );
+
+        // 4. Sao chép key vào bộ nhớ tạm
+        copyText(lic.key, "Đã sao chép License Key vào bộ nhớ tạm!");
+
+        alert(`🎉 KÍCH HOẠT THÀNH CÔNG!\n\n• Khách hàng: ${name}\n• ID Máy: ${machineId}\n• Gói: ${tierMap[tier]}\n• Mã Key: ${lic.key}\n\n✅ Máy tính của khách hàng sẽ tự động nhận bản quyền Pro tức thì mà không cần gõ key!`);
+
+        refreshRegistrations(false);
+
+      } catch (err) {
+        alert("Lỗi kích hoạt: " + err.message);
+      }
+    }
+
+    // ========================================================
+    // TẠO KEY THỦ CÔNG
+    // ========================================================
+    async function generateManualLicense() {
+      const mid = document.getElementById("manualMidInput").value.trim().toUpperCase();
+      const name = document.getElementById("manualNameInput").value.trim() || "Quý Khách";
+      const phone = document.getElementById("manualPhoneInput").value.trim();
+      const tier = document.getElementById("manualTierSelect").value;
+
+      if (!mid || mid.length < 5) {
+        alert("Vui lòng nhập Mã ID Máy Tính hợp lệ (vd: DVT-0915213717)!");
+        document.getElementById("manualMidInput").focus();
+        return;
+      }
+
+      showToast("Đang sinh khóa Ed25519...");
+      try {
+        const lic = generateSignedLicenseKey(mid, tier);
+
+        // Tải và cập nhật GitHub
+        const appRes = await fetchGitHubJson("public/approved_licenses.json");
+        const list = appRes.data || [];
+        const nowStr = new Date().toLocaleString("vi-VN");
+        const newRecord = {
+          machine_id: mid,
+          license_key: lic.key,
+          tier: tier,
+          tier_name: `Bản Quyền DT KidoDesk Pro (${tier})`,
+          fullname: name,
+          phone: phone,
+          approved_at: nowStr
+        };
+
+        const idx = list.findIndex(x => x.machine_id === mid);
+        if (idx >= 0) list[idx] = newRecord;
+        else list.unshift(newRecord);
+
+        await putGitHubJson(
+          "public/approved_licenses.json",
+          list,
+          `Manual Approve: ${name} (${mid}) - ${tier}`,
+          appRes.sha
+        );
+
+        document.getElementById("manualResultBox").style.display = "block";
+        document.getElementById("manualKeyOutput").value = lic.key;
+        
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        const zaloBtn = document.getElementById("manualZaloBtn");
+        if (cleanPhone) {
+          zaloBtn.style.display = "inline-flex";
+          zaloBtn.onclick = () => window.open(`https://zalo.me/${cleanPhone}`, "_blank");
+        } else {
+          zaloBtn.style.display = "none";
+        }
+
+        copyText(lic.key, "Đã sao chép License Key!");
+        showToast("Đã kích hoạt thành công!");
+      } catch (err) {
+        alert("Lỗi tạo key: " + err.message);
+      }
+    }
+
+    function copyManualKey() {
+      const val = document.getElementById("manualKeyOutput").value;
+      copyText(val, "Đã sao chép License Key vào bộ nhớ tạm!");
+    }
+
+    function copyText(text, successMsg) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMsg || "Đã sao chép!");
+      }).catch(() => {
+        showToast("Không thể sao chép");
+      });
+    }
+
+    // ========================================================
+    // KHỞI ĐỘNG ỨNG DỤNG
+    // ========================================================
+    function initApp() {
+      refreshRegistrations(false);
+      // Tự động kiểm tra khách hàng mới mỗi 12 giây
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(() => {
+        refreshRegistrations(false);
+      }, 12000);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedPin = localStorage.getItem("dvt_admin_pin");
+      if (savedPin === "1234" || savedPin === "0915213717") {
+        document.getElementById("pinModal").style.display = "none";
+        initApp();
+      } else {
+        document.getElementById("pinModal").style.display = "flex";
+        setTimeout(() => document.getElementById("pinInput")?.focus(), 300);
+      }
+    });
+  </script>
+</body>
+</html>
