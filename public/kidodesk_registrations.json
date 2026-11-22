@@ -1,5 +1,16 @@
 [
   {
+    "id": "KIDO-TEST-M2",
+    "machine_id": "DVT-0972213717",
+    "fullname": "Thầy giáo Đinh Văn Thành (Máy 2)",
+    "phone": "0915213717",
+    "tier": "YEAR1",
+    "tier_name": "Gói 1 Năm (Khuyên Dùng)",
+    "note": "Đăng ký thử nghiệm Máy 2",
+    "status": "PENDING",
+    "createdAt": "22/11/2026 22:32:38"
+  },
+  {
     "id": "KIDO-TEST-M1",
     "machine_id": "DVT-0915213717",
     "fullname": "Thầy giáo Đinh Văn Thành (Máy 1)",
