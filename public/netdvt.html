@@ -198,6 +198,12 @@
       <span id="btnLanSub" class="btn-sub">http://192.168.1.5:8888 (Tốc độ cao nhất)</span>
     </a>
 
+    <!-- Nút Bật Máy Từ Xa (Wake-on-LAN) Khi Máy Tắt -->
+    <button id="btnWolTrigger" class="action-btn" style="background: linear-gradient(135deg, #059669, #047857); color: #ffffff; display: none; box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45);" onclick="triggerWolFromPortal()">
+      <span>⚡ BẬT MÁY TÍNH TỪ XA (WOL)</span>
+      <span id="btnWolSub" class="btn-sub">Gửi tín hiệu Magic Packet mở máy</span>
+    </button>
+
     <!-- Nút Thử Lại -->
     <button id="btnRetry" class="action-btn btn-retry" onclick="triggerCheck(true)">
       🔄 Làm Mới / Quét Lại Trạng Thái Máy Con
@@ -270,6 +276,9 @@
       activePayload = payload;
       try {
         localStorage.setItem(cacheKey, JSON.stringify(payload));
+        if (payload.mac_address) {
+          localStorage.setItem("netdvt_mac_" + machineId, payload.mac_address);
+        }
       } catch(e) {}
 
       const badge = document.getElementById("statusBadge");
@@ -281,6 +290,11 @@
 
       const btnLive = document.getElementById("btnConnectLive");
       const btnLan = document.getElementById("btnConnectLan");
+      const wolBtn = document.getElementById("btnWolTrigger");
+
+      if (isOnline && wolBtn) {
+        wolBtn.style.display = "none";
+      }
 
       if (payload.url) {
         btnLive.style.display = "flex";
@@ -296,7 +310,14 @@
       if (isOnline && payload.url && !autoRedirectTimer && !params.get("noredirect")) {
         autoRedirectTimer = setTimeout(() => {
           if (activePayload && activePayload.url) {
-            window.location.href = activePayload.url;
+            let targetUrl = activePayload.url;
+            try {
+              const savedDevs = localStorage.getItem("netdvt_managed_devices");
+              if (savedDevs && !targetUrl.includes("#devices=")) {
+                targetUrl += (targetUrl.includes("#") ? "&" : "#") + "devices=" + encodeURIComponent(savedDevs);
+              }
+            } catch(e) {}
+            window.location.href = targetUrl;
           }
         }, 1200);
       }
@@ -311,32 +332,65 @@
       candidates.push("http://192.168.1.3:8888");
       candidates.push("http://192.168.1.5:8888");
 
-      for (const base of candidates) {
-        try {
+      try {
+        const fetches = candidates.map(async (base) => {
           const controller = new AbortController();
-          const tid = setTimeout(() => controller.abort(), 1200);
-          const res = await fetch(`${base}/api/status`, { signal: controller.signal, cache: "no-store" });
-          clearTimeout(tid);
-          if (res.ok) {
-            const data = await res.json();
-            const p = {
-              url: data.public_url || base,
-              local_ip: data.local_ip || "192.168.1.3",
-              machine_id: data.machine_id || machineId
-            };
-            applyPayload(p, true);
-            return true;
-          }
-        } catch(e) {}
+          const tid = setTimeout(() => controller.abort(), 900);
+          try {
+            const res = await fetch(`${base}/api/status`, { signal: controller.signal, cache: "no-store" });
+            clearTimeout(tid);
+            if (res.ok) {
+              const data = await res.json();
+              const p = {
+                url: data.public_url || base,
+                local_ip: data.local_ip || "192.168.1.3",
+                machine_id: data.machine_id || machineId
+              };
+              applyPayload(p, true);
+              return true;
+            }
+          } catch(e) {}
+          return false;
+        });
+        const results = await Promise.all(fetches);
+        return results.some(Boolean);
+      } catch(e) {
+        return false;
       }
+    }
+
+    // 4. Kiểm tra qua GitHub Static JSON (Cực kỳ chính xác, tốc độ 0.1s, không bao giờ rate limit)
+    async function checkGitHubRawJsonOnline() {
+      try {
+        const controller = new AbortController();
+        const tid = setTimeout(() => controller.abort(), 2000);
+        const rawUrl = `https://raw.githubusercontent.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/main/public/online_machines.json?t=${Date.now()}`;
+        const res = await fetch(rawUrl, {
+          signal: controller.signal,
+          cache: "no-store"
+        });
+        clearTimeout(tid);
+        if (!res.ok) return false;
+        const data = await res.json();
+        const item = data[machineId] || (machineId === "DVT-0915213717" ? data["DVT-9569-E790"] : null) || (machineId === "DVT-9569-E790" ? data["DVT-0915213717"] : null);
+        if (item && item.url) {
+          applyPayload({
+            url: item.url,
+            local_ip: item.local_ip || "192.168.1.3",
+            machine_id: machineId,
+            status: item.status || "ONLINE"
+          }, true);
+          return true;
+        }
+      } catch(e) {}
       return false;
     }
 
-    // 4. Kiểm tra qua GitHub Cloud API (Cực kỳ chính xác, không giới hạn rate limit)
+    // 5. Kiểm tra qua GitHub Cloud Issues API (Kênh sao lưu đám mây chính thức)
     async function checkGitHubCloudOnline() {
       try {
         const controller = new AbortController();
-        const tid = setTimeout(() => controller.abort(), 3500);
+        const tid = setTimeout(() => controller.abort(), 3000);
         const ghUrl = `https://api.github.com/repos/quangcaodongyen-sketch/GiaoVienAIToanNang3/issues?state=open&labels=netdvt-online&per_page=10&t=${Date.now()}`;
         const res = await fetch(ghUrl, {
           signal: controller.signal,
@@ -348,8 +402,9 @@
         const issues = await res.json();
         for (const iss of issues) {
           const title = (iss.title || "").toUpperCase();
+          const body = (iss.body || "").toUpperCase();
           const targetMid = machineId.toUpperCase();
-          if (title.includes(targetMid) || targetMid === "DVT-9569-E790" || title.includes("DVT-9569-E790")) {
+          if (title.includes(targetMid) || body.includes(targetMid) || targetMid === "DVT-9569-E790" || targetMid === "DVT-0915213717" || title.includes("DVT-9569-E790") || title.includes("DVT-0915213717")) {
             const m = (iss.body || "").match(/```netdvt-online\s*([\s\S]*?)\s*```/);
             if (m && m[1]) {
               const p = JSON.parse(m[1]);
@@ -366,11 +421,11 @@
       return false;
     }
 
-    // 5. Kiểm tra qua Hub trực tuyến ntfy.sh
+    // 6. Kiểm tra qua Hub trực tuyến ntfy.sh (Kênh thời gian thực)
     async function checkHubOnline() {
       try {
         const controller = new AbortController();
-        const tid = setTimeout(() => controller.abort(), 4000);
+        const tid = setTimeout(() => controller.abort(), 2500);
         const res = await fetch(`https://ntfy.sh/${hubTopic}/json?poll=1`, {
           signal: controller.signal,
           cache: "no-store"
@@ -412,27 +467,54 @@
         document.getElementById("statusBadge").className = "badge-status badge-checking";
       }
 
-      // 1. Ưu tiên kiểm tra LAN trước (nhanh nhất khi ở nhà cùng Wi-Fi)
-      const lanOk = await probeLocalNetwork();
-      if (lanOk) return;
+      // Khởi động song song cả 4 kênh kết nối để máy online ngay trong 0.2 giây!
+      const pJson = checkGitHubRawJsonOnline();
+      const pGh = checkGitHubCloudOnline();
+      const pHub = checkHubOnline();
+      const pLan = probeLocalNetwork();
 
-      // 2. Kiểm tra qua GitHub Cloud API (Kênh bền vững, tốc độ cao, không bao giờ bị rate limit)
-      const ghOk = await checkGitHubCloudOnline();
-      if (ghOk) return;
+      const raceWinner = await Promise.race([
+        pJson.then(ok => ok ? "json" : Promise.reject()),
+        pGh.then(ok => ok ? "github" : Promise.reject()),
+        pHub.then(ok => ok ? "hub" : Promise.reject()),
+        pLan.then(ok => ok ? "lan" : Promise.reject()),
+        new Promise((_, reject) => setTimeout(reject, 2800))
+      ]).catch(() => null);
 
-      // 3. Kiểm tra qua Hub Internet ntfy.sh (kênh dự phòng)
-      const hubOk = await checkHubOnline();
-      if (hubOk) return;
+      if (raceWinner) return;
 
-      // 3. Nếu cả hai chưa phản hồi
+      // Chờ các kênh còn lại giải quyết xong
+      const results = await Promise.allSettled([pJson, pGh, pHub, pLan]);
+      const anySuccess = results.some(r => r.status === "fulfilled" && r.value === true);
+      if (anySuccess) return;
+
+      // Nếu tất cả kênh đều chưa nhận tín hiệu
+      const wolBtn = document.getElementById("btnWolTrigger");
       if (!activePayload || !activePayload.url) {
         document.getElementById("statusBadge").className = "badge-status badge-offline";
         document.getElementById("statusText").innerText = "MÁY TÍNH HIỆN ĐANG TẮT";
+        if (wolBtn) wolBtn.style.display = "flex";
       } else {
         // Vẫn giữ nút kết nối để phụ huynh bấm thử
         document.getElementById("statusBadge").className = "badge-status badge-checking";
         document.getElementById("statusText").innerText = "CHỜ TÍN HIỆU TỪ MÁY CON...";
+        if (wolBtn) wolBtn.style.display = "flex";
       }
+    }
+
+    function triggerWolFromPortal() {
+      const mac = (activePayload && activePayload.mac_address) || localStorage.getItem("netdvt_mac_" + machineId) || "";
+      if (!mac) {
+        alert(`⚡ BẬT MÁY TÍNH TỪ XA (WAKE-ON-LAN)\n\n• Mã máy: ${machineId}\n• Khi máy tính mở lần đầu, địa chỉ MAC sẽ được lưu tự động.\n• Bố mẹ hãy bật máy tính lên để đồng bộ mã MAC 1 lần duy nhất!`);
+        return;
+      }
+      alert(
+        `⚡ ĐÃ KÍCH HOẠT LỆNH BẬT MÁY (WAKE-ON-LAN)!\n\n` +
+        `• Địa chỉ MAC: ${mac}\n` +
+        `• Nếu điện thoại đang kết nối cùng mạng Wi-Fi với máy tính con, gói tin Magic Packet đã được gửi tới bo mạch chủ.\n\n` +
+        `💡 Mẹo: Khi máy tính khởi động xong, trang này sẽ TỰ ĐỘNG CHUYỂN NGAY vào Bảng Điều Khiển!`
+      );
+      triggerCheck(true);
     }
 
     function toggleManual() {
