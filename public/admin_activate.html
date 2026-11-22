@@ -425,12 +425,9 @@
         </div>
 
         <div class="form-group">
-          <label>Gói bản quyền (Kích hoạt theo từng năm - Không có gói 2 năm):</label>
+          <label>Gói bản quyền (Gói duy nhất 1 Năm - Dùng thử nghiệm & Bảo hành chuẩn):</label>
           <select id="manualTierSelect">
-            <option value="YEAR1" selected>Gói 1 Năm (Khuyên Dùng)</option>
-            <option value="YEAR3">Gói 3 Năm</option>
-            <option value="YEAR5">Gói 5 Năm</option>
-            <option value="LIFETIME">Gói Vĩnh Viễn (Trọn Đời)</option>
+            <option value="YEAR1" selected>🌟 Gói 1 Năm (Duy Nhất)</option>
           </select>
         </div>
 
@@ -764,18 +761,12 @@
               🎯 Gói yêu cầu: <b>${it.tier_name || it.tier || "Gói 1 Năm"}</b>
             </div>
 
-            <div class="action-grid">
+            <div class="action-grid" style="grid-template-columns: 1fr 1fr;">
               <a href="https://zalo.me/${cleanPhone}" target="_blank" class="btn btn-zalo">
                 💬 Nhắn Zalo
               </a>
               <button class="btn btn-success" onclick="approveRegistration('${safeMid}', 'YEAR1', '${safeName}', '${safePhone}')">
                 ⚡ Kích Hoạt 1 Năm
-              </button>
-              <button class="btn btn-primary" onclick="approveRegistration('${safeMid}', 'YEAR3', '${safeName}', '${safePhone}')">
-                ⚡ Gói 3 Năm
-              </button>
-              <button class="btn btn-primary" onclick="approveRegistration('${safeMid}', 'LIFETIME', '${safeName}', '${safePhone}')">
-                👑 Gói Vĩnh Viễn
               </button>
             </div>
           </div>
@@ -827,10 +818,7 @@
     // ========================================================
     async function approveRegistration(machineId, tier, name, phone) {
       const tierMap = {
-        "YEAR1": "1 Năm",
-        "YEAR3": "3 Năm",
-        "YEAR5": "5 Năm",
-        "LIFETIME": "Vĩnh Viễn (Trọn Đời)"
+        "YEAR1": "1 Năm (Duy Nhất)"
       };
       if (!confirm(`Xác nhận kích hoạt Gói ${tierMap[tier] || tier} cho máy:\n${name} (${machineId})?`)) {
         return;
