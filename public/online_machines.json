@@ -2,6 +2,7 @@
   "DVT-0915213717": {
     "url": "https://matthew-hans-void-elder.trycloudflare.com",
     "local_ip": "192.168.1.3",
-    "status": "ONLINE"
+    "status": "ONLINE",
+    "updated_at": "test"
   }
 }
