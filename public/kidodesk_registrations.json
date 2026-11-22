@@ -1,5 +1,16 @@
 [
   {
+    "id": "KIDO-1795365310365",
+    "machine_id": "DVT-0915213717",
+    "fullname": "Đinh Thành",
+    "phone": "0912213717",
+    "tier": "YEAR1",
+    "tier_name": "Bản Quyền 1 Năm - DT KidoDesk Pro",
+    "note": "",
+    "status": "PENDING",
+    "createdAt": "22/11/2026 23:35:10"
+  },
+  {
     "id": "KIDO-TEST-M2",
     "machine_id": "DVT-0972213717",
     "fullname": "Thầy giáo Đinh Văn Thành (Máy 2)",
