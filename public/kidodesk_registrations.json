@@ -7,10 +7,11 @@
     "tier": "TRIAL7",
     "tier_name": "Dùng Thử 7 Ngày",
     "note": "",
-    "status": "APPROVED",
+    "status": "REVOKED",
     "createdAt": "22/11/2026 23:35:10",
     "approvedAt": "12:15:02 23/11/2026",
-    "license_key": "DVT-TRIAL7-20261130-phnWF-YaJFtklbJSptJ_eSCf4yqNeXmfT54JLomEgS4EghlEtZAdksCbhjkngWOl9lZA_l8CWxUOONTy2S77DQ"
+    "license_key": "DVT-TRIAL7-20261130-phnWF-YaJFtklbJSptJ_eSCf4yqNeXmfT54JLomEgS4EghlEtZAdksCbhjkngWOl9lZA_l8CWxUOONTy2S77DQ",
+    "revoked_at": "19:24:28 23/11/2026"
   },
   {
     "id": "KIDO-TEST-M2",
