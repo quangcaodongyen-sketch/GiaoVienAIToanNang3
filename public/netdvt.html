@@ -4,9 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DT KidoDesk - Bàn học số an toàn – Đồng hành cùng con từ xa (Đinh Thành 0915.213717)</title>
+  <meta name="apple-mobile-web-app-title" content="DT KidoDesk">
+  <meta name="application-name" content="DT KidoDesk">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0284c7">
+  <meta property="og:title" content="DT KidoDesk - Bàn học số an toàn">
+  <meta property="og:site_name" content="DT KidoDesk">
+  <meta name="description" content="DT KidoDesk - Bàn học số an toàn – Đồng hành cùng con từ xa - Đinh Thành 0915.213717">
   <link rel="icon" type="image/png" href="/app_logo.png">
+  <link rel="apple-touch-icon" href="/app_logo.png">
+  <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22DT%20KidoDesk%20-%20B%C3%A0n%20h%E1%BB%8Dc%20s%E1%BB%91%20an%20to%C3%A0n%22%2C%22short_name%22%3A%22DT%20KidoDesk%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230c1836%22%2C%22theme_color%22%3A%22%230284c7%22%7D">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body {
@@ -185,7 +194,7 @@
     <div style="font-size: 0.95rem; color: #bae6fd; font-style: italic; margin-top: 2px; margin-bottom: 6px;">Bàn học số an toàn – Đồng hành cùng con từ xa</div>
     <div class="author">Thầy giáo Đinh Văn Thành • Hotline/Zalo: 0915.213717</div>
 
-    <div class="machine-tag">Mã máy tính: <b id="displayMachineId">DVT-9569-E790</b></div>
+    <div class="machine-tag">Mã máy tính: <b id="displayMachineId">--</b> <span id="displayDeviceBadge" style="margin-left: 6px; color: #fef08a; font-weight: 700;"></span></div>
 
     <!-- Nút Vào Bảng Điều Khiển Chính -->
     <a id="btnConnectLive" href="#" class="action-btn btn-primary" style="display: none;">
@@ -217,9 +226,8 @@
     </div>
 
     <div class="info-box">
-      <b>⚡ CỔNG KẾT NỐI CỐ ĐỊNH DUY NHẤT:</b><br>
-      • Đường link và mã QR này là <b>cố định vĩnh viễn</b> cho máy tính này.<br>
-      • Khi máy tính con khởi động lại hoặc chạy ngầm, cổng này <b>tự động kết nối lại</b> mà không cần quét mã mới!<br>
+      <b>⚡ CỔNG KẾT NỐI TRỰC TUYẾN:</b><br>
+      • Bố Mẹ quét mã QR hoặc truy cập đường link để kết nối trực tiếp với máy tính.<br>
       • Bố Mẹ hãy bấm <span style="color:#38bdf8;font-weight:700;">"Thêm vào Màn hình chính"</span> để mở 1 chạm như app thật.
     </div>
 
@@ -233,18 +241,25 @@
     let machineId = (params.get("id") || "").trim();
     if (!machineId) {
       try {
-        machineId = (localStorage.getItem("netdvt_active_machine_id") || "DVT-9569-E790").trim();
+        machineId = (localStorage.getItem("netdvt_active_machine_id") || "").trim();
       } catch(e) {
-        machineId = "DVT-9569-E790";
+        machineId = "";
       }
     } else {
       try {
         localStorage.setItem("netdvt_active_machine_id", machineId);
       } catch(e) {}
     }
-    document.getElementById("displayMachineId").innerText = machineId;
+    document.getElementById("displayMachineId").innerText = machineId || "Chưa xác định";
 
-    const hubTopic = "dvt_hub_" + machineId.replace(/-/g, "_");
+    let deviceParamName = (params.get("name") || "").trim();
+    let deviceParamType = (params.get("dtype") || "").trim();
+    if (deviceParamName) {
+      const devBadge = document.getElementById("displayDeviceBadge");
+      if (devBadge) devBadge.innerText = "• " + deviceParamName;
+    }
+
+    const hubTopic = machineId ? ("dvt_hub_" + machineId.replace(/-/g, "_")) : "";
     const cacheKey = "netdvt_cache_" + machineId;
     let autoRedirectTimer = null;
     let pollCount = 0;
@@ -267,13 +282,18 @@
     if (urlFromParam || lanFromParam) {
       const directPayload = {
         url: urlFromParam || (lanFromParam ? `http://${lanFromParam}:8888` : ""),
-        local_ip: lanFromParam || "192.168.1.5",
+        local_ip: lanFromParam || "",
         machine_id: machineId
       };
       applyPayload(directPayload, true);
     }
 
     function applyPayload(payload, isOnline = true) {
+      if (!payload) return;
+      if (payload.machine_id && machineId && payload.machine_id.toUpperCase() !== machineId.toUpperCase()) {
+        console.warn("Bỏ qua payload của máy khác:", payload.machine_id, "khi đang tìm máy:", machineId);
+        return;
+      }
       activePayload = payload;
       try {
         localStorage.setItem(cacheKey, JSON.stringify(payload));
@@ -303,19 +323,29 @@
         document.getElementById("btnLiveSub").innerText = payload.url.replace(/^https?:\/\//, '');
       }
 
-      const localIp = payload.local_ip || "192.168.1.5";
-      btnLan.style.display = "flex";
-      btnLan.href = `http://${localIp}:8888`;
-      document.getElementById("btnLanSub").innerText = `http://${localIp}:8888 (Ở cùng nhà)`;
+      const localIp = payload.local_ip || lanFromParam;
+      if (localIp && localIp !== "127.0.0.1") {
+        btnLan.style.display = "flex";
+        btnLan.href = `http://${localIp}:8888`;
+        document.getElementById("btnLanSub").innerText = `http://${localIp}:8888 (Ở cùng nhà)`;
+      }
 
       if (isOnline && payload.url && !autoRedirectTimer && !params.get("noredirect")) {
         autoRedirectTimer = setTimeout(() => {
           if (activePayload && activePayload.url) {
             let targetUrl = activePayload.url;
+            // Gắn target_mid để client nhận diện ngay máy tính vừa quét QR
+            targetUrl += (targetUrl.includes("#") ? "&" : "#") + "target_mid=" + encodeURIComponent(machineId);
+            if (deviceParamName) {
+              targetUrl += "&target_name=" + encodeURIComponent(deviceParamName);
+            }
+            if (deviceParamType) {
+              targetUrl += "&target_dtype=" + encodeURIComponent(deviceParamType);
+            }
             try {
               const savedDevs = localStorage.getItem("netdvt_managed_devices");
-              if (savedDevs && !targetUrl.includes("#devices=")) {
-                targetUrl += (targetUrl.includes("#") ? "&" : "#") + "devices=" + encodeURIComponent(savedDevs);
+              if (savedDevs && !targetUrl.includes("&devices=")) {
+                targetUrl += "&devices=" + encodeURIComponent(savedDevs);
               }
             } catch(e) {}
             window.location.href = targetUrl;
@@ -327,11 +357,12 @@
     // 3. Thử kiểm tra nội mạng trực tiếp siêu tốc (localhost & LAN IP)
     async function probeLocalNetwork() {
       const candidates = ["http://localhost:8888", "http://127.0.0.1:8888"];
-      if (activePayload && activePayload.local_ip) {
+      if (activePayload && activePayload.local_ip && activePayload.local_ip !== "127.0.0.1") {
         candidates.push(`http://${activePayload.local_ip}:8888`);
       }
-      candidates.push("http://192.168.1.3:8888");
-      candidates.push("http://192.168.1.5:8888");
+      if (lanFromParam && lanFromParam !== "127.0.0.1" && !candidates.includes(`http://${lanFromParam}:8888`)) {
+        candidates.push(`http://${lanFromParam}:8888`);
+      }
 
       try {
         const fetches = candidates.map(async (base) => {
@@ -342,9 +373,14 @@
             clearTimeout(tid);
             if (res.ok) {
               const data = await res.json();
+              // Chống nhầm máy: chỉ chấp nhận khi trùng machine_id
+              if (data && data.machine_id && machineId && data.machine_id.toUpperCase() !== machineId.toUpperCase()) {
+                console.warn("[Local Probe] Máy tại", base, "là", data.machine_id, "không phải máy đang tìm:", machineId);
+                return false;
+              }
               const p = {
                 url: data.public_url || base,
-                local_ip: data.local_ip || "192.168.1.3",
+                local_ip: data.local_ip || base.replace(/https?:\/\//, '').split(':')[0],
                 machine_id: data.machine_id || machineId
               };
               applyPayload(p, true);
@@ -373,7 +409,8 @@
         clearTimeout(tid);
         if (!res.ok) return false;
         const data = await res.json();
-        const item = data[machineId] || (machineId === "DVT-0915213717" ? data["DVT-9569-E790"] : null) || (machineId === "DVT-9569-E790" ? data["DVT-0915213717"] : null);
+        // Lấy đúng máy, không bao giờ fallback bừa bãi
+        const item = data[machineId];
         if (item && item.url) {
           applyPayload({
             url: item.url,
@@ -403,15 +440,18 @@
         const issues = await res.json();
         for (const iss of issues) {
           const title = (iss.title || "").toUpperCase();
-          const body = (iss.body || "").toUpperCase();
           const targetMid = machineId.toUpperCase();
-          if (title.includes(targetMid) || body.includes(targetMid) || targetMid === "DVT-9569-E790" || targetMid === "DVT-0915213717" || title.includes("DVT-9569-E790") || title.includes("DVT-0915213717")) {
+          // Tuyệt đối chỉ nhận Issue chứa đúng mã máy đang quét
+          if (targetMid && title.includes(targetMid)) {
             const m = (iss.body || "").match(/```netdvt-online\s*([\s\S]*?)\s*```/);
             if (m && m[1]) {
               const p = JSON.parse(m[1]);
               if (p && (p.url || p.public_url)) {
-                applyPayload(p, true);
-                return true;
+                if (!p.machine_id || p.machine_id.toUpperCase() === targetMid) {
+                  p.machine_id = machineId;
+                  applyPayload(p, true);
+                  return true;
+                }
               }
             }
           }
@@ -445,14 +485,17 @@
             if (eventObj.event === "message" && eventObj.message) {
               const p = JSON.parse(eventObj.message);
               if (p && p.url) {
-                latestPayload = p;
-                break;
+                if (!p.machine_id || p.machine_id.toUpperCase() === machineId.toUpperCase()) {
+                  latestPayload = p;
+                  break;
+                }
               }
             }
           } catch(e) {}
         }
 
         if (latestPayload && latestPayload.url) {
+          latestPayload.machine_id = machineId;
           applyPayload(latestPayload, true);
           return true;
         }
