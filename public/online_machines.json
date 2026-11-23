@@ -8,12 +8,12 @@
     "last_seen": "09:11:07 23/11/2026"
   },
   "DVT-0972213717": {
-    "url": "https://collect-occupation-electricity-ranch.trycloudflare.com",
+    "url": "https://api.trycloudflare.com",
     "local_ip": "192.168.100.154",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795422396.7303238,
-    "last_seen": "15:26:36 23/11/2026"
+    "timestamp": 1795424518.3530402,
+    "last_seen": "16:01:58 23/11/2026"
   },
   "DVT-0EE2-9995": {
     "url": "https://videos-lace-boost-laden.trycloudflare.com",
