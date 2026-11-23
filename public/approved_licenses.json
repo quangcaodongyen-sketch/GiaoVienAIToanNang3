@@ -15,6 +15,10 @@
     "tier_name": "Bản Quyền 1 Năm (Duy Nhất) - DT KidoDesk Pro",
     "fullname": "Thầy giáo Đinh Văn Thành (Máy 2)",
     "phone": "0915213717",
-    "approved_at": "22:46:51 22/11/2026"
+    "approved_at": "22:46:51 22/11/2026",
+    "status": "REVOKED",
+    "revoked": true,
+    "revoke_reason": "Chưa thanh toán",
+    "revoked_at": "07:27:18 23/11/2026"
   }
 ]
