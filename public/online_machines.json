@@ -12,8 +12,8 @@
     "local_ip": "192.168.1.13",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795435049.198234,
-    "last_seen": "18:57:29 23/11/2026"
+    "timestamp": 1795435236.0778553,
+    "last_seen": "19:00:36 23/11/2026"
   },
   "DVT-0EE2-9995": {
     "url": "https://sox-reasonable-tries-demand.trycloudflare.com",
