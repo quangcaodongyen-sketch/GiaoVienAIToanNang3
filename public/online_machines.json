@@ -12,8 +12,8 @@
     "local_ip": "192.168.100.154",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795421654.7188797,
-    "last_seen": "15:14:14 23/11/2026"
+    "timestamp": 1795421665.441903,
+    "last_seen": "15:14:25 23/11/2026"
   },
   "DVT-0EE2-9995": {
     "url": "https://columbus-itunes-fuel-chem.trycloudflare.com",
