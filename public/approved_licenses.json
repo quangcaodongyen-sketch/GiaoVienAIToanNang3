@@ -1,11 +1,13 @@
 [
   {
     "machine_id": "DVT-0915213717",
-    "license_key": "DVT-YEAR1-20271122-qhB-tGiu37mxFjNGqbpV96bYnjM-sbIR60c68FOVT0uGZfMXU74NqGaz62E11MOgodZOmuqrd027D4TuIayfDg",
-    "tier": "YEAR1",
-    "tier_name": "Bản Quyền 1 Năm (Duy Nhất) - DT KidoDesk Pro",
+    "license_key": "DVT-TRIAL7-20261130-phnWF-YaJFtklbJSptJ_eSCf4yqNeXmfT54JLomEgS4EghlEtZAdksCbhjkngWOl9lZA_l8CWxUOONTy2S77DQ",
+    "tier": "TRIAL7",
+    "tier_name": "Bản Quyền Dùng Thử 7 Ngày - DT KidoDesk",
     "fullname": "Đinh Thành",
     "phone": "0912213717",
-    "approved_at": "23:35:36 22/11/2026"
+    "status": "APPROVED",
+    "revoked": false,
+    "approved_at": "12:15:02 23/11/2026"
   }
 ]
