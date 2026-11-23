@@ -264,6 +264,60 @@
     let autoRedirectTimer = null;
     let pollCount = 0;
     let activePayload = null;
+    let hasRedirected = false;
+
+    // Hàm kiểm tra sinh tồn URL trước khi redirect - TUYỆT ĐỐI CHỐNG LỖI ERROR 1033 CLOUDFLARE
+    async function probeAndRedirect(targetCandidateUrl, sourceLabel = "Kênh Dò Tìm") {
+      if (hasRedirected || !targetCandidateUrl || params.get("noredirect")) return false;
+      const cleanUrl = targetCandidateUrl.replace(/\/+$/, "");
+
+      try {
+        const probeCtrl = new AbortController();
+        const pTid = setTimeout(() => probeCtrl.abort(), 1800);
+        const pRes = await fetch(cleanUrl + "/api/status", {
+          method: "GET",
+          cache: "no-store",
+          signal: probeCtrl.signal
+        });
+        clearTimeout(pTid);
+
+        if (pRes.ok) {
+          const data = await pRes.json();
+          // Bảo vệ chống nhầm máy
+          if (machineId && data.machine_id && data.machine_id.toUpperCase() !== machineId.toUpperCase()) {
+            console.warn(`[Portal] ${cleanUrl} là máy ${data.machine_id}, không khớp máy đang tìm ${machineId}`);
+            return false;
+          }
+
+          // URL HOÀN TOÀN SỐNG & SẴN SÀNG!
+          hasRedirected = true;
+          const badge = document.getElementById("statusBadge");
+          const stText = document.getElementById("statusText");
+          if (badge) badge.className = "badge-status badge-online";
+          if (stText) stText.innerText = "ĐANG VÀO BẢNG ĐIỀU KHIỂN...";
+
+          let redirectUrl = cleanUrl;
+          redirectUrl += (redirectUrl.includes("#") ? "&" : "#") + "target_mid=" + encodeURIComponent(machineId);
+          if (deviceParamName) redirectUrl += "&target_name=" + encodeURIComponent(deviceParamName);
+          if (deviceParamType) redirectUrl += "&target_dtype=" + encodeURIComponent(deviceParamType);
+          try {
+            const savedDevs = localStorage.getItem("netdvt_managed_devices");
+            if (savedDevs && !redirectUrl.includes("&devices=")) {
+              redirectUrl += "&devices=" + encodeURIComponent(savedDevs);
+            }
+          } catch(e) {}
+
+          console.log(`[Portal] URL sống hợp lệ (${sourceLabel}): ${cleanUrl} -> Chuyển hướng ngay!`);
+          window.location.href = redirectUrl;
+          return true;
+        } else {
+          console.warn(`[Portal] ${cleanUrl} trả về status ${pRes.status} (Cloudflare Tunnel cũ hoặc đã đóng)`);
+        }
+      } catch (e) {
+        console.warn(`[Portal] Kiểm tra ${cleanUrl} thất bại:`, e);
+      }
+      return false;
+    }
 
     // 1. Phục hồi dữ liệu kết nối đã lưu trước đó nếu có
     try {
@@ -330,27 +384,9 @@
         document.getElementById("btnLanSub").innerText = `http://${localIp}:8888 (Ở cùng nhà)`;
       }
 
-      if (isOnline && payload.url && !autoRedirectTimer && !params.get("noredirect")) {
-        autoRedirectTimer = setTimeout(() => {
-          if (activePayload && activePayload.url) {
-            let targetUrl = activePayload.url;
-            // Gắn target_mid để client nhận diện ngay máy tính vừa quét QR
-            targetUrl += (targetUrl.includes("#") ? "&" : "#") + "target_mid=" + encodeURIComponent(machineId);
-            if (deviceParamName) {
-              targetUrl += "&target_name=" + encodeURIComponent(deviceParamName);
-            }
-            if (deviceParamType) {
-              targetUrl += "&target_dtype=" + encodeURIComponent(deviceParamType);
-            }
-            try {
-              const savedDevs = localStorage.getItem("netdvt_managed_devices");
-              if (savedDevs && !targetUrl.includes("&devices=")) {
-                targetUrl += "&devices=" + encodeURIComponent(savedDevs);
-              }
-            } catch(e) {}
-            window.location.href = targetUrl;
-          }
-        }, 1200);
+      // THĂM DÒ TRƯỚC KHI CHUYỂN HƯỚNG: Tuyệt đối không chuyển hướng mù quáng để tránh Error 1033
+      if (isOnline && payload.url && !hasRedirected && !params.get("noredirect")) {
+        probeAndRedirect(payload.url, "Payload Trực Tiếp");
       }
     }
 
@@ -398,6 +434,7 @@
 
     // 4. Kiểm tra qua GitHub Static JSON (Cực kỳ chính xác, tốc độ 0.1s, không bao giờ rate limit)
     async function checkGitHubRawJsonOnline() {
+      if (hasRedirected) return true;
       try {
         const controller = new AbortController();
         const tid = setTimeout(() => controller.abort(), 2000);
@@ -410,7 +447,12 @@
         if (!res.ok) return false;
         const data = await res.json();
         // Lấy đúng máy, không bao giờ fallback bừa bãi
-        const item = data[machineId];
+        const targetMid = (machineId || "").toUpperCase();
+        let item = data[machineId];
+        if (!item && targetMid) {
+          const entry = Object.entries(data).find(([k]) => k.toUpperCase() === targetMid);
+          if (entry) item = entry[1];
+        }
         if (item && item.url) {
           applyPayload({
             url: item.url,
@@ -418,7 +460,7 @@
             machine_id: machineId,
             status: item.status || "ONLINE"
           }, true);
-          return true;
+          return await probeAndRedirect(item.url, "GitHub Cloud JSON");
         }
       } catch(e) {}
       return false;
@@ -426,6 +468,7 @@
 
     // 5. Kiểm tra qua GitHub Cloud Issues API (Kênh sao lưu đám mây chính thức)
     async function checkGitHubCloudOnline() {
+      if (hasRedirected) return true;
       try {
         const controller = new AbortController();
         const tid = setTimeout(() => controller.abort(), 3000);
@@ -440,7 +483,7 @@
         const issues = await res.json();
         for (const iss of issues) {
           const title = (iss.title || "").toUpperCase();
-          const targetMid = machineId.toUpperCase();
+          const targetMid = (machineId || "").toUpperCase();
           // Tuyệt đối chỉ nhận Issue chứa đúng mã máy đang quét
           if (targetMid && title.includes(targetMid)) {
             const m = (iss.body || "").match(/```netdvt-online\s*([\s\S]*?)\s*```/);
@@ -450,7 +493,7 @@
                 if (!p.machine_id || p.machine_id.toUpperCase() === targetMid) {
                   p.machine_id = machineId;
                   applyPayload(p, true);
-                  return true;
+                  return await probeAndRedirect(p.url || p.public_url, "GitHub Issues");
                 }
               }
             }
@@ -464,6 +507,7 @@
 
     // 6. Kiểm tra qua Hub trực tuyến ntfy.sh (Kênh thời gian thực)
     async function checkHubOnline() {
+      if (hasRedirected) return true;
       try {
         const controller = new AbortController();
         const tid = setTimeout(() => controller.abort(), 2500);
@@ -485,7 +529,7 @@
             if (eventObj.event === "message" && eventObj.message) {
               const p = JSON.parse(eventObj.message);
               if (p && p.url) {
-                if (!p.machine_id || p.machine_id.toUpperCase() === machineId.toUpperCase()) {
+                if (!p.machine_id || p.machine_id.toUpperCase() === (machineId || "").toUpperCase()) {
                   latestPayload = p;
                   break;
                 }
@@ -497,7 +541,7 @@
         if (latestPayload && latestPayload.url) {
           latestPayload.machine_id = machineId;
           applyPayload(latestPayload, true);
-          return true;
+          return await probeAndRedirect(latestPayload.url, "Hub ntfy");
         }
       } catch(err) {
         console.warn("Hub check warning:", err);
