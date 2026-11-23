@@ -6,8 +6,10 @@
     "tier_name": "Bản Quyền Dùng Thử 7 Ngày - DT KidoDesk",
     "fullname": "Đinh Thành",
     "phone": "0912213717",
-    "status": "APPROVED",
-    "revoked": false,
-    "approved_at": "12:15:02 23/11/2026"
+    "status": "REVOKED",
+    "revoked": true,
+    "approved_at": "12:15:02 23/11/2026",
+    "revoke_reason": "Chưa thanh toán",
+    "revoked_at": "19:24:28 23/11/2026"
   }
 ]
