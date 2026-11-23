@@ -20,9 +20,10 @@
     "tier": "YEAR1",
     "tier_name": "Gói 1 Năm (Khuyên Dùng)",
     "note": "Đăng ký thử nghiệm Máy 2",
-    "status": "APPROVED",
+    "status": "REVOKED",
     "createdAt": "22/11/2026 22:32:38",
     "approvedAt": "22:46:51 22/11/2026",
-    "license_key": "DVT-YEAR1-20271122-uZaTVJCKYmd2yLIgxF0lpDi5nNgrMimJL2CR04E3V1iFecITfXwjmxL8NI0jXce8d4tuoKH0G5-X-JjJxsxqBQ"
+    "license_key": "DVT-YEAR1-20271122-uZaTVJCKYmd2yLIgxF0lpDi5nNgrMimJL2CR04E3V1iFecITfXwjmxL8NI0jXce8d4tuoKH0G5-X-JjJxsxqBQ",
+    "revoked_at": "07:27:18 23/11/2026"
   }
 ]
