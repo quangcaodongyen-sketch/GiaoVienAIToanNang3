@@ -402,8 +402,8 @@
         <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 8px #10b981;"></span>
         <span style="font-size: 0.82rem; font-weight: 800; color: #0284c7; text-transform: uppercase;">Atc-KidiDesk Online</span>
       </div>
-      <button class="btn-close-app" onclick="closeAdminApp()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9999px; font-size: 0.82rem; font-weight: 800; background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; border: none; box-shadow: 0 3px 10px rgba(2, 132, 199, 0.35); cursor: pointer;">
-        🏠 Về Màn Hình Chính
+      <button class="btn-close-app" onclick="closeAdminApp()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 9999px; font-size: 0.88rem; font-weight: 800; background: #ef4444; color: #ffffff; border: 1.5px solid #dc2626; box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35); cursor: pointer;" title="Thoát ứng dụng và trở về màn hình chính điện thoại">
+        🚪 Exit
       </button>
     </div>
 
@@ -695,23 +695,16 @@
       try {
         window.close();
       } catch (e) {}
-      
+
       // 2. Thử quay lại lịch sử duyệt
       if (window.history.length > 1) {
         window.history.back();
       }
-      
+
       // 3. Hiển thị overlay hướng dẫn vuốt về màn hình chính trên iOS Safari / PWA
       const overlay = document.getElementById("homeExitOverlay");
       if (overlay) {
         overlay.style.display = "flex";
-      }
-    } catch (e) {}
-        if (window.history.length > 1) {
-          window.history.back();
-        } else {
-          window.location.href = "about:blank";
-        }
       }
     }
 
