@@ -22,5 +22,13 @@
     "status": "ONLINE",
     "timestamp": 1795530432.2232223,
     "last_seen": "21:27:12 24/11/2026"
+  },
+  "DVT-2028-C986": {
+    "url": "https://guest-heated-invited-barrier.trycloudflare.com",
+    "local_ip": "192.168.1.13",
+    "port": 8888,
+    "status": "ONLINE",
+    "timestamp": 1795530768.3023365,
+    "last_seen": "21:32:48 24/11/2026"
   }
 }
