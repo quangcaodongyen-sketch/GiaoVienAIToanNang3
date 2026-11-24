@@ -557,10 +557,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     }
   }, [currentStudent]);
 
+  const [pendingAcceptInviteId, setPendingAcceptInviteId] = useState<string | null>(null);
+
   const handleAcceptPeerInvite = (inviteId: string) => {
     if (!currentStudent) {
-      alert('Em hãy chọn tên hoặc đăng ký tài khoản ở bên dưới để nhận ngay +30 điểm cùng bạn nhé!');
-      window.scrollTo({ top: 350, behavior: 'smooth' });
+      setPendingAcceptInviteId(inviteId);
+      const inv = peerInvites.find(i => i.id === inviteId);
+      const inviterName = inv ? inv.inviterName : 'bạn của em';
+      alert(`🎉 Em đang chấp nhận lời mời cùng học từ bạn ${inviterName}!\n\nEm hãy chọn tên hoặc đăng ký tài khoản ở biểu mẫu bên dưới. Ngay khi em đăng nhập, bạn ${inviterName} (bên mời) và cả em đều sẽ được cộng ngay +30 điểm thi đua!`);
+      window.scrollTo({ top: 380, behavior: 'smooth' });
       return;
     }
     const res = studentGradebookService.acceptPeerInvitation(inviteId, currentStudent);
@@ -573,6 +578,19 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       alert(res.message);
     }
   };
+
+  // Tự động xử lý nhận thưởng ngay khi học sinh đăng nhập sau khi bấm chấp nhận
+  useEffect(() => {
+    if (!currentStudent || !pendingAcceptInviteId) return;
+    const res = studentGradebookService.acceptPeerInvitation(pendingAcceptInviteId, currentStudent);
+    if (res.success) {
+      setInviteSuccessNotification(res.message);
+      const updated = studentGradebookService.getActiveStudent();
+      if (updated) setCurrentStudent({ ...updated });
+      setPeerInvites(studentGradebookService.getActiveInvitationsForStudent(currentStudent.name, currentStudent.className));
+    }
+    setPendingAcceptInviteId(null);
+  }, [currentStudent, pendingAcceptInviteId]);
 
   const handleSendInAppInvite = () => {
     if (!currentStudent) return;
@@ -3067,7 +3085,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                   </span>
                 </h3>
                 <p className="text-xs text-slate-950 font-bold mt-0.5">
-                  Có bạn bè quan tâm nhắc nhở, hãy có trách nhiệm vào học ngay để cùng tiến bộ và nhận trọn vẹn điểm thưởng!
+                  Cứ mời và tự liên hệ nhau trong vòng 1 tiếng, ai vào học trước cũng được. Chấp nhận lời mời là bên mời được cộng ngay +30 điểm thi đua!
                 </p>
               </div>
             </div>
@@ -7625,23 +7643,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </p>
             </div>
 
-            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-4 space-y-2.5 text-xs">
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-4 space-y-2.5 text-xs text-left">
               <div className="flex items-start gap-2.5">
                 <span className="text-base leading-none">🚀</span>
                 <div>
-                  <strong className="text-amber-300">Số lượng mời không hạn chế:</strong> Em có thể mời bất kỳ bao nhiêu bạn bè trong và ngoài lớp đều được!
+                  <strong className="text-amber-300">Cứ mời bạn bè thoải mái, không giới hạn:</strong> Em có thể mời bất kỳ bạn bè nào trong và ngoài lớp đều được!
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="text-base leading-none">⏰</span>
                 <div>
-                  <strong className="text-amber-300">Thời hạn lời mời 1 tiếng:</strong> Link mời có hiệu lực đúng 60 phút kể từ lúc bấm sao chép hoặc chia sẻ.
+                  <strong className="text-amber-300">Thời hạn 1 tiếng để tự liên hệ vào học:</strong> Trong vòng 1 tiếng, hai bạn tự liên hệ nhau qua web hoặc Zalo để cùng vào học, <strong className="text-cyan-300">ai vào học trước cũng được</strong>!
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="text-base leading-none">🎁</span>
                 <div>
-                  <strong className="text-emerald-400">Thưởng +30 điểm cho cả hai:</strong> Cứ mỗi khi bạn bấm vào link và tham gia học trong thời hạn 1 tiếng, <strong className="text-amber-300">cả hai bạn đều được cộng ngay +30 điểm</strong> vào Bảng Vàng và Tổ Thi Đua!
+                  <strong className="text-emerald-400">Chấp nhận lời mời là có điểm cho bên mời:</strong> Chỉ cần người bạn được mời bấm chấp nhận và vào học, <strong className="text-amber-300">bên mời ngay lập tức được cộng +30 điểm</strong> và bạn được mời cũng nhận ngay +30 điểm thi đua!
                 </div>
               </div>
             </div>
