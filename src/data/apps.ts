@@ -21,7 +21,7 @@ export const apps: AppCard[] = [
     title: "TRỘN ĐỀ KIỂM TRA CÁC MÔN PRO",
     description: "Trộn và hoán vị đề thi mọi môn học (Toán, KHTN, Lý, Hóa, Sinh, Anh, Văn, Sử, Địa, Tin...) chuẩn Bộ GD&ĐT. Bảo toàn 100% công thức MathType/OMML native và hình vẽ vector. Tùy chọn đảo/khóa nhóm câu linh hoạt, sinh N mã đề kèm Bảng đáp án song song và Ma trận hoán vị.",
     image: "/tronde_pro_banner.png",
-    url: "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+    url: "#tron-de-kiem-tra-pro",
     category: "CÔNG CỤ TẠO ĐỀ & TRỘN ĐỀ",
     levelBadge: "TIỆN ÍCH",
     badge: "MỚI NHẤT PRO",

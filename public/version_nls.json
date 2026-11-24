@@ -5,8 +5,8 @@
   "latestVersion": "4.3.0",
   "releaseDate": "08/11/2026",
   "changelog": "• [08/11/2026 - v4.3.0] Nâng cấp công nghệ bảo vệ bản quyền Anti-Crack Pro 2026 với cơ chế Hardware Anchor vĩnh viễn:\n• Cố định mã máy vĩnh viễn (Hardware Anchor), khắc phục triệt để lỗi nhảy mã khi đổi Wi-Fi, cắm dây mạng LAN, chia sẻ 4G hoặc dùng Offline.\n• Cơ chế Multi-Key Decryption Fallback: Bảo vệ bản quyền không bao giờ bị mất quyền Pro ngay cả khi máy dọn rác hoặc ngắt kết nối mạng.\n• Kích hoạt thông minh đa adapter: Tự động nhận diện và khóa vĩnh viễn mã bản quyền Pro theo key đã cấp của Thầy Đinh Thành.",
-  "downloadUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
-  "zipUrl": "https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing",
+  "downloadUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Cai_Dat_Tich_Hop_NLS_AI.exe",
+  "zipUrl": "https://github.com/quangcaodongyen-sketch/GiaoVienAIToanNang3/releases/download/v3.0-nls/Tich_Hop_NLS_AI_Pass_123.zip",
   "websiteUrl": "https://dekiemtraso.com/",
   "author": "Tác giả: Đinh Thành (Tel/zalo: 0915.213717) - THCS"
 }

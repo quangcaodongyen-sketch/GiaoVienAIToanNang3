@@ -209,8 +209,8 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
       'Đầy đủ các mẫu đề linh hoạt: 20 MCQ + Tự luận hoặc 12 MCQ + Đúng/Sai + Trả lời ngắn + Tự luận',
       'Giao diện Nền xanh chữ trắng chuẩn sư phạm cao cấp, tích hợp Add-in Word Ribbon và xuất song song Bản Giáo viên & Bản Học sinh'
     ],
-    zipUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
-    exeUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zipUrl: EXAM_GDDP_THCS_RESOURCES.fullZipUrl,
+    exeUrl: EXAM_GDDP_THCS_RESOURCES.exeUrl,
     accentColor: 'from-blue-700 to-indigo-800',
     badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/40'
   },
@@ -226,8 +226,8 @@ const SUBJECT_DETAILS: Record<string, SubjectDetail> = {
       'Đầy đủ Ma trận 16 cột 3 tầng, Bản đặc tả 7 cột và Barem điểm chi tiết theo chuẩn Bộ GD&ĐT',
       'Giao diện Nền xanh chữ trắng chuẩn sư phạm cao cấp, tích hợp Add-in Word Ribbon 1-Click'
     ],
-    zipUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
-    exeUrl: 'https://drive.google.com/drive/folders/1zdjJpfoahpD35lbmIpfXfzxz7LDC7wjD?usp=sharing',
+    zipUrl: EXAM_GDDP_THCS_RESOURCES.fullZipUrl,
+    exeUrl: EXAM_GDDP_THCS_RESOURCES.exeUrl,
     accentColor: 'from-teal-700 to-cyan-800',
     badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/40'
   },

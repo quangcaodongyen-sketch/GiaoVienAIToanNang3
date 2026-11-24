@@ -1,5 +1,18 @@
 [
   {
+    "id": "REG-TTS-1795240998912",
+    "machineId": "MB-E10D-BE85",
+    "fullName": "Đinh Thành - Test PC 21-11",
+    "schoolUnit": "THCS Đồng Yên",
+    "phoneNumber": "0915213717",
+    "appId": "smart-listening",
+    "appName": "Smart Listening Pro (Tạo Bài Nghe SGK)",
+    "packageType": "2YEAR",
+    "price": "Ưu đãi sư phạm",
+    "status": "PENDING",
+    "createdAt": "21/11/2026 13:03:18"
+  },
+  {
     "id": "RENEW-1793117531881",
     "machineId": "DVT-GDDP-0B1D-A6A7-5A14",
     "fullName": "Đ Thành",
@@ -26,7 +39,7 @@
     "status": "APPROVED",
     "createdAt": "21/10/2026 05:07:35",
     "note": "Xin gia hạn: Gói 1 Năm. Lời nhắn: Kính nhờ Thầy Thành hỗ trợ gia hạn thêm bản quyền phần mềm Tích Hợp NLS-AI cho em.",
-    "key": "KEY-NLS-20290930-SAT5G3-3AS6QU-ICODPP-V3M4QU-LFFS3L-P2BH55-PLMQ2I-5STBHE-WIJJB7-QPHGJF-MBOHYE-2ALDT3-OTB42R-SIDGYI-ZZNV6E-JH52VD-N7DVSD-Q"
+    "key": "KEY-NLS-20271021-4TRZDB-4RUV4B-3OUUNB-QYXVY3-4N6RCH-VQ4FKQ-XBUWGQ-EIGDPR-RSCUBJ-AO455J-HXHICC-KGLWJS-HMSDJ4-FMDO7Y-NCCBP2-EX5MYS-7KAQKD-Q"
   },
   {
     "id": "REG-2YEAR-MB3B0D1E8A",
@@ -58,21 +71,6 @@
     "reviewedBy": "Admin Thầy Thành (0915.213717)",
     "reviewedAt": "2026-10-14 12:36:59",
     "createdAt": "2026-10-14 12:36:59"
-  },
-  {
-    "id": "REG-LIFETIME-MBE10DBE85",
-    "machineId": "MB-E10D-BE85",
-    "fullName": "Thầy giáo Đinh Văn Thành",
-    "schoolUnit": "THCS Đồng Yên",
-    "phoneNumber": "0915213717",
-    "appId": "smart-listening",
-    "appName": "Smart Listening Pro (Tạo Bài Nghe SGK)",
-    "packageType": "LIFETIME",
-    "price": "Bản quyền Vĩnh viễn (Trọn đời)",
-    "status": "APPROVED",
-    "reviewedBy": "Admin Thầy Thành (0915.213717)",
-    "reviewedAt": "2026-10-14 12:04:55",
-    "createdAt": "2026-10-14 12:04:55"
   },
   {
     "id": "REG-LIFETIME-MB54A908D6",
