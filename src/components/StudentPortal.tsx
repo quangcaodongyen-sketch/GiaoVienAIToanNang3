@@ -431,6 +431,94 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
   const [showPromoRoadmapModal, setShowPromoRoadmapModal] = useState<boolean>(false);
   const promoRoadmapList: PromoRoadmapDay[] = useMemo(() => getPromoRoadmapSchedule(currentPromoDate), [currentPromoDate]);
 
+  // =========================================================================
+  // CHƯƠNG TRÌNH ĐÔI BẠN CÙNG TIẾN: MỜI BẠN CÙNG HỌC (+30Đ) (THẦY ĐINH THÀNH 24/11/2026)
+  // =========================================================================
+  const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
+  const [inviteModalSecondsLeft, setInviteModalSecondsLeft] = useState<number>(3600);
+  const [inviteCopied, setInviteCopied] = useState<boolean>(false);
+  const [incomingInvite, setIncomingInvite] = useState<{
+    refId: string;
+    inviterName: string;
+    className: string;
+    timestamp: number;
+    remainingSeconds: number;
+    isValid: boolean;
+  } | null>(null);
+  const [inviteSuccessNotification, setInviteSuccessNotification] = useState<string | null>(null);
+
+  // Phát hiện và nạp lời mời học từ đường dẫn URL (?invite_ref=...&invite_ts=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refId = urlParams.get('invite_ref');
+      const inviterName = urlParams.get('invite_by') || 'Bạn cùng lớp';
+      const className = urlParams.get('invite_cls') || '';
+      const tsStr = urlParams.get('invite_ts');
+
+      if (refId && tsStr) {
+        const timestamp = parseInt(tsStr, 10);
+        const validity = studentGradebookService.checkStudyInviteValidity(timestamp);
+        setIncomingInvite({
+          refId,
+          inviterName,
+          className,
+          timestamp,
+          remainingSeconds: validity.remainingSeconds,
+          isValid: validity.isValid
+        });
+      }
+    } catch {}
+  }, []);
+
+  // Đếm ngược thời gian cho lời mời đến
+  useEffect(() => {
+    if (!incomingInvite || !incomingInvite.isValid || incomingInvite.remainingSeconds <= 0) return;
+    const timer = setInterval(() => {
+      setIncomingInvite(prev => {
+        if (!prev) return null;
+        const newSec = prev.remainingSeconds - 1;
+        if (newSec <= 0) {
+          return { ...prev, remainingSeconds: 0, isValid: false };
+        }
+        return { ...prev, remainingSeconds: newSec };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [incomingInvite?.isValid]);
+
+  // Đếm ngược thời gian trong Modal Mời bạn của học sinh
+  useEffect(() => {
+    if (!showInviteModal) return;
+    setInviteModalSecondsLeft(3600);
+    const timer = setInterval(() => {
+      setInviteModalSecondsLeft(prev => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [showInviteModal]);
+
+  // Tự động trao thưởng khi học sinh đăng nhập với lời mời hợp lệ
+  useEffect(() => {
+    if (!currentStudent || !incomingInvite || !incomingInvite.isValid) return;
+    if (currentStudent.id === incomingInvite.refId) return; // Không tự thưởng link của chính mình
+
+    const res = studentGradebookService.acceptStudyInvitation(
+      incomingInvite.refId,
+      currentStudent.id,
+      incomingInvite.timestamp
+    );
+
+    if (res.success) {
+      setInviteSuccessNotification(`🎉 Chúc mừng! Cả em và bạn ${incomingInvite.inviterName} (${incomingInvite.className}) đều đã được cộng ngay +30 điểm thi đua Bảng Vàng!`);
+      const updated = studentGradebookService.getActiveStudent();
+      if (updated) setCurrentStudent({ ...updated });
+      setIncomingInvite(null);
+    } else if (res.isAlreadyAccepted) {
+      setIncomingInvite(null);
+    }
+  }, [currentStudent, incomingInvite]);
+
   
   // =========================================================================
   // TỰ ĐỘNG CẬP NHẬT ĐIỂM SỐ CHUẨN XÁC MỖI 2 PHÚT (THẦY ĐINH VĂN THÀNH)
@@ -2836,6 +2924,61 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       <OnlineStudentsBar currentStudent={currentStudent} />
 
       {/* =========================================================================
+          BANNER LỜI MỜI CÙNG HỌC (CHƯƠNG TRÌNH ĐÔI BẠN CÙNG TIẾN - THẦY ĐINH THÀNH)
+      ========================================================================= */}
+      {incomingInvite && incomingInvite.isValid && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 p-4 rounded-2xl shadow-xl border-2 border-amber-300 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-white text-slate-950 flex items-center justify-center text-2xl shadow-md shrink-0">
+              🤝
+            </div>
+            <div>
+              <div className="font-black text-sm sm:text-base flex items-center gap-2 flex-wrap text-white drop-shadow-sm">
+                <span>🎉 BẠN {incomingInvite.inviterName.toUpperCase()} {incomingInvite.className ? `(LỚP ${incomingInvite.className})` : ''} MỜI EM CÙNG HỌC!</span>
+                <span className="px-2 py-0.5 rounded-full bg-slate-950 text-amber-300 text-xs font-black">
+                  +30Đ CẢ HAI BẠN
+                </span>
+              </div>
+              <div className="text-xs text-slate-950 font-bold mt-1">
+                {currentStudent ? (
+                  <span>✅ Em và bạn <strong>{incomingInvite.inviterName}</strong> đã được ghi nhận +30 điểm thi đua vào Bảng Vàng!</span>
+                ) : (
+                  <span>👉 Chọn tên em ở Form bên dưới hoặc Tự đăng ký mới để <strong>CẢ HAI BẠN CÙNG NHẬN NGAY +30 ĐIỂM</strong>!</span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="px-3.5 py-1.5 rounded-xl bg-slate-950 text-amber-300 font-mono font-black text-xs sm:text-sm shadow-md flex items-center gap-1.5 border border-amber-400/40">
+              <span>⏰ Còn:</span>
+              <span>
+                {Math.floor(incomingInvite.remainingSeconds / 60).toString().padStart(2, '0')}:{(incomingInvite.remainingSeconds % 60).toString().padStart(2, '0')}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {incomingInvite && !incomingInvite.isValid && incomingInvite.remainingSeconds <= 0 && (
+        <div className="bg-slate-800/90 text-slate-200 px-4 py-3 rounded-2xl border border-slate-700 mb-4 flex items-center justify-between text-xs">
+          <span>⏰ Lời mời cùng học từ bạn <strong>{incomingInvite.inviterName}</strong> đã quá thời hạn 1 tiếng. Tuy nhiên em vẫn nhận trọn vẹn điểm chuyên cần hôm nay khi tích cực ôn luyện!</span>
+          <button onClick={() => setIncomingInvite(null)} className="text-slate-400 hover:text-white font-bold ml-2 cursor-pointer">✕ Đóng</button>
+        </div>
+      )}
+
+      {inviteSuccessNotification && (
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-4 rounded-2xl shadow-xl border-2 border-emerald-300 mb-4 flex items-center justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center gap-2.5">
+            <span className="text-2xl">🎉</span>
+            <span className="text-sm font-black">{inviteSuccessNotification}</span>
+          </div>
+          <button onClick={() => setInviteSuccessNotification(null)} className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white rounded-lg text-xs font-bold cursor-pointer">
+            Đóng
+          </button>
+        </div>
+      )}
+
+      {/* =========================================================================
           BƯỚC 1: ĐĂNG NHẬP / THÔNG TIN HỌC SINH ĐANG HỌC
       ========================================================================= */}
       {!currentStudent ? (
@@ -3459,7 +3602,15 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setShowInviteModal(true)}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1.5 animate-pulse"
+                title="Mời bạn cùng học - Không giới hạn số lượng, hiệu lực 1 tiếng, nhận ngay +30 điểm cho cả 2 bạn"
+              >
+                <span>🤝 Mời Bạn (+30đ)</span>
+              </button>
               <button
                 type="button"
                 onClick={handleSwitchOtherStudent}
@@ -7277,6 +7428,93 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
         </div>
       )}
 
+      {/* =========================================================================
+          MODAL: ĐÔI BẠN CÙNG TIẾN - MỜI BẠN CÙNG HỌC (+30Đ) (THẦY ĐINH THÀNH 24/11/2026)
+      ========================================================================= */}
+      {showInviteModal && currentStudent && (
+        <div className="fixed inset-0 z-[9999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in">
+          <div className="relative w-full max-w-lg bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 border-amber-400/50 rounded-3xl p-6 shadow-2xl text-white">
+            <button
+              type="button"
+              onClick={() => setShowInviteModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="text-center mb-5">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center text-3xl mx-auto shadow-lg mb-3">
+                🤝
+              </div>
+              <h3 className="text-xl font-black text-amber-300">
+                ĐÔI BẠN CÙNG TIẾN - MỜI BẠN CÙNG HỌC
+              </h3>
+              <p className="text-xs text-blue-200 mt-1 font-medium">
+                Các em học sinh thân mến ! Hãy rủ bạn bè cùng ôn luyện từ vựng và bài tập SGK để cùng tiến bộ và tích lũy điểm thi đua!
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-4 space-y-2.5 text-xs">
+              <div className="flex items-start gap-2.5">
+                <span className="text-base leading-none">🚀</span>
+                <div>
+                  <strong className="text-amber-300">Số lượng mời không hạn chế:</strong> Em có thể mời bất kỳ bao nhiêu bạn bè trong và ngoài lớp đều được!
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="text-base leading-none">⏰</span>
+                <div>
+                  <strong className="text-amber-300">Thời hạn lời mời 1 tiếng:</strong> Link mời có hiệu lực đúng 60 phút kể từ lúc bấm sao chép hoặc chia sẻ.
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <span className="text-base leading-none">🎁</span>
+                <div>
+                  <strong className="text-emerald-400">Thưởng +30 điểm cho cả hai:</strong> Cứ mỗi khi bạn bấm vào link và tham gia học trong thời hạn 1 tiếng, <strong className="text-amber-300">cả hai bạn đều được cộng ngay +30 điểm</strong> vào Bảng Vàng và Tổ Thi Đua!
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3.5 mb-5 text-center">
+              <span className="text-xs text-amber-200/90 font-bold">Thời hạn lời mời của em hiện tại:</span>
+              <div className="font-mono text-2xl font-black text-amber-300 tracking-wider my-1">
+                {Math.floor(inviteModalSecondsLeft / 60).toString().padStart(2, '0')}:{(inviteModalSecondsLeft % 60).toString().padStart(2, '0')}
+              </div>
+              <span className="text-[10px] text-slate-400">(Sau 1 tiếng, lời mời hết hạn nhưng em có thể mở lại để tạo link mới bất kỳ lúc nào)</span>
+            </div>
+
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  const inviteData = studentGradebookService.generateStudyInviteLink(currentStudent);
+                  navigator.clipboard.writeText(inviteData.url);
+                  setInviteCopied(true);
+                  setTimeout(() => setInviteCopied(false), 3000);
+                }}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-sm transition cursor-pointer shadow-lg flex items-center justify-center gap-2"
+              >
+                <span>{inviteCopied ? '✅ ĐÃ SAO CHÉP LINK MỜI THÀNH CÔNG!' : '📋 SAO CHÉP LINK MỜI BẠN CÙNG HỌC (+30Đ)'}</span>
+              </button>
+
+              <a
+                href={`https://zalo.me/share?url=${encodeURIComponent(
+                  studentGradebookService.generateStudyInviteLink(currentStudent).url
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition cursor-pointer shadow-md flex items-center justify-center gap-2"
+              >
+                <span>💬 GỬI LỜI MỜI QUA ZALO CHO BẠN</span>
+              </a>
+            </div>
+
+            <div className="text-center mt-5 pt-3 border-t border-slate-800 text-[11px] text-slate-400">
+              Công cụ hỗ trợ, tham khảo dành cho giáo viên và học sinh • Hotline/Zalo Thầy Thành: 0915.213717
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL BẢNG 44 ÂM IPA CHUẨN TUYỆT ĐỐI */}
 

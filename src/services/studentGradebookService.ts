@@ -1380,6 +1380,10 @@ export interface StudentProfile {
   unit4BonusAwarded?: boolean;       // Đã nhận thưởng khởi động nhiệm vụ mới Unit 4 (+50đ)
   unit5BonusAwarded?: boolean;       // Đã nhận thưởng khuyến khích chiến dịch Unit 5 (+50đ)
 
+  // Chương trình Đôi bạn cùng tiến (Thầy Đinh Thành 24/11/2026: 1 tiếng, không giới hạn, +30đ cả 2)
+  referralPoints?: number;           // Tổng điểm nhận được từ việc mời bạn cùng học
+  referralCount?: number;            // Số lượng bạn bè đã mời cùng học thành công
+  acceptedInvites?: string[];        // Danh sách ID lời mời đã chấp nhận
 }
 
 
@@ -4735,6 +4739,155 @@ class StudentGradebookService {
       totalStudents: this.students.length,
       grantedCount,
       totalPointsGranted
+    };
+  }
+
+  // =========================================================================
+  // CHƯƠNG TRÌNH ĐÔI BẠN CÙNG TIẾN: MỜI BẠN CÙNG HỌC (+30Đ) (THẦY ĐINH THÀNH 24/11/2026)
+  // Quy chuẩn:
+  // 1. Số lượng mời bạn bè KHÔNG HẠN CHẾ.
+  // 2. Lời mời có hiệu lực và thời hạn đúng 1 TIẾNG ĐỒNG HỒ (3600 giây).
+  // 3. Mỗi khi người kia chấp nhận lời mời cùng học, CẢ HAI BẠN ĐƯỢC CỘNG NGAY +30 ĐIỂM THI ĐUA!
+  // =========================================================================
+
+  public generateStudyInviteLink(student: StudentProfile): { url: string; expiresAt: number; remainingSeconds: number } {
+    const timestamp = Date.now();
+    const expiresAt = timestamp + 3600 * 1000;
+    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://dekiemtraso.com';
+    const params = new URLSearchParams({
+      invite_ref: student.id,
+      invite_by: student.name,
+      invite_cls: student.className,
+      invite_ts: String(timestamp)
+    });
+    const url = `${origin}/hocsinh?${params.toString()}`;
+    return { url, expiresAt, remainingSeconds: 3600 };
+  }
+
+  public checkStudyInviteValidity(timestamp: number): { isValid: boolean; remainingSeconds: number; isExpired: boolean } {
+    const now = Date.now();
+    const elapsedMs = now - timestamp;
+    const durationMs = 3600 * 1000; // 1 tiếng (60 phút)
+    const remainingMs = durationMs - elapsedMs;
+    const remainingSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+    const isValid = elapsedMs >= 0 && elapsedMs <= durationMs;
+    return {
+      isValid,
+      remainingSeconds,
+      isExpired: !isValid
+    };
+  }
+
+  public acceptStudyInvitation(
+    inviterId: string,
+    inviteeId: string,
+    timestamp: number
+  ): {
+    success: boolean;
+    pointsAwarded: number;
+    inviterName?: string;
+    message: string;
+    isExpired?: boolean;
+    isSelf?: boolean;
+    isAlreadyAccepted?: boolean;
+  } {
+    // 1. Kiểm tra thời hạn 1 tiếng đồng hồ
+    const validity = this.checkStudyInviteValidity(timestamp);
+    if (!validity.isValid) {
+      return {
+        success: false,
+        pointsAwarded: 0,
+        isExpired: true,
+        message: '⏰ Lời mời cùng học này đã quá thời hạn 1 tiếng. Em vẫn nhận được trọn vẹn điểm chuyên cần hôm nay khi tham gia ôn luyện!'
+      };
+    }
+
+    // 2. Không được tự nhận lời mời của chính mình
+    if (inviterId === inviteeId) {
+      return {
+        success: false,
+        pointsAwarded: 0,
+        isSelf: true,
+        message: 'Em không thể tự chấp nhận lời mời của chính mình.'
+      };
+    }
+
+    // 3. Chống cộng điểm trùng lặp cho cùng một cặp bạn trong ngày
+    const todayStr = getLocalDateString();
+    const pairKey = `dvt_invite_${inviterId}_${inviteeId}_${todayStr}`;
+    if (typeof localStorage !== 'undefined' && localStorage.getItem(pairKey)) {
+      return {
+        success: false,
+        pointsAwarded: 0,
+        isAlreadyAccepted: true,
+        message: 'Hai em đã nhận thưởng +30 điểm Đôi Bạn Cùng Tiến trong hôm nay rồi! Hãy cùng nhau tích cực ôn luyện nhé.'
+      };
+    }
+
+    // 4. Tìm kiếm học sinh mời và học sinh được mời
+    const inviter = this.students.find(s => s.id === inviterId);
+    const invitee = this.students.find(s => s.id === inviteeId);
+
+    if (!invitee) {
+      return {
+        success: false,
+        pointsAwarded: 0,
+        message: 'Không tìm thấy hồ sơ học sinh.'
+      };
+    }
+
+    // 5. Cộng +30 điểm cho học sinh được mời (Invitee)
+    const curInviteeMerit = invitee.totalMeritPoints || 0;
+    invitee.totalMeritPoints = curInviteeMerit + 30;
+    invitee.referralPoints = (invitee.referralPoints || 0) + 30;
+    if (!invitee.bonusHistory) invitee.bonusHistory = [];
+    const inviterDisplayName = inviter ? `${inviter.name} (${inviter.className})` : 'bạn cùng lớp';
+    invitee.bonusHistory.push({
+      id: `ref_in_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      points: 30,
+      reason: `Đôi bạn cùng tiến: Chấp nhận lời mời cùng học từ bạn ${inviterDisplayName} (+30đ)`,
+      awardedBy: 'Thầy Đinh Thành',
+      createdAt: new Date().toISOString()
+    });
+    saveStudentVaultMaxPoints(invitee.id, invitee.totalMeritPoints, invitee.name, invitee.className);
+
+    // 6. Cộng +30 điểm cho học sinh mời (Inviter)
+    if (inviter) {
+      const curInviterMerit = inviter.totalMeritPoints || 0;
+      inviter.totalMeritPoints = curInviterMerit + 30;
+      inviter.referralPoints = (inviter.referralPoints || 0) + 30;
+      inviter.referralCount = (inviter.referralCount || 0) + 1;
+      if (!inviter.bonusHistory) inviter.bonusHistory = [];
+      inviter.bonusHistory.push({
+        id: `ref_out_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        points: 30,
+        reason: `Đôi bạn cùng tiến: Mời bạn ${invitee.name} (${invitee.className}) cùng học thành công (+30đ)`,
+        awardedBy: 'Thầy Đinh Thành',
+        createdAt: new Date().toISOString()
+      });
+      saveStudentVaultMaxPoints(inviter.id, inviter.totalMeritPoints, inviter.name, inviter.className);
+    }
+
+    // 7. Lưu dữ liệu an toàn & đồng bộ Cloud
+    this.saveStudents(false);
+    try {
+      localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
+      localStorage.setItem(pairKey, 'true');
+    } catch {}
+
+    const active = this.getActiveStudent();
+    if (active && (active.id === invitee.id || active.id === inviterId)) {
+      const updated = this.students.find(s => s.id === active.id);
+      if (updated) this.setActiveStudent(updated);
+    }
+
+    this.syncToCloud().catch(() => {});
+
+    return {
+      success: true,
+      pointsAwarded: 30,
+      inviterName: inviter ? inviter.name : undefined,
+      message: `🎉 Chúc mừng! Cả em và bạn ${inviter ? inviter.name : 'bạn'} đều đã được cộng ngay +30 điểm thi đua Bảng Vàng!`
     };
   }
 
