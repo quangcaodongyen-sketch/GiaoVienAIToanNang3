@@ -28,6 +28,21 @@ function getStudentKey(s) {
   return s?.studentCode || s?.id || `${n}__${c}`;
 }
 
+function safeParseJson(rawText) {
+  try {
+    if (!rawText) return null;
+    const clean = rawText.trim();
+    const firstBrace = clean.indexOf('{');
+    const lastBrace = clean.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      return JSON.parse(clean.substring(firstBrace, lastBrace + 1));
+    }
+    return JSON.parse(clean);
+  } catch (e) {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -60,8 +75,11 @@ export default async function handler(req, res) {
           }
         });
         if (resp.ok) {
-          const data = await resp.json();
-          return res.status(200).json(data);
+          const rawText = await resp.text();
+          const data = safeParseJson(rawText);
+          if (data) {
+            return res.status(200).json(data);
+          }
         }
       } catch (cloudErr) {
         console.warn('Primary cloud fetch failed:', cloudErr.message);
@@ -88,7 +106,8 @@ export default async function handler(req, res) {
             }
           });
           if (checkResp.ok) {
-            const currentCloudData = await checkResp.json();
+            const rawCheck = await checkResp.text();
+            const currentCloudData = safeParseJson(rawCheck);
             if (Array.isArray(currentCloudData?.students)) {
               existingStudents = currentCloudData.students;
             }

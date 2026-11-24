@@ -1378,6 +1378,7 @@ export interface StudentProfile {
   studyProgressPercent?: number;     // % Tiến độ học tập tổng thể (1 bài = 35%, 2 bài = 70%, 3 bài = 100%)
 
   unit4BonusAwarded?: boolean;       // Đã nhận thưởng khởi động nhiệm vụ mới Unit 4 (+50đ)
+  unit5BonusAwarded?: boolean;       // Đã nhận thưởng khuyến khích chiến dịch Unit 5 (+50đ)
 
 }
 
@@ -2505,6 +2506,9 @@ class StudentGradebookService {
 
       // 4. Rà soát & cấp đủ điểm cho toàn bộ học sinh + thưởng khởi động nhiệm vụ mới Unit 4 (+50đ)
       this.grantUnit4BonusAndRestoreAllStudents();
+
+      // 5. Rà soát & thưởng điểm khuyến khích chiến dịch mới Unit 5 (+50đ) cho toàn thể học sinh
+      this.grantUnit5BonusAndRestoreAllStudents();
 
 
 
@@ -4681,6 +4685,59 @@ class StudentGradebookService {
     };
   }
 
+  // ==================== CẤP ĐỦ ĐIỂM & THƯỞNG KHUYẾN KHÍCH CHIẾN DỊCH UNIT 5 (+50Đ) ====================
+  public grantUnit5BonusAndRestoreAllStudents(): {
+    totalStudents: number;
+    grantedCount: number;
+    totalPointsGranted: number;
+  } {
+    let grantedCount = 0;
+    let totalPointsGranted = 0;
+
+    (this.students || []).forEach(student => {
+      if (!student || !student.name) return;
+      const vaultMax = getStudentVaultMaxPoints(student.id, student.name, student.className);
+      
+      // Nguyên tắc Thầy Thành: Điểm luôn theo hướng có lợi nhất, TUYỆT ĐỐI KHÔNG TRỪ ĐIỂM!
+      const curMerit = student.totalMeritPoints || 0;
+      let newMerit = Math.max(curMerit, vaultMax, 150); // Nâng sàn thi đua tích cực
+
+      // Thưởng 50 điểm khuyến khích khởi động nhiệm vụ mới Unit 5 nếu chưa nhận
+      if (!student.unit5BonusAwarded) {
+        student.unit5BonusAwarded = true;
+        newMerit += 50;
+        student.teacherBonus = (student.teacherBonus || 0) + 50;
+        grantedCount++;
+        totalPointsGranted += 50;
+      }
+
+      if (newMerit > curMerit) {
+        student.totalMeritPoints = newMerit;
+      }
+
+      saveStudentVaultMaxPoints(student.id, student.totalMeritPoints, student.name, student.className);
+    });
+
+    if (grantedCount > 0) {
+      this.saveStudents(false);
+      try {
+        localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
+      } catch {}
+      const active = this.getActiveStudent();
+      if (active) {
+        const updated = this.students.find(s => s.id === active.id);
+        if (updated) this.setActiveStudent(updated);
+      }
+      this.syncToCloud().catch(() => {});
+    }
+
+    return {
+      totalStudents: this.students.length,
+      grantedCount,
+      totalPointsGranted
+    };
+  }
+
 
 
   // ==================== KIỂM TRA & THƯỞNG PHÁO HOA HỌC LIÊN TỤC HÔM QUA ➔ HÔM NAY (+20Đ) ====================
@@ -5098,21 +5155,19 @@ class StudentGradebookService {
           });
 
           if (resp.ok) {
-
-            const json = await resp.json();
+            const raw = await resp.text();
+            let clean = raw.trim();
+            const fb = clean.indexOf('{');
+            const lb = clean.lastIndexOf('}');
+            if (fb !== -1 && lb !== -1 && lb > fb) clean = clean.substring(fb, lb + 1);
+            const json = JSON.parse(clean);
 
             if (json && Array.isArray(json.students)) {
-
               cloudStudents = json.students;
-
             }
-
             if (json && Array.isArray(json.submissions)) {
-
               cloudSubmissions = json.submissions;
-
             }
-
           }
 
         } catch (e) {
@@ -5305,7 +5360,13 @@ class StudentGradebookService {
           headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
         });
         if (checkResp.ok) {
-          const remoteJson = await checkResp.json();
+          const raw = await checkResp.text();
+          let clean = raw.trim();
+          const fb = clean.indexOf('{');
+          const lb = clean.lastIndexOf('}');
+          if (fb !== -1 && lb !== -1 && lb > fb) clean = clean.substring(fb, lb + 1);
+          const remoteJson = JSON.parse(clean);
+
           if (Array.isArray(remoteJson?.students)) remoteStudents = remoteJson.students;
           if (Array.isArray(remoteJson?.submissions)) remoteSubmissions = remoteJson.submissions;
         }
