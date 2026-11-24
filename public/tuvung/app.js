@@ -10641,6 +10641,8 @@ const STUDENT_SYSTEM = {
       badge.style.cursor = 'pointer';
 
       if (loginBtn) loginBtn.style.display = 'none';
+      const regBtn = document.getElementById('headerRegisterBtn');
+      if (regBtn) regBtn.style.display = 'none';
 
 
 
@@ -10725,6 +10727,8 @@ const STUDENT_SYSTEM = {
       badge.style.display = 'none';
 
       if (loginBtn) loginBtn.style.display = 'inline-flex';
+      const regBtn = document.getElementById('headerRegisterBtn');
+      if (regBtn) regBtn.style.display = 'inline-flex';
 
     }
 

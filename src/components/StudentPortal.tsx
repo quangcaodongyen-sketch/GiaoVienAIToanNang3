@@ -2919,31 +2919,31 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             </div>
           )}
 
-          {/* TAB CHUYỂN ĐỔI CHẾ ĐỘ Ở BƯỚC 1: 1. CHỌN TÊN TRONG LỚP | 2. ĐĂNG KÝ NHANH THEO LỚP (MẤT TÀI KHOẢN / MỚI) */}
+          {/* TAB CHUYỂN ĐỔI CHẾ ĐỘ Ở BƯỚC 1: 1. ĐÃ CÓ TÊN TRONG LỚP | 2. TỰ ĐĂNG KÝ TÀI KHOẢN MỚI */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-1.5 rounded-2xl bg-blue-100/70 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700">
             <button
               type="button"
               onClick={() => { setAuthMode('pick'); setQuickError(''); }}
-              className={`py-2 px-3 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                 authMode === 'pick'
                   ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
               }`}
             >
               <span>🔑</span>
-              <span>1. CHỌN TÊN TRONG LỚP (743 Em - 19 Lớp)</span>
+              <span>1. ĐÃ CÓ TÊN TRONG LỚP (Chọn Tên Vào Học)</span>
             </button>
             <button
               type="button"
               onClick={() => { setAuthMode('register'); setRegError(''); }}
-              className={`py-2 px-3 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                 authMode === 'register'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md ring-2 ring-emerald-300'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg ring-2 ring-emerald-300 scale-[1.01]'
+                  : 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-300'
               }`}
             >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>2. ĐĂNG KÝ NHANH THEO LỚP (Mất TK / Mới)</span>
+              <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+              <span>✨ 2. TỰ ĐĂNG KÝ TÀI KHOẢN MỚI (Tặng +50đ)</span>
             </button>
           </div>
 
@@ -3206,13 +3206,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <div className="p-3.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-xs text-emerald-950 dark:text-emerald-200 space-y-1">
                 <div className="font-black text-sm flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
                   <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <span>ĐĂNG KÝ ĐƠN GIẢN THEO LỚP ĐỂ VÀO HỌC NGAY</span>
+                  <span>TỰ ĐĂNG KÝ TÀI KHOẢN HỌC SINH MỚI & VÀO HỌC NGAY</span>
                 </div>
                 <p className="text-[11px] leading-relaxed">
-                  • <strong>Bị mất tài khoản / Đổi thiết bị?</strong> Chỉ cần chọn đúng Lớp và gõ Họ và Tên em, hệ thống sẽ <strong>tự động tìm lại và bảo toàn 100% điểm số cũ</strong> của em!
+                  • <strong>Học sinh tự đăng ký:</strong> Các em chỉ cần chọn Lớp và gõ Họ và Tên của mình. Hệ thống sẽ tự động tạo tài khoản, tặng ngay <strong>+{loginRewardInfo.points} điểm chuyên cần</strong> khởi động thi đua và đăng nhập vào học ngay lập tức!
                 </p>
                 <p className="text-[11px] leading-relaxed">
-                  • <strong>Học sinh mới:</strong> Tặng ngay <strong>+{loginRewardInfo.points} điểm</strong> khi đăng nhập lần đầu hôm nay + 15 điểm khuyến khích khởi động thi đua!
+                  • <strong>Đã có tài khoản nhưng đổi thiết bị?</strong> Chỉ cần nhập lại đúng Họ Tên và Lớp, hệ thống sẽ <strong>tự động khôi phục và bảo toàn 100% điểm số cũ</strong> trong Két Sắt Điểm (Vault)!
                 </p>
               </div>
 
