@@ -1381,9 +1381,42 @@ export interface StudentProfile {
   unit5BonusAwarded?: boolean;       // Đã nhận thưởng khuyến khích chiến dịch Unit 5 (+50đ)
 
   // Chương trình Đôi bạn cùng tiến (Thầy Đinh Thành 24/11/2026: 1 tiếng, không giới hạn, +30đ cả 2)
-  referralPoints?: number;           // Tổng điểm nhận được từ việc mời bạn cùng học
+  referralPoints?: number;           // Tổng điểm nhận được từ việc mời bạn cùng học (+30đ/lượt)
   referralCount?: number;            // Số lượng bạn bè đã mời cùng học thành công
+  acceptedReferralCount?: number;    // Số lần được bạn khác mời và đã cùng vào học (+30đ/lượt)
+  studyBuddies?: string[];           // Danh sách bạn bè đã cùng học
   acceptedInvites?: string[];        // Danh sách ID lời mời đã chấp nhận
+}
+
+export interface PeerStudyInvitation {
+  id: string;
+  inviterId: string;
+  inviterName: string;
+  inviterClass: string;
+  targetStudentName?: string;
+  targetClassName?: string;
+  createdAt: number;
+  expiresAt: number;
+  acceptedBy: {
+    studentId: string;
+    studentName: string;
+    className: string;
+    acceptedAt: number;
+  }[];
+  inviterNotified?: boolean;
+}
+
+export interface StudyBuddyLeaderboardItem {
+  stt: number;
+  studentId: string;
+  name: string;
+  className: string;
+  grade: number;
+  referralPoints: number;
+  referralCount: number;
+  acceptedCount: number;
+  studyBuddies: string[];
+  badge: string;
 }
 
 
@@ -2108,6 +2141,8 @@ class StudentGradebookService {
 
   private checkinLogs: StudentCheckinLog[] = [];
 
+  private peerStudyInvitations: PeerStudyInvitation[] = [];
+
   private isSyncingFromCloud = false;
 
   private lastCloudSyncTimestamp = 0;
@@ -2486,6 +2521,13 @@ class StudentGradebookService {
       const subRaw = localStorage.getItem(STORAGE_KEYS.SUBMISSIONS);
 
       this.submissions = subRaw ? JSON.parse(subRaw) : DEFAULT_SUBMISSIONS;
+
+      try {
+        const invRaw = localStorage.getItem('dvt_peer_invitations');
+        this.peerStudyInvitations = invRaw ? JSON.parse(invRaw) : [];
+      } catch {
+        this.peerStudyInvitations = [];
+      }
 
 
 
@@ -4891,6 +4933,278 @@ class StudentGradebookService {
     };
   }
 
+  // =========================================================================
+  // NÂNG CẤP ĐÔI BẠN CÙNG TIẾN: GỬI LỜI MỜI TRỰC TIẾP TRÊN WEB & ĐỒNG BỘ THỜI GIAN THỰC
+  // Tác giả: Thầy giáo Đinh Văn Thành - Hotline/Zalo: 0915.213717
+  // - Học sinh gửi lời mời trực tiếp trên Web đến bạn bè trong lớp/trường
+  // - Khi bạn mở web sẽ thấy ngay lời mời từ bạn mình, nâng cao trách nhiệm học tập
+  // - Vào học thì bên mời NGAY LẬP TỨC được cộng điểm (+30đ)
+  // - Khi bạn mời đăng nhập sẽ hiển thị rõ ràng cộng điểm và có BẢNG ĐIỂM THƯỞNG THỐNG KÊ
+  // =========================================================================
+
+  public mergeCloudInvitations(incoming: PeerStudyInvitation[]): void {
+    if (!Array.isArray(incoming)) return;
+    const now = Date.now();
+    const map = new Map<string, PeerStudyInvitation>();
+    (this.peerStudyInvitations || []).forEach(inv => {
+      if (inv && inv.id && (now - inv.createdAt < 86400000)) map.set(inv.id, inv);
+    });
+    incoming.forEach(inv => {
+      if (!inv || !inv.id) return;
+      const prev = map.get(inv.id);
+      if (!prev) {
+        map.set(inv.id, inv);
+      } else {
+        const acceptedMap = new Map();
+        (prev.acceptedBy || []).forEach(a => { if (a?.studentId) acceptedMap.set(a.studentId, a); });
+        (inv.acceptedBy || []).forEach(a => { if (a?.studentId) acceptedMap.set(a.studentId, a); });
+        map.set(inv.id, {
+          ...prev,
+          ...inv,
+          acceptedBy: Array.from(acceptedMap.values()),
+          inviterNotified: prev.inviterNotified && inv.inviterNotified
+        });
+      }
+    });
+    this.peerStudyInvitations = Array.from(map.values()).slice(-50);
+    try {
+      localStorage.setItem('dvt_peer_invitations', JSON.stringify(this.peerStudyInvitations));
+    } catch {}
+  }
+
+  public createInAppPeerInvitation(
+    inviter: StudentProfile,
+    targetName?: string,
+    targetClass?: string
+  ): PeerStudyInvitation {
+    const now = Date.now();
+    const cleanTargetName = targetName ? targetName.trim() : undefined;
+    const cleanTargetClass = targetClass ? targetClass.trim().toUpperCase() : undefined;
+
+    const newInvite: PeerStudyInvitation = {
+      id: `peer_inv_${now}_${Math.random().toString(36).substring(2, 7)}`,
+      inviterId: inviter.id,
+      inviterName: inviter.name,
+      inviterClass: inviter.className,
+      targetStudentName: cleanTargetName,
+      targetClassName: cleanTargetClass || inviter.className,
+      createdAt: now,
+      expiresAt: now + 3600 * 1000, // Đúng 1 tiếng đồng hồ
+      acceptedBy: [],
+      inviterNotified: false
+    };
+
+    if (!this.peerStudyInvitations) this.peerStudyInvitations = [];
+    this.peerStudyInvitations.push(newInvite);
+    try {
+      localStorage.setItem('dvt_peer_invitations', JSON.stringify(this.peerStudyInvitations));
+    } catch {}
+
+    // Đồng bộ tức thời lên Cloud để học sinh khác mở web lên thấy ngay
+    this.syncToCloud(true).catch(() => {});
+
+    return newInvite;
+  }
+
+  public getActiveInvitationsForStudent(studentName?: string, className?: string): PeerStudyInvitation[] {
+    const now = Date.now();
+    const normName = studentName ? normalizeVietnameseName(studentName) : '';
+    const normCls = className ? normalizeClassName(className) : '';
+
+    return (this.peerStudyInvitations || []).filter(inv => {
+      // 1. Phải còn thời hạn trong vòng 1 tiếng
+      if (now > inv.expiresAt) return false;
+
+      // 2. Không hiển thị lời mời do chính mình tạo ra
+      if (studentName && normalizeVietnameseName(inv.inviterName) === normName && (!className || normalizeClassName(inv.inviterClass) === normCls)) {
+        return false;
+      }
+
+      // 3. Nếu lời mời có chỉ định đích danh bạn được mời
+      if (inv.targetStudentName) {
+        if (!studentName) return false;
+        if (normalizeVietnameseName(inv.targetStudentName) !== normName) return false;
+      }
+
+      // 4. Nếu lời mời chỉ định lớp
+      if (inv.targetClassName) {
+        if (className && normalizeClassName(inv.targetClassName) !== normCls) return false;
+      }
+
+      return true;
+    }).sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  public acceptPeerInvitation(
+    inviteId: string,
+    invitee: StudentProfile
+  ): {
+    success: boolean;
+    pointsAwarded: number;
+    inviterName: string;
+    message: string;
+    isExpired?: boolean;
+    isAlreadyAccepted?: boolean;
+  } {
+    const now = Date.now();
+    const inv = (this.peerStudyInvitations || []).find(i => i.id === inviteId);
+    if (!inv) {
+      return { success: false, pointsAwarded: 0, inviterName: '', message: 'Không tìm thấy lời mời học này.' };
+    }
+
+    if (now > inv.expiresAt) {
+      return { success: false, pointsAwarded: 0, inviterName: inv.inviterName, isExpired: true, message: '⏰ Lời mời cùng học này đã quá thời hạn 1 tiếng.' };
+    }
+
+    // Không được tự chấp nhận lời mời của mình
+    if (inv.inviterId === invitee.id || normalizeVietnameseName(inv.inviterName) === normalizeVietnameseName(invitee.name)) {
+      return { success: false, pointsAwarded: 0, inviterName: inv.inviterName, message: 'Em không thể tự chấp nhận lời mời của chính mình.' };
+    }
+
+    // Chống nhận trùng lặp cùng 1 lời mời
+    if (!inv.acceptedBy) inv.acceptedBy = [];
+    const already = inv.acceptedBy.some(a => a.studentId === invitee.id || normalizeVietnameseName(a.studentName) === normalizeVietnameseName(invitee.name));
+    if (already) {
+      return { success: false, pointsAwarded: 0, inviterName: inv.inviterName, isAlreadyAccepted: true, message: 'Em đã tham gia cùng học với bạn từ lời mời này rồi!' };
+    }
+
+    // 1. Ghi nhận bạn này đã chấp nhận lời mời
+    inv.acceptedBy.push({
+      studentId: invitee.id,
+      studentName: invitee.name,
+      className: invitee.className,
+      acceptedAt: now
+    });
+    inv.inviterNotified = false; // Đánh dấu để thông báo cho người mời khi đăng nhập
+
+    // 2. CỘNG NGAY LẬP TỨC +30 ĐIỂM CHO BÊN MỜI (Inviter)
+    const inviter = this.students.find(s => s.id === inv.inviterId || (normalizeVietnameseName(s.name) === normalizeVietnameseName(inv.inviterName) && normalizeClassName(s.className) === normalizeClassName(inv.inviterClass)));
+    if (inviter) {
+      inviter.totalMeritPoints = (inviter.totalMeritPoints || 0) + 30;
+      inviter.referralPoints = (inviter.referralPoints || 0) + 30;
+      inviter.referralCount = (inviter.referralCount || 0) + 1;
+      if (!inviter.studyBuddies) inviter.studyBuddies = [];
+      const buddyLabel = `${invitee.name} (${invitee.className})`;
+      if (!inviter.studyBuddies.includes(buddyLabel)) inviter.studyBuddies.push(buddyLabel);
+      if (!inviter.bonusHistory) inviter.bonusHistory = [];
+      inviter.bonusHistory.push({
+        id: `buddy_${now}_${Math.random().toString(36).substring(2, 6)}`,
+        points: 30,
+        reason: `Đôi bạn cùng tiến: Mời bạn ${invitee.name} (${invitee.className}) vào học thành công (+30đ)`,
+        awardedBy: 'Thầy Đinh Thành',
+        createdAt: new Date().toISOString()
+      });
+      saveStudentVaultMaxPoints(inviter.id, inviter.totalMeritPoints, inviter.name, inviter.className);
+    }
+
+    // 3. CỘNG NGAY LẬP TỨC +30 ĐIỂM CHO BÊN ĐƯỢC MỜI (Invitee)
+    invitee.totalMeritPoints = (invitee.totalMeritPoints || 0) + 30;
+    invitee.referralPoints = (invitee.referralPoints || 0) + 30;
+    invitee.acceptedReferralCount = (invitee.acceptedReferralCount || 0) + 1;
+    if (!invitee.studyBuddies) invitee.studyBuddies = [];
+    const inviterLabel = `${inv.inviterName} (${inv.inviterClass})`;
+    if (!invitee.studyBuddies.includes(inviterLabel)) invitee.studyBuddies.push(inviterLabel);
+    if (!invitee.bonusHistory) invitee.bonusHistory = [];
+    invitee.bonusHistory.push({
+      id: `buddy_in_${now}_${Math.random().toString(36).substring(2, 6)}`,
+      points: 30,
+      reason: `Đôi bạn cùng tiến: Chấp nhận lời mời cùng học từ bạn ${inv.inviterName} (${inv.inviterClass}) (+30đ)`,
+      awardedBy: 'Thầy Đinh Thành',
+      createdAt: new Date().toISOString()
+    });
+    saveStudentVaultMaxPoints(invitee.id, invitee.totalMeritPoints, invitee.name, invitee.className);
+
+    // 4. Lưu lại dữ liệu & đồng bộ Cloud ngay lập tức
+    this.saveStudents(false);
+    try {
+      localStorage.setItem('dvt_peer_invitations', JSON.stringify(this.peerStudyInvitations));
+      localStorage.setItem(STORAGE_KEYS.VAULT_STUDENTS, JSON.stringify(this.students));
+    } catch {}
+
+    const active = this.getActiveStudent();
+    if (active && (active.id === invitee.id || (inviter && active.id === inviter.id))) {
+      const updated = this.students.find(s => s.id === active.id);
+      if (updated) this.setActiveStudent(updated);
+    }
+
+    this.syncToCloud(true).catch(() => {});
+
+    return {
+      success: true,
+      pointsAwarded: 30,
+      inviterName: inv.inviterName,
+      message: `🎉 Tuyệt vời! Cả em và bạn ${inv.inviterName} (${inv.inviterClass}) đều đã được cộng ngay +30 điểm thi đua Bảng Vàng!`
+    };
+  }
+
+  public checkAndClaimInviterPointsNotification(student: StudentProfile): { friendName: string; friendClass: string; points: number }[] {
+    const normName = normalizeVietnameseName(student.name);
+    const normCls = normalizeClassName(student.className);
+    const results: { friendName: string; friendClass: string; points: number }[] = [];
+
+    let hasChange = false;
+    (this.peerStudyInvitations || []).forEach(inv => {
+      const isInviter = inv.inviterId === student.id || (normalizeVietnameseName(inv.inviterName) === normName && normalizeClassName(inv.inviterClass) === normCls);
+      if (isInviter && !inv.inviterNotified && inv.acceptedBy && inv.acceptedBy.length > 0) {
+        inv.acceptedBy.forEach(a => {
+          results.push({
+            friendName: a.studentName,
+            friendClass: a.className,
+            points: 30
+          });
+        });
+        inv.inviterNotified = true;
+        hasChange = true;
+      }
+    });
+
+    if (hasChange) {
+      try {
+        localStorage.setItem('dvt_peer_invitations', JSON.stringify(this.peerStudyInvitations));
+      } catch {}
+      this.syncToCloud().catch(() => {});
+    }
+
+    return results;
+  }
+
+  public getStudyBuddyLeaderboard(gradeFilter?: number, classFilter?: string): StudyBuddyLeaderboardItem[] {
+    const list: StudyBuddyLeaderboardItem[] = [];
+
+    this.students.forEach(s => {
+      const refPts = s.referralPoints || 0;
+      const refCnt = s.referralCount || 0;
+      const accCnt = s.acceptedReferralCount || 0;
+
+      if (refPts > 0 || refCnt > 0 || accCnt > 0) {
+        if (gradeFilter && s.grade !== gradeFilter) return;
+        if (classFilter && normalizeClassName(s.className) !== normalizeClassName(classFilter)) return;
+
+        let badge = 'Đôi Bạn Đồng Hành 🌱';
+        if (refPts >= 150 || refCnt >= 5) badge = 'Đôi Bạn Kim Cương 💎';
+        else if (refPts >= 90 || refCnt >= 3) badge = 'Đôi Bạn Vàng 🥇';
+        else if (refPts >= 60 || refCnt >= 2) badge = 'Đôi Bạn Bạc 🥈';
+
+        list.push({
+          stt: 0,
+          studentId: s.id,
+          name: s.name,
+          className: s.className,
+          grade: s.grade || 8,
+          referralPoints: refPts,
+          referralCount: refCnt,
+          acceptedCount: accCnt,
+          studyBuddies: s.studyBuddies || [],
+          badge
+        });
+      }
+    });
+
+    list.sort((a, b) => b.referralPoints - a.referralPoints || b.referralCount - a.referralCount);
+    list.forEach((item, idx) => { item.stt = idx + 1; });
+    return list;
+  }
+
 
 
   // ==================== KIỂM TRA & THƯỞNG PHÁO HOA HỌC LIÊN TỤC HÔM QUA ➔ HÔM NAY (+20Đ) ====================
@@ -5272,15 +5586,13 @@ class StudentGradebookService {
           const json = await resp.json();
 
           if (json && Array.isArray(json.students)) {
-
             cloudStudents = json.students;
-
           }
-
           if (json && Array.isArray(json.submissions)) {
-
             cloudSubmissions = json.submissions;
-
+          }
+          if (json && Array.isArray(json.studyInvitations)) {
+            this.mergeCloudInvitations(json.studyInvitations);
           }
 
         }
@@ -5320,6 +5632,9 @@ class StudentGradebookService {
             }
             if (json && Array.isArray(json.submissions)) {
               cloudSubmissions = json.submissions;
+            }
+            if (json && Array.isArray(json.studyInvitations)) {
+              this.mergeCloudInvitations(json.studyInvitations);
             }
           }
 
@@ -5575,6 +5890,13 @@ class StudentGradebookService {
           if (s.lastLoginDate && (!existing.lastLoginDate || s.lastLoginDate > existing.lastLoginDate)) {
             existing.lastLoginDate = s.lastLoginDate;
           }
+          if (s.referralPoints) existing.referralPoints = Math.max(existing.referralPoints || 0, s.referralPoints);
+          if (s.referralCount) existing.referralCount = Math.max(existing.referralCount || 0, s.referralCount);
+          if (s.acceptedReferralCount) existing.acceptedReferralCount = Math.max(existing.acceptedReferralCount || 0, s.acceptedReferralCount);
+          if (s.studyBuddies && s.studyBuddies.length > 0) {
+            const bSet = new Set([...(existing.studyBuddies || []), ...s.studyBuddies]);
+            existing.studyBuddies = Array.from(bSet);
+          }
         }
       });
 
@@ -5589,7 +5911,8 @@ class StudentGradebookService {
         school: 'THCS Dong Yen',
         updatedAt: Date.now(),
         students: finalStudents,
-        submissions: finalSubmissions
+        submissions: finalSubmissions,
+        studyInvitations: this.peerStudyInvitations
       });
 
       let success = false;

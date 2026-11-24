@@ -92,10 +92,12 @@ export default async function handler(req, res) {
         const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         const incomingStudents = Array.isArray(body?.students) ? body.students : [];
         const incomingSubmissions = Array.isArray(body?.submissions) ? body.submissions : [];
+        const incomingInvitations = Array.isArray(body?.studyInvitations) ? body.studyInvitations : [];
 
         // 1. Lay du lieu hien tai tren Cloud de MERGE thong minh, TUYET DOI KHONG GHI DE XOA HOC SINH
         let existingStudents = [];
         let existingSubmissions = [];
+        let existingInvitations = [];
         try {
           const checkResp = await fetch(CLOUD_STORAGE_URL + '?_t=' + Date.now(), {
             cache: 'no-store',
@@ -113,6 +115,9 @@ export default async function handler(req, res) {
             }
             if (Array.isArray(currentCloudData?.submissions)) {
               existingSubmissions = currentCloudData.submissions;
+            }
+            if (Array.isArray(currentCloudData?.studyInvitations)) {
+              existingInvitations = currentCloudData.studyInvitations;
             }
           }
         } catch (e) {
@@ -240,16 +245,49 @@ export default async function handler(req, res) {
           if (s.studyProgressPercent) c.studyProgressPercent = s.studyProgressPercent;
           if (s.lastLoginDate) c.lastLoginDate = s.lastLoginDate;
           if (s.parentPhone || s.phone) c.parentPhone = s.parentPhone || s.phone;
+          if (s.referralPoints) c.referralPoints = s.referralPoints;
+          if (s.referralCount) c.referralCount = s.referralCount;
+          if (s.acceptedReferralCount) c.acceptedReferralCount = s.acceptedReferralCount;
+          if (s.studyBuddies) c.studyBuddies = s.studyBuddies;
           return c;
         });
 
         const mergedSubmissions = Array.from(subMap.values());
 
+        // Merge loi moi hoc truc tuyen thoi gian thuc (giu cac loi moi con han hoac moi nhan trong 24h)
+        const nowMs = Date.now();
+        const inviteMap = new Map();
+        existingInvitations.forEach(inv => {
+          if (inv?.id && (nowMs - (inv.createdAt || 0) < 86400000)) {
+            inviteMap.set(inv.id, inv);
+          }
+        });
+        incomingInvitations.forEach(inv => {
+          if (inv?.id) {
+            const prev = inviteMap.get(inv.id);
+            if (!prev) {
+              inviteMap.set(inv.id, inv);
+            } else {
+              const acceptedMap = new Map();
+              (prev.acceptedBy || []).forEach(a => { if (a?.studentId) acceptedMap.set(a.studentId, a); });
+              (inv.acceptedBy || []).forEach(a => { if (a?.studentId) acceptedMap.set(a.studentId, a); });
+              inviteMap.set(inv.id, {
+                ...prev,
+                ...inv,
+                acceptedBy: Array.from(acceptedMap.values()),
+                inviterNotified: prev.inviterNotified && inv.inviterNotified
+              });
+            }
+          }
+        });
+        const mergedStudyInvitations = Array.from(inviteMap.values()).slice(-50);
+
         const finalPayload = JSON.stringify({
           school: 'THCS Dong Yen',
           updatedAt: Date.now(),
           students: mergedStudents,
-          submissions: mergedSubmissions
+          submissions: mergedSubmissions,
+          studyInvitations: mergedStudyInvitations
         });
 
         const resp = await fetch(CLOUD_STORAGE_URL, {
@@ -265,7 +303,12 @@ export default async function handler(req, res) {
 
         if (resp.ok) {
           const result = await resp.json();
-          return res.status(200).json({ ok: true, mergedStudentsCount: mergedStudents.length, result });
+          return res.status(200).json({
+            ok: true,
+            mergedStudentsCount: mergedStudents.length,
+            studyInvitationsCount: mergedStudyInvitations.length,
+            result
+          });
         }
       } catch (cloudErr) {
         console.warn('Merged cloud save failed:', cloudErr.message);

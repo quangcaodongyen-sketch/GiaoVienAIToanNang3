@@ -519,6 +519,77 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
     }
   }, [currentStudent, incomingInvite]);
 
+  // =========================================================================
+  // NÂNG CẤP ĐÔI BẠN CÙNG TIẾN: GỬI LỜI MỜI TRỰC TIẾP TRÊN WEB & BẢNG ĐIỂM THƯỞNG
+  // Tác giả: Thầy giáo Đinh Văn Thành - ĐT/Zalo: 0915.213717
+  // =========================================================================
+  const [peerInvites, setPeerInvites] = useState<any[]>([]);
+  const [showStudyBuddyStatsModal, setShowStudyBuddyStatsModal] = useState<boolean>(false);
+  const [statsGradeFilter, setStatsGradeFilter] = useState<number>(0);
+  const [statsClassFilter, setStatsClassFilter] = useState<string>('');
+  const [selectedTargetFriend, setSelectedTargetFriend] = useState<string>('');
+  const [inAppInviteSentMsg, setInAppInviteSentMsg] = useState<string | null>(null);
+  const [inviterWinModalData, setInviterWinModalData] = useState<{ friendName: string; friendClass: string; points: number }[] | null>(null);
+
+  // Tự động kiểm tra và làm mới danh sách lời mời học trực tiếp trên web
+  useEffect(() => {
+    const refreshInvites = () => {
+      const list = studentGradebookService.getActiveInvitationsForStudent(
+        currentStudent?.name,
+        currentStudent?.className
+      );
+      setPeerInvites(list);
+    };
+
+    refreshInvites();
+    const interval = setInterval(refreshInvites, 5000);
+    return () => clearInterval(interval);
+  }, [currentStudent]);
+
+  // Kiểm tra điểm thưởng cho người mời khi đăng nhập (hiển thị thông báo chúc mừng)
+  useEffect(() => {
+    if (!currentStudent) return;
+    const wins = studentGradebookService.checkAndClaimInviterPointsNotification(currentStudent);
+    if (wins && wins.length > 0) {
+      setInviterWinModalData(wins);
+      const updated = studentGradebookService.getActiveStudent();
+      if (updated) setCurrentStudent({ ...updated });
+    }
+  }, [currentStudent]);
+
+  const handleAcceptPeerInvite = (inviteId: string) => {
+    if (!currentStudent) {
+      alert('Em hãy chọn tên hoặc đăng ký tài khoản ở bên dưới để nhận ngay +30 điểm cùng bạn nhé!');
+      window.scrollTo({ top: 350, behavior: 'smooth' });
+      return;
+    }
+    const res = studentGradebookService.acceptPeerInvitation(inviteId, currentStudent);
+    if (res.success) {
+      setInviteSuccessNotification(res.message);
+      const updated = studentGradebookService.getActiveStudent();
+      if (updated) setCurrentStudent({ ...updated });
+      setPeerInvites(studentGradebookService.getActiveInvitationsForStudent(currentStudent.name, currentStudent.className));
+    } else {
+      alert(res.message);
+    }
+  };
+
+  const handleSendInAppInvite = () => {
+    if (!currentStudent) return;
+    studentGradebookService.createInAppPeerInvitation(
+      currentStudent,
+      selectedTargetFriend || undefined,
+      currentStudent.className
+    );
+    setInAppInviteSentMsg(
+      selectedTargetFriend 
+        ? `💌 Đã gửi lời mời đến bạn "${selectedTargetFriend}" thành công! Lời mời có hiệu lực 1 tiếng và sẽ xuất hiện ngay trên web khi bạn mở máy.`
+        : `📢 Đã phát lời mời học lên toàn thể Lớp ${currentStudent.className} thành công! Lời mời có hiệu lực 1 tiếng và hiện trên màn hình của tất cả các bạn trong lớp.`
+    );
+    setSelectedTargetFriend('');
+    setTimeout(() => setInAppInviteSentMsg(null), 5000);
+  };
+
   
   // =========================================================================
   // TỰ ĐỘNG CẬP NHẬT ĐIỂM SỐ CHUẨN XÁC MỖI 2 PHÚT (THẦY ĐINH VĂN THÀNH)
@@ -2979,6 +3050,98 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {/* =========================================================================
+          HỘP THƯ LỜI MỜI HỌC TỪ BẠN BÈ TRỰC TIẾP TRÊN WEB (THẦY ĐINH THÀNH)
+      ========================================================================= */}
+      {peerInvites && peerInvites.length > 0 && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-4 sm:p-5 shadow-2xl border-2 border-amber-300 text-slate-950 mb-5 animate-in fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-amber-400/50">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-white text-slate-950 flex items-center justify-center text-2xl shadow-md shrink-0">
+                💌
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-white drop-shadow-sm flex items-center gap-2 flex-wrap">
+                  <span>HỘP THƯ LỜI MỜI HỌC: BẠN BÈ ĐANG CHỜ EM CÙNG HỌC!</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-950 text-amber-300 text-xs font-black">
+                    {peerInvites.length} Lời Mời (+30đ)
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-950 font-bold mt-0.5">
+                  Có bạn bè quan tâm nhắc nhở, hãy có trách nhiệm vào học ngay để cùng tiến bộ và nhận trọn vẹn điểm thưởng!
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowStudyBuddyStatsModal(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-amber-300 font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1.5 shrink-0"
+            >
+              <span>🏆 Xem Bảng Thống Kê Điểm Thưởng</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3.5">
+            {peerInvites.map(inv => {
+              const secLeft = Math.max(0, Math.floor((inv.expiresAt - Date.now()) / 1000));
+              const isTargetedToMe = currentStudent && inv.targetStudentName && normalizeVietnameseName(inv.targetStudentName) === normalizeVietnameseName(currentStudent.name);
+              const alreadyAcceptedByMe = currentStudent && inv.acceptedBy && inv.acceptedBy.some((a: any) => a.studentId === currentStudent.id);
+
+              return (
+                <div
+                  key={inv.id}
+                  className="bg-white/95 dark:bg-slate-900/95 p-3.5 rounded-2xl border-2 border-amber-300 dark:border-amber-500/50 shadow-md flex flex-col justify-between gap-3 text-slate-900 dark:text-white"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 text-[11px] font-black uppercase">
+                        {isTargetedToMe ? '🎯 MỜI ĐÍCH DANH EM' : `📢 LỜI MỜI LỚP ${inv.inviterClass}`}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-lg bg-slate-950 text-amber-300 font-mono text-[11px] font-black">
+                        ⏰ Còn: {Math.floor(secLeft / 60).toString().padStart(2, '0')}:{(secLeft % 60).toString().padStart(2, '0')}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-2.5">
+                      <span className="text-2xl shrink-0">🤝</span>
+                      <div>
+                        <div className="text-sm font-black text-blue-900 dark:text-blue-300">
+                          Bạn <strong>{inv.inviterName}</strong> (Lớp {inv.inviterClass})
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                          {isTargetedToMe
+                            ? `Gửi lời nhắn: "Cậu vào học cùng tớ nhé, hai đứa mình cùng ôn luyện từ vựng để được +30 điểm nha!"`
+                            : `Đang rủ bạn bè lớp ${inv.inviterClass} cùng vào làm bài tập SGK & từ vựng trên web!`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+                      ⭐ Cả hai bạn cùng nhận +30đ
+                    </span>
+                    {alreadyAcceptedByMe ? (
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-black text-xs flex items-center gap-1">
+                        ✅ Đã cùng học thành công!
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleAcceptPeerInvite(inv.id)}
+                        className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center gap-1 animate-pulse"
+                      >
+                        <span>👉 Chấp Nhận & Vào Học Cùng Bạn (+30đ)</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
           BƯỚC 1: ĐĂNG NHẬP / THÔNG TIN HỌC SINH ĐANG HỌC
       ========================================================================= */}
       {!currentStudent ? (
@@ -3610,6 +3773,14 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
                 title="Mời bạn cùng học - Không giới hạn số lượng, hiệu lực 1 tiếng, nhận ngay +30 điểm cho cả 2 bạn"
               >
                 <span>🤝 Mời Bạn (+30đ)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowStudyBuddyStatsModal(true)}
+                className="px-3 py-1.5 rounded-xl bg-indigo-900/80 hover:bg-indigo-800 text-indigo-100 hover:text-white text-xs font-bold transition cursor-pointer border border-indigo-500/50 flex items-center gap-1.5 shadow-xs"
+                title="Xem Bảng Thống Kê Điểm Thưởng Đôi Bạn Cùng Tiến"
+              >
+                <span>🏆 Bảng Thưởng (+30đ)</span>
               </button>
               <button
                 type="button"
@@ -7483,6 +7654,53 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               <span className="text-[10px] text-slate-400">(Sau 1 tiếng, lời mời hết hạn nhưng em có thể mở lại để tạo link mới bất kỳ lúc nào)</span>
             </div>
 
+            {/* PHẦN 1: GỬI LỜI MỜI TRỰC TIẾP TRÊN WEB (HIỆN TRÊN MÀN HÌNH BẠN) */}
+            <div className="p-3.5 rounded-2xl bg-indigo-950/60 border border-indigo-500/40 space-y-2.5 mb-4 text-left">
+              <div className="flex items-center justify-between text-xs font-black text-indigo-300">
+                <span className="flex items-center gap-1.5">
+                  <span>💌</span>
+                  <span>GỬI LỜI MỜI TRỰC TIẾP TRÊN WEB:</span>
+                </span>
+                <span className="text-[10px] text-amber-300">Hiện ngay trên web bạn mở</span>
+              </div>
+
+              {inAppInviteSentMsg && (
+                <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold text-center animate-in fade-in">
+                  {inAppInviteSentMsg}
+                </div>
+              )}
+
+              {/* Danh sách bạn bè trong lớp */}
+              <div className="space-y-1">
+                <label className="text-[11px] text-slate-300 font-bold block">
+                  Chọn 1 bạn trong Lớp {currentStudent.className} để mời đích danh (hoặc để trống để mời cả lớp):
+                </label>
+                <select
+                  value={selectedTargetFriend}
+                  onChange={(e) => setSelectedTargetFriend(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-indigo-400/50 bg-slate-900 text-white text-xs font-bold focus:border-amber-400 outline-hidden cursor-pointer"
+                >
+                  <option value="">-- Mời toàn thể các bạn trong Lớp {currentStudent.className} --</option>
+                  {studentGradebookService
+                    .getOfficialRoster(currentStudent.className)
+                    .filter(n => normalizeVietnameseName(n) !== normalizeVietnameseName(currentStudent.name))
+                    .map(name => (
+                      <option key={name} value={name}>
+                        Mời bạn: {name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSendInAppInvite}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-black text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
+              >
+                <span>💌 BẤM GỬI LỜI MỜI LÊN WEB CHO BẠN (CÒN 1 TIẾNG)</span>
+              </button>
+            </div>
+
             <div className="space-y-3">
               <button
                 type="button"
@@ -7507,10 +7725,205 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
               >
                 <span>💬 GỬI LỜI MỜI QUA ZALO CHO BẠN</span>
               </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInviteModal(false);
+                  setShowStudyBuddyStatsModal(true);
+                }}
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs transition cursor-pointer border border-slate-700 flex items-center justify-center gap-2"
+              >
+                <span>🏆 XEM BẢNG THỐNG KÊ ĐIỂM THƯỞNG ĐÔI BẠN</span>
+              </button>
             </div>
 
             <div className="text-center mt-5 pt-3 border-t border-slate-800 text-[11px] text-slate-400">
               Công cụ hỗ trợ, tham khảo dành cho giáo viên và học sinh • Hotline/Zalo Thầy Thành: 0915.213717
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL: THÔNG BÁO TIN VUI ĐÔI BẠN CÙNG TIẾN (BẠN ĐÃ NHẬN LỜI VÀO HỌC)
+      ========================================================================= */}
+      {inviterWinModalData && inviterWinModalData.length > 0 && (
+        <div className="fixed inset-0 z-[10000] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in">
+          <div className="relative w-full max-w-md bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 border-emerald-400 rounded-3xl p-6 shadow-2xl text-white text-center">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-slate-950 flex items-center justify-center text-3xl mx-auto shadow-lg mb-3 animate-bounce">
+              🎉
+            </div>
+            <h3 className="text-xl font-black text-amber-300">
+              TIN VUI TỪ ĐÔI BẠN CÙNG TIẾN!
+            </h3>
+            <p className="text-xs text-blue-200 mt-1">
+              Các em học sinh thân mến ! Bạn bè của em đã nhận lời mời và cùng em vào học ôn luyện:
+            </p>
+
+            <div className="my-4 space-y-2 text-left">
+              {inviterWinModalData.map((item, idx) => (
+                <div key={idx} className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-black text-white text-sm">👤 {item.friendName}</span>
+                    <span className="text-emerald-300 ml-1.5 font-bold">({item.friendClass})</span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs shadow-xs">
+                    +{item.points}đ
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-bold mb-5">
+              ⭐ Điểm thi đua đã được tự động cộng vào Bảng Vàng và Két Sắt Điểm (Vault) của em!
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setInviterWinModalData(null)}
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-black text-sm transition cursor-pointer shadow-lg"
+            >
+              🚀 Tuyệt Vời, Tiếp Tục Học Ngay!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL: BẢNG THỐNG KÊ ĐIỂM THƯỞNG ĐÔI BẠN CÙNG TIẾN (THẦY ĐINH THÀNH)
+      ========================================================================= */}
+      {showStudyBuddyStatsModal && (
+        <div className="fixed inset-0 z-[9999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in">
+          <div className="relative w-full max-w-4xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-2 border-amber-400/50 rounded-3xl p-5 sm:p-6 shadow-2xl text-white">
+            <button
+              type="button"
+              onClick={() => setShowStudyBuddyStatsModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="text-center mb-5">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center text-3xl mx-auto shadow-lg mb-2">
+                🏆
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-amber-300">
+                BẢNG THỐNG KÊ ĐIỂM THƯỞNG ĐÔI BẠN CÙNG TIẾN
+              </h3>
+              <p className="text-xs text-blue-200 mt-1">
+                Tôn vinh tinh thần đồng đội, trách nhiệm học tập &amp; bạn bè nhắc nhở nhau cùng tiến bộ (+30đ/lượt)
+              </p>
+            </div>
+
+            {/* Bộ lọc Khối & Lớp */}
+            <div className="flex items-center gap-2 flex-wrap mb-4 pb-3 border-b border-slate-800 text-xs">
+              <span className="text-slate-400 font-bold">Lọc theo khối:</span>
+              {[
+                { val: 0, label: 'Tất cả khối' },
+                { val: 6, label: 'Khối 6' },
+                { val: 7, label: 'Khối 7' },
+                { val: 8, label: 'Khối 8' },
+                { val: 9, label: 'Khối 9' },
+              ].map(f => (
+                <button
+                  key={f.val}
+                  type="button"
+                  onClick={() => setStatsGradeFilter(f.val)}
+                  className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
+                    statsGradeFilter === f.val
+                      ? 'bg-amber-400 text-slate-950 shadow-xs'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Bảng Danh Sách Học Sinh Được Cộng Điểm Thưởng */}
+            {(() => {
+              const list = studentGradebookService.getStudyBuddyLeaderboard(
+                statsGradeFilter || undefined,
+                statsClassFilter || undefined
+              );
+
+              if (list.length === 0) {
+                return (
+                  <div className="text-center py-10 text-slate-400 space-y-2">
+                    <span className="text-4xl block">🌱</span>
+                    <p className="text-sm font-bold">Chưa có học sinh nào nhận điểm thưởng Đôi Bạn Cùng Tiến trong bộ lọc này.</p>
+                    <p className="text-xs text-slate-500">Hãy là những học sinh đầu tiên gửi lời mời để cùng bạn nhận +30 điểm thi đua nhé!</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="overflow-x-auto rounded-2xl border border-slate-800">
+                  <table className="w-full text-left text-xs sm:text-sm">
+                    <thead className="bg-slate-800/90 text-slate-300 text-[11px] uppercase tracking-wider">
+                      <tr>
+                        <th className="py-3 px-3 text-center">Hạng</th>
+                        <th className="py-3 px-3">Học Sinh</th>
+                        <th className="py-3 px-2 text-center">Lớp</th>
+                        <th className="py-3 px-2 text-center">Mời Bạn</th>
+                        <th className="py-3 px-2 text-center">Được Mời</th>
+                        <th className="py-3 px-3 text-right">Điểm Thưởng (+30đ)</th>
+                        <th className="py-3 px-3">Bạn Bè Đã Cùng Học</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60 font-medium">
+                      {list.map(item => (
+                        <tr key={item.studentId} className="hover:bg-slate-800/40 transition">
+                          <td className="py-3 px-3 text-center font-black">
+                            {item.stt === 1 ? '🥇' : item.stt === 2 ? '🥈' : item.stt === 3 ? '🥉' : `#${item.stt}`}
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="font-black text-white flex items-center gap-1.5 flex-wrap">
+                              <span>{item.name}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 text-[10px] font-bold">
+                                {item.badge}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-2 text-center">
+                            <span className="px-2 py-0.5 rounded bg-blue-600/30 text-blue-300 font-bold text-xs">
+                              {item.className}
+                            </span>
+                          </td>
+                          <td className="py-3 px-2 text-center font-bold text-emerald-400">
+                            {item.referralCount} bạn
+                          </td>
+                          <td className="py-3 px-2 text-center font-bold text-cyan-400">
+                            {item.acceptedCount} lần
+                          </td>
+                          <td className="py-3 px-3 text-right">
+                            <span className="px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-xs">
+                              ⭐ +{item.referralPoints}đ
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-[11px] text-slate-300 max-w-[200px] truncate">
+                            {item.studyBuddies && item.studyBuddies.length > 0
+                              ? item.studyBuddies.join(', ')
+                              : 'Chưa cập nhật'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()}
+
+            <div className="text-center mt-5 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between flex-wrap gap-2">
+              <span>Công cụ hỗ trợ, tham khảo dành cho giáo viên và học sinh • Tác giả Đinh Thành: 0915.213717</span>
+              <button
+                type="button"
+                onClick={() => setShowStudyBuddyStatsModal(false)}
+                className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition cursor-pointer"
+              >
+                Đóng
+              </button>
             </div>
           </div>
         </div>
