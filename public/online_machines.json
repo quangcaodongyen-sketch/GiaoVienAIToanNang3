@@ -24,11 +24,11 @@
     "last_seen": "21:27:12 24/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "http://192.168.1.13:8888",
+    "url": "https://solved-metadata-manor-strategic.trycloudflare.com",
     "local_ip": "192.168.1.13",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795531173.5382662,
-    "last_seen": "21:39:33 24/11/2026"
+    "timestamp": 1795531201.7751698,
+    "last_seen": "21:40:01 24/11/2026"
   }
 }
