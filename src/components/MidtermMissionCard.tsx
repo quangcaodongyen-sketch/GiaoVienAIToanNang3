@@ -28,15 +28,15 @@ interface MidtermMissionCardProps {
   onGoToExam?: () => void;
 }
 
-// Bảng tên chủ đề Unit 4 chuẩn SGK Global Success theo từng khối
-const UNIT4_TITLES_BY_GRADE: Record<number, string> = {
-  6: 'Unit 4: My Neighbourhood (Khu phố của em)',
-  7: 'Unit 4: Music and Arts (Âm nhạc & Nghệ thuật)',
-  8: 'Unit 4: Ethnic Groups of Viet Nam (Các dân tộc Việt Nam)',
-  9: 'Unit 4: Remembering the Past (Ký ức quá khứ)',
-  10: 'Unit 4: For a Better Community (Vì cộng đồng tốt đẹp)',
-  11: 'Unit 4: ASEAN and Viet Nam (Hiệp hội các quốc gia ĐNA)',
-  12: 'Unit 4: Urbanisation (Đô thị hoá)'
+// Bảng tên chủ đề Unit 5 chuẩn SGK Global Success theo từng khối
+const UNIT5_TITLES_BY_GRADE: Record<number, string> = {
+  6: 'Unit 5: Natural Wonders of Viet Nam (Kỳ quan thiên nhiên Việt Nam)',
+  7: 'Unit 5: Food and Drink (Ẩm thực & Đồ uống)',
+  8: 'Unit 5: Our Customs and Traditions (Phong tục & Tập quán)',
+  9: 'Unit 5: Our Experiences (Trải nghiệm của chúng ta)',
+  10: 'Unit 5: Inventions (Các phát minh)',
+  11: 'Unit 5: Global Warming (Sự nóng lên toàn cầu)',
+  12: 'Unit 5: The World of Work (Thế giới việc làm)'
 };
 
 export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
@@ -47,10 +47,10 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
   onGoToExam
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const [activeUnitTab, setActiveUnitTab] = useState<number>(4); // Mặc định mở ngay Unit 4 theo chỉ đạo Thầy Thành
+  const [activeUnitTab, setActiveUnitTab] = useState<number>(5); // Mặc định mở ngay Unit 5 theo chỉ đạo Thầy Thành
 
   const grade = currentStudent.grade || 8;
-  const unit4Title = UNIT4_TITLES_BY_GRADE[grade] || `Unit 4 Tiếng Anh Lớp ${grade} Global Success`;
+  const unit5Title = UNIT5_TITLES_BY_GRADE[grade] || `Unit 5 Tiếng Anh Lớp ${grade} Global Success`;
 
   const missionState: MidtermMissionState = midtermMissionService.getMissionState(
     currentStudent.id,
@@ -72,17 +72,17 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-sm">
                 <Flame className="w-3.5 h-3.5 text-amber-300" />
-                <span>Nhiệm Vụ Mới • 03/11/2026</span>
+                <span>Nhiệm Vụ Mới • 24/11/2026</span>
               </span>
               <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
-                Chinh Phục Từ Vựng &amp; Bài Tập SGK Unit 4
+                Chinh Phục Từ Vựng &amp; Bài Tập SGK Unit 5
               </h3>
               <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-200 border border-emerald-400/40 text-[11px] font-bold">
                 Lớp {currentStudent.className || `${grade}A1`}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-emerald-100 font-semibold mt-1 flex items-center gap-2 flex-wrap">
-              <span>📖 Chủ điểm: <strong className="text-amber-300 underline">{unit4Title}</strong></span>
+              <span>📖 Chủ điểm: <strong className="text-amber-300 underline">{unit5Title}</strong></span>
               <span className="hidden sm:inline">•</span>
               <span className="text-cyan-200">👨‍🏫 Thầy giáo Đinh Văn Thành giao nhiệm vụ</span>
             </p>
@@ -125,9 +125,9 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
             <div className="flex items-start gap-2.5">
               <span className="text-xl shrink-0 mt-0.5">📢</span>
               <div className="leading-relaxed">
-                <strong className="text-amber-300 font-black uppercase tracking-wide">Chỉ đạo học tập từ Thầy Thành (03/11/2026):</strong>
+                <strong className="text-amber-300 font-black uppercase tracking-wide">Chỉ đạo học tập từ Thầy Thành (24/11/2026):</strong>
                 <p className="text-slate-200 mt-0.5">
-                  Sau khi hoàn thành thi Giữa kỳ 1, toàn thể học sinh bắt đầu bước vào <strong>Unit 4</strong>. Các em học toàn bộ từ vựng Unit 4 (nghe phát âm, lật thẻ 3D, gõ chính tả) và làm trọn bộ <strong>bài tập kèm Sách giáo khoa</strong> để tích lũy điểm thi đua Bảng Vàng!
+                  Tiếp nối kế hoạch học tốt, toàn thể học sinh bước vào chinh phục <strong>Unit 5</strong>. Các em học toàn bộ từ vựng Unit 5 (nghe phát âm, lật thẻ 3D, gõ chính tả) và làm trọn bộ <strong>bài tập kèm Sách giáo khoa</strong> (A Closer Look 1, 2, Looking Back) để tích lũy điểm thi đua Bảng Vàng!
                 </p>
               </div>
             </div>
@@ -138,12 +138,12 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
             </div>
           </div>
 
-          {/* CHỌN TAB UNIT (ƯU TIÊN UNIT 4 NẰM ĐẦU TIÊN VÀ GẮN HUY HIỆU MỚI) */}
+          {/* CHỌN TAB UNIT (ƯU TIÊN UNIT 5 NẰM ĐẦU TIÊN VÀ GẮN HUY HIỆU MỚI) */}
           <div className="flex items-center gap-2 p-1.5 bg-slate-950/70 rounded-2xl border border-blue-900/60 overflow-x-auto">
-            {[4, 1, 2, 3].map(uNum => {
+            {[5, 4, 3, 2, 1].map(uNum => {
               const uData = missionState.mission1.units[uNum];
               const isActive = activeUnitTab === uNum;
-              const isUnit4 = uNum === 4;
+              const isUnit5 = uNum === 5;
 
               return (
                 <button
@@ -152,14 +152,14 @@ export const MidtermMissionCard: React.FC<MidtermMissionCardProps> = ({
                   onClick={() => setActiveUnitTab(uNum)}
                   className={`flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 ${
                     isActive
-                      ? isUnit4
+                      ? isUnit5
                         ? 'bg-gradient-to-r from-emerald-500 via-teal-600 to-green-600 text-white shadow-lg border-2 border-emerald-300 ring-2 ring-emerald-400/30'
                         : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md border-2 border-blue-300'
                       : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 font-bold border border-slate-700/60'
                   }`}
                 >
-                  {isUnit4 && <span className="text-amber-300">🔥</span>}
-                  <span>Unit {uNum} {isUnit4 ? '(Mới)' : ''}</span>
+                  {isUnit5 && <span className="text-amber-300">🔥</span>}
+                  <span>Unit {uNum} {isUnit5 ? '(Mới)' : ''}</span>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
                     isActive ? 'bg-white text-emerald-900' : 'bg-slate-800 text-slate-300'
                   }`}>

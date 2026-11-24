@@ -8150,6 +8150,20 @@ const TEACHER_CHAT = {
 
     this.loadMessages();
 
+    // AUTO-INJECT UNIT 5 ENCOURAGEMENT MESSAGE (24/11/2026)
+    const hasUnit5Notice = this.messages && this.messages.some(m => m.id === 'MSG_UNIT5_PROMO_20261124' || (m.text && m.text.includes('Unit 5') && m.text.includes('24/11/2026')));
+    if (!hasUnit5Notice && Array.isArray(this.messages)) {
+      this.messages.push({
+        id: 'MSG_UNIT5_PROMO_20261124',
+        sender: 'teacher',
+        teacherName: 'Thầy Đinh Văn Thành',
+        text: '📢 [THÔNG BÁO TỪ THẦY THÀNH - PHÁT ĐỘNG ÔN LUYỆN TỪ VỰNG & BÀI TẬP SGK UNIT 5]: Các em học sinh thân mến ! Tiếp tục kế hoạch học tập kỳ 1, Thầy Thành phát động chiến dịch thi đua: Ôn luyện trọn vẹn Từ vựng Unit 5 và hoàn thành đầy đủ Bài tập kèm Sách giáo khoa (A Closer Look 1, 2, Looking Back). Thầy Thành thưởng nóng +50 điểm chuyên cần khuyến mại đặc biệt và nhân đôi điểm từ vựng (x2.5) cho mỗi em vào học và làm bài. Làm đúng mỗi câu được tự động cộng +2 điểm công tâm vào Bảng Vàng. Thầy chúc các em học sinh thân yêu ôn luyện thật tốt và tích lũy thật nhiều điểm thưởng nhé! 🌟',
+        timestamp: '08:00 24/11/2026',
+        read: false
+      });
+      this.saveMessages();
+    }
+
     // AUTO-INJECT WEEKEND ENCOURAGEMENT MESSAGE (07/11 - 08/11/2026)
     const hasWeekendNotice = this.messages && this.messages.some(m => m.id === 'MSG_WEEKEND_20261107' || (m.text && m.text.includes('07/11/2026')));
     if (!hasWeekendNotice && Array.isArray(this.messages)) {

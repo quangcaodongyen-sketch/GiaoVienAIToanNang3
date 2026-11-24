@@ -3475,7 +3475,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
       )}
 
       {/* =========================================================================
-          THẺ GIAO NHIỆM VỤ MỚI: CHINH PHỤC TỪ VỰNG & BÀI TẬP SGK UNIT 4 (THẦY ĐINH THÀNH 03/11/2026)
+          THẺ GIAO NHIỆM VỤ MỚI: CHINH PHỤC TỪ VỰNG & BÀI TẬP SGK UNIT 5 (THẦY ĐINH THÀNH 24/11/2026)
       ========================================================================= */}
       {currentStudent && (
         <MidtermMissionCard
@@ -3619,12 +3619,12 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({
             type="button"
             onClick={() => {
               setActiveTab('vocab');
-              setVocabTargetUnit(4);
+              setVocabTargetUnit(5);
             }}
             className="px-2.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1 bg-gradient-to-r from-rose-600 via-amber-500 to-rose-600 text-white font-black shadow-xs border border-amber-300 text-xs shrink-0 whitespace-nowrap animate-pulse"
-            title="Thầy giáo Đinh Văn Thành giao nhiệm vụ mới: Chinh phục Từ Vựng & Bài Tập SGK Unit 4"
+            title="Thầy giáo Đinh Văn Thành giao nhiệm vụ mới: Chinh phục Từ Vựng & Bài Tập SGK Unit 5"
           >
-            <span>🔥 Unit 4 Mới</span>
+            <span>🔥 Unit 5 Mới</span>
           </button>
 
           <button

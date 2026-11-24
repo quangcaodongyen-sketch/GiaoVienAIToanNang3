@@ -308,6 +308,79 @@ export function getPromoRoadmapSchedule(referenceDateStr?: string): PromoRoadmap
         '📝 Làm bài test 15 phút hoặc ôn lại từ khó: Nhân đôi điểm thi đua',
         '🎖️ Tổng kết Bảng Vàng chuyên cần tuần và trao thưởng vinh danh'
       ]
+    },
+    {
+      date: '2026-11-24',
+      badge: '🎯 KHỞI ĐỘNG UNIT 5',
+      title: 'Chinh Phục Từ Vựng & Bài Tập SGK Unit 5 (Nhiệm Vụ Tuần Mới)',
+      description: 'Thầy giáo Đinh Văn Thành phát động chiến dịch thi đua: Toàn thể các em học sinh ôn luyện toàn diện Từ vựng Unit 5 và hoàn thành đầy đủ Bài tập kèm Sách giáo khoa (A Closer Look 1, 2, Looking Back). Thưởng nóng +50 điểm chuyên cần khuyến mại đặc biệt!',
+      points: 50,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '🎯 Nhiệm vụ 1: Học & thuộc toàn bộ Từ vựng Unit 5 (Flashcard 3D, Audio IPA, Xếp chữ)',
+        '📘 Nhiệm vụ 2: Hoàn thành Bài tập kèm Sách giáo khoa Unit 5 (A Closer Look 1, 2 & Looking Back)',
+        '⏱️ Chuyên cần tích lũy: Cứ mỗi 5 phút ôn luyện thực tế nhận ngay +5 điểm',
+        '⭐ Tặng ngay +50 điểm chuyên cần khởi động Unit 5 lưu an toàn vào Két Sắt Điểm (Vault)'
+      ]
+    },
+    {
+      date: '2026-11-25',
+      badge: '📘 TĂNG TỐC BÀI TẬP SGK',
+      title: 'Tăng Tốc Bài Tập Sách Giáo Khoa Unit 5',
+      description: 'Luyện tập chuyên sâu Grammar & A Closer Look 2 bám sát SGK Global Success Unit 5.',
+      points: 30,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['📘 Hoàn thành A Closer Look 2 Unit 5', '🧠 Ôn lại cấu trúc ngữ pháp Unit 5', '⭐ Thưởng +30 điểm chuyên cần']
+    },
+    {
+      date: '2026-11-26',
+      badge: '🎧 LUYỆN NGHE & PHÁT ÂM',
+      title: 'Luyện Nghe Audio & Phát Âm IPA Chuẩn AI Unit 5',
+      description: 'Rèn luyện phản xạ phát âm chuẩn IPA, nghe audio đàm thoại Unit 5 và bứt phá vốn từ vựng.',
+      points: 30,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['🎧 Nghe audio đàm thoại Unit 5', '🗣️ Luyện phát âm IPA chuẩn AI', '⭐ Thưởng +30 điểm chuyên cần']
+    },
+    {
+      date: '2026-11-27',
+      badge: '⚡ BỨT PHÁ BÀI TẬP ĐÍNH KÈM',
+      title: 'Bứt Phá Bài Tập Looking Back & Nâng Cao Unit 5',
+      description: 'Hoàn thành bài tập Looking Back và bài tập tự luận nâng cao Unit 5 chuẩn bị cho bài kiểm tra 15 phút.',
+      points: 35,
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      rules: ['📖 Hoàn thành Looking Back Unit 5', '✍️ Viết câu & bài tập tự luận Unit 5', '⭐ Thưởng +35 điểm thi đua']
+    },
+    {
+      date: '2026-11-28',
+      badge: '🎉 THI ĐUA CUỐI TUẦN',
+      title: 'Thi Đua Cuối Tuần: Thử Thách Kiểm Tra 15 Phút Unit 5 Đạt Điểm 9 - 10!',
+      description: 'Đấu trường kiểm tra trắc nghiệm 15 phút Unit 5: Làm bài test đạt điểm 9-10 nhận ngay nhân đôi điểm thi đua và thưởng pháo hoa!',
+      points: 40,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '⭐ Vào học Thứ Bảy (28/11): Tặng nóng +40 điểm chuyên cần cuối tuần',
+        '📝 Bài test 15 phút Unit 5 đạt 9 - 10: Nhân đôi điểm thi đua',
+        '🏆 Tuyên dương Bảng Vàng học sinh chăm chỉ ngày nghỉ cuối tuần'
+      ]
+    },
+    {
+      date: '2026-11-29',
+      badge: '🌟 CHỦ NHẬT VỀ ĐÍCH',
+      title: 'Chủ Nhật Về Đích: Tổng Hợp Bảng Vàng & Vinh Danh Thi Đua Tuần!',
+      description: 'Tổng kết điểm thi đua chuyên cần toàn tuần, vinh danh Top 1 Bảng Vàng và trao cúp 4 Tổ Thi Đua.',
+      points: 50,
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      rules: [
+        '⭐ Vào học Chủ Nhật (29/11): Thưởng lớn +50 điểm chuyên cần ngày nghỉ',
+        '🎖️ Tổng kết Bảng Vàng và trao cúp vinh danh Tổ xuất sắc',
+        '🔒 Toàn bộ điểm số được lưu giữ an toàn vĩnh viễn trong Két Sắt Điểm (Vault)'
+      ]
     }
   ];
 
@@ -356,6 +429,53 @@ export function getDailyLoginRewardInfo(customDateStr?: string): DailyLoginRewar
   const dayName = daysOfWeek[targetDate.getDay()] || 'Hôm nay';
   const dateDisplay = `${dayName}, ngày ${targetDate.getDate().toString().padStart(2, '0')}/${(targetDate.getMonth() + 1).toString().padStart(2, '0')}/${targetDate.getFullYear()}`;
   const expiresAtDisplay = `Hiệu lực đến 23:59:59 đêm nay (Hết ngày tự động hủy bỏ để đón chương trình ngày mới)`;
+
+  // CHIẾN DỊCH KHỞI ĐỘNG ÔN LUYỆN TỪ VỰNG & BÀI TẬP SGK UNIT 5 (24/11/2026 - HÔM NAY)
+  if (todayStr === '2026-11-24') {
+    return {
+      points: 50, // Thưởng nóng +50 điểm chuyên cần khởi động Unit 5!
+      isPromoToday: true,
+      promoBadge: '🎯 CHIẾN DỊCH UNIT 5 - TẶNG +50Đ',
+      vocabMultiplier: 2.5,
+      vocabPointsPerUnit: 25,
+      title: '🎯 Khuyến Mại Hôm Nay: Ôn Luyện Từ Vựng Unit 5 Tặng Ngay +50 Điểm Chuyên Cần!',
+      bannerText: 'Chiến dịch Unit 5: Vào học +50đ chuyên cần, cứ 5 phút ôn luyện +5đ, làm bài tập SGK đính kèm nhân đôi điểm!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Vào học hôm nay: Thưởng nóng +50 điểm chuyên cần lưu an toàn vào Két Sắt Điểm (Vault)',
+        '🎯 Ôn luyện Từ vựng Unit 5 chuẩn Bộ: Làm đúng mỗi câu +2 điểm công tâm (Flashcard 3D, Audio IPA, Game)',
+        '📘 Bài tập Sách giáo khoa Unit 5: Hoàn thành bài tập SGK đính kèm (A Closer Look 1, 2, Looking Back)',
+        '⏱️ Chuyên cần tích lũy: Cứ mỗi 5 phút ôn luyện thực tế nhận ngay +5 điểm thi đua',
+        '⏰ Áp dụng trọn vẹn Thứ Ba 24/11/2026 đến 23:59:59 đêm nay'
+      ],
+      nextDayPromoPreview: '📘 NGÀY MAI THỨ TƯ (25/11): TĂNG TỐC BÀI TẬP SGK UNIT 5 — Thưởng +30đ chuyên cần và bứt phá ngữ pháp!',
+      todayStr
+    };
+  }
+
+  // TĂNG TỐC BÀI TẬP SGK UNIT 5 (25/11/2026)
+  if (todayStr === '2026-11-25') {
+    return {
+      points: 30,
+      isPromoToday: true,
+      promoBadge: '📘 TĂNG TỐC BÀI TẬP SGK - TẶNG +30Đ',
+      vocabMultiplier: 2,
+      vocabPointsPerUnit: 20,
+      title: '📘 Khuyến Mại Thứ Tư: Tăng Tốc Bài Tập SGK Unit 5 Tặng +30 Điểm!',
+      bannerText: 'Luyện tập A Closer Look 1, 2 Unit 5: Tặng +30đ chuyên cần, làm đúng mỗi câu +2đ!',
+      dateDisplay,
+      expiresAtDisplay,
+      bonusRules: [
+        '⭐ Vào học Thứ Tư (25/11): Tặng ngay +30 điểm chuyên cần',
+        '📘 Hoàn thành bài tập SGK Unit 5: Thưởng lớn điểm thi đua',
+        '⏱️ Cứ 5 phút ôn luyện thực tế nhận thêm +5 điểm',
+        '⏰ Áp dụng duy nhất Thứ Tư 25/11/2026 đến 23:59:59'
+      ],
+      nextDayPromoPreview: '🎧 NGÀY KIA THỨ NĂM (26/11): LUYỆN NGHE AUDIO & PHÁT ÂM IPA CHUẨN AI (+30đ)!',
+      todayStr
+    };
+  }
 
   // NGÀY NGHỈ CUỐI TUẦN (HÔM NAY THỨ BẢY 07/11/2026) - ĐÔN ĐỐC & KHUYẾN MẠI CHUYÊN CẦN (+30Đ)
   if (todayStr === '2026-11-07') {
