@@ -8,11 +8,11 @@
     "last_seen": "13:33:59 25/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "https://environment-applicants-collected-scale.trycloudflare.com",
-    "local_ip": "192.168.1.15",
+    "url": "https://api.trycloudflare.com",
+    "local_ip": "192.168.100.154",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795588345.94855,
-    "last_seen": "13:32:25 25/11/2026"
+    "timestamp": 1795588484.405513,
+    "last_seen": "13:34:44 25/11/2026"
   }
 }
