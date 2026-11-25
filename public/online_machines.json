@@ -8,11 +8,11 @@
     "last_seen": "06:51:48 25/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "https://language-daughters-runs-shut.trycloudflare.com",
-    "local_ip": "192.168.1.5",
+    "url": "http://127.0.0.1:8888",
+    "local_ip": "127.0.0.1",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795577887.5886958,
-    "last_seen": "10:38:07 25/11/2026"
+    "timestamp": 1795579017.5315747,
+    "last_seen": "10:56:57 25/11/2026"
   }
 }
