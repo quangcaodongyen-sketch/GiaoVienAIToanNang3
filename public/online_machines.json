@@ -8,11 +8,11 @@
     "last_seen": "06:51:48 25/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "http://127.0.0.1:8888",
-    "local_ip": "127.0.0.1",
+    "url": "https://acres-ranked-binding-continued.trycloudflare.com",
+    "local_ip": "172.20.10.9",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795579017.5315747,
-    "last_seen": "10:56:57 25/11/2026"
+    "timestamp": 1795579027.3645453,
+    "last_seen": "10:57:07 25/11/2026"
   }
 }
