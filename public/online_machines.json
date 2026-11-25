@@ -8,11 +8,11 @@
     "last_seen": "13:33:59 25/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "https://api.trycloudflare.com",
-    "local_ip": "192.168.100.154",
+    "url": "https://ambient-officer-cincinnati-desperate.trycloudflare.com",
+    "local_ip": "192.168.1.15",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795588509.13707,
-    "last_seen": "13:35:09 25/11/2026"
+    "timestamp": 1795588517.8497229,
+    "last_seen": "13:35:17 25/11/2026"
   }
 }
