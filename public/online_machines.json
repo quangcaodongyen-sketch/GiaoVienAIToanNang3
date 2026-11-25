@@ -6,5 +6,13 @@
     "status": "ONLINE",
     "timestamp": 1795564308.7730596,
     "last_seen": "06:51:48 25/11/2026"
+  },
+  "DVT-2028-C986": {
+    "url": "https://opposition-anatomy-cow-shapes.trycloudflare.com",
+    "local_ip": "172.20.10.9",
+    "port": 8888,
+    "status": "ONLINE",
+    "timestamp": 1795566541.4149358,
+    "last_seen": "07:29:01 25/11/2026"
   }
 }
