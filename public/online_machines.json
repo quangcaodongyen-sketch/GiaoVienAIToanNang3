@@ -14,5 +14,13 @@
     "status": "ONLINE",
     "timestamp": 1795681986.5753632,
     "last_seen": "15:33:06 26/11/2026"
+  },
+  "DVT-23A9-CB7E": {
+    "url": "https://amenities-emily-builders-everyday.trycloudflare.com",
+    "local_ip": "192.168.100.154",
+    "port": 8888,
+    "status": "ONLINE",
+    "timestamp": 1795682118.389501,
+    "last_seen": "15:35:18 26/11/2026"
   }
 }
