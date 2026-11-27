@@ -4,16 +4,16 @@
     "local_ip": "192.168.1.14",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795795468.346094,
-    "last_seen": "23:04:28 27/11/2026"
+    "timestamp": 1795795596.1532426,
+    "last_seen": "23:06:36 27/11/2026"
   },
   "DVT-2028-C986": {
     "url": "https://sensor-democratic-invisible-concentration.trycloudflare.com",
     "local_ip": "192.168.1.18",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795795593.2933898,
-    "last_seen": "23:06:33 27/11/2026"
+    "timestamp": 1795795466.5903883,
+    "last_seen": "23:04:26 27/11/2026"
   },
   "DVT-23A9-CB7E": {
     "url": "https://amenities-emily-builders-everyday.trycloudflare.com",
