@@ -4,8 +4,8 @@
     "local_ip": "192.168.1.14",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795739059.5533497,
-    "last_seen": "07:24:19 27/11/2026"
+    "timestamp": 1795739183.0273676,
+    "last_seen": "07:26:23 27/11/2026"
   },
   "DVT-2028-C986": {
     "url": "https://boots-street-tile-origin.trycloudflare.com",
