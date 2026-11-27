@@ -8,12 +8,12 @@
     "last_seen": "07:24:19 27/11/2026"
   },
   "DVT-2028-C986": {
-    "url": "https://lyrics-blast-models-superintendent.trycloudflare.com",
-    "local_ip": "192.168.1.18",
+    "url": "https://boots-street-tile-origin.trycloudflare.com",
+    "local_ip": "192.168.100.27",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795716392.2802415,
-    "last_seen": "01:06:32 27/11/2026"
+    "timestamp": 1795739114.7114053,
+    "last_seen": "07:25:14 27/11/2026"
   },
   "DVT-23A9-CB7E": {
     "url": "https://amenities-emily-builders-everyday.trycloudflare.com",
