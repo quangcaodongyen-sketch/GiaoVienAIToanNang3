@@ -4,8 +4,8 @@
     "local_ip": "192.168.1.14",
     "port": 8888,
     "status": "ONLINE",
-    "timestamp": 1795814381.6192255,
-    "last_seen": "04:19:41 28/11/2026"
+    "timestamp": 1795814507.8228064,
+    "last_seen": "04:21:47 28/11/2026"
   },
   "DVT-2028-C986": {
     "url": "https://sensor-democratic-invisible-concentration.trycloudflare.com",
